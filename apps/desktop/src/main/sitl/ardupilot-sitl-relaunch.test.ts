@@ -146,7 +146,9 @@ afterAll(async () => {
   await rm(tmp, { recursive: true, force: true });
 });
 
-describe('relaunchWithHome', () => {
+// The fake SITL is a `#!/bin/sh` script, which Windows cannot exec, so a spawn there dies at once
+// and every assertion about argv and exits would be testing that instead.
+describe.skipIf(process.platform === 'win32')('relaunchWithHome', () => {
   it('respawns with the requested take-off point in argv', async () => {
     expect((await ardupilotSitlProcess.start(BASE_CONFIG)).success).toBe(true);
     const firstPid = ardupilotSitlProcess.getStatus().pid;

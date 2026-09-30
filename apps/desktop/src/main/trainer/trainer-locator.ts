@@ -1,4 +1,12 @@
-import { join } from 'node:path';
+import { posix, win32 } from 'node:path';
+
+/**
+ * Joins in the style of the path it was given. Windows hands us backslashed paths and wants them
+ * back that way; everything else (and the tests, which run on every OS) uses forward slashes.
+ */
+function join(base: string, ...parts: string[]): string {
+  return (base.includes('\\') ? win32 : posix).join(base, ...parts);
+}
 
 /**
  * Where the ArduDeck Trainer is on this machine, and how to run it.
