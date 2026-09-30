@@ -9,6 +9,8 @@ import type { PanelId } from '../components/panels';
  */
 export type FeatureTourStep = StepType & {
   predicate?: () => boolean;
+  /** Runs when the step becomes current, to bring its anchor on screen (e.g. open a dialog). */
+  setup?: () => void;
 };
 
 export type FeatureTourSitlKind = 'ardupilot' | 'inav';
@@ -55,4 +57,6 @@ export interface FeatureTour {
    * individual steps after a tour has already started.
    */
   predicate?: () => boolean;
+  /** Runs when the tour closes, to undo what step setups opened. */
+  cleanup?: () => void;
 }

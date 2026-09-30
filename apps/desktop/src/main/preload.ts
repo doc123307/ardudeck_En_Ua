@@ -654,6 +654,14 @@ const api = {
   deleteLayout: (name: string): Promise<void> =>
     ipcRenderer.invoke(IPC_CHANNELS.LAYOUT_DELETE, name),
 
+  /** Native save dialog; resolves to the written path, or null when cancelled. */
+  exportLayoutFile: (fileName: string, content: string): Promise<string | null> =>
+    ipcRenderer.invoke(IPC_CHANNELS.LAYOUT_EXPORT_FILE, fileName, content),
+  /** macOS share sheet (AirDrop, Mail, Messages). Electron has no share UI elsewhere. */
+  shareLayout: (fileName: string, content: string): Promise<boolean> =>
+    ipcRenderer.invoke(IPC_CHANNELS.LAYOUT_SHARE, fileName, content),
+  canShareNatively: process.platform === 'darwin',
+
   setActiveLayout: (name: string): Promise<void> =>
     ipcRenderer.invoke(IPC_CHANNELS.LAYOUT_SET_ACTIVE, name),
 

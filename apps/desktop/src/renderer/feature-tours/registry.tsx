@@ -1,4 +1,7 @@
-import type { FeatureTour } from './types';
+import type { FeatureTour, FeatureTourStep } from './types';
+import { useConfigTabMenuStore } from '../stores/config-tab-menu-store';
+import { useWorkspaceDialogStore } from '../stores/workspace-dialog-store';
+import { useSurveyMenuStore } from '../stores/survey-menu-store';
 import { useParameterStore } from '../stores/parameter-store';
 import { hasDualVtolControllers } from '../components/mavlink-config/mavlink-pid-schemes';
 
@@ -11,6 +14,41 @@ import { hasDualVtolControllers } from '../components/mavlink-config/mavlink-pid
 // yet), so a tour degrades gracefully instead of pointing at nothing.
 const present = (selector: string) => () => !!document.querySelector(selector);
 
+function TourText({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-2">
+      <div className="text-sm font-semibold">{title}</div>
+      <p className="text-xs leading-relaxed opacity-90">{children}</p>
+    </div>
+  );
+}
+
+/** A configuration tab group, with its dropdown opened so the sub-tabs are in the highlight. */
+function groupStep(groupId: string, title: string, body: React.ReactNode): FeatureTourStep {
+  const anchor = `[data-tour="mavlink-tab-group-${groupId}"]`;
+  return {
+    selector: anchor,
+    predicate: present(anchor),
+    setup: () => useConfigTabMenuStore.getState().setOpenGroupId(groupId),
+    // reactour only refreshes when an added node matches, so observe this group's menu itself.
+    highlightedSelectors: [`[data-tour="mavlink-tab-menu-${groupId}"]`],
+    mutationObservables: [`[data-tour^="mavlink-tab-menu-"]`],
+    content: <TourText title={title}>{body}</TourText>,
+  };
+}
+
+/** A configuration tab that is not in a group on this vehicle. */
+function itemStep(tabId: string, title: string, body: React.ReactNode): FeatureTourStep {
+  const anchor = `[data-tour="mavlink-tab-${tabId}"]`;
+  return {
+    selector: anchor,
+    predicate: present(anchor),
+    setup: () => useConfigTabMenuStore.getState().setOpenGroupId(null),
+    mutationObservables: [`[data-tour^="mavlink-tab-menu-"]`],
+    content: <TourText title={title}>{body}</TourText>,
+  };
+}
+
 export const FEATURE_TOURS: FeatureTour[] = [
   {
     id: 'mission-planning-alpha32',
@@ -19,10 +57,12 @@ export const FEATURE_TOURS: FeatureTour[] = [
     title: 'Mission planning, leveled up',
     blurb:
       'Grouped missions, corridor surveys, GSD-first planning, GIS import, multi-format export, and full undo - all in the planner.',
+    cleanup: () => useSurveyMenuStore.getState().setOpen(false),
     steps: [
       {
         selector: '[data-tour="mission-group"]',
         predicate: present('[data-tour="mission-group"]'),
+        setup: () => useSurveyMenuStore.getState().setOpen(false),
         content: (
           <div className="space-y-2">
             <div className="text-sm font-semibold">Missions are organized into groups</div>
@@ -38,6 +78,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
       {
         selector: '[data-tour="mission-survey"]',
         predicate: present('[data-tour="mission-survey"]'),
+        setup: () => useSurveyMenuStore.getState().setOpen(true),
+        highlightedSelectors: ['[data-tour="mission-survey-menu"]'],
+        mutationObservables: ['[data-tour="mission-survey-menu"]'],
         content: (
           <div className="space-y-2">
             <div className="text-sm font-semibold">Corridor surveys</div>
@@ -53,6 +96,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
       {
         selector: '[data-tour="mission-survey"]',
         predicate: present('[data-tour="mission-survey"]'),
+        setup: () => useSurveyMenuStore.getState().setOpen(true),
+        highlightedSelectors: ['[data-tour="mission-survey-menu"]'],
+        mutationObservables: ['[data-tour="mission-survey-menu"]'],
         content: (
           <div className="space-y-2">
             <div className="text-sm font-semibold">Smarter area surveys</div>
@@ -68,6 +114,7 @@ export const FEATURE_TOURS: FeatureTour[] = [
       {
         selector: '[data-tour="mission-import"]',
         predicate: present('[data-tour="mission-import"]'),
+        setup: () => useSurveyMenuStore.getState().setOpen(false),
         content: (
           <div className="space-y-2">
             <div className="text-sm font-semibold">Import an area from GIS</div>
@@ -179,7 +226,7 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'quick-launch-033',
     view: 'telemetry',
     version: '0.33',
-    title: 'New: Quick Launch & the Area Editor',
+    title: 'Quick Launch & the Area Editor',
     blurb:
       'Pop tools into their own windows from the header, and jump straight into the new Area Editor for drawing survey areas and corridors.',
     steps: [
@@ -191,10 +238,11 @@ export const FEATURE_TOURS: FeatureTour[] = [
           <div className="space-y-2">
             <div className="text-sm font-semibold">Jump straight into a tool</div>
             <p className="text-xs leading-relaxed opacity-90">
-              No vehicle connected? These cards open the tools that work offline -
-              {' '}<strong>Mission Planning</strong>, the new <strong>Area Editor</strong>,
-              {' '}<strong>SITL</strong>, <strong>Flight Log Analysis</strong>,
-              {' '}<strong>Firmware Flash</strong> and your <strong>Mission Library</strong>.
+              No vehicle connected? These cards open the tools that work offline:
+              {' '}<strong>Mission Planning</strong>, the <strong>Area Editor</strong>,
+              {' '}<strong>SITL</strong>, the <strong>3D Sim World</strong>, the <strong>Radio HUD</strong>,
+              {' '}<strong>Flight Log Analysis</strong>, <strong>Firmware Flash</strong> and your
+              {' '}<strong>Mission Library</strong>.
             </p>
           </div>
         ),
@@ -206,9 +254,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
           <div className="space-y-2">
             <div className="text-sm font-semibold">Quick Launch - tools in their own window</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Open the <strong>MAVLink Inspector</strong> or <strong>Telemetry Dashboard</strong> in a
-              separate window - ideal for a <strong>second monitor</strong> while you keep planning or
-              tuning in the main window. Each stays live alongside the rest of the app.
+              Open the <strong>MAVLink Inspector</strong>, the <strong>Telemetry Dashboard</strong> or the
+              {' '}<strong>3D Sim World</strong> in a separate window, ideal for a <strong>second monitor</strong>
+              {' '}while you keep planning or tuning in the main window. Each stays live alongside the rest of the app.
             </p>
           </div>
         ),
@@ -235,23 +283,51 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'rtk-ntrip-034',
     view: 'telemetry',
     version: '0.1.0',
-    title: 'New: RTK corrections over NTRIP',
+    title: 'RTK corrections over NTRIP',
     blurb:
-      'Stream centimeter-grade RTK correction data from any NTRIP caster straight to your vehicle - no radio link to a base station needed.',
+      'Stream centimeter-grade RTK corrections from any NTRIP caster straight to your vehicle, and watch the fix on the map.',
+    cleanup: () => useWorkspaceDialogStore.getState().setOpen(false),
     steps: [
       {
-        selector: '[data-tour="add-panel"]',
-        predicate: present('[data-tour="add-panel"]'),
+        selector: '[data-tour="telemetry-layout-select"]',
+        predicate: present('[data-tour="telemetry-layout-select"]'),
+        content: (
+          <div className="space-y-2">
+            <div className="text-sm font-semibold">Panels live in the Workspace</div>
+            <p className="text-xs leading-relaxed opacity-90">
+              The <strong>Workspace</strong> button holds the layouts and every panel you can add.
+              The RTK panel is one of them.
+            </p>
+          </div>
+        ),
+      },
+      {
+        selector: '[data-tour="add-panel-rtk"]',
+        setup: () => useWorkspaceDialogStore.getState().setOpen(true),
+        mutationObservables: ['[data-tour="workspace-dialog"]'],
         content: (
           <div className="space-y-2">
             <div className="text-sm font-semibold">RTK / NTRIP panel</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Find the new <strong>RTK / NTRIP</strong> panel here (it is also part of the
-              {' '}<strong>All Panels</strong> layout, tabbed behind GPS). Point it at an NTRIP
-              caster, pick a mountpoint from the fetched list, and ArduDeck forwards the
-              {' '}<strong>RTCM corrections</strong> to your vehicle over MAVLink - with an
-              RTK-capable GPS the fix climbs to <strong>RTK Fixed</strong> (1-2 cm). In
-              multi-vehicle engine mode the corrections go to <strong>every vehicle</strong> at once.
+              Add the <strong>RTK / NTRIP</strong> panel, point it at an NTRIP caster and pick a
+              mountpoint. ArduDeck forwards the <strong>RTCM corrections</strong> over MAVLink; with an
+              RTK-capable GPS the fix climbs to <strong>RTK Fixed</strong> (1-2 cm). With several
+              vehicles connected, every one of them gets the corrections.
+            </p>
+          </div>
+        ),
+      },
+      {
+        selector: '[data-tour="map-instruments"]',
+        setup: () => useWorkspaceDialogStore.getState().setOpen(false),
+        mutationObservables: ['[data-tour="workspace-dialog"]'],
+        predicate: present('[data-tour="map-instruments"]'),
+        content: (
+          <div className="space-y-2">
+            <div className="text-sm font-semibold">RTK on the map</div>
+            <p className="text-xs leading-relaxed opacity-90">
+              Under <strong>Instruments</strong> there is also an <strong>RTK</strong> instrument that
+              shows the fix type and correction age right on the map, where you are looking anyway.
             </p>
           </div>
         ),
@@ -476,6 +552,169 @@ export const FEATURE_TOURS: FeatureTour[] = [
               Plug the radio in via USB (choose <strong>USB Storage</strong> on its screen) and
               hit <strong>Apply</strong> - widget, config, voice pack and maps land on the SD
               card together. Then on the radio: App layout, full-screen widget, ArduDeck.
+            </p>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    id: 'map-instruments-beta1',
+    view: 'telemetry',
+    version: '0.1.2',
+    title: 'Instruments on the map',
+    blurb: 'Gauges, attitude, messages and RTK float over the map. Drag them, group them and save the arrangement with a layout.',
+    steps: [
+      {
+        selector: '[data-tour="map-instruments"]',
+        predicate: present('[data-tour="map-instruments"]'),
+        content: (
+          <div className="space-y-2">
+            <div className="text-sm font-semibold">Pick what floats on the map</div>
+            <p className="text-xs leading-relaxed opacity-90">
+              <strong>Instruments</strong> turns speed, altitude, attitude, heading, battery,
+              {' '}<strong>Messages</strong> and <strong>RTK</strong> on and off, or loads a whole cockpit preset.
+              Drag one onto another to <strong>group</strong> them into a single tray; drag it out to split it.
+            </p>
+            <p className="text-xs leading-relaxed opacity-90">
+              A saved <strong>Workspace</strong> layout remembers the instruments along with the panels.
+              Settings, Guides replays the animated walkthrough.
+            </p>
+          </div>
+        ),
+      },
+      {
+        selector: '[data-tour="vision-stream"]',
+        // Only in synthetic Vision mode, where the Stream button exists.
+        predicate: present('[data-tour="vision-stream"]'),
+        content: (
+          <div className="space-y-2">
+            <div className="text-sm font-semibold">Stream the synthetic view</div>
+            <p className="text-xs leading-relaxed opacity-90">
+              <strong>Stream</strong> publishes the Vision view, with or without the HUD, as RTSP, WebRTC and
+              SRT. Open it in VLC, ffmpeg, OpenCV or a browser.
+            </p>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    id: 'vehicle-setup-beta1',
+    view: 'parameters',
+    version: '0.1.2',
+    title: 'Vehicle setup without the parameter table',
+    blurb: 'Every tab here is a page over the parameters one job needs, in plain words. The raw table is the last resort.',
+    cleanup: () => useConfigTabMenuStore.getState().setOpenGroupId(null),
+    steps: [
+      {
+        selector: '[data-tour="mavlink-tabs"]',
+        predicate: present('[data-tour="mavlink-tabs"]'),
+        setup: () => useConfigTabMenuStore.getState().setOpenGroupId(null),
+        content: (
+          <TourText title="Pages, not parameter names">
+            Each tab sets up one job and writes the right parameters for this firmware, with live data beside
+            the settings so you see the effect. Most tabs sit in a group: the next steps open each one.
+          </TourText>
+        ),
+      },
+      groupStep('tuning-group', 'Tuning', (
+        <>
+          <strong>PID</strong> gains per axis, <strong>Rates</strong> and expo, <strong>Tuning</strong> presets,
+          and <strong>AutoTune</strong> set up without hunting for its parameters. AutoTune refuses edits while armed.
+        </>
+      )),
+      groupStep('rover-tuning-group', 'Tuning', (
+        <>
+          Steering and speed controller gains, <strong>Speed &amp; Steering</strong> limits, and
+          {' '}<strong>Navigation</strong> for waypoint following and loiter.
+        </>
+      )),
+      groupStep('rc-group', 'RC', (
+        <>
+          <strong>Receiver</strong> shows the protocol and every channel live. <strong>Modes</strong> maps
+          the switch positions to modes and shows which slot the switch is in right now.
+        </>
+      )),
+      groupStep('outputs-group', 'Outputs', (
+        <>
+          <strong>Motor Test</strong> spins one motor at a time with live vibration and ESC data (props off, it
+          asks first). <strong>Servo Output</strong> sets each channel's function, reverse and range with a live bar.
+        </>
+      )),
+      itemStep('servo-output', 'Servo Output', (
+        <>Each output's function, reverse, min, trim and max, with the live position on every row.</>
+      )),
+      groupStep('safety-group', 'Safety', (
+        <>
+          <strong>Arming</strong> lists the pre-arm checks and what is failing now. <strong>Failsafes &amp; fence</strong>
+          {' '}sets what happens on link loss, low battery and a fence breach. Pre-arm quick fixes open these pages.
+        </>
+      )),
+      itemStep('battery', 'Battery', (
+        <>Monitor type, voltage and current sensing, and the low, critical and arming voltages, suggested from cell count and chemistry.</>
+      )),
+      groupStep('hardware-group', 'Sensors', (
+        <>
+          <strong>Health</strong> for every sensor live, <strong>Configuration</strong> for board orientation,
+          compasses and GPS wiring, and <strong>LEDs &amp; Sound</strong> for the LED, buzzer and safety button.
+        </>
+      )),
+      groupStep('links-group', 'Links', (
+        <>
+          <strong>Serial Ports</strong> sets what runs on each port. <strong>Telemetry Rates</strong> works out
+          which MAVLink channel a port is and shows what each rate costs on the link.
+        </>
+      )),
+      groupStep('storage-group', 'Storage', (
+        <>
+          <strong>Logging</strong> chooses what the card records. <strong>Files</strong> browses the flight
+          controller over MAVLink-FTP. <strong>Parameters</strong> is the full table, for what no page covers yet.
+        </>
+      )),
+    ],
+  },
+  {
+    id: 'calibration-beta1',
+    view: 'calibration',
+    version: '0.1.2',
+    title: 'Sensor calibration',
+    blurb: 'Accelerometer, compass, level and the rest, each as a guided step with live feedback.',
+    steps: [
+      {
+        selector: '[data-tour="calibration-types"]',
+        predicate: present('[data-tour="calibration-types"]'),
+        mutationObservables: ['[data-tour="calibration-types"]'],
+        content: (
+          <div className="space-y-2">
+            <div className="text-sm font-semibold">Pick what to calibrate</div>
+            <p className="text-xs leading-relaxed opacity-90">
+              Each card is a guided calibration. Cards the vehicle has no sensor for stay greyed out. The
+              compass calibration shows which directions are already covered while you turn the aircraft.
+              A pre-arm fix that needs a calibration opens the right card directly.
+            </p>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    id: 'library-projects-beta1',
+    view: 'library',
+    version: '0.1.2',
+    title: 'Projects',
+    blurb: 'One site, all of its survey areas and missions, local and from the vault, in one place.',
+    steps: [
+      {
+        selector: '[data-tour="library-tabs"]',
+        predicate: present('[data-tour="library-tabs"]'),
+        content: (
+          <div className="space-y-2">
+            <div className="text-sm font-semibold">Missions, areas and projects</div>
+            <p className="text-xs leading-relaxed opacity-90">
+              Give a mission or a survey area a <strong>project</strong> name when you save it and it collects
+              under <strong>Projects</strong> with everything else for that site, including what is in the vault.
+              Open an area or a mission from there and it lands in the planner.
             </p>
           </div>
         ),

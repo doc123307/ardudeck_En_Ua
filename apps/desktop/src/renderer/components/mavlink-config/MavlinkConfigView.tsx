@@ -48,6 +48,7 @@ import {
 } from 'lucide-react';
 import { useParameterStore } from '../../stores/parameter-store';
 import { useConnectionStore } from '../../stores/connection-store';
+import { useConfigTabMenuStore } from '../../stores/config-tab-menu-store';
 import { useNavigationStore } from '../../stores/navigation-store';
 import { formatParamValue } from '../../../shared/parameter-types';
 import { firmwareLabel } from '../../../shared/firmware-types';
@@ -387,31 +388,47 @@ export const MavlinkConfigView: React.FC = () => {
     }
   }, [tabs, activeTab, defaultTab]);
 
-  // Deep link from a pre-arm quick-fix (or anywhere calling setView('parameters',
-  // paramId)): open the All Parameters tab and filter to that exact parameter,
-  // then clear the target so it fires once.
+  // Deep links (pre-arm quick fixes and others): 'tab:<id>' opens that config tab,
+  // anything else filters All Parameters to it. Fires once, then clears.
   useEffect(() => {
     if (!scrollTarget) return;
-    if (collectTabIds(tabs).includes('parameters')) {
+    const tabIds = collectTabIds(tabs);
+    if (scrollTarget.startsWith('tab:')) {
+      const tab = scrollTarget.slice(4) as TabId;
+      // A tab this vehicle or firmware does not have falls back to the full table.
+      if (tabIds.includes(tab)) setActiveTab(tab);
+      else if (tabIds.includes('parameters')) setActiveTab('parameters');
+      clearScrollTarget();
+      return;
+    }
+    if (tabIds.includes('parameters')) {
       setActiveTab('parameters');
     }
+    // A leftover group or "only modified / favourites" filter would hide the target.
+    useParameterStore.setState({ selectedGroup: 'all', showOnlyModified: false, showOnlyNonDefault: false, showOnlyFavourites: false });
     setSearchQuery(scrollTarget);
     clearScrollTarget();
   }, [scrollTarget, tabs, setSearchQuery, clearScrollTarget]);
 
   const activeGroup = useMemo(() => findGroupForTab(tabs, activeTab), [tabs, activeTab]);
-  const [openGroupId, setOpenGroupId] = useState<string | null>(null);
+  const openGroupId = useConfigTabMenuStore((s) => s.openGroupId);
+  const setOpenGroupId = useConfigTabMenuStore((s) => s.setOpenGroupId);
   const groupMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!openGroupId) return;
     const onDocClick = (e: MouseEvent) => {
       if (!groupMenuRef.current) return;
-      if (!groupMenuRef.current.contains(e.target as Node)) setOpenGroupId(null);
+      const target = e.target as Element;
+      // A tour card is showing this dropdown; clicking in it must not close it.
+      if (!groupMenuRef.current.contains(target) && !target.closest?.('.reactour__popover')) setOpenGroupId(null);
     };
     document.addEventListener('mousedown', onDocClick);
     return () => document.removeEventListener('mousedown', onDocClick);
-  }, [openGroupId]);
+  }, [openGroupId, setOpenGroupId]);
+
+  // Leaving the view closes any dropdown a tour left open.
+  useEffect(() => () => setOpenGroupId(null), [setOpenGroupId]);
 
   const [isWritingFlash, setIsWritingFlash] = useState(false);
   const [showWriteConfirm, setShowWriteConfirm] = useState(false);
@@ -684,7 +701,7 @@ export const MavlinkConfigView: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <div ref={groupMenuRef} className="flex gap-1.5 mt-4 flex-wrap items-center">
+        <div ref={groupMenuRef} className="flex gap-1.5 mt-4 flex-wrap items-center" data-tour="mavlink-tabs">
           {tabs.map((node) => {
             if (node.kind === 'group') {
               const isActive = activeGroup?.id === node.id;
@@ -708,7 +725,7 @@ export const MavlinkConfigView: React.FC = () => {
                     <ChevronDown className={`w-3.5 h-3.5 text-content-tertiary transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {isOpen && (
-                    <div className="absolute left-0 top-full mt-1 min-w-[200px] rounded-lg border border-subtle bg-surface-solid shadow-xl z-40 py-1">
+                    <div className="absolute left-0 top-full mt-1 min-w-[200px] rounded-lg border border-subtle bg-surface-solid shadow-xl z-40 py-1" data-tour={`mavlink-tab-menu-${node.id}`}>
                       {node.children.map((child) => {
                         const childActive = activeTab === child.id;
                         return (
@@ -738,6 +755,7 @@ export const MavlinkConfigView: React.FC = () => {
             return (
               <button
                 key={node.id}
+                data-tour={`mavlink-tab-${node.id}`}
                 onClick={() => setActiveTab(node.id)}
                 className={`px-3 py-2 rounded-lg flex items-center gap-2 transition-all ${
                   isActive

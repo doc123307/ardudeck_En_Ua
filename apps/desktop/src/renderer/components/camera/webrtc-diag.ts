@@ -56,8 +56,12 @@ export function trackPeer(label: string, pc: RTCPeerConnection): (remoteSdp: str
   pc.addEventListener('iceconnectionstatechange', () => mark(`ice:${pc.iceConnectionState}`));
   pc.addEventListener('connectionstatechange', () => mark(`conn:${pc.connectionState}`));
 
-  // Pair counters stop being readable once the connection is closed, so keep sampling early on.
-  const timer = setInterval(() => void snapshotPairs(rec), SNAPSHOT_MS);
+  // Pair counters stop being readable once the connection is closed, so keep sampling early
+  // on, and stop at once for an attempt that closed (a dropout makes many of those).
+  const timer = setInterval(() => {
+    if (pc.connectionState === 'closed') clearInterval(timer);
+    else void snapshotPairs(rec);
+  }, SNAPSHOT_MS);
   setTimeout(() => clearInterval(timer), SNAPSHOT_FOR_MS);
 
   return (remoteSdp: string) => { rec.remoteSdp = remoteSdp; };

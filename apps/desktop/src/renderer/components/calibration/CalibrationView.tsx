@@ -16,6 +16,8 @@ import { VehicleCalibrationPanel } from './VehicleCalibrationPanel';
 import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
 import { useVehicleProfileStore } from '../../stores/vehicle-profile-store';
 import { AD_FEAT, hasFeature } from '../../../shared/vehicle-profile';
+import { useNavigationStore } from '../../stores/navigation-store';
+import { CALIBRATION_TYPES, type CalibrationTypeId } from '../../../shared/calibration-types';
 
 export function CalibrationView() {
   const { currentStep, open } = useCalibrationStore();
@@ -24,9 +26,15 @@ export function CalibrationView() {
     (s) => (activeVehicleKey ? s.byVehicle[activeVehicleKey] : undefined),
   );
 
-  // Initialize calibration state when view mounts
+  // Initialize calibration state when view mounts. A deep link (setView('calibration',
+  // 'compass')) lands straight on that calibration instead of the chooser.
   useEffect(() => {
     open();
+    const { scrollTarget, clearScrollTarget } = useNavigationStore.getState();
+    if (scrollTarget && CALIBRATION_TYPES.some((t) => t.id === scrollTarget)) {
+      useCalibrationStore.getState().selectCalibrationType(scrollTarget as CalibrationTypeId);
+      clearScrollTarget();
+    }
   }, [open]);
 
   // A vehicle that described its own calibrations gets those, driven by its own routine.

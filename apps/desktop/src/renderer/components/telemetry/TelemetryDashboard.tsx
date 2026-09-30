@@ -1,5 +1,6 @@
 import { memo, useEffect, useRef, useState, useCallback, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { ClipboardPaste, Copy, Download, FileUp, Pencil, Share2, Trash2, Upload } from 'lucide-react';
 import {
   DockviewReact,
   DockviewReadyEvent,
@@ -22,6 +23,7 @@ import { useSettingsStore } from '../../stores/settings-store';
 import { useEditModeStore } from '../../stores/edit-mode-store';
 import { useTileCacheAreaStore } from '../../stores/tile-cache-area-store';
 import { useTelemetryLayoutStore } from '../../stores/telemetry-layout-store';
+import { useWorkspaceDialogStore } from '../../stores/workspace-dialog-store';
 import { useResolvedTheme } from '../../hooks/useTheme';
 import type { TelemetrySpeed } from '../../../shared/ipc-channels';
 import { formatAltitudeFromMeters, formatSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
@@ -55,6 +57,22 @@ import {
 } from '../panels';
 import { useArduPilotSitlStore } from '../../stores/ardupilot-sitl-store';
 import { useMapInstrumentsStore, resolveInstrumentVisible } from '../../stores/map-instruments-store';
+import {
+  BUILTIN_LAYOUTS,
+  DEFAULT_LAYOUT,
+  applyWorkspaceExtras,
+  captureWorkspace,
+  dockOf,
+  isBuiltinLayout,
+  isWorkspaceV2,
+  descriptionOf,
+  exportFileName,
+  exportPayload,
+  parseImport,
+  uniqueLayoutName,
+  withDescription,
+  type BuiltinLayoutKey,
+} from './workspace-layouts';
 import type { IDockviewHeaderActionsProps } from 'dockview-react';
 
 // Panel component wrapper for dockview. Plain — no decoration. The pop-out
@@ -201,413 +219,26 @@ const components: Record<string, React.FC<IDockviewPanelProps>> = {
   SitlFailureDockPanel: () => <PanelWrapper component={SitlFailureDockPanel} />,
 };
 
-// Preset layout definitions (pilotView is the default)
-const PRESET_LAYOUTS = {
-  pilotView: 'Pilot View',
-  fpv: 'FPV',
-  missionTelemetry: 'Mission Telemetry',
-  sitl: 'SITL',
-  allPanels: 'All Panels',
-} as const;
-
-// The default preset to load when no saved layout exists
-const DEFAULT_PRESET: PresetLayoutKey = 'pilotView';
-
-type PresetLayoutKey = keyof typeof PRESET_LAYOUTS;
-
-// Check if a layout name is a preset
-function isPresetLayout(name: string): name is PresetLayoutKey {
-  return name in PRESET_LAYOUTS;
-}
-
-// Pilot View preset. Map on top-left with Flight Control as a bottom bar under
-// it, and a compact telemetry stack (Battery, GPS, Altitude, Speed, Position)
-// down the right side. Attitude panel omitted since the map renders an attitude
-// overlay.
-const PILOT_VIEW_LAYOUT: SerializedDockview = {
-  grid: {
-    root: {
-      type: 'branch',
-      data: [
-        // Left column: Map on top, Flight Control as a bottom bar under it
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['map'], activeView: 'map', id: '1' }, size: 640 },
-            { type: 'leaf', data: { views: ['flightControl'], activeView: 'flightControl', id: '8' }, size: 240 },
-          ],
-          size: 900,
-        },
-        // Right telemetry stack (full height)
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['battery'], activeView: 'battery', id: '3' }, size: 180 },
-            { type: 'leaf', data: { views: ['gps'], activeView: 'gps', id: '4' }, size: 220 },
-            {
-              type: 'branch',
-              data: [
-                { type: 'leaf', data: { views: ['altitude'], activeView: 'altitude', id: '7' }, size: 160 },
-                { type: 'leaf', data: { views: ['speed'], activeView: 'speed', id: '6' }, size: 160 },
-              ],
-              size: 200,
-            },
-            { type: 'leaf', data: { views: ['position'], activeView: 'position', id: '5' }, size: 180 },
-          ],
-          size: 320,
-        },
-      ],
-      size: 880,
-    },
-    width: 1220,
-    height: 880,
-    orientation: Orientation.HORIZONTAL,
-  },
-  panels: {
-    map: { id: 'map', contentComponent: 'MapPanel', title: 'Map' },
-    flightControl: { id: 'flightControl', contentComponent: 'FlightControlPanel', title: 'Flight Control' },
-    battery: { id: 'battery', contentComponent: 'BatteryPanel', title: 'Battery' },
-    gps: { id: 'gps', contentComponent: 'GpsPanel', title: 'GPS' },
-    altitude: { id: 'altitude', contentComponent: 'AltitudePanel', title: 'Altitude' },
-    speed: { id: 'speed', contentComponent: 'SpeedPanel', title: 'Speed' },
-    position: { id: 'position', contentComponent: 'PositionPanel', title: 'Position' },
-  },
-  activeGroup: '1',
-};
-
-// FPV preset. Pilot View plus the Vision panel (live camera or synthetic SITL
-// view) beside the map. Map and Vision share the top row, Flight Control spans
-// the bottom under both, and the telemetry stack stays on the right.
-const FPV_LAYOUT: SerializedDockview = {
-  grid: {
-    root: {
-      type: 'branch',
-      data: [
-        // Left area: Map + Vision row on top, Flight Control bar underneath
-        {
-          type: 'branch',
-          data: [
-            {
-              type: 'branch',
-              data: [
-                { type: 'leaf', data: { views: ['map'], activeView: 'map', id: '1' }, size: 520 },
-                { type: 'leaf', data: { views: ['camera'], activeView: 'camera', id: '2' }, size: 420 },
-              ],
-              size: 640,
-            },
-            { type: 'leaf', data: { views: ['flightControl'], activeView: 'flightControl', id: '8' }, size: 240 },
-          ],
-          size: 940,
-        },
-        // Right telemetry stack (full height)
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['battery'], activeView: 'battery', id: '3' }, size: 180 },
-            { type: 'leaf', data: { views: ['gps'], activeView: 'gps', id: '4' }, size: 220 },
-            {
-              type: 'branch',
-              data: [
-                { type: 'leaf', data: { views: ['altitude'], activeView: 'altitude', id: '7' }, size: 160 },
-                { type: 'leaf', data: { views: ['speed'], activeView: 'speed', id: '6' }, size: 160 },
-              ],
-              size: 200,
-            },
-            { type: 'leaf', data: { views: ['position'], activeView: 'position', id: '5' }, size: 180 },
-          ],
-          size: 320,
-        },
-      ],
-      size: 880,
-    },
-    width: 1260,
-    height: 880,
-    orientation: Orientation.HORIZONTAL,
-  },
-  panels: {
-    map: { id: 'map', contentComponent: 'MapPanel', title: 'Map' },
-    camera: { id: 'camera', contentComponent: 'CameraPanel', title: 'Vision' },
-    flightControl: { id: 'flightControl', contentComponent: 'FlightControlPanel', title: 'Flight Control' },
-    battery: { id: 'battery', contentComponent: 'BatteryPanel', title: 'Battery' },
-    gps: { id: 'gps', contentComponent: 'GpsPanel', title: 'GPS' },
-    altitude: { id: 'altitude', contentComponent: 'AltitudePanel', title: 'Altitude' },
-    speed: { id: 'speed', contentComponent: 'SpeedPanel', title: 'Speed' },
-    position: { id: 'position', contentComponent: 'PositionPanel', title: 'Position' },
-  },
-  activeGroup: '1',
-};
-
-// Mission Telemetry preset - Map (with mission overlays) left, Waypoints/Battery top-right, AltProfile/Attitude bottom-right
-const MISSION_TELEMETRY_LAYOUT: SerializedDockview = {
-  grid: {
-    root: {
-      type: 'branch',
-      data: [
-        {
-          type: 'leaf',
-          data: { views: ['map'], activeView: 'map', id: '1' },
-          size: 807,
-        },
-        {
-          type: 'branch',
-          data: [
-            {
-              type: 'branch',
-              data: [
-                { type: 'leaf', data: { views: ['waypoints'], activeView: 'waypoints', id: '3' }, size: 476 },
-                { type: 'leaf', data: { views: ['battery'], activeView: 'battery', id: '4' }, size: 331 },
-              ],
-              size: 321,
-            },
-            {
-              type: 'branch',
-              data: [
-                { type: 'leaf', data: { views: ['altitudeProfile'], activeView: 'altitudeProfile', id: '2' }, size: 476 },
-                { type: 'leaf', data: { views: ['flightControl'], activeView: 'flightControl', id: '5' }, size: 331 },
-              ],
-              size: 401,
-            },
-          ],
-          size: 807,
-        },
-      ],
-      size: 722,
-    },
-    width: 1614,
-    height: 722,
-    orientation: Orientation.HORIZONTAL,
-  },
-  panels: {
-    map: { id: 'map', contentComponent: 'MapPanel', title: 'Map' }, // Uses unified MapPanel with mission overlays
-    altitudeProfile: { id: 'altitudeProfile', contentComponent: 'AltitudeProfilePanel', title: 'Altitude Profile' },
-    waypoints: { id: 'waypoints', contentComponent: 'WaypointTablePanel', title: 'Waypoints' },
-    battery: { id: 'battery', contentComponent: 'BatteryPanel', title: 'Battery' },
-    flightControl: { id: 'flightControl', contentComponent: 'FlightControlPanel', title: 'Flight Control' },
-  },
-  activeGroup: '5',
-};
-
-// All Panels preset. Every registered panel laid out at once. Related panels
-// that rarely need to be visible together are grouped as tabs (messages group,
-// mission group, SITL group) to keep the grid readable. Kept in sync with the
-// PANEL_COMPONENTS registry; add new panels here so this stays complete.
-const ALL_PANELS_LAYOUT: SerializedDockview = {
-  grid: {
-    root: {
-      type: 'branch',
-      data: [
-        // Column 1: flight control + attitude + altitude/speed
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['flightControl'], activeView: 'flightControl', id: '1' }, size: 340 },
-            { type: 'leaf', data: { views: ['attitude'], activeView: 'attitude', id: '2' }, size: 220 },
-            { type: 'leaf', data: { views: ['altitude'], activeView: 'altitude', id: '3' }, size: 150 },
-            { type: 'leaf', data: { views: ['speed'], activeView: 'speed', id: '4' }, size: 150 },
-          ],
-          size: 240,
-        },
-        // Column 2: Map + Messages / Pre-flight / Safety Monitor tabs
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['map'], activeView: 'map', id: '5' }, size: 580 },
-            { type: 'leaf', data: { views: ['messages', 'preflightCheck', 'safetyMonitor'], activeView: 'messages', id: '6' }, size: 260 },
-          ],
-          size: 560,
-        },
-        // Column 3: system status
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['battery'], activeView: 'battery', id: '7' }, size: 200 },
-            { type: 'leaf', data: { views: ['gps', 'rtk'], activeView: 'gps', id: '8' }, size: 160 },
-            { type: 'leaf', data: { views: ['position'], activeView: 'position', id: '9' }, size: 150 },
-            { type: 'leaf', data: { views: ['velocity'], activeView: 'velocity', id: '10' }, size: 150 },
-            { type: 'leaf', data: { views: ['flightMode'], activeView: 'flightMode', id: '11' }, size: 150 },
-          ],
-          size: 220,
-        },
-        // Column 4: Vision + mission tabs + SITL tabs
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['camera'], activeView: 'camera', id: '12' }, size: 300 },
-            { type: 'leaf', data: { views: ['waypoints', 'altitudeProfile'], activeView: 'waypoints', id: '13' }, size: 280 },
-            { type: 'leaf', data: { views: ['sitlFailures', 'sitlEnvironment'], activeView: 'sitlFailures', id: '14' }, size: 240 },
-          ],
-          size: 260,
-        },
-      ],
-      size: 880,
-    },
-    width: 1280,
-    height: 880,
-    orientation: Orientation.HORIZONTAL,
-  },
-  panels: {
-    flightControl: { id: 'flightControl', contentComponent: 'FlightControlPanel', title: 'Flight Control' },
-    attitude: { id: 'attitude', contentComponent: 'AttitudePanel', title: 'Attitude' },
-    altitude: { id: 'altitude', contentComponent: 'AltitudePanel', title: 'Altitude' },
-    speed: { id: 'speed', contentComponent: 'SpeedPanel', title: 'Speed' },
-    map: { id: 'map', contentComponent: 'MapPanel', title: 'Map' },
-    messages: { id: 'messages', contentComponent: 'MessagesPanel', title: 'Messages' },
-    preflightCheck: { id: 'preflightCheck', contentComponent: 'PreflightCheckCard', title: 'Pre-flight Checks' },
-    safetyMonitor: { id: 'safetyMonitor', contentComponent: 'SafetyMonitorPanel', title: 'Safety Monitor' },
-    battery: { id: 'battery', contentComponent: 'BatteryPanel', title: 'Battery' },
-    gps: { id: 'gps', contentComponent: 'GpsPanel', title: 'GPS' },
-    rtk: { id: 'rtk', contentComponent: 'NtripPanel', title: 'RTK / NTRIP' },
-    position: { id: 'position', contentComponent: 'PositionPanel', title: 'Position' },
-    velocity: { id: 'velocity', contentComponent: 'VelocityPanel', title: 'Velocity' },
-    flightMode: { id: 'flightMode', contentComponent: 'FlightModePanel', title: 'Flight Mode' },
-    camera: { id: 'camera', contentComponent: 'CameraPanel', title: 'Vision' },
-    waypoints: { id: 'waypoints', contentComponent: 'WaypointTablePanel', title: 'Waypoints' },
-    altitudeProfile: { id: 'altitudeProfile', contentComponent: 'AltitudeProfilePanel', title: 'Altitude Profile' },
-    sitlFailures: { id: 'sitlFailures', contentComponent: 'SitlFailureDockPanel', title: 'SITL Failures' },
-    sitlEnvironment: { id: 'sitlEnvironment', contentComponent: 'SitlEnvironmentDockPanel', title: 'SITL Environment' },
-  },
-  activeGroup: '5',
-};
-
-// SITL preset - Map + Messages center, Flight Control + telemetry left, GPS + SITL panels right
-const SITL_LAYOUT: SerializedDockview = {
-  grid: {
-    root: {
-      type: 'branch',
-      data: [
-        // Left column - core telemetry
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['flightControl'], activeView: 'flightControl', id: '1' }, size: 360 },
-            { type: 'leaf', data: { views: ['altitude'], activeView: 'altitude', id: '2' }, size: 260 },
-            { type: 'leaf', data: { views: ['speed'], activeView: 'speed', id: '3' }, size: 260 },
-          ],
-          size: 200,
-        },
-        // Center - Map + Messages
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['map'], activeView: 'map', id: '4' }, size: 650 },
-            { type: 'leaf', data: { views: ['messages'], activeView: 'messages', id: '5' }, size: 250 },
-          ],
-          size: 600,
-        },
-        // Right column - GPS + SITL controls (tabbed)
-        {
-          type: 'branch',
-          data: [
-            { type: 'leaf', data: { views: ['gps'], activeView: 'gps', id: '6' }, size: 200 },
-            { type: 'leaf', data: { views: ['sitlFailures', 'sitlEnvironment'], activeView: 'sitlFailures', id: '7' }, size: 700 },
-          ],
-          size: 280,
-        },
-      ],
-      size: 900,
-    },
-    width: 1080,
-    height: 900,
-    orientation: Orientation.HORIZONTAL,
-  },
-  panels: {
-    flightControl: { id: 'flightControl', contentComponent: 'FlightControlPanel', title: 'Flight Control' },
-    altitude: { id: 'altitude', contentComponent: 'AltitudePanel', title: 'Altitude' },
-    speed: { id: 'speed', contentComponent: 'SpeedPanel', title: 'Speed' },
-    map: { id: 'map', contentComponent: 'MapPanel', title: 'Map' },
-    messages: { id: 'messages', contentComponent: 'MessagesPanel', title: 'Messages' },
-    gps: { id: 'gps', contentComponent: 'GpsPanel', title: 'GPS' },
-    sitlFailures: { id: 'sitlFailures', contentComponent: 'SitlFailureDockPanel', title: 'SITL Failures' },
-    sitlEnvironment: { id: 'sitlEnvironment', contentComponent: 'SitlEnvironmentDockPanel', title: 'SITL Environment' },
-  },
-  activeGroup: '4',
-};
-
-// Legacy default layout configuration - Map center, panels on sides (used as fallback)
-function createDefaultLayout(api: DockviewApi): void {
-  // Main center group - Map (primary view)
-  const centerGroup = api.addGroup();
-  api.addPanel({
-    id: 'map',
-    component: 'MapPanel',
-    title: 'Map',
-    position: { referenceGroup: centerGroup },
-  });
-
-  // Left group - Flight control + altitude/speed
-  const leftGroup = api.addGroup({ direction: 'left', initialWidth: 260 });
-  api.addPanel({
-    id: 'flightControl',
-    component: 'FlightControlPanel',
-    title: 'Flight Control',
-    position: { referenceGroup: leftGroup },
-  });
-  api.addPanel({
-    id: 'altitude',
-    component: 'AltitudePanel',
-    title: 'Altitude',
-    position: { referenceGroup: leftGroup, index: 1 },
-  });
-  api.addPanel({
-    id: 'speed',
-    component: 'SpeedPanel',
-    title: 'Speed',
-    position: { referenceGroup: leftGroup, index: 2 },
-  });
-
-  // Right group - System status
-  const rightGroup = api.addGroup({ direction: 'right', initialWidth: 180 });
-  api.addPanel({
-    id: 'battery',
-    component: 'BatteryPanel',
-    title: 'Battery',
-    position: { referenceGroup: rightGroup },
-  });
-  api.addPanel({
-    id: 'gps',
-    component: 'GpsPanel',
-    title: 'GPS',
-    position: { referenceGroup: rightGroup, index: 1 },
-  });
-  api.addPanel({
-    id: 'position',
-    component: 'PositionPanel',
-    title: 'Position',
-    position: { referenceGroup: rightGroup, index: 2 },
-  });
-}
-
-// Load a preset layout by name
-function loadPresetLayout(api: DockviewApi, preset: PresetLayoutKey): void {
-  switch (preset) {
-    case 'pilotView':
-      api.fromJSON(PILOT_VIEW_LAYOUT);
-      break;
-    case 'fpv':
-      api.fromJSON(FPV_LAYOUT);
-      break;
-    case 'missionTelemetry':
-      api.fromJSON(MISSION_TELEMETRY_LAYOUT);
-      break;
-    case 'sitl':
-      api.fromJSON(SITL_LAYOUT);
-      break;
-    case 'allPanels':
-      api.fromJSON(ALL_PANELS_LAYOUT);
-      break;
-    default:
-      // Default to Pilot View
-      api.fromJSON(PILOT_VIEW_LAYOUT);
-      break;
-  }
+// Load a built-in layout: the grid plus its cockpit, split and render mode.
+function loadBuiltinLayout(api: DockviewApi, key: BuiltinLayoutKey): void {
+  const layout = BUILTIN_LAYOUTS[key].data();
+  api.fromJSON(layout.dock);
+  applyWorkspaceExtras(layout.extras);
 }
 
 interface WorkspaceProps {
-  onSave: (name: string) => void;
+  onSave: (name: string, description: string) => void;
   onLoad: (name: string) => void;
   onReset: () => void;
+  onEdit: (name: string, newName: string, description: string, replaceContents: boolean) => void;
+  onDelete: (name: string) => void;
+  /** How to share: copy the JSON, save a file, or the macOS share sheet. Resolves to feedback text. */
+  onShare: (name: string, how: 'copy' | 'file' | 'native') => Promise<string | null>;
+  /** Resolves to an error message, or null when the file was imported. */
+  onImport: (raw: string) => Promise<string | null>;
   onAddPanel: (id: string, component: string, title: string) => void;
   layouts: string[];
+  layoutDescriptions: Record<string, string>;
   activeLayout: string;
   supportsMissionPlanning: boolean;
   isMavlink: boolean;
@@ -620,8 +251,9 @@ interface WorkspaceProps {
 // (panel-layout presets, save/reset, offline-map capture, 2D/3D, Add panel)
 // now lives one click away, reclaiming a whole bar of vertical space.
 function WorkspaceButton(props: WorkspaceProps): JSX.Element {
-  const [open, setOpen] = useState(false);
-  const activeName = PRESET_LAYOUTS[props.activeLayout as keyof typeof PRESET_LAYOUTS] ?? props.activeLayout;
+  const open = useWorkspaceDialogStore((s) => s.open);
+  const setOpen = useWorkspaceDialogStore((s) => s.setOpen);
+  const activeName = isBuiltinLayout(props.activeLayout) ? BUILTIN_LAYOUTS[props.activeLayout].label : props.activeLayout;
   return (
     <>
       <button
@@ -668,12 +300,13 @@ function WsSection({ label, accent, icon, children }: { label: string; accent: s
 
 // White elevated card that lifts on hover; accent border + tint + check when
 // it is the active choice. Shared by the layout tiles and the add-panel grid.
-function WsCard({ accent, active = false, accentIcon = false, icon, label, onClick, dataTour }: {
+function WsCard({ accent, active = false, accentIcon = false, icon, label, description, onClick, dataTour }: {
   accent: string;
   active?: boolean;
   accentIcon?: boolean;
   icon: ReactNode;
   label: string;
+  description?: string;
   onClick: () => void;
   dataTour?: string;
 }): JSX.Element {
@@ -681,17 +314,181 @@ function WsCard({ accent, active = false, accentIcon = false, icon, label, onCli
     <button
       onClick={onClick}
       data-tour={dataTour}
-      className="group flex items-center gap-2 rounded-lg px-3 py-2.5 text-left text-xs bg-surface-solid shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+      className={'group flex h-full w-full min-w-0 gap-2 rounded-lg px-3 py-2.5 text-left text-xs bg-surface-solid shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 ' + (description ? 'items-start' : 'items-center')}
       style={{
         border: '1px solid',
         borderColor: active ? `color-mix(in srgb, ${accent} 55%, var(--border-default))` : 'var(--border-subtle)',
         background: active ? `color-mix(in srgb, ${accent} 8%, var(--bg-surface-solid))` : undefined,
       }}
     >
-      <span className={'shrink-0 ' + (active || accentIcon ? '' : 'text-content-tertiary')} style={active || accentIcon ? { color: accent } : undefined}>{icon}</span>
-      <span className={'flex-1 min-w-0 truncate ' + (active ? 'text-content font-medium' : 'text-content-secondary group-hover:text-content')}>{label}</span>
+      <span className={'shrink-0 ' + (description ? 'mt-px ' : '') + (active || accentIcon ? '' : 'text-content-tertiary')} style={active || accentIcon ? { color: accent } : undefined}>{icon}</span>
+      <span className="flex-1 min-w-0">
+        <span className={'block truncate ' + (active ? 'text-content font-medium' : 'text-content-secondary group-hover:text-content')}>{label}</span>
+        {description && (
+          <span className="mt-0.5 text-[10px] leading-snug text-content-tertiary line-clamp-2" title={description}>{description}</span>
+        )}
+      </span>
       {active && <span style={{ color: accent }}>{wsCheck}</span>}
     </button>
+  );
+}
+
+// Name and description of a layout, for save-as and edit. Sits above the Workspace dialog.
+function LayoutDetailsDialog({ title, initialName, initialDescription, taken, originalName, onCancel, onSubmit }: {
+  title: string;
+  initialName: string;
+  initialDescription: string;
+  taken: string[];
+  /** Layout being edited; null when saving a new one. */
+  originalName: string | null;
+  onCancel: () => void;
+  onSubmit: (name: string, description: string, replaceContents: boolean) => void;
+}): JSX.Element {
+  const [name, setName] = useState(initialName);
+  const [replaceContents, setReplaceContents] = useState(false);
+  const [description, setDescription] = useState(initialDescription);
+  const trimmed = name.trim();
+  const exists = trimmed !== '' && trimmed !== originalName && (taken.includes(trimmed) || isBuiltinLayout(trimmed));
+  // Saving over an existing name replaces it; renaming onto one is refused.
+  const replaces = exists && originalName === null && !isBuiltinLayout(trimmed);
+  const blocked = !trimmed || (exists && !replaces);
+  const submit = () => { if (!blocked) onSubmit(trimmed, description.trim(), replaceContents); };
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onCancel(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onCancel]);
+
+  return (
+    <>
+      <div className="fixed inset-0 z-[10000] bg-black/40" onClick={onCancel} />
+      <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 pointer-events-none">
+        <div className="pointer-events-auto w-full max-w-[380px] rounded-xl border border-subtle bg-surface-solid shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="px-4 py-3 border-b border-subtle text-sm font-semibold text-content">{title}</div>
+          <div className="space-y-3 p-4">
+            <label className="block">
+              <span className="mb-1 block text-[11px] text-content-secondary">Name</span>
+              <input
+                autoFocus
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+                className="w-full px-2.5 py-1.5 text-xs rounded-md bg-surface-input border border-default text-content focus:outline-none focus:border-blue-500"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-[11px] text-content-secondary">Description <span className="text-content-tertiary">(optional)</span></span>
+              <textarea
+                value={description}
+                rows={3}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full resize-none px-2.5 py-1.5 text-xs rounded-md bg-surface-input border border-default text-content focus:outline-none focus:border-blue-500"
+              />
+            </label>
+            {originalName !== null && (
+              <label className="flex cursor-pointer items-start gap-2 text-[11px] text-content-secondary">
+                <input
+                  type="checkbox"
+                  checked={replaceContents}
+                  onChange={(e) => setReplaceContents(e.target.checked)}
+                  className="mt-0.5 accent-blue-500"
+                />
+                <span>
+                  Replace contents with the current screen
+                  <span className="block text-[10px] text-content-tertiary">Panels, cockpit instruments, map split and vision mode as they are now.</span>
+                </span>
+              </label>
+            )}
+            {replaces && (
+              <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-2.5 py-1.5 text-[11px] text-amber-300">
+                A layout named &quot;{trimmed}&quot; already exists. Saving replaces it.
+              </div>
+            )}
+            {exists && !replaces && (
+              <div className="rounded-md border border-rose-500/30 bg-rose-500/10 px-2.5 py-1.5 text-[11px] text-rose-300">
+                That name is already taken.
+              </div>
+            )}
+          </div>
+          <div className="flex justify-end gap-2 border-t border-subtle px-4 py-3">
+            <button onClick={onCancel} className="px-3 py-1.5 text-xs rounded-md border border-subtle text-content-secondary hover:text-content transition-colors">Cancel</button>
+            <button
+              onClick={submit}
+              disabled={blocked}
+              className={'px-3 py-1.5 text-xs rounded-md text-white disabled:opacity-50 transition-colors ' + (replaces ? 'bg-amber-600 hover:bg-amber-500' : 'bg-blue-600 hover:bg-blue-500')}
+            >
+              {replaces ? 'Replace' : 'Save'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+const SHARE_ITEM = 'flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs text-content-secondary hover:bg-surface-raised hover:text-content';
+const LAYOUT_ACTION = 'p-1 rounded text-content-tertiary hover:text-content hover:bg-surface-raised transition-colors';
+
+// A saved layout: loads on click; edit, share and delete on hover.
+function SavedLayoutCard({ name, description, active, icon, onLoad, onEdit, onDelete, onShare }: {
+  name: string;
+  description?: string;
+  active: boolean;
+  icon: ReactNode;
+  onLoad: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onShare: (how: 'copy' | 'file' | 'native') => Promise<string | null>;
+}): JSX.Element {
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const share = async (how: 'copy' | 'file' | 'native') => {
+    setShareOpen(false);
+    const note = await onShare(how);
+    if (note) {
+      setFeedback(note);
+      window.setTimeout(() => setFeedback(null), 2000);
+    }
+  };
+
+  return (
+    <div className="group/saved relative min-w-0" onMouseLeave={() => setConfirmDelete(false)}>
+      <WsCard accent={WS_ACCENT.layout} active={active} icon={icon} label={name} description={description} onClick={onLoad} />
+      {feedback && (
+        <div className="pointer-events-none absolute inset-x-1.5 bottom-1.5 rounded bg-emerald-500/15 px-1.5 py-0.5 text-center text-[10px] text-emerald-400">{feedback}</div>
+      )}
+      {shareOpen && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setShareOpen(false)} />
+          <div className="absolute right-1.5 top-9 z-20 w-44 rounded-lg border border-default bg-surface-solid p-1 shadow-xl">
+            <button onClick={() => void share('copy')} className={SHARE_ITEM}><Copy className="w-3.5 h-3.5" />Copy to clipboard</button>
+            <button onClick={() => void share('file')} className={SHARE_ITEM}><Download className="w-3.5 h-3.5" />Save as file…</button>
+            {window.electronAPI?.canShareNatively && (
+              <button onClick={() => void share('native')} className={SHARE_ITEM}><Share2 className="w-3.5 h-3.5" />Share…</button>
+            )}
+          </div>
+        </>
+      )}
+      <div className={'absolute right-1.5 top-1.5 items-center gap-0.5 rounded-md border border-subtle bg-surface-solid px-0.5 py-0.5 shadow-sm ' + (shareOpen ? 'flex' : 'hidden group-hover/saved:flex')}>
+        {confirmDelete ? (
+          <button onClick={onDelete} className="px-1.5 py-0.5 rounded text-[10px] font-medium text-rose-300 bg-rose-500/15 hover:bg-rose-500/25">Delete?</button>
+        ) : (
+          <>
+            <button onClick={onEdit} className={LAYOUT_ACTION} data-tip="Rename or describe">
+              <Pencil className="w-3 h-3" />
+            </button>
+            <button onClick={() => setShareOpen((v) => !v)} className={LAYOUT_ACTION} data-tip="Share">
+              <Share2 className="w-3 h-3" />
+            </button>
+            <button onClick={() => setConfirmDelete(true)} className={LAYOUT_ACTION + ' hover:text-rose-400'} data-tip="Delete">
+              <Trash2 className="w-3 h-3" />
+            </button>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -763,14 +560,20 @@ function panelIcon(id: string): ReactNode {
 }
 
 function WorkspaceDialog(props: WorkspaceProps & { onClose: () => void }): JSX.Element {
-  const { onSave, onLoad, onReset, onAddPanel, layouts, activeLayout, supportsMissionPlanning, isMavlink, isSitlRunning, hasMapPanel, onClose } = props;
+  const { onSave, onLoad, onReset, onEdit, onDelete, onShare, onImport, onAddPanel, layouts, layoutDescriptions, activeLayout, supportsMissionPlanning, isMavlink, isSitlRunning, hasMapPanel, onClose } = props;
   const mapMode = useEditModeStore((s) => s.mapMode);
   const setMapMode = useEditModeStore((s) => s.setMapMode);
   const cacheActive = useTileCacheAreaStore((s) => s.active);
   const setCacheActive = useTileCacheAreaStore((s) => s.setActive);
   const telemetrySpeed = useSettingsStore((s) => s.telemetrySpeed);
   const setTelemetrySpeed = useSettingsStore((s) => s.setTelemetrySpeed);
-  const [savingName, setSavingName] = useState<string | null>(null);
+  // Save-as and edit share one small dialog; null when it is closed.
+  const [details, setDetails] = useState<{ mode: 'save' } | { mode: 'edit'; name: string } | null>(null);
+  const detailsOpen = useRef(false);
+  detailsOpen.current = details !== null;
+  const [importError, setImportError] = useState<string | null>(null);
+  const [importMenu, setImportMenu] = useState(false);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   const handleSpeedChange = (speed: TelemetrySpeed) => {
     setTelemetrySpeed(speed);
@@ -778,16 +581,14 @@ function WorkspaceDialog(props: WorkspaceProps & { onClose: () => void }): JSX.E
   };
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && !detailsOpen.current) onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  const availablePresets = Object.entries(PRESET_LAYOUTS).filter(([key]) => {
-    if (key === 'missionTelemetry' && !supportsMissionPlanning) return false;
-    if (key === 'sitl' && !isSitlRunning) return false;
-    return true;
-  });
+  const availablePresets = Object.entries(BUILTIN_LAYOUTS)
+    .filter(([, layout]) => !('needsMissions' in layout && layout.needsMissions) || supportsMissionPlanning)
+    .map(([key, layout]) => [key, layout.label, layout.description] as const);
   const availablePanels = Object.entries(PANEL_COMPONENTS).filter(([id]) => {
     if (MISSION_PANEL_IDS.includes(id) && !supportsMissionPlanning) return false;
     if (MAVLINK_PANEL_IDS.includes(id) && !isMavlink) return false;
@@ -795,11 +596,6 @@ function WorkspaceDialog(props: WorkspaceProps & { onClose: () => void }): JSX.E
     return true;
   });
 
-  const commitSave = () => {
-    const n = (savingName ?? '').trim();
-    if (n) onSave(n);
-    setSavingName(null);
-  };
 
   const bookmarkIcon = (<svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-4-7 4V5z" /></svg>);
   const plusIcon = (<svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>);
@@ -808,7 +604,7 @@ function WorkspaceDialog(props: WorkspaceProps & { onClose: () => void }): JSX.E
   return createPortal(
     <>
       <div className="fixed inset-0 z-[9998] bg-black/50" onClick={onClose} />
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6 pointer-events-none">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6 pointer-events-none" data-tour="workspace-dialog">
         <div className="pointer-events-auto w-full max-w-[600px] max-h-[85vh] flex flex-col rounded-xl bg-surface-solid border border-subtle shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center gap-2.5 px-4 py-3 border-b border-subtle">
             <svg className="w-4 h-4 text-content-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>
@@ -822,40 +618,89 @@ function WorkspaceDialog(props: WorkspaceProps & { onClose: () => void }): JSX.E
 
           <div className="overflow-y-auto p-4 space-y-6 bg-surface-base">
             <WsSection label="Panel layout" accent={WS_ACCENT.layout} icon={WS_ICONS.layout}>
+              <div className="mb-1.5 text-[10px] font-medium uppercase tracking-wide text-content-tertiary">Built-in</div>
               <div className="grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
-                {availablePresets.map(([key, name]) => (
-                  <WsCard key={key} accent={WS_ACCENT.layout} active={key === activeLayout} icon={WS_ICONS.layout} label={name} onClick={() => { onLoad(key); onClose(); }} />
-                ))}
-                {layouts.map((name) => (
-                  <WsCard key={name} accent={WS_ACCENT.layout} active={name === activeLayout} icon={bookmarkIcon} label={name} onClick={() => { onLoad(name); onClose(); }} />
+                {availablePresets.map(([key, name, description]) => (
+                  <WsCard key={key} accent={WS_ACCENT.layout} active={key === activeLayout} icon={WS_ICONS.layout} label={name} description={description} onClick={() => { onLoad(key); onClose(); }} />
                 ))}
               </div>
-              <div className="mt-3 flex items-center gap-2">
-                {savingName === null ? (
-                  <button onClick={() => setSavingName('')} className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-subtle text-xs text-content-secondary hover:text-content hover:border-default transition-colors">
-                    {plusIcon}
-                    Save current as…
-                  </button>
-                ) : (
-                  <div className="flex items-center gap-1">
-                    <input
-                      autoFocus
-                      type="text"
-                      value={savingName}
-                      placeholder="Layout name"
-                      onChange={(e) => setSavingName(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') commitSave(); if (e.key === 'Escape') setSavingName(null); }}
-                      className="w-40 px-2 py-1 text-xs rounded bg-surface-input border border-default text-content focus:outline-none focus:border-blue-500"
-                    />
-                    <button onClick={commitSave} disabled={!savingName.trim()} className="px-2.5 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 transition-colors">Save</button>
-                    <button onClick={() => setSavingName(null)} className="px-2.5 py-1 text-xs rounded border border-subtle text-content-secondary hover:text-content transition-colors">Cancel</button>
+              {layouts.length > 0 && (
+                <>
+                  <div className="mb-1.5 mt-4 text-[10px] font-medium uppercase tracking-wide text-content-tertiary">Saved</div>
+                  <div className="grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+                    {layouts.map((name) => (
+                      <SavedLayoutCard
+                        key={name}
+                        name={name}
+                        description={layoutDescriptions[name]}
+                        active={name === activeLayout}
+                        icon={bookmarkIcon}
+                        onLoad={() => { onLoad(name); onClose(); }}
+                        onEdit={() => setDetails({ mode: 'edit', name })}
+                        onDelete={() => onDelete(name)}
+                        onShare={(how) => onShare(name, how)}
+                      />
+                    ))}
                   </div>
-                )}
+                </>
+              )}
+              <div className="mt-3 flex items-center gap-2">
+                <button onClick={() => setDetails({ mode: 'save' })} className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-subtle text-xs text-content-secondary hover:text-content hover:border-default transition-colors">
+                  {plusIcon}
+                  Save current as…
+                </button>
+                <div className="relative">
+                  <button
+                    onClick={() => setImportMenu((v) => !v)}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-subtle text-xs text-content-secondary hover:text-content hover:border-default transition-colors"
+                    data-tip="Import a layout someone shared"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    Import
+                  </button>
+                  {importMenu && (
+                    <>
+                      <div className="fixed inset-0 z-10" onClick={() => setImportMenu(false)} />
+                      <div className="absolute left-0 top-8 z-20 w-48 rounded-lg border border-default bg-surface-solid p-1 shadow-xl">
+                        <button onClick={() => { setImportMenu(false); importInputRef.current?.click(); }} className={SHARE_ITEM}>
+                          <FileUp className="w-3.5 h-3.5" />From file…
+                        </button>
+                        <button
+                          onClick={async () => {
+                            setImportMenu(false);
+                            try {
+                              setImportError(await onImport(await navigator.clipboard.readText()));
+                            } catch {
+                              setImportError('Could not read the clipboard.');
+                            }
+                          }}
+                          className={SHARE_ITEM}
+                        >
+                          <ClipboardPaste className="w-3.5 h-3.5" />Paste from clipboard
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <input
+                  ref={importInputRef}
+                  type="file"
+                  accept=".json,application/json"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    e.target.value = '';
+                    if (file) setImportError(await onImport(await file.text()));
+                  }}
+                />
                 <button onClick={() => { onReset(); }} className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-subtle text-xs text-content-secondary hover:text-content hover:border-default transition-colors">
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h5M20 20v-5h-5M20 9A8 8 0 006.34 6.34M4 15a8 8 0 0013.66 2.66" /></svg>
                   Reset to preset
                 </button>
               </div>
+              {importError && (
+                <div className="mt-2 rounded-md border border-rose-500/30 bg-rose-500/10 px-2 py-1 text-[11px] text-rose-300">{importError}</div>
+              )}
             </WsSection>
 
             {isMavlink && (
@@ -904,7 +749,7 @@ function WorkspaceDialog(props: WorkspaceProps & { onClose: () => void }): JSX.E
                     icon={panelIcon(id)}
                     label={title}
                     onClick={() => onAddPanel(id, component, title)}
-                    dataTour={id === panelIds[0] ? 'add-panel' : undefined}
+                    dataTour={id === panelIds[0] ? 'add-panel' : id === 'rtk' ? 'add-panel-rtk' : undefined}
                   />
                 ))}
               </div>
@@ -912,6 +757,25 @@ function WorkspaceDialog(props: WorkspaceProps & { onClose: () => void }): JSX.E
           </div>
         </div>
       </div>
+      {details && (
+        <LayoutDetailsDialog
+          title={details.mode === 'save' ? 'Save layout' : 'Edit layout'}
+          initialName={details.mode === 'edit' ? details.name : ''}
+          initialDescription={details.mode === 'edit' ? layoutDescriptions[details.name] ?? '' : ''}
+          taken={layouts}
+          originalName={details.mode === 'edit' ? details.name : null}
+          onCancel={() => setDetails(null)}
+          onSubmit={(name, description, replaceContents) => {
+            if (details.mode === 'save') {
+              // Replacing without a new description keeps the one it had.
+              onSave(name, description || (layouts.includes(name) ? layoutDescriptions[name] ?? '' : ''));
+            } else {
+              onEdit(details.name, name, description, replaceContents);
+            }
+            setDetails(null);
+          }}
+        />
+      )}
     </>,
     document.body,
   );
@@ -1045,7 +909,7 @@ function QuickStatsBar({ trailing }: { trailing?: ReactNode }) {
 function TelemetryDashboardImpl() {
   const resolvedTheme = useResolvedTheme();
   const apiRef = useRef<DockviewApi | null>(null);
-  const { layouts, activeLayoutName, loadLayouts, saveLayout, setActiveLayout } = useLayoutStore();
+  const { layouts, activeLayoutName, loadLayouts, saveLayout, deleteLayout, setActiveLayout } = useLayoutStore();
   const connectionState = useConnectionStore((s) => s.connectionState);
   const [layoutLoaded, setLayoutLoaded] = useState(false);
   const [hasMapPanel, setHasMapPanel] = useState(true);
@@ -1091,11 +955,12 @@ function TelemetryDashboardImpl() {
   const onReady = useCallback(async (event: DockviewReadyEvent) => {
     apiRef.current = event.api;
 
-    // First, try to load auto-saved layout (most recent state)
+    // First, try to load auto-saved layout (most recent state). The cockpit, split and
+    // render mode persist in their own stores, so only the grid is restored here.
     try {
       const autoSaved = await window.electronAPI?.getLayout(TELEMETRY_AUTOSAVE_NAME);
       if (autoSaved?.data) {
-        event.api.fromJSON(autoSaved.data as SerializedDockview);
+        event.api.fromJSON(dockOf(autoSaved.data));
         setLayoutLoaded(true);
         return;
       }
@@ -1107,7 +972,8 @@ function TelemetryDashboardImpl() {
     const savedLayout = layouts[activeLayoutName];
     if (savedLayout?.data) {
       try {
-        event.api.fromJSON(savedLayout.data as SerializedDockview);
+        event.api.fromJSON(dockOf(savedLayout.data));
+        if (isWorkspaceV2(savedLayout.data) && savedLayout.data.extras) applyWorkspaceExtras(savedLayout.data.extras);
         setLayoutLoaded(true);
         return;
       } catch (e) {
@@ -1115,15 +981,15 @@ function TelemetryDashboardImpl() {
       }
     }
 
-    // Create default layout (Pilot View)
-    loadPresetLayout(event.api, DEFAULT_PRESET);
+    // First launch: the full Pilot workspace, cockpit and split included.
+    loadBuiltinLayout(event.api, DEFAULT_LAYOUT);
+    void setActiveLayout(DEFAULT_LAYOUT);
     setLayoutLoaded(true);
-  }, [layouts, activeLayoutName]);
+  }, [layouts, activeLayoutName, setActiveLayout]);
 
-  const handleSaveLayout = useCallback(async (name: string) => {
+  const handleSaveLayout = useCallback(async (name: string, description = '') => {
     if (!apiRef.current) return;
-    const data = apiRef.current.toJSON();
-    await saveLayout(name, data);
+    await saveLayout(name, captureWorkspace(apiRef.current.toJSON(), description));
     await setActiveLayout(name);
   }, [saveLayout, setActiveLayout]);
 
@@ -1131,33 +997,72 @@ function TelemetryDashboardImpl() {
     if (!apiRef.current) return;
     await setActiveLayout(name);
 
-    // Check if it's a preset layout
-    if (isPresetLayout(name)) {
+    if (isBuiltinLayout(name)) {
       apiRef.current.clear();
-      loadPresetLayout(apiRef.current, name);
+      loadBuiltinLayout(apiRef.current, name);
       return;
     }
 
-    // Otherwise load from saved layouts
+    // Saved layouts: v2 also restores its cockpit, split and render mode.
     const layout = layouts[name];
     if (layout?.data) {
       try {
-        apiRef.current.fromJSON(layout.data as SerializedDockview);
+        apiRef.current.fromJSON(dockOf(layout.data));
+        if (isWorkspaceV2(layout.data) && layout.data.extras) applyWorkspaceExtras(layout.data.extras);
       } catch (e) {
         console.warn('Failed to load layout:', e);
         apiRef.current.clear();
-        loadPresetLayout(apiRef.current, DEFAULT_PRESET);
+        loadBuiltinLayout(apiRef.current, DEFAULT_LAYOUT);
       }
     } else {
       apiRef.current.clear();
-      loadPresetLayout(apiRef.current, DEFAULT_PRESET);
+      loadBuiltinLayout(apiRef.current, DEFAULT_LAYOUT);
     }
   }, [layouts, setActiveLayout]);
+
+  const handleEditLayout = useCallback(async (name: string, newName: string, description: string, replaceContents: boolean) => {
+    const layout = layouts[name];
+    if (!layout) return;
+    const data = replaceContents && apiRef.current
+      ? captureWorkspace(apiRef.current.toJSON(), description)
+      : withDescription(layout.data, description);
+    await saveLayout(newName, data);
+    if (newName !== name) {
+      const wasActive = activeLayoutName === name;
+      await deleteLayout(name);
+      if (wasActive) await setActiveLayout(newName);
+    }
+  }, [layouts, activeLayoutName, saveLayout, deleteLayout, setActiveLayout]);
+
+  const handleShareLayout = useCallback(async (name: string, how: 'copy' | 'file' | 'native'): Promise<string | null> => {
+    const layout = layouts[name];
+    if (!layout) return null;
+    const payload = exportPayload(name, layout.data);
+    try {
+      if (how === 'copy') {
+        await navigator.clipboard.writeText(payload);
+        return 'Copied';
+      }
+      if (how === 'file') return (await window.electronAPI?.exportLayoutFile(exportFileName(name), payload)) ? 'Saved' : null;
+      await window.electronAPI?.shareLayout(exportFileName(name), payload);
+      return null;
+    } catch {
+      return 'Could not share';
+    }
+  }, [layouts]);
+
+  const handleImportLayout = useCallback(async (raw: string): Promise<string | null> => {
+    const result = parseImport(raw);
+    if ('error' in result) return result.error;
+    const visible = Object.keys(layouts).filter((n) => !n.startsWith('__'));
+    await saveLayout(uniqueLayoutName(result.name, visible), result.layout);
+    return null;
+  }, [layouts, saveLayout]);
 
   const handleResetLayout = useCallback(() => {
     if (!apiRef.current) return;
     apiRef.current.clear();
-    loadPresetLayout(apiRef.current, DEFAULT_PRESET);
+    loadBuiltinLayout(apiRef.current, DEFAULT_LAYOUT);
   }, []);
 
   const handleAddPanel = useCallback((id: string, component: string, title: string) => {
@@ -1211,9 +1116,9 @@ function TelemetryDashboardImpl() {
         existing?.api.setActive();
       },
       loadPreset: (presetKey) => {
-        if (!apiRef.current || !isPresetLayout(presetKey)) return;
+        if (!apiRef.current || !isBuiltinLayout(presetKey)) return;
         apiRef.current.clear();
-        loadPresetLayout(apiRef.current, presetKey);
+        loadBuiltinLayout(apiRef.current, presetKey);
       },
     });
     return () => {
@@ -1231,8 +1136,18 @@ function TelemetryDashboardImpl() {
             onSave={handleSaveLayout}
             onLoad={handleLoadLayout}
             onReset={handleResetLayout}
+            onEdit={(name, newName, description, replaceContents) => void handleEditLayout(name, newName, description, replaceContents)}
+            onDelete={(name) => void deleteLayout(name)}
+            onShare={handleShareLayout}
+            onImport={handleImportLayout}
             onAddPanel={handleAddPanel}
             layouts={Object.keys(layouts).filter(name => !name.startsWith('__'))}
+            layoutDescriptions={Object.fromEntries(
+              Object.entries(layouts).flatMap(([n, l]) => {
+                const d = descriptionOf(l.data);
+                return d ? [[n, d]] : [];
+              }),
+            )}
             activeLayout={activeLayoutName}
             supportsMissionPlanning={supportsMissionPlanning}
             isMavlink={connectionState.protocol === 'mavlink'}

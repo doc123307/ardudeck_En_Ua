@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { GuidesAndToursCard } from '../guides/GuidesAndToursList';
 import { DraftNumberInput } from '../../hooks/useNumericDraft';
 import { TileCacheCard } from './TileCacheCard';
 import { UnitSelectionCard } from './UnitSelectionCard';
@@ -1766,6 +1767,8 @@ export function SettingsView() {
             </div>
           </div>
 
+          <GuidesAndToursCard />
+
           <GroupShapeCard />
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -2308,8 +2311,6 @@ function ExperimentalFeaturesSection() {
   const setAdvancedCommandsUnlocked = useSettingsStore((s) => s.setAdvancedCommandsUnlocked);
   const defaultCommandAltFrame = useSettingsStore((s) => s.defaultCommandAltFrame);
   const setDefaultCommandAltFrame = useSettingsStore((s) => s.setDefaultCommandAltFrame);
-  const tourPromptsEnabled = useSettingsStore((s) => s.tourPromptsEnabled);
-  const setTourPromptsEnabled = useSettingsStore((s) => s.setTourPromptsEnabled);
 
   return (
     <div className="mt-8">
@@ -2384,31 +2385,6 @@ function ExperimentalFeaturesSection() {
             {advancedCommandsUnlocked && <ScriptInstallerActions />}
           </div>
 
-          {/* Feature tour prompts. The tours themselves stay available; this only
-              silences the automatic "want a walkthrough?" offers. */}
-          <div className="bg-surface-input rounded-lg p-3">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex-1">
-                <div className="text-sm text-content font-medium mb-0.5">Feature tour prompts</div>
-                <div className="text-xs text-content-secondary">
-                  Offer guided walkthroughs when opening a view for the first time.
-                </div>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={tourPromptsEnabled}
-                onClick={() => setTourPromptsEnabled(!tourPromptsEnabled)}
-                className={`relative w-9 h-5 rounded-full transition-colors shrink-0 ${
-                  tourPromptsEnabled ? 'bg-blue-600' : 'bg-surface-inset border border-subtle'
-                }`}
-              >
-                <div className={`w-4 h-4 rounded-full bg-white border border-strong shadow-sm absolute top-0.5 transition-all ${
-                  tourPromptsEnabled ? 'left-[18px]' : 'left-0.5'
-                }`} />
-              </button>
-            </div>
-          </div>
 
           {/* Default altitude reference for map commands (Fly here / Orbit).
               The popup selector is sticky and writes back here; this row makes

@@ -11,12 +11,34 @@ import type { FirmwareSource } from './firmware-types';
 
 export type PreArmCategory = 'motors' | 'sensors' | 'gps' | 'rc' | 'battery' | 'system' | 'mission';
 
-export interface PreArmFix {
-  params: string[];
-  hint: string;
-  action?: 'calibrate-accel' | 'calibrate-compass' | 'calibrate-rc';
-  navigateTo?: string;
+/** Where a quick fix sends the pilot: an app view (with its deep-link target) or a doc page. */
+export type PreArmLinkTarget =
+  | { kind: 'view'; view: string; target?: string }
+  | { kind: 'external'; url: string };
+
+export interface PreArmLink {
+  label: string;
+  to: PreArmLinkTarget;
 }
+
+/**
+ * A fix points at the place the cause is fixed. It never disables or loosens a check:
+ * a pilot who arms past a failing check is one bad decision from a crash.
+ */
+export interface PreArmFix {
+  hint: string;
+  links?: PreArmLink[];
+  /** Configuration parameters to review, never check bypasses (ARMING_CHECK, COM_ARM_*, CBRK_*). */
+  params?: string[];
+}
+
+const calibrate = (type: string, label: string): PreArmLink => ({ label, to: { kind: 'view', view: 'calibration', target: type } });
+const configTab = (tab: string, label: string): PreArmLink => ({ label, to: { kind: 'view', view: 'parameters', target: `tab:${tab}` } });
+const openView = (view: string, label: string): PreArmLink => ({ label, to: { kind: 'view', view } });
+const docs = (url: string, label: string): PreArmLink => ({ label, to: { kind: 'external', url } });
+
+const ARDUPILOT_PREARM_DOCS = 'https://ardupilot.org/copter/docs/common-prearm-safety-checks.html';
+const PX4_PREARM_DOCS = 'https://docs.px4.io/main/en/flying/pre_flight_checks.html';
 
 export interface PreArmPattern {
   pattern: RegExp;
@@ -37,143 +59,158 @@ export const PREARM_CATEGORIES: { id: PreArmCategory; label: string }[] = [
 const PREARM_PATTERNS: PreArmPattern[] = [
   // Motors
   {
-    pattern: /Motors:.*frame class/i,
+    pattern: /Motors:.*frame class|Check firmware or FRAME/i,
     category: 'motors',
-    fix: { params: ['FRAME_CLASS', 'FRAME_TYPE'], hint: 'Set your vehicle\'s frame layout' },
+    fix: { hint: 'The frame layout is not set for this vehicle. Set the frame class and type to match how the motors are arranged.', params: ['FRAME_CLASS', 'FRAME_TYPE'] },
   },
   {
-    pattern: /Check firmware or FRAME/i,
-    category: 'motors',
-    fix: { params: ['FRAME_CLASS'], hint: 'Select the correct frame class for your vehicle' },
+    pattern: /Throttle.*(too high|not low)|throttle.*(above|high)/i,
+    category: 'rc',
+    fix: { hint: 'Throttle is not at minimum. Pull the throttle stick fully down, and check its trim on the transmitter.', links: [configTab('receiver', 'Check RC inputs')] },
   },
   // Sensors
   {
+    pattern: /Compass.*(not calibrated|offsets)|Compass.*calibration/i,
+    category: 'sensors',
+    fix: { hint: 'The compass has not been calibrated, or its calibration no longer fits.', links: [calibrate('compass', 'Calibrate compass')] },
+  },
+  {
+    pattern: /Compasses inconsistent|Check mag field|mag field/i,
+    category: 'sensors',
+    fix: {
+      hint: 'The compass readings disagree or the magnetic field looks wrong. Move away from metal and power cables, check each compass orientation, then recalibrate.',
+      links: [calibrate('compass', 'Calibrate compass'), configTab('sensor-config', 'Compass setup')],
+    },
+  },
+  {
     pattern: /Compass not healthy/i,
     category: 'sensors',
-    fix: { params: ['COMPASS_ENABLE', 'COMPASS_USE'], hint: 'Enable or disable compass' },
+    fix: { hint: 'A compass is not responding. Check its wiring and that it is detected.', links: [configTab('sensor-config', 'Compass setup')] },
   },
   {
-    pattern: /Compass.*(not calibrated|offsets)/i,
+    pattern: /Gyros? (inconsistent|not calibrated|not healthy)/i,
     category: 'sensors',
-    fix: { params: [], hint: 'Compass needs calibration', action: 'calibrate-compass' },
+    fix: { hint: 'The gyros disagree or are not calibrated. Keep the vehicle completely still and reboot, or run a gyro calibration.', links: [calibrate('gyro', 'Calibrate gyro')] },
   },
   {
-    pattern: /Gyro.*(not calibrated|not healthy)/i,
+    pattern: /Accels? (inconsistent|not calibrated|not healthy|calibration needed)|Accel.*(not calibrated|calibration needed)/i,
     category: 'sensors',
-    fix: { params: ['INS_GYR_CAL'], hint: 'Gyro calibration setting' },
-  },
-  {
-    pattern: /Accel.*(not calibrated|not healthy|inconsistent|calibration needed)/i,
-    category: 'sensors',
-    fix: { params: [], hint: 'Accelerometer needs calibration.', action: 'calibrate-accel' },
+    fix: { hint: 'The accelerometers need calibration.', links: [calibrate('accel-6point', 'Calibrate accelerometer')] },
   },
   {
     pattern: /Baro.*not healthy/i,
     category: 'sensors',
-    fix: { params: ['BARO_ENABLE'], hint: 'Barometer configuration' },
+    fix: { hint: 'The barometer is not responding. Check the flight controller hardware and reboot.' },
+  },
+  {
+    pattern: /Airspeed.*not healthy|Airspeed.*(fail|not)/i,
+    category: 'sensors',
+    fix: { hint: 'The airspeed sensor is not responding. Check its wiring and the pitot tube.', links: [configTab('sensor-config', 'Sensor setup')] },
   },
   {
     pattern: /AHRS.*not healthy/i,
     category: 'sensors',
-    fix: { params: ['AHRS_EKF_TYPE'], hint: 'EKF/AHRS configuration' },
+    fix: { hint: 'The attitude estimate is not ready. Keep the vehicle still and give it a minute, or fix the sensor errors shown above.' },
   },
   {
     pattern: /Rangefinder.*not healthy/i,
     category: 'sensors',
-    fix: { params: ['RNGFND1_TYPE'], hint: 'Rangefinder configuration' },
+    fix: { hint: 'The rangefinder is not responding. Check its wiring. If none is fitted, its type must be set to none.', params: ['RNGFND1_TYPE'] },
   },
   // EKF / Estimation
   {
     pattern: /EKF.*attitude.*bad/i,
     category: 'sensors',
-    fix: { params: [], hint: 'EKF cannot converge. In SITL, restart with "Wipe EEPROM" and wait 60-90s after boot.' },
+    fix: { hint: 'The EKF cannot converge. Keep the vehicle still. In SITL, restart with "Wipe EEPROM" and wait 60-90 s after boot.', links: [openView('sitl', 'Open SITL')] },
   },
   {
     pattern: /AHRS.*inconsistent/i,
     category: 'sensors',
-    fix: { params: [], hint: 'IMU cores disagree - likely stale calibration data. Restart SITL with "Wipe EEPROM" enabled.' },
+    fix: { hint: 'The IMU cores disagree, usually stale calibration. Recalibrate the accelerometers. In SITL, restart with "Wipe EEPROM".', links: [calibrate('accel-6point', 'Calibrate accelerometer')] },
   },
   {
     pattern: /Need Position Estimate/i,
     category: 'sensors',
-    fix: { params: [], hint: 'EKF needs a valid position. Wait 60-90s after boot for convergence, or restart SITL with "Wipe EEPROM".' },
+    fix: { hint: 'The EKF needs a valid position. Wait for a GPS lock and 60-90 s after boot for it to converge.' },
   },
   {
     pattern: /Need Alt Estimate/i,
     category: 'sensors',
-    fix: { params: [], hint: 'EKF needs altitude estimate. Cascades from other sensor errors - fix those first.' },
+    fix: { hint: 'The EKF needs an altitude estimate. This follows from other sensor errors, fix those first.' },
   },
   {
     pattern: /Wait or rebo/i,
     category: 'sensors',
-    fix: { params: [], hint: 'ArduPilot is telling you to wait for sensors to settle or reboot the FC.' },
+    fix: { hint: 'The flight controller asks you to wait for the sensors to settle, or to reboot it.' },
   },
   // GPS
   {
-    pattern: /GPS.*(not ready|Bad|not healthy)/i,
-    category: 'gps',
-    fix: { params: ['GPS_TYPE'], hint: 'Configure GPS type or wait for fix' },
-  },
-  {
     pattern: /Need 3D Fix/i,
     category: 'gps',
-    fix: { params: [], hint: 'Waiting for GPS 3D fix — move to open sky' },
+    fix: { hint: 'Waiting for a GPS 3D fix. Move to open sky and wait.' },
+  },
+  {
+    pattern: /GPS.*(not ready|Bad|not healthy)/i,
+    category: 'gps',
+    fix: { hint: 'The GPS has no usable fix yet, or is not detected. Wait under open sky; if it persists, check the GPS setup.', links: [configTab('sensor-config', 'GPS setup')] },
   },
   // RC
   {
     pattern: /RC not calibrated/i,
     category: 'rc',
-    fix: {
-      params: ['RC1_MIN', 'RC1_MAX', 'RC2_MIN', 'RC2_MAX', 'RC3_MIN', 'RC3_MAX', 'RC4_MIN', 'RC4_MAX'],
-      hint: 'RC channels need calibration',
-      action: 'calibrate-rc',
-    },
+    fix: { hint: 'The radio channels have not been calibrated.', links: [configTab('receiver', 'Calibrate radio')] },
   },
   {
-    pattern: /Throttle.*below failsafe/i,
+    pattern: /Radio failsafe|RC failsafe|Throttle.*below failsafe/i,
     category: 'rc',
-    fix: { params: ['FS_THR_VALUE'], hint: 'Throttle failsafe threshold' },
+    fix: {
+      hint: 'The flight controller is in radio failsafe. Switch the transmitter on and check it is bound, and that its throttle range sits above the failsafe value.',
+      links: [configTab('receiver', 'Check RC inputs'), configTab('safety', 'Failsafe settings')],
+    },
   },
   // Battery
   {
-    pattern: /Battery.*(not healthy|too low|failsafe)/i,
+    pattern: /Battery.*(not healthy|too low|failsafe|below)/i,
     category: 'battery',
-    fix: { params: ['BATT_MONITOR', 'ARMING_VOLT_MIN'], hint: 'Battery monitor type / minimum voltage' },
+    fix: { hint: 'The battery is low or not reported correctly. Charge or replace it, and check the battery monitor if the reading looks wrong.', links: [configTab('battery', 'Battery setup')] },
   },
   // System
   {
-    pattern: /Logging.*not available/i,
+    pattern: /Logging.*(not available|failed)|No SD card|SD card/i,
     category: 'system',
-    fix: { params: ['LOG_BACKEND_TYPE'], hint: 'Configure logging backend' },
+    fix: { hint: 'Logging is not available: the SD card is missing, full or failed. Insert or replace the card.', links: [configTab('logging', 'Logging setup')] },
   },
   {
     pattern: /Hardware safety switch/i,
     category: 'system',
-    fix: { params: ['BRD_SAFETY_DEFLT'], hint: 'Disable hardware safety switch requirement' },
+    fix: { hint: 'Press and hold the safety switch on the vehicle until its light goes solid.' },
   },
   {
     pattern: /Check board type/i,
     category: 'system',
-    fix: { params: ['BRD_TYPE'], hint: 'Board type configuration' },
+    fix: { hint: 'The configured board type does not match this flight controller.', params: ['BRD_TYPE'] },
   },
   // Mission
   {
     pattern: /Fence.*(requires position|breach)/i,
     category: 'mission',
-    fix: { params: ['FENCE_ENABLE'], hint: 'Disable fence or wait for GPS' },
+    fix: { hint: 'The fence needs a position, or the vehicle is outside it. Wait for a GPS lock, or move the vehicle inside the fence.', links: [openView('mission', 'Open fence')] },
   },
   {
-    pattern: /Mission.*(not valid|no first item)/i,
+    pattern: /Mission.*(not valid|no first item)|missing takeoff/i,
     category: 'mission',
-    fix: { params: [], hint: 'Check mission in Mission tab', navigateTo: 'mission' },
+    fix: { hint: 'The mission cannot start as it is. Check it in the mission planner.', links: [openView('mission', 'Open mission')] },
   },
 ];
 
-// Generic fallback for any unmatched ArduPilot PreArm: message
+// Any ArduPilot pre-arm message without a known fix.
 const GENERIC_FALLBACK: PreArmPattern = {
   pattern: /.*/,
   category: 'system',
-  fix: { params: ['ARMING_CHECK'], hint: 'Disable this arming check via bitmask if not needed' },
+  fix: {
+    hint: 'No automatic fix is known for this check. The message comes straight from the flight controller; the pre-arm reference explains each one.',
+    links: [docs(ARDUPILOT_PREARM_DOCS, 'ArduPilot pre-arm reference')],
+  },
 };
 
 /**
@@ -198,92 +235,85 @@ const PX4_PREARM_PATTERNS: PreArmPattern[] = [
   {
     pattern: /(global position|position).*(not ready|denied|fail|estimate)|(estimator|position).*(not ready|fail)/i,
     category: 'gps',
-    fix: {
-      params: ['COM_ARM_WO_GPS', 'EKF2_AID_MASK'],
-      hint: 'Position estimate not ready. Wait for a 3D fix / position lock, or set COM_ARM_WO_GPS to allow arming without GPS if intentional.',
-    },
+    fix: { hint: 'The position estimate is not ready. Wait for a GPS lock under open sky and for the estimator to settle.' },
   },
   {
     pattern: /\b(gps|gnss)\b.*(fix|lock|not ready|fail)|need.*3d fix/i,
     category: 'gps',
-    fix: { params: ['COM_ARM_WO_GPS'], hint: 'Waiting for GPS fix. Move to open sky, or set COM_ARM_WO_GPS if arming without GPS is intended.' },
+    fix: { hint: 'Waiting for a GPS fix. Move to open sky and wait; if it persists, check the GPS setup.', links: [configTab('sensor-config', 'GPS setup')] },
   },
   // Sensors / calibration
   {
     pattern: /(compass|mag(netometer)?).*(not calibrated|inconsistent|fail|interference)/i,
     category: 'sensors',
-    fix: { params: ['COM_ARM_MAG_ANG_DEG'], hint: 'Magnetometer not calibrated or inconsistent. Run compass calibration; COM_ARM_MAG_ANG_DEG sets the allowed tolerance.', action: 'calibrate-compass' },
+    fix: { hint: 'The magnetometer is not calibrated, or its readings disagree. Move away from metal and power cables and recalibrate.', links: [calibrate('compass', 'Calibrate compass')] },
   },
   {
     pattern: /accel(erometer)?.*(not calibrated|inconsistent|fail)/i,
     category: 'sensors',
-    fix: { params: [], hint: 'Accelerometer not calibrated or inconsistent. Run accelerometer calibration.', action: 'calibrate-accel' },
+    fix: { hint: 'The accelerometer is not calibrated or inconsistent.', links: [calibrate('accel-6point', 'Calibrate accelerometer')] },
   },
   {
     pattern: /gyro(scope)?.*(not calibrated|inconsistent|fail)/i,
     category: 'sensors',
-    fix: { params: [], hint: 'Gyroscope not calibrated. Run gyro/sensor calibration and keep the vehicle still.' },
+    fix: { hint: 'The gyroscope is not calibrated. Keep the vehicle completely still during calibration.', links: [calibrate('gyro', 'Calibrate gyro')] },
   },
   {
     pattern: /(accelerometer.*clipping|high vibration|vibration)/i,
     category: 'sensors',
-    fix: { params: [], hint: 'High vibration / accelerometer clipping. Improve flight controller mounting and isolation.' },
+    fix: { hint: 'High vibration or accelerometer clipping. Improve the flight controller mounting and isolation, and balance the props.' },
   },
   {
     pattern: /(attitude|tilt).*(estimate|quality|too large|fail)|(estimator|quality).*(attitude|tilt)/i,
     category: 'sensors',
-    fix: { params: [], hint: 'Attitude estimate not stable. Level the vehicle, reduce vibration, and let the estimator settle.' },
+    fix: { hint: 'The attitude estimate is not stable. Level the vehicle, reduce vibration and let the estimator settle.' },
   },
   // RC / manual control
   {
     pattern: /(rc|radio|manual control).*(not calibrated|lost|fail|not configured)/i,
     category: 'rc',
-    fix: {
-      params: ['COM_RC_IN_MODE'],
-      hint: 'RC not calibrated or signal lost. Calibrate RC, or set COM_RC_IN_MODE for joystick / RC-optional operation.',
-      action: 'calibrate-rc',
-    },
+    fix: { hint: 'The radio is not calibrated or its signal is lost. Switch the transmitter on, check it is bound, and calibrate it.', links: [configTab('receiver', 'Calibrate radio')] },
   },
   // Battery
   {
     pattern: /(battery).*(low|unhealthy|warning|critical|not connected)/i,
     category: 'battery',
-    fix: { params: ['BAT_LOW_THR', 'BAT_CRIT_THR', 'COM_ARM_BAT_MIN_VOLT'], hint: 'Battery low or unhealthy. Charge the pack, or review BAT_LOW_THR / BAT_CRIT_THR / COM_ARM_BAT_MIN_VOLT thresholds.' },
+    fix: { hint: 'The battery is low or unhealthy. Charge or replace it, and check the battery setup if the reading looks wrong.', links: [configTab('battery', 'Battery setup')] },
   },
   // ESC / motors
   {
     pattern: /(esc|motor).*(fail|not|telemetry|unhealthy)/i,
     category: 'motors',
-    fix: { params: [], hint: 'ESC / motor problem detected. Check ESC wiring, telemetry, and motor outputs.' },
+    fix: { hint: 'An ESC or motor problem was detected. Check the ESC wiring, telemetry and motor outputs.' },
   },
   // Geofence
   {
     pattern: /(geofence|\bgf\b)/i,
     category: 'mission',
-    fix: { params: ['GF_ACTION'], hint: 'Geofence condition blocking arming. Review geofence setup or GF_ACTION.' },
+    fix: { hint: 'A geofence condition is blocking arming. Move the vehicle inside the fence, or review the fence.', links: [openView('mission', 'Open fence')] },
   },
   // Home position
   {
     pattern: /(home position|home not set)/i,
     category: 'mission',
-    fix: { params: ['COM_HOME_EN'], hint: 'Home position not set. Wait for a valid position so home can be captured.' },
+    fix: { hint: 'The home position is not set yet. Wait for a valid position so home can be captured.' },
   },
   // Kill switch / safety
   {
     pattern: /(kill switch|emergency)/i,
     category: 'system',
-    fix: { params: [], hint: 'Kill switch engaged. Disengage the kill switch before arming.' },
+    fix: { hint: 'The kill switch is engaged. Disengage it on the transmitter before arming.' },
   },
 ];
 
-/**
- * Generic fallback for an unmatched PX4 arming/preflight message. PX4 has no
- * single ARMING_CHECK bitmask, so this points at the relevant check params.
- */
+// Any PX4 arming or preflight failure without a known fix.
 const PX4_GENERIC_FALLBACK: PreArmPattern = {
   pattern: /.*/,
   category: 'system',
-  fix: { params: ['COM_ARM_WO_GPS', 'COM_PREARM_MODE'], hint: 'Arming/preflight check failed. Resolve the reported condition, or review the relevant COM_ARM_/COM_PREARM_ check parameters.' },
+  fix: {
+    hint: 'No automatic fix is known for this check. The message comes straight from the flight controller; the preflight check reference explains each one.',
+    links: [docs(PX4_PREARM_DOCS, 'PX4 preflight check reference')],
+  },
 };
 
 // PX4 STATUSTEXT prefixes for arming / preflight failures.

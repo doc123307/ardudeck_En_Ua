@@ -44,6 +44,16 @@ const LAYOUTS_STORAGE_KEY = 'map-instrument-layouts';
 // Pre-split cockpit snapshot. Persisted because the split itself survives a
 // relaunch; without this, restarting while split loses the state to restore.
 const SPLIT_RESTORE_KEY = 'map-instruments-split-restore';
+// Name of the preset or saved instrument layout last applied, so a workspace layout records it.
+const ACTIVE_PRESET_KEY = 'map-instruments-active-preset';
+
+function readActivePreset(): string | null {
+  try {
+    return localStorage.getItem(ACTIVE_PRESET_KEY);
+  } catch {
+    return null;
+  }
+}
 
 export const INSTRUMENT_SCALE_MIN = 0.5;
 export const INSTRUMENT_SCALE_MAX = 1.6;
@@ -187,7 +197,7 @@ function persist(s: PersistedMain): void {
   }
 }
 
-function sanitizeLayout(parsed: unknown): InstrumentLayoutSnapshot | null {
+export function sanitizeLayout(parsed: unknown): InstrumentLayoutSnapshot | null {
   if (!parsed || typeof parsed !== 'object') return null;
   const p = parsed as Record<string, unknown>;
   return {
@@ -248,6 +258,8 @@ interface MapInstrumentsStore {
   /** Bumped when a layout is applied; remounts widgets to re-read positions. */
   layoutRev: number;
   savedLayouts: Record<string, InstrumentLayoutSnapshot>;
+  /** Preset or saved instrument layout last applied by name; null for anything else. */
+  activePreset: string | null;
   toggle: (id: string) => void;
   setScale: (id: string, v: number) => void;
   setOpacity: (v: number) => void;
@@ -284,7 +296,12 @@ interface MapInstrumentsStore {
   enterSplitProfile: (profile: InstrumentLayoutSnapshot) => void;
   exitSplitProfile: () => void;
   saveLayout: (name: string) => void;
-  applyLayout: (layout: InstrumentLayoutSnapshot) => void;
+  applyLayout: (layout: InstrumentLayoutSnapshot, name?: string | null) => void;
+  /**
+   * Restore a workspace layout's cockpit: the instrument state plus the pre-split restore
+   * point (null when the layout is not split), so the split lifecycle keeps working after.
+   */
+  restoreWorkspace: (layout: InstrumentLayoutSnapshot, splitRestore: InstrumentLayoutSnapshot | null, preset: string | null) => void;
   deleteLayout: (name: string) => void;
   /** Store an imported (shared) layout under a name; sanitises the raw payload
    * and returns false if it is not a valid layout snapshot. */
@@ -334,6 +351,7 @@ export const useMapInstrumentsStore = create<MapInstrumentsStore>((set, get) => 
     groups: initial.groups,
     layoutRev: 0,
     savedLayouts: readStoredLayouts(),
+    activePreset: readActivePreset(),
 
     toggle: (id) => {
       const wasVisible = resolveInstrumentVisible(get().visible, id);
@@ -551,7 +569,12 @@ export const useMapInstrumentsStore = create<MapInstrumentsStore>((set, get) => 
       get().applyLayout(snapshot);
     },
 
-    applyLayout: (layout) => {
+    applyLayout: (layout, name = null) => {
+      try {
+        if (name) localStorage.setItem(ACTIVE_PRESET_KEY, name);
+        else localStorage.removeItem(ACTIVE_PRESET_KEY);
+      } catch { /* blocked */ }
+      set({ activePreset: name });
       const nextGroups = layout.groups ?? {};
       // Union of current and incoming group keys, so stale group positions
       // are cleared and incoming ones written.
@@ -570,6 +593,15 @@ export const useMapInstrumentsStore = create<MapInstrumentsStore>((set, get) => 
         layoutRev: get().layoutRev + 1,
       });
       persistMain();
+    },
+
+    restoreWorkspace: (layout, splitRestore, preset) => {
+      try {
+        if (splitRestore) localStorage.setItem(SPLIT_RESTORE_KEY, JSON.stringify(splitRestore));
+        else localStorage.removeItem(SPLIT_RESTORE_KEY);
+      } catch { /* full/blocked */ }
+      set({ splitSnapshot: splitRestore });
+      get().applyLayout(layout, preset);
     },
 
     deleteLayout: (name) => {

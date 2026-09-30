@@ -5,8 +5,9 @@
  * The detailed pattern (grid / crosshatch / perimeter / spiral) is still tuned
  * in the survey config panel after a type is chosen.
  */
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useRef, useSyncExternalStore } from 'react';
 import { useSurveyStore } from '../../stores/survey-store';
+import { useSurveyMenuStore } from '../../stores/survey-menu-store';
 import {
   listSurveyGenerators,
   subscribeSurveyGenerators,
@@ -77,17 +78,20 @@ export function SurveyStartButton() {
     [generatorsVersion],
   );
 
-  const [open, setOpen] = useState(false);
+  const open = useSurveyMenuStore((s) => s.open);
+  const setOpen = useSurveyMenuStore((s) => s.setOpen);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Element;
+      // Clicks in a tour card leave it open: the tour is showing this menu.
+      if (ref.current && !ref.current.contains(target) && !target.closest?.('.reactour__popover')) setOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [open]);
+  }, [open, setOpen]);
 
   const start = (pattern: SurveyPattern) => {
     activateSurvey();
@@ -110,7 +114,7 @@ export function SurveyStartButton() {
     <div ref={ref} className="relative">
       <button
         data-tour="mission-survey"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen(!open)}
         className="px-2.5 py-1.5 rounded text-xs font-medium bg-surface-solid border border-purple-400 shadow-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1.5"
         title="Plan a survey: area (polygon grid) or corridor (centerline strips)"
       >
@@ -125,7 +129,7 @@ export function SurveyStartButton() {
 
       {open && (
         // Opens upward: the mission toolbar is pinned to the bottom of the map.
-        <div className="absolute left-0 bottom-full mb-1 z-[1100] w-64 bg-surface-solid border border-subtle rounded-lg shadow-xl py-1">
+        <div data-tour="mission-survey-menu" className="absolute left-0 bottom-full mb-1 z-[1100] w-64 bg-surface-solid border border-subtle rounded-lg shadow-xl py-1">
           {SURVEY_TYPES.map((t) => (
             <button
               key={t.pattern}

@@ -35,6 +35,8 @@ interface ToursStore {
   gateTourId: string | null;
   /** Tour whose panels/layout consent gate is currently showing. */
   panelGateTourId: string | null;
+  /** Tour asked for by name (Settings replay); TourManager starts it and clears this. */
+  requestedTourId: string | null;
 
   markSeen: (id: string) => void;
   skipForSession: (id: string) => void;
@@ -45,6 +47,7 @@ interface ToursStore {
   setGateTour: (id: string | null) => void;
   setPanelGateTour: (id: string | null) => void;
   resetAll: () => void;
+  requestTour: (id: string | null) => void;
 }
 
 export const useToursStore = create<ToursStore>((set) => ({
@@ -55,6 +58,7 @@ export const useToursStore = create<ToursStore>((set) => ({
   pendingTourId: null,
   gateTourId: null,
   panelGateTourId: null,
+  requestedTourId: null,
 
   markSeen: (id) =>
     set((state) => {
@@ -77,6 +81,7 @@ export const useToursStore = create<ToursStore>((set) => ({
   setPendingTour: (id) => set({ pendingTourId: id }),
   setGateTour: (id) => set({ gateTourId: id }),
   setPanelGateTour: (id) => set({ panelGateTourId: id }),
+  requestTour: (id) => set({ requestedTourId: id, promptTourId: null }),
 
   resetAll: () => {
     persist(new Set());

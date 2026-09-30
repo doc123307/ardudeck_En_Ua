@@ -541,7 +541,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
               <button
                 key={name}
                 type="button"
-                onClick={() => applyLayout(layout)}
+                onClick={() => applyLayout(layout, name)}
                 className="rounded-lg border border-subtle bg-surface-solid shadow-sm px-3 py-2.5 text-left hover:border-default hover:shadow-md transition-all border-l-2"
                 style={{ borderLeftColor: a.edge }}
               >
@@ -565,7 +565,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
           )}
           {savedNames.map((name) => (
             <div key={name} className="flex items-center gap-0.5">
-              <button type="button" onClick={() => { const l = savedLayouts[name]; if (l) applyLayout(l); }} className={applyRow + ' flex-1 min-w-0'}>
+              <button type="button" onClick={() => { const l = savedLayouts[name]; if (l) applyLayout(l, name); }} className={applyRow + ' flex-1 min-w-0'}>
                 {layoutIcon}
                 <span className="truncate">{name}</span>
               </button>

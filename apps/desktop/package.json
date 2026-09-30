@@ -106,7 +106,7 @@
       }
     ],
     "npmRebuild": false,
-    "electronVersion": "28.3.3",
+    "electronVersion": "44.4.3",
     "publish": [
       {
         "provider": "github",
@@ -173,6 +173,16 @@
         "nsis",
         "portable"
       ]
+    },
+    "nsis": {
+      "artifactName": "${productName}-${version}-win-${arch}-setup.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-win-${arch}-portable.${ext}"
     },
     "mac": {
       "icon": "resources/icon.icns",

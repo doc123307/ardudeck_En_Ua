@@ -2576,6 +2576,11 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
     const isSplit = splitTarget !== null;
     prevSplitRef.current = splitTarget;
     if (isSplit === wasSplit) return;
+    // A workspace layout set this split and restored its own cockpit already.
+    if (useMapSplitStore.getState().consumeLayoutApply()) {
+      setSplitPrompt(false);
+      return;
+    }
     const store = useMapInstrumentsStore.getState();
     if (isSplit) {
       const mode = localStorage.getItem(SPLIT_LAYOUT_MODE_KEY) ?? 'ask';
@@ -2697,7 +2702,8 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
       )}
 
       {/* Instruments menu (top-left counterpart of the Layers menu) */}
-      <div data-arrange-chrome className="absolute top-2 left-2 z-[1000]">
+      {/* Above the instruments (z-1000): a docked group must never cover its own catalogue button. */}
+      <div data-arrange-chrome className="absolute top-2 left-2 z-[1100]">
         <InstrumentsMenu />
       </div>
 

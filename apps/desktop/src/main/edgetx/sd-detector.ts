@@ -12,8 +12,8 @@ import type { EdgeTxSdCard } from '../../shared/edgetx-types.js';
 
 export type { EdgeTxSdCard };
 
-/** Directories that mark a volume as an EdgeTX/OpenTX SD card. */
-const REQUIRED_DIRS = ['SCRIPTS', 'RADIO'];
+// EdgeTX writes RADIO/radio.yml itself; SCRIPTS only exists once the SD pack is copied on.
+const SIGNATURE_DIRS = ['SCRIPTS', 'RADIO'];
 
 /**
  * EdgeTX target name (radio.yml `board:`) -> screen variant + display name.
@@ -87,8 +87,11 @@ async function isDir(p: string): Promise<boolean> {
  * Returns null when the volume is not an EdgeTX card.
  */
 export async function probeVolume(volumePath: string): Promise<EdgeTxSdCard | null> {
-  for (const dir of REQUIRED_DIRS) {
-    if (!(await isDir(path.join(volumePath, dir)))) return null;
+  const hasRadioYml = await stat(path.join(volumePath, 'RADIO', 'radio.yml')).then((s) => s.isFile(), () => false);
+  if (!hasRadioYml) {
+    for (const dir of SIGNATURE_DIRS) {
+      if (!(await isDir(path.join(volumePath, dir)))) return null;
+    }
   }
 
   let sdCardVersion: string | null = null;

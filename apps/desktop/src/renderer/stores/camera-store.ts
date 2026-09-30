@@ -63,6 +63,8 @@ interface CameraState {
   gimbalAttitude: Record<string, GimbalAttitudeIpc>;
   gimbalInfo: Record<string, GimbalInfoIpc>;
   engineStatus: MediaEngineStatus | null;
+  /** Bumped by the Reconnect button; the player restarts that feed when its count changes. */
+  reconnectRequests: Record<string, number>;
 
   // Config actions
   /** Rebind persisted per-vehicle config from stale vehicle keys (transport id rotates on reconnect) to live ones by sysid suffix. */
@@ -89,6 +91,7 @@ interface CameraState {
   recordGimbalAttitude: (att: GimbalAttitudeIpc) => void;
   recordGimbalInfo: (info: GimbalInfoIpc) => void;
   setEngineStatus: (status: MediaEngineStatus) => void;
+  requestReconnect: (sourceId: string) => void;
 }
 
 export const useCameraStore = create<CameraState>()(
@@ -110,6 +113,7 @@ export const useCameraStore = create<CameraState>()(
 
       sessions: {},
       videoStreams: {},
+      reconnectRequests: {},
       gimbalAttitude: {},
       gimbalInfo: {},
       engineStatus: null,
@@ -215,6 +219,8 @@ export const useCameraStore = create<CameraState>()(
 
       recordVideoStream: (info) =>
         set((s) => ({ videoStreams: { ...s.videoStreams, [info.vehicleKey]: info } })),
+      requestReconnect: (sourceId) =>
+        set((s) => ({ reconnectRequests: { ...s.reconnectRequests, [sourceId]: (s.reconnectRequests[sourceId] ?? 0) + 1 } })),
       recordGimbalAttitude: (att) =>
         set((s) => ({ gimbalAttitude: { ...s.gimbalAttitude, [att.vehicleKey]: att } })),
       recordGimbalInfo: (info) =>

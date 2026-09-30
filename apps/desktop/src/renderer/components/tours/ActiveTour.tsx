@@ -11,7 +11,7 @@ interface ActiveTourProps {
   onAdvanceToTour: (nextTourId: string) => void;
 }
 
-function CloseWatcher({ onFinish }: { onFinish: () => void }) {
+function CloseWatcher({ onFinish, cleanup }: { onFinish: () => void; cleanup?: () => void }) {
   const { isOpen } = useTour();
   const wasOpenRef = useRef(false);
 
@@ -19,18 +19,29 @@ function CloseWatcher({ onFinish }: { onFinish: () => void }) {
     if (isOpen) {
       wasOpenRef.current = true;
     } else if (wasOpenRef.current) {
+      cleanup?.();
       onFinish();
     }
-  }, [isOpen, onFinish]);
+  }, [isOpen, onFinish, cleanup]);
 
   return null;
 }
 
+/** Runs a step's setup when it becomes current, so its anchor exists before reactour looks for it. */
+function StepSetupWatcher({ steps }: { steps: FeatureTour['steps'] }) {
+  const { currentStep } = useTour();
+  useEffect(() => {
+    steps[currentStep]?.setup?.();
+  }, [currentStep, steps]);
+  return null;
+}
+
 export function ActiveTour({ tour, onFinish, onAdvanceToTour }: ActiveTourProps) {
+  // Chain only within this view and only to tours that apply here, never across the app.
   const nextEligibleTour = (() => {
     const state = useToursStore.getState();
     return FEATURE_TOURS.find(
-      (t) => t.id !== tour.id && isTourEligible(t.id, state),
+      (t) => t.id !== tour.id && t.view === tour.view && isTourEligible(t.id, state) && (!t.predicate || t.predicate()),
     );
   })();
 
@@ -146,7 +157,8 @@ export function ActiveTour({ tour, onFinish, onAdvanceToTour }: ActiveTourProps)
         }),
       }}
     >
-      <CloseWatcher onFinish={onFinish} />
+      <StepSetupWatcher steps={activeSteps} />
+      <CloseWatcher onFinish={onFinish} cleanup={tour.cleanup} />
     </TourProvider>
   );
 }

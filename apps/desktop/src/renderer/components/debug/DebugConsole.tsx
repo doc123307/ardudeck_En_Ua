@@ -407,12 +407,7 @@ export function DebugConsole() {
 
                         {/* Expandable fix section */}
                         {prearmMatch && isExpanded && (
-                          <PreArmParamFix
-                            paramIds={prearmMatch.pattern.fix.params}
-                            hint={prearmMatch.pattern.fix.hint}
-                            action={prearmMatch.pattern.fix.action}
-                            navigateTo={prearmMatch.pattern.fix.navigateTo}
-                          />
+                          <PreArmParamFix fix={prearmMatch.pattern.fix} />
                         )}
                       </div>
                     );

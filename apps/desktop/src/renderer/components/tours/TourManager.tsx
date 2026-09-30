@@ -3,6 +3,7 @@ import { useNavigationStore } from '../../stores/navigation-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { useToursStore, isTourEligible } from '../../stores/tours-store';
 import { useSettingsStore } from '../../stores/settings-store';
+import { useGuidesStore } from '../../stores/guides-store';
 import { useTelemetryLayoutStore } from '../../stores/telemetry-layout-store';
 import { getToursForView, getTourById } from '../../feature-tours';
 import type { FeatureTour } from '../../feature-tours';
@@ -47,6 +48,8 @@ export function TourManager() {
   const setPanelGateTour = useToursStore((s) => s.setPanelGateTour);
 
   const tourPromptsEnabled = useSettingsStore((s) => s.tourPromptsEnabled);
+  const requestedTourId = useToursStore((s) => s.requestedTourId);
+  const requestTour = useToursStore((s) => s.requestTour);
 
   // Schedule a prompt for the first eligible tour on this view.
   useEffect(() => {
@@ -61,7 +64,10 @@ export function TourManager() {
     );
     if (!next) return;
     if (state.activeTourId || state.gateTourId || state.panelGateTourId) return;
-    const timer = setTimeout(() => showPrompt(next.id), PROMPT_DELAY_MS);
+    // A guide on screen goes first; the tour is offered on the next visit instead of on top of it.
+    const timer = setTimeout(() => {
+      if (useGuidesStore.getState().queue.length === 0) showPrompt(next.id);
+    }, PROMPT_DELAY_MS);
     return () => clearTimeout(timer);
   }, [currentView, showPrompt, tourPromptsEnabled]);
 
@@ -82,6 +88,21 @@ export function TourManager() {
     }, PENDING_START_DELAY_MS);
     return () => window.clearTimeout(id);
   }, [pendingTourId, isConnected, setPendingTour, setView]);
+
+  // Replay from Settings: start the named tour directly, no prompt.
+  useEffect(() => {
+    if (!requestedTourId) return;
+    const tour = getTourById(requestedTourId);
+    requestTour(null);
+    if (!tour || useToursStore.getState().activeTourId) return;
+    if (requiresConnection(tour) && !useConnectionStore.getState().connectionState.isConnected) {
+      setGateTour(tour.id);
+      return;
+    }
+    startTour(tour);
+    // startTour is recreated each render; the request is what should trigger this.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestedTourId]);
 
   const promptTour = promptTourId ? getTourById(promptTourId) : null;
   const activeTour = activeTourId ? getTourById(activeTourId) : null;

@@ -4,75 +4,7 @@ import { useConnectionStore } from '../../stores/connection-store';
 import { matchPreArmError } from '../../../shared/prearm-checks';
 import { PreArmParamFix } from '../prearm/PreArmParamFix';
 import { PanelContainer } from './panel-utils';
-
-/** Severity → Tailwind color class */
-function severityColor(severity: number): string {
-  switch (severity) {
-    case 0: // EMERGENCY
-    case 1: // ALERT
-    case 2: // CRITICAL
-      return 'text-red-400';
-    case 3: // ERROR
-      return 'text-red-400';
-    case 4: // WARNING
-      return 'text-amber-500';
-    case 5: // NOTICE
-      return 'text-blue-400';
-    case 6: // INFO
-      return 'text-content';
-    case 7: // DEBUG
-      return 'text-content-secondary';
-    default:
-      return 'text-content-secondary';
-  }
-}
-
-/** Severity → left border color */
-function severityBorder(severity: number): string {
-  switch (severity) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-      return 'border-l-red-500';
-    case 4:
-      return 'border-l-yellow-500';
-    case 5:
-      return 'border-l-blue-500';
-    case 6:
-      return 'border-l-subtle';
-    case 7:
-      return 'border-l-subtle';
-    default:
-      return 'border-l-subtle';
-  }
-}
-
-/** Severity badge bg color */
-function severityBadgeBg(severity: number): string {
-  switch (severity) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-      return 'bg-red-500/20 text-red-400';
-    case 4:
-      return 'bg-amber-500/20 text-amber-500';
-    case 5:
-      return 'bg-blue-500/20 text-blue-400';
-    case 6:
-      return 'bg-surface-raised text-content-secondary';
-    case 7:
-      return 'bg-surface-raised text-content-tertiary';
-    default:
-      return 'bg-surface-raised text-content-tertiary';
-  }
-}
-
-function formatTime(ts: number): string {
-  const d = new Date(ts);
-  return d.toLocaleTimeString('en-GB', { hour12: false });
-}
+import { MessageRowBody, formatTime, severityBorder } from '../messages/MessageRow';
 
 export function MessagesPanel() {
   const messages = useMessagesStore((s) => s.messages);
@@ -133,23 +65,7 @@ export function MessagesPanel() {
                     className={`flex items-start gap-2 px-3 py-1.5 border-l-2 ${severityBorder(msg.severity)} hover:bg-surface transition-colors ${prearmMatch ? 'cursor-pointer' : ''}`}
                     onClick={prearmMatch ? () => toggleExpand(msgKey) : undefined}
                   >
-                    {/* Severity badge */}
-                    <span className={`shrink-0 text-[9px] font-mono font-bold px-1 py-0.5 rounded ${severityBadgeBg(msg.severity)} mt-0.5`}>
-                      {msg.severityLabel.slice(0, 4)}
-                    </span>
-
-                    {/* Message text */}
-                    <span className={`flex-1 text-xs font-mono leading-relaxed ${severityColor(msg.severity)}`}>
-                      {msg.text}
-                    </span>
-
-                    {/* Count badge (for repeated messages) */}
-                    {msg.count > 1 && (
-                      <span className="shrink-0 text-[9px] font-mono bg-surface-raised text-content-secondary px-1.5 py-0.5 rounded-full mt-0.5">
-                        x{msg.count}
-                      </span>
-                    )}
-
+                    <MessageRowBody msg={msg} />
                     {/* Expand indicator for pre-arm messages */}
                     {prearmMatch && (
                       <span className="shrink-0 text-[10px] text-blue-400 mt-0.5">
@@ -165,12 +81,7 @@ export function MessagesPanel() {
 
                   {/* Expandable fix section */}
                   {prearmMatch && isExpanded && (
-                    <PreArmParamFix
-                      paramIds={prearmMatch.pattern.fix.params}
-                      hint={prearmMatch.pattern.fix.hint}
-                      action={prearmMatch.pattern.fix.action}
-                      navigateTo={prearmMatch.pattern.fix.navigateTo}
-                    />
+                    <PreArmParamFix fix={prearmMatch.pattern.fix} />
                   )}
                 </div>
               );

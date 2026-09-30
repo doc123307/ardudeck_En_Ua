@@ -3,7 +3,7 @@
  * Handles communication between renderer and main process
  */
 
-import { ipcMain, BrowserWindow, dialog, app, shell, safeStorage, session, webContents as allWebContents, type WebContents } from 'electron';
+import { ipcMain, BrowserWindow, dialog, app, shell, safeStorage, session, ShareMenu, webContents as allWebContents, type WebContents } from 'electron';
 import { join, dirname, basename } from 'path';
 import { existsSync, readFileSync, statSync } from 'fs';
 import { execFile as execFileCb } from 'node:child_process';
@@ -199,7 +199,8 @@ import { wfbngReceiver } from './media/wfbng-receiver.js';
 import { decodeServoOutputRaw } from './servo-output-decode.js';
 import { decodePx4ParamValue, encodePx4ParamSetValue } from './px4-param-bytewise.js';
 import { writeFile, readFile, mkdir } from 'node:fs/promises';
-import { networkInterfaces } from 'node:os';
+import { networkInterfaces, tmpdir } from 'node:os';
+import { writeFile as writeFileAsync } from 'node:fs/promises';
 import { sitlProcess } from './sitl/sitl-process.js';
 import { simEngineProcess } from './sim/sim-engine-process.js';
 import { mediaEngine } from './media/media-engine.js';
@@ -7046,6 +7047,27 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
     }
   });
 
+  // Sharing a workspace layout: a file where the user picks, or the macOS share sheet.
+  ipcMain.handle(IPC_CHANNELS.LAYOUT_EXPORT_FILE, async (e, fileName: string, content: string): Promise<string | null> => {
+    const win = BrowserWindow.fromWebContents(e.sender) ?? mainWindow;
+    const result = await dialog.showSaveDialog(win, {
+      title: 'Save workspace layout',
+      defaultPath: join(app.getPath('documents'), fileName),
+      filters: [{ name: 'ArduDeck workspace layout', extensions: ['json'] }],
+    });
+    if (result.canceled || !result.filePath) return null;
+    await writeFileAsync(result.filePath, content, 'utf8');
+    return result.filePath;
+  });
+  ipcMain.handle(IPC_CHANNELS.LAYOUT_SHARE, async (e, fileName: string, content: string): Promise<boolean> => {
+    if (process.platform !== 'darwin') return false;
+    const filePath = join(tmpdir(), fileName);
+    await writeFileAsync(filePath, content, 'utf8');
+    const win = BrowserWindow.fromWebContents(e.sender) ?? mainWindow;
+    new ShareMenu({ filePaths: [filePath] }).popup({ window: win });
+    return true;
+  });
+
   ipcMain.handle(IPC_CHANNELS.LAYOUT_SET_ACTIVE, async (_, name: string): Promise<void> => {
     layoutStore.set('activeLayout', name);
   });
@@ -13479,7 +13501,8 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
     const totalBytes = statSync(filePath).size;
     return new Promise((resolve, reject) => {
       let settled = false;
-      const worker = new Worker(join(__dirname, 'log-worker.js'), {
+      // import.meta.dirname (what __dirname compiles to) is Node 20.11+; this works on any runtime
+      const worker = new Worker(join(dirname(fileURLToPath(import.meta.url)), 'log-worker.js'), {
         workerData: { type: 'parse', filePath, fileName },
         // Headroom a big log needs; failing with a clear message beats an
         // opaque worker crash.

@@ -30,7 +30,7 @@ export function TourPrompt({ tour, onAccept, onDecline, onLater, onDisableAll }:
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'rgb(37 99 235)' }}>
-              New in v{tour.version}
+              Quick tour
             </span>
           </div>
           <h3 className="text-sm font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>

@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { Camera, Circle, Layers, SlidersHorizontal } from 'lucide-react';
+import { Camera, Circle, Layers, RotateCw, SlidersHorizontal } from 'lucide-react';
 import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
 import { useFleetVehicles, type FleetVehicle } from '../../hooks/useFleet';
 import { useCameraStore } from '../../stores/camera-store';
@@ -23,6 +23,8 @@ import { SyntheticVisionView } from './SyntheticVisionView';
 import { CameraSourceMenu } from './CameraSourceMenu';
 import { GimbalPad } from './GimbalPad';
 import { VisionStreamControl } from './VisionStream';
+import { CameraSourceSwitch } from './CameraSourceSwitch';
+import { VideoLinkBanner } from './VideoLinkBanner';
 import { describePeers } from './webrtc-diag';
 
 // Partial: the `waypoints` layer intentionally has no OSD toggle — the 3D
@@ -153,6 +155,8 @@ export function CameraPanel() {
           ))}
         </div>
 
+        {renderMode === 'live' && viewMode === 'follow' && targetKey && <CameraSourceSwitch vehicleKey={targetKey} />}
+
         {/* Follow / Grid toggle */}
         {fleet.length > 1 && (
           <div className="ml-1 flex overflow-hidden rounded-md border border-subtle">
@@ -191,6 +195,14 @@ export function CameraPanel() {
         {/* Capture — live feed only */}
         {renderMode === 'live' && (
           <>
+            <button
+              onClick={() => { if (liveSourceId) store.requestReconnect(liveSourceId); }}
+              disabled={!liveSourceId}
+              className={ICON_BTN}
+              data-tip="Reconnect the feed now"
+            >
+              <RotateCw className="h-3.5 w-3.5" />
+            </button>
             <button onClick={handleSnapshot} disabled={!liveSourceId} className={ICON_BTN} data-tip="Snapshot">
               <Camera className="h-3.5 w-3.5" />
             </button>
@@ -360,8 +372,9 @@ function FollowBody({ renderMode, syntheticFallback, targetVehicle, targetKey, a
 }) {
   const source = useCameraStore((s) => (liveSourceId ? s.sources[liveSourceId] : undefined));
   const [erroredId, setErroredId] = useState<string | null>(null);
+  const [lostAt, setLostAt] = useState<number | null>(null);
   // Re-arm the live feed whenever the source or the mode changes.
-  useEffect(() => { setErroredId(null); }, [source?.id, renderMode]);
+  useEffect(() => { setErroredId(null); setLostAt(null); }, [source?.id, renderMode]);
 
   if (!targetKey) {
     return <Empty>No vehicle selected. Connect or select a vehicle to view its feed.</Empty>;
@@ -386,21 +399,32 @@ function FollowBody({ renderMode, syntheticFallback, targetVehicle, targetKey, a
   // configured feed actually errored AND the vehicle has a position fix -
   // otherwise synthetic just shows a "needs GPS" dead end that hides the real
   // camera error, so keep the CameraView's own error state instead.
-  const feedErrored = !!source && erroredId === source.id;
-  const showSynthetic =
-    renderMode === 'synthetic' || (syntheticFallback && feedErrored && !!targetVehicle?.position);
-  if (showSynthetic) {
+  if (renderMode === 'synthetic' || !source) {
     return <SyntheticVisionView vehicle={targetVehicle} isPrimary={isPrimary} osd={osd} />;
   }
 
+  // The feed stays mounted under the fallback so it keeps retrying; its first frame lifts it.
+  // A dropout at range shows synthetic vision too: it is what gets the pilot home.
+  const feedErrored = erroredId === source.id;
+  const showFallback = syntheticFallback && (feedErrored || lostAt !== null) && !!targetVehicle?.position;
   return (
-    <CameraView
-      source={source!}
-      vehicle={targetVehicle}
-      isPrimary={isPrimary}
-      osd={osd}
-      onError={() => { if (syntheticFallback) setErroredId(source!.id); }}
-    />
+    <div className="relative h-full w-full">
+      <CameraView
+        source={source}
+        vehicle={targetVehicle}
+        isPrimary={isPrimary}
+        osd={osd}
+        onError={() => { if (syntheticFallback) setErroredId(source.id); }}
+        onLive={() => { setErroredId(null); setLostAt(null); }}
+        onSignalLost={() => setLostAt((t) => t ?? Date.now())}
+      />
+      {showFallback && (
+        <div className="absolute inset-0">
+          <SyntheticVisionView vehicle={targetVehicle} isPrimary={isPrimary} osd={osd} />
+          <VideoLinkBanner lostAt={lostAt} />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -442,27 +466,38 @@ function GridTile({ renderMode, syntheticFallback, vehicle, isActive, osd, onAct
   const sourceId = useCameraStore((s) => s.selectedByVehicle[vehicle.key]);
   const source = useCameraStore((s) => (sourceId ? s.sources[sourceId] : undefined));
   const [errored, setErrored] = useState(false);
-  useEffect(() => { setErrored(false); }, [source?.id, renderMode]);
+  const [lostAt, setLostAt] = useState<number | null>(null);
+  useEffect(() => { setErrored(false); setLostAt(null); }, [source?.id, renderMode]);
 
   // Live tile with no feed: render nothing rather than silently swapping to synthetic.
   if (renderMode === 'live' && !source) return null;
 
   // Same GPS-fix guard as the follow view: don't swap a failed feed for a
   // GPS-less synthetic tile.
-  const showSynthetic = renderMode === 'synthetic' || (syntheticFallback && errored && !!vehicle.position);
+  const showFallback = syntheticFallback && (errored || lostAt !== null) && !!vehicle.position;
   return (
     <div className={`relative overflow-hidden rounded ${isActive ? 'ring-2 ring-blue-500' : 'ring-1 ring-white/10'}`}>
-      {showSynthetic ? (
+      {renderMode === 'synthetic' || !source ? (
         <SyntheticVisionView vehicle={vehicle} isPrimary={isActive} osd={osd} onActivate={onActivate} />
       ) : (
-        <CameraView
-          source={source!}
-          vehicle={vehicle}
-          isPrimary={isActive}
-          osd={osd}
-          onActivate={onActivate}
-          onError={() => { if (syntheticFallback) setErrored(true); }}
-        />
+        <>
+          <CameraView
+            source={source}
+            vehicle={vehicle}
+            isPrimary={isActive}
+            osd={osd}
+            onActivate={onActivate}
+            onError={() => { if (syntheticFallback) setErrored(true); }}
+            onLive={() => { setErrored(false); setLostAt(null); }}
+            onSignalLost={() => setLostAt((t) => t ?? Date.now())}
+          />
+          {showFallback && (
+            <div className="absolute inset-0">
+              <SyntheticVisionView vehicle={vehicle} isPrimary={isActive} osd={osd} onActivate={onActivate} />
+              <VideoLinkBanner lostAt={lostAt} compact />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

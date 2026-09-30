@@ -181,6 +181,8 @@ export const IPC_CHANNELS = {
   LAYOUT_DELETE: 'layout:delete',
   LAYOUT_SET_ACTIVE: 'layout:set-active',
   LAYOUT_GET_ACTIVE: 'layout:get-active',
+  LAYOUT_EXPORT_FILE: 'layout:export-file',
+  LAYOUT_SHARE: 'layout:share',
 
   // Parameters
   PARAM_REQUEST_ALL: 'param:request-all',

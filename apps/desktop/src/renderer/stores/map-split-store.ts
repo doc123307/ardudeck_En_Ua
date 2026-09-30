@@ -57,6 +57,14 @@ interface MapSplitStore {
   /** Map (left) fraction of the content area, MIN..MAX. */
   ratio: number;
   setTarget: (target: PanelId | null) => void;
+  /**
+   * Set by a workspace layout, which brings its own cockpit: MapPanel must not swap in the
+   * split profile or ask. Consumed once by MapPanel's split effect.
+   */
+  applyFromLayout: (target: PanelId | null, ratio: number) => void;
+  /** True once after applyFromLayout changed whether the map is split. */
+  consumeLayoutApply: () => boolean;
+  layoutApplyPending: boolean;
   setRatio: (ratio: number) => void;
   clear: () => void;
 }
@@ -66,6 +74,19 @@ const initial = readStored();
 export const useMapSplitStore = create<MapSplitStore>((set, get) => ({
   target: initial.target,
   ratio: initial.ratio,
+  layoutApplyPending: false,
+  applyFromLayout: (target, ratio) => {
+    const next = target === 'map' ? null : target;
+    const flips = (get().target === null) !== (next === null);
+    const clamped = clampRatio(ratio);
+    set({ target: next, ratio: clamped, layoutApplyPending: flips });
+    persist({ target: next, ratio: clamped });
+  },
+  consumeLayoutApply: () => {
+    if (!get().layoutApplyPending) return false;
+    set({ layoutApplyPending: false });
+    return true;
+  },
   setTarget: (target) => {
     const next = target === 'map' ? null : target;
     set({ target: next });

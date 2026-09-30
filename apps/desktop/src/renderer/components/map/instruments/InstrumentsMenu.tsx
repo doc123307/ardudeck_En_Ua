@@ -31,6 +31,7 @@ export function InstrumentsMenu(): JSX.Element {
         type="button"
         onClick={() => setOpen(true)}
         data-tip="Map instruments"
+        data-tour="map-instruments"
         className="px-2 py-1 inline-flex items-center gap-1.5 rounded text-xs bg-surface text-content hover:bg-surface-raised shadow-lg transition-colors"
       >
         {gaugeIcon}

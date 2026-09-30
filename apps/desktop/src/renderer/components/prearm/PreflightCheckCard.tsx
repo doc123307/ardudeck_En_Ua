@@ -147,12 +147,7 @@ export function PreflightCheckCard() {
                       {err.reason}
                     </div>
                     <div className="pl-5">
-                      <PreArmParamFix
-                        paramIds={err.pattern.fix.params}
-                        hint={err.pattern.fix.hint}
-                        action={err.pattern.fix.action}
-                        navigateTo={err.pattern.fix.navigateTo}
-                      />
+                      <PreArmParamFix fix={err.pattern.fix} />
                     </div>
                   </div>
                 ))}

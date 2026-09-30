@@ -121,7 +121,7 @@ export function MissionLibraryView() {
   };
 
   const tabs = (
-    <div className="flex items-center bg-surface border border-subtle rounded-lg overflow-hidden">
+    <div className="flex items-center bg-surface border border-subtle rounded-lg overflow-hidden" data-tour="library-tabs">
       {(['missions', 'areas', 'projects'] as const).map((t) => (
         <button
           key={t}

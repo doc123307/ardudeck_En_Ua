@@ -38,6 +38,7 @@ import { RoundGauge, GAUGE_COLORS, gaugeArcPath, gaugePoint, valueToAngle, type 
 const USED_TRACK_R = 33;
 import { InstrumentShell } from './InstrumentShell';
 import { InstrumentStrip } from './InstrumentStrip';
+import { MessagesInstrument } from './MessagesInstrument';
 import { FlightControlInstrument } from './FlightControlInstrument';
 import { CompactReadout, type ReadoutSource } from './CompactReadout';
 import { PANEL_WIDTH } from './stripMetrics';
@@ -1298,6 +1299,7 @@ export const MAP_INSTRUMENTS: MapInstrumentDef[] = [
   { id: 'mission', label: 'Mission', defaultClassName: 'absolute left-[124px] top-[192px] z-[1000]', defaultVisible: false, Component: MissionInstrument },
   { id: 'annunciator', label: 'Annunciator', defaultClassName: 'absolute left-[124px] top-[268px] z-[1000]', defaultVisible: false, Component: AnnunciatorInstrument },
   { id: 'rtk', label: 'RTK', defaultClassName: 'absolute left-[124px] top-[600px] z-[1000]', defaultVisible: false, Component: RtkInstrument },
+  { id: 'messages', label: 'Messages', defaultClassName: 'absolute right-3 top-28 z-[1000]', defaultVisible: false, Component: MessagesInstrument },
   { id: 'controls', label: 'Flight control', defaultClassName: 'absolute left-[124px] top-[420px] z-[1000]', defaultVisible: false, Component: FlightControlInstrument, variants: [
     { id: 'compact', label: 'Compact', Component: () => <FlightControlInstrument variant="compact" /> },
     { id: 'bar', label: 'Bar', Component: () => <FlightControlInstrument variant="bar" /> },

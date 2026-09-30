@@ -1417,7 +1417,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                 <div className="flex flex-col">
                   {preArmReasons.map(({ reason, fix }, i) => {
                     const isExpanded = expandedPreArm.has(reason);
-                    const hasFixContent = fix.params.length > 0 || fix.action || fix.navigateTo;
+                    const hasFixContent = true; // every known and unknown pre-arm check carries a hint
                     return (
                       <div key={i}>
                         <div
@@ -1438,12 +1438,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                           )}
                         </div>
                         {isExpanded && (
-                          <PreArmParamFix
-                            paramIds={fix.params}
-                            hint={fix.hint}
-                            action={fix.action}
-                            navigateTo={fix.navigateTo}
-                          />
+                          <PreArmParamFix fix={fix} />
                         )}
                       </div>
                     );

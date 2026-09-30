@@ -316,7 +316,7 @@ export function SelectCalibrationStep() {
 
       {/* Calibration type grid */}
       {!isSensorsLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-tour="calibration-types">
           {availableTypes.map((calType) => {
             const noCompass = calType.id === 'compass' && protocol === 'mavlink' && compassMissing;
             const isAvailable = isCalibrationTypeAvailable(calType, sensors) && !noCompass;

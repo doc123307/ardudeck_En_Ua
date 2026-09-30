@@ -30,11 +30,15 @@ interface CameraViewProps {
   onActivate?: () => void;
   /** Fired when the feed fails to start (used to fall back to synthetic vision). */
   onError?: (error: string) => void;
+  /** Fired when the first frame is shown (used to leave the synthetic fallback). */
+  onLive?: () => void;
+  /** Fired when a playing feed stops delivering frames (link dropout). */
+  onSignalLost?: () => void;
 }
 
-export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onError }: CameraViewProps) {
+export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onError, onLive, onSignalLost }: CameraViewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { status, error, health } = useCameraStream(source, videoRef, onError);
+  const { status, error, health } = useCameraStream(source, videoRef, onError, onLive, onSignalLost);
   const showStats = useCameraStore((s) => s.showStats);
   const gimbal = useCameraStore((s) => s.gimbalAttitude[source.vehicleKey]);
   const gimbalCfg = useCameraStore((s) => s.gimbalByVehicle[source.vehicleKey]);
@@ -127,10 +131,12 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
               <div className="max-w-[80%] text-[11px] text-white/60">
                 The feed stopped delivering frames. Retrying automatically; replugging the device also recovers it.
               </div>
+              <ReconnectButton sourceId={source.id} />
             </>
           ) : (
             <>
               <div className="text-sm text-red-300">No video</div>
+              <ReconnectButton sourceId={source.id} />
               {/* The reason is the only diagnostic a field user can report, and
                   they report it by screenshot. Small grey text did not survive
                   that trip, so it is readable and selectable here. */}
@@ -149,5 +155,17 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
         </div>
       )}
     </div>
+  );
+}
+
+function ReconnectButton({ sourceId }: { sourceId: string }) {
+  const requestReconnect = useCameraStore((s) => s.requestReconnect);
+  return (
+    <button
+      onClick={() => requestReconnect(sourceId)}
+      className="rounded-md border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white hover:bg-white/20"
+    >
+      Reconnect now
+    </button>
   );
 }

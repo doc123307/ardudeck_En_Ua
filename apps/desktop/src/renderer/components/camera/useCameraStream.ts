@@ -13,7 +13,7 @@ import { useEffect, useRef, useState, type RefObject } from 'react';
 import type { CameraSourceConfig } from '../../../shared/camera-types';
 import { useCameraStore } from '../../stores/camera-store';
 import { playWhep } from './whep';
-import { createStallTracker, nextRetryDelayMs } from './stream-stall';
+import { createStallTracker, nextRetryDelayMs, FIRST_FRAME_TIMEOUT_MS, RECONNECT_MS, RECHECK_SESSION_EVERY } from './stream-stall';
 import { sampleFromReport, healthBetween, type StreamHealth, type StreamSample } from './stream-health';
 
 export type CameraStreamStatus = 'starting' | 'live' | 'stalled' | 'error';
@@ -63,6 +63,8 @@ export function useCameraStream(
   source: CameraSourceConfig,
   videoRef: RefObject<HTMLVideoElement>,
   onError?: (error: string) => void,
+  onLive?: () => void,
+  onSignalLost?: () => void,
 ): { status: CameraStreamStatus; error: string | null; health: StreamHealth | null } {
   const [status, setStatus] = useState<CameraStreamStatus>('starting');
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +73,14 @@ export function useCameraStream(
   const retryAttemptRef = useRef(0);
   const onErrorRef = useRef(onError);
   onErrorRef.current = onError;
+  const onLiveRef = useRef(onLive);
+  onLiveRef.current = onLive;
+  const onSignalLostRef = useRef(onSignalLost);
+  onSignalLostRef.current = onSignalLost;
   const advertisedUri = useCameraStore((s) => s.videoStreams[source.vehicleKey]?.uri);
+  const reconnectRequest = useCameraStore((s) => s.reconnectRequests[source.id] ?? 0);
+  // A manual reconnect starts fresh: no inherited backoff.
+  useEffect(() => { retryAttemptRef.current = 0; }, [reconnectRequest]);
 
   useEffect(() => {
     let pc: RTCPeerConnection | null = null;
@@ -83,13 +92,12 @@ export function useCameraStream(
     let statsInterval: ReturnType<typeof setInterval> | null = null;
     let lastSample: StreamSample | null = null;
     let retryTimer: ReturnType<typeof setTimeout> | null = null;
-    const tracker = createStallTracker();
-
-    const fail = (msg: string) => {
-      setStatus('error');
-      setError(msg);
-      onErrorRef.current?.(msg);
-    };
+    let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+    let firstFrameTimer: ReturnType<typeof setTimeout> | null = null;
+    let tracker = createStallTracker();
+    let whepUrl: string | null = null;
+    let reconnectAttempts = 0;
+    const resolved = resolveStreamUrl(source, advertisedUri);
 
     const scheduleRestart = (immediate = false) => {
       if (cancelled || retryTimer) return;
@@ -97,6 +105,39 @@ export function useCameraStream(
       retryTimer = setTimeout(() => {
         if (!cancelled) setRestartNonce((n) => n + 1);
       }, delay);
+    };
+
+    // Errors retry on the same backoff as stalls: a camera powered on later, or a URL
+    // that only now resolves, must come up without the user toggling anything.
+    const fail = (msg: string) => {
+      if (cancelled) return;
+      setStatus('error');
+      setError(msg);
+      onErrorRef.current?.(msg);
+      scheduleRestart();
+    };
+
+    /** Stop playing without touching the hub session, so a returning signal is picked up where it was. */
+    const dropPlayback = () => {
+      const video = videoRef.current;
+      if (rvfcHandle !== null && video) video.cancelVideoFrameCallback(rvfcHandle);
+      rvfcHandle = null;
+      if (stallInterval) clearInterval(stallInterval);
+      if (statsInterval) clearInterval(statsInterval);
+      if (firstFrameTimer) clearTimeout(firstFrameTimer);
+      stallInterval = statsInterval = firstFrameTimer = null;
+      lastSample = null;
+      if (pc) pc.close();
+      pc = null;
+      tracker = createStallTracker();
+    };
+
+    const scheduleReconnect = () => {
+      if (cancelled || reconnectTimer) return;
+      reconnectTimer = setTimeout(() => {
+        reconnectTimer = null;
+        void reconnect();
+      }, RECONNECT_MS);
     };
 
     const onDeviceChange = () => {
@@ -108,12 +149,21 @@ export function useCameraStream(
       }
     };
 
+    // A digital link dropping out at range is flight information, not a failure: say so,
+    // keep the hub pipeline up, and reconnect only the playback until frames return.
     const enterStalled = () => {
       if (cancelled || stalled) return;
       stalled = true;
       setStatus('stalled');
       setError(null);
-      scheduleRestart();
+      onSignalLostRef.current?.();
+      if (source.kind === 'uvc') {
+        scheduleRestart();
+        return;
+      }
+      dropPlayback();
+      reconnectAttempts = 0;
+      scheduleReconnect();
     };
 
     // The receiver counts loss, freezes and decode drops already. Sampling it
@@ -133,14 +183,31 @@ export function useCameraStream(
       }, 1000);
     };
 
+    // Live means a frame was shown, not that signalling succeeded: a connection that
+    // never carries video used to sit on a black "live" view with no error.
     const watchFrames = (video: HTMLVideoElement) => {
+      const frames = tracker;
+      firstFrameTimer = setTimeout(() => {
+        if (cancelled || frames.hasFrames()) return;
+        if (stalled) {
+          dropPlayback();
+          scheduleReconnect();
+        } else {
+          fail('No video arrived. The feed connected but sent no frames.');
+        }
+      }, FIRST_FRAME_TIMEOUT_MS);
       const loop = (): void => {
         rvfcHandle = video.requestVideoFrameCallback(() => {
-          tracker.onFrame(Date.now());
-          if (!cancelled && !stalled) {
-            retryAttemptRef.current = 0;
-            loop();
+          if (cancelled || frames !== tracker) return;
+          if (!frames.hasFrames()) {
+            if (firstFrameTimer) clearTimeout(firstFrameTimer);
+            stalled = false;
+            setStatus('live');
+            onLiveRef.current?.();
           }
+          frames.onFrame(Date.now());
+          retryAttemptRef.current = 0;
+          loop();
         });
       };
       loop();
@@ -148,6 +215,35 @@ export function useCameraStream(
         if (tracker.isStalled(Date.now())) enterStalled();
       }, 1000);
     };
+
+    const startPlayback = async (video: HTMLVideoElement, url: string) => {
+      const connection = await playWhep(video, url);
+      if (cancelled) { connection.close(); return; }
+      pc = connection;
+      // The hub ends the session when its publisher goes away; that is a dropout, not 3 s of waiting.
+      connection.addEventListener('connectionstatechange', () => {
+        if (pc === connection && connection.connectionState === 'failed') enterStalled();
+      });
+      watchFrames(video);
+      watchHealth(connection);
+    };
+
+    async function reconnect() {
+      const video = videoRef.current;
+      if (cancelled || !stalled || !video) return;
+      reconnectAttempts += 1;
+      try {
+        if (!whepUrl || reconnectAttempts % RECHECK_SESSION_EVERY === 0) {
+          const result = await window.electronAPI.cameraStart(source, resolved);
+          if (cancelled) return;
+          if (result.ok && result.session?.playback.kind === 'webrtc') whepUrl = result.session.playback.whepUrl;
+        }
+        if (!whepUrl) throw new Error('no playback url yet');
+        await startPlayback(video, whepUrl);
+      } catch {
+        if (!cancelled) scheduleReconnect();
+      }
+    }
 
     async function go() {
       setStatus('starting');
@@ -169,12 +265,10 @@ export function useCameraStream(
           video.srcObject = uvcStream;
           await video.play().catch(() => {});
           if (cancelled) return;
-          setStatus('live');
           watchFrames(video);
           return;
         }
 
-        const resolved = resolveStreamUrl(source, advertisedUri);
         const result = await window.electronAPI.cameraStart(source, resolved);
         if (cancelled) return;
         if (!result.ok || !result.session) {
@@ -183,11 +277,8 @@ export function useCameraStream(
         }
         const playback = result.session.playback;
         if (playback.kind === 'webrtc') {
-          pc = await playWhep(video, playback.whepUrl);
-          if (cancelled) { pc.close(); return; }
-          setStatus('live');
-          watchFrames(video);
-          watchHealth(pc);
+          whepUrl = playback.whepUrl;
+          await startPlayback(video, playback.whepUrl);
         } else if (playback.kind === 'uvc') {
           fail('Unexpected playback descriptor');
         }
@@ -210,16 +301,13 @@ export function useCameraStream(
       cancelled = true;
       navigator.mediaDevices?.removeEventListener?.('devicechange', onDeviceChange);
       if (retryTimer) clearTimeout(retryTimer);
-      if (stallInterval) clearInterval(stallInterval);
-      if (statsInterval) clearInterval(statsInterval);
-      const video = videoRef.current;
-      if (rvfcHandle !== null && video) video.cancelVideoFrameCallback(rvfcHandle);
-      if (pc) pc.close();
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      dropPlayback();
       if (uvcStream) uvcStream.getTracks().forEach((t) => t.stop());
       if (source.kind !== 'uvc') void window.electronAPI.cameraStop(source.id);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source.id, source.kind, source.url, source.deviceId, source.rtspTransport, advertisedUri, restartNonce]);
+  }, [source.id, source.kind, source.url, source.deviceId, source.rtspTransport, advertisedUri, restartNonce, reconnectRequest]);
 
   return { status, error, health };
 }
