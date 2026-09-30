@@ -105,8 +105,8 @@ export async function installApp(
   const needs = release?.minAppVersion;
   if (needs && compareSemver(app.getVersion(), needs) < 0) {
     throw new Error(
-      `${detail?.name ?? slug} needs ArduDeck ${needs} or newer (this is ${app.getVersion()}). ` +
-        'Update ArduDeck first.',
+      `${detail?.name ?? slug} needs STOHID ${needs} or newer (this is ${app.getVersion()}). ` +
+        'Update STOHID first.',
     );
   }
 

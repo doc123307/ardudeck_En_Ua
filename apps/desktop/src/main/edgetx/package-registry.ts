@@ -86,9 +86,9 @@ export const EDGETX_PACKAGES: EdgeTxPackage[] = [
   },
   {
     id: 'ardudeck-hud',
-    name: 'ArduDeck HUD',
+    name: 'STOHID HUD',
     description:
-      'Glanceable ArduDeck-styled flight screen: big honest numbers, armed/mode bar, live STATUSTEXT ticker, and a diagnostic ladder that tells you exactly why telemetry is missing instead of "no telemetry". Config is generated from your connected vehicle. All color radios; layouts rescale to the screen. B&W radios get a dense telemetry script, installed and wired to a telemetry screen for you.',
+      'Glanceable STOHID-styled flight screen: big honest numbers, armed/mode bar, live STATUSTEXT ticker, and a diagnostic ladder that tells you exactly why telemetry is missing instead of "no telemetry". Config is generated from your connected vehicle. All color radios; layouts rescale to the screen. B&W radios get a dense telemetry script, installed and wired to a telemetry screen for you.',
     homepage: 'https://ardudeck.com',
     license: 'GPL-3.0',
     source: { kind: 'bundled', dir: 'ardudeck-hud', version: '0.5.0' },

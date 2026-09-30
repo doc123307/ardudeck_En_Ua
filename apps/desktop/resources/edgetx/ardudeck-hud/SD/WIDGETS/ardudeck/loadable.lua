@@ -595,7 +595,7 @@ local function ladderState()
   local framesFresh = V.everFrame and (t - V.lastFrameT <= 300)
   if framesFresh then
     if t - V.lastStreamT > 300 then
-      return 'STREAMS OFF', 'FC not streaming - connect ArduDeck to fix rates', T.WARN
+      return 'STREAMS OFF', 'FC not streaming - connect STOHID to fix rates', T.WARN
     end
     return 'LIVE', nil, T.SUCCESS
   end
@@ -684,7 +684,7 @@ local function drawLadderBanner(state, hint, color)
     lcd.drawText(LCD_W / 2, 148, hint, 0 + CENTER + T.TEXT_2)
   end
   lcd.drawText(LCD_W / 2, LCD_H - 60, 'tap screen for demo mode', SMLSIZE + CENTER + T.TEXT_3)
-  lcd.drawText(LCD_W / 2, LCD_H - 34, 'ArduDeck', SMLSIZE + CENTER + T.ACCENT)
+  lcd.drawText(LCD_W / 2, LCD_H - 34, 'STOHID', SMLSIZE + CENTER + T.ACCENT)
 end
 
 local function tileFrame(x, y, w, h, caption)
@@ -1180,7 +1180,7 @@ TILE.map = function (x, y, w, h)
   local idx = pickMap()
   if not idx then
     lcd.drawText(x + w / 2, y + h / 2 - 10, 'no field maps', 0 + CENTER + T.TEXT_3)
-    lcd.drawText(x + w / 2, y + h / 2 + 10, 'prepare in ArduDeck', SMLSIZE + CENTER + T.TEXT_3)
+    lcd.drawText(x + w / 2, y + h / 2 + 10, 'prepare in STOHID', SMLSIZE + CENTER + T.TEXT_3)
     return
   end
   local m = MAPS[idx]
@@ -1422,8 +1422,8 @@ local function drawLive()
   if narrow then
     logoX = LCD_W - 8 - 20 -- logo only; no room for the wordmark
   else
-    local tw = lcd.sizeText('ArduDeck', SMLSIZE)
-    lcd.drawText(LCD_W - 8, 19, 'ArduDeck', SMLSIZE + RIGHT + VCENTER + T.TEXT)
+    local tw = lcd.sizeText('STOHID', SMLSIZE)
+    lcd.drawText(LCD_W - 8, 19, 'STOHID', SMLSIZE + RIGHT + VCENTER + T.TEXT)
     logoX = LCD_W - 8 - tw - 28
   end
   local bmp = currentTheme == 'light' and logoBmpLight or logoBmp

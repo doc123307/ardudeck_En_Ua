@@ -1,14 +1,14 @@
 {
   "name": "@ardudeck/desktop",
-  "version": "0.1.2-0.1",
-  "description": "ArduDeck - Desktop Application",
+  "version": "0.1.2-0.2",
+  "description": "STOHID - ground control station for unmanned ground vehicle systems",
   "author": {
-    "name": "rubenCodeforges",
-    "email": "ruben@codeforges.com"
+    "name": "STOHID",
+    "email": "stohid@users.noreply.github.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rubenCodeforges/ardudeck.git"
+    "url": "https://github.com/doc123307/ardudeck_En_Ua.git"
   },
   "main": "./out/main/index.js",
   "type": "module",
@@ -97,11 +97,11 @@
     "zod": "^4.3.6"
   },
   "build": {
-    "appId": "com.ardudeck.desktop",
-    "productName": "ArduDeck",
+    "appId": "com.stohid.gcs",
+    "productName": "STOHID",
     "protocols": [
       {
-        "name": "ArduDeck",
+        "name": "STOHID",
         "schemes": [
           "ardudeck"
         ]
@@ -112,8 +112,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "rubenCodeforges",
-        "repo": "ardudeck"
+        "owner": "doc123307",
+        "repo": "ardudeck_En_Ua"
       }
     ],
     "directories": {

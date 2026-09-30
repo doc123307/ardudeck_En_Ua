@@ -40,7 +40,7 @@ export function createSplashWindow(): BrowserWindow | null {
       // 20px breathing room and its top radar rings/glow aren't clipped by the
       // window edge. On Windows the surrounding margin is filled by backgroundColor.
       width: 480,
-      height: 380,
+      height: 420,
       frame: false,
       transparent: !isWin,
       resizable: false,
@@ -55,7 +55,7 @@ export function createSplashWindow(): BrowserWindow | null {
       // Transparent (mac/linux) needs no background/shadow. Opaque (Windows) gets
       // the navy card colour to avoid a white flash, and the native OS shadow.
       hasShadow: isWin,
-      backgroundColor: isWin ? '#0d1524' : undefined,
+      backgroundColor: isWin ? '#0c0c0e' : undefined,
       webPreferences: {
         // No preload, no node - it is a static page driven via executeJavaScript.
         contextIsolation: true,

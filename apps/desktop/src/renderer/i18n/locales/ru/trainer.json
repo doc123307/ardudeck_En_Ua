@@ -2,7 +2,7 @@
   "trainer": {
     "NewRegionDialog": {
       "theRegionCouldNotBeBuilt": "Не удалось построить регион.",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите ArduDeck, если Тренажёр только что обновился.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите «Стохід», если Тренажёр только что обновился.",
       "newRegion": "Новый регион",
       "anywhereOnEarthBuiltFromOpen": "Где угодно на Земле. Строится из открытых данных высот, снимков и карт.",
       "gettingStarted": "Начало",
@@ -59,7 +59,7 @@
       "newRegion": "Новый регион",
       "askingTheTrainerWhatItHas": "Запрос к Тренажёру о доступных регионах…",
       "couldNotDeleteThatRegion": "Не удалось удалить регион.",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите ArduDeck, если Тренажёр только что обновился.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите «Стохід», если Тренажёр только что обновился.",
       "readyToFly": "Готов к полёту",
       "unfinished": "Не завершено",
       "ground": "Поверхность",
@@ -75,7 +75,7 @@
     },
     "TrainerVehicleStep": {
       "vehicle": "Аппарат",
-      "theFrameComesFromTheFlight": "Рама берётся из полётного контроллера, запущенного в ArduDeck.",
+      "theFrameComesFromTheFlight": "Рама берётся из полётного контроллера, запущенного в «Стохід».",
       "goggles": "Очки",
       "theTrainerSOwn": "Собственный",
       "lens": "Объектив",
@@ -84,7 +84,8 @@
       "flightController": "Полётный контроллер",
       "whateverWasLastSetUpIn": "То, что последним настроено в лаунчере.",
       "stabilised": "Стабилизированная",
-      "waitingForAGpsFix": "ожидание GPS-фикса"
+      "waitingForAGpsFix": "ожидание GPS-фикса",
+      "brandKeepsIt": "Остаётся за «{{name}}»"
     },
     "TrainerView": {
       "region": "Регион",
@@ -93,7 +94,7 @@
       "timeWeatherAndWind": "Время, погода и ветер",
       "vehicle": "Аппарат",
       "cameraAndFrame": "Камера и рама",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите ArduDeck, если Тренажёр только что обновился.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите «Стохід», если Тренажёр только что обновился.",
       "theTrainerDidNotStart": "Тренажёр не запустился.",
       "readyToFly": "Готов к полёту",
       "checking": "Проверка…",

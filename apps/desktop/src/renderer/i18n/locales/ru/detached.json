@@ -4,10 +4,10 @@
       "unknownComponent": "Неизвестный компонент",
       "missing": "(отсутствует)",
       "isNotRegistered": "не зарегистрирован.",
-      "closeThisWindowAndReturnTo": "Закрыть это окно и вернуться в ArduDeck",
+      "closeThisWindowAndReturnTo": "Закрыть это окно и вернуться в «Стохід»",
       "dockBack": "Вернуть обратно",
       "pinnedOnTopClickToUnpin": "Закреплено поверх, щёлкните, чтобы открепить",
-      "keepThisWindowOnTopOf": "Держать это окно поверх ArduDeck",
+      "keepThisWindowOnTopOf": "Держать это окно поверх «Стохід»",
       "toggleAlwaysOnTop": "Переключить «поверх всех окон»"
     }
   }

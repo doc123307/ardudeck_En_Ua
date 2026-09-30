@@ -2702,12 +2702,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   // This is the same pattern ArduDeck's own ardudeck_commands.lua uses for AD_HB.
   {
     id: 'ad-heartbeat-beacon',
-    name: 'ArduDeck Heartbeat Beacon',
+    name: 'STOHID Heartbeat Beacon',
     get description() { return t('lua_graph.graph_templates.publishANamedValueFloatHeartbeat'); },
     category: 'FC Script',
     graph: {
       version: 1,
-      name: 'ArduDeck Heartbeat Beacon',
+      name: 'STOHID Heartbeat Beacon',
       get description() { return t('lua_graph.graph_templates.publishAdHbOncePerSecond'); },
       runIntervalMs: 100,
       createdAt: '2025-01-01T00:00:00.000Z',

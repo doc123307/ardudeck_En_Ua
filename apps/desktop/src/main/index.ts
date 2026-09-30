@@ -165,11 +165,11 @@ function maybeShowKeychainNotice(): void {
   if (!isUpgrade) return;
   dialog.showMessageBoxSync({
     type: 'info',
-    title: 'ArduDeck',
+    title: 'STOHID',
     message: mt('main.index.yourKeysAreProtected'),
     detail:
-      'ArduDeck encrypts the sensitive data you enter - AI provider API keys, map service keys and connection tokens - and keeps the encryption key in your macOS keychain, the same vault Safari uses for your passwords.\n\n' +
-      'Because macOS guards that vault, it may ask once whether ArduDeck can access "ardudeck Safe Storage". That is ArduDeck unlocking its own encryption key, nothing else.\n\n' +
+      'STOHID encrypts the sensitive data you enter - AI provider API keys, map service keys and connection tokens - and keeps the encryption key in your macOS keychain, the same vault Safari uses for your passwords.\n\n' +
+      'Because macOS guards that vault, it may ask once whether STOHID can access "ardudeck Safe Storage". That is STOHID unlocking its own encryption key, nothing else.\n\n' +
       'Click "Always Allow" and macOS will not ask again. Nothing is read from other apps and nothing ever leaves this computer.',
     buttons: [mt('main.index.gotIt')],
   });

@@ -4,10 +4,10 @@
       "unknownComponent": "Unknown component",
       "missing": "(missing)",
       "isNotRegistered": "is not registered.",
-      "closeThisWindowAndReturnTo": "Close this window and return to ArduDeck",
+      "closeThisWindowAndReturnTo": "Close this window and return to STOHID",
       "dockBack": "Dock back",
       "pinnedOnTopClickToUnpin": "Pinned on top, click to unpin",
-      "keepThisWindowOnTopOf": "Keep this window on top of ArduDeck",
+      "keepThisWindowOnTopOf": "Keep this window on top of STOHID",
       "toggleAlwaysOnTop": "Toggle always on top"
     }
   }

@@ -887,7 +887,7 @@ function HudPreview({
       <div style={{ position: 'relative', width: SCREEN_W, height: SCREEN_H, ...gridBg, fontFamily: 'Roboto, system-ui, sans-serif' }}>
         <div style={{ position: 'absolute', top: 84, width: '100%', textAlign: 'center', fontSize: 32, fontWeight: 700, color: banner.color }}>{banner.state}</div>
         <div style={{ position: 'absolute', top: 148, width: '100%', textAlign: 'center', fontSize: 15, color: C.text2 }}>{banner.hint}</div>
-        <div style={{ position: 'absolute', bottom: 22, width: '100%', textAlign: 'center', fontSize: 13, color: C.accent }}>ArduDeck</div>
+        <div style={{ position: 'absolute', bottom: 22, width: '100%', textAlign: 'center', fontSize: 13, color: C.accent }}>STOHID</div>
       </div>
     );
   }
@@ -931,7 +931,7 @@ function HudPreview({
           )}
           <span style={{ fontSize: 12, color: data.lq > 70 ? C.text2 : C.warn, marginRight: 4 }}>LQ {data.lq}</span>
           <img src={cfg.theme === 'light' ? logoLightUrl : logoUrl} style={{ width: 20, height: 20, borderRadius: cfg.theme === 'light' ? 4 : 0 }} alt="" />
-          {SCREEN_W >= 400 && <span style={{ fontSize: 12, color: C.text }}>ArduDeck</span>}
+          {SCREEN_W >= 400 && <span style={{ fontSize: 12, color: C.text }}>STOHID</span>}
         </div>
       </div>
 
@@ -1310,7 +1310,7 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
   const timer = `${String(Math.floor(data.flightSecs / 60)).padStart(2, '0')}:${String(data.flightSecs % 60).padStart(2, '0')}`;
   const ladder = mode === 'no-link' ? ['NO LINK', 'check RX power / binding']
     : mode === 'no-mavlink' ? ['NO MAVLINK', tr('radio_hud.RadioHudView.elrsMavlinkModeOff')]
-    : mode === 'streams-off' ? ['STREAMS OFF', 'connect ArduDeck once'] : null;
+    : mode === 'streams-off' ? ['STREAMS OFF', 'connect STOHID once'] : null;
   // horizon geometry, same math as the Lua
   const wide = screenW > 150;
   const hx = wide ? 62 : 50;
@@ -1363,7 +1363,7 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
             <>
               <Txt x={screenW / 2 - ladder[0]!.length * 3.4} y={18} size={SML * 2}>{ladder[0]}</Txt>
               <Txt x={screenW / 2 - ladder[1]!.length * 1.7} y={40}>{ladder[1]}</Txt>
-              <Txt x={1} y={56.6}>ArduDeck</Txt>
+              <Txt x={1} y={56.6}>STOHID</Txt>
             </>
           ) : (
             <>
@@ -1374,7 +1374,7 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
               <Strip y={56} />
               <Txt x={1} y={56.6} inv>
                 {data.messages[0]?.text.slice(0, Math.floor(screenW / 5))
-                  ?? `${cfg.name || 'ArduDeck'}  ${data.armed ? 'ARMED' : 'DISARMED'}`}
+                  ?? `${cfg.name || 'STOHID'}  ${data.armed ? 'ARMED' : 'DISARMED'}`}
               </Txt>
               {page === 1 ? (
                 <>

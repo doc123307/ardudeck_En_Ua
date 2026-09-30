@@ -1090,7 +1090,7 @@ function App() {
           <div className="text-center max-w-2xl">
             {/* Logo */}
             <div className="mx-auto w-48 h-48 mb-6 rounded-3xl overflow-hidden">
-              <img src={logoImage} alt="ArduDeck" className="w-full h-full object-cover" />
+              <img src={logoImage} alt={t('brand.name')} className="w-full h-full object-cover" />
             </div>
 
             <h2 className="text-2xl font-semibold text-content mb-3">

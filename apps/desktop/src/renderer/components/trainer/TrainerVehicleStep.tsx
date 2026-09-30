@@ -133,7 +133,7 @@ export function TrainerVehicleStep({
               : t('trainer.TrainerVehicleStep.waitingForAGpsFix')
           }
         />
-        <Row label={t('trainer.TrainerVehicleStep.flightController')} value="ArduDeck keeps it" />
+        <Row label={t('trainer.TrainerVehicleStep.flightController')} value={t('trainer.TrainerVehicleStep.brandKeepsIt', { name: t('brand.name') })} />
       </div>
     </div>
   );

@@ -79,6 +79,6 @@ describe('buildDjiWpml', () => {
   it('stamps create/update time into template.kml', () => {
     const { templateKml } = buildDjiWpml([item({})], 1784557935882);
     expect(templateKml).toContain('<wpml:createTime>1784557935882</wpml:createTime>');
-    expect(templateKml).toContain('<wpml:author>ArduDeck</wpml:author>');
+    expect(templateKml).toContain('<wpml:author>STOHID</wpml:author>');
   });
 });

@@ -15,7 +15,7 @@
       "installed": "{{name}} installed."
     },
     "area_editor_window": {
-      "ardudeckAreaEditor": "ArduDeck Area Editor"
+      "ardudeckAreaEditor": "STOHID Area Editor"
     },
     "calibration_calibration_handlers": {
       "calibration": "[Calibration] {{message}}",
@@ -219,7 +219,7 @@
       "tokenRejectedByGithub": "Token rejected by GitHub",
       "aTokenWithWriteAccessTo": "A token with write access to the repository is required",
       "notConnectedToGithub": "Not connected to GitHub",
-      "ardudeckFleetVault": "ArduDeck fleet vault",
+      "ardudeckFleetVault": "STOHID fleet vault",
       "githubRepoCreationFailed": "GitHub repo creation failed ({{status}})",
       "repositoryExistsButIsNotAccessible": "Repository \"{{name}}\" exists but is not accessible",
       "couldNotListRepositories": "Could not list repositories ({{status}})",
@@ -268,7 +268,7 @@
       "noBoardIdentity": "No board identity",
       "unknownVehicleType": "Unknown vehicle type: {{mavType}}",
       "http": "HTTP {{status}}: {{statusText}}",
-      "sitlIsConnectedButArdudeckHas": "SITL is connected but ArduDeck has lost track of the launcher config - restart SITL from the connection panel.",
+      "sitlIsConnectedButArdudeckHas": "SITL is connected but STOHID has lost track of the launcher config - restart SITL from the connection panel.",
       "couldNotWriteToSitlWorking": "Could not write to SITL working directory: {{msg}}",
       "fcDidNotRespondToA": "FC did not respond to a write probe within 1.5 s. The MAVLink FTP server may be disabled or the FC has no writable filesystem (no SD card?).",
       "parentDirectoryMissingTypicallyMeansThere": "Parent directory missing - typically means there is no SD card present, or /APM/scripts/ has not been created. ArduPilot creates /APM/scripts/ on boot when SCR_ENABLE=1, so a reboot may help.",
@@ -276,7 +276,7 @@
       "sitlLauncherConfigUnavailableRestartSitl": "SITL launcher config unavailable - restart SITL from the connection panel",
       "sitlRestartFailed": "SITL restart failed: {{v1}}",
       "connectToAnFcBeforeRunning": "Connect to an FC before running preflight checks.",
-      "saveArdudeckLuaScript": "Save ArduDeck Lua Script",
+      "saveArdudeckLuaScript": "Save STOHID Lua Script",
       "mavlinkFtpRequiresAMavlinkConnection": "MAVLink-FTP requires a MAVLink connection",
       "couldNotList": "Could not list {{path}}: {{error}}",
       "save": "Save {{fcPath}}",
@@ -393,11 +393,11 @@
       "missionNotFound": "Mission not found",
       "exportMission": "Export Mission",
       "importMission": "Import Mission",
-      "notAnArdudeckMissionFile": "Not an ArduDeck mission file",
+      "notAnArdudeckMissionFile": "Not a STOHID mission file",
       "areaNotFound": "Area not found",
       "exportSurveyArea": "Export Survey Area",
       "importSurveyArea": "Import Survey Area",
-      "notAnArdudeckSurveyAreaFile": "Not an ArduDeck survey area file"
+      "notAnArdudeckSurveyAreaFile": "Not a STOHID survey area file"
     },
     "modules_hangar_client": {
       "couldNotReachTheHangarAt": "Could not reach the Hangar at {{v1}}. Check your connection and try again.",
@@ -440,7 +440,7 @@
       "bundleHashMismatchForDownloadCorrupted": "Bundle hash mismatch for {{slug}} - download corrupted or tampered with",
       "bundleSignatureVerificationFailedFor": "Bundle signature verification failed for {{slug}}",
       "invalidManifestFor": "Invalid manifest for {{slug}}: {{error}}",
-      "needsArdudeckOrNewerYouHave": "{{name}} needs ArduDeck {{minVersion}} or newer (you have {{v3}}). Update ArduDeck first.",
+      "needsArdudeckOrNewerYouHave": "{{name}} needs STOHID {{minVersion}} or newer (you have {{v3}}). Update STOHID first.",
       "failedToDownload": "Failed to download {{slug}}: {{msg}}",
       "activatedModuleS": "Activated {{length}} module(s)",
       "requestingFromTheHangar": "Requesting {{slug}} from the Hangar...",
@@ -492,7 +492,7 @@
     },
     "sim_sim_engine_process": {
       "noPreviousSimEngineOptionsTo": "no previous sim-engine options to restart with",
-      "ardudeckPhysicsEngineBinaryNotFound": "ArduDeck physics engine binary not found. Rebuild or run scripts/fetch-sim-engine.mjs.",
+      "ardudeckPhysicsEngineBinaryNotFound": "STOHID physics engine binary not found. Rebuild or run scripts/fetch-sim-engine.mjs.",
       "simEngineDidNotBecomeReady": "sim-engine did not become ready: {{lastErr}}"
     },
     "simulators_ardupilot_flightgear": {
@@ -571,7 +571,7 @@
     },
     "trainer_trainer_process": {
       "theTrainerSentSomethingThatIs": "The Trainer sent something that is not a catalogue.",
-      "thisTrainerAnswersInAFormat": "This Trainer answers in a format ArduDeck does not understand (no {{v1}}). Update the Trainer, or ArduDeck.",
+      "thisTrainerAnswersInAFormat": "This Trainer answers in a format STOHID does not understand (no {{v1}}). Update the Trainer, or STOHID.",
       "theTrainerDidNotAnswerIn": "The Trainer did not answer in time.",
       "theTrainerExitedWithoutAnswering": "The Trainer exited ({{code}}) without answering.",
       "couldNotWriteTheTrainerRequest": "Could not write the Trainer request: {{message}}",

@@ -1,7 +1,7 @@
 {
   "osd": {
     "HudDestinationBar": {
-      "ardudeckScreenOverlay": "ArduDeck screen overlay",
+      "ardudeckScreenOverlay": "STOHID screen overlay",
       "videoFeed": "Video feed",
       "hudOverlay": "HUD overlay",
       "yourDisplay": "Your display",
@@ -11,7 +11,7 @@
     },
     "HudPanel": {
       "hudOverlay": "HUD overlay",
-      "drawnByArdudeckOverYourVideo": "Drawn by ArduDeck over your video feed",
+      "drawnByArdudeckOverYourVideo": "Drawn by STOHID over your video feed",
       "vehicleProfile": "Vehicle profile",
       "youAreEditingThe": "You are editing the",
       "groundVehicleRoverBoat": "ground vehicle (rover/boat)",
@@ -158,10 +158,10 @@
       "dragToResize": "Drag to resize",
       "linkDemo": "LINK (demo)",
       "osdTool": "OSD Tool",
-      "graphicalOverlayArdudeckDrawsOverYour": "Graphical overlay ArduDeck draws over your video. Not uploaded to the flight controller.",
+      "graphicalOverlayArdudeckDrawsOverYour": "Graphical overlay STOHID draws over your video. Not uploaded to the flight controller.",
       "textOsd": "Text OSD",
       "characterOsdThatLivesInThe": "Character OSD that lives in the flight controller (analog / Betaflight) or is drawn by your digital goggles.",
-      "osdDrawnByRubyfpvOnIts": "OSD drawn by RubyFPV on its ground unit. Authored here, delivered to the board over the ArduDeck Agent.",
+      "osdDrawnByRubyfpvOnIts": "OSD drawn by RubyFPV on its ground unit. Authored here, delivered to the board over the STOHID Agent.",
       "demo": "Demo",
       "live": "Live",
       "liveOffline": "Live (offline)",
@@ -184,7 +184,7 @@
     "RubyOsdDestinationBar": {
       "rubyfpvGroundOsd": "RubyFPV ground OSD",
       "authorHere": "Author here",
-      "ardudeckAgent": "ArduDeck Agent",
+      "ardudeckAgent": "STOHID Agent",
       "rubyfpvGroundBoard": "RubyFPV ground board",
       "drawnOverVideo": "Drawn over video",
       "saveARubyfpvV12OsdBlock": "Save a RubyFPV v12 OSD block (the exact text spliced into ctrl-N.mdl). Direct push to a paired board over the Agent is coming.",

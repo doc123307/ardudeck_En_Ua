@@ -4,12 +4,12 @@
 <meta charset="utf-8" />
 <style>
   :root {
-    --navy: #0d1524;
-    --navy-2: #111c30;
-    --teal: #2dd4bf;
-    --teal-dim: #14b8a6;
-    --ink: #e6f4f1;
-    --muted: #5f7793;
+    --navy: #0c0c0e;
+    --navy-2: #1b1c20;
+    --teal: #d4d4d8;
+    --teal-dim: #9ca3af;
+    --ink: #f4f4f5;
+    --muted: #71717a;
     --mono: ui-monospace, "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,11 +25,11 @@
 
   .card {
     position: relative;
-    width: 440px; height: 340px;
+    width: 460px; height: 390px;
     border-radius: 20px;
     background:
       radial-gradient(120% 120% at 50% 0%, var(--navy-2) 0%, var(--navy) 62%);
-    border: 1px solid rgba(45, 212, 191, 0.18);
+    border: 1px solid rgba(212, 212, 216, 0.16);
     box-shadow:
       0 24px 60px rgba(0, 0, 0, 0.55),
       inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -42,11 +42,11 @@
   }
   @keyframes cardIn { to { transform: scale(1); opacity: 1; } }
 
-  .logo-wrap { position: relative; width: 140px; height: 140px; }
+  .logo-wrap { position: relative; width: 340px; height: 150px; }
   .logo-wrap img {
     width: 100%; height: 100%;
     object-fit: contain; display: block;
-    filter: drop-shadow(0 6px 22px rgba(45, 212, 191, 0.26));
+    filter: drop-shadow(0 6px 22px rgba(255, 255, 255, 0.10));
     opacity: 0;
     animation: logoIn 600ms 60ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
@@ -55,11 +55,18 @@
     to   { opacity: 1; transform: translateY(0)   scale(1); }
   }
   .logo-wrap.fallback::after {
-    content: "ArduDeck";
+    content: "STOHID";
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
     font-size: 26px; font-weight: 700; letter-spacing: 0.5px;
     color: var(--ink);
+  }
+
+  .tagline {
+    margin-top: -6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 2.2px;
+    color: var(--muted);
+    opacity: 0; animation: logoIn 600ms 180ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   /* Boot-check log: each line slides in with a spinner (pending), then its
@@ -90,7 +97,7 @@
   .spin {
     position: absolute; right: 0; top: 1px;
     width: 11px; height: 11px; border-radius: 50%;
-    border: 1.5px solid rgba(45, 212, 191, 0.22);
+    border: 1.5px solid rgba(212, 212, 216, 0.22);
     border-top-color: var(--teal);
     animation:
       spinRot 700ms linear infinite,
@@ -118,7 +125,7 @@
   .bar {
     position: relative;
     width: 262px; height: 3px; border-radius: 3px;
-    background: rgba(45, 212, 191, 0.12); overflow: hidden;
+    background: rgba(212, 212, 216, 0.12); overflow: hidden;
   }
   /* Indeterminate loaders (never show "done" until ready) - one per variant. */
   .bar.sweep::after {
@@ -161,8 +168,9 @@
 <body>
   <div class="card" id="card">
     <div class="logo-wrap" id="logoWrap">
-      <img id="logo" src="logo-splash.png" alt="ArduDeck" />
+      <img id="logo" src="logo-splash.png" alt="STOHID" />
     </div>
+    <div class="tagline">НАЗЕМНІ РОБОТИЗОВАНІ КОМПЛЕКСИ</div>
     <div class="log" id="log"></div>
     <div class="bar sweep" id="bar"></div>
     <div class="version" id="version"></div>

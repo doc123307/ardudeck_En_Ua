@@ -131,8 +131,8 @@ export function buildFreshEntry(args: {
         type: 'install',
         timestamp: now,
         summary: method === 'manual'
-          ? `Detected ArduDeck commands v${args.scriptVersion} (manually installed - script heartbeat received)`
-          : `Installed ArduDeck commands v${args.scriptVersion}`,
+          ? `Detected STOHID commands v${args.scriptVersion} (manually installed - script heartbeat received)`
+          : `Installed STOHID commands v${args.scriptVersion}`,
       },
     ],
   };

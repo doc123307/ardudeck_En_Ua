@@ -299,7 +299,7 @@
       "clearAll": "Clear all",
       "missionSavedToLibrary": "Mission saved to library",
       "openThePanel": "Open the {{title}} panel",
-      "theWholePlanInArdudeckWaypoint": "The whole plan in ArduDeck: waypoint groups, every survey area and its settings, all editable later",
+      "theWholePlanInArdudeckWaypoint": "The whole plan in STOHID: waypoint groups, every survey area and its settings, all editable later",
       "qgcWplArdupilotMissionPlanner": "QGC WPL · ArduPilot / Mission Planner{{v1}}",
       "djiFlyWaypointMissionPlainWaypoints": "DJI Fly waypoint mission · plain waypoints only"
     },

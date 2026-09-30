@@ -214,7 +214,7 @@ class Px4SitlProcessManager {
    * plus awk is available.
    */
   private async ensureSihHomeInRcs(bundleDir: string): Promise<void> {
-    const marker = '# ArduDeck: SIH home from PX4_HOME_*';
+    const marker = '# STOHID: SIH home from PX4_HOME_*';
     const rcsPath = path.join(bundleDir, 'etc', 'init.d-posix', 'rcS');
     try {
       const { readFile, writeFile } = await import('node:fs/promises');

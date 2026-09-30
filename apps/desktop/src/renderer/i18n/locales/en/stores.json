@@ -397,7 +397,7 @@
       "startingInavSitl": "Starting iNav SITL...\n",
       "xPlaneIsNowControlledBy": "X-Plane is now controlled by iNav SITL.\n",
       "makeSureXPlaneDataOutput": "Make sure X-Plane Data Output is configured to send to 127.0.0.1:49000\n",
-      "connectArdudeckToTcp1270": "Connect ArduDeck to TCP 127.0.0.1:5760 to access telemetry.\n",
+      "connectArdudeckToTcp1270": "Connect STOHID to TCP 127.0.0.1:5760 to access telemetry.\n",
       "flightgearIsNotInstalledSetA": "FlightGear is not installed. Set a custom path or install FlightGear.",
       "flightgearIsNotInstalledPleaseInstall": "FlightGear is not installed. Please install it or set a custom path.\n",
       "waitingForFlightgearToInitialize15": "Waiting for FlightGear to initialize (15-30 seconds)...\n",

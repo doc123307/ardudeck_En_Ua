@@ -1,7 +1,7 @@
 {
   "osd": {
     "HudDestinationBar": {
-      "ardudeckScreenOverlay": "Наложение на экран ArduDeck",
+      "ardudeckScreenOverlay": "Наложение на экран «Стохід»",
       "videoFeed": "Видеопоток",
       "hudOverlay": "Наложение HUD",
       "yourDisplay": "Ваш экран",
@@ -11,7 +11,7 @@
     },
     "HudPanel": {
       "hudOverlay": "Наложение HUD",
-      "drawnByArdudeckOverYourVideo": "Рисуется ArduDeck поверх видеопотока",
+      "drawnByArdudeckOverYourVideo": "Рисуется «Стохід» поверх видеопотока",
       "vehicleProfile": "Профиль аппарата",
       "youAreEditingThe": "Вы редактируете раскладку для",
       "groundVehicleRoverBoat": "наземного аппарата (ровер/лодка)",
@@ -158,10 +158,10 @@
       "dragToResize": "Тяните, чтобы изменить размер",
       "linkDemo": "КАНАЛ (демо)",
       "osdTool": "Редактор OSD",
-      "graphicalOverlayArdudeckDrawsOverYour": "Графическое наложение, которое ArduDeck рисует поверх видео. В полётный контроллер не загружается.",
+      "graphicalOverlayArdudeckDrawsOverYour": "Графическое наложение, которое «Стохід» рисует поверх видео. В полётный контроллер не загружается.",
       "textOsd": "Текстовый OSD",
       "characterOsdThatLivesInThe": "Символьный OSD, который хранится в полётном контроллере (аналог / Betaflight) или рисуется цифровыми очками.",
-      "osdDrawnByRubyfpvOnIts": "OSD, который рисует RubyFPV на наземном блоке. Создаётся здесь, доставляется на плату через ArduDeck Agent.",
+      "osdDrawnByRubyfpvOnIts": "OSD, который рисует RubyFPV на наземном блоке. Создаётся здесь, доставляется на плату через «Стохід» Agent.",
       "demo": "Демо",
       "live": "Вживую",
       "liveOffline": "Вживую (офлайн)",
@@ -184,7 +184,7 @@
     "RubyOsdDestinationBar": {
       "rubyfpvGroundOsd": "Наземный OSD RubyFPV",
       "authorHere": "Создаётся здесь",
-      "ardudeckAgent": "ArduDeck Agent",
+      "ardudeckAgent": "«Стохід» Agent",
       "rubyfpvGroundBoard": "Наземная плата RubyFPV",
       "drawnOverVideo": "Рисуется поверх видео",
       "saveARubyfpvV12OsdBlock": "Сохранить блок OSD RubyFPV v12 (именно тот текст, что вставляется в ctrl-N.mdl). Прямая отправка на связанную плату через Agent появится позже.",

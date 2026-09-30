@@ -2,7 +2,7 @@
   "trainer": {
     "NewRegionDialog": {
       "theRegionCouldNotBeBuilt": "The region could not be built.",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Restart ArduDeck if the Trainer was just updated.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Restart STOHID if the Trainer was just updated.",
       "newRegion": "New region",
       "anywhereOnEarthBuiltFromOpen": "Anywhere on Earth. Built from open elevation, imagery and map data.",
       "gettingStarted": "Getting started",
@@ -59,7 +59,7 @@
       "newRegion": "New region",
       "askingTheTrainerWhatItHas": "Asking the Trainer what it has…",
       "couldNotDeleteThatRegion": "Could not delete that region.",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Restart ArduDeck if the Trainer was just updated.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Restart STOHID if the Trainer was just updated.",
       "readyToFly": "Ready to fly",
       "unfinished": "Unfinished",
       "ground": "Ground",
@@ -75,7 +75,7 @@
     },
     "TrainerVehicleStep": {
       "vehicle": "Vehicle",
-      "theFrameComesFromTheFlight": "The frame comes from the flight controller ArduDeck is running.",
+      "theFrameComesFromTheFlight": "The frame comes from the flight controller STOHID is running.",
       "goggles": "Goggles",
       "theTrainerSOwn": "The Trainer's own",
       "lens": "Lens",
@@ -84,7 +84,8 @@
       "flightController": "Flight controller",
       "whateverWasLastSetUpIn": "Whatever was last set up in the launcher.",
       "stabilised": "Stabilised",
-      "waitingForAGpsFix": "waiting for a GPS fix"
+      "waitingForAGpsFix": "waiting for a GPS fix",
+      "brandKeepsIt": "{{name}} keeps it"
     },
     "TrainerView": {
       "region": "Region",
@@ -93,7 +94,7 @@
       "timeWeatherAndWind": "Time, weather and wind",
       "vehicle": "Vehicle",
       "cameraAndFrame": "Camera and frame",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Restart ArduDeck if the Trainer was just updated.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Restart STOHID if the Trainer was just updated.",
       "theTrainerDidNotStart": "The Trainer did not start.",
       "readyToFly": "Ready to fly",
       "checking": "Checking…",

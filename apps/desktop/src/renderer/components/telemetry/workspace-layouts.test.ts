@@ -97,7 +97,7 @@ describe('workspace layouts', () => {
 
   it('refuses files that are not a workspace layout', () => {
     expect(parseImport('not json')).toEqual({ error: 'That file is not valid JSON.' });
-    expect(parseImport(JSON.stringify({ app: 'ardudeck', kind: 'instrument-layout', layout: {} }))).toMatchObject({ error: expect.stringContaining('not an ArduDeck workspace') });
+    expect(parseImport(JSON.stringify({ app: 'ardudeck', kind: 'instrument-layout', layout: {} }))).toMatchObject({ error: expect.stringContaining('not a STOHID workspace') });
     expect(parseImport(JSON.stringify({ app: 'ardudeck', kind: 'workspace-layout', name: 'x', layout: { v: 2, dock: {} } }))).toMatchObject({ error: expect.stringContaining('no panel arrangement') });
   });
 

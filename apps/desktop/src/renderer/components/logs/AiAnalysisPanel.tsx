@@ -398,7 +398,7 @@ You have tools to query the raw telemetry of THIS log on demand, you are not lim
 All time arguments (startS/endS) are SECONDS from log start. This flight is ${dS.toFixed(1)} s long. Prefer real values pulled from these tools over the summary, and cite specific numbers and timestamps.`
       : '';
 
-    return `You are a flight log analyst embedded in ArduDeck, an ArduPilot ground control station.
+    return `You are a flight log analyst embedded in STOHID, an ArduPilot ground control station.
 You ONLY answer questions about this specific flight log, ArduPilot configuration, and drone/vehicle troubleshooting. Refuse any off-topic requests politely.
 
 ## This Flight

@@ -14,7 +14,6 @@ import { useNavigationStore } from '../../stores/navigation-store';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { useUpdateStore } from '../../stores/update-store';
-import { betaLabel } from '../../utils/version-label';
 import { renderMarkdown } from '../lua-graph/docs/markdown-renderer';
 import { ScriptInstallModal } from '../script-installer/ScriptInstallModal';
 import { VehicleTemplatePicker } from './vehicle-profile/VehicleTemplatePicker';
@@ -61,6 +60,7 @@ import {
   type WeightUnit,
 } from '../../../shared/user-units.js';
 import { t as tr } from '../../i18n';
+import { PROJECT_REPO, PROJECT_URL, UPSTREAM_URL } from '../../../shared/brand';
 
 // Display unit conversion helpers - storage stays in each field's native unit.
 function fmtWeight(g: number, unit: WeightUnit): string {
@@ -2619,7 +2619,7 @@ function AboutSection() {
     (async () => {
       try {
         setNotesState('loading');
-        const res = await fetch('https://api.github.com/repos/rubenCodeforges/ardudeck/releases?per_page=15', {
+        const res = await fetch(`https://api.github.com/repos/${PROJECT_REPO.owner}/${PROJECT_REPO.repo}/releases?per_page=15`, {
           headers: { Accept: 'application/vnd.github+json' },
         });
         if (!res.ok) throw new Error(`GitHub ${res.status}`);
@@ -2651,15 +2651,15 @@ function AboutSection() {
       <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-5">
         <div className="flex items-start justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-content">ArduDeck</h3>
+            <h3 className="text-lg font-semibold text-content">{t('brand.name')}</h3>
             <p className="text-sm text-content-secondary mt-0.5">
-              {currentVersion ? betaLabel(currentVersion) : '...'}
+              {currentVersion ? `v${currentVersion}` : '...'}
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <a
-              href="https://github.com/rubenCodeforges/ardudeck"
+              href={PROJECT_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="px-3 py-1.5 text-xs text-content-secondary hover:text-content border border-border hover:border-border rounded-lg transition-colors"
@@ -2784,6 +2784,20 @@ function AboutSection() {
               <span className="truncate">{error}</span>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* About the product: the one place the upstream project is named, with credit and links. */}
+      <section className="mt-4 bg-surface rounded-xl border border-subtle p-5">
+        <h3 className="text-sm font-semibold text-content mb-2">{t('brand.aboutTitle')}</h3>
+        <p className="text-sm text-content-secondary">{t('brand.aboutBasedOn', { name: t('brand.name') })}</p>
+        <div className="mt-3 flex flex-col gap-1.5 text-sm">
+          <a href={PROJECT_URL} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 break-all">
+            {t('brand.projectPage', { name: t('brand.name') })}: {PROJECT_URL}
+          </a>
+          <a href={UPSTREAM_URL} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 break-all">
+            {t('brand.originalProject')}: {UPSTREAM_URL}
+          </a>
         </div>
       </section>
 

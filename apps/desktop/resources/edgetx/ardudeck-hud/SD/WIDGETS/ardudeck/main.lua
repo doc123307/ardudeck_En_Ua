@@ -40,7 +40,7 @@ local function refresh(widget, event, touchState)
   if lib then
     lib.refresh(widget, event, touchState)
   else
-    lcd.drawText(6, 6, 'ArduDeck HUD: loadable.lua missing', SMLSIZE + COLOR_THEME_WARNING)
+    lcd.drawText(6, 6, 'STOHID HUD: loadable.lua missing', SMLSIZE + COLOR_THEME_WARNING)
   end
 end
 
@@ -50,7 +50,7 @@ local function background(widget)
 end
 
 return {
-  name = 'ArduDeck',
+  name = 'STOHID',
   options = options,
   create = create,
   update = update,

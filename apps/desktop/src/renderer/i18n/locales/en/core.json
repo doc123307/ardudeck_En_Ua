@@ -29,7 +29,7 @@
   "header": {
     "voiceMuted": "Voice alerts muted. Click to unmute",
     "voiceOn": "Voice alerts on. Click to mute",
-    "about": "About ArduDeck",
+    "about": "About STOHID",
     "clickToDisconnect": "Click to disconnect",
     "staleTitle": "No data for {{seconds}}s. Click to disconnect",
     "staleLabel": "No data {{seconds}}s",
@@ -82,5 +82,13 @@
       "area": "Area",
       "windSpeed": "Wind speed"
     }
+  },
+  "brand": {
+    "name": "STOHID",
+    "tagline": "Unmanned ground vehicle systems",
+    "aboutTitle": "About the product",
+    "aboutBasedOn": "{{name}} is built on the open-source ground control station ArduDeck.",
+    "originalProject": "Original ArduDeck project",
+    "projectPage": "{{name}} project page"
   }
 }

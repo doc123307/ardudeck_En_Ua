@@ -711,7 +711,7 @@ export class MediaEngine {
    */
   async diagnostics(): Promise<string> {
     const lines: string[] = [];
-    lines.push(`ArduDeck media engine diagnostics  ${new Date().toISOString()}`);
+    lines.push(`STOHID media engine diagnostics  ${new Date().toISOString()}`);
     lines.push(`platform: ${process.platform} ${process.arch}`);
     this.resolveBinaries();
 

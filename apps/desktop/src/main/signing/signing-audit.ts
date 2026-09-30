@@ -149,7 +149,7 @@ const EVENT_LABELS: Record<SigningAuditEvent, string> = {
 export function renderPostureReport(pack: EvidencePack): string {
   const p = pack.posture;
   const lines: string[] = [];
-  lines.push('# ArduDeck Secure Link - Compliance Evidence');
+  lines.push('# STOHID Secure Link - Compliance Evidence');
   lines.push('');
   lines.push(`Generated: ${pack.generatedAt}`);
   lines.push(`Application: ${pack.app.name} v${pack.app.version} (${pack.app.platform}, Electron ${pack.app.electron})`);

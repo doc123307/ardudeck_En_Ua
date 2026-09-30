@@ -126,7 +126,7 @@ export function buildDjiWpml(items: MissionItem[], createTimeMs: number): DjiWpm
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:wpml="http://www.dji.com/wpmz/1.0.2">',
     '  <Document>',
-    '    <wpml:author>ArduDeck</wpml:author>',
+    '    <wpml:author>STOHID</wpml:author>',
     `    <wpml:createTime>${createTimeMs}</wpml:createTime>`,
     `    <wpml:updateTime>${createTimeMs}</wpml:updateTime>`,
     config,

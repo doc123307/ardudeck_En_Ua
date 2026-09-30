@@ -94,7 +94,7 @@
       "missionLibrary": "Mission Library",
       "missionsSaved": "missions saved",
       "importFile": "Import File",
-      "openAnArdudeckMissionFileMission": "Open an ArduDeck mission file (.mission.json), groups and surveys intact",
+      "openAnArdudeckMissionFileMission": "Open a STOHID mission file (.mission.json), groups and surveys intact",
       "openMissionFile": "Open mission file",
       "searchMissions": "Search missions...",
       "allVehicles": "All Vehicles",

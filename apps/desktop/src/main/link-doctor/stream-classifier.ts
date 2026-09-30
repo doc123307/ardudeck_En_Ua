@@ -99,7 +99,7 @@ export function classifyStream(sample: Uint8Array): StreamDiagnosis {
         ? 'This device is speaking CRSF link statistics - it is an ELRS radio module in Normal link mode, not MAVLink.'
         : 'This port is speaking CRSF (RC receiver protocol), not MAVLink.',
       suggestion: elrsNormalMode
-        ? 'Switch the module to MAVLink link mode. ArduDeck can do this for you from the ELRS Radio Setup card - the receiver must be powered off while the mode changes.'
+        ? 'Switch the module to MAVLink link mode. STOHID can do this for you from the ELRS Radio Setup card - the receiver must be powered off while the mode changes.'
         : 'This looks like an RC receiver feed. To use it for telemetry, the ELRS link must be in MAVLink mode on both ends.',
     };
   }

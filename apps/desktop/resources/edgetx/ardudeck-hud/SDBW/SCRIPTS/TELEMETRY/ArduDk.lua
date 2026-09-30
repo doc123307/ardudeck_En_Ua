@@ -515,7 +515,7 @@ local function ladderState()
   local t = now()
   if V.everFrame and t - V.lastFrameT <= 300 then
     if t - V.lastStreamT > 300 then
-      return 'STREAMS OFF', 'connect ArduDeck once'
+      return 'STREAMS OFF', 'connect STOHID once'
     end
     return 'LIVE', nil
   end

@@ -15,7 +15,7 @@
       "installed": "{{name}} установлен."
     },
     "area_editor_window": {
-      "ardudeckAreaEditor": "Редактор участков ArduDeck"
+      "ardudeckAreaEditor": "Редактор участков «Стохід»"
     },
     "calibration_calibration_handlers": {
       "calibration": "[Калибровка] {{message}}",
@@ -219,7 +219,7 @@
       "tokenRejectedByGithub": "GitHub отклонил токен",
       "aTokenWithWriteAccessTo": "Нужен токен с правом записи в репозиторий",
       "notConnectedToGithub": "Нет соединения с GitHub",
-      "ardudeckFleetVault": "Хранилище флота ArduDeck",
+      "ardudeckFleetVault": "Хранилище флота «Стохід»",
       "githubRepoCreationFailed": "Не удалось создать репозиторий GitHub ({{status}})",
       "repositoryExistsButIsNotAccessible": "Репозиторий «{{name}}» существует, но недоступен",
       "couldNotListRepositories": "Не удалось получить список репозиториев ({{status}})",
@@ -268,7 +268,7 @@
       "noBoardIdentity": "Нет идентификатора платы",
       "unknownVehicleType": "Неизвестный тип аппарата: {{mavType}}",
       "http": "HTTP {{status}}: {{statusText}}",
-      "sitlIsConnectedButArdudeckHas": "SITL подключён, но ArduDeck потерял настройки лаунчера — перезапустите SITL с панели подключения.",
+      "sitlIsConnectedButArdudeckHas": "SITL подключён, но «Стохід» потерял настройки лаунчера — перезапустите SITL с панели подключения.",
       "couldNotWriteToSitlWorking": "Не удалось записать в рабочую папку SITL: {{msg}}",
       "fcDidNotRespondToA": "FC не ответил на пробную запись в течение 1,5 с. Возможно, сервер MAVLink FTP выключен или на FC нет файловой системы для записи (нет SD-карты?).",
       "parentDirectoryMissingTypicallyMeansThere": "Родительской папки нет — обычно это значит, что нет SD-карты или /APM/scripts/ не создана. ArduPilot создаёт /APM/scripts/ при старте, когда SCR_ENABLE=1, так что перезагрузка может помочь.",
@@ -276,7 +276,7 @@
       "sitlLauncherConfigUnavailableRestartSitl": "Настройки лаунчера SITL недоступны — перезапустите SITL с панели подключения",
       "sitlRestartFailed": "Не удалось перезапустить SITL: {{v1}}",
       "connectToAnFcBeforeRunning": "Подключитесь к FC перед предполётными проверками.",
-      "saveArdudeckLuaScript": "Сохранить Lua-скрипт ArduDeck",
+      "saveArdudeckLuaScript": "Сохранить Lua-скрипт «Стохід»",
       "mavlinkFtpRequiresAMavlinkConnection": "MAVLink-FTP требует MAVLink-подключения",
       "couldNotList": "Не удалось получить содержимое {{path}}: {{error}}",
       "save": "Сохранить {{fcPath}}",
@@ -393,11 +393,11 @@
       "missionNotFound": "Миссия не найдена",
       "exportMission": "Экспорт миссии",
       "importMission": "Импорт миссии",
-      "notAnArdudeckMissionFile": "Это не файл миссии ArduDeck",
+      "notAnArdudeckMissionFile": "Это не файл миссии «Стохід»",
       "areaNotFound": "Участок не найден",
       "exportSurveyArea": "Экспорт участка съёмки",
       "importSurveyArea": "Импорт участка съёмки",
-      "notAnArdudeckSurveyAreaFile": "Это не файл участка съёмки ArduDeck"
+      "notAnArdudeckSurveyAreaFile": "Это не файл участка съёмки «Стохід»"
     },
     "modules_hangar_client": {
       "couldNotReachTheHangarAt": "Не удалось связаться с Hangar по адресу {{v1}}. Проверьте соединение и попробуйте ещё раз.",
@@ -440,7 +440,7 @@
       "bundleHashMismatchForDownloadCorrupted": "Хеш пакета {{slug}} не совпадает — загрузка повреждена или подделана",
       "bundleSignatureVerificationFailedFor": "Проверка подписи пакета {{slug}} не удалась",
       "invalidManifestFor": "Некорректный манифест {{slug}}: {{error}}",
-      "needsArdudeckOrNewerYouHave": "{{name}} требует ArduDeck {{minVersion}} или новее (у вас {{v3}}). Сначала обновите ArduDeck.",
+      "needsArdudeckOrNewerYouHave": "{{name}} требует «Стохід» {{minVersion}} или новее (у вас {{v3}}). Сначала обновите «Стохід».",
       "failedToDownload": "Не удалось загрузить {{slug}}: {{msg}}",
       "activatedModuleS": "Активировано модулей: {{length}}",
       "requestingFromTheHangar": "Запрос {{slug}} в Hangar...",
@@ -492,7 +492,7 @@
     },
     "sim_sim_engine_process": {
       "noPreviousSimEngineOptionsTo": "нет предыдущих параметров движка симуляции для перезапуска",
-      "ardudeckPhysicsEngineBinaryNotFound": "Бинарник физического движка ArduDeck не найден. Пересоберите или запустите scripts/fetch-sim-engine.mjs.",
+      "ardudeckPhysicsEngineBinaryNotFound": "Бинарник физического движка «Стохід» не найден. Пересоберите или запустите scripts/fetch-sim-engine.mjs.",
       "simEngineDidNotBecomeReady": "движок симуляции не стал готов: {{lastErr}}"
     },
     "simulators_ardupilot_flightgear": {
@@ -571,7 +571,7 @@
     },
     "trainer_trainer_process": {
       "theTrainerSentSomethingThatIs": "Тренажёр прислал что-то, что не является каталогом.",
-      "thisTrainerAnswersInAFormat": "Этот Тренажёр отвечает в формате, который ArduDeck не понимает (нет {{v1}}). Обновите Тренажёр или ArduDeck.",
+      "thisTrainerAnswersInAFormat": "Этот Тренажёр отвечает в формате, который «Стохід» не понимает (нет {{v1}}). Обновите Тренажёр или «Стохід».",
       "theTrainerDidNotAnswerIn": "Тренажёр не ответил вовремя.",
       "theTrainerExitedWithoutAnswering": "Тренажёр завершился ({{code}}) без ответа.",
       "couldNotWriteTheTrainerRequest": "Не удалось записать запрос к Тренажёру: {{message}}",

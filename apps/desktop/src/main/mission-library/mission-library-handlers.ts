@@ -81,7 +81,7 @@ export function initMissionLibraryHandlers(): void {
     const options = {
       title: mt('main.mission_library_mission_library_handlers.exportMission'),
       defaultPath: `${fileSlug(mission.name)}.mission.json`,
-      filters: [{ name: 'ArduDeck Mission', extensions: ['json'] }],
+      filters: [{ name: 'STOHID Mission', extensions: ['json'] }],
     };
     const dlg = window ? await dialog.showSaveDialog(window, options) : await dialog.showSaveDialog(options);
     if (dlg.canceled || !dlg.filePath) return { success: false, error: 'Cancelled' };
@@ -98,7 +98,7 @@ export function initMissionLibraryHandlers(): void {
     const options = {
       title: mt('main.mission_library_mission_library_handlers.importMission'),
       properties: ['openFile' as const],
-      filters: [{ name: 'ArduDeck Mission', extensions: ['json'] }],
+      filters: [{ name: 'STOHID Mission', extensions: ['json'] }],
     };
     const dlg = window ? await dialog.showOpenDialog(window, options) : await dialog.showOpenDialog(options);
     const path = dlg.filePaths[0];
@@ -146,7 +146,7 @@ export function initMissionLibraryHandlers(): void {
     const options = {
       title: mt('main.mission_library_mission_library_handlers.exportSurveyArea'),
       defaultPath: `${fileSlug(doc.name)}.survey.json`,
-      filters: [{ name: 'ArduDeck Survey', extensions: ['json'] }],
+      filters: [{ name: 'STOHID Survey', extensions: ['json'] }],
     };
     const dlg = window
       ? await dialog.showSaveDialog(window, options)
@@ -165,7 +165,7 @@ export function initMissionLibraryHandlers(): void {
     const options = {
       title: mt('main.mission_library_mission_library_handlers.importSurveyArea'),
       properties: ['openFile' as const],
-      filters: [{ name: 'ArduDeck Survey', extensions: ['json'] }],
+      filters: [{ name: 'STOHID Survey', extensions: ['json'] }],
     };
     const dlg = window
       ? await dialog.showOpenDialog(window, options)

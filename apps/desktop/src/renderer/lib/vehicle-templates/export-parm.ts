@@ -16,7 +16,7 @@ export function exportParm(
   opts: { includeSim?: boolean } = {},
 ): string {
   const lines: string[] = [];
-  lines.push(`# ArduDeck vehicle profile export`);
+  lines.push(`# STOHID vehicle profile export`);
   lines.push(`# Profile: ${profile.name}`);
   lines.push(`# Template: ${template.name} (${template.slug})`);
   lines.push(`# Generated: ${new Date().toISOString()}`);

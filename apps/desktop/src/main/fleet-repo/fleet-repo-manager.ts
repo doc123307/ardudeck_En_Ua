@@ -33,7 +33,7 @@ import { mt } from '../i18n';
 const GITHUB_CLIENT_ID = process.env.ARDUDECK_GITHUB_CLIENT_ID ?? 'Ov23liIeHUaZ6cgzSmvh';
 
 const BRANCH = 'main';
-const COMMITTER = { name: 'ArduDeck', email: 'vault@ardudeck.app' };
+const COMMITTER = { name: 'STOHID', email: 'vault@ardudeck.app' };
 
 // ── Types (mirrored in shared/ipc-channels.ts) ──────────────────
 
@@ -157,9 +157,9 @@ export async function ensureRepo(): Promise<void> {
   if (await isRepo(dir)) return;
   await git.init({ fs, dir, defaultBranch: BRANCH });
   const readme = [
-    '# ArduDeck Fleet Vault',
+    '# STOHID Fleet Vault',
     '',
-    'Parameter snapshots, missions and survey areas managed by ArduDeck.',
+    'Parameter snapshots, missions and survey areas managed by STOHID.',
     '',
     '- `units/<uid>/` full parameter dumps per flight controller',
     '- `sites/<site>/` survey boundaries and mission revisions',
@@ -230,7 +230,7 @@ export async function snapshotParams(
   // both ArduPilot and PX4 snapshots. Without this the parameter names in an
   // old snapshot are meaningless to the stack now running, and nothing says so.
   const paramFile = formatParamFile(params, {
-    Source: 'ArduDeck fleet vault',
+    Source: 'STOHID fleet vault',
     Board: boardName,
     ...(vehicleType ? { Vehicle: vehicleType } : {}),
     ...(firmware ? { Firmware: firmware } : {}),

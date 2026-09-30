@@ -12,7 +12,6 @@ import { UpdateBanner } from './UpdateBanner';
 import { ArmDisarmButton } from './ArmDisarmButton';
 import { ScriptHealthBadge } from '../script-installer/ScriptHealthBadge';
 import { QuickLaunchMenu } from './QuickLaunchMenu';
-import { betaLabel } from '../../utils/version-label';
 import iconImage from '../../assets/icon.png';
 
 interface AppShellProps {
@@ -59,9 +58,9 @@ export function AppShell({ children }: AppShellProps) {
       <header className="h-14 border-b border-subtle bg-surface-nav backdrop-blur-sm flex items-center shrink-0 relative z-50">
         {/* Logo sits in a nav-rail-width slot so it lines up with the sidebar icons */}
         <div className="w-14 flex items-center justify-center shrink-0">
-          <img src={iconImage} alt="ArduDeck" className="h-8 w-8 rounded-md object-cover" />
+          <img src={iconImage} alt={t('brand.name')} className="h-8 w-8 rounded-md object-cover" />
         </div>
-        <h1 className="text-lg font-semibold text-content">ArduDeck</h1>
+        <h1 className="text-lg font-bold tracking-wide uppercase text-content">{t('brand.name')}</h1>
 
         <div className="ml-auto flex items-center gap-4 pr-6">
           {/* Voice alerts mute */}
@@ -88,7 +87,7 @@ export function AppShell({ children }: AppShellProps) {
               className="flex items-center gap-1.5 text-content-tertiary hover:text-content-secondary transition-colors"
               title={t('header.about')}
             >
-              <span className="text-xs">{betaLabel(currentVersion)}</span>
+              <span className="text-xs">v{currentVersion}</span>
               {(status === 'available' || status === 'downloaded') && (
                 <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
               )}
