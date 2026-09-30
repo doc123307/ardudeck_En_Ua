@@ -1,0 +1,25 @@
+{
+  "layout": {
+    "QuickLaunchMenu": {
+      "areaEditor": "Редактор областей",
+      "drawMissionAreasMultiAreaHoles": "Малюйте області місії: кілька областей, отвори, KML",
+      "n3dSimWorld": "3D-світ симулятора",
+      "flySitlInAPersistent3d": "Літайте в SITL у постійному 3D-світі: перешкоди, геозони, місії",
+      "mavlinkInspector": "Інспектор MAVLink",
+      "watchLiveMessagesAndGraphs": "Перегляд повідомлень і графіків наживо",
+      "telemetryDashboard": "Панель телеметрії",
+      "liveTelemetryOnItsOwnScreen": "Телеметрія наживо на окремому екрані",
+      "quickLaunchOpenToolsInTheir": "Швидкий запуск: відкривайте інструменти в окремих вікнах",
+      "quickLaunch": "Швидкий запуск"
+    },
+    "UpdateBanner": {
+      "isAvailable": "доступна",
+      "download": "Завантажити",
+      "viewRelease": "Переглянути реліз",
+      "dismiss": "Закрити",
+      "downloading": "Завантаження",
+      "isReadyToInstall": "готова до встановлення",
+      "restartToUpdate": "Перезапустити й оновити"
+    }
+  }
+}

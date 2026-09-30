@@ -1,0 +1,43 @@
+{
+  "tours": {
+    "ActiveTour": {
+      "back": "Назад",
+      "next": "Далее",
+      "next2": "Далее: {{title}}",
+      "nextFeature": "Следующая функция",
+      "done": "Готово"
+    },
+    "TourLaunchGate": {
+      "tourNeedsAVehicle": "Для экскурсии нужен аппарат",
+      "cancel": "Отмена",
+      "thisWalkthroughDemonstratesFeaturesThatNeed": "Эта экскурсия показывает функции, которым нужен живой полётный контроллер. Можно запустить безопасную",
+      "simulationToTryItOrConnect": "симуляцию, чтобы попробовать, или подключить собственный FC.",
+      "ardupilotSitlIsNotSupportedOn": "ArduPilot SITL не поддерживается на этой платформе.",
+      "connectYourOwnFcToContinue": "Подключите собственный FC, чтобы продолжить экскурсию.",
+      "ardupilotSitlIsnTInstalledYet": "ArduPilot SITL ещё не установлен. Перейдите в раздел SITL, чтобы скачать бинарник, — экскурсия продолжится автоматически после подключения.",
+      "goToSitlToInstall": "Перейти к SITL для установки",
+      "startingSitl": "Запуск SITL...",
+      "connecting": "Подключение...",
+      "launch": "Запустить {{sitlLabel}}",
+      "iLlConnectMyOwnFc": "Подключу собственный FC",
+      "notNow": "Не сейчас"
+    },
+    "TourPanelsGate": {
+      "layoutAdjustment": "Изменение раскладки",
+      "cancel": "Отмена",
+      "thisTourWalksThroughPanelsThat": "Эта экскурсия проходит по панелям, которых нет в текущей раскладке:",
+      "missing": "Отсутствуют:",
+      "switchToThe": "Перейти на раскладку",
+      "layoutToSeeTheTourYour": ", чтобы посмотреть экскурсию? Текущая раскладка останется сохранённой — вернуться можно в любой момент через список раскладок.",
+      "switchTo": "Перейти на",
+      "skipThisTour": "Пропустить эту экскурсию"
+    },
+    "TourPrompt": {
+      "quickTour": "Краткая экскурсия",
+      "remindMeLater": "Напомнить позже",
+      "noThanks": "Нет, спасибо",
+      "showMe": "Показать",
+      "donTOfferToursAgain": "Больше не предлагать экскурсии"
+    }
+  }
+}

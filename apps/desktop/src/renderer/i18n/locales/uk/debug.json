@@ -1,0 +1,13 @@
+{
+  "debug": {
+    "DebugConsole": {
+      "console": "Консоль",
+      "messages": "Повідомлення",
+      "clear": "Очистити",
+      "noLogEntries": "Записів немає",
+      "jumpToLatestPaused": "↓ До останніх (призупинено)",
+      "noMessagesFromAutopilot": "Немає повідомлень від автопілота",
+      "fix": "Виправити ›"
+    }
+  }
+}

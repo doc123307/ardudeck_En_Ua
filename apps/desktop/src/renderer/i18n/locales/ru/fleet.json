@@ -1,0 +1,91 @@
+{
+  "fleet": {
+    "DraggableFleetActions": {
+      "dragToMoveMagnetsToPanel": "Тяните, чтобы переместить — прилипает к краям панели и окна",
+      "fleetOps": "Действия с флотом",
+      "expand": "Развернуть",
+      "collapse": "Свернуть",
+      "expandFleetOpsPanel": "Развернуть панель действий с флотом",
+      "collapseFleetOpsPanel": "Свернуть панель действий с флотом"
+    },
+    "FleetContextMenu": {
+      "commandThisVehicle": "Управлять этим аппаратом",
+      "leadsAFleet": "Ведёт флот",
+      "createLeader": "Сделать ведущим",
+      "addToFleet": "Добавить во флот",
+      "join": "Присоединить",
+      "formationShape": "Форма строя",
+      "current": "{{label}} (текущий)",
+      "reForm": "Перестроить: {{label}}",
+      "formUp": "Построиться",
+      "free": "свободный",
+      "disbandsThisFleetItsWingmenReturn": "Расформировывает этот флот — ведомые возвращаются к ручному управлению",
+      "dropFromTheFleetTheRest": "Вывести {{label}} из флота — остальные держат строй",
+      "disbandFleet": "Расформировать флот",
+      "leaveFleet": "Выйти из флота"
+    },
+    "FleetCoordination": {
+      "everyConnectedVehicleArmsAndClimbs": "Каждый подключённый аппарат армится и вместе набирает {{alt}} м",
+      "takeOffAll": "Взлёт всех",
+      "takeoffAltitudeM": "Высота взлёта (м)",
+      "latestReportFromTheCoordinationEngine": "Последний отчёт движка координации (групповой взлёт / старт миссии)",
+      "uploadEachVehicleSAssignedWp": "Загрузить каждому аппарату его группу WP и запустить все {{assignedCount}} миссий в AUTO",
+      "startMissions": "Запустить миссии (",
+      "collapseFleet": "Свернуть флот",
+      "expandFleet": "Развернуть флот",
+      "fleet": "Флот",
+      "armAndClimbOnlySFleet": "Заармить и поднять только флот {{label}} на {{alt}} м",
+      "takeOff": "Взлёт",
+      "reFormSFleet": "Перестроить флот {{label}}: {{label2}}",
+      "fliesItsUploadedMissionInAuto": "{{label}} выполняет загруженную миссию в AUTO; ведомые держат строй и следуют за ним",
+      "startMission": "Запустить миссию"
+    },
+    "FleetDisclosure": {
+      "fleets": "Флоты",
+      "collapseEveryFleet": "Свернуть все флоты",
+      "expandEveryFleet": "Развернуть все флоты",
+      "collapseAll": "Свернуть все",
+      "expandAll": "Развернуть все"
+    },
+    "FleetGroupActions": {
+      "selected": "выбрано",
+      "clear": "Очистить",
+      "confirm": "Подтвердить",
+      "cancel": "Отмена",
+      "arm": "Армить",
+      "disarm": "Дизармить",
+      "start": "Старт"
+    },
+    "FleetStrip": {
+      "clickToDeselect": "{{label}} — щёлкните, чтобы снять выбор",
+      "clickToSetIdentityColour": "{{v1}} — {{state}} (щёлкните, чтобы задать цвет)",
+      "setColour": "Установить цвет {{c}}",
+      "lead": "Ведущий",
+      "selectForGroupCommands": "Выбрать для групповых команд",
+      "orders": "Приказы",
+      "expandFleet": "Развернуть флот",
+      "fleet": "Флот",
+      "collapseFleet": "Свернуть флот",
+      "dragAVehicleHere": "Перетащите аппарат сюда",
+      "unassigned": "Без флота",
+      "dropToRemoveFromFleet": "Отпустите, чтобы вывести из флота"
+    },
+    "FormationGlyphs": {
+      "veeDelta": "Клин (дельта)",
+      "lineAbreastWall": "Фронт (стена)",
+      "columnTrail": "Колонна (след в след)",
+      "echelonRight": "Пеленг вправо",
+      "echelonLeft": "Пеленг влево",
+      "diamond": "Ромб",
+      "boxGrid": "Коробка (сетка)",
+      "surveySweepWide": "Прочёсывание (широкое)"
+    },
+    "MissionPathsToggle": {
+      "missionPaths": "Маршруты миссий",
+      "drawEveryVehicleSFlightPath": "Показывать маршрут каждого аппарата (выбранный — сплошной, остальные — приглушённые)",
+      "allVehiclePaths": "Маршруты всех аппаратов",
+      "drawOnlyTheSelectedVehicleS": "Показывать только маршрут выбранного аппарата",
+      "selectedOnly": "Только выбранный"
+    }
+  }
+}

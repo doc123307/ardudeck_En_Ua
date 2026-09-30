@@ -1,0 +1,14 @@
+{
+  "detached": {
+    "DetachedRoot": {
+      "unknownComponent": "Неизвестный компонент",
+      "missing": "(отсутствует)",
+      "isNotRegistered": "не зарегистрирован.",
+      "closeThisWindowAndReturnTo": "Закрыть это окно и вернуться в ArduDeck",
+      "dockBack": "Вернуть обратно",
+      "pinnedOnTopClickToUnpin": "Закреплено поверх, щёлкните, чтобы открепить",
+      "keepThisWindowOnTopOf": "Держать это окно поверх ArduDeck",
+      "toggleAlwaysOnTop": "Переключить «поверх всех окон»"
+    }
+  }
+}

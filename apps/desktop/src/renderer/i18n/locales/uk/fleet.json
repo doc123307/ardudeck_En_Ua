@@ -1,0 +1,91 @@
+{
+  "fleet": {
+    "DraggableFleetActions": {
+      "dragToMoveMagnetsToPanel": "Тягніть, щоб перемістити — прилипає до країв панелі й вікна",
+      "fleetOps": "Дії з флотом",
+      "expand": "Розгорнути",
+      "collapse": "Згорнути",
+      "expandFleetOpsPanel": "Розгорнути панель дій із флотом",
+      "collapseFleetOpsPanel": "Згорнути панель дій із флотом"
+    },
+    "FleetContextMenu": {
+      "commandThisVehicle": "Керувати цим апаратом",
+      "leadsAFleet": "Веде флот",
+      "createLeader": "Зробити ведучим",
+      "addToFleet": "Додати до флоту",
+      "join": "Приєднати",
+      "formationShape": "Форма строю",
+      "current": "{{label}} (поточний)",
+      "reForm": "Перешикувати: {{label}}",
+      "formUp": "Шикуватися",
+      "free": "вільний",
+      "disbandsThisFleetItsWingmenReturn": "Розформовує цей флот — ведені повертаються до ручного керування",
+      "dropFromTheFleetTheRest": "Вивести {{label}} з флоту — решта тримає стрій",
+      "disbandFleet": "Розформувати флот",
+      "leaveFleet": "Вийти з флоту"
+    },
+    "FleetCoordination": {
+      "everyConnectedVehicleArmsAndClimbs": "Кожен підключений апарат армується й разом набирає {{alt}} м",
+      "takeOffAll": "Зліт усіх",
+      "takeoffAltitudeM": "Висота зльоту (м)",
+      "latestReportFromTheCoordinationEngine": "Останній звіт рушія координації (груповий зліт / старт місії)",
+      "uploadEachVehicleSAssignedWp": "Завантажити кожному апарату його групу WP і запустити всі {{assignedCount}} місій в AUTO",
+      "startMissions": "Запустити місії (",
+      "collapseFleet": "Згорнути флот",
+      "expandFleet": "Розгорнути флот",
+      "fleet": "Флот",
+      "armAndClimbOnlySFleet": "Заармити й підняти лише флот {{label}} на {{alt}} м",
+      "takeOff": "Зліт",
+      "reFormSFleet": "Перешикувати флот {{label}}: {{label2}}",
+      "fliesItsUploadedMissionInAuto": "{{label}} виконує завантажену місію в AUTO; ведені тримають стрій і йдуть слідом",
+      "startMission": "Запустити місію"
+    },
+    "FleetDisclosure": {
+      "fleets": "Флоти",
+      "collapseEveryFleet": "Згорнути всі флоти",
+      "expandEveryFleet": "Розгорнути всі флоти",
+      "collapseAll": "Згорнути все",
+      "expandAll": "Розгорнути все"
+    },
+    "FleetGroupActions": {
+      "selected": "вибрано",
+      "clear": "Очистити",
+      "confirm": "Підтвердити",
+      "cancel": "Скасувати",
+      "arm": "Армувати",
+      "disarm": "Дизармувати",
+      "start": "Старт"
+    },
+    "FleetStrip": {
+      "clickToDeselect": "{{label}} — клацніть, щоб зняти вибір",
+      "clickToSetIdentityColour": "{{v1}} — {{state}} (клацніть, щоб задати колір)",
+      "setColour": "Встановити колір {{c}}",
+      "lead": "Ведучий",
+      "selectForGroupCommands": "Вибрати для групових команд",
+      "orders": "Накази",
+      "expandFleet": "Розгорнути флот",
+      "fleet": "Флот",
+      "collapseFleet": "Згорнути флот",
+      "dragAVehicleHere": "Перетягніть апарат сюди",
+      "unassigned": "Без флоту",
+      "dropToRemoveFromFleet": "Відпустіть, щоб вивести з флоту"
+    },
+    "FormationGlyphs": {
+      "veeDelta": "Клин (дельта)",
+      "lineAbreastWall": "Фронт (стіна)",
+      "columnTrail": "Колона (слід у слід)",
+      "echelonRight": "Пеленг вправо",
+      "echelonLeft": "Пеленг вліво",
+      "diamond": "Ромб",
+      "boxGrid": "Коробка (сітка)",
+      "surveySweepWide": "Прочісування (широке)"
+    },
+    "MissionPathsToggle": {
+      "missionPaths": "Маршрути місій",
+      "drawEveryVehicleSFlightPath": "Показувати маршрут кожного апарата (вибраний — суцільний, інші — приглушені)",
+      "allVehiclePaths": "Маршрути всіх апаратів",
+      "drawOnlyTheSelectedVehicleS": "Показувати лише маршрут вибраного апарата",
+      "selectedOnly": "Лише вибраний"
+    }
+  }
+}

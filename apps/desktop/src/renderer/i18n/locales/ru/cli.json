@@ -1,0 +1,51 @@
+{
+  "cli": {
+    "CliTerminal": {
+      "cliMode": "Режим CLI",
+      "mspMode": "Режим MSP",
+      "tabComplete": "Tab: дополнение",
+      "upDownHistory": "Вверх/Вниз: история",
+      "ctrlCCopyAbort": "Ctrl+C: копировать/прервать",
+      "ctrlVPaste": "Ctrl+V: вставить"
+    },
+    "CliView": {
+      "cliTerminal": "Терминал CLI",
+      "rawCommandLineInterface": "Прямой интерфейс командной строки",
+      "saveTerminalOutputToFile": "Сохранить вывод терминала в файл",
+      "saving": "Сохранение...",
+      "saveTxt": "Сохранить TXT",
+      "runDumpCommandAndSaveParameters": "Выполнить dump и сохранить параметры в JSON",
+      "dumping": "Выгрузка...",
+      "exportJson": "Экспорт JSON",
+      "clearTerminalOutput": "Очистить вывод терминала",
+      "clear": "Очистить",
+      "loadConfigForAutocomplete": "Загрузить конфигурацию для автодополнения",
+      "loadConfig": "Загрузить конфигурацию",
+      "autocompleteActive": "Автодополнение активно",
+      "notConnected": "Не подключено",
+      "connectToAFlightControllerTo": "Подключите полётный контроллер, чтобы пользоваться терминалом CLI.",
+      "directCommandLineAccessToYour": "Прямой доступ к командной строке полётного контроллера. Телеметрия MSP будет приостановлена на время работы в CLI.",
+      "rebootOnExit": "Перезагрузка при выходе",
+      "leavingTheCliTabSendsAn": "Выход из вкладки CLI отправляет команду exit, из-за которой полётный контроллер перезагружается (2–4 секунды). Программа автоматически переподключится.",
+      "enteringCli": "Вход в CLI...",
+      "enterCliMode": "Войти в режим CLI",
+      "cliMode": "Режим CLI",
+      "mspTelemetryPausedWhileInCli": "— телеметрия MSP приостановлена на время работы в CLI.",
+      "type": "Введите",
+      "forCommands": "для списка команд,",
+      "forFullConfig": "для полной конфигурации,",
+      "toReturnToMspMode": "чтобы вернуться в режим MSP.",
+      "savingConfiguration": "Сохранение конфигурации",
+      "rebootingBoard": "Перезагрузка платы",
+      "disconnecting": "Отключение",
+      "saveComplete": "Сохранение завершено",
+      "saveFailed": "Не удалось сохранить",
+      "dismiss": "Закрыть",
+      "exportParameters": "Экспорт параметров",
+      "thisWillClearTheCliTerminal": "Терминал CLI будет очищен, выполнена команда",
+      "commandAndSaveAllParametersAs": "и все параметры сохранены в JSON.",
+      "cancel": "Отмена",
+      "export": "Экспортировать"
+    }
+  }
+}

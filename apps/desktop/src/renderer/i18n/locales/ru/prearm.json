@@ -1,0 +1,27 @@
+{
+  "prearm": {
+    "PreArmParamFix": {
+      "openInParameters": "Открыть {{paramId}} в параметрах",
+      "openInParameters2": "Открыть в параметрах"
+    },
+    "PreflightCheckCard": {
+      "preFlightChecks": "Предполётные проверки",
+      "checking": "Проверка...",
+      "issue": "проблем",
+      "ready": "Готово",
+      "recheck": "Проверить снова",
+      "readyToArm": "Готов к арму"
+    },
+    "SafetyConfigCard": {
+      "doNotFly": "Не летайте",
+      "checkThis": "Проверьте это",
+      "worthKnowing": "Стоит знать",
+      "setsTo": "Устанавливает {{param}} = {{value}}",
+      "applying": "Применение…",
+      "applied": "Применено",
+      "couldNotWriteOpenTheParameter": "Не удалось записать, откройте параметр вручную",
+      "safetyConfiguration": "Настройки безопасности",
+      "item": "пунктов"
+    }
+  }
+}

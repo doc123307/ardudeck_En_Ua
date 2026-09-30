@@ -1,0 +1,100 @@
+{
+  "trainer": {
+    "NewRegionDialog": {
+      "theRegionCouldNotBeBuilt": "Не удалось построить регион.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите ArduDeck, если Тренажёр только что обновился.",
+      "newRegion": "Новый регион",
+      "anywhereOnEarthBuiltFromOpen": "Где угодно на Земле. Строится из открытых данных высот, снимков и карт.",
+      "gettingStarted": "Начало",
+      "stop": "Остановить",
+      "name": "Название",
+      "place": "Место",
+      "barMontenegro": "Бар, Черногория",
+      "size": "Размер",
+      "detail": "Детализация",
+      "aerialDetail": "Детализация аэроснимков",
+      "superResolution": "Суперразрешение",
+      "sharpensThe10MSatelliteGround": "Повышает чёткость спутниковой поверхности с 10 м до 2,5 м. Добавляет около трёх минут.",
+      "roughly": "Примерно",
+      "minutesAerialDetailAndSuperResolution": "мин. Это определяют детализация аэроснимков и суперразрешение; остальной конвейер вместе занимает меньше двух минут.",
+      "km": "км²",
+      "texels": "текселей",
+      "thatIsLargerThan": "Это больше чем",
+      "kmWhichIsMoreThanA": "км², а столько обработка не успеет завершить.",
+      "cancel": "Отмена",
+      "buildRegion": "Построить регион"
+    },
+    "SkyPreview": {
+      "skyWindMetresPerSecond": "Небо: {{preset}}, ветер {{v2}} м/с",
+      "stillAir": "штиль"
+    },
+    "TrainerConditionsStep": {
+      "conditions": "Условия",
+      "timeWeatherAndWind": "Время, погода и ветер",
+      "timeOfDay": "Время суток",
+      "weather": "Погода",
+      "realWeatherHere": "Реальная погода здесь",
+      "rightNow": "Сейчас:",
+      "cloudWind": "% облачности, ветер",
+      "readsAs": "соответствует",
+      "wind": "Ветер",
+      "realWindHere": "Реальный ветер здесь",
+      "takenFromTheRealWeather": "Взято из реальной погоды:",
+      "mSFrom": "м/с с",
+      "gustingTo": ", порывы до",
+      "mSTheTrainerReReads": "м/с. Тренажёр перечитывает данные на месте полётов, которое может не совпадать с вашим.",
+      "speedAt10M": "Скорость на 10 м",
+      "comingFrom": "Направление откуда",
+      "gusts": "Порывы"
+    },
+    "TrainerQuickAction": {
+      "flyThisVehicleInTheTrainer": "Полетать этим аппаратом в Тренажёре с места, где он стоит",
+      "startingTheTrainer": "Запуск Тренажёра…",
+      "flyInTrainer": "Летать в Тренажёре"
+    },
+    "TrainerRegionStep": {
+      "whereYouFly": "Где вы летаете",
+      "bakedOnThisMachine": "Созданные на этом компьютере",
+      "rescan": "Сканировать снова",
+      "newRegion": "Новый регион",
+      "askingTheTrainerWhatItHas": "Запрос к Тренажёру о доступных регионах…",
+      "couldNotDeleteThatRegion": "Не удалось удалить регион.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите ArduDeck, если Тренажёр только что обновился.",
+      "readyToFly": "Готов к полёту",
+      "unfinished": "Не завершено",
+      "ground": "Поверхность",
+      "elevation": "Высоты",
+      "imagery": "Снимки",
+      "onDisk": "На диске",
+      "buildingStoppedEarlySoThisPlace": "Построение остановлено преждевременно, поэтому здесь нет",
+      "deleteItAndBuildItAgain": ". Удалите и постройте заново, чтобы завершить.",
+      "delete": "Удалить",
+      "cancel": "Отмена",
+      "deleting": "Удаление…"
+    },
+    "TrainerVehicleStep": {
+      "vehicle": "Аппарат",
+      "theFrameComesFromTheFlight": "Рама берётся из полётного контроллера, запущенного в ArduDeck.",
+      "goggles": "Очки",
+      "theTrainerSOwn": "Собственный",
+      "lens": "Объектив",
+      "heldLevelByItsMountSo": "Крепление держит её ровно, так что горизонт никогда не наклоняется. Значит, никаких подсказок о положении — это действительно другой навык пилотирования.",
+      "takeOffPoint": "Точка взлёта",
+      "flightController": "Полётный контроллер"
+    },
+    "TrainerView": {
+      "region": "Регион",
+      "whereYouFly": "Где вы летаете",
+      "conditions": "Условия",
+      "timeWeatherAndWind": "Время, погода и ветер",
+      "vehicle": "Аппарат",
+      "cameraAndFrame": "Камера и рама",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустите ArduDeck, если Тренажёр только что обновился.",
+      "theTrainerDidNotStart": "Тренажёр не запустился.",
+      "readyToFly": "Готов к полёту",
+      "checking": "Проверка…",
+      "starting": "Запуск…",
+      "flyInTrainer": "Летать в Тренажёре"
+    }
+  }
+}

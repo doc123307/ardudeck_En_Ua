@@ -1,0 +1,27 @@
+{
+  "prearm": {
+    "PreArmParamFix": {
+      "openInParameters": "Відкрити {{paramId}} у параметрах",
+      "openInParameters2": "Відкрити в параметрах"
+    },
+    "PreflightCheckCard": {
+      "preFlightChecks": "Передпольотні перевірки",
+      "checking": "Перевірка...",
+      "issue": "проблем",
+      "ready": "Готово",
+      "recheck": "Перевірити знову",
+      "readyToArm": "Готово до армування"
+    },
+    "SafetyConfigCard": {
+      "doNotFly": "Не літайте",
+      "checkThis": "Перевірте це",
+      "worthKnowing": "Варто знати",
+      "setsTo": "Встановлює {{param}} = {{value}}",
+      "applying": "Застосування…",
+      "applied": "Застосовано",
+      "couldNotWriteOpenTheParameter": "Не вдалося записати, відкрийте параметр вручну",
+      "safetyConfiguration": "Налаштування безпеки",
+      "item": "пунктів"
+    }
+  }
+}

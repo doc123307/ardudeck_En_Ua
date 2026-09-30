@@ -1,0 +1,29 @@
+{
+  "geofence": {
+    "FenceListPanel": {
+      "geofence": "Геозона",
+      "modified": "Змінено",
+      "geofencingIsNotSupportedOnInav": "Геозони не підтримуються на платах iNav/Betaflight. Ви все одно можете планувати геозони й зберігати їх у файл для довідки.",
+      "returnPoint": "Точка повернення",
+      "alt": "Вис.:",
+      "remove": "Прибрати",
+      "noReturnPointSet": "Точку повернення не задано",
+      "inclusionZones": "Дозволені зони (",
+      "noInclusionZones": "Немає дозволених зон",
+      "polygonPts": "Полігон ({{length}} т.)",
+      "circleM": "Коло ({{v1}} м)",
+      "exclusionZones": "Заборонені зони (",
+      "noExclusionZones": "Немає заборонених зон",
+      "clickAZoneHereOrOn": "Клацніть зону (тут або на карті), щоб перемістити, змінити форму чи видалити її.",
+      "polygon": "полігон",
+      "circle": "коло",
+      "breach": "порушення"
+    },
+    "FenceMapOverlay": {
+      "clickToEditOrDeleteThis": "Клацніть, щоб змінити або видалити цю зону",
+      "dragToMoveTheWholeZone": "Тягніть, щоб перемістити всю зону",
+      "rightClickToDelete": " ПКМ — видалити",
+      "deleteThisZoneDel": "Видалити цю зону (Del)"
+    }
+  }
+}

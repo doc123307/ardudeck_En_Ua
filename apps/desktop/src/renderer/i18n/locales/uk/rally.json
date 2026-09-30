@@ -1,0 +1,27 @@
+{
+  "rally": {
+    "RallyListPanel": {
+      "rallyPoints": "Точки збору",
+      "modified": "Змінено",
+      "emergencyLandingLocations": "Місця аварійної посадки",
+      "downloading": "Завантаження з апарата",
+      "uploading": "Вивантаження на апарат",
+      "noRallyPoints": "Немає точок збору",
+      "clickAddRallyOnTheMap": "Натисніть «Додати точку збору» на карті, щоб створити",
+      "point": "точок",
+      "loading": "Завантаження...",
+      "alt": "Вис.:",
+      "remove": "Видалити",
+      "rallyPointR": "Точка збору R",
+      "position": "Позиція",
+      "altitude": "Висота",
+      "breakAlt": "Висота виходу",
+      "altitudeToExitLoiterAndBegin": "Висота, на якій вийти з кружляння й почати посадку",
+      "landHeading": "Курс посадки (°)",
+      "n0AnyDirection": "0 = будь-який напрямок",
+      "flags": "Прапорці",
+      "landIntoWind": "Сідати проти вітру",
+      "landImmediatelyNoLoiter": "Сідати одразу (без кружляння)"
+    }
+  }
+}

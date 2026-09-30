@@ -1,0 +1,127 @@
+{
+  "stores": {
+    "ardupilot_sitl_store": {
+      "quadDefault": "Квадро (по умолчанию)",
+      "quadPlus": "Квадро плюс (+)",
+      "hexacopter": "Гексакоптер",
+      "octocopter": "Октокоптер",
+      "tricopter": "Трикоптер",
+      "coaxialCopter": "Соосный коптер",
+      "helicopter": "Вертолёт",
+      "singleCopter": "Однороторный коптер",
+      "planeDefault": "Самолёт (по умолчанию)",
+      "vTailPlane": "Самолёт с V-хвостом",
+      "planeWSpoilers": "Самолёт со спойлерами",
+      "roverDefault": "Ровер (по умолчанию)",
+      "skidSteering": "Бортовой поворот",
+      "boat": "Лодка",
+      "sailboat": "Парусник",
+      "balanceBot": "Балансирующий робот",
+      "vectoredDefault": "Векторный (по умолчанию)",
+      "vectored6dof": "Векторный 6DOF"
+    },
+    "calibration_store": {
+      "waitingForFlightController": "Ожидание полётного контроллера...",
+      "placeVehicle": "Положите аппарат {{v1}}",
+      "finalizingCalibrationOnFlightController": "Завершение калибровки на полётном контроллере...",
+      "savingCalibration": "Сохранение калибровки...",
+      "noCompassFitnessReported": "Качество калибровки компаса не сообщено.",
+      "recorded": "Записано."
+    },
+    "cli_store": {
+      "failedToSaveConfiguration": "Не удалось сохранить конфигурацию"
+    },
+    "fence_store": {
+      "downloadedFenceItemsFromFlightController": "Загружено элементов геозоны с полётного контроллера: {{length}}",
+      "uploadedFenceItemsToFlightController": "Выгружено элементов геозоны на полётный контроллер: {{itemCount}}",
+      "fenceClearedFromFlightController": "Геозона удалена с полётного контроллера"
+    },
+    "firmware_store": {
+      "downloadingFirmware": "Загрузка прошивки...",
+      "startingFlash": "Начало прошивки...",
+      "flashFailed": "Ошибка прошивки",
+      "waitingForBoardToReboot6s": "Ожидание перезагрузки платы (6 с)...",
+      "connectingToBoardAttempt": "Подключение к плате (попытка {{attempt}}/{{MAX_RETRIES}})...",
+      "connectionFailedRetryingInS": "Не удалось подключиться, повтор через {{v1}} с...",
+      "checkingPlatformConfiguration": "Проверка конфигурации платформы...",
+      "boardAlreadyConfiguredAsAirplane": "Плата уже настроена как самолёт",
+      "configuringBoardAsAirplane": "Настройка платы как самолёта...",
+      "savingToEeprom": "Запись в EEPROM...",
+      "rebootingBoard": "Перезагрузка платы...",
+      "boardConfiguredAsAirplaneReconnectWhen": "Плата настроена как самолёт! Переподключитесь, когда будете готовы."
+    },
+    "legacy_config_store": {
+      "failedToSaveConfiguration": "Не удалось сохранить конфигурацию"
+    },
+    "mission_store": {
+      "noWaypointsOnFc": "На FC нет путевых точек",
+      "vehicleMission": "Миссия аппарата @ {{stamp}}",
+      "downloadedWaypointsFromFcInto": "Загружено точек с FC в «{{name}}»: {{length}}",
+      "uploadedWaypointsToFc": "Выгружено точек на FC: {{length}}",
+      "uploadedWaypointsToVehicle": "Выгружено точек на аппарат: {{length}}",
+      "savedWaypointsToFile": "Сохранено точек в файл: {{length}}",
+      "missionClearedFromFc": "Миссия удалена с FC",
+      "downloadedWaypointsFromFlightControllerInto": "Загружено точек с полётного контроллера в «{{name}}»: {{length}}",
+      "uploadedWaypointsToFlightController": "Выгружено точек на полётный контроллер: {{itemCount}}",
+      "missionClearedFromFlightController": "Миссия удалена с полётного контроллера",
+      "recoveredWaypointsFromYourLastSession": "Восстановлено точек из прошлого сеанса: {{length}}"
+    },
+    "osd_store": {
+      "readingFromFlightController": "Чтение с полётного контроллера...",
+      "noOsdConfigReturnedByFc": "FC не вернул конфигурацию OSD",
+      "loadedElementsFromFc": "Загружено элементов с FC: {{count}}",
+      "downloadingParameters": "Загрузка параметров...",
+      "noOsdParametersOnThisBoard": "На этой плате нет параметров OSD (задан OSD_TYPE?)",
+      "loadedElementsFromScreen": "Загружено элементов с экрана {{screen}}: {{resolved}}",
+      "connectToAnArdupilotOrBetaflight": "Сначала подключитесь к FC с ArduPilot или Betaflight/iNav",
+      "readFailed": "Ошибка чтения: {{msg}}",
+      "uploadingOsdLayout": "Выгрузка раскладки OSD...",
+      "uploadedElementsAndSavedToFc": "Выгружено элементов: {{written}}, сохранено на FC",
+      "uploadFailed": "Ошибка выгрузки: {{v1}}",
+      "downloadingParameters2": "Загрузка параметров…",
+      "noneOfTheEnabledElementsMap": "Ни один из включённых элементов не соответствует параметрам OSD этого экрана",
+      "noOsdParametersOnThisBoard2": "На этой плате нет параметров OSD (задан OSD_TYPE / OSD включён?)",
+      "uploadingParameters": "Выгрузка параметров: {{length}}...",
+      "uploadedParametersToScreen": "Выгружено параметров на экран {{screen}}: {{confirmed}}",
+      "uploadedNotConfirmed": "Выгружено {{confirmed}}/{{length}}; не подтверждено: {{length2}}",
+      "connectToAFlightControllerFirst": "Сначала подключитесь к полётному контроллеру",
+      "uploadFailed2": "Ошибка выгрузки: {{msg}}",
+      "ardupilotPicksAFontViaThe": "ArduPilot выбирает шрифт параметром OSD_FONT, а не выгрузкой",
+      "connectABetaflightInavBoardTo": "Подключите плату Betaflight/iNAV, чтобы выгрузить аналоговый шрифт",
+      "noFontLoaded": "Шрифт не загружен",
+      "uploadingFontToFcNvm": "Выгрузка шрифта в NVM FC…",
+      "fontUploadedCharsRebootTheFc": "Шрифт выгружен ({{written}} символов), перезагрузите FC, чтобы применить",
+      "fontUploadFailed": "Ошибка выгрузки шрифта: {{v1}}",
+      "fontUploadFailed2": "Ошибка выгрузки шрифта: {{msg}}"
+    },
+    "pseudo_tx_store": {
+      "switchTheUsbTransmitterOnFirst": "Сначала включите USB-пульт",
+      "needsAConnectedMavlinkVehicle": "Нужен подключённый MAVLink-аппарат"
+    },
+    "rally_store": {
+      "downloadedRallyPointsFromFlightController": "Загружено точек сбора с полётного контроллера: {{length}}",
+      "uploadedRallyPointsToFlightController": "Выгружено точек сбора на полётный контроллер: {{itemCount}}",
+      "rallyPointsClearedFromFlightController": "Точки сбора удалены с полётного контроллера"
+    },
+    "servo_wizard_store": {
+      "aircraft": "Аппарат",
+      "selectYourAircraftType": "Выберите тип аппарата",
+      "assign": "Назначение",
+      "mapServosToControlSurfaces": "Назначьте сервы рулевым поверхностям",
+      "test": "Проверка",
+      "verifyServoMovement": "Проверьте движение серв",
+      "calibrate": "Калибровка",
+      "adjustServoLimits": "Настройте пределы серв",
+      "save": "Сохранение",
+      "reviewAndSave": "Просмотрите и сохраните"
+    },
+    "settings_store": {
+      "udpListen": "UDP :{{v1}} прослушивание ({{v2}})"
+    },
+    "sitl_store": {
+      "freshInavInstallWithFactoryDefaults": "Чистая iNav с заводскими настройками. Для общего тестирования.",
+      "preConfiguredForFixedWingTesting": "Предварительно настроено для тестирования самолёта с микшером airplane.",
+      "preConfiguredForQuadTestingWith": "Предварительно настроено для тестирования квадро с микшером X."
+    }
+  }
+}

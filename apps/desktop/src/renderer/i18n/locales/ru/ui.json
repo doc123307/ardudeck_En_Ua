@@ -1,0 +1,39 @@
+{
+  "ui": {
+    "Detachable": {
+      "openInNewWindow": "Открыть {{title}} в новом окне",
+      "openInSeparateWindow": "Открыть в отдельном окне",
+      "dockBackHere": "Вернуть сюда"
+    },
+    "ErrorBoundary": {
+      "theHitAnError": "В «{{label}}» произошла ошибка",
+      "somethingWentWrong": "Что-то пошло не так",
+      "tryAgain": "Попробовать ещё раз"
+    },
+    "ExperienceLevelDialog": {
+      "welcomeToArdudeck": "Добро пожаловать в ArduDeck",
+      "chooseYourExperienceLevelToTailor": "Выберите уровень опыта, чтобы настроить интерфейс",
+      "beginner": "Новичок",
+      "showTipsExplanationsAndGuidesThroughout": "Показывать советы, пояснения и руководства по всему интерфейсу, чтобы помочь научиться.",
+      "advanced": "Опытный",
+      "cleanInterfaceWithNoHandHolding": "Чистый интерфейс без подсказок. Обучающие карточки и встроенные советы скрыты.",
+      "youCanChangeThisAnytimeIn": "Это можно в любой момент изменить в настройках"
+    },
+    "InfoCard": {
+      "tip": "Совет:"
+    },
+    "ProfileManager": {
+      "resetToFactoryDefaults": "Сбросить к заводским настройкам",
+      "reset": "Сбросить",
+      "name": "Название...",
+      "saveCurrentSettingsAsAProfile": "Сохранить текущие настройки как профиль",
+      "save": "Сохранить"
+    },
+    "RateCurve": {
+      "responseCurve": "Кривая отклика",
+      "max": "Макс:",
+      "stick": "Стик",
+      "rate": "Rate"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "components": {
+    "PseudoTxSwitch": {
+      "channelMapping": "Призначення каналів",
+      "reset": "Скинути",
+      "channelIsReversedClickToRestore": "Канал інвертовано — клацніть, щоб повернути",
+      "reverseThisChannel": "Інвертувати цей канал",
+      "rev": "Інв",
+      "assign": "Призначити",
+      "unassign": "Зняти призначення",
+      "press": "Натисніть",
+      "thenMoveTheStickOrFlick": ", потім поворушіть стік або перемкніть тумблер, який хочете призначити на цей канал. Непризначені канали тримають 1500.",
+      "deviceMonitor": "Монітор пристрою",
+      "axes": "осей —",
+      "buttons": "кнопок",
+      "mapping": " — розкладка «{{mappingMode}}»",
+      "rawHid": " — сирий HID",
+      "theBrowserHasAppliedItsStandard": "Браузер застосував до цього пристрою стандартну розкладку геймпада, яка лишає лише чотири осі й відкидає решту — тому тумблери не надходять. Перепідключіть пульт, уже переведений у режим USB Joystick, або використайте модель, чий USB-дескриптор не розпізнається як ігровий контролер.",
+      "flyWithUsbTransmitter": "Літати з USB-пультом",
+      "looksLikeAGamepadNotA": "— схоже на геймпад, а не на пульт",
+      "trainerSessionActiveTheTrainerOwns": "Активний сеанс тренажера — стіками керує тренажер",
+      "sendsRcChannelsOverrideToThe": "Надсилає RC_CHANNELS_OVERRIDE підключеному апарату. Джойстик БУДЕ керувати апаратом.",
+      "joystickControlsVehicle": "Джойстик керує апаратом",
+      "framesSToVehicle": "кадрів/с на апарат",
+      "offSendsNothingToTheAircraft": "Вимк. — нічого не надсилається апарату"
+    }
+  }
+}

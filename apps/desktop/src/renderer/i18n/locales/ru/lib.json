@@ -1,0 +1,266 @@
+{
+  "lib": {
+    "apply": {
+      "noVehicleConnected": "Аппарат не подключён",
+      "vehicleIsArmedDisarmBeforeApplying": "Аппарат заармлен, дизармьте перед применением",
+      "parametersNotLoadedYetFetchThem": "Параметры ещё не загружены, сначала считайте их",
+      "expectedSitlButConnectionIsA": "Ожидался SITL, но подключён настоящий FC",
+      "expectedARealFcButConnection": "Ожидался настоящий FC, но подключён SITL",
+      "noTemplateResolvedForProfile": "Для профиля не найден шаблон",
+      "vehicleAlreadyMatchesProfileNothingTo": "Аппарат уже соответствует профилю, менять нечего",
+      "apply": "Применить {{name}}",
+      "restoreFromSnapshot": "Восстановить из снимка {{v1}}"
+    },
+    "boat_catamaran": {
+      "twinHullTwinPropStablePlatform": "Два корпуса, два винта, стабильная платформа",
+      "boatRoverFrameClass": "Лодка (класс рамы rover)",
+      "boat": "Лодка",
+      "throttleLeftHull": "Газ левого корпуса",
+      "throttleRightHull": "Газ правого корпуса",
+      "waypointSpeed": "Скорость между точками"
+    },
+    "boat_single_prop": {
+      "rudderOneMotor": "Руль + один мотор",
+      "boatRoverFrameClass": "Лодка (класс рамы rover)",
+      "boat": "Лодка",
+      "rudderGroundSteering": "Руль (наземное управление)",
+      "throttle": "Газ",
+      "waypointSpeed": "Скорость между точками"
+    },
+    "boat_twin_prop": {
+      "twoMotorsDifferentialThrustSteeringNo": "Два мотора, управление разницей тяги (без руля)",
+      "boatRoverFrameClass": "Лодка (класс рамы rover)",
+      "boat": "Лодка",
+      "throttleLeft": "Газ левый",
+      "throttleRight": "Газ правый",
+      "waypointSpeed": "Скорость между точками"
+    },
+    "copter_coaxial": {
+      "eightMotorsIn4CoaxialPairs": "Восемь моторов в 4 коаксиальных парах, промышленная рабочая лошадка",
+      "octaquadCoaxialX8": "OctaQuad (коаксиальный X8)",
+      "xArrangement": "Схема X"
+    },
+    "copter_hex_plus": {
+      "sixMotorsInClassicHeavyLift": "Шесть моторов по схеме +, классическая грузовая компоновка",
+      "hexacopter": "Гексакоптер"
+    },
+    "copter_hex_x": {
+      "sixMotorsRedundancyHeavyLift": "Шесть моторов: резервирование, большая грузоподъёмность",
+      "hexacopter": "Гексакоптер",
+      "xArrangement": "Схема X"
+    },
+    "copter_octo_plus": {
+      "eightMotorsInSymmetricalHeavyLift": "Восемь моторов по схеме +, симметричная грузовая",
+      "octocopter": "Октокоптер"
+    },
+    "copter_octo_x": {
+      "eightMotorsMaximumRedundancyHeavyCinema": "Восемь моторов: максимальное резервирование, тяжёлая киносъёмка",
+      "octocopter": "Октокоптер",
+      "xArrangement": "Схема X"
+    },
+    "copter_quad_h": {
+      "fourMotorsInHPatternRigid": "Четыре мотора по схеме H, жёсткая рама для камер",
+      "quadcopter": "Квадрокоптер",
+      "hArrangement": "Схема H"
+    },
+    "copter_quad_plus": {
+      "fourMotorsInPatternMotor1": "Четыре мотора по схеме +, мотор 1 спереди",
+      "quadcopter": "Квадрокоптер"
+    },
+    "copter_quad_x": {
+      "fourMotorsInAnXPattern": "Четыре мотора по схеме X, классический мультиротор",
+      "quadcopter": "Квадрокоптер",
+      "xArrangement": "Схема X"
+    },
+    "copter_tri": {
+      "threeMotorsYawServoEfficientAnd": "Три мотора + серво рыскания, экономичный и своеобразный",
+      "tricopter": "Трикоптер",
+      "yArrangement": "Схема Y"
+    },
+    "copter_y6": {
+      "threeArmsTwoMotorsEachCoaxial": "Три луча по два мотора (коаксиально), компактное резервирование",
+      "octaquadY6": "OctaQuad / Y6",
+      "y6bCoaxial": "Y6B (коаксиальный)"
+    },
+    "param_helpers": {
+      "capacityFromProfileMah": "Ёмкость из профиля ({{batteryCapacity}} мА·ч)",
+      "sVLowThreshold": "{{batteryCells}}S × {{v2}} В (порог низкого заряда {{v3}})",
+      "sVCriticalThreshold": "{{batteryCells}}S × {{v2}} В (критический порог {{v3}})",
+      "analogVoltageCurrentMonitoring": "Аналоговый контроль напряжения и тока",
+      "stall115MSMargin": "Сваливание × 1,15 = {{v1}} м/с (запас над скоростью сваливания)",
+      "stall15MSEfficient": "Сваливание × 1,5 = {{v1}} м/с (экономичный крейсер)",
+      "stall22MSSafe": "Сваливание × 2,2 = {{v1}} м/с (безопасная верхняя граница)",
+      "trimAirspeedInCmSCruise": "Балансировочная воздушная скорость в см/с = крейсерская × 100",
+      "elevonLeftOutputDeltaWing": "Выход левого элевона (летающее крыло)",
+      "elevonRightOutputDeltaWing": "Выход правого элевона (летающее крыло)",
+      "standardElevonMixingGain": "Стандартный коэффициент микширования элевонов",
+      "vTailLeftPitchYawMix": "V-хвост левый (микс тангаж+рыскание)",
+      "vTailRightPitchYawMix": "V-хвост правый (микс тангаж+рыскание)",
+      "standardVTailMixingGain": "Стандартный коэффициент микширования V-хвоста",
+      "simulatedFullChargeVoltageS4": "Симулируемое напряжение полного заряда ({{batteryCells}}S × 4,20 В)",
+      "simulatedCapacityMah": "Симулируемая ёмкость ({{batteryCapacity}} мА·ч)",
+      "scaledFromTWEnginePower": "Масштабировано из тяговооружённости {{thrustToWeight}} (множитель мощности двигателя)",
+      "dragCoefficientFromProfile": "Коэффициент сопротивления из профиля",
+      "servoResponseTimeFromS": "Время отклика серво из {{servoSpeed}}°/с",
+      "enableAllPreArmChecks": "Включить все предполётные проверки"
+    },
+    "plane_flying_wing": {
+      "noTailElevonsOnTrailingEdge": "Без хвоста, элевоны на задней кромке",
+      "throttle": "Газ"
+    },
+    "plane_standard": {
+      "traditionalFuselageWithSeparateElevatorRudder": "Классический фюзеляж с отдельными рулём высоты, рулём направления и элеронами",
+      "aileron": "Элерон",
+      "elevator": "Руль высоты",
+      "throttle": "Газ",
+      "rudder": "Руль направления"
+    },
+    "plane_twin_boom": {
+      "twoTailBoomsGreatForPushers": "Две хвостовые балки, отлично для толкающих винтов и камер",
+      "aileron": "Элерон",
+      "elevator": "Руль высоты",
+      "throttleL": "Газ Л",
+      "rudder": "Руль направления",
+      "throttleRTwinMotor": "Газ П (двухмоторный)"
+    },
+    "plane_v_tail": {
+      "twoCombinedPitchYawSurfacesCleaner": "Две поверхности тангажа/рыскания, меньшее аэродинамическое сопротивление",
+      "throttle": "Газ"
+    },
+    "rover_ackermann": {
+      "carStyleSingleThrottleSteeringServo": "Как автомобиль: один газ, серво руля",
+      "roverFrame": "Рама rover",
+      "undefinedAckermannUsesSteering": "Не определено (Аккерман использует руль)",
+      "groundSteering": "Наземное управление",
+      "throttle": "Газ",
+      "waypointSpeedFromMaxspeed": "Скорость между точками из maxSpeed",
+      "cruiseSpeed60OfMax": "Крейсерская скорость = 60% от макс."
+    },
+    "rover_omni": {
+      "omniDirectionalWheelsCanTranslateSideways": "Всенаправленные колёса, может двигаться боком",
+      "omniRoverFrame": "Рама omni rover",
+      "n4WheelOmniX": "4-колёсный omni (X)",
+      "throttleFrontLeft": "Газ передний левый",
+      "throttleFrontRight": "Газ передний правый",
+      "throttleRearLeft": "Газ задний левый",
+      "throttleRearRight": "Газ задний правый",
+      "waypointSpeedFromMaxspeed": "Скорость между точками из maxSpeed"
+    },
+    "rover_skid": {
+      "differentialDriveTankStyleNoSteering": "Дифференциальный привод: как танк, без серво руля",
+      "roverFrame": "Рама rover",
+      "differential": "Дифференциальный",
+      "throttleLeft": "Газ левый",
+      "throttleRight": "Газ правый",
+      "waypointSpeedFromMaxspeed": "Скорость между точками из maxSpeed",
+      "cruiseSpeed60OfMax": "Крейсерская скорость = 60% от макс."
+    },
+    "sub_vectored_6": {
+      "bluerov2Style4Vectored2Vertical": "Как BlueROV2: 4 векторных + 2 вертикальных движителя",
+      "vectored6Frame": "Рама Vectored-6",
+      "motor1ForwardRightVec": "Мотор 1 (передний правый вект.)",
+      "motor2ForwardLeftVec": "Мотор 2 (передний левый вект.)",
+      "motor3RearRightVec": "Мотор 3 (задний правый вект.)",
+      "motor4RearLeftVec": "Мотор 4 (задний левый вект.)",
+      "motor5VerticalRight": "Мотор 5 (вертикальный правый)",
+      "motor6VerticalLeft": "Мотор 6 (вертикальный левый)"
+    },
+    "vtol_quadplane_hex": {
+      "fixedWingPlaneWith6Vertical": "Самолёт с 6 моторами вертикальной тяги, грузовой VTOL",
+      "enableVtolQuadplaneHex": "Включить VTOL (quadplane hex)",
+      "hexacopterLiftFrame": "Подъёмная рама гексакоптера",
+      "xArrangement": "Схема X",
+      "notATailsitter": "Не tailsitter",
+      "notATiltrotor": "Не tiltrotor",
+      "aileron": "Элерон",
+      "elevator": "Руль высоты",
+      "forwardThrottle": "Маршевый газ",
+      "rudder": "Руль направления",
+      "motor1Lift": "Мотор 1 (подъёмный)",
+      "motor2Lift": "Мотор 2 (подъёмный)",
+      "motor3Lift": "Мотор 3 (подъёмный)",
+      "motor4Lift": "Мотор 4 (подъёмный)",
+      "motor5Lift": "Мотор 5 (подъёмный)",
+      "motor6Lift": "Мотор 6 (подъёмный)",
+      "vtolAssistBelowThisSpeed": "Помощь VTOL ниже этой скорости"
+    },
+    "vtol_quadplane_quad": {
+      "fixedWingPlaneWith4Vertical": "Самолёт с 4 моторами вертикальной тяги",
+      "enableVtolQuadplane": "Включить VTOL (quadplane)",
+      "quadcopterLiftFrame": "Подъёмная рама квадрокоптера",
+      "xArrangement": "Схема X",
+      "notATailsitter": "Не tailsitter",
+      "notATiltrotor": "Не tiltrotor",
+      "aileron": "Элерон",
+      "elevator": "Руль высоты",
+      "forwardThrottle": "Маршевый газ",
+      "rudder": "Руль направления",
+      "motor1Lift": "Мотор 1 (подъёмный)",
+      "motor2Lift": "Мотор 2 (подъёмный)",
+      "motor3Lift": "Мотор 3 (подъёмный)",
+      "motor4Lift": "Мотор 4 (подъёмный)",
+      "belowThisVtolMotorsAssistFixed": "Ниже этого моторы VTOL помогают самолёту",
+      "useVtolForRtlLanding": "Использовать VTOL для посадки в RTL"
+    },
+    "vtol_tailsitter_conventional": {
+      "sitsOnItsTailTiltsTo": "Стоит на хвосте, наклоняется для полёта вперёд, элевоны для управления в зависании",
+      "enableVtol": "Включить VTOL",
+      "enableTailsitterMode": "Включить режим tailsitter",
+      "singleCoaxCopterLiftFrame": "Подъёмная рама single/coax",
+      "vectoredYawTailsitter": "Tailsitter с векторным рысканием",
+      "bodyFrameControlInput": "Управление в связанной системе координат",
+      "elevonLeft": "Элевон левый",
+      "elevonRight": "Элевон правый",
+      "motor1": "Мотор 1",
+      "motor2": "Мотор 2"
+    },
+    "vtol_tailsitter_delta_duo": {
+      "n2MotorDeltaWingTailsitterCompact": "Двухмоторный tailsitter «летающее крыло», компактный и экономичный",
+      "enableVtol": "Включить VTOL",
+      "tailsitterMode": "Режим tailsitter",
+      "singleCoaxFor2MotorTailsitter": "Single/coax для двухмоторного tailsitter",
+      "vectoredYawNoRudder": "Векторное рыскание (без руля направления)",
+      "bodyFrameStickInput": "Стики в связанной системе координат",
+      "motors12ActiveInHover": "Моторы 1+2 активны в зависании",
+      "vectoredThrustYawGain": "Коэффициент рыскания векторной тягой",
+      "vectoredThrustHoverGain": "Коэффициент зависания векторной тягой",
+      "elevonLeftDeltaWing": "Элевон левый (летающее крыло)",
+      "elevonRightDeltaWing": "Элевон правый (летающее крыло)",
+      "motor1HoverForward": "Мотор 1 (зависание + вперёд)",
+      "motor2HoverForward": "Мотор 2 (зависание + вперёд)",
+      "elevonMixGain": "Коэффициент микширования элевонов",
+      "transitionDuration5S": "Длительность перехода (5 с)",
+      "fixedWingAssistThreshold": "Порог помощи самолёту"
+    },
+    "vtol_tiltrotor_dual": {
+      "twoMotorsTiltFromHoverTo": "Два мотора наклоняются от зависания к крейсерскому полёту, как Osprey",
+      "enableVtol": "Включить VTOL",
+      "enableTiltServos": "Включить серво наклона",
+      "motors12Tilt": "Наклон моторов 1+2",
+      "continuousTilt": "Плавный наклон",
+      "bicopter2MotorTiltrotor": "Бикоптер (двухмоторный tiltrotor)",
+      "aileron": "Элерон",
+      "elevator": "Руль высоты",
+      "motor1Left": "Мотор 1 левый",
+      "motor2Right": "Мотор 2 правый",
+      "motor1Tilt": "Наклон мотора 1",
+      "motor2Tilt": "Наклон мотора 2"
+    },
+    "vtol_tiltwing": {
+      "entireWingPivotsFromHoverTo": "Всё крыло поворачивается от зависания к крейсерскому полёту",
+      "enableVtol": "Включить VTOL",
+      "enableTiltServos": "Включить серво наклона",
+      "tiltwingWholeWingTilts": "Tiltwing (наклоняется всё крыло)",
+      "all4MotorsTiltWithWing": "Все 4 мотора наклоняются с крылом",
+      "quadcopterLiftFrame": "Подъёмная рама квадрокоптера",
+      "xArrangement": "Схема X",
+      "aileron": "Элерон",
+      "elevator": "Руль высоты",
+      "motor1": "Мотор 1",
+      "motor2": "Мотор 2",
+      "motor3": "Мотор 3",
+      "motor4": "Мотор 4",
+      "tiltServoSharedWingTilt": "Серво наклона (общий наклон крыла)"
+    }
+  }
+}

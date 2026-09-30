@@ -14,7 +14,13 @@ function flatten(tree: Tree, prefix = ''): Record<string, string> {
 }
 
 function placeholders(text: string): string[] {
-  return [...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]!).sort();
+  return [...new Set([...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]!))].sort();
+}
+
+// English builds plurals by gluing a suffix onto a word ("param{{v2}}"); Ukrainian and
+// Russian inflect differently, so a translation may drop exactly those placeholders.
+function pluralSuffixes(text: string): string[] {
+  return [...text.matchAll(/(?<=[a-z])\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]!);
 }
 
 const english = flatten(loadLocaleTree('en'));
@@ -30,7 +36,9 @@ describe.each(Object.entries(translations))('%s translation', (_lang, strings) =
   it('keeps every {{placeholder}} of the English text', () => {
     for (const [key, text] of Object.entries(english)) {
       if (!(key in strings)) continue;
-      expect(placeholders(strings[key]!), key).toEqual(placeholders(text));
+      const optional = pluralSuffixes(text);
+      const expected = placeholders(text).filter((p) => !optional.includes(p) || strings[key]!.includes(`{{${p}}}`));
+      expect(placeholders(strings[key]!), key).toEqual(expected);
     }
   });
 

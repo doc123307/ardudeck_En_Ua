@@ -1,0 +1,14 @@
+{
+  "detached": {
+    "DetachedRoot": {
+      "unknownComponent": "Невідомий компонент",
+      "missing": "(відсутній)",
+      "isNotRegistered": "не зареєстровано.",
+      "closeThisWindowAndReturnTo": "Закрити це вікно й повернутися в ArduDeck",
+      "dockBack": "Повернути назад",
+      "pinnedOnTopClickToUnpin": "Закріплено поверх, клацніть, щоб відкріпити",
+      "keepThisWindowOnTopOf": "Тримати це вікно поверх ArduDeck",
+      "toggleAlwaysOnTop": "Перемкнути «поверх усіх вікон»"
+    }
+  }
+}

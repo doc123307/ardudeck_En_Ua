@@ -1,0 +1,28 @@
+{
+  "components": {
+    "PseudoTxSwitch": {
+      "channelMapping": "Назначение каналов",
+      "reset": "Сбросить",
+      "channelIsReversedClickToRestore": "Канал инвертирован — щёлкните, чтобы вернуть",
+      "reverseThisChannel": "Инвертировать этот канал",
+      "rev": "Инв",
+      "assign": "Назначить",
+      "unassign": "Снять назначение",
+      "press": "Нажмите",
+      "thenMoveTheStickOrFlick": ", затем пошевелите стик или переключите тумблер, который хотите назначить на этот канал. Неназначенные каналы держат 1500.",
+      "deviceMonitor": "Монитор устройства",
+      "axes": "осей —",
+      "buttons": "кнопок",
+      "mapping": " — раскладка «{{mappingMode}}»",
+      "rawHid": " — сырой HID",
+      "theBrowserHasAppliedItsStandard": "Браузер применил к этому устройству стандартную раскладку геймпада, которая оставляет только четыре оси и отбрасывает остальные — поэтому тумблеры не приходят. Переподключите пульт, уже переведённый в режим USB Joystick, или используйте модель, чей USB-дескриптор не распознаётся как игровой контроллер.",
+      "flyWithUsbTransmitter": "Летать с USB-пультом",
+      "looksLikeAGamepadNotA": "— похоже на геймпад, а не на пульт",
+      "trainerSessionActiveTheTrainerOwns": "Активен сеанс тренажёра — стиками управляет тренажёр",
+      "sendsRcChannelsOverrideToThe": "Отправляет RC_CHANNELS_OVERRIDE подключённому аппарату. Джойстик БУДЕТ управлять аппаратом.",
+      "joystickControlsVehicle": "Джойстик управляет аппаратом",
+      "framesSToVehicle": "кадров/с на аппарат",
+      "offSendsNothingToTheAircraft": "Выкл. — ничего не отправляется аппарату"
+    }
+  }
+}

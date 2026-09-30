@@ -1,0 +1,13 @@
+{
+  "debug": {
+    "DebugConsole": {
+      "console": "Консоль",
+      "messages": "Сообщения",
+      "clear": "Очистить",
+      "noLogEntries": "Записей нет",
+      "jumpToLatestPaused": "↓ К последним (приостановлено)",
+      "noMessagesFromAutopilot": "Нет сообщений от автопилота",
+      "fix": "Исправить ›"
+    }
+  }
+}

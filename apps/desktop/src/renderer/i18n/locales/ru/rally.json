@@ -1,0 +1,27 @@
+{
+  "rally": {
+    "RallyListPanel": {
+      "rallyPoints": "Точки сбора",
+      "modified": "Изменено",
+      "emergencyLandingLocations": "Места аварийной посадки",
+      "downloading": "Загрузка с аппарата",
+      "uploading": "Выгрузка на аппарат",
+      "noRallyPoints": "Нет точек сбора",
+      "clickAddRallyOnTheMap": "Нажмите «Добавить точку сбора» на карте, чтобы создать",
+      "point": "точек",
+      "loading": "Загрузка...",
+      "alt": "Выс.:",
+      "remove": "Удалить",
+      "rallyPointR": "Точка сбора R",
+      "position": "Позиция",
+      "altitude": "Высота",
+      "breakAlt": "Высота выхода",
+      "altitudeToExitLoiterAndBegin": "Высота, на которой выйти из барражирования и начать посадку",
+      "landHeading": "Курс посадки (°)",
+      "n0AnyDirection": "0 = любое направление",
+      "flags": "Флаги",
+      "landIntoWind": "Садиться против ветра",
+      "landImmediatelyNoLoiter": "Садиться сразу (без барражирования)"
+    }
+  }
+}
