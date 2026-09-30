@@ -15,7 +15,7 @@
   "scripts": {
     "build:sim-engine": "tsc -b ../sim-engine --force",
     "predev": "pnpm build:sim-engine",
-    "dev": "electron-vite dev; node ../../tools/stop-dev-tree.mjs",
+    "dev": "node ../../tools/run-dev.mjs",
     "dev:deeplink": "ARDUDECK_DEEPLINK=\"${ARDUDECK_DEEPLINK:-ardudeck://open?view=mission}\" electron-vite dev",
     "prebuild": "pnpm build:sim-engine",
     "build": "electron-vite build",
