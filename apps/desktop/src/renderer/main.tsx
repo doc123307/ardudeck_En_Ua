@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+// Before any component module: they read translations at render time.
+import './i18n';
 import App from './App';
 import { DetachedRoot } from './detached/DetachedRoot';
 // Subpath, not the barrel: the barrel re-exports core/signing.js (node:crypto),

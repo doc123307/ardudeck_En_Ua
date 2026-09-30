@@ -1,0 +1,86 @@
+{
+  "nav": {
+    "telemetry": "Телеметрія",
+    "mission": "Планування місії",
+    "library": "Бібліотека місій",
+    "parameters": "Параметри",
+    "vault": "Сховище флоту",
+    "inspector": "Інспектор MAVLink",
+    "weather": "Метеобрифінг",
+    "trainer": "Тренажер",
+    "settings": "Налаштування",
+    "firmware": "Прошивка",
+    "osd": "Редактор OSD",
+    "radioHud": "HUD пульта",
+    "sitl": "Симулятор SITL",
+    "luaGraph": "Графічний редактор Lua",
+    "cargo": "Модулі (Cargo)",
+    "cli": "Термінал CLI",
+    "calibration": "Калібрування",
+    "companion": "Бортовий комп'ютер",
+    "logs": "Журнали польотів",
+    "reportBug": "Повідомити про помилку"
+  },
+  "theme": {
+    "dark": "Темна тема",
+    "light": "Світла тема",
+    "system": "Системна тема"
+  },
+  "header": {
+    "voiceMuted": "Голосові сповіщення вимкнено. Натисніть, щоб увімкнути",
+    "voiceOn": "Голосові сповіщення увімкнено. Натисніть, щоб вимкнути",
+    "about": "Про ArduDeck",
+    "clickToDisconnect": "Натисніть, щоб відключитися",
+    "staleTitle": "Немає даних {{seconds}} с. Натисніть, щоб відключитися",
+    "staleLabel": "Немає даних {{seconds}} с",
+    "fleetTitle": "Флот підключено через багатоапаратні канали. Натисніть, щоб відкрити телеметрію.",
+    "fleet": "Флот ({{count}})",
+    "noneSelected": " · не вибрано",
+    "waiting": "Очікування...",
+    "disconnected": "Не підключено"
+  },
+  "arm": {
+    "arm": "ARM",
+    "disarm": "DISARM",
+    "forceArm": "FORCE ARM",
+    "armTitle": "Озброїти (ARM)",
+    "disarmTitle": "Роззброїти (DISARM)",
+    "forceArmTitle": "Примусове озброєння (без перевірок)",
+    "rightClickHint": "ПКМ — додаткові опції",
+    "forceArmOption": "Примусовий ARM",
+    "forceArmDescription": "Пропустити передпольотні перевірки безпеки",
+    "mspNoArmMode": "Режим ARM не налаштовано на контролері. Призначте AUX-канал для ARM на вкладці «Режими».",
+    "preArmFailed": "Передпольотні перевірки не пройдено",
+    "armingBlocked": "Озброєння заблоковано",
+    "unknown": "Невідомо"
+  },
+  "settings": {
+    "sections": {
+      "vehicleStatus": "Апарат і стан",
+      "configuration": "Конфігурація",
+      "offlineMaps": "Офлайн-карти",
+      "mapOverlays": "Шари карти",
+      "mavlink": "MAVLink",
+      "console": "Консоль",
+      "aiAnalysis": "ШІ-аналіз польотів",
+      "experimental": "Експериментальне",
+      "about": "Про програму"
+    },
+    "language": {
+      "title": "Мова",
+      "description": "Мова інтерфейсу. Ще не перекладені частини показуються англійською."
+    },
+    "units": {
+      "title": "Одиниці вимірювання",
+      "distance": "Відстань",
+      "altitude": "Висота",
+      "speed": "Швидкість",
+      "verticalSpeed": "Вертикальна швидкість",
+      "electricCapacity": "Ємність батареї",
+      "weight": "Вага",
+      "dimensions": "Розміри",
+      "area": "Площа",
+      "windSpeed": "Швидкість вітру"
+    }
+  }
+}

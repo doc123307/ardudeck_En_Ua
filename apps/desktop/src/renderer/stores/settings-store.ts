@@ -7,6 +7,7 @@ import type { NonDefaultColorKey } from '../components/parameters/non-default-pa
 import { DEFAULT_NON_DEFAULT_COLOR } from '../components/parameters/non-default-palette.js';
 import { DEFAULT_USER_UNIT_PREFERENCES, normalizeUserUnitPreferences, type UserUnitPreferences } from '../../shared/user-units.js';
 import type { AltReferenceFrame } from '../../shared/mission-types.js';
+import { applyLanguage, getInitialLanguage, isAppLanguage, type AppLanguage } from '../i18n';
 
 /**
  * Vehicle type for visualization
@@ -387,6 +388,10 @@ interface SettingsStore {
   // Theme
   theme: ThemePreference;
   setTheme: (theme: ThemePreference) => void;
+
+  // UI language
+  language: AppLanguage;
+  setLanguage: (language: AppLanguage) => void;
 
   // Parameter view: color used to highlight non-default param values
   nonDefaultHighlightColor: NonDefaultColorKey;
@@ -853,6 +858,7 @@ export const useSettingsStore = create<SettingsStore>()(
   telemetrySpeed: 'normal' as TelemetrySpeed,
   unitPreferences: { ...DEFAULT_USER_UNIT_PREFERENCES },
   theme: 'dark' as ThemePreference,
+  language: getInitialLanguage(),
   nonDefaultHighlightColor: DEFAULT_NON_DEFAULT_COLOR,
   experienceLevel: null as ExperienceLevel | null,
   experienceLevelVersion: null as string | null,
@@ -977,6 +983,7 @@ export const useSettingsStore = create<SettingsStore>()(
           telemetrySpeed: (settingsRecord.telemetrySpeed as TelemetrySpeed) || 'normal',
           unitPreferences,
           theme: (settingsRecord.theme as ThemePreference) || 'dark',
+          ...(isAppLanguage(settingsRecord.language) ? { language: settingsRecord.language } : {}),
           nonDefaultHighlightColor: (settingsRecord.nonDefaultHighlightColor as NonDefaultColorKey) || DEFAULT_NON_DEFAULT_COLOR,
           experienceLevel: (settingsRecord.experienceLevel as ExperienceLevel) || null,
           experienceLevelVersion: (settingsRecord.experienceLevelVersion as string) || null,
@@ -1033,6 +1040,7 @@ export const useSettingsStore = create<SettingsStore>()(
         telemetrySpeed: state.telemetrySpeed,
         unitPreferences: state.unitPreferences,
         theme: state.theme,
+        language: state.language,
         nonDefaultHighlightColor: state.nonDefaultHighlightColor,
         ...(state.experienceLevel ? { experienceLevel: state.experienceLevel } : {}),
         ...(state.experienceLevelVersion ? { experienceLevelVersion: state.experienceLevelVersion } : {}),
@@ -1295,6 +1303,10 @@ export const useSettingsStore = create<SettingsStore>()(
     set({ theme });
   },
 
+  setLanguage: (language) => {
+    set({ language });
+  },
+
   setNonDefaultHighlightColor: (color) => {
     set({ nonDefaultHighlightColor: color });
   },
@@ -1362,6 +1374,7 @@ useSettingsStore.subscribe(
     telemetrySpeed: state.telemetrySpeed,
     unitPreferences: state.unitPreferences,
     theme: state.theme,
+    language: state.language,
     nonDefaultHighlightColor: state.nonDefaultHighlightColor,
     experienceLevel: state.experienceLevel,
     experienceLevelVersion: state.experienceLevelVersion,
@@ -1397,6 +1410,7 @@ useSettingsStore.subscribe(
         curr.telemetrySpeed !== prev.telemetrySpeed ||
         curr.unitPreferences !== prev.unitPreferences ||
         curr.theme !== prev.theme ||
+        curr.language !== prev.language ||
         curr.experienceLevel !== prev.experienceLevel ||
         curr.experienceLevelVersion !== prev.experienceLevelVersion ||
         curr.uiVisibility !== prev.uiVisibility ||
@@ -1419,6 +1433,10 @@ useSettingsStore.subscribe(
   },
   { fireImmediately: false }
 );
+
+// Keep i18next (and its startup mirror) in step with the chosen language, whether the
+// change comes from the picker or from settings loaded off disk.
+useSettingsStore.subscribe((state) => state.language, applyLanguage);
 
 // Export a function to initialize settings (call from App.tsx)
 export const initializeSettings = () => {

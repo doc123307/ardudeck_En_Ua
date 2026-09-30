@@ -1,0 +1,86 @@
+{
+  "nav": {
+    "telemetry": "Telemetry",
+    "mission": "Mission Planning",
+    "library": "Mission Library",
+    "parameters": "Parameters",
+    "vault": "Fleet Vault",
+    "inspector": "MAVLink Inspector",
+    "weather": "Weather Briefing",
+    "trainer": "Trainer",
+    "settings": "Settings",
+    "firmware": "Firmware",
+    "osd": "OSD Tool",
+    "radioHud": "Radio HUD",
+    "sitl": "SITL Simulator",
+    "luaGraph": "Lua Graph Editor",
+    "cargo": "Cargo",
+    "cli": "CLI Terminal",
+    "calibration": "Calibration",
+    "companion": "Companion Computer",
+    "logs": "Flight Logs",
+    "reportBug": "Report a Bug"
+  },
+  "theme": {
+    "dark": "Dark theme",
+    "light": "Light theme",
+    "system": "System theme"
+  },
+  "header": {
+    "voiceMuted": "Voice alerts muted. Click to unmute",
+    "voiceOn": "Voice alerts on. Click to mute",
+    "about": "About ArduDeck",
+    "clickToDisconnect": "Click to disconnect",
+    "staleTitle": "No data for {{seconds}}s. Click to disconnect",
+    "staleLabel": "No data {{seconds}}s",
+    "fleetTitle": "Fleet connected over multi-vehicle links. Click to open telemetry.",
+    "fleet": "Fleet ({{count}})",
+    "noneSelected": " · none selected",
+    "waiting": "Waiting...",
+    "disconnected": "Disconnected"
+  },
+  "arm": {
+    "arm": "ARM",
+    "disarm": "DISARM",
+    "forceArm": "FORCE ARM",
+    "armTitle": "Arm",
+    "disarmTitle": "Disarm",
+    "forceArmTitle": "Force arm (bypasses checks)",
+    "rightClickHint": "Right-click for options",
+    "forceArmOption": "Force ARM",
+    "forceArmDescription": "Bypass pre-arm safety checks",
+    "mspNoArmMode": "ARM mode not configured on FC. Set an AUX channel for ARM in the Modes tab.",
+    "preArmFailed": "Pre-arm Checks Failed",
+    "armingBlocked": "Arming Blocked",
+    "unknown": "Unknown"
+  },
+  "settings": {
+    "sections": {
+      "vehicleStatus": "Vehicle & Status",
+      "configuration": "Configuration",
+      "offlineMaps": "Offline Maps",
+      "mapOverlays": "Map Overlays",
+      "mavlink": "MAVLink",
+      "console": "Console",
+      "aiAnalysis": "AI Flight Analysis",
+      "experimental": "Experimental",
+      "about": "About"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Interface language. Parts not translated yet are shown in English."
+    },
+    "units": {
+      "title": "Display Units",
+      "distance": "Distance",
+      "altitude": "Altitude",
+      "speed": "Speed",
+      "verticalSpeed": "Vertical speed",
+      "electricCapacity": "E-Capacity",
+      "weight": "Weight",
+      "dimensions": "Dimensions",
+      "area": "Area",
+      "windSpeed": "Wind speed"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "nav": {
+    "telemetry": "Телеметрия",
+    "mission": "Планирование миссии",
+    "library": "Библиотека миссий",
+    "parameters": "Параметры",
+    "vault": "Хранилище флота",
+    "inspector": "Инспектор MAVLink",
+    "weather": "Метеобрифинг",
+    "trainer": "Тренажёр",
+    "settings": "Настройки",
+    "firmware": "Прошивка",
+    "osd": "Редактор OSD",
+    "radioHud": "HUD пульта",
+    "sitl": "Симулятор SITL",
+    "luaGraph": "Графический редактор Lua",
+    "cargo": "Модули (Cargo)",
+    "cli": "Терминал CLI",
+    "calibration": "Калибровка",
+    "companion": "Бортовой компьютер",
+    "logs": "Журналы полётов",
+    "reportBug": "Сообщить об ошибке"
+  },
+  "theme": {
+    "dark": "Тёмная тема",
+    "light": "Светлая тема",
+    "system": "Системная тема"
+  },
+  "header": {
+    "voiceMuted": "Голосовые оповещения выключены. Нажмите, чтобы включить",
+    "voiceOn": "Голосовые оповещения включены. Нажмите, чтобы выключить",
+    "about": "О программе ArduDeck",
+    "clickToDisconnect": "Нажмите, чтобы отключиться",
+    "staleTitle": "Нет данных {{seconds}} с. Нажмите, чтобы отключиться",
+    "staleLabel": "Нет данных {{seconds}} с",
+    "fleetTitle": "Флот подключён через многоаппаратные каналы. Нажмите, чтобы открыть телеметрию.",
+    "fleet": "Флот ({{count}})",
+    "noneSelected": " · не выбран",
+    "waiting": "Ожидание...",
+    "disconnected": "Не подключено"
+  },
+  "arm": {
+    "arm": "ARM",
+    "disarm": "DISARM",
+    "forceArm": "FORCE ARM",
+    "armTitle": "Заармить (ARM)",
+    "disarmTitle": "Дизармить (DISARM)",
+    "forceArmTitle": "Принудительный арм (без проверок)",
+    "rightClickHint": "ПКМ — дополнительные опции",
+    "forceArmOption": "Принудительный ARM",
+    "forceArmDescription": "Пропустить предполётные проверки безопасности",
+    "mspNoArmMode": "Режим ARM не настроен на контроллере. Назначьте AUX-канал для ARM на вкладке «Режимы».",
+    "preArmFailed": "Предполётные проверки не пройдены",
+    "armingBlocked": "Арм заблокирован",
+    "unknown": "Неизвестно"
+  },
+  "settings": {
+    "sections": {
+      "vehicleStatus": "Аппарат и состояние",
+      "configuration": "Конфигурация",
+      "offlineMaps": "Офлайн-карты",
+      "mapOverlays": "Слои карты",
+      "mavlink": "MAVLink",
+      "console": "Консоль",
+      "aiAnalysis": "ИИ-анализ полётов",
+      "experimental": "Экспериментальное",
+      "about": "О программе"
+    },
+    "language": {
+      "title": "Язык",
+      "description": "Язык интерфейса. Ещё не переведённые части показываются на английском."
+    },
+    "units": {
+      "title": "Единицы измерения",
+      "distance": "Расстояние",
+      "altitude": "Высота",
+      "speed": "Скорость",
+      "verticalSpeed": "Вертикальная скорость",
+      "electricCapacity": "Ёмкость батареи",
+      "weight": "Вес",
+      "dimensions": "Размеры",
+      "area": "Площадь",
+      "windSpeed": "Скорость ветра"
+    }
+  }
+}

@@ -3,6 +3,8 @@ import { GuidesAndToursCard } from '../guides/GuidesAndToursList';
 import { DraftNumberInput } from '../../hooks/useNumericDraft';
 import { TileCacheCard } from './TileCacheCard';
 import { UnitSelectionCard } from './UnitSelectionCard';
+import { LanguageSelectionCard } from './LanguageSelectionCard';
+import { useTranslation } from 'react-i18next';
 import { TrafficSettingsCard } from './TrafficSettingsCard';
 import { GroupShapeCard } from './GroupShapeCard';
 import { useSettingsStore, type VehicleProfile, type VehicleType, type ExperienceLevel, type UiVisibility } from '../../stores/settings-store';
@@ -1129,6 +1131,7 @@ const CATEGORY_COLORS: Record<SettingsCategoryId, { active: string; icon: string
 };
 
 export function SettingsView() {
+  const { t } = useTranslation();
   const {
     missionDefaults,
     vehicles,
@@ -1403,7 +1406,7 @@ export function SettingsView() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-1.5 h-5 bg-blue-500 rounded-full" />
-            <h2 className="text-sm font-medium text-content uppercase tracking-wider">Vehicle & Status</h2>
+            <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.vehicleStatus')}</h2>
           </div>
 
           {/* Top row - Active Vehicle + Performance + Weather */}
@@ -1693,8 +1696,10 @@ export function SettingsView() {
         <div className="space-y-4">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-1.5 h-5 bg-emerald-500 rounded-full" />
-            <h2 className="text-sm font-medium text-content uppercase tracking-wider">Configuration</h2>
+            <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.configuration')}</h2>
           </div>
+
+          <LanguageSelectionCard />
 
           <UnitSelectionCard />
 
@@ -1971,7 +1976,7 @@ export function SettingsView() {
         <div className="mt-8 mb-8">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-1.5 h-5 bg-emerald-500 rounded-full" />
-            <h2 className="text-sm font-medium text-content uppercase tracking-wider">Offline Maps</h2>
+            <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.offlineMaps')}</h2>
           </div>
           <TileCacheCard />
         </div>
@@ -1982,7 +1987,7 @@ export function SettingsView() {
         <div className="mt-8 mb-8">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-1.5 h-5 bg-emerald-500 rounded-full" />
-            <h2 className="text-sm font-medium text-content uppercase tracking-wider">Map Overlays</h2>
+            <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.mapOverlays')}</h2>
           </div>
           <div className="bg-surface rounded-xl border border-subtle p-5">
             <div className="flex items-center gap-3 mb-4">
@@ -1992,7 +1997,7 @@ export function SettingsView() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-content">Map Overlays</h3>
+                <h3 className="text-sm font-medium text-content">{t('settings.sections.mapOverlays')}</h3>
                 <p className="text-xs text-content-secondary">API keys for airspace and airport data</p>
               </div>
             </div>
@@ -2077,6 +2082,7 @@ function OpenAipKeyInput() {
 }
 
 function MavlinkSettingsSection() {
+  const { t } = useTranslation();
   const gcsSysid = useSettingsStore((s) => s.gcsSysid);
   const setGcsSysid = useSettingsStore((s) => s.setGcsSysid);
   const [draft, setDraft] = useState(String(gcsSysid));
@@ -2093,7 +2099,7 @@ function MavlinkSettingsSection() {
     <div className="mt-8">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-1.5 h-5 bg-content-secondary rounded-full" />
-        <h2 className="text-sm font-medium text-content uppercase tracking-wider">MAVLink</h2>
+        <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.mavlink')}</h2>
       </div>
 
       <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-5">
@@ -2132,6 +2138,7 @@ function MavlinkSettingsSection() {
 }
 
 function ConsoleSettingsSection() {
+  const { t } = useTranslation();
   const showDebugLogs = useSettingsStore((s) => s.showDebugLogs);
   const setShowDebugLogs = useSettingsStore((s) => s.setShowDebugLogs);
 
@@ -2139,7 +2146,7 @@ function ConsoleSettingsSection() {
     <div className="mt-8">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-1.5 h-5 bg-content-secondary rounded-full" />
-        <h2 className="text-sm font-medium text-content uppercase tracking-wider">Console</h2>
+        <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.console')}</h2>
       </div>
 
       <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-5">
@@ -2169,6 +2176,7 @@ function ConsoleSettingsSection() {
 }
 
 function AiAnalysisSection() {
+  const { t } = useTranslation();
   const advisorEnabled = useCargoEnabled(ADVISOR_CARGO_SLUG);
   const aiProvider = useSettingsStore((s) => s.aiProvider);
   const setAiProvider = useSettingsStore((s) => s.setAiProvider);
@@ -2219,7 +2227,7 @@ function AiAnalysisSection() {
     <div className="mt-8">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-1.5 h-5 bg-purple-500 rounded-full" />
-        <h2 className="text-sm font-medium text-content uppercase tracking-wider">AI Flight Analysis</h2>
+        <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.aiAnalysis')}</h2>
       </div>
 
       <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-5">
@@ -2305,6 +2313,7 @@ function AiAnalysisSection() {
 }
 
 function ExperimentalFeaturesSection() {
+  const { t } = useTranslation();
   const companionUnlocked = useSettingsStore((s) => s.companionUnlocked);
   const setCompanionUnlocked = useSettingsStore((s) => s.setCompanionUnlocked);
   const advancedCommandsUnlocked = useSettingsStore((s) => s.advancedCommandsUnlocked);
@@ -2316,7 +2325,7 @@ function ExperimentalFeaturesSection() {
     <div className="mt-8">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-1.5 h-5 bg-purple-500 rounded-full" />
-        <h2 className="text-sm font-medium text-content uppercase tracking-wider">Experimental</h2>
+        <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.experimental')}</h2>
       </div>
 
       <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-5">
@@ -2590,6 +2599,7 @@ function GraphicsStatus() {
 }
 
 function AboutSection() {
+  const { t } = useTranslation();
   const {
     currentVersion,
     status,
@@ -2645,7 +2655,7 @@ function AboutSection() {
     <div className="mt-8">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-1.5 h-5 bg-content-secondary rounded-full" />
-        <h2 className="text-sm font-medium text-content uppercase tracking-wider">About</h2>
+        <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('settings.sections.about')}</h2>
       </div>
 
       <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-5">
