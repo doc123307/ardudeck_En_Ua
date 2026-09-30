@@ -81,6 +81,11 @@ app.name = 'ardudeck';
 // play without waiting for a first click.
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
+// Any-address ICE sockets, as Chrome uses: per-adapter ones never reach the hub on 127.0.0.1 on Windows.
+app.on('web-contents-created', (_event, contents) => {
+  contents.setWebRTCIPHandlingPolicy('default_public_and_private_interfaces');
+});
+
 /**
  * Make Linux machines actually use the GPU they have.
  *

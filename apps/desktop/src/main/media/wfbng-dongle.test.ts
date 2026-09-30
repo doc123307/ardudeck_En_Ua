@@ -5,6 +5,8 @@ import {
   findDongleLinux,
   findDongleWindows,
   buildReceiverArgs,
+  isDongleOpenFailure,
+  receiverDriverNote,
 } from './wfbng-dongle.js';
 
 describe('wfb-ng dongle detection parsers', () => {
@@ -85,5 +87,20 @@ describe('findDongleIoreg', () => {
   |         "idProduct" = 33107
 `;
     expect(findDongleIoreg(ioreg)).toBeNull();
+  });
+});
+
+describe('receiver driver hints', () => {
+  it('only Windows needs a driver step, and it names Zadig and WinUSB', () => {
+    expect(receiverDriverNote('win32')).toMatch(/Zadig.*WinUSB/);
+    expect(receiverDriverNote('darwin')).toBeNull();
+    expect(receiverDriverNote('linux')).toBeNull();
+  });
+
+  it('recognises the receiver lines for an adapter the OS driver still owns', () => {
+    expect(isDongleOpenFailure('Cannot open device 0bda:8812 at [1:3]')).toBe(true);
+    expect(isDongleOpenFailure('Failed to claim interface')).toBe(true);
+    expect(isDongleOpenFailure('libusb: error [winusb_open] LIBUSB_ERROR_NOT_SUPPORTED')).toBe(true);
+    expect(isDongleOpenFailure('RTP stream live: codec=H265')).toBe(false);
   });
 });

@@ -1,7 +1,8 @@
-# Builds the ardudeck-wfb-rx sidecar (tools/wfb-rx) for the three desktop
-# platforms and attaches the binaries to a release when a wfb-rx-v* tag is
-# pushed. Asset names must match media-binaries-downloader.ensureWfbRx():
+# Builds the ardudeck-wfb-rx sidecar (tools/wfb-rx) for the desktop platforms
+# and attaches the binaries to a release when a wfb-rx-v* tag is pushed.
+# Asset names must match wfbRxAssetName() in media-binaries-downloader.ts:
 #   ardudeck-wfb-rx-<platform>-<arch>[.exe]   (platform = darwin|linux|win32)
+# Each binary links libusb/libsodium statically: it is downloaded on its own.
 name: Build wfb-rx
 
 on:
@@ -14,6 +15,9 @@ on:
       - 'tools/wfb-rx/**'
       - '.github/workflows/build-wfb-rx.yml'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
@@ -22,11 +26,12 @@ jobs:
         include:
           - os: macos-latest
             asset: ardudeck-wfb-rx-darwin-arm64
-          - os: macos-13
+          - os: macos-15-intel
             asset: ardudeck-wfb-rx-darwin-x64
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             asset: ardudeck-wfb-rx-linux-x64
-          - os: windows-latest
+          # Cross-built with llvm-mingw: the same script works locally on macOS/Linux.
+          - os: ubuntu-22.04
             asset: ardudeck-wfb-rx-win32-x64.exe
     runs-on: ${{ matrix.os }}
     steps:
@@ -37,30 +42,23 @@ jobs:
         run: brew install libusb libsodium pkg-config
 
       - name: Install dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev libsodium-dev libpcap-dev pkg-config
+        if: runner.os == 'Linux' && !endsWith(matrix.asset, '.exe')
+        run: sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev libudev-dev libsodium-dev libpcap-dev pkg-config
 
-      - name: Install dependencies (Windows)
-        if: runner.os == 'Windows'
+      - name: Build (native)
+        if: ${{ !endsWith(matrix.asset, '.exe') }}
+        working-directory: tools/wfb-rx
         run: |
-          vcpkg install libusb:x64-windows libsodium:x64-windows
-          echo "VCPKG_ROOT=$env:VCPKG_ROOT" >> $env:GITHUB_ENV
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j 4
+          ./build/bin/ardudeck-wfb-rx --version
+          cp build/bin/ardudeck-wfb-rx "$GITHUB_WORKSPACE/${{ matrix.asset }}"
 
-      - name: Configure
-        working-directory: tools/wfb-rx
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
-
-      - name: Build
-        working-directory: tools/wfb-rx
-        run: cmake --build build --config Release -j 4
-
-      - name: Stage artifact (unix)
-        if: runner.os != 'Windows'
-        run: cp tools/wfb-rx/build/bin/ardudeck-wfb-rx "${{ matrix.asset }}"
-
-      - name: Stage artifact (windows)
-        if: runner.os == 'Windows'
-        run: Copy-Item tools/wfb-rx/build/bin/Release/ardudeck-wfb-rx.exe "${{ matrix.asset }}" -ErrorAction SilentlyContinue; if (!(Test-Path "${{ matrix.asset }}")) { Copy-Item tools/wfb-rx/build/bin/ardudeck-wfb-rx.exe "${{ matrix.asset }}" }
+      - name: Build (Windows cross)
+        if: endsWith(matrix.asset, '.exe')
+        run: |
+          tools/wfb-rx/scripts/build-win-mingw.sh "$RUNNER_TEMP/wfb-rx-win"
+          cp "$RUNNER_TEMP/wfb-rx-win/dist/${{ matrix.asset }}" "${{ matrix.asset }}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -68,8 +66,12 @@ jobs:
           name: ${{ matrix.asset }}
           path: ${{ matrix.asset }}
 
+      # Pre-release and never "latest": the app updater reads the latest release.
       - name: Attach to release
         if: startsWith(github.ref, 'refs/tags/wfb-rx-v')
         uses: softprops/action-gh-release@v2
         with:
+          name: wfb-ng receiver ${{ github.ref_name }}
+          prerelease: true
+          make_latest: false
           files: ${{ matrix.asset }}

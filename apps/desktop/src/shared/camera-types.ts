@@ -78,6 +78,8 @@ export interface WfbngStatus {
   bandwidth: 20 | 40;
   /** Live counters while running (parsed from the receiver's stats lines). */
   stats: { wifi: number; wfb: number; rtp: number } | null;
+  /** OS-specific driver step the dongle needs (Windows: WinUSB via Zadig), or null. */
+  driverNote: string | null;
 }
 
 /** A built-in source preset (SIYI, Herelink, RunCam, RubyFPV, …). */

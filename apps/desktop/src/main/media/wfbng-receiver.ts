@@ -19,9 +19,12 @@ import {
   findDongleLinux,
   findDongleWindows,
   buildReceiverArgs,
+  isDongleOpenFailure,
+  receiverDriverNote,
   WFB_DEFAULT_CHANNEL,
   type DetectedDongle,
 } from './wfbng-dongle.js';
+import { wfbRxMissingMessage } from './wfb-rx-release.js';
 import type { WfbngStatus } from '../../shared/camera-types.js';
 
 export const WFB_RX_BINARY = 'ardudeck-wfb-rx';
@@ -132,6 +135,7 @@ class WfbngReceiver {
       channel: this.channel,
       bandwidth: this.bandwidth,
       stats: this.lastStats,
+      driverNote: receiverDriverNote(process.platform),
     };
   }
 
@@ -158,11 +162,7 @@ class WfbngReceiver {
 
     const binary = this.binaryPath();
     if (!binary) {
-      return {
-        ok: false,
-        error:
-          'The wfb-ng receiver component is not available for this platform yet. Until it ships, use a ground station (Android PixelPilot or a Linux box) that forwards video to this computer - switch the feed to Network mode.',
-      };
+      return { ok: false, error: wfbRxMissingMessage(process.platform, process.arch) };
     }
     const dongle = await this.detectDongle();
     if (!dongle) {
@@ -198,6 +198,7 @@ class WfbngReceiver {
     // console. A dongle that has been pulled is not a stream of errors, it is
     // one event, so the run is ended and said once.
     let usbFailures = 0;
+    let driverHintShown = false;
     this.proc.stderr?.on('data', (buf: Buffer) => {
       for (const raw of buf.toString().split('\n')) {
         const line = raw.trim();
@@ -221,6 +222,12 @@ class WfbngReceiver {
         }
 
         this.logSink?.(level, `wfb-rx: ${message}`);
+
+        const driverNote = receiverDriverNote(process.platform);
+        if (driverNote && !driverHintShown && isDongleOpenFailure(message)) {
+          driverHintShown = true;
+          this.logSink?.('warn', `wfb-rx: ${driverNote}`);
+        }
       }
     });
     this.proc.on('exit', (code) => {

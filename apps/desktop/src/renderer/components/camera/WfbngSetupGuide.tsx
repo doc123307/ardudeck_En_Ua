@@ -114,6 +114,9 @@ export function WfbngSetupGuide({ port }: { port: number }) {
               `Dongle connected (${status.dongleName})`,
               'Plug the WiFi dongle from the camera kit into this computer',
             )}
+            {status.driverNote && (
+              <p className="pl-3.5 text-[9px] leading-tight text-content-tertiary">{status.driverNote}</p>
+            )}
             {chip(
               status.receiverInstalled,
               'Receiver component installed',

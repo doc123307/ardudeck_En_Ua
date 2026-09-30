@@ -20,10 +20,16 @@ import { existsSync, mkdirSync, writeFileSync, chmodSync, rmSync } from 'node:fs
 import { gunzipSync } from 'node:zlib';
 import { app } from 'electron';
 import AdmZip from 'adm-zip';
+import {
+  HttpStatusError,
+  describeWfbRxDownloadError,
+  isWfbRxBuiltFor,
+  wfbRxAssetUrl,
+  wfbRxNotBuiltMessage,
+} from './wfb-rx-release.js';
 
 const FFMPEG_TAG = 'b6.1.1';
 const MEDIAMTX_TAG = 'v1.19.1';
-const WFB_RX_TAG = 'wfb-rx-v0.1.0';
 
 export type DownloadName = 'ffmpeg' | 'mediamtx' | 'ardudeck-wfb-rx';
 
@@ -86,10 +92,14 @@ export class MediaBinariesDownloader {
    */
   async ensureWfbRx(onLog?: (line: string) => void): Promise<{ ok: boolean; error?: string }> {
     if (this.isPresent('ardudeck-wfb-rx')) return { ok: true };
+    if (!isWfbRxBuiltFor(process.platform, process.arch)) {
+      const error = wfbRxNotBuiltMessage(process.platform, process.arch);
+      onLog?.(error);
+      return { ok: false, error };
+    }
+    const url = wfbRxAssetUrl(process.platform, process.arch);
     try {
       onLog?.('Downloading the wfb-ng receiver…');
-      const ext = process.platform === 'win32' ? '.exe' : '';
-      const url = `https://github.com/rubenCodeforges/ardudeck/releases/download/${WFB_RX_TAG}/ardudeck-wfb-rx-${process.platform}-${archToken()}${ext}`;
       const bin = await downloadBuffer(url);
       const out = this.binaryPath('ardudeck-wfb-rx');
       writeFileSync(out, bin);
@@ -97,8 +107,8 @@ export class MediaBinariesDownloader {
       onLog?.('wfb-ng receiver ready.');
       return { ok: true };
     } catch (e) {
-      const error = e instanceof Error ? e.message : 'Download failed';
-      onLog?.(`wfb-ng receiver download failed: ${error}`);
+      const error = describeWfbRxDownloadError(e, process.platform, process.arch);
+      onLog?.(`wfb-ng receiver download failed (${url}): ${error}`);
       return { ok: false, error };
     }
   }
@@ -141,7 +151,7 @@ export class MediaBinariesDownloader {
 
 async function downloadBuffer(url: string): Promise<Uint8Array> {
   const res = await fetch(url, { redirect: 'follow' });
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  if (!res.ok) throw new HttpStatusError(res.status, url);
   return new Uint8Array(await res.arrayBuffer());
 }
 

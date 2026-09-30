@@ -121,6 +121,19 @@ export function findDongleWindows(pnp: string): DetectedDongle | null {
   return idsMatch(vid, pid) ? { vendorId: vid, productId: pid, name: 'RTL8812AU' } : null;
 }
 
+/** Windows binds Realtek's own driver to the dongle, and libusb cannot open it until WinUSB replaces it. */
+export const WINDOWS_WINUSB_NOTE =
+  'On Windows the dongle needs the WinUSB driver: run Zadig (zadig.akeo.ie), choose Options > List All Devices, select the Realtek 8812AU adapter, install WinUSB, then replug the dongle.';
+
+export function receiverDriverNote(platform: string): string | null {
+  return platform === 'win32' ? WINDOWS_WINUSB_NOTE : null;
+}
+
+/** Receiver log lines meaning the adapter is there but could not be claimed. */
+export function isDongleOpenFailure(message: string): boolean {
+  return /Cannot open device|Failed to claim interface|LIBUSB_ERROR_(NOT_SUPPORTED|ACCESS)/i.test(message);
+}
+
 export interface WfbReceiverOptions {
   gsKeyPath: string;
   channel: number;
