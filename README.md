@@ -266,7 +266,7 @@ ArduDeck is supported by companies that contribute hardware, time, or resources 
 
 ## License
 
-This project is licensed under **GPL-3.0**, see the [LICENSE](LICENSE) file for details.
+This project is licensed under **GPL-3.0** (see [LICENSE](LICENSE)), with an additional permission for marketplace modules under Section 7 (see [MODULE-EXCEPTION.md](MODULE-EXCEPTION.md)).
 
 ---
 

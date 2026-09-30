@@ -29,7 +29,7 @@ You hereby grant to the Copyright Holder a perpetual, worldwide, non-exclusive, 
 This grant includes the right for the Copyright Holder to relicense your Contributions under terms other than the GPL v3, including but not limited to:
 - Proprietary or commercial licenses
 - Different open source licenses
-- The ArduDeck Marketplace Module Exception (as described in the LICENSE file)
+- The ArduDeck Marketplace Module Exception (as described in the MODULE-EXCEPTION.md file)
 
 ---
 

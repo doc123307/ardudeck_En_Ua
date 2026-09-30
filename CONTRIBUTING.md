@@ -10,7 +10,7 @@ All contributions to ArduDeck require agreement to our [Contributor License Agre
 
 ### Why?
 
-ArduDeck is licensed under GPL v3 with a [Marketplace Module Exception](LICENSE) that allows third-party modules sold through the official ArduDeck Hangar to use proprietary licenses. To maintain this dual-licensing structure, we need sufficient rights over all contributed code. The CLA grants the project maintainer (Ruben M) the ability to manage licensing while keeping ArduDeck open source.
+ArduDeck is licensed under GPL v3 with a [Marketplace Module Exception](MODULE-EXCEPTION.md) that allows third-party modules sold through the official ArduDeck Hangar to use proprietary licenses. To maintain this dual-licensing structure, we need sufficient rights over all contributed code. The CLA grants the project maintainer (Ruben M) the ability to manage licensing while keeping ArduDeck open source.
 
 ### How to agree
 
