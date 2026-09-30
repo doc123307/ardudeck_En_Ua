@@ -40,19 +40,19 @@ export function serializeDistanceSensor(msg: DistanceSensor): Uint8Array {
   const view = new DataView(buffer.buffer);
 
   view.setUint32(0, msg.timeBootMs, true);
-  view.setFloat32(4, msg.horizontalFov, true);
-  view.setFloat32(8, msg.verticalFov, true);
+  view.setFloat32(14, msg.horizontalFov, true);
+  view.setFloat32(18, msg.verticalFov, true);
   // Array: quaternion
   for (let i = 0; i < 4; i++) {
-    view.setFloat32(12 + i * 4, msg.quaternion[i] ?? 0, true);
+    view.setFloat32(22 + i * 4, msg.quaternion[i] ?? 0, true);
   }
-  view.setUint16(28, msg.minDistance, true);
-  view.setUint16(30, msg.maxDistance, true);
-  view.setUint16(32, msg.currentDistance, true);
-  buffer[34] = msg.type & 0xff;
-  buffer[35] = msg.id & 0xff;
-  buffer[36] = msg.orientation & 0xff;
-  buffer[37] = msg.covariance & 0xff;
+  view.setUint16(4, msg.minDistance, true);
+  view.setUint16(6, msg.maxDistance, true);
+  view.setUint16(8, msg.currentDistance, true);
+  buffer[10] = msg.type & 0xff;
+  buffer[11] = msg.id & 0xff;
+  buffer[12] = msg.orientation & 0xff;
+  buffer[13] = msg.covariance & 0xff;
   buffer[38] = msg.signalQuality & 0xff;
 
   return buffer;
@@ -63,16 +63,16 @@ export function deserializeDistanceSensor(payload: Uint8Array): DistanceSensor {
 
   return {
     timeBootMs: view.getUint32(0, true),
-    horizontalFov: view.getFloat32(4, true),
-    verticalFov: view.getFloat32(8, true),
-    quaternion: Array.from({ length: 4 }, (_, i) => view.getFloat32(12 + i * 4, true)),
-    minDistance: view.getUint16(28, true),
-    maxDistance: view.getUint16(30, true),
-    currentDistance: view.getUint16(32, true),
-    type: payload[34],
-    id: payload[35],
-    orientation: payload[36],
-    covariance: payload[37],
+    horizontalFov: view.getFloat32(14, true),
+    verticalFov: view.getFloat32(18, true),
+    quaternion: Array.from({ length: 4 }, (_, i) => view.getFloat32(22 + i * 4, true)),
+    minDistance: view.getUint16(4, true),
+    maxDistance: view.getUint16(6, true),
+    currentDistance: view.getUint16(8, true),
+    type: payload[10],
+    id: payload[11],
+    orientation: payload[12],
+    covariance: payload[13],
     signalQuality: payload[38],
   };
 }

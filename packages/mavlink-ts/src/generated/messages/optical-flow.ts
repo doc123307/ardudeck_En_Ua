@@ -39,12 +39,12 @@ export function serializeOpticalFlow(msg: OpticalFlow): Uint8Array {
   view.setFloat32(8, msg.flowCompMX, true);
   view.setFloat32(12, msg.flowCompMY, true);
   view.setFloat32(16, msg.groundDistance, true);
-  view.setFloat32(20, msg.flowRateX, true);
-  view.setFloat32(24, msg.flowRateY, true);
-  view.setInt16(28, msg.flowX, true);
-  view.setInt16(30, msg.flowY, true);
-  buffer[32] = msg.sensorId & 0xff;
-  buffer[33] = msg.quality & 0xff;
+  view.setFloat32(26, msg.flowRateX, true);
+  view.setFloat32(30, msg.flowRateY, true);
+  view.setInt16(20, msg.flowX, true);
+  view.setInt16(22, msg.flowY, true);
+  buffer[24] = msg.sensorId & 0xff;
+  buffer[25] = msg.quality & 0xff;
 
   return buffer;
 }
@@ -57,11 +57,11 @@ export function deserializeOpticalFlow(payload: Uint8Array): OpticalFlow {
     flowCompMX: view.getFloat32(8, true),
     flowCompMY: view.getFloat32(12, true),
     groundDistance: view.getFloat32(16, true),
-    flowRateX: view.getFloat32(20, true),
-    flowRateY: view.getFloat32(24, true),
-    flowX: view.getInt16(28, true),
-    flowY: view.getInt16(30, true),
-    sensorId: payload[32],
-    quality: payload[33],
+    flowRateX: view.getFloat32(26, true),
+    flowRateY: view.getFloat32(30, true),
+    flowX: view.getInt16(20, true),
+    flowY: view.getInt16(22, true),
+    sensorId: payload[24],
+    quality: payload[25],
   };
 }

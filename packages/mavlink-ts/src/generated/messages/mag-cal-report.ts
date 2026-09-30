@@ -61,14 +61,14 @@ export function serializeMagCalReport(msg: MagCalReport): Uint8Array {
   view.setFloat32(28, msg.offdiagX, true);
   view.setFloat32(32, msg.offdiagY, true);
   view.setFloat32(36, msg.offdiagZ, true);
-  view.setFloat32(40, msg.orientationConfidence, true);
-  view.setFloat32(44, msg.scaleFactor, true);
-  buffer[48] = msg.compassId & 0xff;
-  buffer[49] = msg.calMask & 0xff;
-  buffer[50] = msg.calStatus & 0xff;
-  buffer[51] = msg.autosaved & 0xff;
-  buffer[52] = msg.oldOrientation & 0xff;
-  buffer[53] = msg.newOrientation & 0xff;
+  view.setFloat32(44, msg.orientationConfidence, true);
+  view.setFloat32(50, msg.scaleFactor, true);
+  buffer[40] = msg.compassId & 0xff;
+  buffer[41] = msg.calMask & 0xff;
+  buffer[42] = msg.calStatus & 0xff;
+  buffer[43] = msg.autosaved & 0xff;
+  buffer[48] = msg.oldOrientation & 0xff;
+  buffer[49] = msg.newOrientation & 0xff;
 
   return buffer;
 }
@@ -87,13 +87,13 @@ export function deserializeMagCalReport(payload: Uint8Array): MagCalReport {
     offdiagX: view.getFloat32(28, true),
     offdiagY: view.getFloat32(32, true),
     offdiagZ: view.getFloat32(36, true),
-    orientationConfidence: view.getFloat32(40, true),
-    scaleFactor: view.getFloat32(44, true),
-    compassId: payload[48],
-    calMask: payload[49],
-    calStatus: payload[50],
-    autosaved: payload[51],
-    oldOrientation: payload[52],
-    newOrientation: payload[53],
+    orientationConfidence: view.getFloat32(44, true),
+    scaleFactor: view.getFloat32(50, true),
+    compassId: payload[40],
+    calMask: payload[41],
+    calStatus: payload[42],
+    autosaved: payload[43],
+    oldOrientation: payload[48],
+    newOrientation: payload[49],
   };
 }

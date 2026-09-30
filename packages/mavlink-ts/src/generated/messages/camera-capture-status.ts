@@ -33,9 +33,9 @@ export function serializeCameraCaptureStatus(msg: CameraCaptureStatus): Uint8Arr
   view.setFloat32(4, msg.imageInterval, true);
   view.setUint32(8, msg.recordingTimeMs, true);
   view.setFloat32(12, msg.availableCapacity, true);
-  view.setInt32(16, msg.imageCount, true);
-  buffer[20] = msg.imageStatus & 0xff;
-  buffer[21] = msg.videoStatus & 0xff;
+  view.setInt32(18, msg.imageCount, true);
+  buffer[16] = msg.imageStatus & 0xff;
+  buffer[17] = msg.videoStatus & 0xff;
 
   return buffer;
 }
@@ -48,8 +48,8 @@ export function deserializeCameraCaptureStatus(payload: Uint8Array): CameraCaptu
     imageInterval: view.getFloat32(4, true),
     recordingTimeMs: view.getUint32(8, true),
     availableCapacity: view.getFloat32(12, true),
-    imageCount: view.getInt32(16, true),
-    imageStatus: payload[20],
-    videoStatus: payload[21],
+    imageCount: view.getInt32(18, true),
+    imageStatus: payload[16],
+    videoStatus: payload[17],
   };
 }

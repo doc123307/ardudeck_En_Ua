@@ -49,8 +49,8 @@ export function serializeRawImu(msg: RawImu): Uint8Array {
   view.setInt16(20, msg.xmag, true);
   view.setInt16(22, msg.ymag, true);
   view.setInt16(24, msg.zmag, true);
-  view.setInt16(26, msg.temperature, true);
-  buffer[28] = msg.id & 0xff;
+  view.setInt16(27, msg.temperature, true);
+  buffer[26] = msg.id & 0xff;
 
   return buffer;
 }
@@ -69,7 +69,7 @@ export function deserializeRawImu(payload: Uint8Array): RawImu {
     xmag: view.getInt16(20, true),
     ymag: view.getInt16(22, true),
     zmag: view.getInt16(24, true),
-    temperature: view.getInt16(26, true),
-    id: payload[28],
+    temperature: view.getInt16(27, true),
+    id: payload[26],
   };
 }

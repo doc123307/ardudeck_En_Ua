@@ -62,11 +62,11 @@ export function serializeGimbalDeviceAttitudeStatus(msg: GimbalDeviceAttitudeSta
   view.setFloat32(24, msg.angularVelocityY, true);
   view.setFloat32(28, msg.angularVelocityZ, true);
   view.setUint32(32, msg.failureFlags, true);
-  view.setFloat32(36, msg.deltaYaw, true);
-  view.setFloat32(40, msg.deltaYawVelocity, true);
-  view.setUint16(44, msg.flags, true);
-  buffer[46] = msg.targetSystem & 0xff;
-  buffer[47] = msg.targetComponent & 0xff;
+  view.setFloat32(40, msg.deltaYaw, true);
+  view.setFloat32(44, msg.deltaYawVelocity, true);
+  view.setUint16(36, msg.flags, true);
+  buffer[38] = msg.targetSystem & 0xff;
+  buffer[39] = msg.targetComponent & 0xff;
   buffer[48] = msg.gimbalDeviceId & 0xff;
 
   return buffer;
@@ -82,11 +82,11 @@ export function deserializeGimbalDeviceAttitudeStatus(payload: Uint8Array): Gimb
     angularVelocityY: view.getFloat32(24, true),
     angularVelocityZ: view.getFloat32(28, true),
     failureFlags: view.getUint32(32, true),
-    deltaYaw: view.getFloat32(36, true),
-    deltaYawVelocity: view.getFloat32(40, true),
-    flags: view.getUint16(44, true),
-    targetSystem: payload[46],
-    targetComponent: payload[47],
+    deltaYaw: view.getFloat32(40, true),
+    deltaYawVelocity: view.getFloat32(44, true),
+    flags: view.getUint16(36, true),
+    targetSystem: payload[38],
+    targetComponent: payload[39],
     gimbalDeviceId: payload[48],
   };
 }

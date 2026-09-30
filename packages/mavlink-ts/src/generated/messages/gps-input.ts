@@ -68,10 +68,10 @@ export function serializeGpsInput(msg: GpsInput): Uint8Array {
   view.setFloat32(52, msg.vertAccuracy, true);
   view.setUint16(56, msg.ignoreFlags, true);
   view.setUint16(58, msg.timeWeek, true);
-  view.setUint16(60, msg.yaw, true);
-  buffer[62] = msg.gpsId & 0xff;
-  buffer[63] = msg.fixType & 0xff;
-  buffer[64] = msg.satellitesVisible & 0xff;
+  view.setUint16(63, msg.yaw, true);
+  buffer[60] = msg.gpsId & 0xff;
+  buffer[61] = msg.fixType & 0xff;
+  buffer[62] = msg.satellitesVisible & 0xff;
 
   return buffer;
 }
@@ -95,9 +95,9 @@ export function deserializeGpsInput(payload: Uint8Array): GpsInput {
     vertAccuracy: view.getFloat32(52, true),
     ignoreFlags: view.getUint16(56, true),
     timeWeek: view.getUint16(58, true),
-    yaw: view.getUint16(60, true),
-    gpsId: payload[62],
-    fixType: payload[63],
-    satellitesVisible: payload[64],
+    yaw: view.getUint16(63, true),
+    gpsId: payload[60],
+    fixType: payload[61],
+    satellitesVisible: payload[62],
   };
 }

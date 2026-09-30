@@ -57,10 +57,10 @@ export function serializeHilGps(msg: HilGps): Uint8Array {
   view.setInt16(28, msg.ve, true);
   view.setInt16(30, msg.vd, true);
   view.setUint16(32, msg.cog, true);
-  view.setUint16(34, msg.yaw, true);
-  buffer[36] = msg.fixType & 0xff;
-  buffer[37] = msg.satellitesVisible & 0xff;
-  buffer[38] = msg.id & 0xff;
+  view.setUint16(37, msg.yaw, true);
+  buffer[34] = msg.fixType & 0xff;
+  buffer[35] = msg.satellitesVisible & 0xff;
+  buffer[36] = msg.id & 0xff;
 
   return buffer;
 }
@@ -80,9 +80,9 @@ export function deserializeHilGps(payload: Uint8Array): HilGps {
     ve: view.getInt16(28, true),
     vd: view.getInt16(30, true),
     cog: view.getUint16(32, true),
-    yaw: view.getUint16(34, true),
-    fixType: payload[36],
-    satellitesVisible: payload[37],
-    id: payload[38],
+    yaw: view.getUint16(37, true),
+    fixType: payload[34],
+    satellitesVisible: payload[35],
+    id: payload[36],
   };
 }

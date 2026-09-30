@@ -52,18 +52,18 @@ export function serializeGpsRawInt(msg: GpsRawInt): Uint8Array {
   view.setInt32(8, msg.lat, true);
   view.setInt32(12, msg.lon, true);
   view.setInt32(16, msg.alt, true);
-  view.setInt32(20, msg.altEllipsoid, true);
-  view.setUint32(24, msg.hAcc, true);
-  view.setUint32(28, msg.vAcc, true);
-  view.setUint32(32, msg.velAcc, true);
-  view.setUint32(36, msg.hdgAcc, true);
-  view.setUint16(40, msg.eph, true);
-  view.setUint16(42, msg.epv, true);
-  view.setUint16(44, msg.vel, true);
-  view.setUint16(46, msg.cog, true);
-  view.setUint16(48, msg.yaw, true);
-  buffer[50] = msg.fixType & 0xff;
-  buffer[51] = msg.satellitesVisible & 0xff;
+  view.setInt32(30, msg.altEllipsoid, true);
+  view.setUint32(34, msg.hAcc, true);
+  view.setUint32(38, msg.vAcc, true);
+  view.setUint32(42, msg.velAcc, true);
+  view.setUint32(46, msg.hdgAcc, true);
+  view.setUint16(20, msg.eph, true);
+  view.setUint16(22, msg.epv, true);
+  view.setUint16(24, msg.vel, true);
+  view.setUint16(26, msg.cog, true);
+  view.setUint16(50, msg.yaw, true);
+  buffer[28] = msg.fixType & 0xff;
+  buffer[29] = msg.satellitesVisible & 0xff;
 
   return buffer;
 }
@@ -76,17 +76,17 @@ export function deserializeGpsRawInt(payload: Uint8Array): GpsRawInt {
     lat: view.getInt32(8, true),
     lon: view.getInt32(12, true),
     alt: view.getInt32(16, true),
-    altEllipsoid: view.getInt32(20, true),
-    hAcc: view.getUint32(24, true),
-    vAcc: view.getUint32(28, true),
-    velAcc: view.getUint32(32, true),
-    hdgAcc: view.getUint32(36, true),
-    eph: view.getUint16(40, true),
-    epv: view.getUint16(42, true),
-    vel: view.getUint16(44, true),
-    cog: view.getUint16(46, true),
-    yaw: view.getUint16(48, true),
-    fixType: payload[50],
-    satellitesVisible: payload[51],
+    altEllipsoid: view.getInt32(30, true),
+    hAcc: view.getUint32(34, true),
+    vAcc: view.getUint32(38, true),
+    velAcc: view.getUint32(42, true),
+    hdgAcc: view.getUint32(46, true),
+    eph: view.getUint16(20, true),
+    epv: view.getUint16(22, true),
+    vel: view.getUint16(24, true),
+    cog: view.getUint16(26, true),
+    yaw: view.getUint16(50, true),
+    fixType: payload[28],
+    satellitesVisible: payload[29],
   };
 }

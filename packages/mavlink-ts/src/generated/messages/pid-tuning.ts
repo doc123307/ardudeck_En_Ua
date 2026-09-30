@@ -39,9 +39,9 @@ export function serializePidTuning(msg: PidTuning): Uint8Array {
   view.setFloat32(12, msg.p, true);
   view.setFloat32(16, msg.i, true);
   view.setFloat32(20, msg.d, true);
-  view.setFloat32(24, msg.srate, true);
-  view.setFloat32(28, msg.pdmod, true);
-  buffer[32] = msg.axis & 0xff;
+  view.setFloat32(25, msg.srate, true);
+  view.setFloat32(29, msg.pdmod, true);
+  buffer[24] = msg.axis & 0xff;
 
   return buffer;
 }
@@ -56,8 +56,8 @@ export function deserializePidTuning(payload: Uint8Array): PidTuning {
     p: view.getFloat32(12, true),
     i: view.getFloat32(16, true),
     d: view.getFloat32(20, true),
-    srate: view.getFloat32(24, true),
-    pdmod: view.getFloat32(28, true),
-    axis: payload[32],
+    srate: view.getFloat32(25, true),
+    pdmod: view.getFloat32(29, true),
+    axis: payload[24],
   };
 }

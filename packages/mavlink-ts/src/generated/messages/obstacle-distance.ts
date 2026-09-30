@@ -34,16 +34,16 @@ export function serializeObstacleDistance(msg: ObstacleDistance): Uint8Array {
   const view = new DataView(buffer.buffer);
 
   view.setBigUint64(0, BigInt(msg.timeUsec), true);
-  view.setFloat32(8, msg.incrementF, true);
-  view.setFloat32(12, msg.angleOffset, true);
+  view.setFloat32(158, msg.incrementF, true);
+  view.setFloat32(162, msg.angleOffset, true);
   // Array: distances
   for (let i = 0; i < 72; i++) {
-    view.setUint16(16 + i * 2, msg.distances[i] ?? 0, true);
+    view.setUint16(8 + i * 2, msg.distances[i] ?? 0, true);
   }
-  view.setUint16(160, msg.minDistance, true);
-  view.setUint16(162, msg.maxDistance, true);
-  buffer[164] = msg.sensorType & 0xff;
-  buffer[165] = msg.increment & 0xff;
+  view.setUint16(152, msg.minDistance, true);
+  view.setUint16(154, msg.maxDistance, true);
+  buffer[156] = msg.sensorType & 0xff;
+  buffer[157] = msg.increment & 0xff;
   buffer[166] = msg.frame & 0xff;
 
   return buffer;
@@ -54,13 +54,13 @@ export function deserializeObstacleDistance(payload: Uint8Array): ObstacleDistan
 
   return {
     timeUsec: view.getBigUint64(0, true),
-    incrementF: view.getFloat32(8, true),
-    angleOffset: view.getFloat32(12, true),
-    distances: Array.from({ length: 72 }, (_, i) => view.getUint16(16 + i * 2, true)),
-    minDistance: view.getUint16(160, true),
-    maxDistance: view.getUint16(162, true),
-    sensorType: payload[164],
-    increment: payload[165],
+    incrementF: view.getFloat32(158, true),
+    angleOffset: view.getFloat32(162, true),
+    distances: Array.from({ length: 72 }, (_, i) => view.getUint16(8 + i * 2, true)),
+    minDistance: view.getUint16(152, true),
+    maxDistance: view.getUint16(154, true),
+    sensorType: payload[156],
+    increment: payload[157],
     frame: payload[166],
   };
 }

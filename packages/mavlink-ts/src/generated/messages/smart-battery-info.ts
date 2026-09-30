@@ -51,24 +51,24 @@ export function serializeSmartBatteryInfo(msg: SmartBatteryInfo): Uint8Array {
 
   view.setInt32(0, msg.capacityFullSpecification, true);
   view.setInt32(4, msg.capacityFull, true);
-  view.setUint32(8, msg.dischargeMaximumCurrent, true);
-  view.setUint32(12, msg.dischargeMaximumBurstCurrent, true);
-  view.setUint16(16, msg.cycleCount, true);
-  view.setUint16(18, msg.weight, true);
-  view.setUint16(20, msg.dischargeMinimumVoltage, true);
-  view.setUint16(22, msg.chargingMinimumVoltage, true);
-  view.setUint16(24, msg.restingMinimumVoltage, true);
-  view.setUint16(26, msg.chargingMaximumVoltage, true);
-  buffer[28] = msg.id & 0xff;
-  buffer[29] = msg.batteryFunction & 0xff;
-  buffer[30] = msg.type & 0xff;
+  view.setUint32(90, msg.dischargeMaximumCurrent, true);
+  view.setUint32(94, msg.dischargeMaximumBurstCurrent, true);
+  view.setUint16(8, msg.cycleCount, true);
+  view.setUint16(10, msg.weight, true);
+  view.setUint16(12, msg.dischargeMinimumVoltage, true);
+  view.setUint16(14, msg.chargingMinimumVoltage, true);
+  view.setUint16(16, msg.restingMinimumVoltage, true);
+  view.setUint16(87, msg.chargingMaximumVoltage, true);
+  buffer[18] = msg.id & 0xff;
+  buffer[19] = msg.batteryFunction & 0xff;
+  buffer[20] = msg.type & 0xff;
   // String: serial_number
   const serialNumberBytes = new TextEncoder().encode(msg.serialNumber || '');
-  buffer.set(serialNumberBytes.slice(0, 16), 31);
+  buffer.set(serialNumberBytes.slice(0, 16), 21);
   // String: device_name
   const deviceNameBytes = new TextEncoder().encode(msg.deviceName || '');
-  buffer.set(deviceNameBytes.slice(0, 50), 47);
-  buffer[97] = msg.cellsInSeries & 0xff;
+  buffer.set(deviceNameBytes.slice(0, 50), 37);
+  buffer[89] = msg.cellsInSeries & 0xff;
   // String: manufacture_date
   const manufactureDateBytes = new TextEncoder().encode(msg.manufactureDate || '');
   buffer.set(manufactureDateBytes.slice(0, 11), 98);
@@ -82,20 +82,20 @@ export function deserializeSmartBatteryInfo(payload: Uint8Array): SmartBatteryIn
   return {
     capacityFullSpecification: view.getInt32(0, true),
     capacityFull: view.getInt32(4, true),
-    dischargeMaximumCurrent: view.getUint32(8, true),
-    dischargeMaximumBurstCurrent: view.getUint32(12, true),
-    cycleCount: view.getUint16(16, true),
-    weight: view.getUint16(18, true),
-    dischargeMinimumVoltage: view.getUint16(20, true),
-    chargingMinimumVoltage: view.getUint16(22, true),
-    restingMinimumVoltage: view.getUint16(24, true),
-    chargingMaximumVoltage: view.getUint16(26, true),
-    id: payload[28],
-    batteryFunction: payload[29],
-    type: payload[30],
-    serialNumber: new TextDecoder().decode(payload.slice(31, 47)).replace(/\0.*$/, ''),
-    deviceName: new TextDecoder().decode(payload.slice(47, 97)).replace(/\0.*$/, ''),
-    cellsInSeries: payload[97],
+    dischargeMaximumCurrent: view.getUint32(90, true),
+    dischargeMaximumBurstCurrent: view.getUint32(94, true),
+    cycleCount: view.getUint16(8, true),
+    weight: view.getUint16(10, true),
+    dischargeMinimumVoltage: view.getUint16(12, true),
+    chargingMinimumVoltage: view.getUint16(14, true),
+    restingMinimumVoltage: view.getUint16(16, true),
+    chargingMaximumVoltage: view.getUint16(87, true),
+    id: payload[18],
+    batteryFunction: payload[19],
+    type: payload[20],
+    serialNumber: new TextDecoder().decode(payload.slice(21, 37)).replace(/\0.*$/, ''),
+    deviceName: new TextDecoder().decode(payload.slice(37, 87)).replace(/\0.*$/, ''),
+    cellsInSeries: payload[89],
     manufactureDate: new TextDecoder().decode(payload.slice(98, 109)).replace(/\0.*$/, ''),
   };
 }

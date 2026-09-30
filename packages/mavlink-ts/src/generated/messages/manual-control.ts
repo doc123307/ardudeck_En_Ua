@@ -52,17 +52,17 @@ export function serializeManualControl(msg: ManualControl): Uint8Array {
   view.setInt16(4, msg.z, true);
   view.setInt16(6, msg.r, true);
   view.setUint16(8, msg.buttons, true);
-  view.setUint16(10, msg.buttons2, true);
-  view.setInt16(12, msg.s, true);
-  view.setInt16(14, msg.t, true);
-  view.setInt16(16, msg.aux1, true);
-  view.setInt16(18, msg.aux2, true);
-  view.setInt16(20, msg.aux3, true);
-  view.setInt16(22, msg.aux4, true);
-  view.setInt16(24, msg.aux5, true);
-  view.setInt16(26, msg.aux6, true);
-  buffer[28] = msg.target & 0xff;
-  buffer[29] = msg.enabledExtensions & 0xff;
+  view.setUint16(11, msg.buttons2, true);
+  view.setInt16(14, msg.s, true);
+  view.setInt16(16, msg.t, true);
+  view.setInt16(18, msg.aux1, true);
+  view.setInt16(20, msg.aux2, true);
+  view.setInt16(22, msg.aux3, true);
+  view.setInt16(24, msg.aux4, true);
+  view.setInt16(26, msg.aux5, true);
+  view.setInt16(28, msg.aux6, true);
+  buffer[10] = msg.target & 0xff;
+  buffer[13] = msg.enabledExtensions & 0xff;
 
   return buffer;
 }
@@ -76,16 +76,16 @@ export function deserializeManualControl(payload: Uint8Array): ManualControl {
     z: view.getInt16(4, true),
     r: view.getInt16(6, true),
     buttons: view.getUint16(8, true),
-    buttons2: view.getUint16(10, true),
-    s: view.getInt16(12, true),
-    t: view.getInt16(14, true),
-    aux1: view.getInt16(16, true),
-    aux2: view.getInt16(18, true),
-    aux3: view.getInt16(20, true),
-    aux4: view.getInt16(22, true),
-    aux5: view.getInt16(24, true),
-    aux6: view.getInt16(26, true),
-    target: payload[28],
-    enabledExtensions: payload[29],
+    buttons2: view.getUint16(11, true),
+    s: view.getInt16(14, true),
+    t: view.getInt16(16, true),
+    aux1: view.getInt16(18, true),
+    aux2: view.getInt16(20, true),
+    aux3: view.getInt16(22, true),
+    aux4: view.getInt16(24, true),
+    aux5: view.getInt16(26, true),
+    aux6: view.getInt16(28, true),
+    target: payload[10],
+    enabledExtensions: payload[13],
   };
 }

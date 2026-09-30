@@ -49,15 +49,15 @@ export function serializeLandingTarget(msg: LandingTarget): Uint8Array {
   view.setFloat32(16, msg.distance, true);
   view.setFloat32(20, msg.sizeX, true);
   view.setFloat32(24, msg.sizeY, true);
-  view.setFloat32(28, msg.x, true);
-  view.setFloat32(32, msg.y, true);
-  view.setFloat32(36, msg.z, true);
+  view.setFloat32(30, msg.x, true);
+  view.setFloat32(34, msg.y, true);
+  view.setFloat32(38, msg.z, true);
   // Array: q
   for (let i = 0; i < 4; i++) {
-    view.setFloat32(40 + i * 4, msg.q[i] ?? 0, true);
+    view.setFloat32(42 + i * 4, msg.q[i] ?? 0, true);
   }
-  buffer[56] = msg.targetNum & 0xff;
-  buffer[57] = msg.frame & 0xff;
+  buffer[28] = msg.targetNum & 0xff;
+  buffer[29] = msg.frame & 0xff;
   buffer[58] = msg.type & 0xff;
   buffer[59] = msg.positionValid & 0xff;
 
@@ -74,12 +74,12 @@ export function deserializeLandingTarget(payload: Uint8Array): LandingTarget {
     distance: view.getFloat32(16, true),
     sizeX: view.getFloat32(20, true),
     sizeY: view.getFloat32(24, true),
-    x: view.getFloat32(28, true),
-    y: view.getFloat32(32, true),
-    z: view.getFloat32(36, true),
-    q: Array.from({ length: 4 }, (_, i) => view.getFloat32(40 + i * 4, true)),
-    targetNum: payload[56],
-    frame: payload[57],
+    x: view.getFloat32(30, true),
+    y: view.getFloat32(34, true),
+    z: view.getFloat32(38, true),
+    q: Array.from({ length: 4 }, (_, i) => view.getFloat32(42 + i * 4, true)),
+    targetNum: payload[28],
+    frame: payload[29],
     type: payload[58],
     positionValid: payload[59],
   };

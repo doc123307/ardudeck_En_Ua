@@ -1,0 +1,611 @@
+{
+ "AUTOPILOT_STATE_FOR_GIMBAL_DEVICE": {
+  "hex": "0b000000000000000000204000006040000090400000b040420000000000f04000000841000018416e0000000000384184005c636a00008441",
+  "fields": {
+   "time_boot_us": 11,
+   "q": [
+    2.5,
+    3.5,
+    4.5,
+    5.5
+   ],
+   "q_estimated_delay_us": 66,
+   "vx": 7.5,
+   "vy": 8.5,
+   "vz": 9.5,
+   "v_estimated_delay_us": 110,
+   "feed_forward_angular_velocity_z": 11.5,
+   "estimator_status": 132,
+   "target_system": 92,
+   "target_component": 99,
+   "landed_state": 106,
+   "angular_velocity_z": 16.5
+  }
+ },
+ "BATTERY_STATUS": {
+  "hex": "fdfffffffafffffff7ff2c00370042004d00580063006e00790084008f00d6ff6a7178eec7ffffff8de700f200fd000801b01e010000",
+  "fields": {
+   "current_consumed": -3,
+   "energy_consumed": -6,
+   "temperature": -9,
+   "voltages": [
+    44,
+    55,
+    66,
+    77,
+    88,
+    99,
+    110,
+    121,
+    132,
+    143
+   ],
+   "current_battery": -42,
+   "id": 106,
+   "battery_function": 113,
+   "type": 120,
+   "battery_remaining": -18,
+   "time_remaining": -57,
+   "charge_state": 141,
+   "voltages_ext": [
+    231,
+    242,
+    253,
+    264
+   ],
+   "mode": 176,
+   "fault_bitmask": 286
+  }
+ },
+ "CAMERA_CAPTURE_STATUS": {
+  "hex": "0b000000000020402100000000009040242bebffffff",
+  "fields": {
+   "time_boot_ms": 11,
+   "image_interval": 2.5,
+   "recording_time_ms": 33,
+   "available_capacity": 4.5,
+   "image_status": 36,
+   "video_status": 43,
+   "image_count": -21
+  }
+ },
+ "CAMERA_SETTINGS": {
+  "hex": "0b0000000f0000604000009040",
+  "fields": {
+   "time_boot_ms": 11,
+   "mode_id": 15,
+   "zoomLevel": 3.5,
+   "focusLevel": 4.5
+  }
+ },
+ "DEBUG_FLOAT_ARRAY": {
+  "hex": "0b00000000000000160066330000000000000000000090400000b0400000d0400000f04000000841000018410000284100003841000048410000584100006841000078410000844100008c410000944100009c410000a4410000ac410000b4410000bc410000c4410000cc410000d4410000dc410000e4410000ec410000f4410000fc41000002420000064200000a4200000e42000012420000164200001a4200001e42000022420000264200002a4200002e42000032420000364200003a4200003e42000042420000464200004a4200004e42000052420000564200005a4200005e42000062420000664200006a4200006e420000724200007642",
+  "fields": {
+   "time_usec": 11,
+   "array_id": 22,
+   "name": "f3",
+   "data": [
+    4.5,
+    5.5,
+    6.5,
+    7.5,
+    8.5,
+    9.5,
+    10.5,
+    11.5,
+    12.5,
+    13.5,
+    14.5,
+    15.5,
+    16.5,
+    17.5,
+    18.5,
+    19.5,
+    20.5,
+    21.5,
+    22.5,
+    23.5,
+    24.5,
+    25.5,
+    26.5,
+    27.5,
+    28.5,
+    29.5,
+    30.5,
+    31.5,
+    32.5,
+    33.5,
+    34.5,
+    35.5,
+    36.5,
+    37.5,
+    38.5,
+    39.5,
+    40.5,
+    41.5,
+    42.5,
+    43.5,
+    44.5,
+    45.5,
+    46.5,
+    47.5,
+    48.5,
+    49.5,
+    50.5,
+    51.5,
+    52.5,
+    53.5,
+    54.5,
+    55.5,
+    56.5,
+    57.5,
+    58.5,
+    59.5,
+    60.5,
+    61.5
+   ]
+  }
+ },
+ "DISTANCE_SENSOR": {
+  "hex": "0b000000160021002c00242b32390000184100002841000038410000484100005841000068416a",
+  "fields": {
+   "time_boot_ms": 11,
+   "min_distance": 22,
+   "max_distance": 33,
+   "current_distance": 44,
+   "type": 36,
+   "id": 43,
+   "orientation": 50,
+   "covariance": 57,
+   "horizontal_fov": 9.5,
+   "vertical_fov": 10.5,
+   "quaternion": [
+    11.5,
+    12.5,
+    13.5,
+    14.5
+   ],
+   "signal_quality": 106
+  }
+ },
+ "EFI_STATUS": {
+  "hex": "0000c03f0000204000006040000090400000b0400000d0400000f040000008410000184100002841000038410000484100005841000068410000784100008441780000944100009c41",
+  "fields": {
+   "ecu_index": 1.5,
+   "rpm": 2.5,
+   "fuel_consumed": 3.5,
+   "fuel_flow": 4.5,
+   "engine_load": 5.5,
+   "throttle_position": 6.5,
+   "spark_dwell_time": 7.5,
+   "barometric_pressure": 8.5,
+   "intake_manifold_pressure": 9.5,
+   "intake_manifold_temperature": 10.5,
+   "cylinder_head_temperature": 11.5,
+   "ignition_timing": 12.5,
+   "injection_time": 13.5,
+   "exhaust_gas_temperature": 14.5,
+   "throttle_out": 15.5,
+   "pt_compensation": 16.5,
+   "health": 120,
+   "ignition_voltage": 18.5,
+   "fuel_pressure": 19.5
+  }
+ },
+ "EKF_STATUS_REPORT": {
+  "hex": "0000c03f0000204000006040000090400000b04042000000f040",
+  "fields": {
+   "velocity_variance": 1.5,
+   "pos_horiz_variance": 2.5,
+   "pos_vert_variance": 3.5,
+   "compass_variance": 4.5,
+   "terrain_alt_variance": 5.5,
+   "flags": 66,
+   "airspeed_variance": 7.5
+  }
+ },
+ "GIMBAL_DEVICE_ATTITUDE_STATUS": {
+  "hex": "0b0000000000204000006040000090400000b0400000d0400000f04000000841630000006e004e5500005841000068416a",
+  "fields": {
+   "time_boot_ms": 11,
+   "q": [
+    2.5,
+    3.5,
+    4.5,
+    5.5
+   ],
+   "angular_velocity_x": 6.5,
+   "angular_velocity_y": 7.5,
+   "angular_velocity_z": 8.5,
+   "failure_flags": 99,
+   "flags": 110,
+   "target_system": 78,
+   "target_component": 85,
+   "delta_yaw": 13.5,
+   "delta_yaw_velocity": 14.5,
+   "gimbal_device_id": 106
+  }
+ },
+ "GPS_GLOBAL_ORIGIN": {
+  "hex": "fdfffffffafffffff7ffffff2c00000000000000",
+  "fields": {
+   "latitude": -3,
+   "longitude": -6,
+   "altitude": -9,
+   "time_usec": 44
+  }
+ },
+ "GPS_INPUT": {
+  "hex": "0b0000000000000016000000f7fffffff4ffffff0000b0400000d0400000f0400000084100001841000028410000384100004841000058419a00a50071787fd100",
+  "fields": {
+   "time_usec": 11,
+   "time_week_ms": 22,
+   "lat": -9,
+   "lon": -12,
+   "alt": 5.5,
+   "hdop": 6.5,
+   "vdop": 7.5,
+   "vn": 8.5,
+   "ve": 9.5,
+   "vd": 10.5,
+   "speed_accuracy": 11.5,
+   "horiz_accuracy": 12.5,
+   "vert_accuracy": 13.5,
+   "ignore_flags": 154,
+   "time_week": 165,
+   "gps_id": 113,
+   "fix_type": 120,
+   "satellites_visible": 127,
+   "yaw": 209
+  }
+ },
+ "GPS_RAW_INT": {
+  "hex": "0b00000000000000fafffffff7fffffff4ffffff370042004d0058004047dfffffff840000008f0000009a000000a5000000b000",
+  "fields": {
+   "time_usec": 11,
+   "lat": -6,
+   "lon": -9,
+   "alt": -12,
+   "eph": 55,
+   "epv": 66,
+   "vel": 77,
+   "cog": 88,
+   "fix_type": 64,
+   "satellites_visible": 71,
+   "alt_ellipsoid": -33,
+   "h_acc": 132,
+   "v_acc": 143,
+   "vel_acc": 154,
+   "hdg_acc": 165,
+   "yaw": 176
+  }
+ },
+ "GPS2_RAW": {
+  "hex": "0b00000000000000fafffffff7fffffff4ffffff3700000042004d0058006300474e558f00d6ffffffa5000000b0000000bb000000c6000000",
+  "fields": {
+   "time_usec": 11,
+   "lat": -6,
+   "lon": -9,
+   "alt": -12,
+   "dgps_age": 55,
+   "eph": 66,
+   "epv": 77,
+   "vel": 88,
+   "cog": 99,
+   "fix_type": 71,
+   "satellites_visible": 78,
+   "dgps_numch": 85,
+   "yaw": 143,
+   "alt_ellipsoid": -42,
+   "h_acc": 165,
+   "v_acc": 176,
+   "vel_acc": 187,
+   "hdg_acc": 198
+  }
+ },
+ "HIL_GPS": {
+  "hex": "0b00000000000000fafffffff7fffffff4ffffff370042004d00e8ffe5ffe2ff7900555c63a500",
+  "fields": {
+   "time_usec": 11,
+   "lat": -6,
+   "lon": -9,
+   "alt": -12,
+   "eph": 55,
+   "epv": 66,
+   "vel": 77,
+   "vn": -24,
+   "ve": -27,
+   "vd": -30,
+   "cog": 121,
+   "fix_type": 85,
+   "satellites_visible": 92,
+   "id": 99,
+   "yaw": 165
+  }
+ },
+ "HOME_POSITION": {
+  "hex": "fdfffffffafffffff7ffffff000090400000b0400000d0400000f0400000084100001841000028410000384100004841000058419a00000000000000",
+  "fields": {
+   "latitude": -3,
+   "longitude": -6,
+   "altitude": -9,
+   "x": 4.5,
+   "y": 5.5,
+   "z": 6.5,
+   "q": [
+    7.5,
+    8.5,
+    9.5,
+    10.5
+   ],
+   "approach_x": 11.5,
+   "approach_y": 12.5,
+   "approach_z": 13.5,
+   "time_usec": 154
+  }
+ },
+ "LANDING_TARGET": {
+  "hex": "0b000000000000000000204000006040000090400000b0400000d0403239000018410000284100003841000048410000584100006841000078417178",
+  "fields": {
+   "time_usec": 11,
+   "angle_x": 2.5,
+   "angle_y": 3.5,
+   "distance": 4.5,
+   "size_x": 5.5,
+   "size_y": 6.5,
+   "target_num": 50,
+   "frame": 57,
+   "x": 9.5,
+   "y": 10.5,
+   "z": 11.5,
+   "q": [
+    12.5,
+    13.5,
+    14.5,
+    15.5
+   ],
+   "type": 113,
+   "position_valid": 120
+  }
+ },
+ "MAG_CAL_REPORT": {
+  "hex": "0000c03f0000204000006040000090400000b0400000d0400000f0400000084100001841000028414e555c6300007841717800009441",
+  "fields": {
+   "fitness": 1.5,
+   "ofs_x": 2.5,
+   "ofs_y": 3.5,
+   "ofs_z": 4.5,
+   "diag_x": 5.5,
+   "diag_y": 6.5,
+   "diag_z": 7.5,
+   "offdiag_x": 8.5,
+   "offdiag_y": 9.5,
+   "offdiag_z": 10.5,
+   "compass_id": 78,
+   "cal_mask": 85,
+   "cal_status": 92,
+   "autosaved": 99,
+   "orientation_confidence": 15.5,
+   "old_orientation": 113,
+   "new_orientation": 120,
+   "scale_factor": 18.5
+  }
+ },
+ "MANUAL_CONTROL": {
+  "hex": "fdfffafff7fff4ff37002b4d0039e5ffe2ffdfffdcffd9ffd6ffd3ffd0ff",
+  "fields": {
+   "x": -3,
+   "y": -6,
+   "z": -9,
+   "r": -12,
+   "buttons": 55,
+   "target": 43,
+   "buttons2": 77,
+   "enabled_extensions": 57,
+   "s": -27,
+   "t": -30,
+   "aux1": -33,
+   "aux2": -36,
+   "aux3": -39,
+   "aux4": -42,
+   "aux5": -45,
+   "aux6": -48
+  }
+ },
+ "OBSTACLE_DISTANCE": {
+  "hex": "0b00000000000000160021002c00370042004d00580063006e00790084008f009a00a500b000bb00c600d100dc00e700f200fd00080113011e01290134013f014a01550160016b01760181018c019701a201ad01b801c301ce01d901e401ef01fa01050210021b02260231023c02470252025d02680273027e02890294029f02aa02b502c002cb02d602e102ec02f70202030d03180323032e033903212800009d4200009f423d",
+  "fields": {
+   "time_usec": 11,
+   "distances": [
+    22,
+    33,
+    44,
+    55,
+    66,
+    77,
+    88,
+    99,
+    110,
+    121,
+    132,
+    143,
+    154,
+    165,
+    176,
+    187,
+    198,
+    209,
+    220,
+    231,
+    242,
+    253,
+    264,
+    275,
+    286,
+    297,
+    308,
+    319,
+    330,
+    341,
+    352,
+    363,
+    374,
+    385,
+    396,
+    407,
+    418,
+    429,
+    440,
+    451,
+    462,
+    473,
+    484,
+    495,
+    506,
+    517,
+    528,
+    539,
+    550,
+    561,
+    572,
+    583,
+    594,
+    605,
+    616,
+    627,
+    638,
+    649,
+    660,
+    671,
+    682,
+    693,
+    704,
+    715,
+    726,
+    737,
+    748,
+    759,
+    770,
+    781,
+    792,
+    803
+   ],
+   "min_distance": 814,
+   "max_distance": 825,
+   "sensor_type": 33,
+   "increment": 40,
+   "increment_f": 78.5,
+   "angle_offset": 79.5,
+   "frame": 61
+  }
+ },
+ "OPTICAL_FLOW": {
+  "hex": "0b00000000000000000020400000604000009040f1ffeeff32390000184100002841",
+  "fields": {
+   "time_usec": 11,
+   "flow_comp_m_x": 2.5,
+   "flow_comp_m_y": 3.5,
+   "ground_distance": 4.5,
+   "flow_x": -15,
+   "flow_y": -18,
+   "sensor_id": 50,
+   "quality": 57,
+   "flow_rate_x": 9.5,
+   "flow_rate_y": 10.5
+  }
+ },
+ "PID_TUNING": {
+  "hex": "0000c03f0000204000006040000090400000b0400000d040320000084100001841",
+  "fields": {
+   "desired": 1.5,
+   "achieved": 2.5,
+   "FF": 3.5,
+   "P": 4.5,
+   "I": 5.5,
+   "D": 6.5,
+   "axis": 50,
+   "SRate": 8.5,
+   "PDmod": 9.5
+  }
+ },
+ "RAW_IMU": {
+  "hex": "0b00000000000000fafff7fff4fff1ffeeffebffe8ffe5ffe2ff4edcff",
+  "fields": {
+   "time_usec": 11,
+   "xacc": -6,
+   "yacc": -9,
+   "zacc": -12,
+   "xgyro": -15,
+   "ygyro": -18,
+   "zgyro": -21,
+   "xmag": -24,
+   "ymag": -27,
+   "zmag": -30,
+   "id": 78,
+   "temperature": -36
+  }
+ },
+ "SET_GPS_GLOBAL_ORIGIN": {
+  "hex": "fdfffffffafffffff7ffffff1d3700000000000000",
+  "fields": {
+   "latitude": -3,
+   "longitude": -6,
+   "altitude": -9,
+   "target_system": 29,
+   "time_usec": 55
+  }
+ },
+ "SET_HOME_POSITION": {
+  "hex": "fdfffffffafffffff7ffffff000090400000b0400000d0400000f04000000841000018410000284100003841000048410000584163a500000000000000",
+  "fields": {
+   "latitude": -3,
+   "longitude": -6,
+   "altitude": -9,
+   "x": 4.5,
+   "y": 5.5,
+   "z": 6.5,
+   "q": [
+    7.5,
+    8.5,
+    9.5,
+    10.5
+   ],
+   "approach_x": 11.5,
+   "approach_y": 12.5,
+   "approach_z": 13.5,
+   "target_system": 99,
+   "time_usec": 165
+  }
+ },
+ "SMART_BATTERY_INFO": {
+  "hex": "fdfffffffaffffff21002c00370042004d003940476631310000000000000000000000000066313200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008f0063a5000000b00000006631370000000000000000",
+  "fields": {
+   "capacity_full_specification": -3,
+   "capacity_full": -6,
+   "cycle_count": 33,
+   "weight": 44,
+   "discharge_minimum_voltage": 55,
+   "charging_minimum_voltage": 66,
+   "resting_minimum_voltage": 77,
+   "id": 57,
+   "battery_function": 64,
+   "type": 71,
+   "serial_number": "f11",
+   "device_name": "f12",
+   "charging_maximum_voltage": 143,
+   "cells_in_series": 99,
+   "discharge_maximum_current": 165,
+   "discharge_maximum_burst_current": 176,
+   "manufacture_date": "f17"
+  }
+ },
+ "STATUSTEXT": {
+  "hex": "08663200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000021001d",
+  "fields": {
+   "severity": 8,
+   "text": "f2",
+   "id": 33,
+   "chunk_seq": 29
+  }
+ }
+}

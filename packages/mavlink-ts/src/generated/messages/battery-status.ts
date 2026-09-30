@@ -45,24 +45,24 @@ export function serializeBatteryStatus(msg: BatteryStatus): Uint8Array {
 
   view.setInt32(0, msg.currentConsumed, true);
   view.setInt32(4, msg.energyConsumed, true);
-  view.setInt32(8, msg.timeRemaining, true);
-  view.setUint32(12, msg.faultBitmask, true);
-  view.setInt16(16, msg.temperature, true);
+  view.setInt32(36, msg.timeRemaining, true);
+  view.setUint32(50, msg.faultBitmask, true);
+  view.setInt16(8, msg.temperature, true);
   // Array: voltages
   for (let i = 0; i < 10; i++) {
-    view.setUint16(18 + i * 2, msg.voltages[i] ?? 0, true);
+    view.setUint16(10 + i * 2, msg.voltages[i] ?? 0, true);
   }
-  view.setInt16(38, msg.currentBattery, true);
+  view.setInt16(30, msg.currentBattery, true);
   // Array: voltages_ext
   for (let i = 0; i < 4; i++) {
-    view.setUint16(40 + i * 2, msg.voltagesExt[i] ?? 0, true);
+    view.setUint16(41 + i * 2, msg.voltagesExt[i] ?? 0, true);
   }
-  buffer[48] = msg.id & 0xff;
-  buffer[49] = msg.batteryFunction & 0xff;
-  buffer[50] = msg.type & 0xff;
-  view.setInt8(51, msg.batteryRemaining);
-  buffer[52] = msg.chargeState & 0xff;
-  buffer[53] = msg.mode & 0xff;
+  buffer[32] = msg.id & 0xff;
+  buffer[33] = msg.batteryFunction & 0xff;
+  buffer[34] = msg.type & 0xff;
+  view.setInt8(35, msg.batteryRemaining);
+  buffer[40] = msg.chargeState & 0xff;
+  buffer[49] = msg.mode & 0xff;
 
   return buffer;
 }
@@ -73,17 +73,17 @@ export function deserializeBatteryStatus(payload: Uint8Array): BatteryStatus {
   return {
     currentConsumed: view.getInt32(0, true),
     energyConsumed: view.getInt32(4, true),
-    timeRemaining: view.getInt32(8, true),
-    faultBitmask: view.getUint32(12, true),
-    temperature: view.getInt16(16, true),
-    voltages: Array.from({ length: 10 }, (_, i) => view.getUint16(18 + i * 2, true)),
-    currentBattery: view.getInt16(38, true),
-    voltagesExt: Array.from({ length: 4 }, (_, i) => view.getUint16(40 + i * 2, true)),
-    id: payload[48],
-    batteryFunction: payload[49],
-    type: payload[50],
-    batteryRemaining: view.getInt8(51),
-    chargeState: payload[52],
-    mode: payload[53],
+    timeRemaining: view.getInt32(36, true),
+    faultBitmask: view.getUint32(50, true),
+    temperature: view.getInt16(8, true),
+    voltages: Array.from({ length: 10 }, (_, i) => view.getUint16(10 + i * 2, true)),
+    currentBattery: view.getInt16(30, true),
+    voltagesExt: Array.from({ length: 4 }, (_, i) => view.getUint16(41 + i * 2, true)),
+    id: payload[32],
+    batteryFunction: payload[33],
+    type: payload[34],
+    batteryRemaining: view.getInt8(35),
+    chargeState: payload[40],
+    mode: payload[49],
   };
 }

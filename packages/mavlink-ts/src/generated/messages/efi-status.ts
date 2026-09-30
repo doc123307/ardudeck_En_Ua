@@ -69,9 +69,9 @@ export function serializeEfiStatus(msg: EfiStatus): Uint8Array {
   view.setFloat32(52, msg.exhaustGasTemperature, true);
   view.setFloat32(56, msg.throttleOut, true);
   view.setFloat32(60, msg.ptCompensation, true);
-  view.setFloat32(64, msg.ignitionVoltage, true);
-  view.setFloat32(68, msg.fuelPressure, true);
-  buffer[72] = msg.health & 0xff;
+  view.setFloat32(65, msg.ignitionVoltage, true);
+  view.setFloat32(69, msg.fuelPressure, true);
+  buffer[64] = msg.health & 0xff;
 
   return buffer;
 }
@@ -96,8 +96,8 @@ export function deserializeEfiStatus(payload: Uint8Array): EfiStatus {
     exhaustGasTemperature: view.getFloat32(52, true),
     throttleOut: view.getFloat32(56, true),
     ptCompensation: view.getFloat32(60, true),
-    ignitionVoltage: view.getFloat32(64, true),
-    fuelPressure: view.getFloat32(68, true),
-    health: payload[72],
+    ignitionVoltage: view.getFloat32(65, true),
+    fuelPressure: view.getFloat32(69, true),
+    health: payload[64],
   };
 }

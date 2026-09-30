@@ -34,8 +34,8 @@ export function serializeEkfStatusReport(msg: EkfStatusReport): Uint8Array {
   view.setFloat32(8, msg.posVertVariance, true);
   view.setFloat32(12, msg.compassVariance, true);
   view.setFloat32(16, msg.terrainAltVariance, true);
-  view.setFloat32(20, msg.airspeedVariance, true);
-  view.setUint16(24, msg.flags, true);
+  view.setFloat32(22, msg.airspeedVariance, true);
+  view.setUint16(20, msg.flags, true);
 
   return buffer;
 }
@@ -49,7 +49,7 @@ export function deserializeEkfStatusReport(payload: Uint8Array): EkfStatusReport
     posVertVariance: view.getFloat32(8, true),
     compassVariance: view.getFloat32(12, true),
     terrainAltVariance: view.getFloat32(16, true),
-    airspeedVariance: view.getFloat32(20, true),
-    flags: view.getUint16(24, true),
+    airspeedVariance: view.getFloat32(22, true),
+    flags: view.getUint16(20, true),
   };
 }

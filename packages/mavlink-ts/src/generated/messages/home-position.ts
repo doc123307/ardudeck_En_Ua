@@ -37,20 +37,20 @@ export function serializeHomePosition(msg: HomePosition): Uint8Array {
   const buffer = new Uint8Array(60);
   const view = new DataView(buffer.buffer);
 
-  view.setBigUint64(0, BigInt(msg.timeUsec), true);
-  view.setInt32(8, msg.latitude, true);
-  view.setInt32(12, msg.longitude, true);
-  view.setInt32(16, msg.altitude, true);
-  view.setFloat32(20, msg.x, true);
-  view.setFloat32(24, msg.y, true);
-  view.setFloat32(28, msg.z, true);
+  view.setBigUint64(52, BigInt(msg.timeUsec), true);
+  view.setInt32(0, msg.latitude, true);
+  view.setInt32(4, msg.longitude, true);
+  view.setInt32(8, msg.altitude, true);
+  view.setFloat32(12, msg.x, true);
+  view.setFloat32(16, msg.y, true);
+  view.setFloat32(20, msg.z, true);
   // Array: q
   for (let i = 0; i < 4; i++) {
-    view.setFloat32(32 + i * 4, msg.q[i] ?? 0, true);
+    view.setFloat32(24 + i * 4, msg.q[i] ?? 0, true);
   }
-  view.setFloat32(48, msg.approachX, true);
-  view.setFloat32(52, msg.approachY, true);
-  view.setFloat32(56, msg.approachZ, true);
+  view.setFloat32(40, msg.approachX, true);
+  view.setFloat32(44, msg.approachY, true);
+  view.setFloat32(48, msg.approachZ, true);
 
   return buffer;
 }
@@ -59,16 +59,16 @@ export function deserializeHomePosition(payload: Uint8Array): HomePosition {
   const view = new DataView(payload.buffer, payload.byteOffset, payload.byteLength);
 
   return {
-    timeUsec: view.getBigUint64(0, true),
-    latitude: view.getInt32(8, true),
-    longitude: view.getInt32(12, true),
-    altitude: view.getInt32(16, true),
-    x: view.getFloat32(20, true),
-    y: view.getFloat32(24, true),
-    z: view.getFloat32(28, true),
-    q: Array.from({ length: 4 }, (_, i) => view.getFloat32(32 + i * 4, true)),
-    approachX: view.getFloat32(48, true),
-    approachY: view.getFloat32(52, true),
-    approachZ: view.getFloat32(56, true),
+    timeUsec: view.getBigUint64(52, true),
+    latitude: view.getInt32(0, true),
+    longitude: view.getInt32(4, true),
+    altitude: view.getInt32(8, true),
+    x: view.getFloat32(12, true),
+    y: view.getFloat32(16, true),
+    z: view.getFloat32(20, true),
+    q: Array.from({ length: 4 }, (_, i) => view.getFloat32(24 + i * 4, true)),
+    approachX: view.getFloat32(40, true),
+    approachY: view.getFloat32(44, true),
+    approachZ: view.getFloat32(48, true),
   };
 }

@@ -24,9 +24,9 @@ export function serializeCameraSettings(msg: CameraSettings): Uint8Array {
   const view = new DataView(buffer.buffer);
 
   view.setUint32(0, msg.timeBootMs, true);
-  view.setFloat32(4, msg.zoomlevel, true);
-  view.setFloat32(8, msg.focuslevel, true);
-  buffer[12] = msg.modeId & 0xff;
+  view.setFloat32(5, msg.zoomlevel, true);
+  view.setFloat32(9, msg.focuslevel, true);
+  buffer[4] = msg.modeId & 0xff;
 
   return buffer;
 }
@@ -36,8 +36,8 @@ export function deserializeCameraSettings(payload: Uint8Array): CameraSettings {
 
   return {
     timeBootMs: view.getUint32(0, true),
-    zoomlevel: view.getFloat32(4, true),
-    focuslevel: view.getFloat32(8, true),
-    modeId: payload[12],
+    zoomlevel: view.getFloat32(5, true),
+    focuslevel: view.getFloat32(9, true),
+    modeId: payload[4],
   };
 }

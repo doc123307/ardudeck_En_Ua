@@ -23,10 +23,10 @@ export function serializeGpsGlobalOrigin(msg: GpsGlobalOrigin): Uint8Array {
   const buffer = new Uint8Array(20);
   const view = new DataView(buffer.buffer);
 
-  view.setBigUint64(0, BigInt(msg.timeUsec), true);
-  view.setInt32(8, msg.latitude, true);
-  view.setInt32(12, msg.longitude, true);
-  view.setInt32(16, msg.altitude, true);
+  view.setBigUint64(12, BigInt(msg.timeUsec), true);
+  view.setInt32(0, msg.latitude, true);
+  view.setInt32(4, msg.longitude, true);
+  view.setInt32(8, msg.altitude, true);
 
   return buffer;
 }
@@ -35,9 +35,9 @@ export function deserializeGpsGlobalOrigin(payload: Uint8Array): GpsGlobalOrigin
   const view = new DataView(payload.buffer, payload.byteOffset, payload.byteLength);
 
   return {
-    timeUsec: view.getBigUint64(0, true),
-    latitude: view.getInt32(8, true),
-    longitude: view.getInt32(12, true),
-    altitude: view.getInt32(16, true),
+    timeUsec: view.getBigUint64(12, true),
+    latitude: view.getInt32(0, true),
+    longitude: view.getInt32(4, true),
+    altitude: view.getInt32(8, true),
   };
 }
