@@ -1,0 +1,587 @@
+{
+  "main": {
+    "apps_app_extract": {
+      "failed": "{{cmd}} failed ({{code}}): {{v3}}"
+    },
+    "apps_app_manager": {
+      "hangarReturned": "Hangar returned {{status}}",
+      "downloading": "Downloading {{slug}}...",
+      "couldNotReachTheHangarAt": "Could not reach the Hangar at {{v1}}. Check your connection.",
+      "hangarReturnedFor": "Hangar returned {{status}} for {{slug}} ({{platform}})",
+      "emptyResponseBody": "Empty response body",
+      "verifying": "Verifying {{slug}}...",
+      "hashMismatchForTheDownloadWas": "Hash mismatch for {{slug}} - the download was corrupted or tampered with",
+      "installing": "Installing {{slug}}...",
+      "installed": "{{name}} installed."
+    },
+    "area_editor_window": {
+      "ardudeckAreaEditor": "ArduDeck Area Editor"
+    },
+    "calibration_calibration_handlers": {
+      "calibration": "[Calibration] {{message}}",
+      "anotherCalibrationIsAlreadyInProgress": "Another calibration is already in progress",
+      "placeVehicleLevelTopUp": "Place vehicle level (top up)",
+      "unknownCalibrationType": "Unknown calibration type: {{type}}",
+      "sendingCalibrationCommand": "Sending calibration command...",
+      "calibratingAccelerometer": "Calibrating accelerometer...",
+      "calibrationFailedEnsureVehicleIsLevel": "Calibration failed - ensure vehicle is level and still",
+      "startingCompassCalibration": "Starting compass calibration...",
+      "failedToStartCompassCalibration": "Failed to start compass calibration",
+      "rotateVehicleInAllDirections": "Rotate vehicle in all directions...",
+      "calibratingGyroscope": "Calibrating gyroscope...",
+      "holdSteadyOverTexturedSurface": "Hold steady over textured surface...",
+      "n6PointCalibrationNotInProgress": "6-point calibration not in progress",
+      "accCalibrationCommandFailedEnsureFc": "ACC calibration command failed — ensure FC is connected",
+      "placeVehicle": "Place vehicle {{v1}}"
+    },
+    "calibration_mavlink_calibration": {
+      "mavlinkCalibrationNotInitialized": "MAVLink calibration not initialized",
+      "largeVehicleMagcalAlreadyInProgress": "Large Vehicle MagCal already in progress",
+      "failedToSendCommandEnsureFc": "Failed to send command - ensure FC is connected",
+      "flightControllerDidNotRespondCheck": "Flight controller did not respond. Check the connection and try again.",
+      "compassmotAlreadyInProgress": "CompassMot already in progress",
+      "failedToSendFinishCommandEnsure": "Failed to send finish command - ensure FC is connected",
+      "anotherCalibrationIsAlreadyInProgress": "Another calibration is already in progress",
+      "unsupportedMavlinkCalibrationType": "Unsupported MAVLink calibration type: {{type}}",
+      "n6PointCalibrationNotInProgress": "6-point calibration not in progress",
+      "px4DetectsPositionsAutomaticallyNoConfirmation": "PX4 detects positions automatically, no confirmation needed",
+      "invalidPositionIndex": "Invalid position index: {{position}}",
+      "waitingForFlightControllerToRequest": "Waiting for flight controller to request a position. Keep the vehicle still.",
+      "failedToSendPositionConfirmationEnsure": "Failed to send position confirmation — ensure FC is connected",
+      "vehicleIsTiltedMoreThan10": "Vehicle is tilted more than 10° from level. Place the flight controller on a flat surface and try again.",
+      "compassCalibrationFailedMoveAwayFrom": "Compass calibration failed: {{reason}}. Move away from metal/magnets/wiring and try again.",
+      "detectedHoldStill": "{{v1}} detected, hold still",
+      "notInitialized": "Not initialized",
+      "unsupportedPx4CalibrationType": "Unsupported PX4 calibration type: {{type}}",
+      "failedToSendCalibrationCommandEnsure": "Failed to send calibration command, ensure FC is connected",
+      "waitingForTheVehicleToStart": "Waiting for the vehicle to start calibrating...",
+      "theVehicleStoppedRespondingDuringCalibration": "The vehicle stopped responding during calibration. Nothing was saved, check the connection and try again.",
+      "rotateTheVehicleSlowlyThroughAll": "Rotate the vehicle slowly through all orientations",
+      "noCompassCalibratedMoveAwayFrom": "No compass calibrated. {{failed}}. Move away from metal, magnets and wiring, and try again.",
+      "accelerometerCalibrationFailed": "Accelerometer calibration failed",
+      "placeVehicle": "Place vehicle {{v1}}",
+      "sendingLevelCalibrationCommand": "Sending level calibration command...",
+      "calibratingKeepVehicleLevelAndStill": "Calibrating... keep vehicle level and still",
+      "sendingQuickCalibrationCommand": "Sending quick calibration command...",
+      "calibratingKeepTheVehicleLevelAnd": "Calibrating... keep the vehicle level and completely still",
+      "waitingForFlightController": "Waiting for flight controller...",
+      "sendingGyroCalibrationCommand": "Sending gyro calibration command...",
+      "calibratingGyroscopeKeepVehicleStill": "Calibrating gyroscope... keep vehicle still",
+      "rotateVehicleSlowlyInAllDirections": "Rotate vehicle slowly in all directions...",
+      "compassCalibrationIsNotConvergingCheck": "Compass calibration is not converging. Check the compass is healthy (prearm \"Compass not healthy\" means it is not), move away from metal/magnets/wiring, and rotate through all axes. If this FC has no working compass, disable it (COMPASS_ENABLE=0) — Stabilize does not need one."
+    },
+    "cli_cli_handlers": {
+      "transportNotConnected": "Transport not connected",
+      "transportClosedDuringCliSetup": "Transport closed during CLI setup",
+      "saveCliOutput": "Save CLI Output"
+    },
+    "companion_companion_connection": {
+      "notConnected": "Not connected",
+      "agentApiError": "Agent API error: {{status}} {{statusText}}"
+    },
+    "connection_connection_registry": {
+      "connectionregistrySetactiveUnknownTransportid": "ConnectionRegistry.setActive: unknown transportId {{transportId}}",
+      "connectionregistrySetactiveVehiclekeyDoesNotBelo": "ConnectionRegistry.setActive: vehicleKey {{vehicleKey}} does not belong to transport {{transportId}}"
+    },
+    "dronebridge_dronebridge_client": {
+      "dronebridgeApiError": "DroneBridge API error: {{status}} {{statusText}}"
+    },
+    "edgetx_package_installer": {
+      "downloadFailedHttpFor": "Download failed: HTTP {{status}} for {{zipUrl}}",
+      "hasNoFilesForRadioVariant": "{{name}} has no files for radio variant {{variantId}}",
+      "archiveLayoutChangedNotFoundIn": "Archive layout changed: {{archivePath}} not found in {{versionTag}}"
+    },
+    "firmware_ardupilot_flasher": {
+      "invalidApjFileMissingImageOr": "Invalid APJ file: missing image or image_size field",
+      "apjDecompressionFailed": "APJ decompression failed: {{message}}",
+      "bootloaderReportsInvalidOperation": "Bootloader reports INVALID OPERATION",
+      "bootloaderReportsOperationFailed": "Bootloader reports OPERATION FAILED",
+      "getDeviceSyncFailedAfterReading": "GET_DEVICE({{infoType}}) sync failed after reading value",
+      "invalidProgMultiSize": "Invalid PROG_MULTI size: {{length}}",
+      "progMultiFailedBootloaderDidNot": "PROG_MULTI failed — bootloader did not acknowledge write",
+      "flashOperationAborted": "Flash operation aborted",
+      "writingFirmwareKb": "Writing firmware... {{percent}}% ({{v2}}/{{v3}} KB)",
+      "crcVerificationSyncFailed": "CRC verification sync failed",
+      "noSerialPortSpecifiedForArdupilot": "No serial port specified for ArduPilot bootloader flash",
+      "anotherFlashOperationIsAlreadyIn": "Another flash operation is already in progress. Please wait for it to complete.",
+      "loadingFirmwareFile": "Loading firmware file...",
+      "aborted": "Aborted",
+      "rebootingBoardIntoBootloaderMode": "Rebooting board into bootloader mode...",
+      "waitingForBootloaderUsb": "Waiting for bootloader USB...",
+      "connectingToArdupilotBootloaderOn": "Connecting to ArduPilot bootloader on {{flashPort}}...",
+      "synchronizingWithBootloader": "Synchronizing with bootloader...",
+      "couldNotConnectToArdupilotBootloader": "Could not connect to ArduPilot bootloader on {{flashPort}}.\n\nMake sure:\n1. The board is running ArduPilot firmware (not Betaflight/iNav)\n2. The board has the ArduPilot bootloader installed\n3. No other application is using the serial port\n\nIf the board does not respond, try disconnecting and reconnecting USB.",
+      "readingBoardInfo": "Reading board info...",
+      "unsupportedBootloaderRevisionExpected220": "Unsupported bootloader revision: {{blRev}} (expected 2-20)",
+      "boardIdMismatchFirmwareIsFor": "Board ID mismatch: firmware is for board {{apjBoardId}}, but connected board reports ID {{boardId}}.\n\nPlease select the correct firmware for your board.",
+      "firmwareTooLargeKbButBoard": "Firmware too large: {{v1}} KB, but board flash is {{v2}} KB",
+      "erasingFlash": "Erasing flash...",
+      "writingFirmware": "Writing firmware...",
+      "verifyingFirmwareCrc": "Verifying firmware CRC...",
+      "firmwareCrcVerificationFailedTheWritten": "Firmware CRC verification failed — the written data does not match. Please try again.",
+      "rebootingBoard": "Rebooting board...",
+      "flashComplete": "Flash complete!",
+      "firmwareFlashedSuccessfullyViaArdupilotBootloade": "Firmware flashed successfully via ArduPilot bootloader"
+    },
+    "firmware_avr_flasher": {
+      "noSerialPortSpecifiedForAvr": "No serial port specified for AVR board. Please ensure the board is connected.",
+      "startingAvrFlash": "Starting AVR flash...",
+      "erasingChip": "Erasing chip...",
+      "writingFlashMemory": "Writing flash memory...",
+      "verifyingFlashMemory": "Verifying flash memory...",
+      "flashComplete": "Flash complete!",
+      "firmwareFlashedAndVerifiedSuccessfully": "Firmware flashed and verified successfully",
+      "failedToStartAvrdudeMakeSure": "Failed to start avrdude: {{message}}. Make sure avrdude is installed.",
+      "flashOperationAborted": "Flash operation aborted"
+    },
+    "firmware_dfu_flasher": {
+      "invalidApjFileMissingImageOr": "Invalid APJ file: missing image or image_size",
+      "apjDecompressionFailed": "APJ decompression failed: {{message}}",
+      "anotherFlashOperationIsAlreadyIn": "Another flash operation is already in progress. Please wait for it to complete.",
+      "loadingFirmwareFile": "Loading firmware file...",
+      "flashOperationAborted": "Flash operation aborted",
+      "findingDfuDevice": "Finding DFU device...",
+      "rebootingBoardIntoDfuMode": "Rebooting board into DFU mode...",
+      "waitingForDfuDevice": "Waiting for DFU device...",
+      "openingDfuDevice": "Opening DFU device...",
+      "flashCompleteRebooting": "Flash complete, rebooting...",
+      "firmwareFlashedSuccessfully": "Firmware flashed successfully",
+      "flashFailed": "Flash failed: {{errorMessage}}"
+    },
+    "firmware_esp32_flasher": {
+      "failedToFetchEsptoolReleaseInfo": "Failed to fetch esptool release info: {{status}}",
+      "noEsptoolBinaryFoundFor": "No esptool binary found for {{platform}}/{{arch}}",
+      "failedToDownloadEsptool": "Failed to download esptool: {{status}}",
+      "unknownFirmwareTemplate": "Unknown firmware template: {{templateId}}",
+      "templateDoesnTSupportChip": "Template {{templateId}} doesn't support chip {{chipKey}}",
+      "fetchingLatestRelease": "Fetching latest release...",
+      "failedToFetchRelease": "Failed to fetch release: {{status}}",
+      "noMatchingAssetFoundIn": "No matching asset found in {{owner}}/{{repo}} {{tag_name}}",
+      "downloading": "Downloading {{tag_name}}...",
+      "failedToDownloadFirmware": "Failed to download firmware: {{status}}",
+      "extractingFirmware": "Extracting firmware...",
+      "failedToExtractFirmware": "Failed to extract firmware: {{e}}",
+      "firmwareReady": "Firmware ready",
+      "noFirmwareBinariesFound": "No firmware binaries found",
+      "noValidBinariesFoundInFlash": "No valid binaries found in flash_args.txt",
+      "writing": "Writing: {{pct}}%",
+      "erasingFlash": "Erasing flash...",
+      "writeComplete": "Write complete",
+      "verified": "Verified",
+      "detected": "Detected: {{v1}}",
+      "connectingToBootloader": "Connecting to bootloader...",
+      "flashComplete": "Flash complete!",
+      "firmwareFlashedAndVerified": "Firmware flashed and verified",
+      "flashAborted": "Flash aborted",
+      "checkingEsptool": "Checking esptool...",
+      "downloadingEsptool": "Downloading esptool...",
+      "detectingChip": "Detecting chip...",
+      "couldNotDetectEsp32ChipCheck": "Could not detect ESP32 chip. Check the USB connection and try again.",
+      "downloadingFirmware": "Downloading firmware...",
+      "startingFlash": "Starting flash...",
+      "readingDeviceInfo": "Reading device info...",
+      "error": "Error: {{message}}",
+      "noSerialPortSpecified": "No serial port specified.",
+      "firmwareFileNotFound": "Firmware file not found: {{firmwarePath}}"
+    },
+    "firmware_firmware_downloader": {
+      "usingBundledLegacyFirmware": "Using bundled legacy firmware",
+      "bundledFirmwareNotFound": "Bundled firmware not found: {{localPath}}",
+      "usingCachedFirmware": "Using cached firmware",
+      "downloading": "Downloading {{version}}...",
+      "downloadFailedHttp": "Download failed: HTTP {{statusCode}}",
+      "downloading2": "Downloading: {{v1}} / {{v2}}",
+      "downloadAborted": "Download aborted"
+    },
+    "firmware_stm32_serial_flasher": {
+      "writeFailedAtAddress0xAfter": "Write failed at address 0x{{v1}} after {{maxRetries}} retries",
+      "invalidApjFileMissingImageOr": "Invalid APJ file: missing image or image_size",
+      "apjDecompressionFailed": "APJ decompression failed: {{message}}",
+      "noSerialPortSpecified": "No serial port specified",
+      "anotherFlashOperationIsAlreadyIn": "Another flash operation is already in progress. Please wait for it to complete.",
+      "loadingFirmware": "Loading firmware...",
+      "rebootingIntoBootloaderMode": "Rebooting into bootloader mode...",
+      "waitingForBootloaderUsb": "Waiting for bootloader USB...",
+      "tryingBootloaderAtBaud": "Trying bootloader at {{baudRate}} baud...",
+      "couldNotConnectToBootloaderFor": "Could not connect to bootloader. For boards with USB-serial adapter (CP2102/FTDI):\n\n1. Disconnect USB\n2. Short the BOOT pads on the board (use tweezers or a jumper wire)\n3. While holding BOOT pads shorted, connect USB\n4. Click Flash again (keep boot pads shorted until flashing starts)\n5. Release boot pads once \"Erasing flash...\" appears\n\nThe BOOT pads are usually labeled \"BOOT\" or \"BT\" near the MCU.",
+      "firmwareTooLargeTheHasKb": "Firmware too large! The {{mcu}} has {{flashSizeKb}}KB flash, but the firmware is {{firmwareSizeKb}}KB.\n\nPlease select a firmware build that matches your board's flash size.",
+      "aborted": "Aborted",
+      "erasingFlash": "Erasing flash...",
+      "flashEraseFailed": "Flash erase failed",
+      "writingFirmware": "Writing firmware...",
+      "writingFirmware2": "Writing firmware... {{percent}}%",
+      "startingApplication": "Starting application...",
+      "flashComplete": "Flash complete!",
+      "firmwareFlashedSuccessfully": "Firmware flashed successfully"
+    },
+    "fleet_repo_fleet_repo_manager": {
+      "initializeFleetVault": "Initialize fleet vault",
+      "tokenRejectedByGithub": "Token rejected by GitHub",
+      "aTokenWithWriteAccessTo": "A token with write access to the repository is required",
+      "notConnectedToGithub": "Not connected to GitHub",
+      "ardudeckFleetVault": "ArduDeck fleet vault",
+      "githubRepoCreationFailed": "GitHub repo creation failed ({{status}})",
+      "repositoryExistsButIsNotAccessible": "Repository \"{{name}}\" exists but is not accessible",
+      "couldNotListRepositories": "Could not list repositories ({{status}})",
+      "thisVaultAlreadyHasSnapshotsCreate": "This vault already has snapshots. Create a new repository instead, or move the vault folder away first.",
+      "notConnectedSetUpBackupIn": "Not connected. Set up backup in the vault first.",
+      "noRepositoryConfigured": "No repository configured"
+    },
+    "gis_shapefile_to_geojson": {
+      "fileTooSmallToBeA": "File too small to be a shapefile",
+      "notAShapefileBadFileCode": "Not a shapefile (bad file code)"
+    },
+    "index": {
+      "rejectionTrace": "rejection trace",
+      "yourKeysAreProtected": "Your keys are protected",
+      "gotIt": "Got it"
+    },
+    "ipc_handlers": {
+      "portRequiredForSerialConnection": "Port required for serial connection",
+      "hostAndPortRequiredForTcp": "Host and port required for TCP",
+      "remoteHostAndPortRequiredFor": "Remote host and port required for UDP client mode",
+      "invalidConnectionTypeMustBeSerial": "Invalid connection type: {{v1}}. Must be 'serial', 'tcp', or 'udp'.",
+      "ipcHandlersNotRegisteredYet": "IPC handlers not registered yet",
+      "notConnected": "Not connected",
+      "cannotAddBackgroundTransportsWhileConnected": "Cannot add background transports while connected via MSP",
+      "cannotRemoveThePrimaryTransportUse": "Cannot remove the primary transport; use disconnect",
+      "parseIngestFailed": "parse/ingest failed",
+      "cannotAddAnOrchestrationLinkWhile": "Cannot add an orchestration link while connected via MSP",
+      "noOrchestratorConnected": "No orchestrator connected",
+      "unknownStreamPath": "Unknown stream path {{path}}",
+      "savedKeyVerifiedAgainstFcAnd": "Saved key verified against FC and signing auto-enabled{{v1}}",
+      "fcSendsSignedPacketsButNone": "FC sends signed packets but none of {{length}} saved key(s) matched",
+      "failedToCreateTransportThisShould": "Failed to create transport - this should not happen",
+      "thisPortIsInUseBy": "This port is in use by the active connection. Disconnect first.",
+      "aUdpConnectionIsAlreadyActive": "A UDP connection is already active. Disconnect first.",
+      "importWfbNgPairingKey": "Import wfb-ng pairing key",
+      "saveWorkspaceLayout": "Save workspace layout",
+      "passphraseCannotBeEmpty": "Passphrase cannot be empty",
+      "noSigningKeyConfiguredSetA": "No signing key configured. Set a passphrase first.",
+      "signingIsOnlyAvailableForMavlink": "Signing is only available for MAVLink connections",
+      "signingRequiresMavlinkV2ThisBoard": "Signing requires MAVLink v2. This board uses MAVLink v1.",
+      "noSigningKeyConfigured": "No signing key configured",
+      "failedToDisableOnFc": "Failed to disable on FC: {{msg}}",
+      "exportSecureLinkEvidencePack": "Export Secure Link Evidence Pack",
+      "linkIsUpButTheVehicle": "Link is up but the vehicle has not been heard from yet",
+      "parameterNotFoundOnThisBoard": "Parameter \"{{paramId}}\" not found on this board. Use the Parameters list to see available parameters.",
+      "noBoardIdentity": "No board identity",
+      "unknownVehicleType": "Unknown vehicle type: {{mavType}}",
+      "http": "HTTP {{status}}: {{statusText}}",
+      "sitlIsConnectedButArdudeckHas": "SITL is connected but ArduDeck has lost track of the launcher config - restart SITL from the connection panel.",
+      "couldNotWriteToSitlWorking": "Could not write to SITL working directory: {{msg}}",
+      "fcDidNotRespondToA": "FC did not respond to a write probe within 1.5 s. The MAVLink FTP server may be disabled or the FC has no writable filesystem (no SD card?).",
+      "parentDirectoryMissingTypicallyMeansThere": "Parent directory missing - typically means there is no SD card present, or /APM/scripts/ has not been created. ArduPilot creates /APM/scripts/ on boot when SCR_ENABLE=1, so a reboot may help.",
+      "fcRejectedTheWriteProbe": "FC rejected the write probe: {{err}}",
+      "sitlLauncherConfigUnavailableRestartSitl": "SITL launcher config unavailable - restart SITL from the connection panel",
+      "sitlRestartFailed": "SITL restart failed: {{v1}}",
+      "connectToAnFcBeforeRunning": "Connect to an FC before running preflight checks.",
+      "saveArdudeckLuaScript": "Save ArduDeck Lua Script",
+      "mavlinkFtpRequiresAMavlinkConnection": "MAVLink-FTP requires a MAVLink connection",
+      "couldNotList": "Could not list {{path}}: {{error}}",
+      "save": "Save {{fcPath}}",
+      "ftpDownloadOfFailed": "FTP download of {{fcPath}} failed",
+      "uploadTo": "Upload to {{targetDir}}",
+      "couldNotRead": "Could not read {{sourcePath}}: {{v2}}",
+      "motorTestRequiresMavlinkConnection": "Motor test requires MAVLink connection",
+      "servoTestRequiresMavlinkConnection": "Servo test requires MAVLink connection",
+      "trainerSessionActiveTheTrainerOwns": "Trainer session active - the Trainer owns the sticks",
+      "rcOverrideRequiresMavlinkConnection": "RC override requires MAVLink connection",
+      "saveParameters": "Save Parameters",
+      "importSurveyArea": "Import Survey Area",
+      "noKmlFoundInsideTheKmz": "No .kml found inside the KMZ archive",
+      "noPolygonOrLineGeometryFound": "No polygon or line geometry found in the shapefile",
+      "noShpFoundInsideTheZip": "No .shp found inside the zip archive",
+      "loadParameters": "Load Parameters",
+      "notASurveyAreaDocument": "Not a survey area document",
+      "notAMissionDocument": "Not a mission document",
+      "vehicleNotReachable": "Vehicle not reachable",
+      "noMissionItemsToUpload": "No mission items to upload",
+      "anotherMissionUploadIsInProgress": "Another mission upload is in progress",
+      "saveMission": "Save Mission",
+      "noExportableWaypointsDjiKmzNeeds": "No exportable waypoints (DJI KMZ needs plain waypoints with coordinates)",
+      "loadMission": "Load Mission",
+      "notADjiWaypointMissionNo": "Not a DJI waypoint mission: no waylines.wpml inside the .kmz",
+      "noWaypointsFoundInTheDji": "No waypoints found in the DJI mission",
+      "noFenceItemsToUpload": "No fence items to upload",
+      "saveFence": "Save Fence",
+      "loadFence": "Load Fence",
+      "noRallyPointsToUpload": "No rally points to upload",
+      "saveRallyPoints": "Save Rally Points",
+      "loadRallyPoints": "Load Rally Points",
+      "noWindow": "no window",
+      "connectTheVehicleFirstConfigValues": "Connect the vehicle first - config values come from its parameters",
+      "sdCardIsNoLongerMounted": "SD card is no longer mounted",
+      "notAMountedEdgetxSdCard": "Not a mounted EdgeTX SD card",
+      "unknownPackage": "Unknown package: {{packageId}}",
+      "sdCardIsNoLongerMounted2": "SD card is no longer mounted or is not an EdgeTX card",
+      "serialFlashFailed": "Serial flash failed: {{errMsg}}",
+      "unsupportedFlasherType": "Unsupported flasher type: {{flasher}}",
+      "selectFirmwareFile": "Select Firmware File",
+      "notConnectedToFlightController": "Not connected to flight controller",
+      "noStm32BootloaderDetected": "No STM32 bootloader detected",
+      "noMspResponse": "No MSP response",
+      "noCompatibleFirmwareDetected": "No compatible firmware detected",
+      "driverFileNotFound": "Driver file not found: {{driverName}}",
+      "failedToDownloadCygwinDlls": "Failed to download Cygwin DLLs: {{error}}",
+      "notConnectedToMspBoard": "Not connected to MSP board",
+      "collectingStatus": "Collecting status...",
+      "collectingDumpAll": "Collecting dump all...",
+      "collectingDiffAll": "Collecting diff all...",
+      "notConnectedToMavlinkBoard": "Not connected to MAVLink board",
+      "collectingMavlinkDiagnostics": "Collecting MAVLink diagnostics...",
+      "saveBugReport": "Save Bug Report",
+      "saveCanceled": "Save canceled",
+      "collectingLogs": "Collecting logs...",
+      "encryptingReport": "Encrypting report...",
+      "saveLuaGraph": "Save Lua Graph",
+      "openLuaGraph": "Open Lua Graph",
+      "exportLuaScript": "Export Lua Script",
+      "saveFlightLog": "Save Flight Log",
+      "downloadFailed": "Download failed",
+      "openFlightLog": "Open Flight Log",
+      "logParseFailed": "Log parse failed: {{message}}",
+      "fileNoLongerExists": "File no longer exists: {{filePath}}",
+      "noApiKeyConfiguredForAdd": "No API key configured for {{provider}}. Add it in Settings.",
+      "noApiKeyConfiguredForClaude": "No API key configured for claude. Add it in Settings.",
+      "claudeApiError": "Claude API error {{status}}: {{body}}",
+      "exportAreas": "Export Areas",
+      "frameBlueprintBinaryNotBuilt": "frame_blueprint binary not built",
+      "frameBlueprintInvocationFailed": "frame_blueprint invocation failed: {{message}}",
+      "openaiApiError": "OpenAI API error {{status}}: {{body}}",
+      "geminiApiError": "Gemini API error {{status}}: {{body}}",
+      "unknownProvider": "Unknown provider: {{provider}}"
+    },
+    "link_doctor_elrs_service": {
+      "noElrsModuleAnsweredOnThis": "No ELRS module answered on this port",
+      "malformedDeviceInfoFromModule": "Malformed DEVICE_INFO from module",
+      "thisModuleHasNoLinkMode": "This module has no Link Mode setting (firmware too old?)"
+    },
+    "log_worker": {
+      "logWorkerMustBeRunAs": "log-worker must be run as a worker thread"
+    },
+    "logging_report_encryptor": {
+      "invalidFileFormat": "Invalid file format"
+    },
+    "mavlink_ftp_ftp_client": {
+      "unexpectedOpcode": "unexpected opcode {{opcode}}"
+    },
+    "media_media_binaries_downloader": {
+      "failedToExtractMediamtx": "Failed to extract mediamtx"
+    },
+    "media_media_engine": {
+      "webrtcSourceHasNoWhepUrl": "WebRTC source has no WHEP url",
+      "sourceHasNoUrl": "Source has no url",
+      "ffmpegRequiredToBridgeUdpSources": "ffmpeg required to bridge UDP sources",
+      "hubRejectedTheSourcePath": "Hub rejected the source path",
+      "cameraIsSendingWhichTheBuilt": "Camera is sending {{v1}}, which the built-in player cannot decode. Click Install to enable live conversion, or switch the camera encoder to H.264.",
+      "cameraIsSendingAndNoH": "Camera is sending {{v1}} and no H.264 encoder worked ({{v2}})",
+      "noLiveStreamToSnapshot": "No live stream to snapshot",
+      "ffmpegRequiredForSnapshots": "ffmpeg required for snapshots",
+      "snapshotFailed": "Snapshot failed",
+      "noLiveStreamToRecord": "No live stream to record",
+      "ffmpegRequiredForRecording": "ffmpeg required for recording"
+    },
+    "media_vision_stream_window": {
+      "streamRendererStopped": "Stream renderer stopped ({{reason}})"
+    },
+    "media_wfbng_receiver": {
+      "noWifiReceiverDongleFoundPlug": "No WiFi receiver dongle found. Plug the RTL8812AU dongle from the camera kit into this computer.",
+      "thePairingKeyGsKeyHas": "The pairing key (gs.key) has not been imported. Get it from the camera (it creates gs.key on first boot) and import it in the feed setup."
+    },
+    "mission_library_mission_library_handlers": {
+      "missionNotFound": "Mission not found",
+      "exportMission": "Export Mission",
+      "importMission": "Import Mission",
+      "notAnArdudeckMissionFile": "Not an ArduDeck mission file",
+      "areaNotFound": "Area not found",
+      "exportSurveyArea": "Export Survey Area",
+      "importSurveyArea": "Import Survey Area",
+      "notAnArdudeckSurveyAreaFile": "Not an ArduDeck survey area file"
+    },
+    "modules_hangar_client": {
+      "couldNotReachTheHangarAt": "Could not reach the Hangar at {{v1}}. Check your connection and try again.",
+      "emptyResponseBody": "Empty response body"
+    },
+    "modules_license_validator": {
+      "invalidKeyFormat": "Invalid key format",
+      "invalidSignature": "Invalid signature",
+      "licenseHasExpired": "License has expired",
+      "verificationFailed": "Verification failed: {{err}}",
+      "notAReceipt": "Not a receipt",
+      "unsupportedReceiptVersion": "Unsupported receipt version",
+      "noSlugs": "No slugs",
+      "receiptBelongsToAnotherDevice": "Receipt belongs to another device",
+      "receiptHasExpired": "Receipt has expired"
+    },
+    "modules_module_dev": {
+      "notAvailableInAPackagedBuild": "Not available in a packaged build",
+      "invalidModuleJson": "Invalid module.json: {{error}}",
+      "noReadableModuleJsonIn": "No readable module.json in {{dir}}: {{err}}"
+    },
+    "modules_module_extract": {
+      "unsafeZipEntryPathTraversal": "Unsafe zip entry (path traversal): {{name}}"
+    },
+    "modules_module_ipc": {
+      "unknownModule": "unknown module: {{slug}}",
+      "moduleLacksPtyPermission": "module {{slug}} lacks pty permission",
+      "notAvailableInAPackagedBuild": "Not available in a packaged build",
+      "loadUnpackedCargo": "Load unpacked cargo",
+      "chooseTheFolderHoldingModuleJson": "Choose the folder holding module.json and the built renderer entry"
+    },
+    "modules_module_manager": {
+      "validatingLicenseKey": "Validating license key...",
+      "thisLicenseKeyIsAlreadyActivated": "This license key is already activated",
+      "activatingWithServer": "Activating with server...",
+      "activationFailed": "Activation failed: {{msg}}",
+      "enabling": "Enabling {{slug}} ({{moduleIndex}}/{{length}})...",
+      "downloading": "Downloading {{slug}} ({{moduleIndex}}/{{length}})...",
+      "verifying": "Verifying {{slug}}...",
+      "bundleHashMismatchForDownloadCorrupted": "Bundle hash mismatch for {{slug}} - download corrupted or tampered with",
+      "bundleSignatureVerificationFailedFor": "Bundle signature verification failed for {{slug}}",
+      "invalidManifestFor": "Invalid manifest for {{slug}}: {{error}}",
+      "needsArdudeckOrNewerYouHave": "{{name}} needs ArduDeck {{minVersion}} or newer (you have {{v3}}). Update ArduDeck first.",
+      "failedToDownload": "Failed to download {{slug}}: {{msg}}",
+      "activatedModuleS": "Activated {{length}} module(s)",
+      "requestingFromTheHangar": "Requesting {{slug}} from the Hangar...",
+      "installFailed": "Install failed: {{msg}}",
+      "moduleIsNotInstalled": "Module {{slug}} is not installed"
+    },
+    "ntrip_local_base_source": {
+      "baseStationSerialPortIsNot": "Base station serial port is not set"
+    },
+    "ntrip_ntrip_client": {
+      "hostNotFoundEnterTheCaster": "Host not found: \"{{host}}\". Enter the caster server name, e.g. caster.centipede.fr (the mountpoint goes in its own field).",
+      "connectionRefusedByCheckThePort": "Connection refused by {{host}}:{{port}}. Check the port (NTRIP casters usually use 2101).",
+      "casterHostIsNotSet": "Caster host is not set",
+      "authenticationRejectedByCaster": "Authentication rejected by caster",
+      "casterReturnedNoMountpoints": "Caster returned no mountpoints",
+      "mountpointIsNotSet": "Mountpoint is not set"
+    },
+    "ntrip_ntrip_ipc_handlers": {
+      "casterHostIsNotSet": "Caster host is not set",
+      "mountpointIsNotSet": "Mountpoint is not set"
+    },
+    "overlays_open_meteo_wind": {
+      "openMeteoHttpForPts": "Open-Meteo HTTP {{status}} for {{length}} pts: {{v3}}",
+      "openMeteoNoFramesLocsFirsthourlykeys": "Open-Meteo: no frames (locs={{length}}, firstHourlyKeys={{v2}})"
+    },
+    "script_installer_bundle": {
+      "orbit": "Orbit",
+      "orbitsATargetLatLonAt": "Orbits a target lat/lon at a chosen radius and altitude in GUIDED mode. Anchored to live telemetry, so link drops do not desync the orbit. Optional revolutions count: 0 = indefinite, N = stop and hover after N full circles.",
+      "spiral": "Spiral",
+      "orbitsATargetLatLonWhile": "Orbits a target lat/lon while continuously climbing or descending toward a target altitude at a chosen rate. Once the target altitude is reached, holds the orbit indefinitely. Useful for clearing obstacles before RTL or controlled descent into landing zones.",
+      "watchtower": "Watchtower",
+      "hoversAtAClickedPointAnd": "Hovers at a clicked point and slowly rotates yaw for a panoramic survey. Useful for \"what is around me?\" site checks or quick 360° captures.",
+      "climbRtl": "Climb + RTL",
+      "climbsTheVehicleInPlaceTo": "Climbs the vehicle in place to a safe altitude before the FC switches to RTL for the actual return. Solves the \"RTL into a tree\" problem when current altitude is below RTL_ALT or the home path is blocked.",
+      "reveal": "Reveal",
+      "cinematicPullBackVehicleRetreatsFrom": "Cinematic pull-back: vehicle retreats from its current position along the away-from-target bearing while climbing, yaw locked to the clicked target throughout. The \"castle reveal\" shot.",
+      "strafe": "Strafe",
+      "cinematicDollyPassVehicleFliesAlong": "Cinematic dolly pass: vehicle flies along an axis perpendicular to the target-to-vehicle bearing at a chosen offset, yaw locked to the clicked target. Picks the side of the target the vehicle is already on so the approach is short.",
+      "landAtPoint": "Land at point",
+      "fliesToTheClickedLatLon": "Flies to the clicked lat/lon at the vehicle's current altitude, then switches to LAND mode. Solves the \"ArduCopter NAV_LAND ignores lat/lon and just descends in place\" problem by repositioning first."
+    },
+    "script_installer_installer_service": {
+      "noInstallInProgress": "No install in progress"
+    },
+    "script_installer_preflight": {
+      "mavlinkFtpAvailable": "MAVLink FTP available",
+      "scriptSlots": "Script slots",
+      "vehicleDisarmed": "Vehicle disarmed"
+    },
+    "sim_sim_engine_process": {
+      "noPreviousSimEngineOptionsTo": "no previous sim-engine options to restart with",
+      "ardudeckPhysicsEngineBinaryNotFound": "ArduDeck physics engine binary not found. Rebuild or run scripts/fetch-sim-engine.mjs.",
+      "simEngineDidNotBecomeReady": "sim-engine did not become ready: {{lastErr}}"
+    },
+    "simulators_ardupilot_flightgear": {
+      "flightgearIsAlreadyRunning": "FlightGear is already running",
+      "flightgearNotFoundInstallItFrom": "FlightGear not found. Install it from flightgear.org or set a custom path."
+    },
+    "simulators_flightgear_launcher": {
+      "flightgearIsAlreadyRunning": "FlightGear is already running",
+      "flightgearNotFoundPleaseInstallFlightgear": "FlightGear not found. Please install FlightGear or set a custom path."
+    },
+    "simulators_protocol_bridge": {
+      "bridgeIsAlreadyRunning": "Bridge is already running"
+    },
+    "simulators_xplane_launcher": {
+      "xPlaneIsAlreadyRunning": "X-Plane is already running",
+      "xPlaneNotFoundPleaseInstall": "X-Plane not found. Please install X-Plane or set a custom path."
+    },
+    "sitl_ardupilot_sitl_downloader": {
+      "http": "HTTP {{status}}: {{statusText}} — {{url}}",
+      "noResponseBody": "No response body",
+      "http2": "{{dll}}: HTTP {{status}} {{statusText}} — {{url}}"
+    },
+    "sitl_ardupilot_sitl_process": {
+      "sitlIsNotRunning": "SITL is not running",
+      "unsupportedPlatform": "Unsupported platform: {{platform}}",
+      "sitlBinaryNotFoundAtPlease": "SITL binary not found at {{binaryPath}}. Please download it first.",
+      "simEngineFailedToStart": "sim-engine failed to start: {{error}}",
+      "noActiveSitlConfigToRestart": "No active SITL config to restart with"
+    },
+    "sitl_custom_frame_storage": {
+      "importSitlFrameJson": "Import SITL Frame JSON",
+      "invalidFrame": "Invalid frame: {{v1}}",
+      "failedToReadFile": "Failed to read file: {{message}}",
+      "frameNotFound": "Frame not found",
+      "exportSitlFrameJson": "Export SITL Frame JSON",
+      "failedToWriteFile": "Failed to write file: {{message}}"
+    },
+    "sitl_frame_config": {
+      "vehicleinfoNoTopLevelDictFound": "vehicleinfo: no top-level dict found",
+      "quadDefault": "Quad (default)",
+      "quadPlus": "Quad Plus",
+      "hexacopter": "Hexacopter",
+      "octocopter": "Octocopter",
+      "tricopter": "Tricopter",
+      "planeDefault": "Plane (default)",
+      "planeTailsitter": "Plane Tailsitter",
+      "fireflyY6Vtol": "Firefly (Y6 VTOL)",
+      "roverDefault": "Rover (default)",
+      "skidSteerRover": "Skid Steer Rover",
+      "motorBoat": "Motor Boat",
+      "sailboat": "Sailboat",
+      "vectoredDefault": "Vectored (default)",
+      "vectored6dof": "Vectored 6DOF"
+    },
+    "sitl_px4_sitl_downloader": {
+      "refusingToExtractEntryOutsideTarget": "Refusing to extract entry outside target dir: {{fullName}}",
+      "http": "HTTP {{status}}: {{statusText}} — {{url}}",
+      "noResponseBody": "No response body",
+      "downloadedBundleIsMissingBinPx4": "Downloaded bundle is missing bin/px4"
+    },
+    "sitl_px4_sitl_process": {
+      "px4SitlIsAlreadyStarting": "PX4 SITL is already starting",
+      "px4SitlNotDownloadedForThe": "PX4 SITL not downloaded for the {{releaseTrack}} track",
+      "noActivePx4SitlConfigTo": "No active PX4 SITL config to restart with"
+    },
+    "sitl_sitl_process": {
+      "unsupportedPlatform": "Unsupported platform: {{platform}}"
+    },
+    "sitl_swarm_sitl_process": {
+      "sitlBinaryNotFoundAtDownload": "SITL binary not found at {{binaryPath}}. Download it on the SITL tab first."
+    },
+    "trainer_trainer_ipc_handlers": {
+      "aRegionIsAlreadyBeingBuilt": "A region is already being built.",
+      "theTrainerIsNotInstalledLooked": "The Trainer is not installed. Looked in: {{v1}}",
+      "theTrainerIsNotInstalled": "The Trainer is not installed."
+    },
+    "trainer_trainer_process": {
+      "theTrainerSentSomethingThatIs": "The Trainer sent something that is not a catalogue.",
+      "thisTrainerAnswersInAFormat": "This Trainer answers in a format ArduDeck does not understand (no {{v1}}). Update the Trainer, or ArduDeck.",
+      "theTrainerDidNotAnswerIn": "The Trainer did not answer in time.",
+      "theTrainerExitedWithoutAnswering": "The Trainer exited ({{code}}) without answering.",
+      "couldNotWriteTheTrainerRequest": "Could not write the Trainer request: {{message}}",
+      "couldNotStartTheTrainer": "Could not start the Trainer: {{message}}",
+      "theTrainerDidNotReportBack": "The Trainer did not report back in time.",
+      "theTrainerAnsweredInAFormat": "The Trainer answered in a format this build cannot read."
+    },
+    "trainer_trainer_request": {
+      "noTakeOffPointYetStart": "No take-off point yet. Start a flight controller and wait for a GPS fix.",
+      "theFlightControllerHasNoGps": "The flight controller has no GPS fix yet."
+    }
+  }
+}

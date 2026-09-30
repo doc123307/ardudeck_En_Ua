@@ -1,3 +1,4 @@
+import { mt } from '../i18n';
 /**
  * Minimal, dependency-free ESRI Shapefile (.shp) -> GeoJSON converter.
  *
@@ -241,9 +242,9 @@ export interface ShapefileToGeoJsonResult {
  */
 export function shapefileToGeoJson(shp: Uint8Array, prj?: string): ShapefileToGeoJsonResult {
   const view = new DataView(shp.buffer, shp.byteOffset, shp.byteLength);
-  if (view.byteLength < 100) throw new Error('File too small to be a shapefile');
+  if (view.byteLength < 100) throw new Error(mt('main.gis_shapefile_to_geojson.fileTooSmallToBeA'));
   const fileCode = view.getInt32(0, false); // big-endian
-  if (fileCode !== 9994) throw new Error('Not a shapefile (bad file code)');
+  if (fileCode !== 9994) throw new Error(mt('main.gis_shapefile_to_geojson.notAShapefileBadFileCode'));
 
   const reproject = reprojectionFromPrj(prj);
   const features: ShapefileToGeoJsonResult['geojson']['features'] = [];

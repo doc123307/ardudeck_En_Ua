@@ -16,6 +16,7 @@ import {
   type SitlCustomFrameRecord,
   type SitlCustomFrameMeta,
 } from '../../shared/sitl-custom-frame.js';
+import { mt } from '../i18n';
 
 const FRAMES_DIR = () => path.join(app.getPath('userData'), 'sitl-frames');
 
@@ -163,7 +164,7 @@ export async function deleteCustomFrame(id: string): Promise<boolean> {
  */
 export async function importCustomFrame(): Promise<{ ok: true; record: SitlCustomFrameRecord } | { ok: false; error: string }> {
   const result = await dialog.showOpenDialog({
-    title: 'Import SITL Frame JSON',
+    title: mt('main.sitl_custom_frame_storage.importSitlFrameJson'),
     filters: [{ name: 'JSON', extensions: ['json'] }],
     properties: ['openFile'],
   });
@@ -177,7 +178,7 @@ export async function importCustomFrame(): Promise<{ ok: true; record: SitlCusto
     const parsed = JSON.parse(raw);
     const validation = validateFrame(stripMeta(parsed));
     if (!validation.ok) {
-      return { ok: false, error: `Invalid frame: ${validation.errors.join(', ')}` };
+      return { ok: false, error: mt('main.sitl_custom_frame_storage.invalidFrame', { v1: validation.errors.join(', ') }) };
     }
     const baseName = path.basename(sourcePath, '.json');
     const displayName = typeof parsed.__ardudeck_name === 'string' ? parsed.__ardudeck_name : baseName;
@@ -185,7 +186,7 @@ export async function importCustomFrame(): Promise<{ ok: true; record: SitlCusto
     return { ok: true, record };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
-    return { ok: false, error: `Failed to read file: ${message}` };
+    return { ok: false, error: mt('main.sitl_custom_frame_storage.failedToReadFile', { message }) };
   }
 }
 
@@ -196,9 +197,9 @@ export async function importCustomFrame(): Promise<{ ok: true; record: SitlCusto
  */
 export async function exportCustomFrame(id: string): Promise<{ ok: true; path: string } | { ok: false; error: string }> {
   const record = await loadCustomFrame(id);
-  if (!record) return { ok: false, error: 'Frame not found' };
+  if (!record) return { ok: false, error: mt('main.sitl_custom_frame_storage.frameNotFound') };
   const result = await dialog.showSaveDialog({
-    title: 'Export SITL Frame JSON',
+    title: mt('main.sitl_custom_frame_storage.exportSitlFrameJson'),
     defaultPath: `${record.id}.json`,
     filters: [{ name: 'JSON', extensions: ['json'] }],
   });
@@ -210,7 +211,7 @@ export async function exportCustomFrame(id: string): Promise<{ ok: true; path: s
     return { ok: true, path: result.filePath };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
-    return { ok: false, error: `Failed to write file: ${message}` };
+    return { ok: false, error: mt('main.sitl_custom_frame_storage.failedToWriteFile', { message }) };
   }
 }
 

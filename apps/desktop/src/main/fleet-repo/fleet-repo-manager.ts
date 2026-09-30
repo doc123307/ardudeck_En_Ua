@@ -26,6 +26,7 @@ import { isSurveyDocument, type SurveyDocument } from '../../shared/survey-docum
 import type { VaultMission, VaultSurveyArea } from '../../shared/ipc-channels';
 import { isStoredMission, type StoredMission } from '../../shared/mission-library-types';
 import { syncErrorMessage } from './sync-error.js';
+import { mt } from '../i18n';
 
 // ArduDeck community OAuth app (device flow enabled, no client secret needed).
 // Overridable for development.
@@ -167,7 +168,7 @@ export async function ensureRepo(): Promise<void> {
   ].join('\n');
   await fsp.writeFile(join(dir, 'README.md'), readme, 'utf-8');
   await git.add({ fs, dir, filepath: 'README.md' });
-  await git.commit({ fs, dir, message: 'Initialize fleet vault', author: COMMITTER });
+  await git.commit({ fs, dir, message: mt('main.fleet_repo_fleet_repo_manager.initializeFleetVault'), author: COMMITTER });
 }
 
 async function commitFiles(
@@ -706,7 +707,7 @@ export async function githubDevicePoll(
 /** Fallback for locked-down orgs: paste a personal access token directly */
 export async function githubSetToken(token: string): Promise<{ success: boolean; login?: string; error?: string }> {
   const login = await fetchLogin(token);
-  if (!login) return { success: false, error: 'Token rejected by GitHub' };
+  if (!login) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.tokenRejectedByGithub') };
   setToken(token);
   vaultStore.set('login', login);
   return { success: true, login };
@@ -739,7 +740,7 @@ export async function setCustomRemote(
     return { success: false, error: 'Use an HTTPS repository URL (SSH is not supported)' };
   }
   if (!token.trim()) {
-    return { success: false, error: 'A token with write access to the repository is required' };
+    return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.aTokenWithWriteAccessTo') };
   }
 
   await ensureRepo();
@@ -782,21 +783,21 @@ export async function githubCreateRepo(
 ): Promise<{ success: boolean; error?: string }> {
   const token = getToken();
   const login = vaultStore.get('login');
-  if (!token || !login) return { success: false, error: 'Not connected to GitHub' };
+  if (!token || !login) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.notConnectedToGithub') };
   const name = sanitizeSegment(repoName) || 'ardudeck-fleet';
 
   const res = await ghFetch('https://api.github.com/user/repos', {
     method: 'POST',
     token,
-    body: JSON.stringify({ name, private: true, auto_init: false, description: 'ArduDeck fleet vault' }),
+    body: JSON.stringify({ name, private: true, auto_init: false, description: mt('main.fleet_repo_fleet_repo_manager.ardudeckFleetVault') }),
   });
   if (!res.ok && res.status !== 422) {
-    return { success: false, error: `GitHub repo creation failed (${res.status})` };
+    return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.githubRepoCreationFailed', { status: res.status }) };
   }
   if (res.status === 422) {
     // Name already exists: verify we can access it and adopt it as the remote
     const check = await ghFetch(`https://api.github.com/repos/${login}/${name}`, { token });
-    if (!check.ok) return { success: false, error: `Repository "${name}" exists but is not accessible` };
+    if (!check.ok) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.repositoryExistsButIsNotAccessible', { name }) };
   }
 
   await ensureRepo();
@@ -826,12 +827,12 @@ export async function githubListRepos(): Promise<{
   error?: string;
 }> {
   const token = getToken();
-  if (!token) return { success: false, error: 'Not connected to GitHub' };
+  if (!token) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.notConnectedToGithub') };
   const res = await ghFetch(
     'https://api.github.com/user/repos?per_page=100&sort=pushed&affiliation=owner,collaborator',
     { token },
   );
-  if (!res.ok) return { success: false, error: `Could not list repositories (${res.status})` };
+  if (!res.ok) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.couldNotListRepositories', { status: res.status }) };
   const data = (await res.json()) as Array<{
     full_name: string;
     private: boolean;
@@ -856,13 +857,13 @@ export async function githubUseExistingRepo(
   fullName: string,
 ): Promise<{ success: boolean; error?: string }> {
   const token = getToken();
-  if (!token) return { success: false, error: 'Not connected to GitHub' };
+  if (!token) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.notConnectedToGithub') };
 
   const current = await status();
   if (current.commitCount > 1) {
     return {
       success: false,
-      error: 'This vault already has snapshots. Create a new repository instead, or move the vault folder away first.',
+      error: mt('main.fleet_repo_fleet_repo_manager.thisVaultAlreadyHasSnapshotsCreate'),
     };
   }
 
@@ -919,12 +920,12 @@ async function remoteHasBranch(dir: string, ref: string, onAuth: () => { usernam
 export async function githubSync(): Promise<{ success: boolean; error?: string }> {
   const token = getToken();
   const mode = vaultStore.get('remoteMode') ?? 'github';
-  if (!token) return { success: false, error: 'Not connected. Set up backup in the vault first.' };
+  if (!token) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.notConnectedSetUpBackupIn') };
   if (mode === 'github') {
-    if (!vaultStore.get('login')) return { success: false, error: 'Not connected to GitHub' };
-    if (!vaultStore.get('repoName')) return { success: false, error: 'No repository configured' };
+    if (!vaultStore.get('login')) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.notConnectedToGithub') };
+    if (!vaultStore.get('repoName')) return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.noRepositoryConfigured') };
   } else if (!vaultStore.get('remoteUrl')) {
-    return { success: false, error: 'No repository configured' };
+    return { success: false, error: mt('main.fleet_repo_fleet_repo_manager.noRepositoryConfigured') };
   }
 
   await ensureRepo();

@@ -18,6 +18,7 @@ import { createSplashWindow, splashSetStatus, closeSplash } from './splash-windo
 import { Worker } from 'node:worker_threads';
 import Store from 'electron-store';
 import { registerArduDeckDialect } from '@ardudeck/mavlink-ts';
+import { mt } from './i18n';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -57,7 +58,7 @@ process.on('unhandledRejection', (reason: unknown) => {
 
   console.error('[Main] Unhandled rejection:', reason);
   console.error('[Main] Rejection type:', typeof reason, reason?.constructor?.name);
-  console.error('[Main] Rejection stack:', new Error('rejection trace').stack);
+  console.error('[Main] Rejection stack:', new Error(mt('main.index.rejectionTrace')).stack);
 });
 
 const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
@@ -165,12 +166,12 @@ function maybeShowKeychainNotice(): void {
   dialog.showMessageBoxSync({
     type: 'info',
     title: 'ArduDeck',
-    message: 'Your keys are protected',
+    message: mt('main.index.yourKeysAreProtected'),
     detail:
       'ArduDeck encrypts the sensitive data you enter - AI provider API keys, map service keys and connection tokens - and keeps the encryption key in your macOS keychain, the same vault Safari uses for your passwords.\n\n' +
       'Because macOS guards that vault, it may ask once whether ArduDeck can access "ardudeck Safe Storage". That is ArduDeck unlocking its own encryption key, nothing else.\n\n' +
       'Click "Always Allow" and macOS will not ask again. Nothing is read from other apps and nothing ever leaves this computer.',
-    buttons: ['Got it'],
+    buttons: [mt('main.index.gotIt')],
   });
 }
 

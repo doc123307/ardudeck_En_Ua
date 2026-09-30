@@ -24,6 +24,7 @@ import type {
   ArduPilotSitlBinaryInfo,
 } from '../../shared/ipc-channels.js';
 import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
+import { mt } from '../i18n';
 
 // ── URL sources ──────────────────────────────────────────────────────────────
 
@@ -204,7 +205,7 @@ class ArduPilotSitlDownloader {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText} — ${url}`);
+        throw new Error(mt('main.sitl_ardupilot_sitl_downloader.http', { status: response.status, statusText: response.statusText, url }));
       }
 
       const contentLength = response.headers.get('content-length');
@@ -215,7 +216,7 @@ class ArduPilotSitlDownloader {
 
       const reader = response.body?.getReader();
       if (!reader) {
-        throw new Error('No response body');
+        throw new Error(mt('main.sitl_ardupilot_sitl_downloader.noResponseBody'));
       }
 
       while (true) {
@@ -299,7 +300,7 @@ class ArduPilotSitlDownloader {
 
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error(`${dll}: HTTP ${response.status} ${response.statusText} — ${url}`);
+          throw new Error(mt('main.sitl_ardupilot_sitl_downloader.http2', { dll, status: response.status, statusText: response.statusText, url }));
         }
 
         const arrayBuffer = await response.arrayBuffer();

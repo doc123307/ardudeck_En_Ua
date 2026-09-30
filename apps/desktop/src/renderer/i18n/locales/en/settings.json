@@ -449,7 +449,20 @@
       "pitch120": "Pitch: 1-20\"",
       "mustBeAValidNumber": "Must be a valid number",
       "mustBeAWholeNumber": "Must be a whole number",
-      "vtolMotors2": "{{vtolMotorCount}} VTOL motors"
+      "vtolMotors2": "{{vtolMotorCount}} VTOL motors",
+      "typeCopter": "Multicopter",
+      "typeRover": "Rover",
+      "typeBoat": "Boat",
+      "typeSub": "Submarine",
+      "flightConditions": "Flight",
+      "weather_Clear": "Clear",
+      "weather_PartlyCloudy": "Partly Cloudy",
+      "weather_Cloudy": "Cloudy",
+      "weather_Fog": "Fog",
+      "weather_Rain": "Rain",
+      "weather_Snow": "Snow",
+      "weather_Thunderstorm": "Thunderstorm",
+      "driveConditions": "Drive"
     },
     "SigningSection": {
       "enterAPassphrase": "Enter a passphrase",

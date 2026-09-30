@@ -2,6 +2,7 @@ import { BrowserWindow, shell } from 'electron';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { registerSecondaryWindow } from './window-manager.js';
+import { mt } from './i18n';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,7 +26,7 @@ export function openAreaEditorWindow(): BrowserWindow {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
-    title: 'ArduDeck Area Editor',
+    title: mt('main.area_editor_window.ardudeckAreaEditor'),
     autoHideMenuBar: true,
     show: false,
     webPreferences: {

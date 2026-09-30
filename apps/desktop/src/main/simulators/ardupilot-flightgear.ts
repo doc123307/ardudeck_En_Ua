@@ -19,6 +19,7 @@
 import { spawn, ChildProcess } from 'child_process';
 import { detectFlightGear } from './simulator-detector';
 import type { ArduPilotFlightGearConfig } from '../../shared/ipc-channels.js';
+import { mt } from '../i18n';
 
 export type { ArduPilotFlightGearConfig };
 
@@ -115,14 +116,14 @@ class ArduPilotFlightGearViewer {
     customPath?: string,
   ): Promise<{ success: boolean; error?: string }> {
     if (this.isRunning()) {
-      return { success: false, error: 'FlightGear is already running' };
+      return { success: false, error: mt('main.simulators_ardupilot_flightgear.flightgearIsAlreadyRunning') };
     }
 
     const fgInfo = await detectFlightGear(customPath);
     if (!fgInfo.installed || !fgInfo.executable) {
       return {
         success: false,
-        error: 'FlightGear not found. Install it from flightgear.org or set a custom path.',
+        error: mt('main.simulators_ardupilot_flightgear.flightgearNotFoundInstallItFrom'),
       };
     }
 

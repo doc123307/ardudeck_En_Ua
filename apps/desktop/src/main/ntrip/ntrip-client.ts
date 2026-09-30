@@ -19,6 +19,7 @@ import type {
 } from '../../shared/ntrip-types.js';
 import { INITIAL_NTRIP_STATUS } from '../../shared/ntrip-types.js';
 import { RtcmFramer, type RtcmFrame } from './rtcm.js';
+import { mt } from '../i18n';
 
 const CONNECT_TIMEOUT_MS = 10000;
 const SOURCETABLE_TIMEOUT_MS = 15000;
@@ -112,13 +113,13 @@ function classifySocketError(
 ): { message: string; permanent: boolean } {
   if (/ENOTFOUND|EAI_AGAIN/.test(message)) {
     return {
-      message: `Host not found: "${config.host}". Enter the caster server name, e.g. caster.centipede.fr (the mountpoint goes in its own field).`,
+      message: mt('main.ntrip_ntrip_client.hostNotFoundEnterTheCaster', { host: config.host }),
       permanent: true,
     };
   }
   if (/ECONNREFUSED/.test(message)) {
     return {
-      message: `Connection refused by ${config.host}:${config.port}. Check the port (NTRIP casters usually use 2101).`,
+      message: mt('main.ntrip_ntrip_client.connectionRefusedByCheckThePort', { host: config.host, port: config.port }),
       permanent: false,
     };
   }
@@ -167,7 +168,7 @@ export function fetchSourcetable(
 ): Promise<NtripSourcetableResult> {
   return new Promise((resolve) => {
     if (!config.host) {
-      resolve({ success: false, error: 'Caster host is not set' });
+      resolve({ success: false, error: mt('main.ntrip_ntrip_client.casterHostIsNotSet') });
       return;
     }
     let settled = false;
@@ -203,7 +204,7 @@ export function fetchSourcetable(
       const raw = Buffer.concat(chunks);
       const full = raw.toString('latin1');
       if (/(^|\r\n)HTTP\/\d\.\d 401/.test(full) || full.startsWith('HTTP/1.0 401')) {
-        done({ success: false, error: 'Authentication rejected by caster' });
+        done({ success: false, error: mt('main.ntrip_ntrip_client.authenticationRejectedByCaster') });
         return;
       }
       // Split headers from body; v2 casters may chunk-encode the body, which
@@ -223,7 +224,7 @@ export function fetchSourcetable(
         .map(parseStrLine)
         .filter((m): m is NtripMountpoint => m !== null);
       if (mountpoints.length === 0) {
-        done({ success: false, error: 'Caster returned no mountpoints' });
+        done({ success: false, error: mt('main.ntrip_ntrip_client.casterReturnedNoMountpoints') });
         return;
       }
       done({ success: true, mountpoints });
@@ -275,8 +276,8 @@ export class NtripClient {
   }
 
   connect(config: NtripConfig): { success: boolean; error?: string } {
-    if (!config.host) return { success: false, error: 'Caster host is not set' };
-    if (!config.mountpoint) return { success: false, error: 'Mountpoint is not set' };
+    if (!config.host) return { success: false, error: mt('main.ntrip_ntrip_client.casterHostIsNotSet') };
+    if (!config.mountpoint) return { success: false, error: mt('main.ntrip_ntrip_client.mountpointIsNotSet') };
     this.teardownSocket();
     this.clearReconnect();
     this.enabled = true;

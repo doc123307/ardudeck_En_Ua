@@ -27,6 +27,7 @@ import {
   watchDevModules,
 } from './module-dev.js';
 import { killPty, resizePty, spawnPty, writePty } from './module-pty-service.js';
+import { mt } from '../i18n';
 
 export function setupModuleIpc(mainWindow: BrowserWindow): void {
   // Activate a license key
@@ -156,9 +157,9 @@ export function setupModuleIpc(mainWindow: BrowserWindow): void {
       },
     ) => {
       const rec = getLoadedModules().find((r) => r.slug === slug);
-      if (!rec) throw new Error(`unknown module: ${slug}`);
+      if (!rec) throw new Error(mt('main.modules_module_ipc.unknownModule', { slug }));
       if (!rec.manifest.permissions?.includes('pty')) {
-        throw new Error(`module ${slug} lacks pty permission`);
+        throw new Error(mt('main.modules_module_ipc.moduleLacksPtyPermission', { slug }));
       }
       return spawnPty({
         moduleSlug: slug,
@@ -188,10 +189,10 @@ export function setupModuleIpc(mainWindow: BrowserWindow): void {
   ipcMain.handle(IPC_CHANNELS.MODULE_DEV_LIST, () => getDevModules());
 
   ipcMain.handle(IPC_CHANNELS.MODULE_DEV_LOAD, async () => {
-    if (!isDevLoadAvailable()) return { ok: false, error: 'Not available in a packaged build' };
+    if (!isDevLoadAvailable()) return { ok: false, error: mt('main.modules_module_ipc.notAvailableInAPackagedBuild') };
     const picked = await dialog.showOpenDialog({
-      title: 'Load unpacked cargo',
-      message: 'Choose the folder holding module.json and the built renderer entry',
+      title: mt('main.modules_module_ipc.loadUnpackedCargo'),
+      message: mt('main.modules_module_ipc.chooseTheFolderHoldingModuleJson'),
       properties: ['openDirectory'],
     });
     if (picked.canceled || !picked.filePaths[0]) return { ok: false, error: 'Cancelled' };

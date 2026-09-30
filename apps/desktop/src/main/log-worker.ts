@@ -4,9 +4,10 @@ import { randomUUID } from 'node:crypto';
 import { createDataFlashParser, runHealthChecks } from '@ardudeck/dataflash-parser';
 import { createUlogParser, runPx4HealthChecks } from '@ardudeck/ulog-parser';
 import { extractFlightSummary, type LogLike, type HealthLike } from './logs/fleet-log-summary.js';
+import { mt } from './i18n';
 
 if (!parentPort) {
-  throw new Error('log-worker must be run as a worker thread');
+  throw new Error(mt('main.log_worker.logWorkerMustBeRunAs'));
 }
 
 // Detect log format from the leading magic bytes. ULog files start with the

@@ -45,7 +45,8 @@
       "stayInCli": "Stay in CLI",
       "leaveAndReboot": "Leave and Reboot",
       "fixedWing": "Fixed Wing",
-      "defaultAltitudeReferenceResetToHome": "Default altitude reference reset to Home (terrain-relative was refused by the vehicle)."
+      "defaultAltitudeReferenceResetToHome": "Default altitude reference reset to Home (terrain-relative was refused by the vehicle).",
+      "badgeNew": "New"
     }
   }
 }

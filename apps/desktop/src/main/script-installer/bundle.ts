@@ -10,6 +10,7 @@
 import luaSource from '../lua-scripts/ardudeck_commands.lua?raw';
 import { buildScriptBundle, type ScriptBundle } from './installer-service';
 import { USER_CMD, SUB_CMD, type ScriptManifest } from '../../shared/script-installer-types';
+import { mt } from '../i18n';
 
 const FILENAME = 'ardudeck_commands.lua';
 const VERSION = '1.0.0';
@@ -42,9 +43,9 @@ export function getScriptBundle(): ScriptBundle {
     commands: [
       {
         name: 'ORBIT',
-        label: 'Orbit',
+        label: mt('main.script_installer_bundle.orbit'),
         description:
-          'Orbits a target lat/lon at a chosen radius and altitude in GUIDED mode. Anchored to live telemetry, so link drops do not desync the orbit. Optional revolutions count: 0 = indefinite, N = stop and hover after N full circles.',
+          mt('main.script_installer_bundle.orbitsATargetLatLonAt'),
         trigger: USER_CMD.AD,
         subId: SUB_CMD.ORBIT,
         paramSchema:
@@ -52,9 +53,9 @@ export function getScriptBundle(): ScriptBundle {
       },
       {
         name: 'SPIRAL',
-        label: 'Spiral',
+        label: mt('main.script_installer_bundle.spiral'),
         description:
-          'Orbits a target lat/lon while continuously climbing or descending toward a target altitude at a chosen rate. Once the target altitude is reached, holds the orbit indefinitely. Useful for clearing obstacles before RTL or controlled descent into landing zones.',
+          mt('main.script_installer_bundle.orbitsATargetLatLonWhile'),
         trigger: USER_CMD.AD,
         subId: SUB_CMD.SPIRAL,
         paramSchema:
@@ -62,9 +63,9 @@ export function getScriptBundle(): ScriptBundle {
       },
       {
         name: 'WATCHTOWER',
-        label: 'Watchtower',
+        label: mt('main.script_installer_bundle.watchtower'),
         description:
-          'Hovers at a clicked point and slowly rotates yaw for a panoramic survey. Useful for "what is around me?" site checks or quick 360° captures.',
+          mt('main.script_installer_bundle.hoversAtAClickedPointAnd'),
         trigger: USER_CMD.AD,
         subId: SUB_CMD.WATCHTOWER,
         paramSchema:
@@ -72,9 +73,9 @@ export function getScriptBundle(): ScriptBundle {
       },
       {
         name: 'CLIMB_RTL',
-        label: 'Climb + RTL',
+        label: mt('main.script_installer_bundle.climbRtl'),
         description:
-          'Climbs the vehicle in place to a safe altitude before the FC switches to RTL for the actual return. Solves the "RTL into a tree" problem when current altitude is below RTL_ALT or the home path is blocked.',
+          mt('main.script_installer_bundle.climbsTheVehicleInPlaceTo'),
         trigger: USER_CMD.AD,
         subId: SUB_CMD.CLIMB_RTL,
         paramSchema:
@@ -82,9 +83,9 @@ export function getScriptBundle(): ScriptBundle {
       },
       {
         name: 'REVEAL',
-        label: 'Reveal',
+        label: mt('main.script_installer_bundle.reveal'),
         description:
-          'Cinematic pull-back: vehicle retreats from its current position along the away-from-target bearing while climbing, yaw locked to the clicked target throughout. The "castle reveal" shot.',
+          mt('main.script_installer_bundle.cinematicPullBackVehicleRetreatsFrom'),
         trigger: USER_CMD.AD,
         subId: SUB_CMD.REVEAL,
         paramSchema:
@@ -92,9 +93,9 @@ export function getScriptBundle(): ScriptBundle {
       },
       {
         name: 'STRAFE',
-        label: 'Strafe',
+        label: mt('main.script_installer_bundle.strafe'),
         description:
-          'Cinematic dolly pass: vehicle flies along an axis perpendicular to the target-to-vehicle bearing at a chosen offset, yaw locked to the clicked target. Picks the side of the target the vehicle is already on so the approach is short.',
+          mt('main.script_installer_bundle.cinematicDollyPassVehicleFliesAlong'),
         trigger: USER_CMD.AD,
         subId: SUB_CMD.STRAFE,
         paramSchema:
@@ -102,9 +103,9 @@ export function getScriptBundle(): ScriptBundle {
       },
       {
         name: 'LAND_AT',
-        label: 'Land at point',
+        label: mt('main.script_installer_bundle.landAtPoint'),
         description:
-          'Flies to the clicked lat/lon at the vehicle\'s current altitude, then switches to LAND mode. Solves the "ArduCopter NAV_LAND ignores lat/lon and just descends in place" problem by repositioning first.',
+          mt('main.script_installer_bundle.fliesToTheClickedLatLon'),
         trigger: USER_CMD.AD,
         subId: SUB_CMD.LAND_AT,
         paramSchema:

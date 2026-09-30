@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import { app, BrowserWindow } from 'electron';
 import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import type { DetectedBoard, FlashProgress, FlashResult } from '../../shared/firmware-types.js';
+import { mt } from '../i18n';
 
 /**
  * Get path to bundled avrdude binary
@@ -164,7 +165,7 @@ export async function flashWithAvrdude(
     if (!board.port) {
       resolve({
         success: false,
-        error: 'No serial port specified for AVR board. Please ensure the board is connected.',
+        error: mt('main.firmware_avr_flasher.noSerialPortSpecifiedForAvr'),
         duration: 0,
       });
       return;
@@ -173,7 +174,7 @@ export async function flashWithAvrdude(
     sendProgress(window, {
       state: 'flashing',
       progress: 0,
-      message: 'Starting AVR flash...',
+      message: mt('main.firmware_avr_flasher.startingAvrFlash'),
     });
 
     // Build avrdude arguments
@@ -251,7 +252,7 @@ export async function flashWithAvrdude(
           sendProgress(window, {
             state: 'erasing',
             progress: lastProgress,
-            message: 'Erasing chip...',
+            message: mt('main.firmware_avr_flasher.erasingChip'),
           });
         }
 
@@ -259,7 +260,7 @@ export async function flashWithAvrdude(
           sendProgress(window, {
             state: 'flashing',
             progress: lastProgress,
-            message: 'Writing flash memory...',
+            message: mt('main.firmware_avr_flasher.writingFlashMemory'),
           });
         }
 
@@ -267,7 +268,7 @@ export async function flashWithAvrdude(
           sendProgress(window, {
             state: 'verifying',
             progress: lastProgress,
-            message: 'Verifying flash memory...',
+            message: mt('main.firmware_avr_flasher.verifyingFlashMemory'),
           });
         }
 
@@ -293,12 +294,12 @@ export async function flashWithAvrdude(
         sendProgress(window, {
           state: 'complete',
           progress: 100,
-          message: 'Flash complete!',
+          message: mt('main.firmware_avr_flasher.flashComplete'),
         });
 
         resolve({
           success: true,
-          message: 'Firmware flashed and verified successfully',
+          message: mt('main.firmware_avr_flasher.firmwareFlashedAndVerifiedSuccessfully'),
           duration,
           verified: true,
         });
@@ -325,7 +326,7 @@ export async function flashWithAvrdude(
     proc.on('error', (err) => {
       resolve({
         success: false,
-        error: `Failed to start avrdude: ${err.message}. Make sure avrdude is installed.`,
+        error: mt('main.firmware_avr_flasher.failedToStartAvrdudeMakeSure', { message: err.message }),
         duration: Date.now() - startTime,
       });
     });
@@ -336,7 +337,7 @@ export async function flashWithAvrdude(
         proc.kill('SIGTERM');
         resolve({
           success: false,
-          error: 'Flash operation aborted',
+          error: mt('main.firmware_avr_flasher.flashOperationAborted'),
           duration: Date.now() - startTime,
         });
       });

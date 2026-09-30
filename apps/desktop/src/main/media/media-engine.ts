@@ -37,6 +37,7 @@ import type {
   CanvasStreamStatus,
 } from '../../shared/camera-types.js';
 import { HUB_HOST, HUB_RTSP_PORT, HUB_WEBRTC_PORT, HUB_SRT_PORT } from '../../shared/camera-types.js';
+import { mt } from '../i18n';
 
 const API_PORT = 9997;
 const RTSP_PORT = HUB_RTSP_PORT;
@@ -413,7 +414,7 @@ export class MediaEngine {
     // WebRTC sources are already WHEP — no hub, no transcode.
     if (source.kind === 'webrtc') {
       const url = resolvedUrl ?? source.url;
-      if (!url) return { ok: false, error: 'WebRTC source has no WHEP url' };
+      if (!url) return { ok: false, error: mt('main.media_media_engine.webrtcSourceHasNoWhepUrl') };
       const session: CameraStreamSession = {
         sourceId: source.id,
         vehicleKey: source.vehicleKey,
@@ -431,13 +432,13 @@ export class MediaEngine {
 
     const name = `cam_${source.id.replace(/[^a-zA-Z0-9]/g, '')}`;
     const url = resolvedUrl ?? source.url;
-    if (!url) return { ok: false, error: 'Source has no url' };
+    if (!url) return { ok: false, error: mt('main.media_media_engine.sourceHasNoUrl') };
 
     const needsBridge = source.kind === 'rtp-udp' || source.kind === 'rubyfpv' || source.kind === 'wfbng';
     let ingest: ChildProcess | undefined;
 
     if (needsBridge) {
-      if (!this.ffmpegPath) return { ok: false, error: 'ffmpeg required to bridge UDP sources' };
+      if (!this.ffmpegPath) return { ok: false, error: mt('main.media_media_engine.ffmpegRequiredToBridgeUdpSources') };
       let args: string[];
       if (source.kind === 'wfbng') {
         // Dongle mode (default): ArduDeck drives the plugged-in RTL8812AU via
@@ -474,7 +475,7 @@ export class MediaEngine {
     } else {
       // rtsp / srt / mavlink-rtsp — hub pulls directly.
       const added = await this.addHubPath(name, url, source.rtspTransport ?? 'automatic');
-      if (!added) return { ok: false, error: 'Hub rejected the source path' };
+      if (!added) return { ok: false, error: mt('main.media_media_engine.hubRejectedTheSourcePath') };
     }
 
     // Wait until the path is actually publishing before handing back the WHEP
@@ -507,7 +508,7 @@ export class MediaEngine {
           await this.removeHubPath(name);
           return {
             ok: false,
-            error: `Camera is sending ${tracks.join('+')}, which the built-in player cannot decode. Click Install to enable live conversion, or switch the camera encoder to H.264.`,
+            error: mt('main.media_media_engine.cameraIsSendingWhichTheBuilt', { v1: tracks.join('+') }),
           };
         }
         const relayName = `${name}h264`;
@@ -542,7 +543,7 @@ export class MediaEngine {
           await this.removeHubPath(name);
           return {
             ok: false,
-            error: `Camera is sending ${tracks.join('+')} and no H.264 encoder worked (${attempts.join('; ')})`,
+            error: mt('main.media_media_engine.cameraIsSendingAndNoH', { v1: tracks.join('+'), v2: attempts.join('; ') }),
           };
         }
         playPath = relayName;
@@ -647,8 +648,8 @@ export class MediaEngine {
   /** Grab a single JPEG frame from a live session. */
   async snapshot(sourceId: string): Promise<CameraMediaActionResult> {
     const active = this.sessions.get(sourceId);
-    if (!active?.session.path) return { ok: false, error: 'No live stream to snapshot' };
-    if (!this.ffmpegPath) return { ok: false, error: 'ffmpeg required for snapshots' };
+    if (!active?.session.path) return { ok: false, error: mt('main.media_media_engine.noLiveStreamToSnapshot') };
+    if (!this.ffmpegPath) return { ok: false, error: mt('main.media_media_engine.ffmpegRequiredForSnapshots') };
     const dir = this.mediaDir();
     const filePath = join(dir, `snapshot_${stamp()}.jpg`);
     return new Promise((resolve) => {
@@ -656,7 +657,7 @@ export class MediaEngine {
         '-y', '-rtsp_transport', 'tcp', '-i', this.rtspUrl(active.session.path as string),
         '-frames:v', '1', '-q:v', '2', filePath,
       ], { stdio: 'ignore' });
-      p.on('exit', (code) => resolve(code === 0 ? { ok: true, filePath } : { ok: false, error: 'Snapshot failed' }));
+      p.on('exit', (code) => resolve(code === 0 ? { ok: true, filePath } : { ok: false, error: mt('main.media_media_engine.snapshotFailed') }));
       p.on('error', (e) => resolve({ ok: false, error: e.message }));
     });
   }
@@ -664,7 +665,7 @@ export class MediaEngine {
   /** Toggle recording for a session. Returns the file when recording starts. */
   async toggleRecord(sourceId: string): Promise<CameraMediaActionResult> {
     const active = this.sessions.get(sourceId);
-    if (!active?.session.path) return { ok: false, error: 'No live stream to record' };
+    if (!active?.session.path) return { ok: false, error: mt('main.media_media_engine.noLiveStreamToRecord') };
     if (active.record) {
       killProc(active.record);
       const filePath = active.recordPath;
@@ -672,7 +673,7 @@ export class MediaEngine {
       delete active.recordPath;
       return { ok: true, ...(filePath ? { filePath } : {}) };
     }
-    if (!this.ffmpegPath) return { ok: false, error: 'ffmpeg required for recording' };
+    if (!this.ffmpegPath) return { ok: false, error: mt('main.media_media_engine.ffmpegRequiredForRecording') };
     const filePath = join(this.mediaDir(), `recording_${stamp()}.mp4`);
     const p = spawn(this.ffmpegPath, [
       '-rtsp_transport', 'tcp', '-i', this.rtspUrl(active.session.path),

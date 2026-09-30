@@ -16,6 +16,7 @@ import { isSurveyDocument, type SaveSurveyAreaPayload } from '../../shared/surve
 import { isStoredMission, type StoredMission } from '../../shared/mission-library-types.js';
 import { LocalMissionLibraryProvider } from './local-provider.js';
 import { LocalSurveyAreaProvider, type SurveyAreaFilter } from './area-provider.js';
+import { mt } from '../i18n';
 
 const provider = new LocalMissionLibraryProvider();
 const areas = new LocalSurveyAreaProvider();
@@ -75,10 +76,10 @@ export function initMissionLibraryHandlers(): void {
   // unlike .waypoints which flattens everything.
   ipcMain.handle(IPC_CHANNELS.MISSION_LIBRARY_EXPORT_FILE, async (event, id: string) => {
     const mission = await provider.getMission(id);
-    if (!mission) return { success: false, error: 'Mission not found' };
+    if (!mission) return { success: false, error: mt('main.mission_library_mission_library_handlers.missionNotFound') };
     const window = BrowserWindow.fromWebContents(event.sender);
     const options = {
-      title: 'Export Mission',
+      title: mt('main.mission_library_mission_library_handlers.exportMission'),
       defaultPath: `${fileSlug(mission.name)}.mission.json`,
       filters: [{ name: 'ArduDeck Mission', extensions: ['json'] }],
     };
@@ -95,7 +96,7 @@ export function initMissionLibraryHandlers(): void {
   ipcMain.handle(IPC_CHANNELS.MISSION_LIBRARY_IMPORT_FILE, async (event) => {
     const window = BrowserWindow.fromWebContents(event.sender);
     const options = {
-      title: 'Import Mission',
+      title: mt('main.mission_library_mission_library_handlers.importMission'),
       properties: ['openFile' as const],
       filters: [{ name: 'ArduDeck Mission', extensions: ['json'] }],
     };
@@ -104,7 +105,7 @@ export function initMissionLibraryHandlers(): void {
     if (dlg.canceled || !path) return { success: false, error: 'Cancelled' };
     try {
       const raw: unknown = JSON.parse(await readFile(path, 'utf-8'));
-      if (!isStoredMission(raw)) return { success: false, error: 'Not an ArduDeck mission file' };
+      if (!isStoredMission(raw)) return { success: false, error: mt('main.mission_library_mission_library_handlers.notAnArdudeckMissionFile') };
       return { success: true, mission: await importMission(raw) };
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : String(err) };
@@ -140,10 +141,10 @@ export function initMissionLibraryHandlers(): void {
 
   ipcMain.handle(IPC_CHANNELS.SURVEY_AREA_EXPORT_FILE, async (event, id: string) => {
     const doc = await areas.get(id);
-    if (!doc) return { success: false, error: 'Area not found' };
+    if (!doc) return { success: false, error: mt('main.mission_library_mission_library_handlers.areaNotFound') };
     const window = BrowserWindow.fromWebContents(event.sender);
     const options = {
-      title: 'Export Survey Area',
+      title: mt('main.mission_library_mission_library_handlers.exportSurveyArea'),
       defaultPath: `${fileSlug(doc.name)}.survey.json`,
       filters: [{ name: 'ArduDeck Survey', extensions: ['json'] }],
     };
@@ -162,7 +163,7 @@ export function initMissionLibraryHandlers(): void {
   ipcMain.handle(IPC_CHANNELS.SURVEY_AREA_IMPORT_FILE, async (event) => {
     const window = BrowserWindow.fromWebContents(event.sender);
     const options = {
-      title: 'Import Survey Area',
+      title: mt('main.mission_library_mission_library_handlers.importSurveyArea'),
       properties: ['openFile' as const],
       filters: [{ name: 'ArduDeck Survey', extensions: ['json'] }],
     };
@@ -174,7 +175,7 @@ export function initMissionLibraryHandlers(): void {
     try {
       const raw: unknown = JSON.parse(await readFile(path, 'utf-8'));
       if (!isSurveyDocument(raw)) {
-        return { success: false, error: 'Not an ArduDeck survey area file' };
+        return { success: false, error: mt('main.mission_library_mission_library_handlers.notAnArdudeckSurveyAreaFile') };
       }
       return { success: true, area: await areas.import(raw) };
     } catch (err) {

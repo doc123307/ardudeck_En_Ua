@@ -13,6 +13,7 @@ import {
   type CanvasStreamSnapshot,
   type VisionStreamOpenOptions,
 } from '../../shared/camera-types.js';
+import { mt } from '../i18n';
 
 let win: BrowserWindow | null = null;
 let snap: CanvasStreamSnapshot = IDLE_STREAM;
@@ -53,7 +54,7 @@ export function openVisionStreamWindow(opts: VisionStreamOpenOptions): void {
   loadRendererRoute(w, params);
   w.webContents.on('render-process-gone', (_e, details) => {
     if (win !== w) return;
-    publish({ ...IDLE_STREAM, state: 'error', error: `Stream renderer stopped (${details.reason})` });
+    publish({ ...IDLE_STREAM, state: 'error', error: mt('main.media_vision_stream_window.streamRendererStopped', { reason: details.reason }) });
     closeVisionStreamWindow(true);
   });
   w.on('closed', () => {

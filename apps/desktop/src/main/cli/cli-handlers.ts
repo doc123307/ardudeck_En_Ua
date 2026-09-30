@@ -10,6 +10,7 @@ import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import type { Transport } from '@ardudeck/comms';
 import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
+import { mt } from '../i18n';
 
 // =============================================================================
 // State
@@ -381,7 +382,7 @@ async function exitCliModeSilent(): Promise<boolean> {
  */
 export async function sendCliCommand(command: string): Promise<void> {
   if (!currentTransport?.isOpen) {
-    throw new Error('Transport not connected');
+    throw new Error(mt('main.cli_cli_handlers.transportNotConnected'));
   }
 
   // Check if this is an exit or save command - both trigger board reboot
@@ -471,7 +472,7 @@ export async function sendCliCommand(command: string): Promise<void> {
  */
 async function sendCliRaw(data: string): Promise<void> {
   if (!currentTransport?.isOpen) {
-    throw new Error('Transport not connected');
+    throw new Error(mt('main.cli_cli_handlers.transportNotConnected'));
   }
 
   if (!cliModeActive) {
@@ -493,7 +494,7 @@ async function sendCliRaw(data: string): Promise<void> {
  */
 export async function getCliDump(diff = false): Promise<string> {
   if (!currentTransport?.isOpen) {
-    throw new Error('Transport not connected');
+    throw new Error(mt('main.cli_cli_handlers.transportNotConnected'));
   }
 
   const wasInCliMode = cliModeActive;
@@ -518,7 +519,7 @@ export async function getCliDump(diff = false): Promise<string> {
     // Temporarily replace the data listener to capture dump
     // Re-check transport in case it was closed during enterCliMode()
     if (!currentTransport?.isOpen) {
-      throw new Error('Transport closed during CLI setup');
+      throw new Error(mt('main.cli_cli_handlers.transportClosedDuringCliSetup'));
     }
     if (cliDataListener) {
       currentTransport.off('data', cliDataListener as (...args: unknown[]) => void);
@@ -611,7 +612,7 @@ function registerIpcHandlers(): void {
     if (!mainWindow) return false;
 
     const result = await dialog.showSaveDialog(mainWindow, {
-      title: 'Save CLI Output',
+      title: mt('main.cli_cli_handlers.saveCliOutput'),
       defaultPath: `cli-dump-${new Date().toISOString().slice(0, 10)}.txt`,
       filters: [
         { name: 'Text Files', extensions: ['txt'] },

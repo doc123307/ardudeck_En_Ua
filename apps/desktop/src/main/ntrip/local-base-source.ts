@@ -7,6 +7,7 @@ import { SerialPort } from 'serialport';
 import type { NtripConfig, NtripStatus } from '../../shared/ntrip-types.js';
 import { INITIAL_NTRIP_STATUS } from '../../shared/ntrip-types.js';
 import { RtcmFramer, parseBasePosition, type RtcmFrame } from './rtcm.js';
+import { mt } from '../i18n';
 
 const RECONNECT_BASE_MS = 2000;
 const RECONNECT_MAX_MS = 30000;
@@ -64,7 +65,7 @@ export class LocalBaseSource {
   }
 
   connect(config: NtripConfig): { success: boolean; error?: string } {
-    if (!config.serialPath) return { success: false, error: 'Base station serial port is not set' };
+    if (!config.serialPath) return { success: false, error: mt('main.ntrip_local_base_source.baseStationSerialPortIsNot') };
     this.teardownPort();
     this.clearReconnect();
     this.enabled = true;

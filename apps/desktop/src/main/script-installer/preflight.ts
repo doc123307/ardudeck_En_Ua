@@ -14,6 +14,7 @@ import type {
   PreflightCheck,
   ScriptManifest,
 } from '../../shared/script-installer-types';
+import { mt } from '../i18n';
 
 interface PreflightInputs {
   manifest: ScriptManifest;
@@ -44,7 +45,7 @@ export function runPreflight(inputs: PreflightInputs): PreflightCheck[] {
   // 1. FTP capability is a hard prerequisite - we can't write without it.
   out.push({
     id: 'ftp_supported',
-    label: 'MAVLink FTP available',
+    label: mt('main.script_installer_preflight.mavlinkFtpAvailable'),
     severity: ftpSupported ? 'pass' : 'block',
     detail: ftpSupported
       ? 'Connection supports MAVLink FTP - script can be uploaded.'
@@ -98,7 +99,7 @@ export function runPreflight(inputs: PreflightInputs): PreflightCheck[] {
     const free = Math.max(0, scrLdNum - loadedScriptCount);
     out.push({
       id: 'script_slots',
-      label: 'Script slots',
+      label: mt('main.script_installer_preflight.scriptSlots'),
       severity: free >= 1 ? 'pass' : 'block',
       detail: free >= 1
         ? `${free} free of ${scrLdNum} - script will fit.`
@@ -114,7 +115,7 @@ export function runPreflight(inputs: PreflightInputs): PreflightCheck[] {
   //    will be blocked separately when applying the fix.
   out.push({
     id: 'armed_state',
-    label: 'Vehicle disarmed',
+    label: mt('main.script_installer_preflight.vehicleDisarmed'),
     severity: vehicleArmed ? 'warn' : 'pass',
     detail: vehicleArmed
       ? 'Vehicle is currently armed. Install will proceed, but any required reboot will be refused while armed - disarm first if a reboot is needed.'

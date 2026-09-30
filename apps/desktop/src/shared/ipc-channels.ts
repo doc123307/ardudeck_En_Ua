@@ -1451,6 +1451,8 @@ export interface SettingsStoreSchema {
   unitPreferences?: UserUnitPreferences;
   experienceLevel?: 'beginner' | 'advanced';
   experienceLevelVersion?: string;
+  /** UI language ('en' | 'uk' | 'ru'); the main process follows it for dialogs and messages. */
+  language?: string;
   uiVisibility?: UiVisibilitySettings;
   showDebugLogs?: boolean;
   aiProvider?: 'claude' | 'openai' | 'gemini' | null;

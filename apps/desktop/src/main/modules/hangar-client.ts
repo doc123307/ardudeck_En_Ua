@@ -17,6 +17,7 @@ import type {
   PublicCargo,
   CargoDetail,
 } from '../../shared/module-types.js';
+import { mt } from '../i18n';
 
 const DEFAULT_BASE_URL = 'https://hangar.ardudeck.com';
 // 127.0.0.1, not localhost: the local API binds IPv4-only (0.0.0.0) and
@@ -49,7 +50,7 @@ async function jsonPost<T>(path: string, body: Record<string, unknown>): Promise
       body: JSON.stringify(body),
     });
   } catch {
-    throw new Error(`Could not reach the Hangar at ${getBaseUrl()}. Check your connection and try again.`);
+    throw new Error(mt('main.modules_hangar_client.couldNotReachTheHangarAt', { v1: getBaseUrl() }));
   }
   if (!res.ok) {
     throw new Error(await hangarError(res));
@@ -63,7 +64,7 @@ async function jsonGet<T>(path: string): Promise<T> {
   try {
     res = await fetch(url, { method: 'GET' });
   } catch {
-    throw new Error(`Could not reach the Hangar at ${getBaseUrl()}. Check your connection and try again.`);
+    throw new Error(mt('main.modules_hangar_client.couldNotReachTheHangarAt', { v1: getBaseUrl() }));
   }
   if (!res.ok) {
     throw new Error(await hangarError(res));
@@ -180,7 +181,7 @@ export async function downloadBundle(
       headers: { 'x-license-key': licenseKey },
     });
   } catch {
-    throw new Error(`Could not reach the Hangar at ${getBaseUrl()}. Check your connection and try again.`);
+    throw new Error(mt('main.modules_hangar_client.couldNotReachTheHangarAt', { v1: getBaseUrl() }));
   }
 
   if (!res.ok) {
@@ -197,7 +198,7 @@ export async function downloadBundle(
   const filePath = join(modulesDir, `${version}.zip`);
 
   if (!res.body) {
-    throw new Error('Empty response body');
+    throw new Error(mt('main.modules_hangar_client.emptyResponseBody'));
   }
 
   // Stream download with progress, hashing the bytes as they arrive so the

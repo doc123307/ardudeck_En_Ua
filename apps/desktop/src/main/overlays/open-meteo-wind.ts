@@ -11,6 +11,7 @@
  */
 
 import type { WindBBox, WindField, WindFrame, WindFetchParams } from '../../shared/wind-types.js';
+import { mt } from '../i18n';
 
 const API_URL = 'https://api.open-meteo.com/v1/forecast';
 const FORECAST_DAYS = 3;
@@ -181,7 +182,7 @@ export async function fetchWindField(params: WindFetchParams): Promise<WindField
       const res = await fetch(url);
       if (!res.ok) {
         const body = await res.text().catch(() => '');
-        throw new Error(`Open-Meteo HTTP ${res.status} for ${latChunks[i]!.length} pts: ${body.slice(0, 200)}`);
+        throw new Error(mt('main.overlays_open_meteo_wind.openMeteoHttpForPts', { status: res.status, length: latChunks[i]!.length, v3: body.slice(0, 200) }));
       }
       const json = await res.json();
       // Open-Meteo returns an array for multi-location requests, an object for one.
@@ -191,7 +192,7 @@ export async function fetchWindField(params: WindFetchParams): Promise<WindField
 
     const { frames, speedMax } = parseWindResponse(locations, grid, altitudeM);
     if (frames.length === 0) {
-      throw new Error(`Open-Meteo: no frames (locs=${locations.length}, firstHourlyKeys=${JSON.stringify(Object.keys(locations[0]?.hourly ?? {}))})`);
+      throw new Error(mt('main.overlays_open_meteo_wind.openMeteoNoFramesLocsFirsthourlykeys', { length: locations.length, v2: JSON.stringify(Object.keys(locations[0]?.hourly ?? {})) }));
     }
 
     const field: WindField = {

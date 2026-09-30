@@ -17,6 +17,7 @@ import path from 'node:path';
 import { existsSync } from 'node:fs';
 import { chmod } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { mt } from '../i18n';
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -76,7 +77,7 @@ class SimEngineProcessManager {
   /** Restart with the options of the last start(). */
   async restartLast(): Promise<{ success: boolean; wsPort?: number; error?: string }> {
     if (!this._lastOptions) {
-      return { success: false, error: 'no previous sim-engine options to restart with' };
+      return { success: false, error: mt('main.sim_sim_engine_process.noPreviousSimEngineOptionsTo') };
     }
     return this.start(this._lastOptions);
   }
@@ -145,7 +146,7 @@ class SimEngineProcessManager {
     if (!binary) {
       return {
         success: false,
-        error: 'ArduDeck physics engine binary not found. Rebuild or run scripts/fetch-sim-engine.mjs.',
+        error: mt('main.sim_sim_engine_process.ardudeckPhysicsEngineBinaryNotFound'),
       };
     }
     if (process.platform !== 'win32') {
@@ -228,7 +229,7 @@ class SimEngineProcessManager {
 
     this._isRunning = false;
     this._wsPort = null;
-    return { success: false, error: `sim-engine did not become ready: ${lastErr}` };
+    return { success: false, error: mt('main.sim_sim_engine_process.simEngineDidNotBecomeReady', { lastErr }) };
   }
 
   /**

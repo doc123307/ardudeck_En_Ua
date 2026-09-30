@@ -27,6 +27,7 @@ import type {
 import { runPreflight, preflightOk } from './preflight';
 import { resetHeartbeat, waitForHeartbeat } from './heartbeat-tracker';
 import * as registry from './registry-store';
+import { mt } from '../i18n';
 
 /**
  * Adapter interface the installer uses to talk to the connected flight
@@ -148,7 +149,7 @@ export function cancelInstall(): void {
 }
 
 export async function applyFix(fix: PreflightFix): Promise<void> {
-  if (!active) throw new Error('No install in progress');
+  if (!active) throw new Error(mt('main.script_installer_installer_service.noInstallInProgress'));
   const { adapter, emitter, bundle } = active;
   if (fix.type === 'set_param') {
     const before = (await adapter.readParams([fix.param]))[fix.param] ?? 0;

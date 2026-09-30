@@ -1,6 +1,7 @@
 import AdmZip from 'adm-zip';
 import { rm, mkdir } from 'node:fs/promises';
 import { resolve, relative, isAbsolute } from 'node:path';
+import { mt } from '../i18n';
 
 export async function extractBundle(zipPath: string, targetDir: string): Promise<void> {
   const absTarget = resolve(targetDir);
@@ -15,7 +16,7 @@ export async function extractBundle(zipPath: string, targetDir: string): Promise
     const dest = resolve(absTarget, name);
     const rel = relative(absTarget, dest);
     if (rel.startsWith('..') || isAbsolute(rel)) {
-      throw new Error(`Unsafe zip entry (path traversal): ${name}`);
+      throw new Error(mt('main.modules_module_extract.unsafeZipEntryPathTraversal', { name }));
     }
   }
 

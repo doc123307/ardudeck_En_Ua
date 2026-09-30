@@ -15,6 +15,7 @@ import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import type { DetectedBoard, FlashProgress, FlashResult, FlashOptions } from '../../shared/firmware-types.js';
 import { rebootToBootloaderMavlink } from './msp-detector.js';
 import { acquireFlashLock, releaseFlashLock } from './flash-guard.js';
+import { mt } from '../i18n';
 
 // ArduPilot bootloader response codes
 const INSYNC = 0x12;
@@ -108,7 +109,7 @@ async function parseApjFile(firmwarePath: string): Promise<ApjFirmware> {
   const json = JSON.parse(content) as { board_id?: number; image_size?: number; image?: string };
 
   if (!json.image || !json.image_size) {
-    throw new Error('Invalid APJ file: missing image or image_size field');
+    throw new Error(mt('main.firmware_ardupilot_flasher.invalidApjFileMissingImageOr'));
   }
 
   const boardId = json.board_id ?? 0;
@@ -120,7 +121,7 @@ async function parseApjFile(firmwarePath: string): Promise<ApjFirmware> {
   // Decompress zlib
   const decompressed = await new Promise<Buffer>((resolve, reject) => {
     zlib.inflate(compressed, (err, result) => {
-      if (err) reject(new Error(`APJ decompression failed: ${err.message}`));
+      if (err) reject(new Error(mt('main.firmware_ardupilot_flasher.apjDecompressionFailed', { message: err.message })));
       else resolve(result);
     });
   });
@@ -166,8 +167,8 @@ async function getSync(transport: SerialTransport, timeout: number = 1000): Prom
 
   if (resp[0] !== INSYNC) return false;
   if (resp[1] === OK) return true;
-  if (resp[1] === INVALID) throw new Error('Bootloader reports INVALID OPERATION');
-  if (resp[1] === FAILED) throw new Error('Bootloader reports OPERATION FAILED');
+  if (resp[1] === INVALID) throw new Error(mt('main.firmware_ardupilot_flasher.bootloaderReportsInvalidOperation'));
+  if (resp[1] === FAILED) throw new Error(mt('main.firmware_ardupilot_flasher.bootloaderReportsOperationFailed'));
   return false;
 }
 
@@ -222,7 +223,7 @@ async function getDeviceInfo(
 
   // Then read INSYNC + OK
   if (!await getSync(transport, 1000)) {
-    throw new Error(`GET_DEVICE(${infoType}) sync failed after reading value`);
+    throw new Error(mt('main.firmware_ardupilot_flasher.getDeviceSyncFailedAfterReading', { infoType }));
   }
 
   // Return as signed 32-bit (matching Mission Planner's BitConverter.ToInt32)
@@ -262,7 +263,7 @@ async function programMulti(
   data: Uint8Array
 ): Promise<void> {
   if (data.length > PROG_MULTI_MAX || data.length === 0) {
-    throw new Error(`Invalid PROG_MULTI size: ${data.length}`);
+    throw new Error(mt('main.firmware_ardupilot_flasher.invalidProgMultiSize', { length: data.length }));
   }
 
   // Format: [PROG_MULTI, length, ...data, EOC]
@@ -275,7 +276,7 @@ async function programMulti(
   await transport.write(packet);
 
   if (!await getSync(transport, 5000)) {
-    throw new Error('PROG_MULTI failed — bootloader did not acknowledge write');
+    throw new Error(mt('main.firmware_ardupilot_flasher.progMultiFailedBootloaderDidNot'));
   }
 }
 
@@ -292,7 +293,7 @@ async function programFirmware(
   let chunk = 0;
 
   for (let offset = 0; offset < firmware.length; offset += PROG_MULTI_MAX) {
-    if (abortSignal?.aborted) throw new Error('Flash operation aborted');
+    if (abortSignal?.aborted) throw new Error(mt('main.firmware_ardupilot_flasher.flashOperationAborted'));
 
     const end = Math.min(offset + PROG_MULTI_MAX, firmware.length);
     const data = firmware.slice(offset, end);
@@ -304,7 +305,7 @@ async function programFirmware(
     sendProgress(window, {
       state: 'flashing',
       progress: 20 + Math.round(percent * 0.6),
-      message: `Writing firmware... ${percent}% (${Math.round(offset / 1024)}/${Math.round(firmware.length / 1024)} KB)`,
+      message: mt('main.firmware_ardupilot_flasher.writingFirmwareKb', { percent, v2: Math.round(offset / 1024), v3: Math.round(firmware.length / 1024) }),
       bytesWritten: offset + data.length,
       totalBytes: firmware.length,
     });
@@ -353,7 +354,7 @@ async function verifyCrc(
   const deviceCrc = (crcData[0]! | (crcData[1]! << 8) | (crcData[2]! << 16) | ((crcData[3]! << 24) >>> 0)) >>> 0;
 
   if (!await getSync(transport, 1000)) {
-    throw new Error('CRC verification sync failed');
+    throw new Error(mt('main.firmware_ardupilot_flasher.crcVerificationSyncFailed'));
   }
 
   const expectedUnsigned = expectedCrc >>> 0;
@@ -444,7 +445,7 @@ export async function flashWithArduPilotBootloader(
   if (!board.port) {
     return {
       success: false,
-      error: 'No serial port specified for ArduPilot bootloader flash',
+      error: mt('main.firmware_ardupilot_flasher.noSerialPortSpecifiedForArdupilot'),
       duration: Date.now() - startTime,
     };
   }
@@ -452,7 +453,7 @@ export async function flashWithArduPilotBootloader(
   if (!acquireFlashLock('ardupilot')) {
     return {
       success: false,
-      error: 'Another flash operation is already in progress. Please wait for it to complete.',
+      error: mt('main.firmware_ardupilot_flasher.anotherFlashOperationIsAlreadyIn'),
       duration: Date.now() - startTime,
     };
   }
@@ -465,7 +466,7 @@ export async function flashWithArduPilotBootloader(
     sendProgress(window, {
       state: 'preparing',
       progress: 0,
-      message: 'Loading firmware file...',
+      message: mt('main.firmware_ardupilot_flasher.loadingFirmwareFile'),
     });
 
     let firmware: Uint8Array;
@@ -505,7 +506,7 @@ export async function flashWithArduPilotBootloader(
 
     if (abortController?.signal.aborted) {
       sendLog(window, 'warn', 'Flash aborted by user');
-      return { success: false, error: 'Aborted', duration: Date.now() - startTime };
+      return { success: false, error: mt('main.firmware_ardupilot_flasher.aborted'), duration: Date.now() - startTime };
     }
 
     // Step 2: Reboot board into bootloader if needed
@@ -519,7 +520,7 @@ export async function flashWithArduPilotBootloader(
       sendProgress(window, {
         state: 'entering-bootloader',
         progress: 3,
-        message: 'Rebooting board into bootloader mode...',
+        message: mt('main.firmware_ardupilot_flasher.rebootingBoardIntoBootloaderMode'),
       });
 
       // Record ports before reboot so we can detect new ones after
@@ -543,7 +544,7 @@ export async function flashWithArduPilotBootloader(
         sendProgress(window, {
           state: 'entering-bootloader',
           progress: 4,
-          message: 'Waiting for bootloader USB...',
+          message: mt('main.firmware_ardupilot_flasher.waitingForBootloaderUsb'),
         });
 
         // Native USB boards re-enumerate as a different COM port in bootloader mode.
@@ -592,7 +593,7 @@ export async function flashWithArduPilotBootloader(
     sendProgress(window, {
       state: 'preparing',
       progress: 5,
-      message: `Connecting to ArduPilot bootloader on ${flashPort}...`,
+      message: mt('main.firmware_ardupilot_flasher.connectingToArdupilotBootloaderOn', { flashPort }),
     });
 
     sendLog(window, 'info', `Using port: ${flashPort}${flashPort !== board.port ? ` (changed from ${board.port})` : ''}`);
@@ -612,7 +613,7 @@ export async function flashWithArduPilotBootloader(
     sendProgress(window, {
       state: 'preparing',
       progress: 8,
-      message: 'Synchronizing with bootloader...',
+      message: mt('main.firmware_ardupilot_flasher.synchronizingWithBootloader'),
     });
 
     let synced = await ardupilotSync(transport, window);
@@ -651,7 +652,7 @@ export async function flashWithArduPilotBootloader(
       if (!synced) {
         return {
           success: false,
-          error: `Could not connect to ArduPilot bootloader on ${flashPort}.\n\nMake sure:\n1. The board is running ArduPilot firmware (not Betaflight/iNav)\n2. The board has the ArduPilot bootloader installed\n3. No other application is using the serial port\n\nIf the board does not respond, try disconnecting and reconnecting USB.`,
+          error: mt('main.firmware_ardupilot_flasher.couldNotConnectToArdupilotBootloader', { flashPort }),
           duration: Date.now() - startTime,
         };
       }
@@ -659,14 +660,14 @@ export async function flashWithArduPilotBootloader(
 
     if (abortController?.signal.aborted) {
       sendLog(window, 'warn', 'Flash aborted by user');
-      return { success: false, error: 'Aborted', duration: Date.now() - startTime };
+      return { success: false, error: mt('main.firmware_ardupilot_flasher.aborted'), duration: Date.now() - startTime };
     }
 
     // Step 5: Get device info
     sendProgress(window, {
       state: 'preparing',
       progress: 10,
-      message: 'Reading board info...',
+      message: mt('main.firmware_ardupilot_flasher.readingBoardInfo'),
     });
 
     const blRev = await getDeviceInfo(transport, INFO_BL_REV);
@@ -683,7 +684,7 @@ export async function flashWithArduPilotBootloader(
       sendLog(window, 'error', `Unsupported bootloader revision: ${blRev} (expected 2-20)`);
       return {
         success: false,
-        error: `Unsupported bootloader revision: ${blRev} (expected 2-20)`,
+        error: mt('main.firmware_ardupilot_flasher.unsupportedBootloaderRevisionExpected220', { blRev }),
         duration: Date.now() - startTime,
       };
     }
@@ -693,7 +694,7 @@ export async function flashWithArduPilotBootloader(
       sendLog(window, 'error', `Board ID mismatch: firmware board_id=${apjBoardId}, device board_id=${boardId}`);
       return {
         success: false,
-        error: `Board ID mismatch: firmware is for board ${apjBoardId}, but connected board reports ID ${boardId}.\n\nPlease select the correct firmware for your board.`,
+        error: mt('main.firmware_ardupilot_flasher.boardIdMismatchFirmwareIsFor', { apjBoardId, boardId }),
         duration: Date.now() - startTime,
       };
     }
@@ -703,35 +704,35 @@ export async function flashWithArduPilotBootloader(
       sendLog(window, 'error', `Firmware too large: ${firmware.length} bytes > flash ${flashSize} bytes`);
       return {
         success: false,
-        error: `Firmware too large: ${Math.round(firmware.length / 1024)} KB, but board flash is ${Math.round(flashSize / 1024)} KB`,
+        error: mt('main.firmware_ardupilot_flasher.firmwareTooLargeKbButBoard', { v1: Math.round(firmware.length / 1024), v2: Math.round(flashSize / 1024) }),
         duration: Date.now() - startTime,
       };
     }
 
     if (abortController?.signal.aborted) {
       sendLog(window, 'warn', 'Flash aborted by user');
-      return { success: false, error: 'Aborted', duration: Date.now() - startTime };
+      return { success: false, error: mt('main.firmware_ardupilot_flasher.aborted'), duration: Date.now() - startTime };
     }
 
     // Step 6: Erase flash
     sendProgress(window, {
       state: 'erasing',
       progress: 12,
-      message: 'Erasing flash...',
+      message: mt('main.firmware_ardupilot_flasher.erasingFlash'),
     });
 
     await chipErase(transport, window);
 
     if (abortController?.signal.aborted) {
       sendLog(window, 'warn', 'Flash aborted by user');
-      return { success: false, error: 'Aborted', duration: Date.now() - startTime };
+      return { success: false, error: mt('main.firmware_ardupilot_flasher.aborted'), duration: Date.now() - startTime };
     }
 
     // Step 7: Program firmware
     sendProgress(window, {
       state: 'flashing',
       progress: 20,
-      message: 'Writing firmware...',
+      message: mt('main.firmware_ardupilot_flasher.writingFirmware'),
     });
 
     await programFirmware(transport, firmware, window, abortController?.signal);
@@ -744,14 +745,14 @@ export async function flashWithArduPilotBootloader(
       sendProgress(window, {
         state: 'verifying',
         progress: 85,
-        message: 'Verifying firmware CRC...',
+        message: mt('main.firmware_ardupilot_flasher.verifyingFirmwareCrc'),
       });
 
       verified = await verifyCrc(transport, firmware, flashSize, window);
       if (!verified) {
         return {
           success: false,
-          error: 'Firmware CRC verification failed — the written data does not match. Please try again.',
+          error: mt('main.firmware_ardupilot_flasher.firmwareCrcVerificationFailedTheWritten'),
           duration: Date.now() - startTime,
           verified: false,
         };
@@ -764,7 +765,7 @@ export async function flashWithArduPilotBootloader(
     sendProgress(window, {
       state: 'rebooting',
       progress: 95,
-      message: 'Rebooting board...',
+      message: mt('main.firmware_ardupilot_flasher.rebootingBoard'),
     });
 
     await reboot(transport, window);
@@ -774,7 +775,7 @@ export async function flashWithArduPilotBootloader(
     sendProgress(window, {
       state: 'complete',
       progress: 100,
-      message: 'Flash complete!',
+      message: mt('main.firmware_ardupilot_flasher.flashComplete'),
     });
 
     const duration = Date.now() - startTime;
@@ -782,7 +783,7 @@ export async function flashWithArduPilotBootloader(
 
     return {
       success: true,
-      message: 'Firmware flashed successfully via ArduPilot bootloader',
+      message: mt('main.firmware_ardupilot_flasher.firmwareFlashedSuccessfullyViaArdupilotBootloade'),
       duration,
       verified,
     };

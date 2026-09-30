@@ -14,6 +14,7 @@ import type {
   CalibrationCompleteEvent,
   CalibrationData,
 } from '../../shared/calibration-types.js';
+import { mt } from '../i18n';
 
 // =============================================================================
 // MAVLink Constants
@@ -248,9 +249,9 @@ export function isMavlinkCalibrationActive(): boolean {
  * in a single shot and writes COMPASS_OFS_*. Reboot recommended afterward.
  */
 export async function sendFixedMagCalYaw(headingDeg: number): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'MAVLink calibration not initialized' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.mavlinkCalibrationNotInitialized') };
   if (pendingFixedMagCalYawResolver) {
-    return { success: false, error: 'Large Vehicle MagCal already in progress' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.largeVehicleMagcalAlreadyInProgress') };
   }
 
   // Normalize heading to [0, 360)
@@ -268,7 +269,7 @@ export async function sendFixedMagCalYaw(headingDeg: number): Promise<{ success:
   });
 
   if (!sent) {
-    return { success: false, error: 'Failed to send command - ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendCommandEnsureFc') };
   }
 
   return new Promise((resolve) => {
@@ -279,7 +280,7 @@ export async function sendFixedMagCalYaw(headingDeg: number): Promise<{ success:
       pendingFixedMagCalYawTimeoutId = null;
       if (r) {
         deps?.sendLog('error', 'Large Vehicle MagCal timed out — no COMMAND_ACK from FC');
-        r({ success: false, error: 'Flight controller did not respond. Check the connection and try again.' });
+        r({ success: false, error: mt('main.calibration_mavlink_calibration.flightControllerDidNotRespondCheck') });
       }
     }, FIXED_MAG_CAL_YAW_TIMEOUT_MS);
   });
@@ -295,8 +296,8 @@ export async function sendFixedMagCalYaw(headingDeg: number): Promise<{ success:
  * arrival of COMPASSMOT_STATUS frames, which the renderer decodes directly.
  */
 export async function startCompassMot(): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'MAVLink calibration not initialized' };
-  if (compassMotActive) return { success: false, error: 'CompassMot already in progress' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.mavlinkCalibrationNotInitialized') };
+  if (compassMotActive) return { success: false, error: mt('main.calibration_mavlink_calibration.compassmotAlreadyInProgress') };
 
   deps.sendLog('info', 'Starting CompassMot (PREFLIGHT_CALIBRATION param6=1)');
 
@@ -308,7 +309,7 @@ export async function startCompassMot(): Promise<{ success: boolean; error?: str
   });
 
   if (!sent) {
-    return { success: false, error: 'Failed to send command - ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendCommandEnsureFc') };
   }
 
   compassMotActive = true;
@@ -322,7 +323,7 @@ export async function startCompassMot(): Promise<{ success: boolean; error?: str
  * lossy links, so we do the same.
  */
 export async function stopCompassMot(): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'MAVLink calibration not initialized' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.mavlinkCalibrationNotInitialized') };
 
   deps.sendLog('info', 'Finishing CompassMot (COMMAND_ACK for PREFLIGHT_CALIBRATION)');
 
@@ -331,7 +332,7 @@ export async function stopCompassMot(): Promise<{ success: boolean; error?: stri
   compassMotActive = false;
 
   if (!sent) {
-    return { success: false, error: 'Failed to send finish command - ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendFinishCommandEnsure') };
   }
   return { success: true };
 }
@@ -340,8 +341,8 @@ export async function startMavlinkCalibration(
   type: CalibrationTypeId,
   firmware: CalibrationFirmware = 'ardupilot',
 ): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'MAVLink calibration not initialized' };
-  if (activeCalType) return { success: false, error: 'Another calibration is already in progress' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.mavlinkCalibrationNotInitialized') };
+  if (activeCalType) return { success: false, error: mt('main.calibration_mavlink_calibration.anotherCalibrationIsAlreadyInProgress') };
 
   activeCalType = type;
   activeFirmware = firmware;
@@ -363,20 +364,20 @@ export async function startMavlinkCalibration(
       return startCompass();
     default:
       activeCalType = null;
-      return { success: false, error: `Unsupported MAVLink calibration type: ${type}` };
+      return { success: false, error: mt('main.calibration_mavlink_calibration.unsupportedMavlinkCalibrationType', { type }) };
   }
 }
 
 export async function confirmMavlinkPosition(position: number): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'MAVLink calibration not initialized' };
-  if (activeCalType !== 'accel-6point') return { success: false, error: '6-point calibration not in progress' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.mavlinkCalibrationNotInitialized') };
+  if (activeCalType !== 'accel-6point') return { success: false, error: mt('main.calibration_mavlink_calibration.n6PointCalibrationNotInProgress') };
   // PX4 detects orientations automatically and has no confirm step; the UI
   // never shows the button on PX4, this is a belt-and-braces guard.
-  if (activeFirmware === 'px4') return { success: false, error: 'PX4 detects positions automatically, no confirmation needed' };
+  if (activeFirmware === 'px4') return { success: false, error: mt('main.calibration_mavlink_calibration.px4DetectsPositionsAutomaticallyNoConfirmation') };
 
   // Convert our position index to ArduPilot enum
   const arduPos = INDEX_TO_ARDU_POS[position];
-  if (arduPos === undefined) return { success: false, error: `Invalid position index: ${position}` };
+  if (arduPos === undefined) return { success: false, error: mt('main.calibration_mavlink_calibration.invalidPositionIndex', { position }) };
 
   // ArduPilot only accepts position confirmations when its AccelCal state
   // machine is in WAITING_FOR_ORIENTATION. AP signals readiness by sending
@@ -385,7 +386,7 @@ export async function confirmMavlinkPosition(position: number): Promise<{ succes
   // confirmation before AP asks for it, AP returns MAV_RESULT_FAILED.
   // Mission Planner also waits for this request before enabling the button.
   if (expectedPosition === -1) {
-    return { success: false, error: 'Waiting for flight controller to request a position. Keep the vehicle still.' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.waitingForFlightControllerToRequest') };
   }
 
   deps.sendLog('info', `Confirming position ${position} (${POSITION_NAMES[position]}) — sending ACCELCAL_VEHICLE_POS`);
@@ -397,7 +398,7 @@ export async function confirmMavlinkPosition(position: number): Promise<{ succes
 
   if (!sent) {
     deps.sendLog('error', `Position ${position}: failed to send ACCELCAL_VEHICLE_POS`);
-    return { success: false, error: 'Failed to send position confirmation — ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendPositionConfirmationEnsure') };
   }
 
   // Mark this position as captured locally and reset expectedPosition so
@@ -503,7 +504,7 @@ function armOneShotTimeout(type: 'accel-level' | 'accel-quick' | 'gyro'): void {
     deps.sendComplete({
       type,
       success: false,
-      error: 'Flight controller did not respond. Check the connection and try again.',
+      error: mt('main.calibration_mavlink_calibration.flightControllerDidNotRespondCheck'),
     });
     cancelMavlinkCalibration();
   }, ONE_SHOT_TIMEOUT_MS);
@@ -559,7 +560,7 @@ export function handleCalibrationStatusText(text: string, severity: number): voi
     deps.sendComplete({
       type: 'accel-level',
       success: false,
-      error: 'Vehicle is tilted more than 10° from level. Place the flight controller on a flat surface and try again.',
+      error: mt('main.calibration_mavlink_calibration.vehicleIsTiltedMoreThan10'),
     });
     cancelMavlinkCalibration();
     return;
@@ -611,7 +612,7 @@ export function handleCalibrationStatusText(text: string, severity: number): voi
         ? 'bad orientation — check the board/compass mounting direction (COMPASS_ORIENT)'
         : 'bad radius — strong magnetic interference near the compass';
       deps.sendLog('error', `Compass calibration failed: ${text}`);
-      deps.sendComplete({ type: 'compass', success: false, error: `Compass calibration failed: ${reason}. Move away from metal/magnets/wiring and try again.` });
+      deps.sendComplete({ type: 'compass', success: false, error: mt('main.calibration_mavlink_calibration.compassCalibrationFailedMoveAwayFrom', { reason }) });
       cancelMavlinkCalibration();
       return;
     }
@@ -741,7 +742,7 @@ function handlePx4CalStatusText(text: string, lower: string): void {
     deps.sendProgress({
       type: activeCalType,
       progress: px4LastProgressPct,
-      statusText: `${PX4_SIDE_LABEL[side]} detected, hold still`,
+      statusText: mt('main.calibration_mavlink_calibration.detectedHoldStill', { v1: PX4_SIDE_LABEL[side] }),
       currentPosition: idx as 0 | 1 | 2 | 3 | 4 | 5,
       positionStatus: [...positionStatus],
     });
@@ -803,7 +804,7 @@ function handlePx4CalStatusText(text: string, lower: string): void {
  * the ACK arrives immediately and does NOT mean the work is done).
  */
 async function startPx4Calibration(type: CalibrationTypeId): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'Not initialized' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.notInitialized') };
 
   const params = { param1: 0, param2: 0, param3: 0, param4: 0, param5: 0, param6: 0, param7: 0 };
   switch (type) {
@@ -814,7 +815,7 @@ async function startPx4Calibration(type: CalibrationTypeId): Promise<{ success: 
     case 'accel-quick': params.param5 = 4; break;
     default:
       activeCalType = null;
-      return { success: false, error: `Unsupported PX4 calibration type: ${type}` };
+      return { success: false, error: mt('main.calibration_mavlink_calibration.unsupportedPx4CalibrationType', { type }) };
   }
 
   px4SidesDone = new Set();
@@ -826,13 +827,13 @@ async function startPx4Calibration(type: CalibrationTypeId): Promise<{ success: 
   const sent = await deps.sendCommandLong(MAV_CMD_PREFLIGHT_CALIBRATION, params);
   if (!sent) {
     activeCalType = null;
-    return { success: false, error: 'Failed to send calibration command, ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendCalibrationCommandEnsure') };
   }
 
   deps.sendProgress({
     type,
     progress: 0,
-    statusText: 'Waiting for the vehicle to start calibrating...',
+    statusText: mt('main.calibration_mavlink_calibration.waitingForTheVehicleToStart'),
     ...(type === 'accel-6point' || type === 'compass' ? { positionStatus: [...positionStatus] } : {}),
   });
 
@@ -848,7 +849,7 @@ async function startPx4Calibration(type: CalibrationTypeId): Promise<{ success: 
     deps.sendComplete({
       type,
       success: false,
-      error: 'The vehicle stopped responding during calibration. Nothing was saved, check the connection and try again.',
+      error: mt('main.calibration_mavlink_calibration.theVehicleStoppedRespondingDuringCalibration'),
     });
     cancelMavlinkCalibration();
   }, timeoutMs);
@@ -889,7 +890,7 @@ export function handleMagCalProgress(compassId: number, _calStatus: number, comp
   deps.sendProgress({
     type: 'compass',
     progress: overall,
-    statusText: 'Rotate the vehicle slowly through all orientations',
+    statusText: mt('main.calibration_mavlink_calibration.rotateTheVehicleSlowlyThroughAll'),
     compassProgress,
   });
 }
@@ -940,7 +941,7 @@ function finishMagCalIfDone(expected: number): void {
     deps.sendComplete({
       type: 'compass',
       success: false,
-      error: `No compass calibrated. ${failed}. Move away from metal, magnets and wiring, and try again.`,
+      error: mt('main.calibration_mavlink_calibration.noCompassCalibratedMoveAwayFrom', { failed }),
     });
   } else {
     deps.sendComplete({
@@ -1126,7 +1127,7 @@ export function handleIncomingCommandLong(command: number, param1: number): void
       deps.sendComplete({
         type: 'accel-6point',
         success: false,
-        error: 'Accelerometer calibration failed',
+        error: mt('main.calibration_mavlink_calibration.accelerometerCalibrationFailed'),
       });
       cancelMavlinkCalibration();
       return;
@@ -1144,7 +1145,7 @@ export function handleIncomingCommandLong(command: number, param1: number): void
     deps.sendProgress({
       type: 'accel-6point',
       progress: (positionStatus.filter(Boolean).length / 6) * 100,
-      statusText: `Place vehicle ${POSITION_NAMES[posIndex]}`,
+      statusText: mt('main.calibration_mavlink_calibration.placeVehicle', { v1: POSITION_NAMES[posIndex] }),
       currentPosition: posIndex as 0 | 1 | 2 | 3 | 4 | 5,
       positionStatus: [...positionStatus],
     });
@@ -1156,13 +1157,13 @@ export function handleIncomingCommandLong(command: number, param1: number): void
 // =============================================================================
 
 async function startAccelLevel(): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'Not initialized' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.notInitialized') };
 
   deps.sendLog('info', 'Starting MAVLink level calibration (MAV_CMD_PREFLIGHT_CALIBRATION param5=2)');
   deps.sendProgress({
     type: 'accel-level',
     progress: 0,
-    statusText: 'Sending level calibration command...',
+    statusText: mt('main.calibration_mavlink_calibration.sendingLevelCalibrationCommand'),
   });
 
   // param5=2 = simple level calibration (AHRS trim)
@@ -1178,13 +1179,13 @@ async function startAccelLevel(): Promise<{ success: boolean; error?: string }> 
 
   if (!sent) {
     activeCalType = null;
-    return { success: false, error: 'Failed to send calibration command, ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendCalibrationCommandEnsure') };
   }
 
   deps.sendProgress({
     type: 'accel-level',
     progress: 0,
-    statusText: 'Calibrating... keep vehicle level and still',
+    statusText: mt('main.calibration_mavlink_calibration.calibratingKeepVehicleLevelAndStill'),
   });
   armOneShotTimeout('accel-level');
 
@@ -1199,13 +1200,13 @@ async function startAccelLevel(): Promise<{ success: boolean; error?: string }> 
  * boat or a large aircraft onto each of its faces.
  */
 async function startAccelQuick(): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'Not initialized' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.notInitialized') };
 
   deps.sendLog('info', 'Starting MAVLink quick accel calibration (MAV_CMD_PREFLIGHT_CALIBRATION param5=4)');
   deps.sendProgress({
     type: 'accel-quick',
     progress: 0,
-    statusText: 'Sending quick calibration command...',
+    statusText: mt('main.calibration_mavlink_calibration.sendingQuickCalibrationCommand'),
   });
 
   const sent = await deps.sendCommandLong(MAV_CMD_PREFLIGHT_CALIBRATION, {
@@ -1220,13 +1221,13 @@ async function startAccelQuick(): Promise<{ success: boolean; error?: string }> 
 
   if (!sent) {
     activeCalType = null;
-    return { success: false, error: 'Failed to send calibration command, ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendCalibrationCommandEnsure') };
   }
 
   deps.sendProgress({
     type: 'accel-quick',
     progress: 0,
-    statusText: 'Calibrating... keep the vehicle level and completely still',
+    statusText: mt('main.calibration_mavlink_calibration.calibratingKeepTheVehicleLevelAnd'),
   });
   armOneShotTimeout('accel-quick');
 
@@ -1234,7 +1235,7 @@ async function startAccelQuick(): Promise<{ success: boolean; error?: string }> 
 }
 
 async function startAccel6Point(): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'Not initialized' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.notInitialized') };
 
   positionStatus = [false, false, false, false, false, false];
   expectedPosition = -1;
@@ -1254,14 +1255,14 @@ async function startAccel6Point(): Promise<{ success: boolean; error?: string }>
 
   if (!sent) {
     activeCalType = null;
-    return { success: false, error: 'Failed to send calibration command, ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendCalibrationCommandEnsure') };
   }
 
   // ArduPilot will send COMMAND_LONG with ACCELCAL_VEHICLE_POS to request first position
   deps.sendProgress({
     type: 'accel-6point',
     progress: 0,
-    statusText: 'Waiting for flight controller...',
+    statusText: mt('main.calibration_mavlink_calibration.waitingForFlightController'),
     currentPosition: 0,
     positionStatus: [false, false, false, false, false, false],
   });
@@ -1270,13 +1271,13 @@ async function startAccel6Point(): Promise<{ success: boolean; error?: string }>
 }
 
 async function startGyro(): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'Not initialized' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.notInitialized') };
 
   deps.sendLog('info', 'Starting MAVLink gyro calibration (MAV_CMD_PREFLIGHT_CALIBRATION param1=1)');
   deps.sendProgress({
     type: 'gyro',
     progress: 0,
-    statusText: 'Sending gyro calibration command...',
+    statusText: mt('main.calibration_mavlink_calibration.sendingGyroCalibrationCommand'),
   });
 
   // param1=1 = gyro calibration
@@ -1292,13 +1293,13 @@ async function startGyro(): Promise<{ success: boolean; error?: string }> {
 
   if (!sent) {
     activeCalType = null;
-    return { success: false, error: 'Failed to send calibration command, ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendCalibrationCommandEnsure') };
   }
 
   deps.sendProgress({
     type: 'gyro',
     progress: 0,
-    statusText: 'Calibrating gyroscope... keep vehicle still',
+    statusText: mt('main.calibration_mavlink_calibration.calibratingGyroscopeKeepVehicleStill'),
   });
   armOneShotTimeout('gyro');
 
@@ -1306,7 +1307,7 @@ async function startGyro(): Promise<{ success: boolean; error?: string }> {
 }
 
 async function startCompass(): Promise<{ success: boolean; error?: string }> {
-  if (!deps) return { success: false, error: 'Not initialized' };
+  if (!deps) return { success: false, error: mt('main.calibration_mavlink_calibration.notInitialized') };
 
   deps.sendLog('info', 'Starting compass calibration (MAV_CMD_DO_START_MAG_CAL, all compasses)');
 
@@ -1328,7 +1329,7 @@ async function startCompass(): Promise<{ success: boolean; error?: string }> {
 
   if (!sent) {
     activeCalType = null;
-    return { success: false, error: 'Failed to send calibration command, ensure FC is connected' };
+    return { success: false, error: mt('main.calibration_mavlink_calibration.failedToSendCalibrationCommandEnsure') };
   }
 
   // Convergence timeout: if no MAG_CAL_REPORT / "calibrated" STATUSTEXT arrives
@@ -1343,7 +1344,7 @@ async function startCompass(): Promise<{ success: boolean; error?: string }> {
   deps.sendProgress({
     type: 'compass',
     progress: 0,
-    statusText: 'Rotate vehicle slowly in all directions...',
+    statusText: mt('main.calibration_mavlink_calibration.rotateVehicleSlowlyInAllDirections'),
   });
 
   return { success: true };
@@ -1370,7 +1371,7 @@ function armCompassStallTimer(): void {
     deps.sendComplete({
       type: 'compass',
       success: false,
-      error: 'Compass calibration is not converging. Check the compass is healthy (prearm "Compass not healthy" means it is not), move away from metal/magnets/wiring, and rotate through all axes. If this FC has no working compass, disable it (COMPASS_ENABLE=0) — Stabilize does not need one.',
+      error: mt('main.calibration_mavlink_calibration.compassCalibrationIsNotConvergingCheck'),
     });
     cancelMavlinkCalibration();
   }, COMPASS_CAL_STALL_MS);

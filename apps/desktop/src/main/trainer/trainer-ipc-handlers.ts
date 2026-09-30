@@ -20,6 +20,7 @@ import {
   type TrainerLaunchOutcome,
 } from './trainer-process.js';
 import type { TrainerBakeDone } from '../../shared/trainer-types.js';
+import { mt } from '../i18n';
 
 /**
  * Flying what is planned here, in the Trainer, without leaving this app first.
@@ -120,13 +121,13 @@ export function setupTrainerHandlers(mainWindow: BrowserWindow | null, deps: Tra
   ipcMain.handle(
     IPC_CHANNELS.TRAINER_BAKE,
     async (_e, request: unknown): Promise<TrainerBakeDone> => {
-      if (bake) return { kind: 'done', ok: false, error: 'A region is already being built.' };
+      if (bake) return { kind: 'done', ok: false, error: mt('main.trainer_trainer_ipc_handlers.aRegionIsAlreadyBeingBuilt') };
       const { target, searched } = find();
       if (!target) {
         return {
           kind: 'done',
           ok: false,
-          error: `The Trainer is not installed. Looked in: ${searched.join(', ')}`,
+          error: mt('main.trainer_trainer_ipc_handlers.theTrainerIsNotInstalledLooked', { v1: searched.join(', ') }),
         };
       }
       bake = bakeRegion(request, {
@@ -153,7 +154,7 @@ export function setupTrainerHandlers(mainWindow: BrowserWindow | null, deps: Tra
     IPC_CHANNELS.TRAINER_DELETE_REGION,
     async (_e, name: string): Promise<{ ok: boolean; error?: string }> => {
       const { target } = find();
-      if (!target) return { ok: false, error: 'The Trainer is not installed.' };
+      if (!target) return { ok: false, error: mt('main.trainer_trainer_ipc_handlers.theTrainerIsNotInstalled') };
       return deleteRegion(target, name);
     },
   );
@@ -161,7 +162,7 @@ export function setupTrainerHandlers(mainWindow: BrowserWindow | null, deps: Tra
   ipcMain.handle(IPC_CHANNELS.TRAINER_CATALOGUE, async (): Promise<TrainerCatalogueResult> => {
     const { target, searched } = find();
     if (!target) {
-      return { ok: false, error: `The Trainer is not installed. Looked in: ${searched.join(', ')}` };
+      return { ok: false, error: mt('main.trainer_trainer_ipc_handlers.theTrainerIsNotInstalledLooked', { v1: searched.join(', ') }) };
     }
     return queryTrainer(target);
   });
@@ -173,7 +174,7 @@ export function setupTrainerHandlers(mainWindow: BrowserWindow | null, deps: Tra
       if (!target) {
         return {
           ok: false,
-          error: `The Trainer is not installed. Looked in: ${searched.join(', ')}`,
+          error: mt('main.trainer_trainer_ipc_handlers.theTrainerIsNotInstalledLooked', { v1: searched.join(', ') }),
         };
       }
 

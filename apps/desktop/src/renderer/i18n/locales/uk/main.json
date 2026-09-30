@@ -1,0 +1,587 @@
+{
+  "main": {
+    "apps_app_extract": {
+      "failed": "{{cmd}} завершився з помилкою ({{code}}): {{v3}}"
+    },
+    "apps_app_manager": {
+      "hangarReturned": "Hangar повернув {{status}}",
+      "downloading": "Завантаження {{slug}}...",
+      "couldNotReachTheHangarAt": "Не вдалося зв'язатися з Hangar за адресою {{v1}}. Перевірте з'єднання.",
+      "hangarReturnedFor": "Hangar повернув {{status}} для {{slug}} ({{platform}})",
+      "emptyResponseBody": "Порожня відповідь",
+      "verifying": "Перевірка {{slug}}...",
+      "hashMismatchForTheDownloadWas": "Хеш {{slug}} не збігається — завантаження пошкоджене або підроблене",
+      "installing": "Встановлення {{slug}}...",
+      "installed": "{{name}} встановлено."
+    },
+    "area_editor_window": {
+      "ardudeckAreaEditor": "Редактор ділянок ArduDeck"
+    },
+    "calibration_calibration_handlers": {
+      "calibration": "[Калібрування] {{message}}",
+      "anotherCalibrationIsAlreadyInProgress": "Уже триває інше калібрування",
+      "placeVehicleLevelTopUp": "Поставте апарат рівно (верхом догори)",
+      "unknownCalibrationType": "Невідомий тип калібрування: {{type}}",
+      "sendingCalibrationCommand": "Надсилання команди калібрування...",
+      "calibratingAccelerometer": "Калібрування акселерометра...",
+      "calibrationFailedEnsureVehicleIsLevel": "Калібрування не вдалося — переконайтеся, що апарат рівно й нерухомо",
+      "startingCompassCalibration": "Початок калібрування компаса...",
+      "failedToStartCompassCalibration": "Не вдалося почати калібрування компаса",
+      "rotateVehicleInAllDirections": "Обертайте апарат у всіх напрямках...",
+      "calibratingGyroscope": "Калібрування гіроскопа...",
+      "holdSteadyOverTexturedSurface": "Тримайте нерухомо над текстурованою поверхнею...",
+      "n6PointCalibrationNotInProgress": "6-точкове калібрування не виконується",
+      "accCalibrationCommandFailedEnsureFc": "Команда калібрування акселерометра не вдалася — переконайтеся, що FC підключено",
+      "placeVehicle": "Покладіть апарат {{v1}}"
+    },
+    "calibration_mavlink_calibration": {
+      "mavlinkCalibrationNotInitialized": "Калібрування MAVLink не ініціалізовано",
+      "largeVehicleMagcalAlreadyInProgress": "Large Vehicle MagCal уже виконується",
+      "failedToSendCommandEnsureFc": "Не вдалося надіслати команду — переконайтеся, що FC підключено",
+      "flightControllerDidNotRespondCheck": "Польотний контролер не відповів. Перевірте з'єднання й спробуйте ще раз.",
+      "compassmotAlreadyInProgress": "CompassMot уже виконується",
+      "failedToSendFinishCommandEnsure": "Не вдалося надіслати команду завершення — переконайтеся, що FC підключено",
+      "anotherCalibrationIsAlreadyInProgress": "Уже триває інше калібрування",
+      "unsupportedMavlinkCalibrationType": "Непідтримуваний тип калібрування MAVLink: {{type}}",
+      "n6PointCalibrationNotInProgress": "6-точкове калібрування не виконується",
+      "px4DetectsPositionsAutomaticallyNoConfirmation": "PX4 визначає положення автоматично, підтвердження не потрібне",
+      "invalidPositionIndex": "Некоректний індекс положення: {{position}}",
+      "waitingForFlightControllerToRequest": "Очікування запиту положення від польотного контролера. Тримайте апарат нерухомо.",
+      "failedToSendPositionConfirmationEnsure": "Не вдалося надіслати підтвердження положення — переконайтеся, що FC підключено",
+      "vehicleIsTiltedMoreThan10": "Апарат нахилено більш ніж на 10° від горизонталі. Покладіть польотний контролер на рівну поверхню й спробуйте ще раз.",
+      "compassCalibrationFailedMoveAwayFrom": "Калібрування компаса не вдалося: {{reason}}. Відійдіть від металу/магнітів/проводів і спробуйте ще раз.",
+      "detectedHoldStill": "{{v1}} виявлено, тримайте нерухомо",
+      "notInitialized": "Не ініціалізовано",
+      "unsupportedPx4CalibrationType": "Непідтримуваний тип калібрування PX4: {{type}}",
+      "failedToSendCalibrationCommandEnsure": "Не вдалося надіслати команду калібрування, переконайтеся, що FC підключено",
+      "waitingForTheVehicleToStart": "Очікування початку калібрування апаратом...",
+      "theVehicleStoppedRespondingDuringCalibration": "Апарат перестав відповідати під час калібрування. Нічого не збережено, перевірте з'єднання й спробуйте ще раз.",
+      "rotateTheVehicleSlowlyThroughAll": "Повільно обертайте апарат у всіх положеннях",
+      "noCompassCalibratedMoveAwayFrom": "Жоден компас не відкалібровано. {{failed}}. Відійдіть від металу, магнітів і проводів і спробуйте ще раз.",
+      "accelerometerCalibrationFailed": "Калібрування акселерометра не вдалося",
+      "placeVehicle": "Покладіть апарат {{v1}}",
+      "sendingLevelCalibrationCommand": "Надсилання команди калібрування рівня...",
+      "calibratingKeepVehicleLevelAndStill": "Калібрування... тримайте апарат рівно й нерухомо",
+      "sendingQuickCalibrationCommand": "Надсилання команди швидкого калібрування...",
+      "calibratingKeepTheVehicleLevelAnd": "Калібрування... тримайте апарат рівно й повністю нерухомо",
+      "waitingForFlightController": "Очікування польотного контролера...",
+      "sendingGyroCalibrationCommand": "Надсилання команди калібрування гіроскопа...",
+      "calibratingGyroscopeKeepVehicleStill": "Калібрування гіроскопа... тримайте апарат нерухомо",
+      "rotateVehicleSlowlyInAllDirections": "Повільно обертайте апарат у всіх напрямках...",
+      "compassCalibrationIsNotConvergingCheck": "Калібрування компаса не сходиться. Перевірте, що компас справний (prearm «Compass not healthy» означає, що ні), відійдіть від металу/магнітів/проводів і обертайте по всіх осях. Якщо на цьому FC немає робочого компаса, вимкніть його (COMPASS_ENABLE=0) — для Stabilize він не потрібен."
+    },
+    "cli_cli_handlers": {
+      "transportNotConnected": "Транспорт не підключено",
+      "transportClosedDuringCliSetup": "Транспорт закрився під час налаштування CLI",
+      "saveCliOutput": "Зберегти вивід CLI"
+    },
+    "companion_companion_connection": {
+      "notConnected": "Не підключено",
+      "agentApiError": "Помилка API агента: {{status}} {{statusText}}"
+    },
+    "connection_connection_registry": {
+      "connectionregistrySetactiveUnknownTransportid": "ConnectionRegistry.setActive: невідомий transportId {{transportId}}",
+      "connectionregistrySetactiveVehiclekeyDoesNotBelo": "ConnectionRegistry.setActive: vehicleKey {{vehicleKey}} не належить транспорту {{transportId}}"
+    },
+    "dronebridge_dronebridge_client": {
+      "dronebridgeApiError": "Помилка API DroneBridge: {{status}} {{statusText}}"
+    },
+    "edgetx_package_installer": {
+      "downloadFailedHttpFor": "Помилка завантаження: HTTP {{status}} для {{zipUrl}}",
+      "hasNoFilesForRadioVariant": "{{name}} не має файлів для варіанта пульта {{variantId}}",
+      "archiveLayoutChangedNotFoundIn": "Структура архіву змінилася: {{archivePath}} не знайдено в {{versionTag}}"
+    },
+    "firmware_ardupilot_flasher": {
+      "invalidApjFileMissingImageOr": "Некоректний файл APJ: відсутнє поле image або image_size",
+      "apjDecompressionFailed": "Не вдалося розпакувати APJ: {{message}}",
+      "bootloaderReportsInvalidOperation": "Завантажувач повідомляє INVALID OPERATION",
+      "bootloaderReportsOperationFailed": "Завантажувач повідомляє OPERATION FAILED",
+      "getDeviceSyncFailedAfterReading": "GET_DEVICE({{infoType}}): збій синхронізації після читання значення",
+      "invalidProgMultiSize": "Некоректний розмір PROG_MULTI: {{length}}",
+      "progMultiFailedBootloaderDidNot": "PROG_MULTI не вдалося — завантажувач не підтвердив запис",
+      "flashOperationAborted": "Прошивання перервано",
+      "writingFirmwareKb": "Запис прошивки... {{percent}}% ({{v2}}/{{v3}} КБ)",
+      "crcVerificationSyncFailed": "Збій синхронізації перевірки CRC",
+      "noSerialPortSpecifiedForArdupilot": "Не вказано послідовний порт для прошивання через завантажувач ArduPilot",
+      "anotherFlashOperationIsAlreadyIn": "Уже триває інше прошивання. Дочекайтеся його завершення.",
+      "loadingFirmwareFile": "Завантаження файлу прошивки...",
+      "aborted": "Перервано",
+      "rebootingBoardIntoBootloaderMode": "Перезавантаження плати в режим завантажувача...",
+      "waitingForBootloaderUsb": "Очікування USB завантажувача...",
+      "connectingToArdupilotBootloaderOn": "Підключення до завантажувача ArduPilot на {{flashPort}}...",
+      "synchronizingWithBootloader": "Синхронізація із завантажувачем...",
+      "couldNotConnectToArdupilotBootloader": "Не вдалося підключитися до завантажувача ArduPilot на {{flashPort}}.\n\nПереконайтеся, що:\n1. На платі прошивка ArduPilot (а не Betaflight/iNav)\n2. На платі встановлено завантажувач ArduPilot\n3. Послідовний порт не використовує інша програма\n\nЯкщо плата не відповідає, спробуйте від'єднати й знову під'єднати USB.",
+      "readingBoardInfo": "Читання інформації про плату...",
+      "unsupportedBootloaderRevisionExpected220": "Непідтримувана ревізія завантажувача: {{blRev}} (очікується 2–20)",
+      "boardIdMismatchFirmwareIsFor": "Невідповідність ID плати: прошивка для плати {{apjBoardId}}, а підключена плата повідомляє ID {{boardId}}.\n\nВиберіть правильну прошивку для своєї плати.",
+      "firmwareTooLargeKbButBoard": "Прошивка завелика: {{v1}} КБ, а flash плати {{v2}} КБ",
+      "erasingFlash": "Стирання flash...",
+      "writingFirmware": "Запис прошивки...",
+      "verifyingFirmwareCrc": "Перевірка CRC прошивки...",
+      "firmwareCrcVerificationFailedTheWritten": "Перевірка CRC прошивки не вдалася — записані дані не збігаються. Спробуйте ще раз.",
+      "rebootingBoard": "Перезавантаження плати...",
+      "flashComplete": "Прошивання завершено!",
+      "firmwareFlashedSuccessfullyViaArdupilotBootloade": "Прошивку успішно записано через завантажувач ArduPilot"
+    },
+    "firmware_avr_flasher": {
+      "noSerialPortSpecifiedForAvr": "Не вказано послідовний порт для плати AVR. Переконайтеся, що плату підключено.",
+      "startingAvrFlash": "Початок прошивання AVR...",
+      "erasingChip": "Стирання мікросхеми...",
+      "writingFlashMemory": "Запис flash-пам'яті...",
+      "verifyingFlashMemory": "Перевірка flash-пам'яті...",
+      "flashComplete": "Прошивання завершено!",
+      "firmwareFlashedAndVerifiedSuccessfully": "Прошивку успішно записано й перевірено",
+      "failedToStartAvrdudeMakeSure": "Не вдалося запустити avrdude: {{message}}. Переконайтеся, що avrdude встановлено.",
+      "flashOperationAborted": "Прошивання перервано"
+    },
+    "firmware_dfu_flasher": {
+      "invalidApjFileMissingImageOr": "Некоректний файл APJ: відсутнє image або image_size",
+      "apjDecompressionFailed": "Не вдалося розпакувати APJ: {{message}}",
+      "anotherFlashOperationIsAlreadyIn": "Уже триває інше прошивання. Дочекайтеся його завершення.",
+      "loadingFirmwareFile": "Завантаження файлу прошивки...",
+      "flashOperationAborted": "Прошивання перервано",
+      "findingDfuDevice": "Пошук DFU-пристрою...",
+      "rebootingBoardIntoDfuMode": "Перезавантаження плати в режим DFU...",
+      "waitingForDfuDevice": "Очікування DFU-пристрою...",
+      "openingDfuDevice": "Відкриття DFU-пристрою...",
+      "flashCompleteRebooting": "Прошивання завершено, перезавантаження...",
+      "firmwareFlashedSuccessfully": "Прошивку успішно записано",
+      "flashFailed": "Помилка прошивання: {{errorMessage}}"
+    },
+    "firmware_esp32_flasher": {
+      "failedToFetchEsptoolReleaseInfo": "Не вдалося отримати інформацію про реліз esptool: {{status}}",
+      "noEsptoolBinaryFoundFor": "Не знайдено бінарника esptool для {{platform}}/{{arch}}",
+      "failedToDownloadEsptool": "Не вдалося завантажити esptool: {{status}}",
+      "unknownFirmwareTemplate": "Невідомий шаблон прошивки: {{templateId}}",
+      "templateDoesnTSupportChip": "Шаблон {{templateId}} не підтримує мікросхему {{chipKey}}",
+      "fetchingLatestRelease": "Отримання останнього релізу...",
+      "failedToFetchRelease": "Не вдалося отримати реліз: {{status}}",
+      "noMatchingAssetFoundIn": "У {{owner}}/{{repo}} {{tag_name}} не знайдено відповідного файлу",
+      "downloading": "Завантаження {{tag_name}}...",
+      "failedToDownloadFirmware": "Не вдалося завантажити прошивку: {{status}}",
+      "extractingFirmware": "Розпакування прошивки...",
+      "failedToExtractFirmware": "Не вдалося розпакувати прошивку: {{e}}",
+      "firmwareReady": "Прошивка готова",
+      "noFirmwareBinariesFound": "Бінарників прошивки не знайдено",
+      "noValidBinariesFoundInFlash": "У flash_args.txt не знайдено коректних бінарників",
+      "writing": "Запис: {{pct}}%",
+      "erasingFlash": "Стирання flash...",
+      "writeComplete": "Запис завершено",
+      "verified": "Перевірено",
+      "detected": "Виявлено: {{v1}}",
+      "connectingToBootloader": "Підключення до завантажувача...",
+      "flashComplete": "Прошивання завершено!",
+      "firmwareFlashedAndVerified": "Прошивку записано й перевірено",
+      "flashAborted": "Прошивання перервано",
+      "checkingEsptool": "Перевірка esptool...",
+      "downloadingEsptool": "Завантаження esptool...",
+      "detectingChip": "Визначення мікросхеми...",
+      "couldNotDetectEsp32ChipCheck": "Не вдалося визначити мікросхему ESP32. Перевірте USB-з'єднання й спробуйте ще раз.",
+      "downloadingFirmware": "Завантаження прошивки...",
+      "startingFlash": "Початок прошивання...",
+      "readingDeviceInfo": "Читання інформації про пристрій...",
+      "error": "Помилка: {{message}}",
+      "noSerialPortSpecified": "Не вказано послідовний порт.",
+      "firmwareFileNotFound": "Файл прошивки не знайдено: {{firmwarePath}}"
+    },
+    "firmware_firmware_downloader": {
+      "usingBundledLegacyFirmware": "Використовується вбудована стара прошивка",
+      "bundledFirmwareNotFound": "Вбудовану прошивку не знайдено: {{localPath}}",
+      "usingCachedFirmware": "Використовується кешована прошивка",
+      "downloading": "Завантаження {{version}}...",
+      "downloadFailedHttp": "Помилка завантаження: HTTP {{statusCode}}",
+      "downloading2": "Завантаження: {{v1}} / {{v2}}",
+      "downloadAborted": "Завантаження перервано"
+    },
+    "firmware_stm32_serial_flasher": {
+      "writeFailedAtAddress0xAfter": "Помилка запису за адресою 0x{{v1}} після {{maxRetries}} спроб",
+      "invalidApjFileMissingImageOr": "Некоректний файл APJ: відсутнє image або image_size",
+      "apjDecompressionFailed": "Не вдалося розпакувати APJ: {{message}}",
+      "noSerialPortSpecified": "Не вказано послідовний порт",
+      "anotherFlashOperationIsAlreadyIn": "Уже триває інше прошивання. Дочекайтеся його завершення.",
+      "loadingFirmware": "Завантаження прошивки...",
+      "rebootingIntoBootloaderMode": "Перезавантаження в режим завантажувача...",
+      "waitingForBootloaderUsb": "Очікування USB завантажувача...",
+      "tryingBootloaderAtBaud": "Спроба підключитися до завантажувача на {{baudRate}} бод...",
+      "couldNotConnectToBootloaderFor": "Не вдалося підключитися до завантажувача. Для плат з USB-serial адаптером (CP2102/FTDI):\n\n1. Від'єднайте USB\n2. Замкніть контакти BOOT на платі (пінцетом або перемичкою)\n3. Тримаючи BOOT замкненими, під'єднайте USB\n4. Натисніть «Прошити» ще раз (тримайте BOOT замкненими, доки не почнеться прошивання)\n5. Відпустіть BOOT, щойно з'явиться «Стирання flash...»\n\nКонтакти BOOT зазвичай позначено «BOOT» або «BT» біля мікроконтролера.",
+      "firmwareTooLargeTheHasKb": "Прошивка завелика! {{mcu}} має {{flashSizeKb}} КБ flash, а прошивка — {{firmwareSizeKb}} КБ.\n\nВиберіть збірку прошивки, що відповідає розміру flash вашої плати.",
+      "aborted": "Перервано",
+      "erasingFlash": "Стирання flash...",
+      "flashEraseFailed": "Не вдалося стерти flash",
+      "writingFirmware": "Запис прошивки...",
+      "writingFirmware2": "Запис прошивки... {{percent}}%",
+      "startingApplication": "Запуск програми...",
+      "flashComplete": "Прошивання завершено!",
+      "firmwareFlashedSuccessfully": "Прошивку успішно записано"
+    },
+    "fleet_repo_fleet_repo_manager": {
+      "initializeFleetVault": "Ініціалізація сховища флоту",
+      "tokenRejectedByGithub": "GitHub відхилив токен",
+      "aTokenWithWriteAccessTo": "Потрібен токен із правом запису до репозиторію",
+      "notConnectedToGithub": "Немає з'єднання з GitHub",
+      "ardudeckFleetVault": "Сховище флоту ArduDeck",
+      "githubRepoCreationFailed": "Не вдалося створити репозиторій GitHub ({{status}})",
+      "repositoryExistsButIsNotAccessible": "Репозиторій «{{name}}» існує, але недоступний",
+      "couldNotListRepositories": "Не вдалося отримати список репозиторіїв ({{status}})",
+      "thisVaultAlreadyHasSnapshotsCreate": "У цьому сховищі вже є знімки. Створіть новий репозиторій або спершу перемістіть теку сховища.",
+      "notConnectedSetUpBackupIn": "Не підключено. Спершу налаштуйте резервування у сховищі.",
+      "noRepositoryConfigured": "Репозиторій не налаштовано"
+    },
+    "gis_shapefile_to_geojson": {
+      "fileTooSmallToBeA": "Файл замалий для shapefile",
+      "notAShapefileBadFileCode": "Це не shapefile (неправильний код файлу)"
+    },
+    "index": {
+      "rejectionTrace": "трасування відхилення",
+      "yourKeysAreProtected": "Ваші ключі захищено",
+      "gotIt": "Зрозуміло"
+    },
+    "ipc_handlers": {
+      "portRequiredForSerialConnection": "Для послідовного підключення потрібен порт",
+      "hostAndPortRequiredForTcp": "Для TCP потрібні хост і порт",
+      "remoteHostAndPortRequiredFor": "Для режиму UDP-клієнта потрібні віддалений хост і порт",
+      "invalidConnectionTypeMustBeSerial": "Некоректний тип підключення: {{v1}}. Має бути 'serial', 'tcp' або 'udp'.",
+      "ipcHandlersNotRegisteredYet": "Обробники IPC ще не зареєстровано",
+      "notConnected": "Не підключено",
+      "cannotAddBackgroundTransportsWhileConnected": "Не можна додавати фонові транспорти під час підключення через MSP",
+      "cannotRemoveThePrimaryTransportUse": "Не можна видалити основний транспорт; використайте від'єднання",
+      "parseIngestFailed": "помилка розбору/прийому",
+      "cannotAddAnOrchestrationLinkWhile": "Не можна додати канал оркестрації під час підключення через MSP",
+      "noOrchestratorConnected": "Оркестратор не підключено",
+      "unknownStreamPath": "Невідомий шлях потоку {{path}}",
+      "savedKeyVerifiedAgainstFcAnd": "Збережений ключ перевірено на FC, підпис увімкнено автоматично{{v1}}",
+      "fcSendsSignedPacketsButNone": "FC надсилає підписані пакети, але жоден зі збережених ключів ({{length}}) не підійшов",
+      "failedToCreateTransportThisShould": "Не вдалося створити транспорт — такого не мало статися",
+      "thisPortIsInUseBy": "Цей порт використовується активним підключенням. Спершу від'єднайтеся.",
+      "aUdpConnectionIsAlreadyActive": "UDP-підключення вже активне. Спершу від'єднайтеся.",
+      "importWfbNgPairingKey": "Імпорт ключа сполучення wfb-ng",
+      "saveWorkspaceLayout": "Зберегти розкладку робочого простору",
+      "passphraseCannotBeEmpty": "Парольна фраза не може бути порожньою",
+      "noSigningKeyConfiguredSetA": "Ключ підпису не налаштовано. Спершу задайте парольну фразу.",
+      "signingIsOnlyAvailableForMavlink": "Підпис доступний лише для MAVLink-підключень",
+      "signingRequiresMavlinkV2ThisBoard": "Підпис потребує MAVLink v2. Ця плата використовує MAVLink v1.",
+      "noSigningKeyConfigured": "Ключ підпису не налаштовано",
+      "failedToDisableOnFc": "Не вдалося вимкнути на FC: {{msg}}",
+      "exportSecureLinkEvidencePack": "Експорт пакета доказів захищеного зв'язку",
+      "linkIsUpButTheVehicle": "Зв'язок є, але апарат ще не озивався",
+      "parameterNotFoundOnThisBoard": "Параметр «{{paramId}}» не знайдено на цій платі. Доступні параметри дивіться в списку «Параметри».",
+      "noBoardIdentity": "Немає ідентифікатора плати",
+      "unknownVehicleType": "Невідомий тип апарата: {{mavType}}",
+      "http": "HTTP {{status}}: {{statusText}}",
+      "sitlIsConnectedButArdudeckHas": "SITL підключено, але ArduDeck втратив налаштування лаунчера — перезапустіть SITL з панелі підключення.",
+      "couldNotWriteToSitlWorking": "Не вдалося записати в робочу теку SITL: {{msg}}",
+      "fcDidNotRespondToA": "FC не відповів на пробний запис протягом 1,5 с. Можливо, сервер MAVLink FTP вимкнено або на FC немає файлової системи для запису (немає SD-картки?).",
+      "parentDirectoryMissingTypicallyMeansThere": "Батьківської теки немає — зазвичай це означає, що немає SD-картки або /APM/scripts/ не створено. ArduPilot створює /APM/scripts/ під час старту, коли SCR_ENABLE=1, тож перезавантаження може допомогти.",
+      "fcRejectedTheWriteProbe": "FC відхилив пробний запис: {{err}}",
+      "sitlLauncherConfigUnavailableRestartSitl": "Налаштування лаунчера SITL недоступні — перезапустіть SITL з панелі підключення",
+      "sitlRestartFailed": "Не вдалося перезапустити SITL: {{v1}}",
+      "connectToAnFcBeforeRunning": "Підключіться до FC перед передпольотними перевірками.",
+      "saveArdudeckLuaScript": "Зберегти Lua-скрипт ArduDeck",
+      "mavlinkFtpRequiresAMavlinkConnection": "MAVLink-FTP потребує MAVLink-підключення",
+      "couldNotList": "Не вдалося отримати вміст {{path}}: {{error}}",
+      "save": "Зберегти {{fcPath}}",
+      "ftpDownloadOfFailed": "Не вдалося завантажити {{fcPath}} через FTP",
+      "uploadTo": "Вивантажити в {{targetDir}}",
+      "couldNotRead": "Не вдалося прочитати {{sourcePath}}: {{v2}}",
+      "motorTestRequiresMavlinkConnection": "Тест моторів потребує MAVLink-підключення",
+      "servoTestRequiresMavlinkConnection": "Тест серв потребує MAVLink-підключення",
+      "trainerSessionActiveTheTrainerOwns": "Активний сеанс Тренажера — стіками керує Тренажер",
+      "rcOverrideRequiresMavlinkConnection": "RC override потребує MAVLink-підключення",
+      "saveParameters": "Зберегти параметри",
+      "importSurveyArea": "Імпорт ділянки зйомки",
+      "noKmlFoundInsideTheKmz": "Усередині архіву KMZ не знайдено .kml",
+      "noPolygonOrLineGeometryFound": "У shapefile не знайдено геометрії полігона чи лінії",
+      "noShpFoundInsideTheZip": "Усередині zip-архіву не знайдено .shp",
+      "loadParameters": "Завантажити параметри",
+      "notASurveyAreaDocument": "Це не документ ділянки зйомки",
+      "notAMissionDocument": "Це не документ місії",
+      "vehicleNotReachable": "Апарат недоступний",
+      "noMissionItemsToUpload": "Немає елементів місії для вивантаження",
+      "anotherMissionUploadIsInProgress": "Уже триває інше вивантаження місії",
+      "saveMission": "Зберегти місію",
+      "noExportableWaypointsDjiKmzNeeds": "Немає точок для експорту (DJI KMZ потребує простих точок із координатами)",
+      "loadMission": "Завантажити місію",
+      "notADjiWaypointMissionNo": "Це не місія DJI: усередині .kmz немає waylines.wpml",
+      "noWaypointsFoundInTheDji": "У місії DJI не знайдено точок",
+      "noFenceItemsToUpload": "Немає елементів огорожі для вивантаження",
+      "saveFence": "Зберегти огорожу",
+      "loadFence": "Завантажити огорожу",
+      "noRallyPointsToUpload": "Немає точок збору для вивантаження",
+      "saveRallyPoints": "Зберегти точки збору",
+      "loadRallyPoints": "Завантажити точки збору",
+      "noWindow": "немає вікна",
+      "connectTheVehicleFirstConfigValues": "Спершу підключіть апарат — значення налаштувань беруться з його параметрів",
+      "sdCardIsNoLongerMounted": "SD-картку більше не змонтовано",
+      "notAMountedEdgetxSdCard": "Це не змонтована SD-картка EdgeTX",
+      "unknownPackage": "Невідомий пакет: {{packageId}}",
+      "sdCardIsNoLongerMounted2": "SD-картку більше не змонтовано або це не картка EdgeTX",
+      "serialFlashFailed": "Помилка прошивання через послідовний порт: {{errMsg}}",
+      "unsupportedFlasherType": "Непідтримуваний тип прошивальника: {{flasher}}",
+      "selectFirmwareFile": "Виберіть файл прошивки",
+      "notConnectedToFlightController": "Немає з'єднання з польотним контролером",
+      "noStm32BootloaderDetected": "Завантажувач STM32 не виявлено",
+      "noMspResponse": "Немає відповіді MSP",
+      "noCompatibleFirmwareDetected": "Сумісної прошивки не виявлено",
+      "driverFileNotFound": "Файл драйвера не знайдено: {{driverName}}",
+      "failedToDownloadCygwinDlls": "Не вдалося завантажити DLL Cygwin: {{error}}",
+      "notConnectedToMspBoard": "Немає з'єднання з MSP-платою",
+      "collectingStatus": "Збір стану...",
+      "collectingDumpAll": "Збір dump all...",
+      "collectingDiffAll": "Збір diff all...",
+      "notConnectedToMavlinkBoard": "Немає з'єднання з MAVLink-платою",
+      "collectingMavlinkDiagnostics": "Збір діагностики MAVLink...",
+      "saveBugReport": "Зберегти звіт про помилку",
+      "saveCanceled": "Збереження скасовано",
+      "collectingLogs": "Збір журналів...",
+      "encryptingReport": "Шифрування звіту...",
+      "saveLuaGraph": "Зберегти граф Lua",
+      "openLuaGraph": "Відкрити граф Lua",
+      "exportLuaScript": "Експорт Lua-скрипту",
+      "saveFlightLog": "Зберегти журнал польоту",
+      "downloadFailed": "Помилка завантаження",
+      "openFlightLog": "Відкрити журнал польоту",
+      "logParseFailed": "Помилка розбору журналу: {{message}}",
+      "fileNoLongerExists": "Файлу більше не існує: {{filePath}}",
+      "noApiKeyConfiguredForAdd": "Для {{provider}} не налаштовано API-ключ. Додайте його в налаштуваннях.",
+      "noApiKeyConfiguredForClaude": "Для claude не налаштовано API-ключ. Додайте його в налаштуваннях.",
+      "claudeApiError": "Помилка API Claude {{status}}: {{body}}",
+      "exportAreas": "Експорт ділянок",
+      "frameBlueprintBinaryNotBuilt": "Бінарник frame_blueprint не зібрано",
+      "frameBlueprintInvocationFailed": "Помилка виклику frame_blueprint: {{message}}",
+      "openaiApiError": "Помилка API OpenAI {{status}}: {{body}}",
+      "geminiApiError": "Помилка API Gemini {{status}}: {{body}}",
+      "unknownProvider": "Невідомий провайдер: {{provider}}"
+    },
+    "link_doctor_elrs_service": {
+      "noElrsModuleAnsweredOnThis": "На цьому порту не відповів жоден модуль ELRS",
+      "malformedDeviceInfoFromModule": "Пошкоджений DEVICE_INFO від модуля",
+      "thisModuleHasNoLinkMode": "Цей модуль не має налаштування Link Mode (застара прошивка?)"
+    },
+    "log_worker": {
+      "logWorkerMustBeRunAs": "log-worker має запускатися як робочий потік"
+    },
+    "logging_report_encryptor": {
+      "invalidFileFormat": "Некоректний формат файлу"
+    },
+    "mavlink_ftp_ftp_client": {
+      "unexpectedOpcode": "неочікуваний opcode {{opcode}}"
+    },
+    "media_media_binaries_downloader": {
+      "failedToExtractMediamtx": "Не вдалося розпакувати mediamtx"
+    },
+    "media_media_engine": {
+      "webrtcSourceHasNoWhepUrl": "Джерело WebRTC не має WHEP URL",
+      "sourceHasNoUrl": "Джерело не має URL",
+      "ffmpegRequiredToBridgeUdpSources": "Для UDP-джерел потрібен ffmpeg",
+      "hubRejectedTheSourcePath": "Хаб відхилив шлях джерела",
+      "cameraIsSendingWhichTheBuilt": "Камера надсилає {{v1}}, що вбудований плеєр не декодує. Натисніть «Встановити», щоб увімкнути перетворення наживо, або перемкніть кодувальник камери на H.264.",
+      "cameraIsSendingAndNoH": "Камера надсилає {{v1}}, і жоден кодувальник H.264 не спрацював ({{v2}})",
+      "noLiveStreamToSnapshot": "Немає живого потоку для знімка",
+      "ffmpegRequiredForSnapshots": "Для знімків потрібен ffmpeg",
+      "snapshotFailed": "Не вдалося зробити знімок",
+      "noLiveStreamToRecord": "Немає живого потоку для запису",
+      "ffmpegRequiredForRecording": "Для запису потрібен ffmpeg"
+    },
+    "media_vision_stream_window": {
+      "streamRendererStopped": "Рендерер потоку зупинено ({{reason}})"
+    },
+    "media_wfbng_receiver": {
+      "noWifiReceiverDongleFoundPlug": "WiFi-адаптер приймача не знайдено. Під'єднайте адаптер RTL8812AU з комплекту камери до цього комп'ютера.",
+      "thePairingKeyGsKeyHas": "Ключ сполучення (gs.key) не імпортовано. Візьміть його з камери (вона створює gs.key під час першого запуску) й імпортуйте в налаштуваннях потоку."
+    },
+    "mission_library_mission_library_handlers": {
+      "missionNotFound": "Місію не знайдено",
+      "exportMission": "Експорт місії",
+      "importMission": "Імпорт місії",
+      "notAnArdudeckMissionFile": "Це не файл місії ArduDeck",
+      "areaNotFound": "Ділянку не знайдено",
+      "exportSurveyArea": "Експорт ділянки зйомки",
+      "importSurveyArea": "Імпорт ділянки зйомки",
+      "notAnArdudeckSurveyAreaFile": "Це не файл ділянки зйомки ArduDeck"
+    },
+    "modules_hangar_client": {
+      "couldNotReachTheHangarAt": "Не вдалося зв'язатися з Hangar за адресою {{v1}}. Перевірте з'єднання й спробуйте ще раз.",
+      "emptyResponseBody": "Порожня відповідь"
+    },
+    "modules_license_validator": {
+      "invalidKeyFormat": "Некоректний формат ключа",
+      "invalidSignature": "Некоректний підпис",
+      "licenseHasExpired": "Термін дії ліцензії минув",
+      "verificationFailed": "Перевірка не вдалася: {{err}}",
+      "notAReceipt": "Це не квитанція",
+      "unsupportedReceiptVersion": "Непідтримувана версія квитанції",
+      "noSlugs": "Немає ідентифікаторів",
+      "receiptBelongsToAnotherDevice": "Квитанція належить іншому пристрою",
+      "receiptHasExpired": "Термін дії квитанції минув"
+    },
+    "modules_module_dev": {
+      "notAvailableInAPackagedBuild": "Недоступно в пакетній збірці",
+      "invalidModuleJson": "Некоректний module.json: {{error}}",
+      "noReadableModuleJsonIn": "У {{dir}} немає придатного для читання module.json: {{err}}"
+    },
+    "modules_module_extract": {
+      "unsafeZipEntryPathTraversal": "Небезпечний елемент zip (вихід за межі теки): {{name}}"
+    },
+    "modules_module_ipc": {
+      "unknownModule": "невідомий модуль: {{slug}}",
+      "moduleLacksPtyPermission": "модуль {{slug}} не має дозволу pty",
+      "notAvailableInAPackagedBuild": "Недоступно в пакетній збірці",
+      "loadUnpackedCargo": "Завантажити розпакований модуль",
+      "chooseTheFolderHoldingModuleJson": "Виберіть теку з module.json і зібраним файлом рендерера"
+    },
+    "modules_module_manager": {
+      "validatingLicenseKey": "Перевірка ліцензійного ключа...",
+      "thisLicenseKeyIsAlreadyActivated": "Цей ліцензійний ключ уже активовано",
+      "activatingWithServer": "Активація на сервері...",
+      "activationFailed": "Помилка активації: {{msg}}",
+      "enabling": "Увімкнення {{slug}} ({{moduleIndex}}/{{length}})...",
+      "downloading": "Завантаження {{slug}} ({{moduleIndex}}/{{length}})...",
+      "verifying": "Перевірка {{slug}}...",
+      "bundleHashMismatchForDownloadCorrupted": "Хеш пакета {{slug}} не збігається — завантаження пошкоджене або підроблене",
+      "bundleSignatureVerificationFailedFor": "Перевірка підпису пакета {{slug}} не вдалася",
+      "invalidManifestFor": "Некоректний маніфест {{slug}}: {{error}}",
+      "needsArdudeckOrNewerYouHave": "{{name}} потребує ArduDeck {{minVersion}} або новішого (у вас {{v3}}). Спершу оновіть ArduDeck.",
+      "failedToDownload": "Не вдалося завантажити {{slug}}: {{msg}}",
+      "activatedModuleS": "Активовано модулів: {{length}}",
+      "requestingFromTheHangar": "Запит {{slug}} у Hangar...",
+      "installFailed": "Помилка встановлення: {{msg}}",
+      "moduleIsNotInstalled": "Модуль {{slug}} не встановлено"
+    },
+    "ntrip_local_base_source": {
+      "baseStationSerialPortIsNot": "Послідовний порт базової станції не задано"
+    },
+    "ntrip_ntrip_client": {
+      "hostNotFoundEnterTheCaster": "Хост не знайдено: «{{host}}». Введіть ім'я сервера кастера, напр. caster.centipede.fr (точку монтування — в окремому полі).",
+      "connectionRefusedByCheckThePort": "{{host}}:{{port}} відхилив з'єднання. Перевірте порт (кастери NTRIP зазвичай використовують 2101).",
+      "casterHostIsNotSet": "Хост кастера не задано",
+      "authenticationRejectedByCaster": "Кастер відхилив автентифікацію",
+      "casterReturnedNoMountpoints": "Кастер не повернув точок монтування",
+      "mountpointIsNotSet": "Точку монтування не задано"
+    },
+    "ntrip_ntrip_ipc_handlers": {
+      "casterHostIsNotSet": "Хост кастера не задано",
+      "mountpointIsNotSet": "Точку монтування не задано"
+    },
+    "overlays_open_meteo_wind": {
+      "openMeteoHttpForPts": "Open-Meteo HTTP {{status}} для {{length}} точок: {{v3}}",
+      "openMeteoNoFramesLocsFirsthourlykeys": "Open-Meteo: немає кадрів (locs={{length}}, firstHourlyKeys={{v2}})"
+    },
+    "script_installer_bundle": {
+      "orbit": "Орбіта",
+      "orbitsATargetLatLonAt": "Облітає ціль (шир./довг.) із заданими радіусом і висотою в режимі GUIDED. Прив'язано до живої телеметрії, тож обриви зв'язку не збивають орбіту. Необов'язкова кількість обертів: 0 = безкінечно, N = зупинитися й зависнути після N повних кіл.",
+      "spiral": "Спіраль",
+      "orbitsATargetLatLonWhile": "Облітає ціль, безперервно набираючи чи знижуючи висоту до цільової із заданою швидкістю. Досягнувши цільової висоти, тримає орбіту безкінечно. Корисно для обходу перешкод перед RTL або контрольованого зниження в зону посадки.",
+      "watchtower": "Спостережна вежа",
+      "hoversAtAClickedPointAnd": "Зависає у вибраній точці й повільно обертається по рисканню для панорамного огляду. Корисно для перевірок «що навколо?» або швидкої зйомки 360°.",
+      "climbRtl": "Набір висоти + RTL",
+      "climbsTheVehicleInPlaceTo": "Піднімає апарат на місці до безпечної висоти, перш ніж FC перемкнеться на RTL для самого повернення. Розв'язує проблему «RTL у дерево», коли поточна висота нижча за RTL_ALT або шлях додому перекрито.",
+      "reveal": "Відкриття",
+      "cinematicPullBackVehicleRetreatsFrom": "Кінематографічний відліт: апарат відходить від поточної позиції в напрямку від цілі, набираючи висоту, рискання весь час зафіксоване на вибраній цілі. Кадр «розкриття замку».",
+      "strafe": "Проліт убік",
+      "cinematicDollyPassVehicleFliesAlong": "Кінематографічний проліт: апарат летить уздовж осі, перпендикулярної до напрямку ціль–апарат, із заданим зміщенням, рискання зафіксоване на вибраній цілі. Вибирає бік цілі, на якому апарат уже є, щоб захід був коротким.",
+      "landAtPoint": "Посадка в точці",
+      "fliesToTheClickedLatLon": "Летить у вибрану точку на поточній висоті, потім перемикається в режим LAND. Розв'язує проблему «ArduCopter NAV_LAND ігнорує координати й просто знижується на місці», спершу переміщуючись."
+    },
+    "script_installer_installer_service": {
+      "noInstallInProgress": "Встановлення не виконується"
+    },
+    "script_installer_preflight": {
+      "mavlinkFtpAvailable": "MAVLink FTP доступний",
+      "scriptSlots": "Слоти скриптів",
+      "vehicleDisarmed": "Апарат дизармовано"
+    },
+    "sim_sim_engine_process": {
+      "noPreviousSimEngineOptionsTo": "немає попередніх параметрів рушія симуляції для перезапуску",
+      "ardudeckPhysicsEngineBinaryNotFound": "Бінарник фізичного рушія ArduDeck не знайдено. Перезберіть або запустіть scripts/fetch-sim-engine.mjs.",
+      "simEngineDidNotBecomeReady": "рушій симуляції не став готовим: {{lastErr}}"
+    },
+    "simulators_ardupilot_flightgear": {
+      "flightgearIsAlreadyRunning": "FlightGear уже запущено",
+      "flightgearNotFoundInstallItFrom": "FlightGear не знайдено. Встановіть його з flightgear.org або вкажіть власний шлях."
+    },
+    "simulators_flightgear_launcher": {
+      "flightgearIsAlreadyRunning": "FlightGear уже запущено",
+      "flightgearNotFoundPleaseInstallFlightgear": "FlightGear не знайдено. Встановіть FlightGear або вкажіть власний шлях."
+    },
+    "simulators_protocol_bridge": {
+      "bridgeIsAlreadyRunning": "Міст уже запущено"
+    },
+    "simulators_xplane_launcher": {
+      "xPlaneIsAlreadyRunning": "X-Plane уже запущено",
+      "xPlaneNotFoundPleaseInstall": "X-Plane не знайдено. Встановіть X-Plane або вкажіть власний шлях."
+    },
+    "sitl_ardupilot_sitl_downloader": {
+      "http": "HTTP {{status}}: {{statusText}} — {{url}}",
+      "noResponseBody": "Порожня відповідь",
+      "http2": "{{dll}}: HTTP {{status}} {{statusText}} — {{url}}"
+    },
+    "sitl_ardupilot_sitl_process": {
+      "sitlIsNotRunning": "SITL не запущено",
+      "unsupportedPlatform": "Непідтримувана платформа: {{platform}}",
+      "sitlBinaryNotFoundAtPlease": "Бінарник SITL не знайдено в {{binaryPath}}. Спершу завантажте його.",
+      "simEngineFailedToStart": "рушій симуляції не запустився: {{error}}",
+      "noActiveSitlConfigToRestart": "Немає активної конфігурації SITL для перезапуску"
+    },
+    "sitl_custom_frame_storage": {
+      "importSitlFrameJson": "Імпорт JSON рами SITL",
+      "invalidFrame": "Некоректна рама: {{v1}}",
+      "failedToReadFile": "Не вдалося прочитати файл: {{message}}",
+      "frameNotFound": "Раму не знайдено",
+      "exportSitlFrameJson": "Експорт JSON рами SITL",
+      "failedToWriteFile": "Не вдалося записати файл: {{message}}"
+    },
+    "sitl_frame_config": {
+      "vehicleinfoNoTopLevelDictFound": "vehicleinfo: не знайдено словника верхнього рівня",
+      "quadDefault": "Квадро (типово)",
+      "quadPlus": "Квадро плюс",
+      "hexacopter": "Гексакоптер",
+      "octocopter": "Октокоптер",
+      "tricopter": "Трикоптер",
+      "planeDefault": "Літак (типово)",
+      "planeTailsitter": "Літак-тейлситтер",
+      "fireflyY6Vtol": "Firefly (Y6 VTOL)",
+      "roverDefault": "Ровер (типово)",
+      "skidSteerRover": "Ровер із бортовим поворотом",
+      "motorBoat": "Моторний човен",
+      "sailboat": "Вітрильник",
+      "vectoredDefault": "Векторний (типово)",
+      "vectored6dof": "Векторний 6DOF"
+    },
+    "sitl_px4_sitl_downloader": {
+      "refusingToExtractEntryOutsideTarget": "Відмовлено розпакувати елемент поза цільовою текою: {{fullName}}",
+      "http": "HTTP {{status}}: {{statusText}} — {{url}}",
+      "noResponseBody": "Порожня відповідь",
+      "downloadedBundleIsMissingBinPx4": "У завантаженому пакеті немає bin/px4"
+    },
+    "sitl_px4_sitl_process": {
+      "px4SitlIsAlreadyStarting": "PX4 SITL уже запускається",
+      "px4SitlNotDownloadedForThe": "PX4 SITL не завантажено для гілки {{releaseTrack}}",
+      "noActivePx4SitlConfigTo": "Немає активної конфігурації PX4 SITL для перезапуску"
+    },
+    "sitl_sitl_process": {
+      "unsupportedPlatform": "Непідтримувана платформа: {{platform}}"
+    },
+    "sitl_swarm_sitl_process": {
+      "sitlBinaryNotFoundAtDownload": "Бінарник SITL не знайдено в {{binaryPath}}. Спершу завантажте його на вкладці SITL."
+    },
+    "trainer_trainer_ipc_handlers": {
+      "aRegionIsAlreadyBeingBuilt": "Регіон уже будується.",
+      "theTrainerIsNotInstalledLooked": "Тренажер не встановлено. Шукали в: {{v1}}",
+      "theTrainerIsNotInstalled": "Тренажер не встановлено."
+    },
+    "trainer_trainer_process": {
+      "theTrainerSentSomethingThatIs": "Тренажер надіслав щось, що не є каталогом.",
+      "thisTrainerAnswersInAFormat": "Цей Тренажер відповідає у форматі, якого ArduDeck не розуміє (немає {{v1}}). Оновіть Тренажер або ArduDeck.",
+      "theTrainerDidNotAnswerIn": "Тренажер не відповів вчасно.",
+      "theTrainerExitedWithoutAnswering": "Тренажер завершився ({{code}}) без відповіді.",
+      "couldNotWriteTheTrainerRequest": "Не вдалося записати запит до Тренажера: {{message}}",
+      "couldNotStartTheTrainer": "Не вдалося запустити Тренажер: {{message}}",
+      "theTrainerDidNotReportBack": "Тренажер не відзвітував вчасно.",
+      "theTrainerAnsweredInAFormat": "Тренажер відповів у форматі, який ця збірка не може прочитати."
+    },
+    "trainer_trainer_request": {
+      "noTakeOffPointYetStart": "Точки зльоту ще немає. Запустіть польотний контролер і дочекайтеся GPS-фіксу.",
+      "theFlightControllerHasNoGps": "Польотний контролер ще не має GPS-фіксу."
+    }
+  }
+}

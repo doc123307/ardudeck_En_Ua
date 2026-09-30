@@ -12,6 +12,7 @@ import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import type { DetectedBoard, FlashProgress, FlashResult, FlashOptions } from '../../shared/firmware-types.js';
 import { rebootToBootloaderCli } from './msp-detector.js';
 import { acquireFlashLock, releaseFlashLock } from './flash-guard.js';
+import { mt } from '../i18n';
 
 // Inline firmware image type to avoid import issues
 interface FirmwareImage {
@@ -487,7 +488,7 @@ class STM32SerialBootloader {
         }
 
         if (!success) {
-          throw new Error(`Write failed at address 0x${address.toString(16)} after ${maxRetries} retries`);
+          throw new Error(mt('main.firmware_stm32_serial_flasher.writeFailedAtAddress0xAfter', { v1: address.toString(16), maxRetries }));
         }
 
         offset += chunkSize;
@@ -583,13 +584,13 @@ function parseHexFile(content: string): FirmwareImage {
 async function parseApjFile(buffer: Buffer): Promise<FirmwareImage> {
   const json = JSON.parse(buffer.toString('utf-8')) as { image?: string; image_size?: number };
   if (!json.image || !json.image_size) {
-    throw new Error('Invalid APJ file: missing image or image_size');
+    throw new Error(mt('main.firmware_stm32_serial_flasher.invalidApjFileMissingImageOr'));
   }
 
   const compressed = Buffer.from(json.image, 'base64');
   const decompressed = await new Promise<Buffer>((resolve, reject) => {
     zlib.inflate(compressed, (err, result) => {
-      if (err) reject(new Error(`APJ decompression failed: ${err.message}`));
+      if (err) reject(new Error(mt('main.firmware_stm32_serial_flasher.apjDecompressionFailed', { message: err.message })));
       else resolve(result);
     });
   });
@@ -643,7 +644,7 @@ export async function flashWithSerialBootloader(
   if (!flashPort) {
     return {
       success: false,
-      error: 'No serial port specified',
+      error: mt('main.firmware_stm32_serial_flasher.noSerialPortSpecified'),
       duration: Date.now() - startTime,
     };
   }
@@ -652,7 +653,7 @@ export async function flashWithSerialBootloader(
   if (!acquireFlashLock('serial')) {
     return {
       success: false,
-      error: 'Another flash operation is already in progress. Please wait for it to complete.',
+      error: mt('main.firmware_stm32_serial_flasher.anotherFlashOperationIsAlreadyIn'),
       duration: Date.now() - startTime,
     };
   }
@@ -664,7 +665,7 @@ export async function flashWithSerialBootloader(
     sendProgress(window, {
       state: 'preparing',
       progress: 0,
-      message: 'Loading firmware...',
+      message: mt('main.firmware_stm32_serial_flasher.loadingFirmware'),
     });
 
     const firmware = await loadFirmware(firmwarePath);
@@ -676,7 +677,7 @@ export async function flashWithSerialBootloader(
       sendProgress(window, {
         state: 'entering-bootloader',
         progress: 5,
-        message: 'Rebooting into bootloader mode...',
+        message: mt('main.firmware_stm32_serial_flasher.rebootingIntoBootloaderMode'),
       });
 
       // Use CLI 'dfu' command to enter bootloader — works for both iNav and Betaflight.
@@ -705,7 +706,7 @@ export async function flashWithSerialBootloader(
           sendProgress(window, {
             state: 'entering-bootloader',
             progress: 7,
-            message: 'Waiting for bootloader USB...',
+            message: mt('main.firmware_stm32_serial_flasher.waitingForBootloaderUsb'),
           });
 
           // Wait for port to disappear and reappear (up to 8 seconds)
@@ -760,7 +761,7 @@ export async function flashWithSerialBootloader(
       sendProgress(window, {
         state: 'preparing',
         progress: 10,
-        message: `Trying bootloader at ${baudRate} baud...`,
+        message: mt('main.firmware_stm32_serial_flasher.tryingBootloaderAtBaud', { baudRate }),
       });
       sendLog(window, 'info', `Trying bootloader connection at ${baudRate} baud...`);
 
@@ -821,15 +822,7 @@ export async function flashWithSerialBootloader(
       sendLog(window, 'error', `Bootloader sync failed on ${flashPort} after trying baud rates: ${baudRates.join(', ')}`);
       return {
         success: false,
-        error: `Could not connect to bootloader. For boards with USB-serial adapter (CP2102/FTDI):
-
-1. Disconnect USB
-2. Short the BOOT pads on the board (use tweezers or a jumper wire)
-3. While holding BOOT pads shorted, connect USB
-4. Click Flash again (keep boot pads shorted until flashing starts)
-5. Release boot pads once "Erasing flash..." appears
-
-The BOOT pads are usually labeled "BOOT" or "BT" near the MCU.`,
+        error: mt('main.firmware_stm32_serial_flasher.couldNotConnectToBootloaderFor'),
         duration: Date.now() - startTime,
       };
     }
@@ -856,7 +849,7 @@ The BOOT pads are usually labeled "BOOT" or "BT" near the MCU.`,
             await bootloader.close();
             return {
               success: false,
-              error: `Firmware too large! The ${chipInfo.mcu} has ${flashSizeKb}KB flash, but the firmware is ${firmwareSizeKb}KB.\n\nPlease select a firmware build that matches your board's flash size.`,
+              error: mt('main.firmware_stm32_serial_flasher.firmwareTooLargeTheHasKb', { mcu: chipInfo.mcu, flashSizeKb, firmwareSizeKb }),
               duration: Date.now() - startTime,
             };
           }
@@ -866,14 +859,14 @@ The BOOT pads are usually labeled "BOOT" or "BT" near the MCU.`,
 
     if (abortController?.signal.aborted) {
       sendLog(window, 'warn', 'Flash aborted by user');
-      return { success: false, error: 'Aborted', duration: Date.now() - startTime };
+      return { success: false, error: mt('main.firmware_stm32_serial_flasher.aborted'), duration: Date.now() - startTime };
     }
 
     // Erase flash
     sendProgress(window, {
       state: 'erasing',
       progress: 10,
-      message: 'Erasing flash...',
+      message: mt('main.firmware_stm32_serial_flasher.erasingFlash'),
     });
 
     const erased = await bootloader.eraseFlash();
@@ -881,7 +874,7 @@ The BOOT pads are usually labeled "BOOT" or "BT" near the MCU.`,
       sendLog(window, 'error', 'Flash erase command failed — bootloader did not ACK');
       return {
         success: false,
-        error: 'Flash erase failed',
+        error: mt('main.firmware_stm32_serial_flasher.flashEraseFailed'),
         duration: Date.now() - startTime,
       };
     }
@@ -889,21 +882,21 @@ The BOOT pads are usually labeled "BOOT" or "BT" near the MCU.`,
 
     if (abortController?.signal.aborted) {
       sendLog(window, 'warn', 'Flash aborted by user after erase');
-      return { success: false, error: 'Aborted', duration: Date.now() - startTime };
+      return { success: false, error: mt('main.firmware_stm32_serial_flasher.aborted'), duration: Date.now() - startTime };
     }
 
     // Write firmware
     sendProgress(window, {
       state: 'flashing',
       progress: 20,
-      message: 'Writing firmware...',
+      message: mt('main.firmware_stm32_serial_flasher.writingFirmware'),
     });
 
     await bootloader.flash(firmware, (percent) => {
       sendProgress(window, {
         state: 'flashing',
         progress: 20 + Math.round(percent * 0.7),
-        message: `Writing firmware... ${percent}%`,
+        message: mt('main.firmware_stm32_serial_flasher.writingFirmware2', { percent }),
       });
     });
     sendLog(window, 'info', 'Firmware written');
@@ -912,7 +905,7 @@ The BOOT pads are usually labeled "BOOT" or "BT" near the MCU.`,
     sendProgress(window, {
       state: 'rebooting',
       progress: 95,
-      message: 'Starting application...',
+      message: mt('main.firmware_stm32_serial_flasher.startingApplication'),
     });
 
     await bootloader.go();
@@ -921,7 +914,7 @@ The BOOT pads are usually labeled "BOOT" or "BT" near the MCU.`,
     sendProgress(window, {
       state: 'complete',
       progress: 100,
-      message: 'Flash complete!',
+      message: mt('main.firmware_stm32_serial_flasher.flashComplete'),
     });
 
     const duration = Date.now() - startTime;
@@ -929,7 +922,7 @@ The BOOT pads are usually labeled "BOOT" or "BT" near the MCU.`,
 
     return {
       success: true,
-      message: 'Firmware flashed successfully',
+      message: mt('main.firmware_stm32_serial_flasher.firmwareFlashedSuccessfully'),
       duration,
       verified: false, // Serial bootloader doesn't easily support verify
     };

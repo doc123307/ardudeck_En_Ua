@@ -14,6 +14,7 @@ import { mkdir, readFile, writeFile, readdir, rm, rmdir, stat } from 'fs/promise
 import path from 'path';
 import { EdgeTxPackage, resolveMappings } from './package-registry.js';
 import type { InstalledPackageRecord, InstallProgress } from '../../shared/edgetx-types.js';
+import { mt } from '../i18n';
 
 const MANIFEST_DIR = '.ardudeck';
 const MANIFEST_NAME = 'edgetx-packages.json';
@@ -87,7 +88,7 @@ async function downloadZip(pkgId: string, release: ReleaseInfo, onProgress: Prog
   onProgress({ phase: 'download', percent: -1, detail: release.tag });
   const res = await fetch(release.zipUrl, { headers: GITHUB_HEADERS, redirect: 'follow' });
   if (!res.ok) {
-    throw new Error(`Download failed: HTTP ${res.status} for ${release.zipUrl}`);
+    throw new Error(mt('main.edgetx_package_installer.downloadFailedHttpFor', { status: res.status, zipUrl: release.zipUrl }));
   }
   const data = Buffer.from(await res.arrayBuffer());
   // Write via temp name so an interrupted download never poisons the cache.
@@ -166,7 +167,7 @@ export async function installPackage(
 ): Promise<InstalledPackageRecord> {
   const mappings = resolveMappings(pkg, variantId);
   if (mappings.length === 0) {
-    throw new Error(`${pkg.name} has no files for radio variant ${variantId}`);
+    throw new Error(mt('main.edgetx_package_installer.hasNoFilesForRadioVariant', { name: pkg.name, variantId }));
   }
 
   onProgress({ phase: 'resolve', percent: -1 });
@@ -213,7 +214,7 @@ export async function installPackage(
       try {
         await stat(src);
       } catch {
-        throw new Error(`Archive layout changed: ${m.archivePath} not found in ${versionTag}`);
+        throw new Error(mt('main.edgetx_package_installer.archiveLayoutChangedNotFoundIn', { archivePath: m.archivePath, versionTag }));
       }
       sources.push({ src });
       total += await countFiles(src);

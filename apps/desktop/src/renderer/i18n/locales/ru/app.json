@@ -45,7 +45,8 @@
       "stayInCli": "Остаться в CLI",
       "leaveAndReboot": "Выйти и перезагрузить",
       "fixedWing": "Самолёт",
-      "defaultAltitudeReferenceResetToHome": "Отсчёт высоты по умолчанию сброшен на «Дом» (аппарат отклонил отсчёт от рельефа)."
+      "defaultAltitudeReferenceResetToHome": "Отсчёт высоты по умолчанию сброшен на «Дом» (аппарат отклонил отсчёт от рельефа).",
+      "badgeNew": "Новое"
     }
   }
 }

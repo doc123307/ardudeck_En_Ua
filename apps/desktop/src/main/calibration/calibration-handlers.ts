@@ -30,6 +30,7 @@ import {
   stopCompassMot,
   type MavlinkCalibrationDeps,
 } from './mavlink-calibration.js';
+import { mt } from '../i18n';
 
 // =============================================================================
 // State
@@ -50,7 +51,7 @@ function sendLog(level: 'info' | 'warn' | 'error', message: string, details?: st
       id: Date.now(),
       timestamp: Date.now(),
       level,
-      message: `[Calibration] ${message}`,
+      message: mt('main.calibration_calibration_handlers.calibration', { message }),
       details,
     });
   }
@@ -116,7 +117,7 @@ async function startCalibration(options: CalibrationStartOptions): Promise<Calib
   const { type, protocol, firmware } = options;
 
   if (currentCalibration || isMavlinkCalibrationActive()) {
-    return { success: false, error: 'Another calibration is already in progress' };
+    return { success: false, error: mt('main.calibration_calibration_handlers.anotherCalibrationIsAlreadyInProgress') };
   }
 
   activeProtocol = protocol ?? null;
@@ -142,7 +143,7 @@ async function startCalibration(options: CalibrationStartOptions): Promise<Calib
         sendProgress({
           type: 'accel-6point',
           progress: 0,
-          statusText: 'Place vehicle level (top up)',
+          statusText: mt('main.calibration_calibration_handlers.placeVehicleLevelTopUp'),
           currentPosition: 0,
           positionStatus: [false, false, false, false, false, false],
         });
@@ -158,7 +159,7 @@ async function startCalibration(options: CalibrationStartOptions): Promise<Calib
         return await calibrateOpflow();
 
       default:
-        return { success: false, error: `Unknown calibration type: ${type}` };
+        return { success: false, error: mt('main.calibration_calibration_handlers.unknownCalibrationType', { type }) };
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -177,14 +178,14 @@ async function calibrateAccelLevelMsp(): Promise<CalibrationResult> {
   sendProgress({
     type: 'accel-level',
     progress: 10,
-    statusText: 'Sending calibration command...',
+    statusText: mt('main.calibration_calibration_handlers.sendingCalibrationCommand'),
   });
 
   try {
     sendProgress({
       type: 'accel-level',
       progress: 30,
-      statusText: 'Calibrating accelerometer...',
+      statusText: mt('main.calibration_calibration_handlers.calibratingAccelerometer'),
     });
 
     const { calibrateAccFromHandler } = await import('../msp/msp-commands.js');
@@ -212,9 +213,9 @@ async function calibrateAccelLevelMsp(): Promise<CalibrationResult> {
       sendComplete({
         type: 'accel-level',
         success: false,
-        error: 'Calibration failed - ensure vehicle is level and still',
+        error: mt('main.calibration_calibration_handlers.calibrationFailedEnsureVehicleIsLevel'),
       });
-      return { success: false, error: 'Calibration failed - ensure vehicle is level and still' };
+      return { success: false, error: mt('main.calibration_calibration_handlers.calibrationFailedEnsureVehicleIsLevel') };
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -233,7 +234,7 @@ async function calibrateCompassMsp(): Promise<CalibrationResult> {
   sendProgress({
     type: 'compass',
     progress: 0,
-    statusText: 'Starting compass calibration...',
+    statusText: mt('main.calibration_calibration_handlers.startingCompassCalibration'),
     countdown: duration,
   });
 
@@ -245,9 +246,9 @@ async function calibrateCompassMsp(): Promise<CalibrationResult> {
       sendComplete({
         type: 'compass',
         success: false,
-        error: 'Failed to start compass calibration',
+        error: mt('main.calibration_calibration_handlers.failedToStartCompassCalibration'),
       });
-      return { success: false, error: 'Failed to start compass calibration' };
+      return { success: false, error: mt('main.calibration_calibration_handlers.failedToStartCompassCalibration') };
     }
 
     let remaining = duration;
@@ -258,7 +259,7 @@ async function calibrateCompassMsp(): Promise<CalibrationResult> {
       sendProgress({
         type: 'compass',
         progress,
-        statusText: 'Rotate vehicle in all directions...',
+        statusText: mt('main.calibration_calibration_handlers.rotateVehicleInAllDirections'),
         countdown: remaining,
       });
 
@@ -295,7 +296,7 @@ async function calibrateGyroMsp(): Promise<CalibrationResult> {
   sendProgress({
     type: 'gyro',
     progress: 0,
-    statusText: 'Calibrating gyroscope...',
+    statusText: mt('main.calibration_calibration_handlers.calibratingGyroscope'),
   });
 
   try {
@@ -334,7 +335,7 @@ async function calibrateOpflow(): Promise<CalibrationResult> {
   sendProgress({
     type: 'opflow',
     progress: 0,
-    statusText: 'Hold steady over textured surface...',
+    statusText: mt('main.calibration_calibration_handlers.holdSteadyOverTexturedSurface'),
     countdown: duration,
   });
 
@@ -347,7 +348,7 @@ async function calibrateOpflow(): Promise<CalibrationResult> {
       sendProgress({
         type: 'opflow',
         progress,
-        statusText: 'Hold steady over textured surface...',
+        statusText: mt('main.calibration_calibration_handlers.holdSteadyOverTexturedSurface'),
         countdown: remaining,
       });
 
@@ -386,7 +387,7 @@ async function calibrateOpflow(): Promise<CalibrationResult> {
 
 async function confirmPositionMsp(position: number): Promise<{ success: boolean; error?: string }> {
   if (currentCalibration !== 'accel-6point') {
-    return { success: false, error: '6-point calibration not in progress' };
+    return { success: false, error: mt('main.calibration_calibration_handlers.n6PointCalibrationNotInProgress') };
   }
 
   sendLog('info', `Confirming position ${position} — sending MSP_ACC_CALIBRATION`);
@@ -397,7 +398,7 @@ async function confirmPositionMsp(position: number): Promise<{ success: boolean;
 
     if (!accResult) {
       sendLog('error', `Position ${position}: MSP_ACC_CALIBRATION failed`);
-      return { success: false, error: 'ACC calibration command failed — ensure FC is connected' };
+      return { success: false, error: mt('main.calibration_calibration_handlers.accCalibrationCommandFailedEnsureFc') };
     }
 
     await new Promise((resolve) => setTimeout(resolve, 2500));
@@ -431,7 +432,7 @@ async function confirmPositionMsp(position: number): Promise<{ success: boolean;
       sendProgress({
         type: 'accel-6point',
         progress: ((position + 1) / 6) * 100,
-        statusText: `Place vehicle ${positionNames[position + 1]}`,
+        statusText: mt('main.calibration_calibration_handlers.placeVehicle', { v1: positionNames[position + 1] }),
         currentPosition: (position + 1) as 0 | 1 | 2 | 3 | 4 | 5,
         positionStatus,
       });

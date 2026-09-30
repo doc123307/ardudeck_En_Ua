@@ -8,6 +8,7 @@ import type {
   TrainerBakeProgress,
   TrainerCatalogue,
 } from '../../shared/trainer-types';
+import { mt } from '../i18n';
 
 export type TrainerCatalogueResult =
   | { ok: true; catalogue: TrainerCatalogue }
@@ -23,7 +24,7 @@ export type TrainerCatalogueResult =
  */
 export function parseCatalogue(raw: unknown): TrainerCatalogueResult {
   if (typeof raw !== 'object' || raw === null) {
-    return { ok: false, error: 'The Trainer sent something that is not a catalogue.' };
+    return { ok: false, error: mt('main.trainer_trainer_process.theTrainerSentSomethingThatIs') };
   }
   const c = raw as Record<string, unknown>;
   const missing = (['regions', 'cameras', 'weather', 'times'] as const).filter(
@@ -32,7 +33,7 @@ export function parseCatalogue(raw: unknown): TrainerCatalogueResult {
   if (missing.length > 0) {
     return {
       ok: false,
-      error: `This Trainer answers in a format ArduDeck does not understand (no ${missing.join(', ')}). Update the Trainer, or ArduDeck.`,
+      error: mt('main.trainer_trainer_process.thisTrainerAnswersInAFormat', { v1: missing.join(', ') }),
     };
   }
   return { ok: true, catalogue: raw as TrainerCatalogue };
@@ -172,7 +173,7 @@ export async function queryTrainer(target: TrainerTarget): Promise<TrainerCatalo
       resolve(r);
     };
     const timer = setTimeout(
-      () => done({ ok: false, error: 'The Trainer did not answer in time.' }),
+      () => done({ ok: false, error: mt('main.trainer_trainer_process.theTrainerDidNotAnswerIn') }),
       QUERY_TIMEOUT_MS,
     );
 
@@ -205,7 +206,7 @@ export async function queryTrainer(target: TrainerTarget): Promise<TrainerCatalo
     });
     child.on('error', (err) => done({ ok: false, error: err.message }));
     child.on('exit', (code) =>
-      done({ ok: false, error: `The Trainer exited (${code}) without answering.` }),
+      done({ ok: false, error: mt('main.trainer_trainer_process.theTrainerExitedWithoutAnswering', { code }) }),
     );
   });
 }
@@ -370,7 +371,7 @@ export async function launchTrainer(
     await mkdir(dir, { recursive: true });
     await writeFile(requestPath, JSON.stringify(request, null, 2), 'utf8');
   } catch (err) {
-    return { ok: false, error: `Could not write the Trainer request: ${(err as Error).message}` };
+    return { ok: false, error: mt('main.trainer_trainer_process.couldNotWriteTheTrainerRequest', { message: (err as Error).message }) };
   }
 
   const { command, args } = trainerCommand(deps.target, requestPath);
@@ -378,7 +379,7 @@ export async function launchTrainer(
   try {
     child = spawn(command, args, { detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
   } catch (err) {
-    return { ok: false, error: `Could not start the Trainer: ${(err as Error).message}` };
+    return { ok: false, error: mt('main.trainer_trainer_process.couldNotStartTheTrainer', { message: (err as Error).message }) };
   }
   child.unref();
 
@@ -394,7 +395,7 @@ export async function launchTrainer(
     };
 
     const timer = setTimeout(
-      () => done({ ok: false, error: 'The Trainer did not report back in time.' }),
+      () => done({ ok: false, error: mt('main.trainer_trainer_process.theTrainerDidNotReportBack') }),
       RESULT_TIMEOUT_MS,
     );
 
@@ -419,7 +420,7 @@ export async function launchTrainer(
           } catch {
             // A marker we cannot parse is a Trainer newer than this build. Not fatal: it has
             // already started or failed on its own, and guessing which would be worse.
-            done({ ok: false, error: 'The Trainer answered in a format this build cannot read.' });
+            done({ ok: false, error: mt('main.trainer_trainer_process.theTrainerAnsweredInAFormat') });
           }
         }
       });

@@ -32,6 +32,7 @@ import {
   type VehicleEntry,
   type VehicleKey,
 } from './types.js';
+import { mt } from '../i18n';
 
 /**
  * Patch shape for `updateVehicle`. Only the fields the message-routing layer is
@@ -250,13 +251,13 @@ export class ConnectionRegistry {
     }
     const entry = this.transports.get(transportId);
     if (!entry) {
-      throw new Error(`ConnectionRegistry.setActive: unknown transportId ${transportId}`);
+      throw new Error(mt('main.connection_connection_registry.connectionregistrySetactiveUnknownTransportid', { transportId }));
     }
     if (vehicleKey != null) {
       const vehicle = entry.vehicles.get(vehicleKey);
       if (!vehicle) {
         throw new Error(
-          `ConnectionRegistry.setActive: vehicleKey ${vehicleKey} does not belong to transport ${transportId}`,
+          mt('main.connection_connection_registry.connectionregistrySetactiveVehiclekeyDoesNotBelo', { vehicleKey, transportId }),
         );
       }
     }

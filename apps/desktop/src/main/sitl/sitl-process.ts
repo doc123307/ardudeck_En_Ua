@@ -7,6 +7,7 @@ import { spawn, ChildProcess } from 'node:child_process';
 import { app, BrowserWindow } from 'electron';
 import { access, chmod } from 'node:fs/promises';
 import path from 'node:path';
+import { mt } from '../i18n';
 
 export interface SitlConfig {
   /** Profile name (e.g., "Airplane", "Quadcopter") */
@@ -75,7 +76,7 @@ class SitlProcessManager {
       return path.join(basePath, 'macos', 'inav_SITL');
     }
 
-    throw new Error(`Unsupported platform: ${platform}`);
+    throw new Error(mt('main.sitl_sitl_process.unsupportedPlatform', { platform }));
   }
 
   /**

@@ -25,6 +25,7 @@ import {
   serializeFtpPayload,
   parseFtpPayload,
 } from './ftp-types.js';
+import { mt } from '../i18n';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -402,7 +403,7 @@ export class MavlinkFtpClient {
       }
 
       if (resp.opcode !== FtpOpcode.Ack) {
-        return { error: `unexpected opcode ${resp.opcode}` };
+        return { error: mt('main.mavlink_ftp_ftp_client.unexpectedOpcode', { opcode: resp.opcode }) };
       }
 
       // Parse the packed entries. The Ack payload uses `size` as the number
@@ -494,7 +495,7 @@ export class MavlinkFtpClient {
       const errCode = result.data[0];
       return { ok: false, error: FTP_ERROR_NAMES[errCode ?? 0] ?? `code=${errCode}` };
     }
-    return { ok: false, error: `unexpected opcode ${result.opcode}` };
+    return { ok: false, error: mt('main.mavlink_ftp_ftp_client.unexpectedOpcode', { opcode: result.opcode }) };
   }
 
   /** Like sendRequest but with a per-call timeout override (for the probe). */
@@ -661,7 +662,7 @@ export class MavlinkFtpClient {
       if (errCode === FtpError.FileNotFound) return { ok: true };
       return { ok: false, error: FTP_ERROR_NAMES[errCode ?? 0] ?? `code=${errCode}` };
     }
-    return { ok: false, error: `unexpected opcode ${resp.opcode}` };
+    return { ok: false, error: mt('main.mavlink_ftp_ftp_client.unexpectedOpcode', { opcode: resp.opcode }) };
   }
 
   /**
@@ -688,7 +689,7 @@ export class MavlinkFtpClient {
       if (errCode === FtpError.FileNotFound) return { ok: true };
       return { ok: false, error: FTP_ERROR_NAMES[errCode ?? 0] ?? `code=${errCode}` };
     }
-    return { ok: false, error: `unexpected opcode ${resp.opcode}` };
+    return { ok: false, error: mt('main.mavlink_ftp_ftp_client.unexpectedOpcode', { opcode: resp.opcode }) };
   }
 
   /**
@@ -719,7 +720,7 @@ export class MavlinkFtpClient {
       const errCode = resp.data[0];
       return { ok: false, error: FTP_ERROR_NAMES[errCode ?? 0] ?? `code=${errCode}` };
     }
-    return { ok: false, error: `unexpected opcode ${resp.opcode}` };
+    return { ok: false, error: mt('main.mavlink_ftp_ftp_client.unexpectedOpcode', { opcode: resp.opcode }) };
   }
 
   /**
@@ -779,7 +780,7 @@ export class MavlinkFtpClient {
       const errCode = resp.data[0];
       return { ok: false, error: FTP_ERROR_NAMES[errCode ?? 0] ?? `code=${errCode}` };
     }
-    return { ok: false, error: `unexpected opcode ${resp.opcode}` };
+    return { ok: false, error: mt('main.mavlink_ftp_ftp_client.unexpectedOpcode', { opcode: resp.opcode }) };
   }
 
   private async createFile(path: string): Promise<{ ok: boolean; error?: string }> {

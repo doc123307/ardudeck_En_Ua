@@ -22,6 +22,7 @@ import { app } from 'electron';
 import { mkdir, readFile, writeFile, stat, readdir, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import type { ArduPilotVehicleType } from '../../shared/ipc-channels.js';
+import { mt } from '../i18n';
 
 // Upstream moved the vehicle/frame catalog from a Python dict literal in
 // `pysim/vehicleinfo.py` to a plain JSON file in `pysim/vehicleinfo.json`.
@@ -291,7 +292,7 @@ function parseFrames(rawText: string): SitlFrameInfo[] {
   } else {
     // Legacy Python dict literal (older ArduPilot branches).
     const block = extractOuterBraces(rawText);
-    if (!block) throw new Error('vehicleinfo: no top-level dict found');
+    if (!block) throw new Error(mt('main.sitl_frame_config.vehicleinfoNoTopLevelDictFound'));
     const json = pythonToJson(block);
     try {
       parsed = JSON.parse(json) as RawVehicleInfo;
@@ -348,22 +349,22 @@ function parseFrames(rawText: string): SitlFrameInfo[] {
  * frame so a user can hit Start immediately.
  */
 const FALLBACK_FRAMES: SitlFrameInfo[] = [
-  { value: 'quad',         label: 'Quad (default)',  vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
-  { value: '+',            label: 'Quad Plus',        vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
-  { value: 'hexa',         label: 'Hexacopter',       vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
-  { value: 'octa',         label: 'Octocopter',       vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
-  { value: 'tri',          label: 'Tricopter',        vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
+  { value: 'quad',         get label() { return mt('main.sitl_frame_config.quadDefault'); },  vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
+  { value: '+',            get label() { return mt('main.sitl_frame_config.quadPlus'); },        vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
+  { value: 'hexa',         get label() { return mt('main.sitl_frame_config.hexacopter'); },       vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
+  { value: 'octa',         get label() { return mt('main.sitl_frame_config.octocopter'); },       vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
+  { value: 'tri',          get label() { return mt('main.sitl_frame_config.tricopter'); },        vehicleType: 'copter', category: 'Multirotor', defaultParamFiles: ['default_params/copter.parm'] },
   { value: 'heli',         label: 'Helicopter',       vehicleType: 'copter', category: 'Helicopter', defaultParamFiles: ['default_params/copter-heli.parm'] },
-  { value: 'plane',        label: 'Plane (default)',  vehicleType: 'plane',  category: 'Plane',      defaultParamFiles: ['default_params/plane.parm'] },
+  { value: 'plane',        get label() { return mt('main.sitl_frame_config.planeDefault'); },  vehicleType: 'plane',  category: 'Plane',      defaultParamFiles: ['default_params/plane.parm'] },
   { value: 'quadplane',    label: 'Quadplane',        vehicleType: 'plane',  category: 'Quadplane',  defaultParamFiles: ['default_params/quadplane.parm'] },
-  { value: 'plane-tailsitter', label: 'Plane Tailsitter', vehicleType: 'plane', category: 'Tailsitter', defaultParamFiles: ['default_params/plane-tailsitter.parm'] },
-  { value: 'firefly',      label: 'Firefly (Y6 VTOL)',vehicleType: 'plane',  category: 'Quadplane',  defaultParamFiles: ['default_params/firefly.parm'] },
-  { value: 'rover',        label: 'Rover (default)',  vehicleType: 'rover',  category: 'Rover',      defaultParamFiles: ['default_params/rover.parm'] },
-  { value: 'rover-skid',   label: 'Skid Steer Rover', vehicleType: 'rover',  category: 'Rover',      defaultParamFiles: ['default_params/rover-skid.parm'] },
-  { value: 'motorboat',    label: 'Motor Boat',       vehicleType: 'rover',  category: 'Boat',       defaultParamFiles: ['default_params/motorboat.parm'] },
-  { value: 'sailboat',     label: 'Sailboat',         vehicleType: 'rover',  category: 'Boat',       defaultParamFiles: ['default_params/sailboat.parm'] },
-  { value: 'vectored',     label: 'Vectored (default)', vehicleType: 'sub',  category: 'Sub',        defaultParamFiles: ['default_params/sub.parm'] },
-  { value: 'vectored_6dof',label: 'Vectored 6DOF',    vehicleType: 'sub',    category: 'Sub',        defaultParamFiles: ['default_params/sub-6dof.parm'] },
+  { value: 'plane-tailsitter', get label() { return mt('main.sitl_frame_config.planeTailsitter'); }, vehicleType: 'plane', category: 'Tailsitter', defaultParamFiles: ['default_params/plane-tailsitter.parm'] },
+  { value: 'firefly',      get label() { return mt('main.sitl_frame_config.fireflyY6Vtol'); },vehicleType: 'plane',  category: 'Quadplane',  defaultParamFiles: ['default_params/firefly.parm'] },
+  { value: 'rover',        get label() { return mt('main.sitl_frame_config.roverDefault'); },  vehicleType: 'rover',  category: 'Rover',      defaultParamFiles: ['default_params/rover.parm'] },
+  { value: 'rover-skid',   get label() { return mt('main.sitl_frame_config.skidSteerRover'); }, vehicleType: 'rover',  category: 'Rover',      defaultParamFiles: ['default_params/rover-skid.parm'] },
+  { value: 'motorboat',    get label() { return mt('main.sitl_frame_config.motorBoat'); },       vehicleType: 'rover',  category: 'Boat',       defaultParamFiles: ['default_params/motorboat.parm'] },
+  { value: 'sailboat',     get label() { return mt('main.sitl_frame_config.sailboat'); },         vehicleType: 'rover',  category: 'Boat',       defaultParamFiles: ['default_params/sailboat.parm'] },
+  { value: 'vectored',     get label() { return mt('main.sitl_frame_config.vectoredDefault'); }, vehicleType: 'sub',  category: 'Sub',        defaultParamFiles: ['default_params/sub.parm'] },
+  { value: 'vectored_6dof',get label() { return mt('main.sitl_frame_config.vectored6dof'); },    vehicleType: 'sub',    category: 'Sub',        defaultParamFiles: ['default_params/sub-6dof.parm'] },
 ];
 
 // =============================================================================

@@ -17,6 +17,7 @@ import crypto from 'crypto';
 import { writeFileSync } from 'fs';
 import { PUBLIC_KEY, PUBLIC_KEY_VERSION, IS_PLACEHOLDER_KEY } from './public-key.js';
 import type { ReportPayload } from './report-generator.js';
+import { mt } from '../i18n';
 
 // Constants
 const MAGIC = 'DECKREPORT'; // 10 bytes
@@ -197,7 +198,7 @@ export function decryptReport(encrypted: Buffer, privateKey: string): ReportPayl
     // Parse header
     const header = parseHeader(encrypted);
     if (!header) {
-      throw new Error('Invalid file format');
+      throw new Error(mt('main.logging_report_encryptor.invalidFileFormat'));
     }
 
     let offset = HEADER_SIZE;

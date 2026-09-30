@@ -23,6 +23,7 @@ import type {
 } from '../../shared/ipc-channels.js';
 import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import { px4SitlBundleDir, px4PathHasSpace } from './px4-paths.js';
+import { mt } from '../i18n';
 
 /**
  * PX4_SIM_MODEL for each airframe class. We use PX4's built-in SIH
@@ -298,7 +299,7 @@ class Px4SitlProcessManager {
     // the first ran on as an orphan that stop() could never reach, keeping
     // 14550 alive and the GCS "connected" to a vehicle we no longer managed.
     if (this._startInFlight) {
-      return { success: false, error: 'PX4 SITL is already starting' };
+      return { success: false, error: mt('main.sitl_px4_sitl_process.px4SitlIsAlreadyStarting') };
     }
     this._startInFlight = true;
     try {
@@ -325,7 +326,7 @@ class Px4SitlProcessManager {
       } catch {
         return {
           success: false,
-          error: `PX4 SITL not downloaded for the ${config.releaseTrack} track`,
+          error: mt('main.sitl_px4_sitl_process.px4SitlNotDownloadedForThe', { releaseTrack: config.releaseTrack }),
         };
       }
 
@@ -566,7 +567,7 @@ class Px4SitlProcessManager {
    */
   async restart(): Promise<{ success: boolean; command?: string; error?: string }> {
     const cfg = this._currentConfig;
-    if (!cfg) return { success: false, error: 'No active PX4 SITL config to restart with' };
+    if (!cfg) return { success: false, error: mt('main.sitl_px4_sitl_process.noActivePx4SitlConfigTo') };
     this._relaunching = true;
     try {
       this.stop();

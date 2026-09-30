@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import { mkdir, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { mt } from '../i18n';
 
 /**
  * Unpack an app archive.
@@ -42,7 +43,7 @@ export async function extractAppArchive(zipPath: string, targetDir: string): Pro
     p.stderr?.on('data', (d) => { err += String(d); });
     p.on('error', fail);
     p.on('close', (code) =>
-      code === 0 ? ok() : fail(new Error(`${cmd} failed (${code}): ${err.trim()}`)),
+      code === 0 ? ok() : fail(new Error(mt('main.apps_app_extract.failed', { cmd, code, v3: err.trim() }))),
     );
   });
 }

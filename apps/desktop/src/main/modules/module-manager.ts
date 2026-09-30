@@ -25,6 +25,7 @@ import type {
   PublicCargo,
   UpdateAvailable,
 } from '../../shared/module-types.js';
+import { mt } from '../i18n';
 
 // --------------------------------------------------------------------------
 // Persistent store
@@ -97,7 +98,7 @@ export async function activateLicense(
   },
 ): Promise<{ success: boolean; error?: string }> {
   // 1. Offline signature validation
-  onProgress({ stage: 'validating', message: 'Validating license key...' });
+  onProgress({ stage: 'validating', message: mt('main.modules_module_manager.validatingLicenseKey') });
 
   const verification = verifyLicenseKey(key);
   if (!verification.valid) {
@@ -108,12 +109,12 @@ export async function activateLicense(
   // Check if already activated (manual double-add, not an update)
   const existingKeys = store.get('licenseKeys');
   if (!opts?.reactivate && existingKeys.includes(key)) {
-    onProgress({ stage: 'error', message: 'This license key is already activated' });
-    return { success: false, error: 'This license key is already activated' };
+    onProgress({ stage: 'error', message: mt('main.modules_module_manager.thisLicenseKeyIsAlreadyActivated') });
+    return { success: false, error: mt('main.modules_module_manager.thisLicenseKeyIsAlreadyActivated') };
   }
 
   // 2. API activation
-  onProgress({ stage: 'activating', message: 'Activating with server...' });
+  onProgress({ stage: 'activating', message: mt('main.modules_module_manager.activatingWithServer') });
 
   const deviceId = getDeviceId();
   const deviceName = getDeviceName();
@@ -123,7 +124,7 @@ export async function activateLicense(
     activateResult = await hangar.activate(key, deviceId, deviceName);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    onProgress({ stage: 'error', message: `Activation failed: ${msg}` });
+    onProgress({ stage: 'error', message: mt('main.modules_module_manager.activationFailed', { msg }) });
     return { success: false, error: msg };
   }
 
@@ -147,7 +148,7 @@ export async function activateLicense(
     if (activatableSlugs.has(slug)) {
       onProgress({
         stage: 'activating',
-        message: `Enabling ${slug} (${moduleIndex}/${modules.length})...`,
+        message: mt('main.modules_module_manager.enabling', { slug, moduleIndex, length: modules.length }),
         percent: Math.round((i / modules.length) * 100),
       });
       newModules.push({
@@ -165,7 +166,7 @@ export async function activateLicense(
 
     onProgress({
       stage: 'downloading',
-      message: `Downloading ${slug} (${moduleIndex}/${modules.length})...`,
+      message: mt('main.modules_module_manager.downloading', { slug, moduleIndex, length: modules.length }),
       percent: Math.round((i / modules.length) * 100),
     });
 
@@ -179,7 +180,7 @@ export async function activateLicense(
           const dlPercent = total > 0 ? Math.round((downloaded / total) * 100) : 0;
           onProgress({
             stage: 'downloading',
-            message: `Downloading ${slug} (${moduleIndex}/${modules.length})...`,
+            message: mt('main.modules_module_manager.downloading', { slug, moduleIndex, length: modules.length }),
             percent: Math.round(((i + dlPercent / 100) / modules.length) * 100),
           });
         },
@@ -188,7 +189,7 @@ export async function activateLicense(
       // 4. Verify bundle signature
       onProgress({
         stage: 'verifying',
-        message: `Verifying ${slug}...`,
+        message: mt('main.modules_module_manager.verifying', { slug }),
         percent: Math.round(((i + 0.9) / modules.length) * 100),
       });
 
@@ -198,7 +199,7 @@ export async function activateLicense(
       // Absent headers only warn - servers predating them still install.
       if (hash && localHash !== hash) {
         await rm(filePath, { force: true });
-        throw new Error(`Bundle hash mismatch for ${slug} - download corrupted or tampered with`);
+        throw new Error(mt('main.modules_module_manager.bundleHashMismatchForDownloadCorrupted', { slug }));
       }
       if (!hash) {
         console.warn(`[ModuleManager] No bundle hash for ${slug}, skipping hash verification`);
@@ -206,7 +207,7 @@ export async function activateLicense(
       if (sig) {
         if (!verifyBundleSignature(filePath, sig)) {
           await rm(filePath, { force: true });
-          throw new Error(`Bundle signature verification failed for ${slug}`);
+          throw new Error(mt('main.modules_module_manager.bundleSignatureVerificationFailedFor', { slug }));
         }
       } else {
         console.warn(`[ModuleManager] No bundle signature for ${slug}, skipping signature verification`);
@@ -219,7 +220,7 @@ export async function activateLicense(
       const manifestRaw = await readFile(join(installPath, 'module.json'), 'utf-8');
       const parsed = parseModuleManifest(JSON.parse(manifestRaw));
       if (!parsed.ok) {
-        throw new Error(`Invalid manifest for ${slug}: ${parsed.error}`);
+        throw new Error(mt('main.modules_module_manager.invalidManifestFor', { slug, error: parsed.error }));
       }
 
       // Refuse cargo that needs a newer app: a module built against host APIs
@@ -229,7 +230,7 @@ export async function activateLicense(
       if (minVersion && compareSemver(app.getVersion(), minVersion) < 0) {
         await rm(installPath, { recursive: true, force: true });
         throw new Error(
-          `${parsed.manifest.name} needs ArduDeck ${minVersion} or newer (you have ${app.getVersion()}). Update ArduDeck first.`,
+          mt('main.modules_module_manager.needsArdudeckOrNewerYouHave', { name: parsed.manifest.name, minVersion, v3: app.getVersion() }),
         );
       }
 
@@ -247,8 +248,8 @@ export async function activateLicense(
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`[ModuleManager] Failed to download ${slug}:`, msg);
-      onProgress({ stage: 'error', message: `Failed to download ${slug}: ${msg}` });
-      return { success: false, error: `Failed to download ${slug}: ${msg}` };
+      onProgress({ stage: 'error', message: mt('main.modules_module_manager.failedToDownload', { slug, msg }) });
+      return { success: false, error: mt('main.modules_module_manager.failedToDownload', { slug, msg }) };
     }
   }
 
@@ -265,7 +266,7 @@ export async function activateLicense(
   // Deduped: re-activation of an already-known key is the module UPDATE path.
   store.set('licenseKeys', Array.from(new Set([...currentKeys, key])));
 
-  onProgress({ stage: 'complete', message: `Activated ${newModules.length} module(s)`, percent: 100 });
+  onProgress({ stage: 'complete', message: mt('main.modules_module_manager.activatedModuleS', { length: newModules.length }), percent: 100 });
 
   return { success: true };
 }
@@ -293,7 +294,7 @@ export async function installFreeCargo(
   slug: string,
   onProgress: (p: ModuleProgress) => void,
 ): Promise<{ success: boolean; error?: string }> {
-  onProgress({ stage: 'activating', message: `Requesting ${slug} from the Hangar...` });
+  onProgress({ stage: 'activating', message: mt('main.modules_module_manager.requestingFromTheHangar', { slug }) });
 
   const deviceId = getDeviceId();
   const deviceName = getDeviceName();
@@ -304,7 +305,7 @@ export async function installFreeCargo(
     key = result.key;
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    onProgress({ stage: 'error', message: `Install failed: ${msg}` });
+    onProgress({ stage: 'error', message: mt('main.modules_module_manager.installFailed', { msg }) });
     return { success: false, error: msg };
   }
 
@@ -390,7 +391,7 @@ export async function updateModule(
 ): Promise<{ success: boolean; error?: string }> {
   const installed = store.get('modules').find((m) => m.slug === slug);
   if (!installed) {
-    return { success: false, error: `Module ${slug} is not installed` };
+    return { success: false, error: mt('main.modules_module_manager.moduleIsNotInstalled', { slug }) };
   }
   if (!installed.licenseKey || !isLicenseKeyShaped(installed.licenseKey)) {
     return installFreeCargo(slug, onProgress);

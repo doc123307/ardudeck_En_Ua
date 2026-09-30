@@ -45,7 +45,8 @@
       "stayInCli": "Лишитися в CLI",
       "leaveAndReboot": "Вийти й перезавантажити",
       "fixedWing": "Літак",
-      "defaultAltitudeReferenceResetToHome": "Типовий відлік висоти скинуто на «Дім» (апарат відхилив відлік від рельєфу)."
+      "defaultAltitudeReferenceResetToHome": "Типовий відлік висоти скинуто на «Дім» (апарат відхилив відлік від рельєфу).",
+      "badgeNew": "Нове"
     }
   }
 }

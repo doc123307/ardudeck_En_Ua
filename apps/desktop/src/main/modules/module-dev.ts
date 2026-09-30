@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path';
 import Store from 'electron-store';
 import { parseModuleManifest } from '@ardudeck/module-sdk';
 import { checkDevSlug, type DevLoadCheck } from '../../shared/dev-load-guard.js';
+import { mt } from '../i18n';
 
 export interface DevModule {
   slug: string;
@@ -42,16 +43,16 @@ export function loadDevModule(
   dir: string,
   installedSlugs: readonly string[],
 ): DevLoadCheck & { module?: DevModule } {
-  if (!isDevLoadAvailable()) return { ok: false, error: 'Not available in a packaged build' };
+  if (!isDevLoadAvailable()) return { ok: false, error: mt('main.modules_module_dev.notAvailableInAPackagedBuild') };
 
   let manifest;
   try {
     const raw = readFileSync(join(dir, 'module.json'), 'utf-8');
     const parsed = parseModuleManifest(JSON.parse(raw));
-    if (!parsed.ok) return { ok: false, error: `Invalid module.json: ${parsed.error}` };
+    if (!parsed.ok) return { ok: false, error: mt('main.modules_module_dev.invalidModuleJson', { error: parsed.error }) };
     manifest = parsed.manifest;
   } catch (err) {
-    return { ok: false, error: `No readable module.json in ${dir}: ${err}` };
+    return { ok: false, error: mt('main.modules_module_dev.noReadableModuleJsonIn', { dir, err }) };
   }
 
   const check = checkDevSlug(manifest.slug, installedSlugs);

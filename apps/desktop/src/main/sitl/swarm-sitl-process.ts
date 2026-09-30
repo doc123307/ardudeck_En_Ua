@@ -32,6 +32,7 @@ import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import { ardupilotSitlDownloader } from './ardupilot-sitl-downloader.js';
 import { generateDefaultParams } from './ardupilot-sitl-process.js';
 import { resolveDefaultsFile } from './frame-config.js';
+import { mt } from '../i18n';
 
 const BASE_TCP_PORT = 5760;
 /** ArduPilot shifts all instance ports by this many per `-I` step. */
@@ -219,7 +220,7 @@ class SwarmSitlProcessManager {
     try {
       await access(binaryPath);
     } catch {
-      return { success: false, error: `SITL binary not found at ${binaryPath}. Download it on the SITL tab first.` };
+      return { success: false, error: mt('main.sitl_swarm_sitl_process.sitlBinaryNotFoundAtDownload', { binaryPath }) };
     }
     if (process.platform !== 'win32') {
       try { await chmod(binaryPath, 0o755); } catch { /* best effort */ }

@@ -21,6 +21,7 @@ import {
 } from '@ardudeck/stm32-dfu';
 import { rebootToBootloaderCli, rebootToBootloaderMavlink } from './msp-detector.js';
 import { acquireFlashLock, releaseFlashLock } from './flash-guard.js';
+import { mt } from '../i18n';
 
 /**
  * Send progress update to renderer
@@ -72,13 +73,13 @@ function phaseToState(phase: DfuProgress['phase']): FlashProgress['state'] {
 async function parseApjForDfu(buffer: Buffer): Promise<FirmwareImage> {
   const json = JSON.parse(buffer.toString('utf-8')) as { image?: string; image_size?: number };
   if (!json.image || !json.image_size) {
-    throw new Error('Invalid APJ file: missing image or image_size');
+    throw new Error(mt('main.firmware_dfu_flasher.invalidApjFileMissingImageOr'));
   }
 
   const compressed = Buffer.from(json.image, 'base64');
   const decompressed = await new Promise<Buffer>((resolve, reject) => {
     zlib.inflate(compressed, (err, result) => {
-      if (err) reject(new Error(`APJ decompression failed: ${err.message}`));
+      if (err) reject(new Error(mt('main.firmware_dfu_flasher.apjDecompressionFailed', { message: err.message })));
       else resolve(result);
     });
   });
@@ -130,7 +131,7 @@ export async function flashWithDfu(
   if (!acquireFlashLock('dfu')) {
     return {
       success: false,
-      error: 'Another flash operation is already in progress. Please wait for it to complete.',
+      error: mt('main.firmware_dfu_flasher.anotherFlashOperationIsAlreadyIn'),
       duration: Date.now() - startTime,
     };
   }
@@ -141,7 +142,7 @@ export async function flashWithDfu(
     sendProgress(window, {
       state: 'preparing',
       progress: 0,
-      message: 'Loading firmware file...',
+      message: mt('main.firmware_dfu_flasher.loadingFirmwareFile'),
     });
 
     // Load firmware
@@ -152,7 +153,7 @@ export async function flashWithDfu(
     if (abortController?.signal.aborted) {
       return {
         success: false,
-        error: 'Flash operation aborted',
+        error: mt('main.firmware_dfu_flasher.flashOperationAborted'),
         duration: Date.now() - startTime,
       };
     }
@@ -160,7 +161,7 @@ export async function flashWithDfu(
     sendProgress(window, {
       state: 'preparing',
       progress: 5,
-      message: 'Finding DFU device...',
+      message: mt('main.firmware_dfu_flasher.findingDfuDevice'),
     });
     sendLog(window, 'info', 'Searching for DFU device...');
 
@@ -186,7 +187,7 @@ export async function flashWithDfu(
       sendProgress(window, {
         state: 'entering-bootloader',
         progress: 8,
-        message: 'Rebooting board into DFU mode...',
+        message: mt('main.firmware_dfu_flasher.rebootingBoardIntoDfuMode'),
       });
 
       const rebooted = board.detectionMethod === 'mavlink'
@@ -198,7 +199,7 @@ export async function flashWithDfu(
         sendProgress(window, {
           state: 'preparing',
           progress: 10,
-          message: 'Waiting for DFU device...',
+          message: mt('main.firmware_dfu_flasher.waitingForDfuDevice'),
         });
         // Wait for device to appear in DFU mode
         device = await DfuDevice.waitForDevice(8000);
@@ -218,7 +219,7 @@ export async function flashWithDfu(
       sendProgress(window, {
         state: 'preparing',
         progress: 10,
-        message: 'Waiting for DFU device...',
+        message: mt('main.firmware_dfu_flasher.waitingForDfuDevice'),
       });
       device = await DfuDevice.waitForDevice(5000);
     }
@@ -251,7 +252,7 @@ export async function flashWithDfu(
     if (abortController?.signal.aborted) {
       return {
         success: false,
-        error: 'Flash operation aborted',
+        error: mt('main.firmware_dfu_flasher.flashOperationAborted'),
         duration: Date.now() - startTime,
       };
     }
@@ -259,7 +260,7 @@ export async function flashWithDfu(
     sendProgress(window, {
       state: 'preparing',
       progress: 15,
-      message: 'Opening DFU device...',
+      message: mt('main.firmware_dfu_flasher.openingDfuDevice'),
     });
     sendLog(window, 'info', 'Opening DFU device...');
 
@@ -308,7 +309,7 @@ export async function flashWithDfu(
     sendProgress(window, {
       state: 'rebooting',
       progress: 100,
-      message: 'Flash complete, rebooting...',
+      message: mt('main.firmware_dfu_flasher.flashCompleteRebooting'),
     });
 
     const duration = Date.now() - startTime;
@@ -316,7 +317,7 @@ export async function flashWithDfu(
 
     return {
       success: true,
-      message: 'Firmware flashed successfully',
+      message: mt('main.firmware_dfu_flasher.firmwareFlashedSuccessfully'),
       duration,
       verified: true,
     };
@@ -326,7 +327,7 @@ export async function flashWithDfu(
 
     return {
       success: false,
-      error: `Flash failed: ${errorMessage}`,
+      error: mt('main.firmware_dfu_flasher.flashFailed', { errorMessage }),
       duration: Date.now() - startTime,
     };
   } finally {

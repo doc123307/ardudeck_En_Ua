@@ -27,6 +27,7 @@ import {
   wfbRxAssetUrl,
   wfbRxNotBuiltMessage,
 } from './wfb-rx-release.js';
+import { mt } from '../i18n';
 
 const FFMPEG_TAG = 'b6.1.1';
 const MEDIAMTX_TAG = 'v1.19.1';
@@ -144,7 +145,7 @@ export class MediaBinariesDownloader {
     writeFileSync(tmp, Buffer.from(archive));
     const res = spawnSync('tar', ['xzf', tmp, '-C', dir, 'mediamtx'], { stdio: 'ignore' });
     rmSync(tmp, { force: true });
-    if (res.status !== 0 || !existsSync(out)) throw new Error('Failed to extract mediamtx');
+    if (res.status !== 0 || !existsSync(out)) throw new Error(mt('main.media_media_binaries_downloader.failedToExtractMediamtx'));
     chmodSync(out, 0o755);
   }
 }

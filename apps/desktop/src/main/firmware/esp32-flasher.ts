@@ -12,6 +12,7 @@ import { mkdir, writeFile, chmod, readFile } from 'fs/promises';
 import { app, BrowserWindow } from 'electron';
 import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import type { FlashProgress, FlashResult } from '../../shared/firmware-types.js';
+import { mt } from '../i18n';
 
 // ─── Chip Variants ──────────────────────────────────────────────────────────
 
@@ -67,15 +68,15 @@ export async function downloadEsptool(): Promise<string> {
   if (fs.existsSync(binaryPath)) return binaryPath;
 
   const releaseResp = await fetch('https://api.github.com/repos/espressif/esptool/releases/latest');
-  if (!releaseResp.ok) throw new Error(`Failed to fetch esptool release info: ${releaseResp.status}`);
+  if (!releaseResp.ok) throw new Error(mt('main.firmware_esp32_flasher.failedToFetchEsptoolReleaseInfo', { status: releaseResp.status }));
   const release = await releaseResp.json() as { tag_name: string; assets: Array<{ name: string; browser_download_url: string }> };
   const version = release.tag_name;
   const assetName = getEsptoolAssetName(version);
   const asset = release.assets.find((a) => a.name === assetName);
-  if (!asset) throw new Error(`No esptool binary found for ${process.platform}/${process.arch}`);
+  if (!asset) throw new Error(mt('main.firmware_esp32_flasher.noEsptoolBinaryFoundFor', { platform: process.platform, arch: process.arch }));
 
   const dlResp = await fetch(asset.browser_download_url);
-  if (!dlResp.ok) throw new Error(`Failed to download esptool: ${dlResp.status}`);
+  if (!dlResp.ok) throw new Error(mt('main.firmware_esp32_flasher.failedToDownloadEsptool', { status: dlResp.status }));
   const buffer = Buffer.from(await dlResp.arrayBuffer());
 
   await mkdir(destDir, { recursive: true });
@@ -194,19 +195,19 @@ export async function downloadFirmware(
   window: BrowserWindow | null,
 ): Promise<{ binaries: FlashBinary[]; flashMode: string; flashFreq: string; flashSize: string }> {
   const source = FIRMWARE_SOURCES[templateId];
-  if (!source) throw new Error(`Unknown firmware template: ${templateId}`);
+  if (!source) throw new Error(mt('main.firmware_esp32_flasher.unknownFirmwareTemplate', { templateId }));
 
   const chipDir = source.chipDirMap[chipKey];
-  if (!chipDir) throw new Error(`Template ${templateId} doesn't support chip ${chipKey}`);
+  if (!chipDir) throw new Error(mt('main.firmware_esp32_flasher.templateDoesnTSupportChip', { templateId, chipKey }));
 
-  sendProgress(window, { state: 'preparing', progress: 0, message: 'Fetching latest release...' });
+  sendProgress(window, { state: 'preparing', progress: 0, message: mt('main.firmware_esp32_flasher.fetchingLatestRelease') });
 
   // Get latest release
   const releaseResp = await fetch(`https://api.github.com/repos/${source.owner}/${source.repo}/releases/latest`);
-  if (!releaseResp.ok) throw new Error(`Failed to fetch release: ${releaseResp.status}`);
+  if (!releaseResp.ok) throw new Error(mt('main.firmware_esp32_flasher.failedToFetchRelease', { status: releaseResp.status }));
   const release = await releaseResp.json() as { tag_name: string; assets: Array<{ name: string; browser_download_url: string }> };
   const asset = release.assets.find((a) => a.name.includes(source.assetMatch));
-  if (!asset) throw new Error(`No matching asset found in ${source.owner}/${source.repo} ${release.tag_name}`);
+  if (!asset) throw new Error(mt('main.firmware_esp32_flasher.noMatchingAssetFoundIn', { owner: source.owner, repo: source.repo, tag_name: release.tag_name }));
 
   // Check cache
   const cacheDir = path.join(getFirmwareCacheDir(), templateId, release.tag_name, chipDir);
@@ -215,14 +216,14 @@ export async function downloadFirmware(
     return parseFirmwareDir(cacheDir);
   }
 
-  sendProgress(window, { state: 'preparing', progress: 10, message: `Downloading ${release.tag_name}...` });
+  sendProgress(window, { state: 'preparing', progress: 10, message: mt('main.firmware_esp32_flasher.downloading', { tag_name: release.tag_name }) });
 
   // Download zip
   const dlResp = await fetch(asset.browser_download_url);
-  if (!dlResp.ok) throw new Error(`Failed to download firmware: ${dlResp.status}`);
+  if (!dlResp.ok) throw new Error(mt('main.firmware_esp32_flasher.failedToDownloadFirmware', { status: dlResp.status }));
   const zipBuffer = Buffer.from(await dlResp.arrayBuffer());
 
-  sendProgress(window, { state: 'preparing', progress: 40, message: 'Extracting firmware...' });
+  sendProgress(window, { state: 'preparing', progress: 40, message: mt('main.firmware_esp32_flasher.extractingFirmware') });
 
   // Extract using node — zip files from GitHub use backslash paths (Windows-built)
   const tempZip = path.join(app.getPath('temp'), `firmware-${Date.now()}.zip`);
@@ -264,7 +265,7 @@ print('OK')
     try {
       execSync(`python "${extractPy}" "${tempZip}" "${chipDir}" "${cacheDir}"`, { timeout: 30000 });
     } catch (e) {
-      throw new Error(`Failed to extract firmware: ${e}`);
+      throw new Error(mt('main.firmware_esp32_flasher.failedToExtractFirmware', { e }));
     }
   }
 
@@ -275,7 +276,7 @@ print('OK')
   // Mark cache complete
   await writeFile(cacheMarker, release.tag_name);
 
-  sendProgress(window, { state: 'preparing', progress: 50, message: 'Firmware ready' });
+  sendProgress(window, { state: 'preparing', progress: 50, message: mt('main.firmware_esp32_flasher.firmwareReady') });
 
   return parseFirmwareDir(cacheDir);
 }
@@ -286,7 +287,7 @@ async function parseFirmwareDir(dir: string): Promise<{ binaries: FlashBinary[];
   if (!fs.existsSync(argsPath)) {
     // No flash_args.txt — look for a single .bin file
     const bins = fs.readdirSync(dir).filter((f) => f.endsWith('.bin'));
-    if (bins.length === 0) throw new Error('No firmware binaries found');
+    if (bins.length === 0) throw new Error(mt('main.firmware_esp32_flasher.noFirmwareBinariesFound'));
     return {
       binaries: [{ offset: '0x0', filePath: path.join(dir, bins[0]!) }],
       flashMode: 'dio',
@@ -329,7 +330,7 @@ async function parseFirmwareDir(dir: string): Promise<{ binaries: FlashBinary[];
     }
   }
 
-  if (binaries.length === 0) throw new Error('No valid binaries found in flash_args.txt');
+  if (binaries.length === 0) throw new Error(mt('main.firmware_esp32_flasher.noValidBinariesFoundInFlash'));
 
   return { binaries, flashMode, flashFreq, flashSize };
 }
@@ -346,23 +347,23 @@ function parseEsptoolProgress(line: string): { progress: number; state: FlashPro
   const writeMatch = line.match(/Writing at 0x[\da-fA-F]+\.\.\.\s*\((\d+)\s*%\)/);
   if (writeMatch) {
     const pct = parseInt(writeMatch[1]!, 10);
-    return { progress: pct, state: 'flashing', message: `Writing: ${pct}%` };
+    return { progress: pct, state: 'flashing', message: mt('main.firmware_esp32_flasher.writing', { pct }) };
   }
   if (line.includes('Erasing flash') || line.includes('Erasing region')) {
-    return { progress: 0, state: 'erasing', message: 'Erasing flash...' };
+    return { progress: 0, state: 'erasing', message: mt('main.firmware_esp32_flasher.erasingFlash') };
   }
   if (line.includes('Wrote') && line.includes('bytes')) {
-    return { progress: 100, state: 'flashing', message: 'Write complete' };
+    return { progress: 100, state: 'flashing', message: mt('main.firmware_esp32_flasher.writeComplete') };
   }
   if (line.includes('Hash of data verified') || line.includes('Leaving...')) {
-    return { progress: 100, state: 'verifying', message: 'Verified' };
+    return { progress: 100, state: 'verifying', message: mt('main.firmware_esp32_flasher.verified') };
   }
   const chipMatch = line.match(/Chip is (ESP32\S*)/);
   if (chipMatch) {
-    return { progress: 0, state: 'preparing', message: `Detected: ${chipMatch[1]}` };
+    return { progress: 0, state: 'preparing', message: mt('main.firmware_esp32_flasher.detected', { v1: chipMatch[1] }) };
   }
   if (line.includes('Connecting')) {
-    return { progress: 0, state: 'preparing', message: 'Connecting to bootloader...' };
+    return { progress: 0, state: 'preparing', message: mt('main.firmware_esp32_flasher.connectingToBootloader') };
   }
   return null;
 }
@@ -448,8 +449,8 @@ function flashMultiBin(
     proc.on('close', (code) => {
       const duration = Date.now() - startTime;
       if (code === 0) {
-        sendProgress(window, { state: 'complete', progress: 100, message: 'Flash complete!' });
-        resolve({ success: true, message: 'Firmware flashed and verified', duration, verified: true });
+        sendProgress(window, { state: 'complete', progress: 100, message: mt('main.firmware_esp32_flasher.flashComplete') });
+        resolve({ success: true, message: mt('main.firmware_esp32_flasher.firmwareFlashedAndVerified'), duration, verified: true });
       } else {
         let friendlyError = errorOutput;
         if (errorOutput.includes('Failed to connect')) {
@@ -477,7 +478,7 @@ function flashMultiBin(
     if (abortController) {
       abortController.signal.addEventListener('abort', () => {
         proc.kill('SIGTERM');
-        resolve({ success: false, error: 'Flash aborted', duration: Date.now() - startTime });
+        resolve({ success: false, error: mt('main.firmware_esp32_flasher.flashAborted'), duration: Date.now() - startTime });
       });
     }
   });
@@ -537,11 +538,11 @@ export async function flashTemplate(
 ): Promise<FlashResult> {
   try {
     // 1. Ensure esptool is available
-    sendProgress(window, { state: 'preparing', progress: 0, message: 'Checking esptool...' });
+    sendProgress(window, { state: 'preparing', progress: 0, message: mt('main.firmware_esp32_flasher.checkingEsptool') });
     const available = await isEsptoolAvailable();
     let esptoolPath: string;
     if (!available) {
-      sendProgress(window, { state: 'preparing', progress: 5, message: 'Downloading esptool...' });
+      sendProgress(window, { state: 'preparing', progress: 5, message: mt('main.firmware_esp32_flasher.downloadingEsptool') });
       esptoolPath = await downloadEsptool();
     } else {
       esptoolPath = getEsptoolPath();
@@ -552,12 +553,12 @@ export async function flashTemplate(
     if (options.detectedChip) {
       chipKey = normalizeChip(options.detectedChip);
     } else {
-      sendProgress(window, { state: 'preparing', progress: 10, message: 'Detecting chip...' });
+      sendProgress(window, { state: 'preparing', progress: 10, message: mt('main.firmware_esp32_flasher.detectingChip') });
       const detected = await detectEsp32Chip(options.port);
       if (!detected) {
         return {
           success: false,
-          error: 'Could not detect ESP32 chip. Check the USB connection and try again.',
+          error: mt('main.firmware_esp32_flasher.couldNotDetectEsp32ChipCheck'),
           duration: 0,
         };
       }
@@ -568,11 +569,11 @@ export async function flashTemplate(
     const esptoolChip = ESP32_CHIPS[chipKey] ?? chipKey;
 
     // 3. Download firmware
-    sendProgress(window, { state: 'preparing', progress: 15, message: 'Downloading firmware...' });
+    sendProgress(window, { state: 'preparing', progress: 15, message: mt('main.firmware_esp32_flasher.downloadingFirmware') });
     const firmware = await downloadFirmware(options.templateId, esptoolChip, window);
 
     // 4. Flash
-    sendProgress(window, { state: 'preparing', progress: 55, message: 'Starting flash...' });
+    sendProgress(window, { state: 'preparing', progress: 55, message: mt('main.firmware_esp32_flasher.startingFlash') });
     const flashResult = await flashMultiBin(
       {
         port: options.port,
@@ -590,7 +591,7 @@ export async function flashTemplate(
 
     // 5. After successful DroneBridge flash, read boot log over serial to get device info
     if (flashResult.success && options.templateId.startsWith('dronebridge')) {
-      sendProgress(window, { state: 'complete', progress: 95, message: 'Reading device info...' });
+      sendProgress(window, { state: 'complete', progress: 95, message: mt('main.firmware_esp32_flasher.readingDeviceInfo') });
       try {
         // Small delay for ESP32 to start booting
         await new Promise((r) => setTimeout(r, 1500));
@@ -607,7 +608,7 @@ export async function flashTemplate(
     return flashResult;
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    sendProgress(window, { state: 'complete', progress: 0, message: `Error: ${message}` });
+    sendProgress(window, { state: 'complete', progress: 0, message: mt('main.firmware_esp32_flasher.error', { message }) });
     return { success: false, error: message, duration: 0 };
   }
 }
@@ -629,10 +630,10 @@ export async function flashEsp32(
   abortController?: AbortController,
 ): Promise<FlashResult> {
   if (!options.port) {
-    return { success: false, error: 'No serial port specified.', duration: 0 };
+    return { success: false, error: mt('main.firmware_esp32_flasher.noSerialPortSpecified'), duration: 0 };
   }
   if (!fs.existsSync(options.firmwarePath)) {
-    return { success: false, error: `Firmware file not found: ${options.firmwarePath}`, duration: 0 };
+    return { success: false, error: mt('main.firmware_esp32_flasher.firmwareFileNotFound', { firmwarePath: options.firmwarePath }), duration: 0 };
   }
 
   const esptoolPath = getEsptoolPath();

@@ -16,6 +16,7 @@ import type {
   ProcessInfo,
   LogEntry,
 } from '@ardudeck/companion-types';
+import { mt } from '../i18n';
 
 type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'reconnecting';
 
@@ -103,18 +104,18 @@ export class CompanionConnection {
 
   /** Make an authenticated REST request to the agent */
   async restGet<T>(path: string): Promise<T> {
-    if (!this.options) throw new Error('Not connected');
+    if (!this.options) throw new Error(mt('main.companion_companion_connection.notConnected'));
     const url = `http://${this.options.host}:${this.options.port}/api/v1${path}`;
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${this.options.token}` } as Record<string, string>,
     });
-    if (!res.ok) throw new Error(`Agent API error: ${res.status} ${res.statusText}`);
+    if (!res.ok) throw new Error(mt('main.companion_companion_connection.agentApiError', { status: res.status, statusText: res.statusText }));
     return res.json() as Promise<T>;
   }
 
   /** Make an authenticated REST POST to the agent */
   async restPost<T>(path: string, body?: unknown): Promise<T> {
-    if (!this.options) throw new Error('Not connected');
+    if (!this.options) throw new Error(mt('main.companion_companion_connection.notConnected'));
     const url = `http://${this.options.host}:${this.options.port}/api/v1${path}`;
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.options.token}`,
@@ -127,7 +128,7 @@ export class CompanionConnection {
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
-    if (!res.ok) throw new Error(`Agent API error: ${res.status} ${res.statusText}`);
+    if (!res.ok) throw new Error(mt('main.companion_companion_connection.agentApiError', { status: res.status, statusText: res.statusText }));
     return res.json() as Promise<T>;
   }
 

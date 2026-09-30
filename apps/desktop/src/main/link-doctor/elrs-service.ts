@@ -38,6 +38,7 @@ import {
   type ElrsSetModeResult,
   type ElrsProgressEvent,
 } from '../../shared/link-doctor-types.js';
+import { mt } from '../i18n';
 
 export { ELRS_USB_BAUD };
 export type { ElrsFieldSummary, ElrsModuleInfo, ElrsSetModeResult, ElrsProgressEvent };
@@ -236,12 +237,12 @@ export async function setElrsLinkMode(
 async function findLinkModeIndex(session: CrsfSession): Promise<number> {
   await session.write(buildDevicePing());
   const frame = await session.waitFrame((f) => f.type === CRSF_FRAMETYPE_DEVICE_INFO, 800);
-  if (!frame) throw new Error('No ELRS module answered on this port');
+  if (!frame) throw new Error(mt('main.link_doctor_elrs_service.noElrsModuleAnsweredOnThis'));
   const info = parseDeviceInfo(frame.body);
-  if (!info) throw new Error('Malformed DEVICE_INFO from module');
+  if (!info) throw new Error(mt('main.link_doctor_elrs_service.malformedDeviceInfoFromModule'));
   for (let idx = 1; idx <= info.fieldCount; idx++) {
     const field = await readField(session, idx);
     if (field?.name === 'Link Mode') return field.index;
   }
-  throw new Error('This module has no Link Mode setting (firmware too old?)');
+  throw new Error(mt('main.link_doctor_elrs_service.thisModuleHasNoLinkMode'));
 }

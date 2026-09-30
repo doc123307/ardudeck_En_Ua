@@ -9,6 +9,7 @@ import type {
   DroneBridgeSettings,
   DroneBridgeClients,
 } from '../../shared/dronebridge-types.js';
+import { mt } from '../i18n';
 
 const DEFAULT_TIMEOUT = 5000;
 
@@ -50,7 +51,7 @@ export async function probe(ip: string): Promise<DroneBridgeInfo | null> {
  */
 export async function getInfo(ip: string): Promise<DroneBridgeInfo> {
   const res = await fetchWithTimeout(`${baseUrl(ip)}/api/system/info`);
-  if (!res.ok) throw new Error(`DroneBridge API error: ${res.status} ${res.statusText}`);
+  if (!res.ok) throw new Error(mt('main.dronebridge_dronebridge_client.dronebridgeApiError', { status: res.status, statusText: res.statusText }));
   return (await res.json()) as DroneBridgeInfo;
 }
 
@@ -59,7 +60,7 @@ export async function getInfo(ip: string): Promise<DroneBridgeInfo> {
  */
 export async function getStats(ip: string): Promise<DroneBridgeStats> {
   const res = await fetchWithTimeout(`${baseUrl(ip)}/api/system/stats`);
-  if (!res.ok) throw new Error(`DroneBridge API error: ${res.status} ${res.statusText}`);
+  if (!res.ok) throw new Error(mt('main.dronebridge_dronebridge_client.dronebridgeApiError', { status: res.status, statusText: res.statusText }));
   return (await res.json()) as DroneBridgeStats;
 }
 
@@ -68,7 +69,7 @@ export async function getStats(ip: string): Promise<DroneBridgeStats> {
  */
 export async function getSettings(ip: string): Promise<DroneBridgeSettings> {
   const res = await fetchWithTimeout(`${baseUrl(ip)}/api/settings`);
-  if (!res.ok) throw new Error(`DroneBridge API error: ${res.status} ${res.statusText}`);
+  if (!res.ok) throw new Error(mt('main.dronebridge_dronebridge_client.dronebridgeApiError', { status: res.status, statusText: res.statusText }));
   return (await res.json()) as DroneBridgeSettings;
 }
 
@@ -84,7 +85,7 @@ export async function updateSettings(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(settings),
   });
-  if (!res.ok) throw new Error(`DroneBridge API error: ${res.status} ${res.statusText}`);
+  if (!res.ok) throw new Error(mt('main.dronebridge_dronebridge_client.dronebridgeApiError', { status: res.status, statusText: res.statusText }));
   return (await res.json()) as { status: string; msg: string };
 }
 
@@ -93,7 +94,7 @@ export async function updateSettings(
  */
 export async function getClients(ip: string): Promise<DroneBridgeClients> {
   const res = await fetchWithTimeout(`${baseUrl(ip)}/api/system/clients`);
-  if (!res.ok) throw new Error(`DroneBridge API error: ${res.status} ${res.statusText}`);
+  if (!res.ok) throw new Error(mt('main.dronebridge_dronebridge_client.dronebridgeApiError', { status: res.status, statusText: res.statusText }));
   return (await res.json()) as DroneBridgeClients;
 }
 
@@ -114,7 +115,7 @@ export async function addUdpClient(
       save: true,
     }),
   });
-  if (!res.ok) throw new Error(`DroneBridge API error: ${res.status} ${res.statusText}`);
+  if (!res.ok) throw new Error(mt('main.dronebridge_dronebridge_client.dronebridgeApiError', { status: res.status, statusText: res.statusText }));
 }
 
 /**
@@ -124,5 +125,5 @@ export async function clearUdpClients(ip: string): Promise<void> {
   const res = await fetchWithTimeout(`${baseUrl(ip)}/api/settings/clients/clear_udp`, {
     method: 'DELETE',
   });
-  if (!res.ok) throw new Error(`DroneBridge API error: ${res.status} ${res.statusText}`);
+  if (!res.ok) throw new Error(mt('main.dronebridge_dronebridge_client.dronebridgeApiError', { status: res.status, statusText: res.statusText }));
 }

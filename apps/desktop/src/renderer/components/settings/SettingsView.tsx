@@ -245,12 +245,12 @@ const VEHICLE_ICONS: Record<VehicleType, React.ReactNode> = {
 };
 
 const VEHICLE_TYPE_NAMES: Record<VehicleType, string> = {
-  copter: 'Multicopter',
+  get copter() { return tr('settings.SettingsView.typeCopter'); },
   get plane() { return tr('settings.SettingsView.fixedWing'); },
   vtol: 'VTOL',
-  rover: 'Rover',
-  boat: 'Boat',
-  sub: 'Submarine',
+  get rover() { return tr('settings.SettingsView.typeRover'); },
+  get boat() { return tr('settings.SettingsView.typeBoat'); },
+  get sub() { return tr('settings.SettingsView.typeSub'); },
 };
 
 // Firmware display names
@@ -779,14 +779,14 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
 
   // Get vehicle-specific label
   const getVehicleLabel = () => {
-    if (!vehicleType) return 'Flight';
+    if (!vehicleType) return tr('settings.SettingsView.flightConditions');
     switch (vehicleType) {
       case 'copter':
       case 'plane':
-      case 'vtol': return 'Flight';
+      case 'vtol': return tr('settings.SettingsView.flightConditions');
       case 'boat': return tr('settings.SettingsView.maritime');
       case 'sub': return tr('settings.SettingsView.dive');
-      case 'rover': return tr('settings.SettingsView.drive');
+      case 'rover': return tr('settings.SettingsView.driveConditions');
       default: return tr('settings.SettingsView.operation');
     }
   };
@@ -799,7 +799,7 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
           <WeatherIcon />
           <div>
             <div className="text-2xl font-bold text-content">{weather.temp}°C</div>
-            <div className="text-sm text-content-secondary">{weather.condition}</div>
+            <div className="text-sm text-content-secondary">{tr(`settings.SettingsView.weather_${weather.condition.replace(/ /g, '')}`)}</div>
           </div>
         </div>
         <div className="text-right">

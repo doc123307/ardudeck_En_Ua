@@ -24,6 +24,7 @@ import type { AuthoredObstacle, SimObstacleStoreSchema } from '../../shared/sim-
 import { resolveCopterFrame, sitlFrameForMotorCount } from '../../shared/sitl-frame-geometry.js';
 import { ardupilotSitlDownloader } from './ardupilot-sitl-downloader.js';
 import { simEngineProcess } from '../sim/sim-engine-process.js';
+import { mt } from '../i18n';
 
 /** Motor count for a stock ArduPilot copter frame model name (octaquad -> 8, etc). */
 function motorCountForModel(model: string | undefined): number {
@@ -452,7 +453,7 @@ class ArduPilotSitlProcessManager {
    */
   async relaunchWithHome(home: { lat: number; lng: number; alt: number; heading: number }): Promise<{ success: boolean; error?: string }> {
     const cfg = this._currentConfig;
-    if (!cfg) return { success: false, error: 'SITL is not running' };
+    if (!cfg) return { success: false, error: mt('main.sitl_ardupilot_sitl_process.sitlIsNotRunning') };
     const next: ArduPilotSitlConfig = { ...cfg, homeLocation: home };
     this._relaunching = true;
     try {
@@ -490,7 +491,7 @@ class ArduPilotSitlProcessManager {
     return {
       supported: false,
       useDocker: false,
-      error: `Unsupported platform: ${platform}`,
+      error: mt('main.sitl_ardupilot_sitl_process.unsupportedPlatform', { platform }),
     };
   }
 
@@ -573,7 +574,7 @@ class ArduPilotSitlProcessManager {
       } catch {
         return {
           success: false,
-          error: `SITL binary not found at ${binaryPath}. Please download it first.`,
+          error: mt('main.sitl_ardupilot_sitl_process.sitlBinaryNotFoundAtPlease', { binaryPath }),
         };
       }
 
@@ -736,7 +737,7 @@ class ArduPilotSitlProcessManager {
         });
         if (!engineResult.success) {
           this._isRunning = false;
-          return { success: false, error: `sim-engine failed to start: ${engineResult.error}` };
+          return { success: false, error: mt('main.sitl_ardupilot_sitl_process.simEngineFailedToStart', { error: engineResult.error }) };
         }
       } else if (config.customFramePath) {
         try {
@@ -979,7 +980,7 @@ class ArduPilotSitlProcessManager {
    */
   async restart(): Promise<{ success: boolean; command?: string; error?: string }> {
     const cfg = this._currentConfig;
-    if (!cfg) return { success: false, error: 'No active SITL config to restart with' };
+    if (!cfg) return { success: false, error: mt('main.sitl_ardupilot_sitl_process.noActiveSitlConfigToRestart') };
     await this.stopAndWait(5000);
     // Brief pause for the OS to fully release the bound TCP port (5760).
     await new Promise<void>(r => setTimeout(r, 1000));

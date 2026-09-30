@@ -10,6 +10,7 @@ import { join } from 'path';
 import { copyFileSync, existsSync, mkdirSync } from 'fs';
 import { app } from 'electron';
 import { detectFlightGear } from './simulator-detector';
+import { mt } from '../i18n';
 
 export interface FlightGearConfig {
   // Aircraft selection
@@ -224,13 +225,13 @@ class FlightGearLauncher {
   async launch(config: FlightGearConfig, customPath?: string): Promise<{ success: boolean; error?: string }> {
     // Check if already running
     if (this.isRunning()) {
-      return { success: false, error: 'FlightGear is already running' };
+      return { success: false, error: mt('main.simulators_flightgear_launcher.flightgearIsAlreadyRunning') };
     }
 
     // Detect FlightGear installation (use custom path if provided)
     const fgInfo = await detectFlightGear(customPath);
     if (!fgInfo.installed || !fgInfo.executable || !fgInfo.path) {
-      return { success: false, error: 'FlightGear not found. Please install FlightGear or set a custom path.' };
+      return { success: false, error: mt('main.simulators_flightgear_launcher.flightgearNotFoundPleaseInstallFlightgear') };
     }
 
     // Install our protocol files to a user-writable directory

@@ -31,6 +31,7 @@ import type {
 } from '../../shared/ipc-channels.js';
 import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import { px4SitlBasePath, px4SitlBundleDir } from './px4-paths.js';
+import { mt } from '../i18n';
 
 // ── URL sources ──────────────────────────────────────────────────────────────
 
@@ -138,7 +139,7 @@ async function extractTarGz(tarGzPath: string, destDir: string): Promise<void> {
     // Guard against path traversal in a malformed/hostile archive.
     const destPath = path.resolve(resolvedRoot, fullName);
     if (destPath !== resolvedRoot && !destPath.startsWith(resolvedRoot + path.sep)) {
-      throw new Error(`Refusing to extract entry outside target dir: ${fullName}`);
+      throw new Error(mt('main.sitl_px4_sitl_downloader.refusingToExtractEntryOutsideTarget', { fullName }));
     }
 
     if (typeflag === '5' || fullName.endsWith('/')) {
@@ -253,7 +254,7 @@ class Px4SitlDownloader {
 
       const response = await fetch(url, { signal: this.abortController.signal });
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText} — ${url}`);
+        throw new Error(mt('main.sitl_px4_sitl_downloader.http', { status: response.status, statusText: response.statusText, url }));
       }
 
       const contentLength = response.headers.get('content-length');
@@ -264,7 +265,7 @@ class Px4SitlDownloader {
 
       const reader = response.body?.getReader();
       if (!reader) {
-        throw new Error('No response body');
+        throw new Error(mt('main.sitl_px4_sitl_downloader.noResponseBody'));
       }
 
       while (true) {
@@ -304,7 +305,7 @@ class Px4SitlDownloader {
       try {
         await access(extractedBinary);
       } catch {
-        throw new Error('Downloaded bundle is missing bin/px4');
+        throw new Error(mt('main.sitl_px4_sitl_downloader.downloadedBundleIsMissingBinPx4'));
       }
 
       // Atomic swap: remove any previous bundle, then rename the temp dir in.

@@ -31,6 +31,7 @@ import { NtripClient, fetchSourcetable } from './ntrip-client.js';
 import { LocalBaseSource } from './local-base-source.js';
 import { buildGgaSentence } from './gga.js';
 import { fragmentRtcm, type RtcmFrame, type RtcmInjectFragment } from './rtcm.js';
+import { mt } from '../i18n';
 
 interface NtripStoreSchema {
   config: NtripConfig;
@@ -184,8 +185,8 @@ export function setupNtripHandlers(_mainWindow: BrowserWindow, deps: NtripHandle
       return localBase!.connect(config);
     }
     if (remote) {
-      if (!config.host) return { success: false, error: 'Caster host is not set' };
-      if (!config.mountpoint) return { success: false, error: 'Mountpoint is not set' };
+      if (!config.host) return { success: false, error: mt('main.ntrip_ntrip_ipc_handlers.casterHostIsNotSet') };
+      if (!config.mountpoint) return { success: false, error: mt('main.ntrip_ntrip_ipc_handlers.mountpointIsNotSet') };
       remote.connect(config, getApiKey('ntrip') ?? '');
       return { success: true };
     }
