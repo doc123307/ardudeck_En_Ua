@@ -131,13 +131,13 @@ const SensorsTab: React.FC = () => {
 
   // GPS fix type names
   const gpsFixTypes: Record<number, string> = {
-    0: 'No GPS',
-    1: 'No Fix',
+    0: t('mavlink_config.SensorsTab.noGps'),
+    1: t('mavlink_config.SensorsTab.noFix'),
     2: '2D Fix',
     3: '3D Fix',
     4: 'DGPS',
-    5: 'RTK Float',
-    6: 'RTK Fixed',
+    5: t('mavlink_config.SensorsTab.rtkFloat'),
+    6: t('mavlink_config.SensorsTab.rtkFixed'),
   };
 
   return (

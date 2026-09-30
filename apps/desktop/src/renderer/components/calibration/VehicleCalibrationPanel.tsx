@@ -15,11 +15,11 @@ import { useTelemetryStore } from '../../stores/telemetry-store';
 import { t } from '../../i18n';
 
 const REQUIREMENT_TEXT: [number, string][] = [
-  [AD_CAL_REQ.MOTORS_LIVE, 'Motors will spin. Remove the propellers and secure the airframe.'],
-  [AD_CAL_REQ.PROPS_OFF, 'Remove the propellers before starting.'],
-  [AD_CAL_REQ.DISARMED, 'The vehicle must be disarmed.'],
-  [AD_CAL_REQ.STATIONARY, 'Put the vehicle down and keep it still.'],
-  [AD_CAL_REQ.LEVEL_SURFACE, 'Use a surface you know to be level.'],
+  [AD_CAL_REQ.MOTORS_LIVE, t('calibration.VehicleCalibrationPanel.motorsWillSpinRemoveThePropellers')],
+  [AD_CAL_REQ.PROPS_OFF, t('calibration.VehicleCalibrationPanel.removeThePropellersBeforeStarting')],
+  [AD_CAL_REQ.DISARMED, t('calibration.VehicleCalibrationPanel.theVehicleMustBeDisarmed')],
+  [AD_CAL_REQ.STATIONARY, t('calibration.VehicleCalibrationPanel.putTheVehicleDownAndKeep')],
+  [AD_CAL_REQ.LEVEL_SURFACE, t('calibration.VehicleCalibrationPanel.useASurfaceYouKnowTo')],
 ];
 
 function requirementsFor(cal: VehicleCalibration): string[] {

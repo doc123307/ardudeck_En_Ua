@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { t as tr } from '../../i18n';
 
 interface TagInputProps {
   tags: string[];
@@ -7,7 +8,7 @@ interface TagInputProps {
   suggestions?: string[];
 }
 
-export function TagInput({ tags, onChange, placeholder = 'Add tags...', suggestions }: TagInputProps) {
+export function TagInput({ tags, onChange, placeholder = tr('ui.TagInput.addTags'), suggestions }: TagInputProps) {
   const [input, setInput] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(-1);

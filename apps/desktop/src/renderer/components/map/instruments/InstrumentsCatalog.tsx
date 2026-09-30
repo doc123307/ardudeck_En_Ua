@@ -99,7 +99,7 @@ function roleOf(id: string): InstrumentRole {
 }
 
 const ROLE_TITLE: Record<InstrumentRole, string> = {
-  primaryFlight: 'Primary flight',
+  get primaryFlight() { return t('map.InstrumentsCatalog.primaryFlight'); },
   power: 'Power',
   navigation: 'Navigation',
   command: 'Commands',
@@ -108,9 +108,9 @@ const ROLE_TITLE: Record<InstrumentRole, string> = {
 };
 
 const ROLE_BLURB: Record<InstrumentRole, string> = {
-  primaryFlight: 'The basic-T scan: attitude, speed, altitude, heading, vertical speed.',
-  power: 'Pack voltage, current and remaining capacity.',
-  navigation: 'Fix quality, mission progress and where home is.',
+  get primaryFlight() { return t('map.InstrumentsCatalog.theBasicTScanAttitudeSpeed'); },
+  get power() { return t('map.InstrumentsCatalog.packVoltageCurrentAndRemainingCapacity'); },
+  get navigation() { return t('map.InstrumentsCatalog.fixQualityMissionProgressAndWhere'); },
   command: 'Surfaces that command the vehicle.',
   status: 'Link, mode, warnings and vehicle messages.',
   get summary() { return t('map.InstrumentsCatalog.wideCardsThatCarrySeveralValues'); },
@@ -446,7 +446,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
     }
     const obj = parsed as { name?: unknown; layout?: unknown };
     const layout = obj && typeof obj === 'object' && 'layout' in obj ? obj.layout : parsed;
-    const suggested = obj && typeof obj === 'object' && typeof obj.name === 'string' ? obj.name : 'Imported layout';
+    const suggested = obj && typeof obj === 'object' && typeof obj.name === 'string' ? obj.name : t('map.InstrumentsCatalog.importedLayout');
     // Avoid clobbering an existing name silently.
     let name = suggested;
     for (let i = 2; savedLayouts[name]; i++) name = `${suggested} ${i}`;

@@ -9,7 +9,7 @@ import { createPortal } from 'react-dom';
 import { MapPin, X, Check } from 'lucide-react';
 import { parseSurveyedPoints } from './rtk-points';
 import { useGuideStore } from '../../stores/guide-store';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 const PLACEHOLDER = `One point per line - labels optional, decimal commas OK:
 
@@ -40,7 +40,7 @@ export function SurveyedPointsDialog({
     showToast?.(
       connect
         ? t('mission.SurveyedPointsDialog.addedPolygonFromSurveyedPoints', { length: parsed.points.length })
-        : t('mission.SurveyedPointsDialog.addedSurveyedPoint', { length: parsed.points.length, v2: parsed.points.length === 1 ? '' : 's' }),
+        : t('mission.SurveyedPointsDialog.addedSurveyedPoint', { length: parsed.points.length, v2: parsed.points.length === 1 ? '' : enPlural('s') }),
       'success',
     );
     onClose();
@@ -84,11 +84,11 @@ export function SurveyedPointsDialog({
 
           <div className="flex items-center justify-between text-[11px]">
             <span className={parsed.points.length > 0 ? 'text-teal-400 font-medium' : 'text-content-tertiary'}>
-              {parsed.points.length} {t('mission.SurveyedPointsDialog.point')}{parsed.points.length === 1 ? '' : 's'} {t('mission.SurveyedPointsDialog.recognized')}
+              {parsed.points.length} {t('mission.SurveyedPointsDialog.point')}{parsed.points.length === 1 ? '' : enPlural('s')} {t('mission.SurveyedPointsDialog.recognized')}
             </span>
             {parsed.skipped.length > 0 && (
               <span className="text-amber-500" data-tip={t('mission.SurveyedPointsDialog.linesWithContentThatProducedNo')}>
-                {parsed.skipped.length} {t('mission.SurveyedPointsDialog.line')}{parsed.skipped.length === 1 ? '' : 's'} {t('mission.SurveyedPointsDialog.skipped')}
+                {parsed.skipped.length} {t('mission.SurveyedPointsDialog.line')}{parsed.skipped.length === 1 ? '' : enPlural('s')} {t('mission.SurveyedPointsDialog.skipped')}
                 {parsed.skipped.length <= 6 ? `: ${parsed.skipped.join(', ')}` : ''}
               </span>
             )}

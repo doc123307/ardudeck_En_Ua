@@ -7,7 +7,7 @@
  */
 import { AlertTriangle, X } from 'lucide-react';
 import { useTrafficStore } from '../../../stores/traffic-store';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 export function ZoneAlertBanner() {
   const alerts = useTrafficStore((s) => s.alerts);
@@ -24,7 +24,7 @@ export function ZoneAlertBanner() {
         <div className="flex items-center gap-2 mb-1.5">
           <AlertTriangle className={`w-4 h-4 ${active.length > 0 ? 'text-red-400 animate-pulse' : 'text-amber-400'}`} />
           <span className="text-xs font-semibold text-content">
-            {active.length > 0 ? t('map.ZoneAlertBanner.activePerimeterIntrusion', { length: active.length, v2: active.length === 1 ? '' : 's' }) : t('map.ZoneAlertBanner.perimeterClear')}
+            {active.length > 0 ? t('map.ZoneAlertBanner.activePerimeterIntrusion', { length: active.length, v2: active.length === 1 ? '' : enPlural('s') }) : t('map.ZoneAlertBanner.perimeterClear')}
           </span>
           <button onClick={dismiss} className="ml-auto text-content-tertiary hover:text-content" title={t('map.ZoneAlertBanner.clearAlertLog')}>
             <X className="w-3.5 h-3.5" />

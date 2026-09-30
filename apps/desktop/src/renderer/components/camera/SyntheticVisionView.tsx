@@ -603,7 +603,7 @@ export function SyntheticVisionView({ vehicle, isPrimary, osd, onActivate, strea
         <Center>
           <div className="text-sm text-amber-300">{tr('camera.SyntheticVisionView.noPositionFix')}</div>
           <div className="max-w-[80%] text-[11px] text-white/60">
-            {tr('camera.SyntheticVisionView.syntheticVisionNeedsAGpsFix')} {vehicle?.label ?? 'the vehicle'}.
+            {tr('camera.SyntheticVisionView.syntheticVisionNeedsAGpsFix')} {vehicle?.label ?? tr('camera.SyntheticVisionView.theVehicle')}.
           </div>
         </Center>
       )}

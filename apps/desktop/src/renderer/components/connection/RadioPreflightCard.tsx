@@ -38,18 +38,18 @@ export function RadioPreflightCard() {
     try {
       const batch = fixable.map((f) => {
         const existing = parameters.get(f.param);
-        if (!existing) throw new Error(`${f.param} is not loaded yet`);
+        if (!existing) throw new Error(t('connection.RadioPreflightCard.isNotLoadedYet', { param: f.param }));
         return { paramId: f.param, value: f.value, type: existing.type };
       });
       const result = await window.electronAPI.setParameterBatch(batch);
       const failed = result?.failed ?? [];
       if (failed.length > 0) {
-        setFailure(`The vehicle rejected: ${failed.join(', ')}`);
+        setFailure(t('connection.RadioPreflightCard.theVehicleRejected', { v1: failed.join(', ') }));
       } else {
         setApplied(true);
       }
     } catch (e) {
-      setFailure(e instanceof Error ? e.message : 'Applying settings failed.');
+      setFailure(e instanceof Error ? e.message : t('connection.RadioPreflightCard.applyingSettingsFailed'));
     } finally {
       setApplying(false);
     }

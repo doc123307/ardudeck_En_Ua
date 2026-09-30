@@ -148,7 +148,7 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
               )}
               <div className="max-w-[80%] text-[11px] text-white/45">
                 {source.kind === 'rtsp' || source.kind === 'mavlink'
-                  ? `${source.url ?? 'no url'} · ${source.rtspTransport ?? 'automatic'}`
+                  ? `${source.url ?? t('camera.CameraView.noUrl')} · ${source.rtspTransport ?? 'automatic'}`
                   : source.kind}
               </div>
             </>

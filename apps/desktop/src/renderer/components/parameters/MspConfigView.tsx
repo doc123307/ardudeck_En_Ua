@@ -305,40 +305,40 @@ const PID_PRESETS: Record<string, {
 // Mode definitions with beginner-friendly explanations
 // iNav permanent box IDs (from fc_msp_box.c) - must match mode-presets.ts BOX_ID
 const MODE_INFO: Record<number, { name: string; icon: LucideIcon; description: string; color: string; beginner: string; configureTab?: string }> = {
-  0: { name: 'ARM', icon: Power, get description() { return tr('parameters.MspConfigView.enableMotors'); }, color: 'bg-red-500', beginner: 'SAFETY SWITCH - Arms/disarms your aircraft. Always have this on a switch!' },
-  1: { name: 'ANGLE', icon: Square, get description() { return tr('parameters.MspConfigView.selfLevel'); }, color: 'bg-blue-500', beginner: 'BEGINNER MODE - Aircraft stays level automatically. Best for learning!' },
-  2: { name: 'HORIZON', icon: Sunrise, get description() { return tr('parameters.MspConfigView.hybridMode'); }, color: 'bg-cyan-500', beginner: 'TRAINING MODE - Self-levels at center, allows flips at full stick' },
-  3: { name: 'NAV ALTHOLD', icon: ArrowUpFromLine, get description() { return tr('parameters.MspConfigView.holdAltitude'); }, color: 'bg-teal-500', beginner: 'Holds current altitude using barometer/GPS. Throttle controls climb/descent rate.' },
-  5: { name: 'HEADING HOLD', icon: Navigation, get description() { return tr('parameters.MspConfigView.holdHeading'); }, color: 'bg-emerald-500', beginner: 'Maintains current magnetic heading. Useful for flying straight lines.' },
-  6: { name: 'HEADFREE', icon: Move3d, get description() { return tr('parameters.MspConfigView.headlessMode'); }, color: 'bg-purple-500', beginner: 'Stick directions are relative to pilot, not aircraft - useful for beginners' },
-  7: { name: 'HEADADJ', icon: RotateCw, get description() { return tr('parameters.MspConfigView.headAdjust'); }, color: 'bg-gray-500', beginner: 'Resets headfree reference direction' },
-  8: { name: 'CAMSTAB', icon: Camera, get description() { return tr('parameters.MspConfigView.cameraStabilization'); }, color: 'bg-indigo-500', beginner: 'Stabilizes camera servo output' },
-  10: { name: 'NAV RTH', icon: Home, get description() { return tr('parameters.MspConfigView.returnToHome'); }, color: 'bg-green-500', beginner: 'Return To Home - Aircraft will climb to safe altitude and fly back to launch point. Essential safety feature!' },
-  11: { name: 'NAV POSHOLD', icon: MapPin, get description() { return tr('parameters.MspConfigView.holdPosition'); }, color: 'bg-cyan-500', beginner: 'GPS position hold - Aircraft will stay in place. Great for aerial photography or when you need to stop.' },
-  12: { name: 'MANUAL', icon: Joystick, get description() { return tr('parameters.MspConfigView.directControl'); }, color: 'bg-rose-500', beginner: 'Direct servo/motor control without stabilization. For experienced pilots only!' },
-  13: { name: 'BEEPER', icon: Volume2, get description() { return tr('parameters.MspConfigView.findAircraft'); }, color: 'bg-yellow-500', beginner: 'Makes your aircraft beep - great for finding it in grass!' },
-  15: { name: 'LEDS OFF', icon: Lightbulb, get description() { return tr('parameters.MspConfigView.disableLeds'); }, color: 'bg-gray-500', beginner: 'Turns off LED strip' },
-  16: { name: 'LIGHTS', icon: Flashlight, get description() { return tr('parameters.MspConfigView.navigationLights'); }, color: 'bg-amber-500', beginner: 'Turns on navigation lights' },
-  19: { name: 'OSD OFF', icon: Monitor, get description() { return tr('parameters.MspConfigView.hideOsd'); }, color: 'bg-gray-500', beginner: 'Turns off on-screen display' },
-  20: { name: 'TELEMETRY', icon: Satellite, get description() { return tr('parameters.MspConfigView.telemetryOutput'); }, color: 'bg-blue-500', beginner: 'Enables telemetry transmission' },
-  21: { name: 'AUTO TUNE', icon: Settings2, get description() { return tr('parameters.MspConfigView.pidAutotune'); }, color: 'bg-violet-500', beginner: 'Automatically tunes PID values during flight' },
-  26: { name: 'BLACKBOX', icon: Package, get description() { return tr('parameters.MspConfigView.flightLogging'); }, color: 'bg-pink-500', beginner: 'Records flight data for tuning analysis' },
-  27: { name: 'FAILSAFE', icon: ShieldAlert, get description() { return tr('parameters.MspConfigView.emergency'); }, color: 'bg-orange-500', beginner: 'EMERGENCY MODE - Triggers failsafe behavior. Normally activated automatically when signal is lost.' },
-  28: { name: 'NAV WP', icon: Map, get description() { return tr('parameters.MspConfigView.waypointMission'); }, color: 'bg-indigo-500', beginner: 'Execute uploaded waypoint mission. Aircraft will fly to each waypoint automatically.' },
-  29: { name: 'AIRMODE', icon: Wind, get description() { return tr('parameters.MspConfigView.fullControlAtZeroThrottle'); }, color: 'bg-cyan-500', beginner: 'Keeps full stick authority even at zero throttle. Essential for freestyle tricks and flips.' },
-  30: { name: 'HOME RESET', icon: RotateCcw, get description() { return tr('parameters.MspConfigView.resetHomePosition'); }, color: 'bg-red-400', beginner: 'Sets current position as new home point. Use when you relocate during a session.' },
-  31: { name: 'GCS NAV', icon: Gamepad2, get description() { return tr('parameters.MspConfigView.groundControl'); }, color: 'bg-purple-500', beginner: 'Allow ground control station to send navigation commands (fly-to-here, etc).' },
-  34: { name: 'FLAPERON', icon: PlaneTakeoff, get description() { return tr('parameters.MspConfigView.flapsMode'); }, color: 'bg-amber-500', beginner: 'Activates flaperons for slower landing approach. Ailerons droop down to act as flaps.' },
-  35: { name: 'TURN ASSIST', icon: RotateCw, get description() { return tr('parameters.MspConfigView.coordinatedTurns'); }, color: 'bg-lime-500', beginner: 'Auto-coordinates rudder with ailerons for smooth turns. Great for fixed-wing beginners.' },
-  36: { name: 'NAV LAUNCH', icon: Rocket, get description() { return tr('parameters.MspConfigView.autoLaunch'); }, color: 'bg-orange-500', beginner: 'Automatic launch sequence for fixed-wing. Throw the plane and it will climb to safe altitude.', configureTab: 'auto-launch' },
-  37: { name: 'SERVO AUTOTRIM', icon: Scissors, get description() { return tr('parameters.MspConfigView.autoTrimServos'); }, color: 'bg-gray-500', beginner: 'Automatically adjusts servo trim during flight' },
-  45: { name: 'NAV CRUISE', icon: Plane, get description() { return tr('parameters.MspConfigView.cruiseControl'); }, color: 'bg-sky-500', beginner: 'Fixed-wing cruise mode - Maintains heading and altitude. Perfect for long-range flights.' },
-  46: { name: 'MC BRAKING', icon: OctagonX, get description() { return tr('parameters.MspConfigView.multirotorBraking'); }, color: 'bg-red-500', beginner: 'Aggressive braking when releasing sticks on multirotor' },
-  51: { name: 'PREARM', icon: KeyRound, get description() { return tr('parameters.MspConfigView.preArmCheck'); }, color: 'bg-yellow-600', beginner: 'Safety switch - must be enabled before arming. Prevents accidental arm.' },
-  52: { name: 'TURTLE', icon: Turtle, get description() { return tr('parameters.MspConfigView.flipOver'); }, color: 'bg-stone-500', beginner: 'Flip crashed aircraft back over using motor spin. For multirotors only.' },
-  53: { name: 'COURSE HOLD', icon: Compass, get description() { return tr('parameters.MspConfigView.holdCourse'); }, color: 'bg-violet-500', beginner: 'Maintains current heading while allowing altitude control. Good for flying in a straight line.' },
-  55: { name: 'WP PLANNER', icon: Waypoints, get description() { return tr('parameters.MspConfigView.missionPlanner'); }, color: 'bg-fuchsia-500', beginner: 'Enable in-flight waypoint planning via stick commands.' },
-  56: { name: 'SOARING', icon: CloudSun, get description() { return tr('parameters.MspConfigView.thermalSoaring'); }, color: 'bg-sky-400', beginner: 'Enables thermal detection and circling for gliders' },
+  0: { name: 'ARM', icon: Power, get description() { return tr('parameters.MspConfigView.enableMotors'); }, color: 'bg-red-500', get beginner() { return tr('parameters.MspConfigView.safetySwitchArmsDisarmsYourAircraft'); } },
+  1: { name: 'ANGLE', icon: Square, get description() { return tr('parameters.MspConfigView.selfLevel'); }, color: 'bg-blue-500', get beginner() { return tr('parameters.MspConfigView.beginnerModeAircraftStaysLevelAutomatically'); } },
+  2: { name: 'HORIZON', icon: Sunrise, get description() { return tr('parameters.MspConfigView.hybridMode'); }, color: 'bg-cyan-500', get beginner() { return tr('parameters.MspConfigView.trainingModeSelfLevelsAtCenter'); } },
+  3: { name: 'NAV ALTHOLD', icon: ArrowUpFromLine, get description() { return tr('parameters.MspConfigView.holdAltitude'); }, color: 'bg-teal-500', get beginner() { return tr('parameters.MspConfigView.holdsCurrentAltitudeUsingBarometerGps'); } },
+  5: { name: 'HEADING HOLD', icon: Navigation, get description() { return tr('parameters.MspConfigView.holdHeading'); }, color: 'bg-emerald-500', get beginner() { return tr('parameters.MspConfigView.maintainsCurrentMagneticHeadingUsefulFor'); } },
+  6: { name: 'HEADFREE', icon: Move3d, get description() { return tr('parameters.MspConfigView.headlessMode'); }, color: 'bg-purple-500', get beginner() { return tr('parameters.MspConfigView.stickDirectionsAreRelativeToPilot'); } },
+  7: { name: 'HEADADJ', icon: RotateCw, get description() { return tr('parameters.MspConfigView.headAdjust'); }, color: 'bg-gray-500', get beginner() { return tr('parameters.MspConfigView.resetsHeadfreeReferenceDirection'); } },
+  8: { name: 'CAMSTAB', icon: Camera, get description() { return tr('parameters.MspConfigView.cameraStabilization'); }, color: 'bg-indigo-500', get beginner() { return tr('parameters.MspConfigView.stabilizesCameraServoOutput'); } },
+  10: { name: 'NAV RTH', icon: Home, get description() { return tr('parameters.MspConfigView.returnToHome'); }, color: 'bg-green-500', get beginner() { return tr('parameters.MspConfigView.returnToHomeAircraftWillClimb'); } },
+  11: { name: 'NAV POSHOLD', icon: MapPin, get description() { return tr('parameters.MspConfigView.holdPosition'); }, color: 'bg-cyan-500', get beginner() { return tr('parameters.MspConfigView.gpsPositionHoldAircraftWillStay'); } },
+  12: { name: 'MANUAL', icon: Joystick, get description() { return tr('parameters.MspConfigView.directControl'); }, color: 'bg-rose-500', get beginner() { return tr('parameters.MspConfigView.directServoMotorControlWithoutStabilization'); } },
+  13: { name: 'BEEPER', icon: Volume2, get description() { return tr('parameters.MspConfigView.findAircraft'); }, color: 'bg-yellow-500', get beginner() { return tr('parameters.MspConfigView.makesYourAircraftBeepGreatFor'); } },
+  15: { name: 'LEDS OFF', icon: Lightbulb, get description() { return tr('parameters.MspConfigView.disableLeds'); }, color: 'bg-gray-500', get beginner() { return tr('parameters.MspConfigView.turnsOffLedStrip'); } },
+  16: { name: 'LIGHTS', icon: Flashlight, get description() { return tr('parameters.MspConfigView.navigationLights'); }, color: 'bg-amber-500', get beginner() { return tr('parameters.MspConfigView.turnsOnNavigationLights'); } },
+  19: { name: 'OSD OFF', icon: Monitor, get description() { return tr('parameters.MspConfigView.hideOsd'); }, color: 'bg-gray-500', get beginner() { return tr('parameters.MspConfigView.turnsOffOnScreenDisplay'); } },
+  20: { name: 'TELEMETRY', icon: Satellite, get description() { return tr('parameters.MspConfigView.telemetryOutput'); }, color: 'bg-blue-500', get beginner() { return tr('parameters.MspConfigView.enablesTelemetryTransmission'); } },
+  21: { name: 'AUTO TUNE', icon: Settings2, get description() { return tr('parameters.MspConfigView.pidAutotune'); }, color: 'bg-violet-500', get beginner() { return tr('parameters.MspConfigView.automaticallyTunesPidValuesDuringFlight'); } },
+  26: { name: 'BLACKBOX', icon: Package, get description() { return tr('parameters.MspConfigView.flightLogging'); }, color: 'bg-pink-500', get beginner() { return tr('parameters.MspConfigView.recordsFlightDataForTuningAnalysis'); } },
+  27: { name: 'FAILSAFE', icon: ShieldAlert, get description() { return tr('parameters.MspConfigView.emergency'); }, color: 'bg-orange-500', get beginner() { return tr('parameters.MspConfigView.emergencyModeTriggersFailsafeBehaviorNormally'); } },
+  28: { name: 'NAV WP', icon: Map, get description() { return tr('parameters.MspConfigView.waypointMission'); }, color: 'bg-indigo-500', get beginner() { return tr('parameters.MspConfigView.executeUploadedWaypointMissionAircraftWill'); } },
+  29: { name: 'AIRMODE', icon: Wind, get description() { return tr('parameters.MspConfigView.fullControlAtZeroThrottle'); }, color: 'bg-cyan-500', get beginner() { return tr('parameters.MspConfigView.keepsFullStickAuthorityEvenAt'); } },
+  30: { name: 'HOME RESET', icon: RotateCcw, get description() { return tr('parameters.MspConfigView.resetHomePosition'); }, color: 'bg-red-400', get beginner() { return tr('parameters.MspConfigView.setsCurrentPositionAsNewHome'); } },
+  31: { name: 'GCS NAV', icon: Gamepad2, get description() { return tr('parameters.MspConfigView.groundControl'); }, color: 'bg-purple-500', get beginner() { return tr('parameters.MspConfigView.allowGroundControlStationToSend'); } },
+  34: { name: 'FLAPERON', icon: PlaneTakeoff, get description() { return tr('parameters.MspConfigView.flapsMode'); }, color: 'bg-amber-500', get beginner() { return tr('parameters.MspConfigView.activatesFlaperonsForSlowerLandingApproach'); } },
+  35: { name: 'TURN ASSIST', icon: RotateCw, get description() { return tr('parameters.MspConfigView.coordinatedTurns'); }, color: 'bg-lime-500', get beginner() { return tr('parameters.MspConfigView.autoCoordinatesRudderWithAileronsFor'); } },
+  36: { name: 'NAV LAUNCH', icon: Rocket, get description() { return tr('parameters.MspConfigView.autoLaunch'); }, color: 'bg-orange-500', get beginner() { return tr('parameters.MspConfigView.automaticLaunchSequenceForFixedWing'); }, configureTab: 'auto-launch' },
+  37: { name: 'SERVO AUTOTRIM', icon: Scissors, get description() { return tr('parameters.MspConfigView.autoTrimServos'); }, color: 'bg-gray-500', get beginner() { return tr('parameters.MspConfigView.automaticallyAdjustsServoTrimDuringFlight'); } },
+  45: { name: 'NAV CRUISE', icon: Plane, get description() { return tr('parameters.MspConfigView.cruiseControl'); }, color: 'bg-sky-500', get beginner() { return tr('parameters.MspConfigView.fixedWingCruiseModeMaintainsHeading'); } },
+  46: { name: 'MC BRAKING', icon: OctagonX, get description() { return tr('parameters.MspConfigView.multirotorBraking'); }, color: 'bg-red-500', get beginner() { return tr('parameters.MspConfigView.aggressiveBrakingWhenReleasingSticksOn'); } },
+  51: { name: 'PREARM', icon: KeyRound, get description() { return tr('parameters.MspConfigView.preArmCheck'); }, color: 'bg-yellow-600', get beginner() { return tr('parameters.MspConfigView.safetySwitchMustBeEnabledBefore'); } },
+  52: { name: 'TURTLE', icon: Turtle, get description() { return tr('parameters.MspConfigView.flipOver'); }, color: 'bg-stone-500', get beginner() { return tr('parameters.MspConfigView.flipCrashedAircraftBackOverUsing'); } },
+  53: { name: 'COURSE HOLD', icon: Compass, get description() { return tr('parameters.MspConfigView.holdCourse'); }, color: 'bg-violet-500', get beginner() { return tr('parameters.MspConfigView.maintainsCurrentHeadingWhileAllowingAltitude'); } },
+  55: { name: 'WP PLANNER', icon: Waypoints, get description() { return tr('parameters.MspConfigView.missionPlanner'); }, color: 'bg-fuchsia-500', get beginner() { return tr('parameters.MspConfigView.enableInFlightWaypointPlanningVia'); } },
+  56: { name: 'SOARING', icon: CloudSun, get description() { return tr('parameters.MspConfigView.thermalSoaring'); }, color: 'bg-sky-400', get beginner() { return tr('parameters.MspConfigView.enablesThermalDetectionAndCirclingFor'); } },
 };
 
 
@@ -355,7 +355,7 @@ const RATE_TYPES = [
 function PresetSelector<T extends Record<string, { name: string; description: string; icon: LucideIcon; iconColor: string; color: string }>>({
   presets,
   onApply,
-  label = 'Quick Presets',
+  label = tr('parameters.MspConfigView.quickPresets'),
 }: {
   presets: T;
   onApply: (key: keyof T) => void;
@@ -1182,7 +1182,7 @@ function ModeChannelIndicator({
     icon: HelpCircle,
     description: tr('parameters.MspConfigView.unknown'),
     color: 'bg-gray-500',
-    beginner: 'Unknown mode',
+    beginner: tr('parameters.MspConfigView.unknownMode'),
   };
   const IconComponent = info.icon;
 
@@ -1730,12 +1730,12 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                   const currentPercent = ((rcValue - rangeMin) / totalRange) * 100;
 
                   // Friendly switch names
-                  const switchNames = ['Switch A', 'Switch B', 'Switch C', 'Switch D', 'Switch E', 'Switch F', 'Switch G', 'Switch H', 'Switch I', 'Switch J', 'Switch K', 'Switch L'];
+                  const switchNames = [tr('parameters.MspConfigView.switchA'), tr('parameters.MspConfigView.switchB'), tr('parameters.MspConfigView.switchC'), tr('parameters.MspConfigView.switchD'), tr('parameters.MspConfigView.switchE'), tr('parameters.MspConfigView.switchF'), tr('parameters.MspConfigView.switchG'), tr('parameters.MspConfigView.switchH'), tr('parameters.MspConfigView.switchI'), tr('parameters.MspConfigView.switchJ'), tr('parameters.MspConfigView.switchK'), tr('parameters.MspConfigView.switchL')];
                   const switchName = switchNames[mode.auxChannel] || `Switch ${mode.auxChannel + 1}`;
 
                   // Convert PWM range to friendly position description
                   const getPositionName = (pwm: number) => {
-                    if (pwm <= 1100) return 'Low';
+                    if (pwm <= 1100) return tr('parameters.MspConfigView.low');
                     if (pwm <= 1400) return 'Low-Mid';
                     if (pwm <= 1600) return 'Mid';
                     if (pwm <= 1800) return 'Mid-High';
@@ -1942,7 +1942,7 @@ export function MspConfigView() {
     try {
       // 1. Set platform type
       const success = await window.electronAPI?.mspSetInavPlatformType(platformType);
-      if (!success) throw new Error('Failed to change platform type');
+      if (!success) throw new Error(tr('parameters.MspConfigView.failedToChangePlatformType'));
 
       // 2. Save to EEPROM
       setPlatformChangeState('saving');
@@ -1995,7 +1995,7 @@ export function MspConfigView() {
       setRebootNeeded(false);
     } catch (err) {
       console.error('[UI] Reboot error:', err);
-      setError('Reboot failed: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      setError(tr('parameters.MspConfigView.rebootFailed') + (err instanceof Error ? err.message : tr('parameters.MspConfigView.unknownError')));
     } finally {
       // Give time for the board to disconnect before clearing state
       setTimeout(() => setRebooting(false), 3000);
@@ -2033,7 +2033,7 @@ export function MspConfigView() {
         setRebootNeeded(true);
       }
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+      const errorMsg = err instanceof Error ? err.message : tr('parameters.MspConfigView.unknownError');
       setError(tr('parameters.MspConfigView.hardwareToggleError', { errorMsg }));
       console.error('[UI] Hardware sensor toggle error:', err);
     } finally {
@@ -2082,7 +2082,7 @@ export function MspConfigView() {
         console.error('[UI] Failed to set features');
       }
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+      const errorMsg = err instanceof Error ? err.message : tr('parameters.MspConfigView.unknownError');
       setError(tr('parameters.MspConfigView.featureToggleError', { errorMsg }));
       console.error('[UI] Feature toggle error:', err);
     } finally {

@@ -6,7 +6,7 @@ import { useParameterStore } from '../../../stores/parameter-store';
 import { useTelemetryStore } from '../../../stores/telemetry-store';
 import { useEffectiveRc } from '../../../stores/pseudo-tx-store';
 import { SwitchDetector, switchPosition, rcinPassthroughFunction } from './switch-detect';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 const PWM_MIN = 900;
 const PWM_MAX = 2100;
@@ -235,7 +235,7 @@ export const SwitchActionsSection: React.FC = () => {
         <div className="mt-3 flex items-center gap-3 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
           <Zap className="w-4 h-4 text-amber-400 shrink-0" />
           <span className="flex-1 text-sm text-amber-300">
-            {pending.size} {t('mavlink_config.SwitchActionsSection.change')}{pending.size === 1 ? '' : 's'} {t('mavlink_config.SwitchActionsSection.stagedNothingIsWrittenToThe')}
+            {pending.size} {t('mavlink_config.SwitchActionsSection.change')}{pending.size === 1 ? '' : enPlural('s')} {t('mavlink_config.SwitchActionsSection.stagedNothingIsWrittenToThe')}
           </span>
           <button
             onClick={() => setPending(new Map())}

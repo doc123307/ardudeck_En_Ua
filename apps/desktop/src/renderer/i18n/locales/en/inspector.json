@@ -9,7 +9,8 @@
       "dropTheSamplesCollectedSoFar": "Drop the samples collected so far",
       "clear": "Clear",
       "fieldBuffer": "field · buffer",
-      "max": "max"
+      "max": "max",
+      "series": "series"
     },
     "InspectorGraphsView": {
       "noGraphs": "No graphs",
@@ -60,7 +61,9 @@
       "waitingForPackets": "Waiting for packets…",
       "notConnected": "Not connected",
       "messagesWillAppearHereAsSoon": "Messages will appear here as soon as the FC starts sending.",
-      "connectToAFlightControllerFrom": "Connect to a flight controller from the panel on the left."
+      "connectToAFlightControllerFrom": "Connect to a flight controller from the panel on the left.",
+      "type": "type",
+      "types": "types"
     }
   }
 }

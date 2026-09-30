@@ -43,7 +43,9 @@
       "leavingTheCliTabWillSend": "Leaving the CLI tab will send an exit command which triggers a flight controller reboot (2-4 seconds).",
       "theAppWillAutomaticallyReconnectAfter": "The app will automatically reconnect after the board restarts.",
       "stayInCli": "Stay in CLI",
-      "leaveAndReboot": "Leave and Reboot"
+      "leaveAndReboot": "Leave and Reboot",
+      "fixedWing": "Fixed Wing",
+      "defaultAltitudeReferenceResetToHome": "Default altitude reference reset to Home (terrain-relative was refused by the vehicle)."
     }
   }
 }

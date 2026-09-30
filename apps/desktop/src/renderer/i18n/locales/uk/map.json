@@ -26,7 +26,10 @@
       "cameraCenter": "центр камери"
     },
     "CompactReadout": {
-      "notSetUp": "не налаштовано"
+      "notSetUp": "не налаштовано",
+      "toLaunch": "до старту",
+      "noHome": "немає дому",
+      "noRssi": "немає RSSI"
     },
     "DockedGroup": {
       "displayForAll": "Вигляд для всіх",
@@ -37,7 +40,9 @@
       "displayModeForTheWholeGroup": "Режим відображення для всієї групи",
       "constellation": "Сузір'я",
       "dockedGroup": "Група приладів",
-      "dragOutOrClickToUndock": "Витягніть або клацніть, щоб від'єднати {{label}}"
+      "dragOutOrClickToUndock": "Витягніть або клацніть, щоб від'єднати {{label}}",
+      "height": "Висота",
+      "width": "Ширина"
     },
     "ElevationLegend": {
       "clickToEdit": "Клацніть, щоб змінити",
@@ -67,7 +72,8 @@
       "uploading": "Завантаження...",
       "uploadStart": "Завантажити й почати",
       "startAnyway": "Почати все одно",
-      "confirm": "підтвердити"
+      "confirm": "підтвердити",
+      "noLink": "НЕМАЄ ЗВ'ЯЗКУ"
     },
     "InstrumentsCatalog": {
       "summary": "Зведення",
@@ -109,7 +115,12 @@
       "onScreen": "на екрані",
       "searchInstruments": "Пошук приладів",
       "close": "Закрити",
-      "layoutAndPresets": "Макет і шаблони"
+      "layoutAndPresets": "Макет і шаблони",
+      "primaryFlight": "Основні пілотажні",
+      "theBasicTScanAttitudeSpeed": "Базова T-схема: положення, швидкість, висота, курс, вертикальна швидкість.",
+      "packVoltageCurrentAndRemainingCapacity": "Напруга батареї, струм і залишок ємності.",
+      "fixQualityMissionProgressAndWhere": "Якість фіксу, прогрес місії й де дім.",
+      "importedLayout": "Імпортована розкладка"
     },
     "InstrumentsLayer": {
       "analog": "Аналоговий",
@@ -135,7 +146,16 @@
       "fecCorrected": "Виправлено FEC",
       "freeSpaceInTheRadioS": "Вільне місце в буфері передавання радіо; близько 0% — канал не встигає за вихідними даними",
       "txBufferFree": "Вільно в буфері Tx",
-      "noTelemetryModemIsReportingOn": "На цьому каналі жоден телеметрійний модем не звітує. RADIO_STATUS надсилають радіо класу SiK/RFD900 і шлюзи wfb-ng або ELRS; прямий USB і звичайні мережеві канали його не надсилають."
+      "noTelemetryModemIsReportingOn": "На цьому каналі жоден телеметрійний модем не звітує. RADIO_STATUS надсилають радіо класу SiK/RFD900 і шлюзи wfb-ng або ELRS; прямий USB і звичайні мережеві канали його не надсилають.",
+      "receivedSignalStrengthRawAndSik": "Рівень прийнятого сигналу (сирий і дБм за калібруванням SiK; інші модеми масштабують інакше)",
+      "backgroundNoiseFloorRawAndSik": "Рівень фонового шуму (сирий і дБм за калібруванням SiK)",
+      "whatTheGroundSideModemHears": "Що наземний модем чує від апарата",
+      "whatTheVehicleSideModemHears": "Що бортовий модем чує від землі (передається назад каналом)",
+      "packetsLostToReceptionErrorsSince": "Пакети, втрачені через помилки прийому від старту (накопичено, з поточною швидкістю)",
+      "damagedPacketsRepairedByForwardError": "Пошкоджені пакети, відновлені кодом корекції помилок; зростання лічильника означає, що канал працює на межі",
+      "notSetUp": "не налаштовано",
+      "separateRcReceiverSignalReportedBy": "Сигнал окремого RC-приймача, повідомлений польотним контролером",
+      "notSetUp2": "НЕ НАЛАШТОВАНО"
     },
     "MapCommandPopup": {
       "flyHere": "Летіти сюди",
@@ -198,7 +218,13 @@
       "terrain": "Рельєф",
       "aboveTheGroundBelowTheVehicle": "Над землею під апаратом. Потрібні дані рельєфу або далекомір.",
       "sea": "Море",
-      "aboveMeanSeaLevelAmsl": "Над середнім рівнем моря (AMSL)"
+      "aboveMeanSeaLevelAmsl": "Над середнім рівнем моря (AMSL)",
+      "onArrivalItDependsOnQ": "Що буде після прибуття, залежить від Q_GUIDED_MODE, який ще не прочитано.",
+      "onArrivalItTransitionsBackAnd": "Після прибуття повертається в режим зависання й зависає там.",
+      "onArrivalItCirclesAsA": "Після прибуття кружляє як літак; зависати не буде (Q_GUIDED_MODE вимкнено).",
+      "transitionsToForwardFlightAndFlies": "Переходить у горизонтальний політ і летить туди на крилі, а не в зависанні. {{arrival}}",
+      "climbAndReturn": "Набрати висоту й повернутися",
+      "confirmLand": "Підтвердити посадку"
     },
     "MapLayersControl": {
       "mapLayersOverlays": "Шари та накладки карти",
@@ -219,7 +245,8 @@
       "lat": "Шир.",
       "lng": "Довг.",
       "go": "Перейти",
-      "cancel": "Скасувати"
+      "cancel": "Скасувати",
+      "useThisPoint": "Використати цю точку"
     },
     "MapSearchControl": {
       "noMatchFound": "Нічого не знайдено",
@@ -303,6 +330,10 @@
       "openTheFullRtkNtripPanel": "Відкрити повну панель RTK / NTRIP (список точок монтування, TLS, налаштування GGA)",
       "fullSettingsInPanel": "Усі налаштування в панелі"
     },
+    "TerrainOverlayLayer": {
+      "no2dContext": "Немає 2D-контексту",
+      "tileLoadFailed": "Не вдалося завантажити тайл"
+    },
     "TrafficAltitudeFilter": {
       "altitudeFilter": "Фільтр за висотою",
       "collapse": "Згорнути",
@@ -311,7 +342,8 @@
       "ceiling": "Верхня межа",
       "hideTrafficAboveCeiling": "Ховати трафік вище верхньої межі",
       "belowTheFloorIsHiddenAbove": "Нижче нижньої межі — приховано. Вище верхньої межі —",
-      "shrinksAndFades": "зменшується й тьмяніє"
+      "shrinksAndFades": "зменшується й тьмяніє",
+      "isHidden": "приховано"
     },
     "WindControls": {
       "windAtAgl": "Вітер на {{v1}} над землею",
@@ -319,7 +351,15 @@
       "playForecast": "Відтворити прогноз",
       "forecastHour": "Година прогнозу",
       "regionalFlow25KmModelNot": "Регіональний потік (модель ~25 км). Без деталей долин/хребтів — біля рельєфу довіряйте бортовим датчикам.",
-      "cycleUnitsMSKtMph": "Змінити одиниці (м/с · вузли · миль/год · км/год)"
+      "cycleUnitsMSKtMph": "Змінити одиниці (м/с · вузли · миль/год · км/год)",
+      "sun": "Нд",
+      "mon": "Пн",
+      "tue": "Вт",
+      "wed": "Ср",
+      "thu": "Чт",
+      "fri": "Пт",
+      "sat": "Сб",
+      "windDataUnavailable": "Дані про вітер недоступні"
     },
     "WindRoseCard": {
       "close": "Закрити"
@@ -329,6 +369,20 @@
       "perimeterClear": "Периметр чистий",
       "clearAlertLog": "Очистити журнал тривог",
       "awarenessOnlyMitigationIfAnyIs": "Лише для інформування. Заходи протидії, якщо вони є, вживають окремо уповноважені сторони."
+    },
+    "contact_popup": {
+      "remoteId": "Remote ID",
+      "onGround": "На землі",
+      "groundSpeed": "Шляхова швидкість",
+      "vertSep": "Верт. розділ."
+    },
+    "contact_style": {
+      "groundVehicle": "Наземний апарат",
+      "unknownType": "Невідомий тип"
+    },
+    "guided_speed_range": {
+      "airspeedMinMaxIsOutsideThat": "AIRSPEED_MIN..MAX = {{lo}}-{{hi}} {{unitLabel}}; поза цим діапазоном апарат відхиляє команду",
+      "wpnavSpeedAllowsUpTo": "WPNAV_SPEED дозволяє до {{hi}} {{unitLabel}}"
     },
     "preset_layouts": {
       "gaugeBarAlongTheBottomCommand": "Смуга шкал унизу, командна панель ліворуч.",
@@ -369,7 +423,8 @@
       "messages": "Повідомлення",
       "flightControl": "Керування польотом",
       "compact": "Компактний",
-      "bar": "Смуга"
+      "bar": "Смуга",
+      "sats": "-- супутн."
     },
     "tactical_icon_pool": {
       "multirotor": "Мультиротор",
@@ -379,6 +434,10 @@
       "submarine": "Підводний апарат",
       "antennaTracker": "Антенний трекер",
       "unknown": "Невідомо"
+    },
+    "dock_groups": {
+      "analog": "Аналоговий",
+      "numeric": "Числовий"
     }
   }
 }

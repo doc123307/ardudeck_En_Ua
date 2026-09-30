@@ -24,6 +24,7 @@ import { useConnectionStore } from './connection-store';
 import { useActiveVehicleStore } from './active-vehicle-store';
 import { useEditModeStore } from './edit-mode-store';
 import { useSettingsStore } from './settings-store';
+import { t } from '../i18n';
 
 export type WeatherLocationSource = 'vehicle' | 'home' | 'map' | 'override';
 
@@ -166,7 +167,7 @@ export const useWeatherStore = create<WeatherStore>((set, get) => ({
 
     set({
       weather: summary,
-      error: summary ? null : 'Weather data unavailable. Check your internet connection and try again.',
+      error: summary ? null : t('stores.weather_store.weatherDataUnavailableCheckYourInternet'),
       loading: false,
       lastFetchMs: Date.now(),
       geomag: activity,

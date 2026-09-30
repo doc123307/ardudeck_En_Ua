@@ -43,7 +43,9 @@
       "leavingTheCliTabWillSend": "Выход из вкладки CLI отправит команду exit, которая перезагрузит полётный контроллер (2–4 секунды).",
       "theAppWillAutomaticallyReconnectAfter": "Программа автоматически переподключится после перезапуска платы.",
       "stayInCli": "Остаться в CLI",
-      "leaveAndReboot": "Выйти и перезагрузить"
+      "leaveAndReboot": "Выйти и перезагрузить",
+      "fixedWing": "Самолёт",
+      "defaultAltitudeReferenceResetToHome": "Отсчёт высоты по умолчанию сброшен на «Дом» (аппарат отклонил отсчёт от рельефа)."
     }
   }
 }

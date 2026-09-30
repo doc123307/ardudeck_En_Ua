@@ -233,7 +233,7 @@ function RegionCard({
               {/* The size is the whole point of the confirmation: 150 MB is minutes of network
                   against services that rate-limit, not a file that can be undeleted. */}
               <span className="text-content-tertiary">
-                {t('trainer.TrainerRegionStep.delete')} {region.sizeBytes ? `${Math.round(region.sizeBytes / 1e6)} MB` : 'this'}?
+                {t('trainer.TrainerRegionStep.delete')} {region.sizeBytes ? `${Math.round(region.sizeBytes / 1e6)} MB` : t('trainer.TrainerRegionStep.this')}?
               </span>
               <button
                 className="rounded px-2 py-1 text-content-secondary hover:bg-surface-raised"

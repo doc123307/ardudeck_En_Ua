@@ -46,17 +46,17 @@ const INPUT_SOURCE_NAMES: Record<number, string> = {
   1: 'Pitch',
   2: 'Yaw',
   3: 'Throttle',
-  4: 'RC Roll (raw)',
-  5: 'RC Pitch (raw)',
-  6: 'RC Yaw (raw)',
-  7: 'RC Throttle (raw)',
+  get 4() { return t('parameters.ServoMixerTab.rcRollRaw'); },
+  get 5() { return t('parameters.ServoMixerTab.rcPitchRaw'); },
+  get 6() { return t('parameters.ServoMixerTab.rcYawRaw'); },
+  get 7() { return t('parameters.ServoMixerTab.rcThrottleRaw'); },
   8: 'AUX 1',
   9: 'AUX 2',
   10: 'AUX 3',
   11: 'AUX 4',
-  12: 'Gimbal Pitch',
-  13: 'Gimbal Roll',
-  14: 'Flap input',
+  get 12() { return t('parameters.ServoMixerTab.gimbalPitch'); },
+  get 13() { return t('parameters.ServoMixerTab.gimbalRoll'); },
+  get 14() { return t('parameters.ServoMixerTab.flapInput'); },
   15: 'Headtracker',
 };
 
@@ -355,7 +355,7 @@ export default function ServoMixerTab({ modified, setModified }: Props) {
   // Describe what a servo does based on its rules
   const describeServoFunction = (servoIndex: number): string => {
     const rules = getRulesForServo(servoIndex);
-    if (rules.length === 0) return 'Not configured';
+    if (rules.length === 0) return t('parameters.ServoMixerTab.notConfigured');
 
     const inputs = rules.map((r) => {
       const name = INPUT_SOURCE_NAMES[r.inputSource] || `Input ${r.inputSource}`;

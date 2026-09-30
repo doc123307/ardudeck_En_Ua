@@ -52,7 +52,16 @@
       "saved": "Сохранено",
       "sendTheseAreasToTheMission": "Отправить эти области в планировщик миссий",
       "sent": "Отправлено",
-      "sendToMission": "Отправить в миссию"
+      "sendToMission": "Отправить в миссию",
+      "themeDarkClickForLight": "Тема: тёмная (кликните для светлой)",
+      "themeLightClickForSystem": "Тема: светлая (кликните для системной)",
+      "themeSystemClickForDark": "Тема: системная (кликните для тёмной)",
+      "undoCtrlZ": "Отменить (Ctrl+Z)",
+      "redoCtrlShiftZ": "Повторить (Ctrl+Shift+Z)",
+      "zoomToFitAllObjects": "Масштабировать, чтобы показать все объекты",
+      "importKmlKmzGeojsonShapefile": "Импорт KML / KMZ / GeoJSON / Shapefile",
+      "exportAreasAsKml": "Экспортировать участки как KML",
+      "exportAreasAsKmz": "Экспортировать участки как KMZ"
     },
     "ObjectEditorContextMenu": {
       "convertToEditablePolygon": "Преобразовать в редактируемый полигон",
@@ -79,7 +88,8 @@
       "undo": "Отменить действие",
       "ctrlZ": "Ctrl+Z",
       "redo": "Повторить действие",
-      "ctrlShiftZ": "Ctrl+Shift+Z"
+      "ctrlShiftZ": "Ctrl+Shift+Z",
+      "noWaypoints": "нет точек"
     },
     "ObjectEditorHud": {
       "area": "Площадь",
@@ -136,7 +146,16 @@
       "fencesFromFc": "↓ Геозоны с FC",
       "uploadAllInclusionExclusionObjectsTo": "Загрузить все объекты включения/исключения в полётный контроллер",
       "fencesToFc": "↑ Геозоны в FC",
-      "setColor": "Установить цвет {{c}}"
+      "setColor": "Установить цвет {{c}}",
+      "joinedCorridors": "Объединено коридоров: {{v1}}",
+      "noFencesOnFc": "На FC нет геозон",
+      "loadedFenceFromFc": "Загружено геозон с FC: {{length}}",
+      "tagObjectsAsFencesFirst": "Сначала отметьте объекты как геозоны",
+      "uploadedFence": "Выгружено геозон: {{length}}",
+      "uploadFailed": "Ошибка выгрузки",
+      "area": "Участок",
+      "inclusion": "Разрешённая зона",
+      "exclusion": "Запрещённая зона"
     },
     "area_editor_layers_store": {
       "satellite": "Спутник",

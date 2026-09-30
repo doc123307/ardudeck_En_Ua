@@ -36,7 +36,14 @@
       "addAFeed": "Добавить источник",
       "orSwitchTo": "или переключитесь на",
       "noVehiclesToShow": "Нет аппаратов для показа.",
-      "noFeedsConfiguredOpenSourcesTo": "Источники не настроены. Откройте «Источники», чтобы добавить по одному на аппарат."
+      "noFeedsConfiguredOpenSourcesTo": "Источники не настроены. Откройте «Источники», чтобы добавить по одному на аппарат.",
+      "centerCoords": "Координаты центра",
+      "flightHud": "Полётный HUD",
+      "snapshotSaved": "Снимок сохранён",
+      "snapshotFailed": "Не удалось сделать снимок: {{v1}}",
+      "recordFailed": "Ошибка записи: {{v1}}",
+      "recordingSaved": "Запись сохранена",
+      "videoDiagnosticsCopied": "Диагностика видео скопирована"
     },
     "CameraSourceMenu": {
       "selectAVehicleToConfigureIts": "Выберите аппарат, чтобы настроить его камеры.",
@@ -85,7 +92,8 @@
       "videoStalledReconnecting": "Видео остановилось, переподключение…",
       "theFeedStoppedDeliveringFramesRetrying": "Источник перестал присылать кадры. Повторяем автоматически; переподключение устройства тоже помогает.",
       "noVideo": "Нет видео",
-      "reconnectNow": "Переподключить"
+      "reconnectNow": "Переподключить",
+      "noUrl": "нет URL"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "Подвес управляется с RC, управляйте им с пульта",
@@ -120,7 +128,12 @@
       "rtspIsServedOverTcpFor": "RTSP передаётся по TCP. Для OpenCV установите",
       "toSkipTheUdpAttempt": "чтобы пропустить попытку UDP.",
       "copy": "Копировать",
-      "encoderIsCpuLimitedUntickHud": "Кодировщику не хватает CPU. Отключите HUD или уменьшите панель, чтобы облегчить нагрузку."
+      "encoderIsCpuLimitedUntickHud": "Кодировщику не хватает CPU. Отключите HUD или уменьшите панель, чтобы облегчить нагрузку.",
+      "installingEngine": "Установка движка...",
+      "off": "Выкл.",
+      "sendsThe3dViewOnlyWithout": "Отправляет только 3D-вид, без HUD и элементов управления.",
+      "sendsTheFollowedVehicleSView": "Отправляет вид отслеживаемого аппарата с HUD и OSD, отрендеренный отдельно, так что ничто на экране его не перекрывает.",
+      "sendsTheTerrainOnlyWithoutHud": "Отправляет только рельеф, без HUD и OSD."
     },
     "SyntheticVisionView": {
       "clickToMakeActive": "Щёлкните, чтобы сделать активным",
@@ -128,7 +141,8 @@
       "syntheticVisionNeedsAGpsFix": "Синтетическому зрению нужен фикс GPS от",
       "terrainM": "РЕЛЬЕФ {{v1}} м",
       "loadingTerrain": "Загрузка рельефа…",
-      "terrainDataUnavailableCheckTheInternet": "Данные рельефа недоступны, проверьте подключение к интернету."
+      "terrainDataUnavailableCheckTheInternet": "Данные рельефа недоступны, проверьте подключение к интернету.",
+      "theVehicle": "аппарат"
     },
     "VideoLinkBanner": {
       "noVideoRetrying": "НЕТ ВИДЕО · повтор",
@@ -173,7 +187,13 @@
       "pressAddAndSelectTheFeed": "— нажмите «Добавить» и выберите источник.",
       "nothingOnPort": "Пока ничего на порту",
       "yetMakeSureTheGroundStation": "— убедитесь, что наземная станция показывает видео и пересылает его на IP этого компьютера.",
-      "arrivingDataIsNotVideo": "Полученные данные — не видео:"
+      "arrivingDataIsNotVideo": "Полученные данные — не видео:",
+      "dongleConnected": "Адаптер подключён ({{dongleName}})",
+      "plugTheWifiDongleFromThe": "Подключите WiFi-адаптер из комплекта камеры к этому компьютеру",
+      "receiverComponentInstalled": "Компонент приёмника установлен",
+      "receiverComponentMissing": "Компонент приёмника отсутствует",
+      "pairingKeyImported": "Ключ сопряжения импортирован",
+      "pairingKeyMissing": "Ключ сопряжения отсутствует"
     },
     "camera_presets": {
       "advertisedByVehicleMavlink": "Объявленное аппаратом (MAVLink)",
@@ -240,6 +260,38 @@
       "rollPitchTiltRolloverAwareness": "Наклон по крену/тангажу (риск опрокидывания)",
       "distanceToActiveWaypoint": "Расстояние до активной путевой точки",
       "crosstrackError": "Боковое отклонение от траектории"
+    },
+    "stream_health": {
+      "noFramesArriving": "Кадры не поступают",
+      "packetLossCheckTheRadioLink": "Потеря пакетов {{lossPct}}%: проверьте радиоканал",
+      "framesDroppedThisMachineIsBehind": "Пропущено кадров: {{droppedFrames}}: компьютер не успевает",
+      "requestingKeyframesAfterLoss": "Запрос ключевых кадров после потери",
+      "onlyFps": "Только {{fps}} кадр/с"
+    },
+    "useCameraStream": {
+      "noVideoArrivedTheFeedConnected": "Видео не поступило. Поток подключился, но кадров не отправил.",
+      "noPlaybackUrlYet": "URL воспроизведения ещё нет",
+      "streamFailed": "Ошибка потока",
+      "unexpectedPlaybackDescriptor": "Неожиданный дескриптор воспроизведения",
+      "playbackError": "Ошибка воспроизведения"
+    },
+    "useCanvasStream": {
+      "thisViewIsHiddenAnotherTab": "Этот вид скрыт (другая вкладка или свёрнут). Покажите его, затем запустите поток.",
+      "couldNotCaptureTheView": "Не удалось захватить вид: {{v1}}",
+      "couldNotCaptureThe3dView": "Не удалось захватить 3D-вид",
+      "mediaHubUnavailable": "Медиахаб недоступен",
+      "streamConnectionToTheMediaHub": "Не удалось подключить поток к медиахабу ({{why}})",
+      "frameCroppingIsNotSupportedBy": "обрезка кадра не поддерживается этой сборкой",
+      "noVideoTrack": "нет видеодорожки",
+      "noFramesIn3s": "нет кадров за 3 с ({{detail}})",
+      "error": "Ошибка"
+    },
+    "webrtc_diag": {
+      "noCandidates": "нет кандидатов",
+      "noWebrtcConnectionsThisSession": "в этом сеансе нет соединений WebRTC"
+    },
+    "whip_publish": {
+      "whipUnreachable": "WHIP недоступен: {{v1}}"
     }
   }
 }

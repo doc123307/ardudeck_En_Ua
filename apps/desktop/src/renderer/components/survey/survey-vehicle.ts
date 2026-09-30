@@ -118,11 +118,11 @@ export function finishCommand(
 /** How the detected aircraft is named in the planner. */
 export function vehicleClassLabel(vehicleClass: ArduPilotVehicleClass | undefined): string {
   switch (vehicleClass) {
-    case 'plane': return 'Fixed wing';
+    case 'plane': return t('survey.survey_vehicle.fixedWing');
     case 'vtol': return 'VTOL';
     case 'copter': return 'Multirotor';
-    case 'rover': return 'Ground vehicle';
-    case 'sub': return 'Submarine';
+    case 'rover': return t('survey.survey_vehicle.groundVehicle');
+    case 'sub': return t('survey.survey_vehicle.submarine');
     default: return 'Unknown';
   }
 }
@@ -132,12 +132,12 @@ export function vehiclePlanningNote(
   vehicleClass: ArduPilotVehicleClass | undefined,
   launch?: SurveyLaunch,
 ): string {
-  if (vehicleClass === undefined) return 'No vehicle connected - pick an airframe to plan for';
+  if (vehicleClass === undefined) return t('survey.survey_vehicle.noVehicleConnectedPickAnAirframe');
   const turns = surveyModeForVehicle(vehicleClass) === 'plane'
-    ? 'overshoot and racetracks at hairpins'
-    : 'turns on the spot, no overshoot';
+    ? t('survey.survey_vehicle.overshootAndRacetracksAtHairpins')
+    : t('survey.survey_vehicle.turnsOnTheSpotNoOvershoot2');
   const start = launchCommands(launch, vehicleClass).takeoff === MAV_CMD.NAV_VTOL_TAKEOFF
-    ? 'vertical takeoff and landing'
-    : 'normal takeoff, RTL home';
+    ? t('survey.survey_vehicle.verticalTakeoffAndLanding')
+    : t('survey.survey_vehicle.normalTakeoffRtlHome');
   return `${vehicleClassLabel(vehicleClass)}: ${turns} · ${start}`;
 }

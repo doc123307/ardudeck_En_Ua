@@ -46,7 +46,7 @@ export function ProfileManager<T>({
   currentData,
   onLoad,
   onReset,
-  label = 'My Profiles',
+  label = t('ui.ProfileManager.myProfiles'),
   showReset = true,
 }: ProfileManagerProps<T>) {
   const [profiles, setProfiles] = useState<Record<string, { name: string; data: T }>>({});

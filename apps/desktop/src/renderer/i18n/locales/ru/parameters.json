@@ -64,7 +64,8 @@
       "haveAWayToAbortDisarm": "Имейте способ прервать (переключатель дизарма или ручное переопределение)",
       "refresh": "Обновить",
       "saving": "Сохранение...",
-      "saveLaunchConfig": "Сохранить настройки запуска"
+      "saveLaunchConfig": "Сохранить настройки запуска",
+      "launchConfigurationSaved": "Настройки запуска сохранены"
     },
     "FilterConfigTab": {
       "firstOrderGentleSlope": "Первый порядок, пологий спад",
@@ -125,7 +126,8 @@
       "dTerm": "D-составляющая:",
       "moreAggressiveFilteringHereReducesMotor": "Более агрессивная фильтрация здесь уменьшает нагрев моторов и колебания.",
       "setTo0": "Значение 0:",
-      "disablesThatFilterCompletely": "полностью отключает этот фильтр."
+      "disablesThatFilterCompletely": "полностью отключает этот фильтр.",
+      "filterSettingsSaved": "Настройки фильтров сохранены!"
     },
     "MotorMixerTab": {
       "mostCommonDroneLayout": "Самая распространённая схема дрона",
@@ -188,7 +190,17 @@
       "clockwise": "По часовой",
       "counterClockwise": "Против часовой",
       "frontOfAircraft": "Перед аппарата",
-      "numbersInTheDiagramMatchMotor": "Номера на схеме соответствуют выходам моторов на полётном контроллере (M0, M1 и т. д.). Противоположные моторы вращаются в противоположные стороны, чтобы компенсировать крутящий момент."
+      "numbersInTheDiagramMatchMotor": "Номера на схеме соответствуют выходам моторов на полётном контроллере (M0, M1 и т. д.). Противоположные моторы вращаются в противоположные стороны, чтобы компенсировать крутящий момент.",
+      "thisIsWhatMostRacingAnd": "Так сделано большинство гоночных и фристайл-дронов. Форма X даёт сбалансированное управление во всех направлениях.",
+      "motorsAreArrangedInAShape": "Моторы расположены крестом +. Один мотор смотрит вперёд. Реже, но хорошо подходит для некоторых рам.",
+      "sixMotorsProvideMorePowerAnd": "Шесть моторов дают больше мощности и резервирования. Если один мотор откажет, можно успеть безопасно сесть.",
+      "mostAirplanesHaveOneMotorAt": "Большинство самолётов имеют один мотор спереди (тянущий) или сзади (толкающий). Управление — рулями.",
+      "twoWingMotorsSpinningOppositeDirections": "Два мотора на крыльях вращаются в противоположные стороны. Рыскание — ускорением одного мотора и замедлением другого.",
+      "twoWingMotorsAtEqualSpeed": "Два мотора на крыльях с одинаковой скоростью. Для самолётов с рулём направления/хвостом для рыскания.",
+      "vtolAircraft4LiftingMotorsLike": "VTOL: 4 подъёмных мотора (как у квадро) плюс 1 толкающий для горизонтального полёта. Самая популярная схема VTOL.",
+      "vtolWith3MotorsThatTilt": "VTOL с 3 поворотными моторами для перехода. Легче QuadPlane, но механически сложнее.",
+      "motor2": "мотор",
+      "motors": "моторов"
     },
     "MspConfigView": {
       "slowPredictableGreatForLearning": "Медленно и предсказуемо — отлично для обучения",
@@ -398,7 +410,56 @@
       "safety": "Безопасность",
       "sensors": "Датчики",
       "settingsChangedThatRequireAReboot": "Изменены настройки, требующие перезагрузки.",
-      "rebootNow": "Перезагрузить сейчас"
+      "rebootNow": "Перезагрузить сейчас",
+      "safetySwitchArmsDisarmsYourAircraft": "ПРЕДОХРАНИТЕЛЬ — армирует/дизармирует аппарат. Всегда держите его на переключателе!",
+      "beginnerModeAircraftStaysLevelAutomatically": "РЕЖИМ ДЛЯ НОВИЧКОВ — аппарат сам держится ровно. Лучше всего для обучения!",
+      "trainingModeSelfLevelsAtCenter": "УЧЕБНЫЙ РЕЖИМ — выравнивается у центра, позволяет флипы на полном стике",
+      "holdsCurrentAltitudeUsingBarometerGps": "Удерживает текущую высоту по барометру/GPS. Газ управляет скоростью набора/снижения.",
+      "maintainsCurrentMagneticHeadingUsefulFor": "Держит текущий магнитный курс. Полезно для полёта по прямой.",
+      "stickDirectionsAreRelativeToPilot": "Направления стиков относительно пилота, а не аппарата — полезно для новичков",
+      "resetsHeadfreeReferenceDirection": "Сбрасывает опорное направление headfree",
+      "stabilizesCameraServoOutput": "Стабилизирует выход сервы камеры",
+      "returnToHomeAircraftWillClimb": "Возврат домой — аппарат наберёт безопасную высоту и полетит к точке старта. Ключевая функция безопасности!",
+      "gpsPositionHoldAircraftWillStay": "Удержание позиции GPS — аппарат стоит на месте. Отлично для аэрофото или когда нужно остановиться.",
+      "directServoMotorControlWithoutStabilization": "Прямое управление сервами/моторами без стабилизации. Только для опытных пилотов!",
+      "makesYourAircraftBeepGreatFor": "Аппарат пищит — отлично, чтобы найти его в траве!",
+      "turnsOffLedStrip": "Выключает светодиодную ленту",
+      "turnsOnNavigationLights": "Включает навигационные огни",
+      "turnsOffOnScreenDisplay": "Выключает экранное меню (OSD)",
+      "enablesTelemetryTransmission": "Включает передачу телеметрии",
+      "automaticallyTunesPidValuesDuringFlight": "Автоматически настраивает PID в полёте",
+      "recordsFlightDataForTuningAnalysis": "Записывает полётные данные для анализа настройки",
+      "emergencyModeTriggersFailsafeBehaviorNormally": "АВАРИЙНЫЙ РЕЖИМ — запускает failsafe. Обычно включается автоматически при потере сигнала.",
+      "executeUploadedWaypointMissionAircraftWill": "Выполнить загруженную миссию. Аппарат автоматически пролетит все точки.",
+      "keepsFullStickAuthorityEvenAt": "Полное управление даже на нулевом газе. Необходимо для фристайл-трюков и флипов.",
+      "setsCurrentPositionAsNewHome": "Задаёт текущую позицию новой точкой дома. Используйте, если сменили место во время сессии.",
+      "allowGroundControlStationToSend": "Разрешить наземной станции отправлять навигационные команды («лететь сюда» и т. п.).",
+      "activatesFlaperonsForSlowerLandingApproach": "Включает флапероны для более медленного захода на посадку. Элероны опускаются и работают как закрылки.",
+      "autoCoordinatesRudderWithAileronsFor": "Автоматически координирует руль направления с элеронами для плавных разворотов. Отлично для новичков на самолётах.",
+      "automaticLaunchSequenceForFixedWing": "Автоматический запуск самолёта. Бросьте самолёт — он сам наберёт безопасную высоту.",
+      "automaticallyAdjustsServoTrimDuringFlight": "Автоматически регулирует трим серв в полёте",
+      "fixedWingCruiseModeMaintainsHeading": "Крейсерский режим самолёта — держит курс и высоту. Идеально для дальних полётов.",
+      "aggressiveBrakingWhenReleasingSticksOn": "Резкое торможение мультиротора при отпускании стиков",
+      "safetySwitchMustBeEnabledBefore": "Предохранитель — должен быть включён перед армом. Предотвращает случайный арм.",
+      "flipCrashedAircraftBackOverUsing": "Переворачивает аппарат после падения вращением моторов. Только для мультироторов.",
+      "maintainsCurrentHeadingWhileAllowingAltitude": "Держит текущий курс, позволяя управлять высотой. Хорошо для полёта по прямой.",
+      "enableInFlightWaypointPlanningVia": "Включить планирование точек в полёте командами стиков.",
+      "enablesThermalDetectionAndCirclingFor": "Включает поиск термиков и кружение в них для планеров",
+      "unknownMode": "Неизвестный режим",
+      "switchA": "Переключатель A",
+      "switchB": "Переключатель B",
+      "switchC": "Переключатель C",
+      "switchD": "Переключатель D",
+      "switchE": "Переключатель E",
+      "switchF": "Переключатель F",
+      "switchG": "Переключатель G",
+      "switchH": "Переключатель H",
+      "switchI": "Переключатель I",
+      "switchJ": "Переключатель J",
+      "switchK": "Переключатель K",
+      "switchL": "Переключатель L",
+      "failedToChangePlatformType": "Не удалось сменить тип платформы",
+      "rebootFailed": "Ошибка перезагрузки: "
     },
     "NavigationTab": {
       "stayAtCurrentHeightCouldHit": "Оставаться на текущей высоте, возможно столкновение с препятствиями!",
@@ -470,7 +531,11 @@
       "checkGpsSatelliteCount8Before": "Перед автономным полётом проверьте количество спутников GPS (8+)",
       "configureFailsafeToRthForAdded": "Для дополнительной безопасности настройте failsafe на RTH",
       "refresh": "Обновить",
-      "saveNavigationConfig": "Сохранить настройки навигации"
+      "saveNavigationConfig": "Сохранить настройки навигации",
+      "fakeTesting": "Фиктивный (тестирование)",
+      "egnosEurope": "EGNOS (Европа)",
+      "msasJapan": "MSAS (Япония)",
+      "gaganIndia": "GAGAN (Индия)"
     },
     "ParameterCompareModalRoot": {
       "reviewParameterChanges": "Просмотр изменений параметров",
@@ -515,7 +580,11 @@
       "goToParametersTabToFlash": "Перейти на вкладку параметров для записи во флеш и перезагрузки",
       "notFoundOnThisFirmware": "не найдены в этой прошивке:",
       "theseMayBecomeAvailableAfterReboot": "Они могут появиться после перезагрузки",
-      "done": "Готово"
+      "done": "Готово",
+      "thisValue": "это значение",
+      "theseValues": "эти значения",
+      "it": "его",
+      "they": "их"
     },
     "ParametersView": {
       "parametersSavedToFlashSuccessfully": "Параметры успешно сохранены во флеш",
@@ -640,7 +709,14 @@
       "vehicle": "Аппарат",
       "applyingParameters": "Применение параметров...",
       "applying": "Применение...",
-      "applyParameter": "Применить параметры: {{length}}"
+      "applyParameter": "Применить параметры: {{length}}",
+      "failedToWrite": "Не удалось записать {{v1}}",
+      "noParametersToSave": "Нет параметров для сохранения",
+      "noChangedParametersToSave": "Нет изменённых параметров для сохранения",
+      "noNonDefaultParametersToSave": "Нет нестандартных параметров для сохранения",
+      "saveAllChangesToKeepThem": " — нажмите «Сохранить все изменения», чтобы они остались после перезагрузки",
+      "theCurrentFile": "текущего файла",
+      "theVehicle": "аппарата"
     },
     "PortsTab": {
       "none": "Нет",
@@ -846,7 +922,13 @@
       "returnToHome2": "Возврат домой",
       "inavSAdvancedNavigationFeaturesRth": "Расширенные навигационные функции iNav (RTH, путевые точки, удержание позиции) настраиваются на вкладке",
       "navigation": "«Навигация»",
-      "tabTheFailsafeRthOptionAbove": ". Вариант RTH для failsafe выше использует эти настройки."
+      "tabTheFailsafeRthOptionAbove": ". Вариант RTH для failsafe выше использует эти настройки.",
+      "failedToSaveFailsafe": "Не удалось сохранить failsafe",
+      "failedToSaveGpsRescue": "Не удалось сохранить GPS Rescue",
+      "failedToSaveGpsRescuePids": "Не удалось сохранить PID GPS Rescue",
+      "failedToSaveRxConfigVia": "Не удалось сохранить настройки RX через MSP",
+      "failedToSaveArmingSettings": "Не удалось сохранить настройки арма",
+      "modified": "Изменено"
     },
     "ServoMixerTab": {
       "respondsToRoll": "Реагирует на крен",
@@ -888,7 +970,15 @@
       "forComplexSetupsMostUsersDon": "Для сложных конфигураций. Большинству пользователей это не нужно.",
       "noRules": "Нет правил",
       "refresh": "Обновить",
-      "save": "Сохранить"
+      "save": "Сохранить",
+      "rcRollRaw": "RC крен (сырой)",
+      "rcPitchRaw": "RC тангаж (сырой)",
+      "rcYawRaw": "RC рыскание (сырое)",
+      "rcThrottleRaw": "RC газ (сырой)",
+      "gimbalPitch": "Тангаж подвеса",
+      "gimbalRoll": "Крен подвеса",
+      "flapInput": "Вход закрылков",
+      "notConfigured": "Не настроено"
     },
     "ServoTuningTab": {
       "checkingServoSupport": "Проверка поддержки серво...",
@@ -960,7 +1050,8 @@
       "coordinateFrequenciesWithOtherPilotsAt": "Согласовывайте частоты с другими пилотами на поле",
       "refresh": "Обновить",
       "saving": "Сохранение...",
-      "saveVtxConfig": "Сохранить настройки VTX"
+      "saveVtxConfig": "Сохранить настройки VTX",
+      "vtxConfigurationSaved": "Настройки VTX сохранены"
     },
     "non_default_palette": {
       "orangeQgc": "Оранжевый (QGC)",

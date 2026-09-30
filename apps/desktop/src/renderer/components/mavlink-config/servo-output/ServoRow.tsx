@@ -77,7 +77,7 @@ export const ServoRow: React.FC<ServoRowProps> = React.memo(
     const canTestDirectly = funcValue === 0 || funcValue === 1 || (funcValue >= 51 && funcValue <= 66);
     const testTooltip = canTestDirectly
       ? undefined
-      : 'ArduPlane mixer overrides this output. DO_SET_SERVO only works on Disabled (0), RCPassThru (1), or RCx_PASSTHRU (51-66) functions.';
+      : t('mavlink_config.ServoRow.arduplaneMixerOverridesThisOutputDo');
 
     return (
       <div className="grid grid-cols-[40px_1fr_80px_minmax(180px,1fr)_70px_70px_70px_180px] gap-2 items-center px-3 py-2 hover:bg-surface-raised/30">

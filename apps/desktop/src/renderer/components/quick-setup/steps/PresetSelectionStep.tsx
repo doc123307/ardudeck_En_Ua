@@ -559,7 +559,7 @@ export const PresetSelectionStep: React.FC = () => {
   // ============================================================================
 
   const presets = selectedVehicle === 'multirotor' ? multirotorPresets : fixedWingPresets;
-  const vehicleTitle = selectedVehicle === 'multirotor' ? 'Multirotor' : 'Fixed Wing';
+  const vehicleTitle = selectedVehicle === 'multirotor' ? t('quick_setup.PresetSelectionStep.multirotor') : t('quick_setup.PresetSelectionStep.fixedWing');
   const VehicleIcon = selectedVehicle === 'multirotor' ? RotateCcw : PlaneIcon;
 
   return (

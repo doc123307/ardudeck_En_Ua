@@ -16,12 +16,20 @@
       "calm": "Calm",
       "noStormForecastIn72h": "No storm forecast in 72h",
       "wmm2025IsOutsideItsValidityWindow": "WMM2025 is outside its validity window; declination and field values are approximate.",
-      "kpFromNoaaSwpcFieldFrom": "Kp from NOAA SWPC · field from WMM2025 (offline)"
+      "kpFromNoaaSwpcFieldFrom": "Kp from NOAA SWPC · field from WMM2025 (offline)",
+      "cautionKpNoGoKpG1": "Caution Kp {{caution}}, no-go Kp {{nogo}} (G1 storm)",
+      "highestPredictedKpInTheNext": "Highest predicted Kp in the next 72 hours",
+      "within72h": "within 72h"
     },
     "LocationPicker": {
       "pickTheBriefingLocationOnA": "Pick the briefing location on a map",
       "planned": "Planned",
-      "changeLocation": "Change location"
+      "changeLocation": "Change location",
+      "vehiclePosition": "Vehicle position",
+      "homePosition": "Home position",
+      "mapCenter": "Map center",
+      "pickedLocation": "Picked location",
+      "noPosition": "No position"
     },
     "LocationPickerDialog": {
       "briefingLocation": "Briefing location",
@@ -72,14 +80,33 @@
       "precip2": "precip",
       "mm": "mm,",
       "visibilityBelow": "visibility below",
-      "km": "km."
+      "km": "km.",
+      "vehiclePosition": "Vehicle position",
+      "homePosition": "Home position",
+      "mapCenter": "Map center",
+      "pickedLocation": "Picked location",
+      "gustsOfExceedTheSafeLimit": "Gusts of {{v1}} exceed the safe limit ({{v2}}). Risk of loss of control.",
+      "gustsOfAreApproachingTheLimit": "Gusts of {{v1}} are approaching the limit ({{v2}}). Monitor closely.",
+      "sustainedWindOfExceedsTheSafe": "Sustained wind of {{v1}} exceeds the safe limit ({{v2}}).",
+      "sustainedWindOfIsApproachingThe": "Sustained wind of {{v1}} is approaching the limit ({{v2}}).",
+      "lowVisibilityOfKmBelowThe": "Low visibility of {{v1}} km, below the {{v2}} km minimum.",
+      "reducedVisibilityOfKmMaintainVisual": "Reduced visibility of {{v1}} km. Maintain visual line of sight.",
+      "precipitationOfMmElectronicsAtRisk": "Precipitation of {{v1}} mm. Electronics at risk, do not launch.",
+      "lightPrecipitationOfMmDetectedProtect": "Light precipitation of {{v1}} mm detected. Protect the airframe.",
+      "highChanceOfPrecipitationExpectRain": "High chance of precipitation ({{v1}}%). Expect rain within the hour.",
+      "risingChanceOfPrecipitationWatchThe": "Rising chance of precipitation ({{v1}}%). Watch the sky.",
+      "cautionMmNoGoMm": "Caution {{caution}} mm, no-go {{nogo}} mm",
+      "cautionBelowKmNoGoBelow": "Caution below {{v1}} km, no-go below {{v2}} km"
     },
     "weather_visuals": {
       "rain": "Rain",
       "fog": "Fog",
       "overcast": "Overcast",
       "partlyCloudy": "Partly cloudy",
-      "clear": "Clear"
+      "clear": "Clear",
+      "conditionsAreWithinLimitsForLaunch": "Conditions are within limits for launch.",
+      "conditionsAreMarginalReviewTheFlagged": "Conditions are marginal. Review the flagged parameters before launch.",
+      "oneOrMoreParametersExceedSafe": "One or more parameters exceed safe limits. Do not launch."
     }
   }
 }

@@ -127,6 +127,9 @@
       "twoCombinedPitchYawSurfacesCleaner": "Две поверхности тангажа/рыскания, меньшее аэродинамическое сопротивление",
       "throttle": "Газ"
     },
+    "registry": {
+      "noDefaultTemplateForType": "Нет шаблона по умолчанию для типа {{type}}"
+    },
     "rover_ackermann": {
       "carStyleSingleThrottleSteeringServo": "Как автомобиль: один газ, серво руля",
       "roverFrame": "Рама rover",

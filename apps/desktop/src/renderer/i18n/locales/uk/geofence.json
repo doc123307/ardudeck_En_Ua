@@ -17,7 +17,11 @@
       "clickAZoneHereOrOn": "Клацніть зону (тут або на карті), щоб перемістити, змінити форму чи видалити її.",
       "polygon": "полігон",
       "circle": "коло",
-      "breach": "порушення"
+      "breach": "порушення",
+      "belowMinimumAltitude": "Нижче мінімальної висоти",
+      "aboveMaximumAltitude": "Вище максимальної висоти",
+      "outsideBoundary": "За межею",
+      "fenceBreached": "Огорожу порушено"
     },
     "FenceMapOverlay": {
       "clickToEditOrDeleteThis": "Клацніть, щоб змінити або видалити цю зону",

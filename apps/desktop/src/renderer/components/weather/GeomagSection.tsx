@@ -182,7 +182,7 @@ export function GeomagSection({ activity, unavailable, field, modelValid, verdic
                     zones={kpZones()}
                     markerColor={kpColor}
                     animate={animate}
-                    tip={`Caution Kp ${GEOMAG_THRESHOLDS.kp.caution}, no-go Kp ${GEOMAG_THRESHOLDS.kp.nogo} (G1 storm)`}
+                    tip={t('weather.GeomagSection.cautionKpNoGoKpG1', { caution: GEOMAG_THRESHOLDS.kp.caution, nogo: GEOMAG_THRESHOLDS.kp.nogo })}
                   />
                 </GeomagTile>
 
@@ -199,7 +199,7 @@ export function GeomagSection({ activity, unavailable, field, modelValid, verdic
                         </span>
                       </div>
                       <div className="text-[11px] text-content-secondary mt-0.5 tabular-nums">
-                        {peakHours != null ? `in ${peakHours}h` : 'within 72h'}
+                        {peakHours != null ? `in ${peakHours}h` : t('weather.GeomagSection.within72h')}
                         {activity.peakTime72hIso && (
                           <span className="text-content-tertiary">
                             {' '}&middot; {new Date(activity.peakTime72hIso).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })}
@@ -213,7 +213,7 @@ export function GeomagSection({ activity, unavailable, field, modelValid, verdic
                         zones={kpZones()}
                         markerColor={peakColor}
                         animate={animate}
-                        tip="Highest predicted Kp in the next 72 hours"
+                        tip={t('weather.GeomagSection.highestPredictedKpInTheNext')}
                       />
                     </>
                   ) : (

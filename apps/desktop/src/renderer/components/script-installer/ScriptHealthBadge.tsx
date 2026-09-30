@@ -116,7 +116,7 @@ function DiagnosticContent({ health, isConnected, isMavlink, onOpenInstaller }: 
         </span>
       </div>
 
-      <Row label={t('script_installer.ScriptHealthBadge.connection')} value={isConnected ? (isMavlink ? 'MAVLink ✓' : 'connected (non-MAVLink)') : 'not connected'} />
+      <Row label={t('script_installer.ScriptHealthBadge.connection')} value={isConnected ? (isMavlink ? t('script_installer.ScriptHealthBadge.mavlink') : 'connected (non-MAVLink)') : t('script_installer.ScriptHealthBadge.notConnected')} />
       <Row label={t('script_installer.ScriptHealthBadge.heartbeatAdHb')} value={
         health.status === 'present' ? `present (${(health.ageMs / 1000).toFixed(1)} s ago)`
         : health.status === 'stale' ? `stale (last seen ${Math.round(health.ageMs / 1000)} s ago)`

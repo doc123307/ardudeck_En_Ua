@@ -279,7 +279,7 @@ export const StickTestPanel: React.FC = () => {
         <div className="mb-4 text-xs text-amber-400/80 bg-amber-500/5 border border-amber-500/20 rounded-lg p-3 flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <div>
-            {tr('mavlink_config.StickTestPanel.startSetsManualModeAndForce')} {isRover ? tr('mavlink_config.StickTestPanel.liftTheDriveWheelsOffThe') : 'remove propellers'} {tr('mavlink_config.StickTestPanel.beforePressingStart')}
+            {tr('mavlink_config.StickTestPanel.startSetsManualModeAndForce')} {isRover ? tr('mavlink_config.StickTestPanel.liftTheDriveWheelsOffThe') : tr('mavlink_config.StickTestPanel.removePropellers')} {tr('mavlink_config.StickTestPanel.beforePressingStart')}
           </div>
         </div>
       )}

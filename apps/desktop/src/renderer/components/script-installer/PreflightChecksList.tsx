@@ -72,7 +72,7 @@ function formatFixLabel(fix: PreflightFix): string {
     const reboot = fix.requiresReboot ? ' + reboot' : '';
     return `Set ${fix.param} = ${fix.value}${reboot}`;
   }
-  if (fix.type === 'reboot') return 'Reboot flight controller';
-  if (fix.type === 'disarm') return 'Disarm vehicle';
-  return 'Fix';
+  if (fix.type === 'reboot') return t('script_installer.PreflightChecksList.rebootFlightController');
+  if (fix.type === 'disarm') return t('script_installer.PreflightChecksList.disarmVehicle');
+  return t('script_installer.PreflightChecksList.fix');
 }

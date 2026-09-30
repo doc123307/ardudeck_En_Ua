@@ -27,7 +27,7 @@ function formatFrameTime(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso);
   if (!m) return iso;
   const [, y, mo, d, hh, mm] = m;
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const days = [t('map.WindControls.sun'), t('map.WindControls.mon'), t('map.WindControls.tue'), t('map.WindControls.wed'), t('map.WindControls.thu'), t('map.WindControls.fri'), t('map.WindControls.sat')];
   const dow = days[new Date(Date.UTC(Number(y), Number(mo) - 1, Number(d))).getUTCDay()] ?? '';
   return `${dow} ${hh}:${mm} UTC`;
 }
@@ -35,7 +35,7 @@ function formatFrameTime(iso: string): string {
 function shortDay(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
   if (!m) return '';
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const days = [t('map.WindControls.sun'), t('map.WindControls.mon'), t('map.WindControls.tue'), t('map.WindControls.wed'), t('map.WindControls.thu'), t('map.WindControls.fri'), t('map.WindControls.sat')];
   return days[new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]))).getUTCDay()] ?? '';
 }
 
@@ -70,7 +70,7 @@ export function WindControls({ raised = false, dragKey = 'wind-bar' }: { raised?
     return () => window.clearInterval(id);
   }, [playing, frames.length]);
 
-  const status = loading ? 'Loading…' : field ? null : error ? 'Wind data unavailable' : null;
+  const status = loading ? 'Loading…' : field ? null : error ? t('map.WindControls.windDataUnavailable') : null;
 
   return (
     <div

@@ -3,7 +3,7 @@ import { useLogStore } from '../../stores/log-store';
 import { extractLogParams, isNonDefault, fmtParamValue } from './log-params';
 import { fmtEventTime } from './log-events';
 import { publishTimeJump } from './log-hover-bus';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 type Filter = 'all' | 'changed' | 'nondefault';
 
@@ -62,7 +62,7 @@ export function LogParamsPanel() {
         <div className="flex items-center gap-1.5 flex-wrap">
           {([
             ['all', `All ${params.length}`],
-            ['changed', `Changed in flight ${changedCount}`],
+            ['changed', t('logs.LogParamsPanel.changedInFlight', { changedCount })],
             ...(hasDefaults ? [['nondefault', `Non-default ${nonDefaultCount}`] as [Filter, string]] : []),
           ] as [Filter, string][]).map(([key, label]) => (
             <button
@@ -111,7 +111,7 @@ export function LogParamsPanel() {
                 )}
                 {changed && (
                   <span className="text-[9px] px-1.5 py-px rounded bg-amber-500/15 text-amber-500 shrink-0 font-medium">
-                    {p.changes.length} {t('logs.LogParamsPanel.change')}{p.changes.length > 1 ? 's' : ''}
+                    {p.changes.length} {t('logs.LogParamsPanel.change')}{p.changes.length > 1 ? enPlural('s') : ''}
                   </span>
                 )}
                 <span className={`text-[11px] font-mono tabular-nums shrink-0 ${changed ? 'text-amber-500 font-medium' : 'text-content'}`}>

@@ -4,7 +4,7 @@ import { DraggableSlider } from '../../ui/DraggableSlider';
 import { DraftNumberInput } from '../../../hooks/useNumericDraft';
 import { OutputVisual } from './OutputVisual';
 import { classifyOutput, isTravelEditable, travelFromEndpoints, type OutputShape } from './output-shape';
-import { t as tr } from '../../../i18n';
+import { t as tr, enPlural } from '../../../i18n';
 
 const SERVO_TRAVEL_MAX_US = 500;
 const PWM_FLOOR = 800;
@@ -25,11 +25,11 @@ interface OutputGroup {
 }
 
 const SHAPE_NOTE: Record<OutputShape, string> = {
-  angular: 'Deflects either side of trim. The arc shows share of travel, not degrees.',
-  bipolar: 'Runs both ways from a centre stop, so trim is neutral.',
-  unidirectional: 'Runs one way, from min to max.',
-  discrete: 'Switches between two states; there is no travel to set.',
-  motor: 'Driven by the mixer. Min and max are ESC calibration, not travel.',
+  get angular() { return tr('mavlink_config.OutputCards.deflectsEitherSideOfTrimThe'); },
+  get bipolar() { return tr('mavlink_config.OutputCards.runsBothWaysFromACentre'); },
+  get unidirectional() { return tr('mavlink_config.OutputCards.runsOneWayFromMinTo'); },
+  get discrete() { return tr('mavlink_config.OutputCards.switchesBetweenTwoStatesThereIs'); },
+  get motor() { return tr('mavlink_config.OutputCards.drivenByTheMixerMinAnd'); },
 };
 
 interface OutputCardsProps {
@@ -243,7 +243,7 @@ export const OutputCards: React.FC<OutputCardsProps> = ({
       <span>
         {unassigned.length === 0
           ? tr('mavlink_config.OutputCards.everyOutputHasAFunction')
-          : tr('mavlink_config.OutputCards.outputUnassigned', { length: unassigned.length, v2: unassigned.length === 1 ? '' : 's', v3: unassigned.slice(0, 6).join(', '), v4: unassigned.length > 6 ? '…' : '' })}
+          : tr('mavlink_config.OutputCards.outputUnassigned', { length: unassigned.length, v2: unassigned.length === 1 ? '' : enPlural('s'), v3: unassigned.slice(0, 6).join(', '), v4: unassigned.length > 6 ? '…' : '' })}
       </span>
       <button onClick={onAssignOutputs} className="text-emerald-400 hover:underline">
         {tr('mavlink_config.OutputCards.openAllOutputs')}

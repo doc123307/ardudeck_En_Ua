@@ -36,7 +36,16 @@
       "save": "Зберегти",
       "noSavedHudsYet": "Збережених HUD ще немає.",
       "delete": "Видалити",
-      "resetHudToDefaults": "Скинути HUD до стандартного"
+      "resetHudToDefaults": "Скинути HUD до стандартного",
+      "aircraft": "повітряного апарата",
+      "profile_air": "Повітряний",
+      "profile_ground": "Наземний",
+      "category_Power": "Живлення",
+      "category_Flight": "Політ",
+      "category_Speed": "Швидкість",
+      "category_Navigation": "Навігація",
+      "category_Environment": "Середовище",
+      "category_Status": "Стан"
     },
     "OsdDemoPanel": {
       "demoValues": "Демо-значення",
@@ -133,7 +142,11 @@
       "noSavedLayoutsYet": "Збережених розкладок ще немає.",
       "deleteLayout": "Видалити розкладку",
       "autoArrangeToCanvas": "Авторозташування на полотні",
-      "resetToDefaults": "Скинути до стандартного"
+      "resetToDefaults": "Скинути до стандартного",
+      "betaflightInav": "Betaflight / iNAV",
+      "simulatorNotConnected": "Симулятор (не підключено)",
+      "writeTheElementLayoutToThe": "Записати розкладку елементів на FC і зберегти",
+      "writeTheCurrentFontToThe": "Записати поточний шрифт у символьну NVM FC (аналог/MAX7456), перезавантажте для застосування"
     },
     "OsdVideoBackdrop": {
       "showYourLiveVideoBehindThe": "Показувати живе відео під OSD. Спільне з панеллю «Відео» телеметрії.",
@@ -198,7 +211,16 @@
       "fontSize": "Розмір шрифту {{v1}}",
       "transparency": "Прозорість {{v1}}",
       "elements": "Елементи",
-      "resetAllScreens": "Скинути всі екрани"
+      "resetAllScreens": "Скинути всі екрани",
+      "category_Flight": "Політ",
+      "category_Power": "Живлення",
+      "category_GPS": "GPS",
+      "category_Navigation": "Навігація",
+      "category_Link": "Зв'язок",
+      "category_Video": "Відео",
+      "category_System": "Система",
+      "category_Instruments": "Прилади",
+      "category_Grid": "Сітка"
     },
     "RubyOsdPreview": {
       "noElementsEnabledOnScreen": "На екрані не ввімкнено жодного елемента",

@@ -159,7 +159,7 @@ export default function Px4ArmingConfig(): JSX.Element {
             <p className="text-xs text-content-secondary">
               {disabledCount === 0
                 ? t('mavlink_config.Px4ArmingConfig.everyCheckThisVehicleExposesIs')
-                : `${disabledCount} ${disabledCount === 1 ? 'check is' : 'checks are'} switched off`}
+                : t('mavlink_config.Px4ArmingConfig.checksSwitchedOff', { n: disabledCount, what: disabledCount === 1 ? t('mavlink_config.Px4ArmingConfig.checkIs') : t('mavlink_config.Px4ArmingConfig.checksAre') })}
             </p>
           </div>
         </div>

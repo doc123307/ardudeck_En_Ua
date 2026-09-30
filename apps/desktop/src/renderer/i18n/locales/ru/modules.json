@@ -20,7 +20,8 @@
       "worksInsideArdudeck": "Работает внутри ArduDeck",
       "noBuild": "Нет сборки для {{label}}",
       "previous": "Предыдущее",
-      "next": "Следующее"
+      "next": "Следующее",
+      "unreleased": "не выпущено"
     },
     "HangarApps": {
       "installedApps": "Установленные программы",
@@ -100,7 +101,8 @@
       "updatingAll": "Обновление всех…",
       "updateAll": "Обновить все ({{length}})",
       "checking": "Проверка…",
-      "checkUpdates": "Проверить обновления"
+      "checkUpdates": "Проверить обновления",
+      "error": "Ошибка"
     },
     "ModulePanelWindow": {
       "restore": "Восстановить",
@@ -119,7 +121,22 @@
       "keptAsTheyAre": "Остаются как есть:",
       "cancel": "Отмена",
       "writing": "Запись...",
-      "writeToAircraft": "Записать в аппарат"
+      "writeToAircraft": "Записать в аппарат",
+      "theReturnPoint": "точку возврата"
+    },
+    "module_host_renderer": {
+      "moduleVaultAccessRequiresTheVault": "[module:{{slug}}] доступ к хранилищу требует разрешения манифеста «vault»",
+      "noFlightLogIsOpenIn": "В Log Explorer не открыт ни один журнал полёта.",
+      "theVehicleDidNotConfirmThe": "Аппарат не подтвердил геозону",
+      "clickTheCornersOfTheArea": "Кликните по углам участка",
+      "snapshotFailed": "Не удалось сделать снимок"
+    },
+    "module_mission_panel_registry": {
+      "moduleMissionPanelNeedsAComponent": "[module:{{slug}}] панели миссии {{id}} нужен компонент"
+    },
+    "module_proposal_registry": {
+      "anotherProposalIsAlreadyOpen": "Уже открыто другое предложение",
+      "aFenceNeedsAtLeastThree": "Геозоне нужно минимум три точки"
     }
   }
 }

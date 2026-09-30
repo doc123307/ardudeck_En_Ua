@@ -20,7 +20,7 @@ import {
   UNIT_LABELS,
   type AltitudeUnit,
 } from '../../../shared/user-units.js';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 interface RallyListPanelProps {
   readOnly?: boolean;
@@ -160,7 +160,7 @@ export function RallyListPanel({
       {/* Status Bar */}
       <div className="p-2 border-t border-subtle text-xs text-content-secondary flex items-center justify-between">
         <span>
-          {rallyPoints.length} {t('rally.RallyListPanel.point')}{rallyPoints.length !== 1 ? 's' : ''}
+          {rallyPoints.length} {t('rally.RallyListPanel.point')}{rallyPoints.length !== 1 ? enPlural('s') : ''}
         </span>
         {isLoading && (
           <span className="flex items-center gap-1">

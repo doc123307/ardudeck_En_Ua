@@ -90,7 +90,8 @@
       "driftedFromAppliedState": "відхилилися від застосованого стану",
       "lastAppliedTo": "Востаннє застосовано до",
       "reconnectToVerifyLiveState": "· перепідключіться, щоб перевірити поточний стан",
-      "allLiveValuesMatch": "· усі поточні значення збігаються"
+      "allLiveValuesMatch": "· усі поточні значення збігаються",
+      "notAppliedYet": "ще не застосовано"
     },
     "PhysicsAdvanced": {
       "physicsSitlFidelity": "Фізика (точність SITL)",
@@ -151,7 +152,15 @@
       "view": "Показати",
       "auditLog": "журнал аудиту (",
       "noSigningEventsRecordedYet": "Подій підпису ще не записано.",
-      "attestsTheMavlinkLinkAndGround": "Засвідчує лише MAVLink-зв'язок і наземну станцію, а не планер. Підпис — це автентифікація, а не шифрування, і USB-з'єднання його оминає."
+      "attestsTheMavlinkLinkAndGround": "Засвідчує лише MAVLink-зв'язок і наземну станцію, а не планер. Підпис — це автентифікація, а не шифрування, і USB-з'єднання його оминає.",
+      "keySet": "Ключ задано",
+      "keySentToFc": "Ключ надіслано на FC",
+      "signingEnabled": "Підпис увімкнено",
+      "signingDisabled": "Підпис вимкнено",
+      "autoMatchedOnConnect": "Автоматично підібрано під час підключення",
+      "keyMismatch": "Ключ не збігається",
+      "keyRemoved": "Ключ видалено",
+      "autoEnabledAtStartup": "Автоматично ввімкнено під час запуску"
     },
     "SettingsView": {
       "yourProfileIsNotCompatibleWith": "Ваш профіль {{v1}} несумісний з {{v2}}",
@@ -424,7 +433,23 @@
       "exportParmFile": "Експортувати файл .parm",
       "clickAgainToDelete": "Клацніть ще раз, щоб видалити",
       "delete": "Видалити",
-      "delete2": "Видалити?"
+      "delete2": "Видалити?",
+      "required": "Обов'язково",
+      "invalidNumber": "Некоректне число",
+      "fixedWing": "Літак",
+      "maritime": "Морське",
+      "dive": "Занурення",
+      "operation": "Експлуатація",
+      "hex": "Гекса",
+      "octo": "Окто",
+      "quad": "Квадро",
+      "mustBeWholeNumber": "Має бути цілим числом",
+      "useDxpFormatEG10x5": "Використовуйте формат DxP (напр. 10x5)",
+      "diameter140": "Діаметр: 1–40\"",
+      "pitch120": "Крок: 1–20\"",
+      "mustBeAValidNumber": "Має бути коректним числом",
+      "mustBeAWholeNumber": "Має бути цілим числом",
+      "vtolMotors2": "VTOL-моторів: {{vtolMotorCount}}"
     },
     "SigningSection": {
       "enterAPassphrase": "Введіть парольну фразу",
@@ -624,7 +649,11 @@
       "applyCancelledNoParametersWereChanged": "Застосування скасовано, жоден параметр не змінено",
       "appliedParamTo": "Застосовано параметрів: {{appliedCount}} до {{v3}}{{flashNote}}{{failMsg}}",
       "backupFailedApplyAborted": "Не вдалося створити резервну копію, застосування перервано",
-      "applyCancelled": "Застосування скасовано"
+      "applyCancelled": "Застосування скасовано",
+      "vehicle": "Апарат",
+      "andSavedToFlash": " і збережено у flash",
+      "sitlFlashNotRequired": " (SITL, flash не потрібен)",
+      "notSavedToFlashWillReset": " (не збережено у flash, скинеться після перезавантаження)"
     }
   }
 }

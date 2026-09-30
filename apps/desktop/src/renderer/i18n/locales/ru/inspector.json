@@ -9,7 +9,8 @@
       "dropTheSamplesCollectedSoFar": "Отбросить собранные измерения",
       "clear": "Очистить",
       "fieldBuffer": "поле · буфер",
-      "max": "макс."
+      "max": "макс.",
+      "series": "серий"
     },
     "InspectorGraphsView": {
       "noGraphs": "Нет графиков",
@@ -60,7 +61,9 @@
       "waitingForPackets": "Ожидание пакетов…",
       "notConnected": "Не подключено",
       "messagesWillAppearHereAsSoon": "Сообщения появятся здесь, как только FC начнёт их отправлять.",
-      "connectToAFlightControllerFrom": "Подключите полётный контроллер через панель слева."
+      "connectToAFlightControllerFrom": "Подключите полётный контроллер через панель слева.",
+      "type": "тип",
+      "types": "типов"
     }
   }
 }

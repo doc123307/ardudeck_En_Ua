@@ -38,12 +38,12 @@ export function StatusPanel() {
     : 'bg-gray-600';
 
   const statusLabel = isConnected
-    ? 'Connected'
+    ? t('companion.StatusPanel.connected')
     : isReconnecting
     ? `Reconnecting (${connectionState.reconnectAttempt})`
     : heartbeatOnline
-    ? 'MAVLink Only'
-    : 'Offline';
+    ? t('companion.StatusPanel.mavlinkOnly')
+    : t('companion.StatusPanel.offline');
 
   const statusTextColor = isConnected
     ? 'text-emerald-400'

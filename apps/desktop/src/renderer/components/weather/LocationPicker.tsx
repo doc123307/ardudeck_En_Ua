@@ -15,9 +15,9 @@ import { LocationPickerDialog } from './LocationPickerDialog';
 import { t } from '../../i18n';
 
 const AUTO_SOURCE_LABEL: Record<Exclude<WeatherLocationSource, 'override'>, string> = {
-  vehicle: 'Vehicle position',
-  home: 'Home position',
-  map: 'Map center',
+  get vehicle() { return t('weather.LocationPicker.vehiclePosition'); },
+  get home() { return t('weather.LocationPicker.homePosition'); },
+  get map() { return t('weather.LocationPicker.mapCenter'); },
 };
 
 export function LocationPicker(): JSX.Element {
@@ -27,9 +27,9 @@ export function LocationPicker(): JSX.Element {
 
   const label = location
     ? location.source === 'override'
-      ? (location.name ?? 'Picked location')
+      ? (location.name ?? t('weather.LocationPicker.pickedLocation'))
       : AUTO_SOURCE_LABEL[location.source]
-    : 'No position';
+    : t('weather.LocationPicker.noPosition');
 
   return (
     <>

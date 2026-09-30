@@ -19,7 +19,7 @@ import { TemplateDialog } from './TemplateDialog';
 import { DocsDialog } from './docs/DocsDialog';
 import { ConfirmDialog } from './ConfirmDialog';
 import type { GraphFile } from './lua-graph-types';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 export function GraphToolbar() {
   const {
@@ -151,7 +151,7 @@ export function GraphToolbar() {
 
         {/* Node count */}
         <span className="text-[10px] text-content-secondary">
-          {nodes.length} {t('lua_graph.GraphToolbar.node')}{nodes.length !== 1 ? 's' : ''} | {edges.length} {t('lua_graph.GraphToolbar.connection')}{edges.length !== 1 ? 's' : ''}
+          {nodes.length} {t('lua_graph.GraphToolbar.node')}{nodes.length !== 1 ? enPlural('s') : ''} | {edges.length} {t('lua_graph.GraphToolbar.connection')}{edges.length !== 1 ? enPlural('s') : ''}
         </span>
       </div>
 

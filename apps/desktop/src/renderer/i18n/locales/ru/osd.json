@@ -36,7 +36,16 @@
       "save": "Сохранить",
       "noSavedHudsYet": "Сохранённых HUD пока нет.",
       "delete": "Удалить",
-      "resetHudToDefaults": "Сбросить HUD к стандартному"
+      "resetHudToDefaults": "Сбросить HUD к стандартному",
+      "aircraft": "воздушного аппарата",
+      "profile_air": "Воздушный",
+      "profile_ground": "Наземный",
+      "category_Power": "Питание",
+      "category_Flight": "Полёт",
+      "category_Speed": "Скорость",
+      "category_Navigation": "Навигация",
+      "category_Environment": "Среда",
+      "category_Status": "Состояние"
     },
     "OsdDemoPanel": {
       "demoValues": "Демо-значения",
@@ -133,7 +142,11 @@
       "noSavedLayoutsYet": "Сохранённых раскладок пока нет.",
       "deleteLayout": "Удалить раскладку",
       "autoArrangeToCanvas": "Авторасстановка на холсте",
-      "resetToDefaults": "Сбросить к стандартному"
+      "resetToDefaults": "Сбросить к стандартному",
+      "betaflightInav": "Betaflight / iNAV",
+      "simulatorNotConnected": "Симулятор (не подключён)",
+      "writeTheElementLayoutToThe": "Записать раскладку элементов на FC и сохранить",
+      "writeTheCurrentFontToThe": "Записать текущий шрифт в символьную NVM FC (аналог/MAX7456), перезагрузите для применения"
     },
     "OsdVideoBackdrop": {
       "showYourLiveVideoBehindThe": "Показывать живое видео под OSD. Общее с панелью «Видео» телеметрии.",
@@ -198,7 +211,16 @@
       "fontSize": "Размер шрифта {{v1}}",
       "transparency": "Прозрачность {{v1}}",
       "elements": "Элементы",
-      "resetAllScreens": "Сбросить все экраны"
+      "resetAllScreens": "Сбросить все экраны",
+      "category_Flight": "Полёт",
+      "category_Power": "Питание",
+      "category_GPS": "GPS",
+      "category_Navigation": "Навигация",
+      "category_Link": "Связь",
+      "category_Video": "Видео",
+      "category_System": "Система",
+      "category_Instruments": "Приборы",
+      "category_Grid": "Сетка"
     },
     "RubyOsdPreview": {
       "noElementsEnabledOnScreen": "На экране не включено ни одного элемента",

@@ -919,7 +919,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
               ? 'bg-[var(--status-warn-bg)] border-[color:var(--status-warn)] text-[color:var(--status-warn-fg)]'
               : 'bg-surface border-subtle hover:border-default text-content'}`}
             title={tr('panels.FlightControlPanel.flyToWaypoint', { v1: target + 1 })}
-          >{pendingOp === 'jump' ? tr('panels.FlightControlPanel.confirm') : 'Go'}</button>
+          >{pendingOp === 'jump' ? tr('panels.FlightControlPanel.confirm') : tr('panels.FlightControlPanel.go')}</button>
         </div>
         <button
           onClick={() => { if (pendingOp === 'restart') { void handleRestart(); setPendingOp(null); } else setPendingOp('restart'); }}
@@ -1202,7 +1202,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                     ? <>{missionItems.length} wp
                         <span className="text-content-tertiary"> · </span>
                         <span className={`font-mono ${missionDirty && currentSeq == null ? 'text-[color:var(--status-warn-fg)]' : 'text-content-secondary'}`}>
-                          {currentSeq != null ? `→ ${currentSeq + 1}/${missionItems.length}` : (isInAuto ? 'starting…' : missionDirty ? 'not uploaded' : 'idle')}
+                          {currentSeq != null ? `→ ${currentSeq + 1}/${missionItems.length}` : (isInAuto ? 'starting…' : missionDirty ? tr('panels.FlightControlPanel.notUploaded') : tr('panels.FlightControlPanel.idle2'))}
                         </span>
                       </>
                     : <span className="text-content-secondary">{tr('panels.FlightControlPanel.noMission')}</span>}

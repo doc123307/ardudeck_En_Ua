@@ -57,12 +57,12 @@ const MODE_ENUM_FALLBACK: Record<number, string> = {
   6: 'Acro',
   7: 'Offboard',
   8: 'Stabilized',
-  9: 'Position Slow',
+  get 9() { return t('mavlink_config.Px4FlightModesConfig.positionSlow'); },
   10: 'Takeoff',
   11: 'Land',
-  12: 'Follow Me',
-  13: 'Precision Land',
-  16: 'Altitude Cruise',
+  get 12() { return t('mavlink_config.Px4FlightModesConfig.followMe'); },
+  get 13() { return t('mavlink_config.Px4FlightModesConfig.precisionLand'); },
+  get 16() { return t('mavlink_config.Px4FlightModesConfig.altitudeCruise'); },
 };
 
 const Px4FlightModesConfig: React.FC = () => {

@@ -381,7 +381,7 @@ export function FlightInfoPanel() {
           <Stat label={tr('mission.FlightInfoPanel.coverage')} value={formatAreaFromSquareMeters(survey.areaM2, areaUnit)} />
           <Stat label="GSD" value={survey.gsdCm > 0 ? `${survey.gsdCm.toFixed(1)} cm/px` : 'n/a'} />
           <Stat label={tr('mission.FlightInfoPanel.photos')} value={survey.photoCount.toLocaleString()} />
-          <Stat label={tr('mission.FlightInfoPanel.data')} value={`~${survey.dataGb.toFixed(1)} GB`} detail="JPEG+RAW estimate" />
+          <Stat label={tr('mission.FlightInfoPanel.data')} value={`~${survey.dataGb.toFixed(1)} GB`} detail={tr('mission.FlightInfoPanel.jpegRawEstimate')} />
         </Section>
       )}
     </div>

@@ -72,7 +72,7 @@ export function MapPointPickerDialog({
   title,
   subtitle,
   initial,
-  confirmLabel = 'Use this point',
+  confirmLabel = t('map.MapPointPickerDialog.useThisPoint'),
   onConfirm,
   onClose,
 }: {

@@ -48,17 +48,17 @@ const LED_STATES = [
 
 /** NTF_LED_TYPES bits, from AP_Notify.cpp. Used when metadata is absent. */
 const LED_TYPE_FALLBACK: Record<number, string> = {
-  0: 'Built-in LED', 1: 'Internal ToshibaLED', 2: 'External ToshibaLED',
-  3: 'External PCA9685', 4: 'Oreo LED', 5: 'DroneCAN', 6: 'NCP5623 External',
-  7: 'NCP5623 Internal', 8: 'NeoPixel', 9: 'ProfiLED', 10: 'Scripting',
-  11: 'DShot', 12: 'ProfiLED SPI', 13: 'LP5562 External', 14: 'LP5562 Internal',
-  15: 'IS31FL3195 External', 16: 'IS31FL3195 Internal', 17: 'DiscreteRGB',
-  18: 'NeoPixelRGB', 19: 'ProfiLED IOMCU',
+  get 0() { return tr('mavlink_config.NotifyTab.builtInLed'); }, get 1() { return tr('mavlink_config.NotifyTab.internalToshibaled'); }, get 2() { return tr('mavlink_config.NotifyTab.externalToshibaled'); },
+  get 3() { return tr('mavlink_config.NotifyTab.externalPca9685'); }, get 4() { return tr('mavlink_config.NotifyTab.oreoLed'); }, 5: 'DroneCAN', get 6() { return tr('mavlink_config.NotifyTab.ncp5623External'); },
+  get 7() { return tr('mavlink_config.NotifyTab.ncp5623Internal'); }, 8: 'NeoPixel', 9: 'ProfiLED', 10: 'Scripting',
+  11: 'DShot', get 12() { return tr('mavlink_config.NotifyTab.profiledSpi'); }, get 13() { return tr('mavlink_config.NotifyTab.lp5562External'); }, get 14() { return tr('mavlink_config.NotifyTab.lp5562Internal'); },
+  get 15() { return tr('mavlink_config.NotifyTab.is31fl3195External'); }, get 16() { return tr('mavlink_config.NotifyTab.is31fl3195Internal'); }, 17: 'DiscreteRGB',
+  18: 'NeoPixelRGB', get 19() { return tr('mavlink_config.NotifyTab.profiledIomcu'); },
 };
 
 /** NTF_BUZZ_TYPES bits, from AP_Notify.cpp. */
 const BUZZ_TYPE_FALLBACK: Record<number, string> = {
-  0: 'Built-in buzzer', 1: 'DShot', 2: 'DroneCAN',
+  get 0() { return tr('mavlink_config.NotifyTab.builtInBuzzer'); }, 1: 'DShot', 2: 'DroneCAN',
 };
 
 const AP_BRIGHTNESS = [
@@ -70,8 +70,8 @@ const AP_BRIGHTNESS = [
 
 /** Serial-LED strips ride a servo output set to one of these functions. */
 const STRIP_FUNCTIONS: Record<number, string> = {
-  120: 'NeoPixel 1', 121: 'NeoPixel 2', 122: 'NeoPixel 3', 123: 'NeoPixel 4',
-  124: 'ProfiLED 1', 125: 'ProfiLED 2', 126: 'ProfiLED 3', 127: 'ProfiLED Clock',
+  get 120() { return tr('mavlink_config.NotifyTab.neopixel1'); }, get 121() { return tr('mavlink_config.NotifyTab.neopixel2'); }, get 122() { return tr('mavlink_config.NotifyTab.neopixel3'); }, get 123() { return tr('mavlink_config.NotifyTab.neopixel4'); },
+  get 124() { return tr('mavlink_config.NotifyTab.profiled1'); }, get 125() { return tr('mavlink_config.NotifyTab.profiled2'); }, get 126() { return tr('mavlink_config.NotifyTab.profiled3'); }, get 127() { return tr('mavlink_config.NotifyTab.profiledClock'); },
 };
 
 export default function NotifyTab(): JSX.Element {

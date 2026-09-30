@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGuideStore } from '../../stores/guide-store';
 import { SurveyedPointsDialog } from './SurveyedPointsDialog';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 export function GuidesButton({ showToast }: { showToast?: (msg: string, kind: 'success' | 'error') => void }) {
   const guides = useGuideStore((s) => s.guides);
@@ -33,7 +33,7 @@ export function GuidesButton({ showToast }: { showToast?: (msg: string, kind: 's
 
   const handleImport = () => {
     void importGuides().then((res) => {
-      if (res.ok) showToast?.(t('mission.GuidesButton.addedGuide', { count: res.count, v2: res.count === 1 ? '' : 's' }), 'success');
+      if (res.ok) showToast?.(t('mission.GuidesButton.addedGuide', { count: res.count, v2: res.count === 1 ? '' : enPlural('s') }), 'success');
       else if (res.error) showToast?.(res.error, 'error');
     });
   };
@@ -119,7 +119,7 @@ export function GuidesButton({ showToast }: { showToast?: (msg: string, kind: 's
                     {g.name}
                   </span>
                   <span className="text-[10px] text-content-tertiary shrink-0">
-                    {g.kind === 'line' ? 'line · ' : ''}{g.polygon.length} pts
+                    {g.kind === 'line' ? t('mission.GuidesButton.line') : ''}{g.polygon.length} pts
                   </span>
                   <button
                     onClick={() => focusGuide(g.id)}

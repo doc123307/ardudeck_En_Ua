@@ -127,7 +127,7 @@ export function HangarAppCard({
                 </span>
               </div>
               <p className="text-xs text-content-tertiary">
-                {app.latestVersion ? `v${app.latestVersion}` : 'unreleased'} · {app.authorName}
+                {app.latestVersion ? `v${app.latestVersion}` : t('modules.HangarAppCard.unreleased')} · {app.authorName}
               </p>
             </div>
 

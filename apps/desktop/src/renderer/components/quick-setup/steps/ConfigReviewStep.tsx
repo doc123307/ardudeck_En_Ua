@@ -66,8 +66,8 @@ export const ConfigReviewStep: React.FC = () => {
   const rateItems = [
     `RC Rate: ${selectedPreset.rates.rcRate}`,
     `Expo: ${selectedPreset.rates.rcExpo}%`,
-    `Roll/Pitch Rate: ${selectedPreset.rates.rollRate}`,
-    `Yaw Rate: ${selectedPreset.rates.yawRate}`,
+    t('quick_setup.ConfigReviewStep.rollPitchRate', { rollRate: selectedPreset.rates.rollRate }),
+    t('quick_setup.ConfigReviewStep.yawRate', { yawRate: selectedPreset.rates.yawRate }),
   ];
 
   // Mode names lookup (iNav permanent box IDs)
@@ -103,19 +103,19 @@ export const ConfigReviewStep: React.FC = () => {
   const failsafeItems = [
     `Procedure: ${selectedPreset.failsafe.procedure}`,
     `Delay: ${selectedPreset.failsafe.delay} seconds`,
-    `Landing timeout: ${selectedPreset.failsafe.offDelay} seconds`,
+    t('quick_setup.ConfigReviewStep.landingTimeoutSeconds', { offDelay: selectedPreset.failsafe.offDelay }),
   ];
 
   const aircraftItems =
     selectedPreset.category === 'fixed_wing'
       ? [
-          'Platform: Airplane',
-          `Servo mixer: ${selectedPreset.aircraft.servoMixerRules.length} rules`,
-          `Motor mixer: ${selectedPreset.aircraft.motorMixerRules.length} motors`,
+          t('quick_setup.ConfigReviewStep.platformAirplane'),
+          t('quick_setup.ConfigReviewStep.servoMixerRules', { length: selectedPreset.aircraft.servoMixerRules.length }),
+          t('quick_setup.ConfigReviewStep.motorMixerMotors', { length: selectedPreset.aircraft.motorMixerRules.length }),
         ]
       : [
-          'Platform: Multirotor',
-          `Motor mixer: Quad X (${selectedPreset.aircraft.motorMixerRules.length} motors)`,
+          t('quick_setup.ConfigReviewStep.platformMultirotor'),
+          t('quick_setup.ConfigReviewStep.motorMixerQuadXMotors', { length: selectedPreset.aircraft.motorMixerRules.length }),
         ];
 
   return (

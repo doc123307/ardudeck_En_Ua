@@ -10,6 +10,7 @@
 import type { TrafficContact } from '../../../../shared/traffic-types';
 import type { ProximityResult } from './proximity';
 import { ALT_STATE_COLOR, CATEGORY_LABEL, altitudeColorState, type AltitudeBand } from './contact-style';
+import { t } from '../../../i18n';
 
 function row(label: string, value: string): string {
   return `<div style="display:flex;justify-content:space-between;gap:14px;line-height:1.7">
@@ -31,15 +32,15 @@ export function buildContactPopup(
   const title = c.callsign || c.registration || c.id;
   // Lead with what the thing IS in plain words; the raw type code and data
   // source come after (B412 alone means nothing to most operators).
-  const sourceLabel = c.source === 'ogn' ? 'OGN' : c.source === 'remoteid' ? 'Remote ID' : 'ADS-B';
+  const sourceLabel = c.source === 'ogn' ? 'OGN' : c.source === 'remoteid' ? t('map.contact_popup.remoteId') : 'ADS-B';
   const sub = [CATEGORY_LABEL[c.category], c.model, c.registration, sourceLabel]
     .filter(Boolean).join(' • ');
   const color = ALT_STATE_COLOR[altitudeColorState(c, band)];
 
   const rows: string[] = [];
   if (c.altMeters != null) rows.push(row('Altitude', `${Math.round(c.altMeters * M_TO_FT).toLocaleString()} ft`));
-  if (c.onGround) rows.push(row('State', 'On ground'));
-  if (c.groundSpeedMps != null) rows.push(row('Ground speed', `${Math.round(c.groundSpeedMps * MS_TO_KT)} kt`));
+  if (c.onGround) rows.push(row('State', t('map.contact_popup.onGround')));
+  if (c.groundSpeedMps != null) rows.push(row(t('map.contact_popup.groundSpeed'), `${Math.round(c.groundSpeedMps * MS_TO_KT)} kt`));
   if (c.trackDeg != null) rows.push(row('Track', `${Math.round(c.trackDeg)}°`));
   if (c.verticalRateMps != null && Math.abs(c.verticalRateMps) > 0.05)
     rows.push(row('Vertical', `${c.verticalRateMps > 0 ? '+' : ''}${Math.round(c.verticalRateMps * MS_TO_FPM)} fpm`));
@@ -47,7 +48,7 @@ export function buildContactPopup(
   if (prox) {
     rows.push(row('Distance', `${(prox.distanceMeters / 1000).toFixed(1)} km`));
     rows.push(row('Bearing', `${Math.round(prox.bearingDeg)}°`));
-    if (prox.verticalMeters != null) rows.push(row('Vert sep', `${Math.round(prox.verticalMeters * M_TO_FT).toLocaleString()} ft`));
+    if (prox.verticalMeters != null) rows.push(row(t('map.contact_popup.vertSep'), `${Math.round(prox.verticalMeters * M_TO_FT).toLocaleString()} ft`));
   }
   rows.push(row('Age', `${Math.max(0, Math.round((nowMs - c.lastSeen) / 1000))}s`));
 

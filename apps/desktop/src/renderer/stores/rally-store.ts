@@ -78,7 +78,7 @@ export const useRallyStore = create<RallyStore>((set, get) => ({
     try {
       const result = await window.electronAPI?.downloadRally();
       if (!result?.success) {
-        set({ error: result?.error || 'Failed to download rally points', isLoading: false, progress: null });
+        set({ error: result?.error || t('stores.rally_store.failedToDownloadRallyPoints'), isLoading: false, progress: null });
       }
       // Items will be set via IPC events (onRallyComplete)
     } catch (err) {
@@ -91,7 +91,7 @@ export const useRallyStore = create<RallyStore>((set, get) => ({
     const items = buildRallyItems(rallyPoints);
 
     if (items.length === 0) {
-      set({ error: 'No rally points to upload' });
+      set({ error: t('stores.rally_store.noRallyPointsToUpload') });
       return false;
     }
 
@@ -101,7 +101,7 @@ export const useRallyStore = create<RallyStore>((set, get) => ({
       if (result?.success) {
         return true;
       } else {
-        set({ error: result?.error || 'Failed to upload rally points', isLoading: false, progress: null });
+        set({ error: result?.error || t('stores.rally_store.failedToUploadRallyPoints'), isLoading: false, progress: null });
         return false;
       }
     } catch (err) {
@@ -117,7 +117,7 @@ export const useRallyStore = create<RallyStore>((set, get) => ({
       if (result?.success) {
         return true;
       } else {
-        set({ error: result?.error || 'Failed to clear rally points', isLoading: false });
+        set({ error: result?.error || t('stores.rally_store.failedToClearRallyPoints'), isLoading: false });
         return false;
       }
     } catch (err) {

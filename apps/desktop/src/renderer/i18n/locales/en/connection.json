@@ -73,7 +73,16 @@
       "autopilot": "Autopilot",
       "vehicle": "Vehicle",
       "systemId": "System ID",
-      "deviceNotShowingGetDriverHelp": "Device not showing? Get driver help"
+      "deviceNotShowingGetDriverHelp": "Device not showing? Get driver help",
+      "batteryFullAgain": "Battery full again",
+      "thisArdupilotOnlyChargesOnBoot": "This ArduPilot only charges on boot: press Respawn",
+      "theVehicleRefusedTheChange": "The vehicle refused the change",
+      "respawningAtHome": "Respawning at home",
+      "inavRunningOnTcp5760": "iNav running on TCP :5760",
+      "ardupilotRunningOnTcp5760": "ArduPilot {{ardupilotVehicleType}} running on TCP :5760",
+      "px4RunningOnUdp14550": "PX4 {{px4VehicleType}} running on UDP :14550",
+      "clickToDownloadAndLaunch": "Click to download and launch",
+      "launchVirtualFlightController": "Launch virtual flight controller"
     },
     "DriverAssistant": {
       "macos1014HasBuiltIn": "macOS 10.14+ has built-in support. Only install if device not detected.",
@@ -86,7 +95,12 @@
       "linuxIncludesBuiltInDriversFor": "Linux includes built-in drivers for most USB-serial chips. If your device isn't detected, check that you have permission to access serial ports (add your user to the",
       "group": "group).",
       "troubleshooting": "Troubleshooting",
-      "afterInstallingAllowTheExtensionIn": "After installing, allow the extension in System Settings → Privacy & Security"
+      "afterInstallingAllowTheExtensionIn": "After installing, allow the extension in System Settings → Privacy & Security",
+      "siliconLabs": "Silicon Labs",
+      "tryADifferentUsbCableSome": "Try a different USB cable (some are charge-only)",
+      "tryADifferentUsbPortAvoid": "Try a different USB port (avoid USB hubs)",
+      "unplugAndReplugTheDevice": "Unplug and replug the device",
+      "restartTheApplicationAfterInstallingDrivers": "Restart the application after installing drivers"
     },
     "LinksManager": {
       "server": "Server",
@@ -145,7 +159,10 @@
       "fixForMe": "Fix for me",
       "settingsAppliedRestartTheVehicleButton": "Settings applied. Restart the vehicle (button above) to make them take effect - the link reconnects by itself afterwards.",
       "hideTechnicalDetails": "Hide technical details",
-      "showTechnicalDetails": "Show technical details"
+      "showTechnicalDetails": "Show technical details",
+      "isNotLoadedYet": "{{param}} is not loaded yet",
+      "theVehicleRejected": "The vehicle rejected: {{v1}}",
+      "applyingSettingsFailed": "Applying settings failed."
     },
     "RadioSetupWizard": {
       "findRadio": "Find radio",
@@ -190,7 +207,15 @@
       "theRemainingItemCannotBeFixed": "The remaining item cannot be fixed from here (see above). Telemetry works regardless.",
       "radioLinkFullySetUp": "Radio link fully set up.",
       "telemetryStickControlAndSignalStrength": "Telemetry, stick control and signal strength all flow through the radio. The SiK-style modem workflow applies from here: just connect on",
-      "wheneverYouFlyOrDrive": "whenever you fly or drive."
+      "wheneverYouFlyOrDrive": "whenever you fly or drive.",
+      "theModuleKeptRefusingTheChange": "The module kept refusing the change - the receiver was still powered and linked. Unpower the vehicle completely (battery AND USB cable) and press Start again.",
+      "theModuleStoppedResponding": "The module stopped responding.",
+      "couldNotOpenThePortIs": "Could not open the port. Is another program using it?",
+      "couldNotListenOnTheWifi": "Could not listen on the WiFi port. Is another program using UDP 14550?",
+      "couldNotReadVehicleSettings": "Could not read vehicle settings.",
+      "theVehicleRejected": "The vehicle rejected: {{v1}}",
+      "applyingSettingsFailed": "Applying settings failed.",
+      "theRestartCommandWasNotAccepted": "The restart command was not accepted."
     },
     "RecentConnectionsButton": {
       "recentConnections": "Recent connections ({{length}})",

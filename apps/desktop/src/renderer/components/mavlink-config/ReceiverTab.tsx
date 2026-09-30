@@ -20,7 +20,7 @@ import { useConnectionStore } from '../../stores/connection-store';
 import Px4ReceiverConfig from './Px4ReceiverConfig';
 import { StickAssignmentCard } from './StickAssignmentCard';
 import { PRIMARY_CHANNEL_COUNT, getMavlinkChannelNames, reorderChannelsWithRcmap } from '../../utils/rc-channel-constants';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 // =============================================================================
 // Constants
@@ -272,8 +272,8 @@ const ReceiverTab: React.FC = () => {
       const movedChannels = batch.length / 3;
       setRcCalMessage(
         failed > 0
-          ? t('mavlink_config.ReceiverTab.savedChannelsParamRejected', { v1: movedChannels - failed, movedChannels, failed, v4: failed === 1 ? '' : 's' })
-          : t('mavlink_config.ReceiverTab.savedCalibrationForChannel', { movedChannels, v2: movedChannels === 1 ? '' : 's' }),
+          ? t('mavlink_config.ReceiverTab.savedChannelsParamRejected', { v1: movedChannels - failed, movedChannels, failed, v4: failed === 1 ? '' : enPlural('s') })
+          : t('mavlink_config.ReceiverTab.savedCalibrationForChannel', { movedChannels, v2: movedChannels === 1 ? '' : enPlural('s') }),
       );
     } finally {
       setIsSavingRcCal(false);

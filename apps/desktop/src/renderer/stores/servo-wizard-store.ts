@@ -197,7 +197,7 @@ export const useServoWizardStore = create<ServoWizardState>((set, get) => ({
               servoSupported: false,
               isCheckingSupport: false,
               isMultirotor: true,
-              supportError: 'Servo outputs are not available on this board in multirotor mode. This is a hardware limitation - not all flight controller boards can output servo signals when configured as a quad/hex.',
+              supportError: t('stores.servo_wizard_store.servoOutputsAreNotAvailableOn'),
             });
             return;
           }
@@ -247,8 +247,8 @@ export const useServoWizardStore = create<ServoWizardState>((set, get) => ({
             isCheckingSupport: false,
             isMultirotor,
             supportError: isMultirotor
-              ? 'No servo outputs available on this board for gimbal control.'
-              : 'No servo outputs detected. Ensure your board supports servos.',
+              ? t('stores.servo_wizard_store.noServoOutputsAvailableOnThis')
+              : t('stores.servo_wizard_store.noServoOutputsDetectedEnsureYour'),
           });
         }
       } catch (err) {
@@ -258,17 +258,17 @@ export const useServoWizardStore = create<ServoWizardState>((set, get) => ({
           servoSupported: false,
           isCheckingSupport: false,
           isMultirotor,
-          supportError: 'Servo configuration not supported on this firmware. iNav 2.0.0 may be too old - try updating to a newer version.',
+          supportError: t('stores.servo_wizard_store.servoConfigurationNotSupportedOnThis'),
         });
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
+      const message = err instanceof Error ? err.message : t('stores.servo_wizard_store.unknownError');
       console.error('[ServoWizard] Check failed:', message);
 
       set({
         servoSupported: false,
         isCheckingSupport: false,
-        supportError: 'Failed to check servo support. Please try again.',
+        supportError: t('stores.servo_wizard_store.failedToCheckServoSupportPlease'),
       });
     }
   },
@@ -371,13 +371,13 @@ export const useServoWizardStore = create<ServoWizardState>((set, get) => ({
         console.error(`[ServoWizard] Failed to set platform type (MSP2 + CLI both failed)`);
         // Show user a helpful message
         set({
-          supportError: `Could not change platform to ${platformName}. For iNav 2.0.0, you may need to use iNav Configurator to change the mixer type, then reconnect.`,
+          supportError: t('stores.servo_wizard_store.couldNotChangePlatformToFor', { platformName }),
         });
       }
     } catch (err) {
       console.error('[ServoWizard] Error setting platform type:', err);
       set({
-        supportError: `Error changing platform: ${err instanceof Error ? err.message : 'Unknown error'}. Try using iNav Configurator to change the mixer type.`,
+        supportError: t('stores.servo_wizard_store.errorChangingPlatformTryUsingInav', { v1: err instanceof Error ? err.message : 'Unknown error' }),
       });
     }
   },
@@ -569,7 +569,7 @@ export const useServoWizardStore = create<ServoWizardState>((set, get) => ({
         });
 
         if (!configResult) {
-          throw new Error(`Failed to set servo ${assignment.servoIndex} config`);
+          throw new Error(t('stores.servo_wizard_store.failedToSetServoConfig', { servoIndex: assignment.servoIndex }));
         }
 
         // Set mixer rules for this servo (MSP2 - not supported on old iNav)
@@ -614,7 +614,7 @@ export const useServoWizardStore = create<ServoWizardState>((set, get) => ({
         // This will save and reboot the board
         const cliSaveResult = await window.electronAPI.mspSaveServoCli();
         if (!cliSaveResult) {
-          throw new Error('Failed to save to EEPROM');
+          throw new Error(t('stores.servo_wizard_store.failedToSaveToEeprom'));
         }
         console.log('[ServoWizard] Saved via CLI (board will reboot)');
       }
@@ -637,13 +637,13 @@ export const useServoWizardStore = create<ServoWizardState>((set, get) => ({
       set({ isSaving: false });
       console.log('[ServoWizard] Saved to FC successfully');
     } catch (err) {
-      let message = err instanceof Error ? err.message : 'Failed to save';
+      let message = err instanceof Error ? err.message : t('stores.servo_wizard_store.failedToSave');
 
       // Add helpful suggestions based on error type
       if (message.includes('timed out')) {
-        message += '. Possible causes: (1) FC not configured as airplane/fixed-wing, (2) iNav version too old, (3) Board has no servo outputs.';
+        message += t('stores.servo_wizard_store.possibleCauses1FcNotConfigured');
       } else if (message.includes('not supported')) {
-        message += '. Your FC firmware may not support servo configuration via MSP. Try using iNav Configurator CLI.';
+        message += t('stores.servo_wizard_store.yourFcFirmwareMayNotSupport');
       }
 
       set({ isSaving: false, saveError: message });

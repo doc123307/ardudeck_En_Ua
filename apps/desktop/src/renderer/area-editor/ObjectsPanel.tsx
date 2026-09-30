@@ -11,7 +11,7 @@ import { colorForIndex } from './objects-geo';
 import { isVertexEditable, objectWorldRing, type EditorObjectType } from './area-object';
 import { GROUP_COLOR_PALETTE } from '../../shared/mission-group-types';
 import { parseFenceItems, buildFenceItems, type PolygonFence, type CircleFence } from '../../shared/fence-types';
-import { t } from '../i18n';
+import { t, enPlural } from '../i18n';
 
 const TYPE_LABEL: Record<EditorObjectType, string> = {
   polygon: 'Area', corridor: 'Corridor', rectangle: 'Rectangle', circle: 'Circle',
@@ -42,7 +42,7 @@ export function ObjectsPanel(): JSX.Element {
     if (!res) { setAutoStatus(t('area_editor.ObjectsPanel.pickAtLeastTwoCorridors')); return; }
     const saved = Math.max(0, res.transitBeforeM - res.transitAfterM);
     setAutoStatus(
-      `Joined ${res.absorbed + 1} corridors` +
+      t('area_editor.ObjectsPanel.joinedCorridors', { v1: res.absorbed + 1 }) +
       (saved > 1 ? ` · ${(saved / 1000).toFixed(1)} km less transit` : ''),
     );
   };
@@ -76,9 +76,9 @@ export function ObjectsPanel(): JSX.Element {
           return { ring, type: 'polygon' as const, fenceType: c.type };
         }),
       ];
-      if (rings.length === 0) { flashFence('No fences on FC'); return; }
+      if (rings.length === 0) { flashFence(t('area_editor.ObjectsPanel.noFencesOnFc')); return; }
       loadWorldRings(rings);
-      flashFence(`Loaded ${rings.length} fence${rings.length === 1 ? '' : 's'} from FC`);
+      flashFence(t('area_editor.ObjectsPanel.loadedFenceFromFc', { length: rings.length, v2: rings.length === 1 ? '' : enPlural('s') }));
     });
     void window.electronAPI?.downloadFence?.();
   }, [loadWorldRings, flashFence]);
@@ -86,7 +86,7 @@ export function ObjectsPanel(): JSX.Element {
   // Push every fence-tagged object to the FC as inclusion/exclusion fences.
   const uploadFences = useCallback(async () => {
     const fenceObjs = useObjectsStore.getState().objects.filter((o) => o.fenceType);
-    if (fenceObjs.length === 0) { flashFence('Tag objects as fences first'); return; }
+    if (fenceObjs.length === 0) { flashFence(t('area_editor.ObjectsPanel.tagObjectsAsFencesFirst')); return; }
     const polygons: PolygonFence[] = [];
     const circles: CircleFence[] = [];
     for (const o of fenceObjs) {
@@ -101,7 +101,7 @@ export function ObjectsPanel(): JSX.Element {
     }
     const items = buildFenceItems(polygons, circles, null);
     const res = await window.electronAPI?.uploadFence?.(items);
-    flashFence(res?.success ? `Uploaded ${fenceObjs.length} fence${fenceObjs.length === 1 ? '' : 's'}` : (res?.error ?? 'Upload failed'));
+    flashFence(res?.success ? t('area_editor.ObjectsPanel.uploadedFence', { length: fenceObjs.length, v2: fenceObjs.length === 1 ? '' : enPlural('s') }) : (res?.error ?? t('area_editor.ObjectsPanel.uploadFailed')));
   }, [flashFence]);
 
   return (
@@ -221,7 +221,7 @@ export function ObjectsPanel(): JSX.Element {
                     </div>
                     <div className="text-[10px] text-content-tertiary">
                       {TYPE_LABEL[o.type]}
-                      {branchCount > 0 && ` · ${branchCount} branch${branchCount > 1 ? 'es' : ''}`}
+                      {branchCount > 0 && ` · ${branchCount} branch${branchCount > 1 ? enPlural('es') : ''}`}
                     </div>
                   </div>
                 )}
@@ -285,7 +285,7 @@ export function ObjectsPanel(): JSX.Element {
                 <div className="text-[10px] font-medium text-content-tertiary uppercase tracking-wide">{t('area_editor.ObjectsPanel.geofence')}</div>
                 <div className="flex gap-1">
                   {([
-                    ['Area', null], ['Inclusion', 'inclusion'], ['Exclusion', 'exclusion'],
+                    [t('area_editor.ObjectsPanel.area'), null], [t('area_editor.ObjectsPanel.inclusion'), 'inclusion'], [t('area_editor.ObjectsPanel.exclusion'), 'exclusion'],
                   ] as Array<[string, 'inclusion' | 'exclusion' | null]>).map(([label, ft]) => {
                     const active = (sel!.fenceType ?? null) === ft;
                     return (

@@ -171,7 +171,7 @@ export function FleetContextMenu(): JSX.Element | null {
                 no ambiguous icon that fires a maneuver on a stray click. */}
             {isLeader && !hasWingmen && freeCount > 0 && (
               <button type="button" disabled={busy} onClick={run(() => { void formUp(undefined, v.key); })} className={item}>
-                {t('fleet.FleetContextMenu.formUp')} {freeCount} {t('fleet.FleetContextMenu.free')} {freeCount === 1 ? 'drone' : 'drones'}
+                {t('fleet.FleetContextMenu.formUp')} {freeCount} {t('fleet.FleetContextMenu.free')} {freeCount === 1 ? t('fleet.FleetContextMenu.drone') : t('fleet.FleetContextMenu.drones')}
               </button>
             )}
 

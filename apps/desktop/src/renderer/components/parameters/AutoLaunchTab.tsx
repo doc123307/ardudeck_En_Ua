@@ -199,7 +199,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
       }
 
       console.log('[AutoLaunch] Saved successfully');
-      setSuccess('Launch configuration saved');
+      setSuccess(t('parameters.AutoLaunchTab.launchConfigurationSaved'));
       setModified(false);
     } catch (err) {
       console.error('[AutoLaunch] Save error:', err);

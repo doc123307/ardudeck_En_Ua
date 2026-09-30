@@ -5,7 +5,7 @@ import { matchPreArmError } from '../../../shared/prearm-checks';
 import { PreArmParamFix } from '../prearm/PreArmParamFix';
 import { PanelContainer } from './panel-utils';
 import { MessageRowBody, formatTime, severityBorder } from '../messages/MessageRow';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 export function MessagesPanel() {
   const messages = useMessagesStore((s) => s.messages);
@@ -35,7 +35,7 @@ export function MessagesPanel() {
       {/* Header bar */}
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-subtle shrink-0">
         <span className="text-xs text-content-secondary font-medium">
-          {messages.length > 0 ? `${messages.length} message${messages.length !== 1 ? 's' : ''}` : t('panels.MessagesPanel.noMessages')}
+          {messages.length > 0 ? `${messages.length} message${messages.length !== 1 ? enPlural('s') : ''}` : t('panels.MessagesPanel.noMessages')}
         </span>
         {messages.length > 0 && (
           <button

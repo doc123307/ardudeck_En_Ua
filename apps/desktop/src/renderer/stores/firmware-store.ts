@@ -260,7 +260,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       const usbResult = await window.electronAPI?.detectBoard?.();
       if (!usbResult?.success || !usbResult.boards || usbResult.boards.length === 0) {
         set({
-          detectionError: 'No USB device detected. Make sure your flight controller is connected.',
+          detectionError: t('stores.firmware_store.noUsbDeviceDetectedMakeSure'),
           isDetecting: false,
         });
         return;
@@ -361,7 +361,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       }
     } catch (error) {
       set({
-        detectionError: error instanceof Error ? error.message : 'Detection failed',
+        detectionError: error instanceof Error ? error.message : t('stores.firmware_store.detectionFailed'),
         isDetecting: false,
       });
     }
@@ -427,13 +427,13 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       } else {
         set({
           isProbing: false,
-          detectionError: `No STM32 bootloader found on ${port}. Make sure the board is in bootloader mode.`,
+          detectionError: t('stores.firmware_store.noStm32BootloaderFoundOnMake', { port }),
         });
       }
     } catch (error) {
       set({
         isProbing: false,
-        detectionError: error instanceof Error ? error.message : 'Probe failed',
+        detectionError: error instanceof Error ? error.message : t('stores.firmware_store.probeFailed'),
       });
     }
   },
@@ -469,13 +469,13 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       } else {
         set({
           isProbing: false,
-          detectionError: result?.error || `Could not identify board on ${port}. Select your board manually.`,
+          detectionError: result?.error || t('stores.firmware_store.couldNotIdentifyBoardOnSelect', { port }),
         });
       }
     } catch (error) {
       set({
         isProbing: false,
-        detectionError: error instanceof Error ? error.message : 'MAVLink query failed',
+        detectionError: error instanceof Error ? error.message : t('stores.firmware_store.mavlinkQueryFailed'),
       });
     }
   },
@@ -588,7 +588,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
     try {
       // Explicit check instead of optional chaining to surface errors
       if (!window.electronAPI?.fetchFirmwareBoards) {
-        throw new Error('Firmware API not available - check preload.ts');
+        throw new Error(t('stores.firmware_store.firmwareApiNotAvailableCheckPreload'));
       }
 
       const result = await window.electronAPI.fetchFirmwareBoards(reqSource, reqVehicleType);
@@ -623,7 +623,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
           }
         }
       } else {
-        const errorMsg = result?.error || 'Failed to fetch boards (no error message)';
+        const errorMsg = result?.error || t('stores.firmware_store.failedToFetchBoardsNoError');
         console.error('[FirmwareStore] fetchBoards failed:', errorMsg);
         set({
           boardsError: errorMsg,
@@ -633,7 +633,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
     } catch (error) {
       console.error('[FirmwareStore] fetchBoards exception:', error);
       set({
-        boardsError: error instanceof Error ? error.message : 'Failed to fetch boards',
+        boardsError: error instanceof Error ? error.message : t('stores.firmware_store.failedToFetchBoards'),
         isFetchingBoards: false,
       });
     }
@@ -654,7 +654,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
     try {
       // Explicit check instead of optional chaining to surface errors
       if (!window.electronAPI?.fetchFirmwareVersions) {
-        throw new Error('Firmware versions API not available - check preload.ts');
+        throw new Error(t('stores.firmware_store.firmwareVersionsApiNotAvailableCheck'));
       }
 
       const result = await window.electronAPI.fetchFirmwareVersions(
@@ -694,7 +694,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
           get().setSelectedVersionGroup(latestGroup);
         }
       } else {
-        const errorMsg = result?.error || 'Failed to fetch versions (no error message)';
+        const errorMsg = result?.error || t('stores.firmware_store.failedToFetchVersionsNoError');
         console.error('[FirmwareStore] fetchVersions failed:', errorMsg);
         set({
           versionsError: errorMsg,
@@ -704,7 +704,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
     } catch (error) {
       console.error('[FirmwareStore] fetchVersions exception:', error);
       set({
-        versionsError: error instanceof Error ? error.message : 'Failed to fetch versions',
+        versionsError: error instanceof Error ? error.message : t('stores.firmware_store.failedToFetchVersions'),
         isFetchingVersions: false,
       });
     }
@@ -729,7 +729,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
     const { selectedSource, selectedVehicleType, selectedVersion, customFirmwarePath, detectedBoard, selectedPort } = get();
 
     if (!detectedBoard) {
-      set({ flashError: 'No board connected. Click Connect first.' });
+      set({ flashError: t('stores.firmware_store.noBoardConnectedClickConnectFirst') });
       return;
     }
 
@@ -742,7 +742,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       const expectedFirmwareType = VEHICLE_TO_FIRMWARE[selectedVehicleType];
       if (selectedVersion.vehicleType && selectedVersion.vehicleType !== expectedFirmwareType) {
         set({
-          flashError: `Vehicle type mismatch: you selected ${selectedVehicleType} but the chosen version is ${selectedVersion.vehicleType}. Reselect the vehicle and version, then try again.`,
+          flashError: t('stores.firmware_store.vehicleTypeMismatchYouSelectedBut', { selectedVehicleType, vehicleType: selectedVersion.vehicleType }),
         });
         return;
       }
@@ -760,12 +760,12 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
     if (selectedSource === 'custom') {
       firmwarePath = customFirmwarePath || undefined;
       if (!firmwarePath) {
-        set({ flashError: 'No firmware file selected' });
+        set({ flashError: t('stores.firmware_store.noFirmwareFileSelected') });
         return;
       }
     } else {
       if (!selectedVersion) {
-        set({ flashError: 'No firmware version selected' });
+        set({ flashError: t('stores.firmware_store.noFirmwareVersionSelected') });
         return;
       }
 
@@ -792,7 +792,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
         if (!downloadResult?.success || !downloadResult.filePath) {
           set({
             flashState: 'error',
-            flashError: downloadResult?.error || 'Download failed',
+            flashError: downloadResult?.error || t('stores.firmware_store.downloadFailed'),
           });
           return;
         }
@@ -800,7 +800,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       } catch (error) {
         set({
           flashState: 'error',
-          flashError: error instanceof Error ? error.message : 'Download failed',
+          flashError: error instanceof Error ? error.message : t('stores.firmware_store.downloadFailed'),
         });
         return;
       }
@@ -818,13 +818,13 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       if (!result?.success) {
         set({
           flashState: 'error',
-          flashError: result?.error || 'Flash failed',
+          flashError: result?.error || t('stores.firmware_store.flashFailed'),
         });
       }
     } catch (error) {
       set({
         flashState: 'error',
-        flashError: error instanceof Error ? error.message : 'Flash failed',
+        flashError: error instanceof Error ? error.message : t('stores.firmware_store.flashFailed'),
       });
     }
   },
@@ -845,13 +845,13 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       if (!result?.success) {
         set({
           flashState: 'error',
-          flashError: result?.error || 'Failed to enter bootloader',
+          flashError: result?.error || t('stores.firmware_store.failedToEnterBootloader'),
         });
       }
     } catch (error) {
       set({
         flashState: 'error',
-        flashError: error instanceof Error ? error.message : 'Failed to enter bootloader',
+        flashError: error instanceof Error ? error.message : t('stores.firmware_store.failedToEnterBootloader'),
       });
     }
   },
@@ -880,7 +880,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
     if (!port) {
       set({
         postFlashState: 'error',
-        postFlashError: 'No port found for reconnection',
+        postFlashError: t('stores.firmware_store.noPortFoundForReconnection'),
       });
       return;
     }
@@ -946,8 +946,8 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
 
       if (!connected) {
         throw new Error(
-          'Could not connect after flash. The USB-serial chip may need a physical unplug/replug. ' +
-          'Disconnect the board, reconnect it, then use Servo Wizard to configure as airplane.'
+          t('stores.firmware_store.couldNotConnectAfterFlashThe') +
+          t('stores.firmware_store.disconnectTheBoardReconnectItThen')
         );
       }
 
@@ -959,7 +959,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
 
       const mixerConfig = await window.electronAPI?.mspGetInavMixerConfig?.();
       if (!mixerConfig) {
-        throw new Error('Failed to read iNav mixer config');
+        throw new Error(t('stores.firmware_store.failedToReadInavMixerConfig'));
       }
 
 
@@ -981,7 +981,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
 
       const setResult = await window.electronAPI?.mspSetInavPlatformType?.(1); // 1 = AIRPLANE
       if (!setResult) {
-        throw new Error('Failed to set platform type to airplane');
+        throw new Error(t('stores.firmware_store.failedToSetPlatformTypeTo'));
       }
 
       // BSOD Prevention: Delay after platform type change
@@ -1020,7 +1020,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       console.error('[PostFlash] Configuration failed:', error);
       set({
         postFlashState: 'error',
-        postFlashError: error instanceof Error ? error.message : 'Configuration failed',
+        postFlashError: error instanceof Error ? error.message : t('stores.firmware_store.configurationFailed'),
       });
 
       // Try to disconnect cleanly

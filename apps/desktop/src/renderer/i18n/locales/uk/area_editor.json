@@ -52,7 +52,16 @@
       "saved": "Збережено",
       "sendTheseAreasToTheMission": "Надіслати ці області в планувальник місій",
       "sent": "Надіслано",
-      "sendToMission": "Надіслати в місію"
+      "sendToMission": "Надіслати в місію",
+      "themeDarkClickForLight": "Тема: темна (клацніть для світлої)",
+      "themeLightClickForSystem": "Тема: світла (клацніть для системної)",
+      "themeSystemClickForDark": "Тема: системна (клацніть для темної)",
+      "undoCtrlZ": "Скасувати (Ctrl+Z)",
+      "redoCtrlShiftZ": "Повторити (Ctrl+Shift+Z)",
+      "zoomToFitAllObjects": "Масштабувати, щоб показати всі об'єкти",
+      "importKmlKmzGeojsonShapefile": "Імпорт KML / KMZ / GeoJSON / Shapefile",
+      "exportAreasAsKml": "Експортувати ділянки як KML",
+      "exportAreasAsKmz": "Експортувати ділянки як KMZ"
     },
     "ObjectEditorContextMenu": {
       "convertToEditablePolygon": "Перетворити на редагований полігон",
@@ -79,7 +88,8 @@
       "undo": "Скасувати дію",
       "ctrlZ": "Ctrl+Z",
       "redo": "Повторити дію",
-      "ctrlShiftZ": "Ctrl+Shift+Z"
+      "ctrlShiftZ": "Ctrl+Shift+Z",
+      "noWaypoints": "немає точок"
     },
     "ObjectEditorHud": {
       "area": "Площа",
@@ -136,7 +146,16 @@
       "fencesFromFc": "↓ Геозони з FC",
       "uploadAllInclusionExclusionObjectsTo": "Завантажити всі об'єкти включення/виключення в польотний контролер",
       "fencesToFc": "↑ Геозони в FC",
-      "setColor": "Встановити колір {{c}}"
+      "setColor": "Встановити колір {{c}}",
+      "joinedCorridors": "Об'єднано коридорів: {{v1}}",
+      "noFencesOnFc": "На FC немає огорож",
+      "loadedFenceFromFc": "Завантажено огорож з FC: {{length}}",
+      "tagObjectsAsFencesFirst": "Спершу позначте об'єкти як огорожі",
+      "uploadedFence": "Вивантажено огорож: {{length}}",
+      "uploadFailed": "Помилка вивантаження",
+      "area": "Ділянка",
+      "inclusion": "Дозволена зона",
+      "exclusion": "Заборонена зона"
     },
     "area_editor_layers_store": {
       "satellite": "Супутник",

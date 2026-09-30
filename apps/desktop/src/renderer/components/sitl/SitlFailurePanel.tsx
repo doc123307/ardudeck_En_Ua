@@ -57,7 +57,7 @@ function FailureCard({ label, icon, active, available, fcHealthy, onToggle }: Fa
         <span className={`text-[9px] transition-colors ${
           fcHealthy ? 'text-green-400' : 'text-red-400'
         }`}>
-          FC: {fcHealthy ? 'healthy' : 'unhealthy'}
+          FC: {fcHealthy ? t('sitl.SitlFailurePanel.healthy') : t('sitl.SitlFailurePanel.unhealthy')}
         </span>
       )}
     </button>

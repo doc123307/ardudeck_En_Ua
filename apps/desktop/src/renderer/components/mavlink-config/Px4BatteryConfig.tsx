@@ -28,8 +28,8 @@ import { t } from '../../i18n';
 // Fallback enum labels used when metadata for the param is not loaded.
 const SOURCE_LABELS: Record<number, string> = {
   [-1]: 'Disabled',
-  0: 'Power Module / Analog',
-  1: 'External / ADC',
+  get 0() { return t('mavlink_config.Px4BatteryConfig.powerModuleAnalog'); },
+  get 1() { return t('mavlink_config.Px4BatteryConfig.externalAdc'); },
   2: 'ESCs',
 };
 

@@ -86,7 +86,7 @@ export function HudPanel() {
       <Section title={t('osd.HudPanel.vehicleProfile')} icon={designGround ? Car : Plane}>
         <div className="px-2 pb-1">
           <div className="inline-flex w-full items-center rounded-lg border border-subtle overflow-hidden bg-surface">
-            {([['air', 'Aircraft', Plane], ['ground', 'Ground', Car]] as const).map(([key, label, Icon]) => (
+            {([['air', 'Aircraft', Plane], ['ground', 'Ground', Car]] as const).map(([key, , Icon]) => (
               <button
                 key={key}
                 onClick={() => setDesignGround(key === 'ground')}
@@ -95,13 +95,13 @@ export function HudPanel() {
                 }`}
               >
                 <Icon className="h-3.5 w-3.5" />
-                {label}
+                {t(`osd.HudPanel.profile_${key}`)}
               </button>
             ))}
           </div>
         </div>
         <p className="px-2 pb-1 text-[10px] leading-snug text-content-tertiary">
-          {t('osd.HudPanel.youAreEditingThe')} {designGround ? t('osd.HudPanel.groundVehicleRoverBoat') : 'aircraft'} {t('osd.HudPanel.arrangementEachKeepsItsOwnInstruments')}
+          {t('osd.HudPanel.youAreEditingThe')} {designGround ? t('osd.HudPanel.groundVehicleRoverBoat') : t('osd.HudPanel.aircraft')} {t('osd.HudPanel.arrangementEachKeepsItsOwnInstruments')}
         </p>
         <Row label={t('osd.HudPanel.liveOverlayUses')}>
           <select
@@ -169,7 +169,7 @@ export function HudPanel() {
           if (items.length === 0) return null;
           return (
             <div key={cat} className="mb-1">
-              <div className="px-2 pt-1.5 pb-0.5 text-[9px] font-semibold uppercase tracking-wider text-content-tertiary">{cat}</div>
+              <div className="px-2 pt-1.5 pb-0.5 text-[9px] font-semibold uppercase tracking-wider text-content-tertiary">{t(`osd.HudPanel.category_${cat}`)}</div>
               {items.map((r) => {
                 const on = activeWidgets[r.id];
                 return (

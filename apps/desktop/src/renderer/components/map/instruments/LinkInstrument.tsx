@@ -50,8 +50,8 @@ function DirectionBlock({ title, tip, rssi, noise }: { title: string; tip: strin
           {margin === null ? '--' : `${margin.toFixed(0)} dB`}
         </span>
       </div>
-      <Row label="RSSI" value={`${rssi === RADIO_UNKNOWN ? '--' : rssi} · ${formatDbm(rssi)}`} tip="Received signal strength (raw and SiK-calibrated dBm; other modems scale differently)" />
-      <Row label={t('map.LinkInstrument.noise')} value={`${noise === RADIO_UNKNOWN ? '--' : noise} · ${formatDbm(noise)}`} tip="Background noise floor (raw and SiK-calibrated dBm)" />
+      <Row label="RSSI" value={`${rssi === RADIO_UNKNOWN ? '--' : rssi} · ${formatDbm(rssi)}`} tip={t('map.LinkInstrument.receivedSignalStrengthRawAndSik')} />
+      <Row label={t('map.LinkInstrument.noise')} value={`${noise === RADIO_UNKNOWN ? '--' : noise} · ${formatDbm(noise)}`} tip={t('map.LinkInstrument.backgroundNoiseFloorRawAndSik')} />
     </div>
   );
 }
@@ -132,7 +132,7 @@ export function LinkInstrument(): JSX.Element {
           <span className="text-[8px] font-normal text-[var(--gauge-text-dim)] ml-0.5">%</span>
         </span>
         <span className="ml-auto text-[8px] leading-none text-[var(--gauge-text-dim)]">
-          {state.kind === 'unconfigured' ? 'NOT SET UP' : state.fromModem ? 'TLM RSSI' : 'RSSI'}
+          {state.kind === 'unconfigured' ? t('map.LinkInstrument.notSetUp2') : state.fromModem ? 'TLM RSSI' : 'RSSI'}
         </span>
         <svg className="w-2.5 h-2.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ color: GAUGE_COLORS.textDim }}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -154,13 +154,13 @@ export function LinkInstrument(): JSX.Element {
                 <>
                   <DirectionBlock
                     title={t('map.LinkInstrument.groundReceive')}
-                    tip="What the ground-side modem hears from the vehicle"
+                    tip={t('map.LinkInstrument.whatTheGroundSideModemHears')}
                     rssi={radioStatus.rssi}
                     noise={radioStatus.noise}
                   />
                   <DirectionBlock
                     title={t('map.LinkInstrument.vehicleReceive')}
-                    tip="What the vehicle-side modem hears from the ground (reported back over the link)"
+                    tip={t('map.LinkInstrument.whatTheVehicleSideModemHears')}
                     rssi={radioStatus.remRssi}
                     noise={radioStatus.remNoise}
                   />
@@ -168,12 +168,12 @@ export function LinkInstrument(): JSX.Element {
                     <Row
                       label={t('map.LinkInstrument.rxErrors')}
                       value={r ? `${radioStatus.rxErrors} (${r.errorsPerSec.toFixed(1)}/s)` : `${radioStatus.rxErrors}`}
-                      tip="Packets lost to reception errors since boot (cumulative, with current rate)"
+                      tip={t('map.LinkInstrument.packetsLostToReceptionErrorsSince')}
                     />
                     <Row
                       label={t('map.LinkInstrument.fecCorrected')}
                       value={r ? `${radioStatus.fixed} (${r.fixedPerSec.toFixed(1)}/s)` : `${radioStatus.fixed}`}
-                      tip="Damaged packets repaired by forward error correction; rising counts mean the link is working hard"
+                      tip={t('map.LinkInstrument.damagedPacketsRepairedByForwardError')}
                     />
                   </div>
                   <div data-tip={t('map.LinkInstrument.freeSpaceInTheRadioS')}>
@@ -194,8 +194,8 @@ export function LinkInstrument(): JSX.Element {
                   {chancount > 0 && rssi !== 255 && (
                     <Row
                       label="RC RSSI"
-                      value={rssi > 0 ? `${Math.round((Math.min(rssi, 254) / 254) * 100)}%` : 'not set up'}
-                      tip="Separate RC receiver signal reported by the flight controller"
+                      value={rssi > 0 ? `${Math.round((Math.min(rssi, 254) / 254) * 100)}%` : t('map.LinkInstrument.notSetUp')}
+                      tip={t('map.LinkInstrument.separateRcReceiverSignalReportedBy')}
                     />
                   )}
                 </>

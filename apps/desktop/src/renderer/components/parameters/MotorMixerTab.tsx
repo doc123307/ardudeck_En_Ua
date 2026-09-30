@@ -50,7 +50,7 @@ const MOTOR_PRESETS: Record<string, {
   quadX: {
     name: 'Quad X',
     get description() { return t('parameters.MotorMixerTab.mostCommonDroneLayout'); },
-    beginner: 'This is what most racing and freestyle drones use. The X shape gives balanced control in all directions.',
+    get beginner() { return t('parameters.MotorMixerTab.thisIsWhatMostRacingAnd'); },
     icon: Sparkles,
     recommended: true,
     platform: 'multirotor',
@@ -70,7 +70,7 @@ const MOTOR_PRESETS: Record<string, {
   quadPlus: {
     name: 'Quad +',
     get description() { return t('parameters.MotorMixerTab.plusShapedLayout'); },
-    beginner: 'Motors are arranged in a + shape. One motor points forward. Less common but works well for some frames.',
+    get beginner() { return t('parameters.MotorMixerTab.motorsAreArrangedInAShape'); },
     icon: Plus,
     platform: 'multirotor',
     positions: [
@@ -89,7 +89,7 @@ const MOTOR_PRESETS: Record<string, {
   hex: {
     name: 'Hex X',
     get description() { return t('parameters.MotorMixerTab.n6MotorsForHeavyLifting'); },
-    beginner: 'Six motors provide more power and redundancy. If one motor fails, you might still be able to land safely.',
+    get beginner() { return t('parameters.MotorMixerTab.sixMotorsProvideMorePowerAnd'); },
     icon: Cog,
     platform: 'multirotor',
     positions: [
@@ -114,7 +114,7 @@ const MOTOR_PRESETS: Record<string, {
   singleMotor: {
     name: 'Single Motor',
     get description() { return t('parameters.MotorMixerTab.standardAirplaneWithOneMotor'); },
-    beginner: 'Most airplanes have one motor at the front (tractor) or back (pusher). Control surfaces handle steering.',
+    get beginner() { return t('parameters.MotorMixerTab.mostAirplanesHaveOneMotorAt'); },
     icon: Plane,
     recommended: true,
     platform: 'airplane',
@@ -128,7 +128,7 @@ const MOTOR_PRESETS: Record<string, {
   twinMotorDiff: {
     name: 'Twin Motor (Diff Thrust)',
     get description() { return t('parameters.MotorMixerTab.yawViaMotorSpeedDifference'); },
-    beginner: 'Two wing motors spinning opposite directions. Yaw is controlled by speeding up one motor and slowing the other.',
+    get beginner() { return t('parameters.MotorMixerTab.twoWingMotorsSpinningOppositeDirections'); },
     icon: Plane,
     platform: 'airplane',
     positions: [
@@ -143,7 +143,7 @@ const MOTOR_PRESETS: Record<string, {
   twinMotorRudder: {
     name: 'Twin Motor (Rudder)',
     get description() { return t('parameters.MotorMixerTab.yawViaRudderServo'); },
-    beginner: 'Two wing motors at equal speed. Use this if your plane has a rudder/tail for yaw control.',
+    get beginner() { return t('parameters.MotorMixerTab.twoWingMotorsAtEqualSpeed'); },
     icon: Plane,
     platform: 'airplane',
     positions: [
@@ -158,7 +158,7 @@ const MOTOR_PRESETS: Record<string, {
   quadPlaneVTOL: {
     name: 'QuadPlane VTOL',
     get description() { return t('parameters.MotorMixerTab.n4QuadMotors1Pusher'); },
-    beginner: 'VTOL aircraft: 4 lifting motors (like a quad) plus 1 pusher motor for forward flight. Most popular VTOL setup.',
+    get beginner() { return t('parameters.MotorMixerTab.vtolAircraft4LiftingMotorsLike'); },
     icon: Plane,
     platform: 'airplane',
     positions: [
@@ -179,7 +179,7 @@ const MOTOR_PRESETS: Record<string, {
   triVTOL: {
     name: 'Tricopter VTOL',
     description: '3 tilt/lift motors',
-    beginner: 'VTOL with 3 motors that tilt for transition. Lighter than QuadPlane but more complex mechanically.',
+    get beginner() { return t('parameters.MotorMixerTab.vtolWith3MotorsThatTilt'); },
     icon: Plane,
     platform: 'airplane',
     positions: [
@@ -441,7 +441,7 @@ export default function MotorMixerTab({ modified, setModified }: Props) {
       // Try MSP first, falls back to CLI internally
       const success = await window.electronAPI?.mspSetMotorMixer(rules);
       if (!success) {
-        throw new Error('Failed to save motor mixer');
+        throw new Error(t('parameters.MotorMixerTab.failedToSaveMotorMixer'));
       }
 
       // Save to EEPROM
@@ -654,7 +654,7 @@ export default function MotorMixerTab({ modified, setModified }: Props) {
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
                       isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-surface-raised text-content-tertiary'
                     }`}>
-                      {preset.motors.length} {preset.motors.length === 1 ? 'motor' : 'motors'}
+                      {preset.motors.length} {preset.motors.length === 1 ? t('parameters.MotorMixerTab.motor2') : t('parameters.MotorMixerTab.motors')}
                     </span>
                     {isSelected && (
                       <span className="text-xs text-emerald-400 font-medium">{t('parameters.MotorMixerTab.selected')}</span>

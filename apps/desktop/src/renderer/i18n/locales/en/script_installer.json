@@ -8,12 +8,17 @@
       "graph": "Graph",
       "source": "Source",
       "closeEsc": "Close (Esc)",
-      "readOnlyReviewPanZoomIn": "Read-only review. Pan/zoom in graph view. Switch tabs to inspect source line by line."
+      "readOnlyReviewPanZoomIn": "Read-only review. Pan/zoom in graph view. Switch tabs to inspect source line by line.",
+      "graphReview": "GRAPH REVIEW",
+      "sourceReview": "SOURCE REVIEW"
     },
     "PreflightChecksList": {
       "now": "now:",
       "need": "→ need:",
-      "applying": "Applying…"
+      "applying": "Applying…",
+      "rebootFlightController": "Reboot flight controller",
+      "disarmVehicle": "Disarm vehicle",
+      "fix": "Fix"
     },
     "ScriptHealthBadge": {
       "luaV": "Lua v{{v1}}",
@@ -31,7 +36,9 @@
       "is0": "is 0",
       "fcHasnTRebootedSinceInstall": "FC hasn't rebooted since install (scripts only load at boot)",
       "scriptCrashedOnLoadCheckFc": "Script crashed on load - check FC STATUSTEXT messages",
-      "openInstallerManage": "Open installer / manage…"
+      "openInstallerManage": "Open installer / manage…",
+      "mavlink": "MAVLink ✓",
+      "notConnected": "not connected"
     },
     "ScriptInstallModal": {
       "installArdudeckCommandsOnThisVehicle": "Install ArduDeck commands on this vehicle",
@@ -105,7 +112,9 @@
       "close": "Close",
       "retryAutomaticInstall": "Retry automatic install",
       "installFailed": "✗ Install failed",
-      "tryAgain": "Try again"
+      "tryAgain": "Try again",
+      "connectToAFlightControllerTo": "Connect to a flight controller to continue.",
+      "vehicleIsConnectedViaMspThe": "Vehicle is connected via MSP. The Lua installer requires a MAVLink connection (ArduPilot)."
     },
     "ardudeck_commands_graph": {
       "runEvery1000Ms": "Run every 1000 ms",

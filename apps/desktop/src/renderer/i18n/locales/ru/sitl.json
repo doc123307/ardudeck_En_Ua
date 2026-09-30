@@ -113,7 +113,18 @@
       "offlineDefaultList": "офлайн · список по умолчанию",
       "noUpstreamDefaultsArdudeckBaselineOnly": "Нет значений по умолчанию из upstream — только базовые ArduDeck.",
       "loads": "Загружает",
-      "onStart": "при запуске."
+      "onStart": "при запуске.",
+      "couldnTReachUpstreamClickTo": "Не удалось связаться с upstream: {{error}}\nКликните, чтобы повторить.",
+      "frameListMirrorsArdupilotUpstreamVehicleinfo": "Список рам зеркалирует `vehicleinfo.py` из upstream ArduPilot. Кликните, чтобы обновить.",
+      "group_Multirotor": "Мультиротор",
+      "group_Helicopter": "Вертолёт",
+      "group_Plane": "Самолёт",
+      "group_Quadplane": "Квадроплан",
+      "group_Tailsitter": "Тейлситтер",
+      "group_Rover": "Ровер",
+      "group_Boat": "Лодка",
+      "group_Sub": "Подводный",
+      "group_Other": "Другое"
     },
     "CustomFramePanel": {
       "physical": "Физические",
@@ -159,7 +170,8 @@
       "frameName": "Название рамы",
       "save": "Сохранить",
       "activeFrameIsLoadedViaSitl": "Активная рама загружается через SITL",
-      "onNextStartStopRestartSitl": "при следующем запуске. Остановите и перезапустите SITL, чтобы применить."
+      "onNextStartStopRestartSitl": "при следующем запуске. Остановите и перезапустите SITL, чтобы применить.",
+      "vFullCharge": "В (полный заряд)"
     },
     "Px4SitlTab": {
       "copter": "Коптер",
@@ -242,7 +254,9 @@
       "injectSensorFailuresToTestFailsafe": "Вносите отказы датчиков, чтобы проверить поведение failsafe. Кликните датчик, чтобы переключить его отказ.",
       "gpsAdvanced": "GPS — расширенные",
       "satellites": "Спутники",
-      "delay": "Задержка"
+      "delay": "Задержка",
+      "healthy": "исправен",
+      "unhealthy": "неисправен"
     },
     "SitlView": {
       "cessna172p": "Cessna 172P",

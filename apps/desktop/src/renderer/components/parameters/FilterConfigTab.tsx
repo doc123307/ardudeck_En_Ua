@@ -150,7 +150,7 @@ export default function FilterConfigTab({ setModified }: Props) {
       await window.electronAPI.mspSaveEeprom();
 
       setOriginalConfig({ ...config });
-      setSuccess('Filter settings saved!');
+      setSuccess(t('parameters.FilterConfigTab.filterSettingsSaved'));
       setModified?.(false);
     } catch (err) {
       console.error('[FilterConfigTab] Failed to save:', err);

@@ -44,8 +44,8 @@ export default function ReportBugView() {
   const boardInfo = isMspBoard
     ? `${connectionState.fcVariant} ${connectionState.fcVersion}`
     : isMavlinkBoard
-      ? [firmwareLabel(connectionState), connectionState.vehicleType].filter(Boolean).join(' ') || 'MAVLink vehicle'
-      : 'Not connected';
+      ? [firmwareLabel(connectionState), connectionState.vehicleType].filter(Boolean).join(' ') || t('report.ReportBugView.mavlinkVehicle')
+      : t('report.ReportBugView.notConnected');
 
   // Fetch encryption info on mount
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function ReportBugView() {
           setProgress({ stage: 'board_dump', message: t('report.ReportBugView.collectingBoardConfigurationCliMode') });
           const result = await window.electronAPI.reportCollectMspDump();
           if (!result.success) {
-            throw new Error(result.error || 'Failed to collect board dump');
+            throw new Error(result.error || t('report.ReportBugView.failedToCollectBoardDump'));
           }
           boardDump = result.dump;
         } else if (isMavlinkBoard) {
@@ -106,17 +106,17 @@ export default function ReportBugView() {
       // Save the report
       setProgress({ stage: 'saving', message: t('report.ReportBugView.creatingEncryptedReport') });
       const result = await window.electronAPI.reportSave(
-        description || 'No description provided',
+        description || t('report.ReportBugView.noDescriptionProvided'),
         boardDump,
         includeLogs ? logHours : 0
       );
 
       if (result.success) {
-        setSuccess(`Report saved to: ${result.filePath}`);
+        setSuccess(t('report.ReportBugView.reportSavedTo', { filePath: result.filePath }));
         setDescription('');
         setHasConsented(false);
       } else {
-        throw new Error(result.error || 'Failed to save report');
+        throw new Error(result.error || t('report.ReportBugView.failedToSaveReport'));
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('report.ReportBugView.unknownError'));

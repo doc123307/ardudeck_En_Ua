@@ -752,7 +752,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       if (isMsp && isInav) {
         const waypoints = await window.electronAPI?.mspGetWaypoints();
         if (waypoints === null) {
-          set({ error: 'Failed to download waypoints - MSP not supported', isLoading: false, progress: null });
+          set({ error: t('stores.mission_store.failedToDownloadWaypointsMspNot'), isLoading: false, progress: null });
           return;
         }
         if (waypoints.length === 0) {
@@ -796,7 +796,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       // MAVLink path for ArduPilot boards
       const result = await window.electronAPI?.downloadMission();
       if (!result?.success) {
-        set({ error: result?.error || 'Failed to download mission', isLoading: false, progress: null });
+        set({ error: result?.error || t('stores.mission_store.failedToDownloadMission'), isLoading: false, progress: null });
       }
       // Items will be set via IPC events (onMissionComplete)
     } catch (err) {
@@ -815,7 +815,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
     const isInav = connectionState.fcVariant === 'INAV';
 
     if (itemsToUpload.length === 0) {
-      set({ error: 'No waypoints to upload (all groups deselected?)' });
+      set({ error: t('stores.mission_store.noWaypointsToUploadAllGroups') });
       return false;
     }
 
@@ -841,7 +841,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
           });
           return true;
         } else {
-          set({ error: 'Failed to upload waypoints', isLoading: false, progress: null });
+          set({ error: t('stores.mission_store.failedToUploadWaypoints'), isLoading: false, progress: null });
           return false;
         }
       }
@@ -855,7 +855,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
         // Don't set isLoading: false here - wait for MISSION_ACK via onMissionUploadComplete
         return true;
       } else {
-        set({ error: result?.error || 'Failed to upload mission', isLoading: false, progress: null });
+        set({ error: result?.error || t('stores.mission_store.failedToUploadMission'), isLoading: false, progress: null });
         return false;
       }
     } catch (err) {
@@ -867,7 +867,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   uploadGroup: async (groupId) => {
     const itemsToUpload = get().getUploadItemsForGroup(groupId);
     if (itemsToUpload.length === 0) {
-      set({ error: 'No waypoints in this group to upload' });
+      set({ error: t('stores.mission_store.noWaypointsInThisGroupTo') });
       return false;
     }
     // Snapshot just this group so the completion handler marks only it as
@@ -900,7 +900,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
           });
           return true;
         }
-        set({ error: 'Failed to upload waypoints', isLoading: false, progress: null });
+        set({ error: t('stores.mission_store.failedToUploadWaypoints'), isLoading: false, progress: null });
         return false;
       }
 
@@ -911,7 +911,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
         // isLoading cleared on MISSION_ACK via onMissionUploadComplete.
         return true;
       }
-      set({ error: result?.error || 'Failed to upload mission', isLoading: false, progress: null });
+      set({ error: result?.error || t('stores.mission_store.failedToUploadMission'), isLoading: false, progress: null });
       return false;
     } catch (err) {
       set({ error: String(err), isLoading: false, progress: null });
@@ -922,7 +922,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   uploadGroupToVehicle: async (groupId, vehicleKey) => {
     const itemsToUpload = get().getUploadItemsForGroup(groupId);
     if (itemsToUpload.length === 0) {
-      set({ error: 'No waypoints in this group to upload' });
+      set({ error: t('stores.mission_store.noWaypointsInThisGroupTo') });
       return false;
     }
     // Snapshot this group so the "on vehicle" indicator reflects it on success.
@@ -940,7 +940,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
         });
         return true;
       }
-      set({ error: result?.error || 'Failed to upload mission to vehicle' });
+      set({ error: result?.error || t('stores.mission_store.failedToUploadMissionToVehicle') });
       return false;
     } catch (err) {
       set({ error: String(err) });
@@ -951,7 +951,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   saveGroupToFile: async (groupId) => {
     const items = get().getUploadItemsForGroup(groupId);
     if (items.length === 0) {
-      set({ error: 'No waypoints in this group to save' });
+      set({ error: t('stores.mission_store.noWaypointsInThisGroupTo2') });
       return false;
     }
     // .waypoints files also treat seq 0 as HOME, so the wire builder applies.
@@ -989,7 +989,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
           });
           return true;
         } else {
-          set({ error: 'Failed to clear waypoints', isLoading: false });
+          set({ error: t('stores.mission_store.failedToClearWaypoints'), isLoading: false });
           return false;
         }
       }
@@ -1000,7 +1000,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
         // Don't set isLoading: false here - wait for MISSION_ACK via onMissionClearComplete
         return true;
       } else {
-        set({ error: result?.error || 'Failed to clear mission', isLoading: false });
+        set({ error: result?.error || t('stores.mission_store.failedToClearMission'), isLoading: false });
         return false;
       }
     } catch (err) {

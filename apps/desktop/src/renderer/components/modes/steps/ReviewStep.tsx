@@ -10,7 +10,7 @@ import { useModesWizardStore } from '../../../stores/modes-wizard-store';
 import { MODE_INFO, AUX_CHANNELS, PRESET_ICONS } from '../presets/mode-presets';
 import ModeCard from '../shared/ModeCard';
 import { ClipboardList, AlertTriangle, XCircle, CheckCircle2, Lightbulb, HelpCircle } from 'lucide-react';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 export const ReviewStep: React.FC = () => {
   const {
@@ -59,8 +59,8 @@ export const ReviewStep: React.FC = () => {
         <h2 className="text-xl font-semibold text-content">{t('modes.ReviewStep.reviewYourConfiguration')}</h2>
         <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
           {selectedPreset
-            ? t('modes.ReviewStep.usingPresetWithMode', { name: selectedPreset.name, length: pendingModes.length, v3: pendingModes.length !== 1 ? 's' : '' })
-            : t('modes.ReviewStep.youHaveConfiguredMode', { length: pendingModes.length, v2: pendingModes.length !== 1 ? 's' : '' })}
+            ? t('modes.ReviewStep.usingPresetWithMode', { name: selectedPreset.name, length: pendingModes.length, v3: pendingModes.length !== 1 ? enPlural('s') : '' })
+            : t('modes.ReviewStep.youHaveConfiguredMode', { length: pendingModes.length, v2: pendingModes.length !== 1 ? enPlural('s') : '' })}
         </p>
       </div>
 

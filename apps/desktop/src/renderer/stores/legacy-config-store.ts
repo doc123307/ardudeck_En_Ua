@@ -400,7 +400,7 @@ export const useLegacyConfigStore = create<LegacyConfigStore>((set, get) => ({
       console.error('[LegacyConfigStore] Failed to load config:', err);
       set({
         isLoading: false,
-        error: err instanceof Error ? err.message : 'Failed to load config',
+        error: err instanceof Error ? err.message : t('stores.legacy_config_store.failedToLoadConfig'),
       });
     } finally {
       loadInProgress = false;
@@ -414,21 +414,21 @@ export const useLegacyConfigStore = create<LegacyConfigStore>((set, get) => ({
 
     try {
       // Step 1: Saving
-      setRebootState('saving', 'Saving configuration to EEPROM...');
+      setRebootState('saving', t('stores.legacy_config_store.savingConfigurationToEeprom'));
       await window.electronAPI.cliSendCommand('save');
 
       // Clear changes flag (they're saved now)
       set({ hasChanges: false });
 
       // Step 2: Rebooting
-      setRebootState('rebooting', 'Board is rebooting...');
+      setRebootState('rebooting', t('stores.legacy_config_store.boardIsRebooting'));
       console.log('[LegacyConfigStore] Save command sent, board is rebooting');
 
       // Wait for board to reboot (typical reboot takes 2-4 seconds)
       await new Promise(r => setTimeout(r, 4000));
 
       // Step 3: Reconnecting
-      setRebootState('reconnecting', 'Reconnecting to board...');
+      setRebootState('reconnecting', t('stores.legacy_config_store.reconnectingToBoard'));
       console.log('[LegacyConfigStore] Attempting to reconnect...');
 
       // Disconnect first to clean up state
@@ -442,7 +442,7 @@ export const useLegacyConfigStore = create<LegacyConfigStore>((set, get) => ({
       // For now, just show success and let user know to reconnect
 
       // Step 4: Done (or prompt user to reconnect manually)
-      setRebootState('done', 'Configuration saved! Board rebooted. Please reconnect.');
+      setRebootState('done', t('stores.legacy_config_store.configurationSavedBoardRebootedPleaseReconnect'));
       console.log('[LegacyConfigStore] Save complete, user should reconnect');
 
       // Auto-clear after 3 seconds

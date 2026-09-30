@@ -62,7 +62,11 @@
       "end": "Конец:",
       "dragHandles": "Тяните маркеры",
       "yourTransmitter": "Ваш пульт",
-      "activeRange": "Активный диапазон"
+      "activeRange": "Активный диапазон",
+      "switchDown": "Переключатель ВНИЗ",
+      "switchMid": "Переключатель ПОСЕРЕДИНЕ",
+      "switchUp": "Переключатель ВВЕРХ",
+      "alwaysOn": "Всегда ВКЛ."
     },
     "ReviewStep": {
       "reviewYourConfiguration": "Проверьте настройки",
@@ -169,7 +173,31 @@
       "oftenA3PositionSwitch": "Часто 3-позиционный переключатель",
       "additionalSwitch": "Дополнительный переключатель",
       "additionalChannelKnobSlider": "Дополнительный канал (крутилка/ползунок)",
-      "additionalChannel": "Дополнительный канал"
+      "additionalChannel": "Дополнительный канал",
+      "safetySwitchArmsDisarmsYourAircraft": "ПРЕДОХРАНИТЕЛЬ — армирует/дизармирует аппарат. ВСЕГДА ставьте его на отдельный переключатель! После арма пропеллеры могут закрутиться в любой момент.",
+      "beginnerModeYourAircraftWillAutomatically": "РЕЖИМ ДЛЯ НОВИЧКОВ — аппарат сам выравнивается, когда вы отпускаете стики. Максимальный угол наклона ограничен. Идеально для обучения!",
+      "intermediateModeSelfLevelsNearCenter": "ПРОМЕЖУТОЧНЫЙ РЕЖИМ — выравнивается у центра стика, как ANGLE, но позволяет флипы и бочки на полном стике. Мостик между ANGLE и ACRO.",
+      "advancedKeepsFullStickAuthorityEven": "ДЛЯ ОПЫТНЫХ — полное управление даже на нулевом газе. Необходимо для фристайл-трюков и флипов. Обычно включено постоянно.",
+      "holdsCurrentAltitudeUsingBarometerGps": "Удерживает текущую высоту по барометру/GPS. Газ управляет скоростью набора/снижения.",
+      "returnToHomeAircraftWillClimb": "Возврат домой — аппарат наберёт безопасную высоту и полетит к точке старта. Ключевая функция безопасности!",
+      "gpsPositionHoldAircraftWillStay": "Удержание позиции GPS — аппарат стоит на месте. Отлично для аэрофото или когда нужно остановиться.",
+      "executeUploadedWaypointMissionAircraftWill": "Выполнить загруженную миссию. Аппарат автоматически пролетит все точки.",
+      "maintainsCurrentHeadingWhileAllowingAltitude": "Держит текущий курс, позволяя управлять высотой. Хорошо для полёта по прямой.",
+      "fixedWingCruiseModeMaintainsHeading": "Крейсерский режим самолёта — держит курс и высоту. Идеально для дальних полётов.",
+      "automaticLaunchSequenceForFixedWing": "Автоматический запуск самолёта. Бросьте самолёт — он сам наберёт безопасную высоту.",
+      "allowGroundControlStationToSend": "Разрешить наземной станции отправлять навигационные команды («лететь сюда» и т. п.).",
+      "finderMakesYourAircraftBeepLoudly": "ПОИСК — аппарат громко пищит, чтобы его было легче найти после падения. Очень полезно в высокой траве!",
+      "emergencyTriggersFailsafeBehaviorUsuallyLanding": "АВАРИЙНЫЙ — запускает failsafe (обычно посадку или дизарм). Обычно включается автоматически при потере сигнала.",
+      "loggingRecordsFlightDataToThe": "ЖУРНАЛ — записывает полётные данные на SD-карту для анализа. Полезно для настройки PID и разбора аварий.",
+      "keepsGimbalTiltAxisLevelRegardless": "Держит ось наклона подвеса ровно независимо от положения аппарата. Полезно для стабилизации камеры.",
+      "directServoMotorControlWithoutStabilization": "Прямое управление сервами/моторами без стабилизации. Только для опытных пилотов!",
+      "activatesFlaperonsForSlowerLandingApproach": "Включает флапероны для более медленного захода на посадку. Элероны опускаются и работают как закрылки.",
+      "autoCoordinatesRudderWithAileronsFor": "Автоматически координирует руль направления с элеронами для плавных разворотов. Отлично для новичков на самолётах.",
+      "setsCurrentPositionAsNewHome": "Задаёт текущую позицию новой точкой дома. Используйте, если сменили место во время сессии.",
+      "enableInFlightWaypointPlanningVia": "Включить планирование точек в полёте командами стиков.",
+      "maintainsCurrentMagneticHeadingUsefulFor": "Держит текущий магнитный курс. Полезно для полёта по прямой.",
+      "safetySwitchMustBeEnabledBefore": "Предохранитель — должен быть включён перед армом. Предотвращает случайный арм.",
+      "flipCrashedAircraftBackOverUsing": "Переворачивает аппарат после падения вращением моторов. Только для мультироторов."
     }
   }
 }

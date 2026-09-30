@@ -25,9 +25,9 @@ const PRIMARY = ['Roll', 'Pitch', 'Throttle', 'Yaw'];
 
 function sourceLabel(src: ChannelSource): string {
   switch (src.kind) {
-    case 'none': return 'not assigned';
-    case 'axis': return `axis ${src.index}`;
-    case 'button': return `button ${src.index}`;
+    case 'none': return t('panels.JoystickPanel.notAssigned');
+    case 'axis': return t('panels.JoystickPanel.axisN', { n: src.index });
+    case 'button': return t('panels.JoystickPanel.buttonN', { n: src.index });
     case 'button3': return `buttons ${src.low}/${src.high}`;
   }
 }
@@ -58,7 +58,7 @@ function ChannelRow({ index }: { index: number }): JSX.Element {
   return (
     <div className="flex items-center gap-2 py-1">
       <div className="w-16 shrink-0 text-[11px] text-content-secondary">
-        {PRIMARY[index] ?? `Ch ${index + 1}`}
+        {PRIMARY[index] ? t(`panels.JoystickPanel.axis_${PRIMARY[index]}`) : t('panels.JoystickPanel.chN', { n: index + 1 })}
       </div>
       <div className="relative h-4 flex-1 rounded bg-surface-raised overflow-hidden">
         <div
@@ -132,7 +132,7 @@ export function JoystickPanel(): JSX.Element {
   useEffect(() => {
     if (vehicleControl && !connected) {
       disableVehicleControl();
-      setRefused('Controller disconnected, sticks released');
+      setRefused(t('panels.JoystickPanel.controllerDisconnectedSticksReleased'));
     }
   }, [vehicleControl, connected, disableVehicleControl]);
 
@@ -143,7 +143,7 @@ export function JoystickPanel(): JSX.Element {
       return;
     }
     const r = enableVehicleControl();
-    if (!r.ok) setRefused(r.reason ?? 'Could not take the sticks');
+    if (!r.ok) setRefused(r.reason ?? t('panels.JoystickPanel.couldNotTakeTheSticks'));
   };
 
   return (
@@ -170,7 +170,7 @@ export function JoystickPanel(): JSX.Element {
               enabled ? 'bg-emerald-500/20 text-emerald-300' : 'bg-surface-raised text-content-secondary hover:text-content'
             }`}
           >
-            {enabled ? 'On' : t('panels.JoystickPanel.off')}
+            {enabled ? t('panels.JoystickPanel.on') : t('panels.JoystickPanel.off')}
           </button>
         </div>
         {enabled && connected && mappingMode === 'standard' && (

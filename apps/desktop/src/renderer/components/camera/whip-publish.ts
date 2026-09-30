@@ -1,5 +1,6 @@
 import type { StreamPublishStats } from '../../../shared/camera-types';
 import { candidateSummary, trackPeer } from './webrtc-diag';
+import { t } from '../../i18n';
 
 export { candidateSummary };
 
@@ -110,7 +111,7 @@ export async function publishWhip(
     });
   } catch (err) {
     pc.close();
-    throw new Error(`WHIP unreachable: ${err instanceof Error ? err.message : String(err)}`);
+    throw new Error(t('camera.whip_publish.whipUnreachable', { v1: err instanceof Error ? err.message : String(err) }));
   }
   if (!res.ok) {
     const reason = (await res.text().catch(() => '')).trim().slice(0, 200);

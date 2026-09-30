@@ -199,7 +199,7 @@ export function FieldGraph(propsIn: Record<string, unknown>): JSX.Element {
       <div className="px-3 pt-2 pb-1 flex items-center gap-2 text-[11px]">
         <span className="font-mono font-semibold text-content uppercase tracking-wider">{messageName}</span>
         <span className="text-[9px] text-content-tertiary tabular-nums shrink-0">
-          {fields.length} {fields.length === 1 ? 'series' : 'series'} {t('inspector.FieldGraph.sysid')} {sysid} {t('inspector.FieldGraph.msgid')} {msgid} · {sampleCount} {t('inspector.FieldGraph.samples')}
+          {fields.length} {fields.length === 1 ? t('inspector.FieldGraph.series') : t('inspector.FieldGraph.series')} {t('inspector.FieldGraph.sysid')} {sysid} {t('inspector.FieldGraph.msgid')} {msgid} · {sampleCount} {t('inspector.FieldGraph.samples')}
         </span>
 
         <div className="ml-auto flex items-center gap-1 shrink-0">

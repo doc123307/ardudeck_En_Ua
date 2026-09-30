@@ -52,7 +52,16 @@
       "saved": "Saved",
       "sendTheseAreasToTheMission": "Send these areas to the mission planner",
       "sent": "Sent",
-      "sendToMission": "Send to mission"
+      "sendToMission": "Send to mission",
+      "themeDarkClickForLight": "Theme: Dark (click for Light)",
+      "themeLightClickForSystem": "Theme: Light (click for System)",
+      "themeSystemClickForDark": "Theme: System (click for Dark)",
+      "undoCtrlZ": "Undo (Ctrl+Z)",
+      "redoCtrlShiftZ": "Redo (Ctrl+Shift+Z)",
+      "zoomToFitAllObjects": "Zoom to fit all objects",
+      "importKmlKmzGeojsonShapefile": "Import KML / KMZ / GeoJSON / Shapefile",
+      "exportAreasAsKml": "Export areas as KML",
+      "exportAreasAsKmz": "Export areas as KMZ"
     },
     "ObjectEditorContextMenu": {
       "convertToEditablePolygon": "Convert to editable polygon",
@@ -79,7 +88,8 @@
       "undo": "Undo",
       "ctrlZ": "Ctrl+Z",
       "redo": "Redo",
-      "ctrlShiftZ": "Ctrl+Shift+Z"
+      "ctrlShiftZ": "Ctrl+Shift+Z",
+      "noWaypoints": "no waypoints"
     },
     "ObjectEditorHud": {
       "area": "Area",
@@ -136,7 +146,16 @@
       "fencesFromFc": "↓ Fences from FC",
       "uploadAllInclusionExclusionObjectsTo": "Upload all inclusion/exclusion objects to the flight controller",
       "fencesToFc": "↑ Fences to FC",
-      "setColor": "Set color {{c}}"
+      "setColor": "Set color {{c}}",
+      "joinedCorridors": "Joined {{v1}} corridors",
+      "noFencesOnFc": "No fences on FC",
+      "loadedFenceFromFc": "Loaded {{length}} fence{{v2}} from FC",
+      "tagObjectsAsFencesFirst": "Tag objects as fences first",
+      "uploadedFence": "Uploaded {{length}} fence{{v2}}",
+      "uploadFailed": "Upload failed",
+      "area": "Area",
+      "inclusion": "Inclusion",
+      "exclusion": "Exclusion"
     },
     "area_editor_layers_store": {
       "satellite": "Satellite",

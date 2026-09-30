@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useServoWizardStore } from '../../../stores/servo-wizard-store';
 import { CONTROL_SURFACE_INFO, SERVO_INPUT_SOURCE } from '../presets/servo-presets';
 import { Check, X, Save, Info } from 'lucide-react';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 export default function ServoReviewStep() {
   const {
@@ -72,7 +72,7 @@ export default function ServoReviewStep() {
           <span className="text-2xl">{selectedPreset.icon}</span>
           <span className="text-sm font-medium text-content">{selectedPreset.name}</span>
           <span className="text-xs text-content-secondary">
-            {selectedPreset.servoCount} {t('servo_wizard.ServoReviewStep.servo')}{selectedPreset.servoCount !== 1 ? 's' : ''}
+            {selectedPreset.servoCount} {t('servo_wizard.ServoReviewStep.servo')}{selectedPreset.servoCount !== 1 ? enPlural('s') : ''}
           </span>
         </div>
       </div>

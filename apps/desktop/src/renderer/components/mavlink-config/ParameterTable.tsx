@@ -24,7 +24,7 @@ import ParamHistoryModal from './ParamHistoryModal';
 import { Tooltip } from '../ui/Tooltip';
 import { NON_DEFAULT_COLORS, getNonDefaultColor } from '../parameters/non-default-palette';
 import { useOwnsCompareModal } from '../parameters/compare-modal-host';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 // Toast notification state
 type ToastType = 'success' | 'error' | 'info';
@@ -265,7 +265,7 @@ const ParameterTable: React.FC = () => {
       // PX4 persists each PARAM_SET on receipt; ArduPilot needs a flash flush.
       const staged = await commitStagedParams();
       const result = staged.failed.length > 0
-        ? { success: false as const, error: `Failed to write ${staged.failed.join(', ')}` }
+        ? { success: false as const, error: t('mavlink_config.ParameterTable.failedToWrite', { v1: staged.failed.join(', ') }) }
         : connectionState.firmware === 'px4'
           ? { success: true as const }
           : await window.electronAPI?.writeParamsToFlash();
@@ -352,7 +352,7 @@ const ParameterTable: React.FC = () => {
     const runRetry = async () => {
       cycle.phase = 'retrying';
       const pending = useParameterStore.getState().pendingRetryParams;
-      setCycleStatus(t('mavlink_config.ParameterTable.applyingPendingParameter', { length: pending.length, v2: pending.length !== 1 ? 's' : '' }));
+      setCycleStatus(t('mavlink_config.ParameterTable.applyingPendingParameter', { length: pending.length, v2: pending.length !== 1 ? enPlural('s') : '' }));
 
       const result = await retryPendingParams();
       cycle.totalApplied += result.applied;
@@ -484,7 +484,7 @@ const ParameterTable: React.FC = () => {
       const vehicleType = connectionState.vehicleType || connectionState.fcVariant;
       const result = await window.electronAPI?.saveParamsToFile(params, vehicleType);
       if (result?.success) {
-        showToast(t('mavlink_config.ParameterTable.savedParameterToFile', { length: params.length, v2: params.length !== 1 ? 's' : '' }), 'success');
+        showToast(t('mavlink_config.ParameterTable.savedParameterToFile', { length: params.length, v2: params.length !== 1 ? enPlural('s') : '' }), 'success');
       } else if (result?.error && result.error !== 'Cancelled') {
         showToast(result.error, 'error');
       }
@@ -510,9 +510,9 @@ const ParameterTable: React.FC = () => {
   const handleApplySelectedParams = useCallback(async () => {
     const result = await applySelectedFileParams();
     if (result.applied > 0) {
-      showToast(t('mavlink_config.ParameterTable.appliedParameterToVehicle', { applied: result.applied, v2: result.applied !== 1 ? 's' : '', v3: result.failed > 0 ? ` (${result.failed} failed)` : '', v4: result.applied > 0 ? ' — Save All Changes to keep them after a reboot' : '' }), result.failed > 0 ? 'info' : 'success');
+      showToast(t('mavlink_config.ParameterTable.appliedParameterToVehicle', { applied: result.applied, v2: result.applied !== 1 ? enPlural('s') : '', v3: result.failed > 0 ? ` (${result.failed} failed)` : '', v4: result.applied > 0 ? t('mavlink_config.ParameterTable.saveAllChangesToKeepThem') : '' }), result.failed > 0 ? 'info' : 'success');
     } else if (result.failed > 0) {
-      showToast(t('mavlink_config.ParameterTable.failedToApplyParameter', { failed: result.failed, v2: result.failed !== 1 ? 's' : '' }), 'error');
+      showToast(t('mavlink_config.ParameterTable.failedToApplyParameter', { failed: result.failed, v2: result.failed !== 1 ? enPlural('s') : '' }), 'error');
     }
   }, [applySelectedFileParams, showToast]);
 
@@ -873,7 +873,7 @@ const ParameterTable: React.FC = () => {
             ) : (
               <div className="min-w-0 flex-1">
                 <div className="text-sm text-amber-300">
-                  {t('mavlink_config.ParameterTable.rebootRequiredFor')} {rebootRequiredParams.length} {t('mavlink_config.ParameterTable.parameter')}{rebootRequiredParams.length !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.toTakeEffect')}
+                  {t('mavlink_config.ParameterTable.rebootRequiredFor')} {rebootRequiredParams.length} {t('mavlink_config.ParameterTable.parameter')}{rebootRequiredParams.length !== 1 ? enPlural('s') : ''} {t('mavlink_config.ParameterTable.toTakeEffect')}
                 </div>
                 <div className="mt-1 max-h-16 overflow-y-auto pr-1">
                   <span className="font-mono text-xs text-amber-400/70 break-words">
@@ -1080,8 +1080,8 @@ const ParameterTable: React.FC = () => {
                                     hints.push(`Default: ${formatParamValue(param.defaultValue)}`);
                                   }
                                   if (meta?.range) hints.push(`Range: ${meta.range.min} - ${meta.range.max}`);
-                                  if (meta?.volatile) hints.push('Written by the vehicle: your value can be overwritten');
-                                  return hints.join('\n') || `Click to edit`;
+                                  if (meta?.volatile) hints.push(t('mavlink_config.ParameterTable.writtenByTheVehicleYourValue'));
+                                  return hints.join('\n') || t('mavlink_config.ParameterTable.clickToEdit');
                                 })()}
                               >
                                 {formatParamValue(param.value)}
@@ -1163,7 +1163,7 @@ const ParameterTable: React.FC = () => {
                       </span>
                     </Tooltip>
                     {showDocsLink && (
-                      <Tooltip content={isPx4 ? 'Open PX4 docs' : 'Open ArduPilot docs'} placement="top">
+                      <Tooltip content={isPx4 ? t('mavlink_config.ParameterTable.openPx4Docs') : t('mavlink_config.ParameterTable.openArdupilotDocs')} placement="top">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1345,7 +1345,7 @@ const ParameterTable: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-green-400 shrink-0" />
                     <span className="text-sm text-green-300">
-                      {fileApplyResult.applied} {t('mavlink_config.ParameterTable.parameter')}{fileApplyResult.applied !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.applied')}
+                      {fileApplyResult.applied} {t('mavlink_config.ParameterTable.parameter')}{fileApplyResult.applied !== 1 ? enPlural('s') : ''} {t('mavlink_config.ParameterTable.applied')}
                     </span>
                   </div>
 
@@ -1354,7 +1354,7 @@ const ParameterTable: React.FC = () => {
                     <div className="flex items-center gap-3">
                       <XCircle className="w-5 h-5 text-red-400 shrink-0" />
                       <span className="text-sm text-red-300">
-                        {fileApplyResult.failed} {t('mavlink_config.ParameterTable.parameter')}{fileApplyResult.failed !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.failed')}
+                        {fileApplyResult.failed} {t('mavlink_config.ParameterTable.parameter')}{fileApplyResult.failed !== 1 ? enPlural('s') : ''} {t('mavlink_config.ParameterTable.failed')}
                       </span>
                     </div>
                   )}
@@ -1419,7 +1419,7 @@ const ParameterTable: React.FC = () => {
                   <p className="text-sm text-content-secondary mt-1">
                     {fileParamDiffs.length === 0
                       ? t('mavlink_config.ParameterTable.noDifferencesFoundAllFileParameters')
-                      : t('mavlink_config.ParameterTable.parameterDifferBetweenFileAndVehicle', { length: fileParamDiffs.length, v2: fileParamDiffs.length !== 1 ? 's' : '' })
+                      : t('mavlink_config.ParameterTable.parameterDifferBetweenFileAndVehicle', { length: fileParamDiffs.length, v2: fileParamDiffs.length !== 1 ? enPlural('s') : '' })
                     }
                   </p>
                   {(() => {
@@ -1444,8 +1444,8 @@ const ParameterTable: React.FC = () => {
                       <div className="flex-1 text-xs">
                         <div className="text-blue-300">
                           {sitlSafeMode
-                            ? t('mavlink_config.ParameterTable.sitlSafeModeHidesHardwareIdentity', { size: sitlUnsafeMap.size, v2: sitlUnsafeMap.size !== 1 ? 's' : '' })
-                            : t('mavlink_config.ParameterTable.paramBelowAreFlaggedAsHardware', { size: sitlUnsafeMap.size, v2: sitlUnsafeMap.size !== 1 ? 's' : '' })}
+                            ? t('mavlink_config.ParameterTable.sitlSafeModeHidesHardwareIdentity', { size: sitlUnsafeMap.size, v2: sitlUnsafeMap.size !== 1 ? enPlural('s') : '' })
+                            : t('mavlink_config.ParameterTable.paramBelowAreFlaggedAsHardware', { size: sitlUnsafeMap.size, v2: sitlUnsafeMap.size !== 1 ? enPlural('s') : '' })}
                         </div>
                         <button
                           onClick={() => setSitlSafeMode(v => !v)}
@@ -1579,7 +1579,7 @@ const ParameterTable: React.FC = () => {
                     >
                       {isApplyingFileParams
                         ? t('mavlink_config.ParameterTable.applying')
-                        : t('mavlink_config.ParameterTable.applyParameter', { length: fileParamDiffs.filter(d => d.selected).length, v2: fileParamDiffs.filter(d => d.selected).length !== 1 ? 's' : '' })
+                        : t('mavlink_config.ParameterTable.applyParameter', { length: fileParamDiffs.filter(d => d.selected).length, v2: fileParamDiffs.filter(d => d.selected).length !== 1 ? enPlural('s') : '' })
                       }
                     </button>
                   )}
@@ -1602,14 +1602,14 @@ const ParameterTable: React.FC = () => {
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-400 shrink-0" />
                 <span className="text-sm text-green-300">
-                  {cycleResult.totalApplied} {t('mavlink_config.ParameterTable.parameter')}{cycleResult.totalApplied !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.applied')}
+                  {cycleResult.totalApplied} {t('mavlink_config.ParameterTable.parameter')}{cycleResult.totalApplied !== 1 ? enPlural('s') : ''} {t('mavlink_config.ParameterTable.applied')}
                 </span>
               </div>
 
               <div className="flex items-center gap-3">
                 <RotateCw className="w-5 h-5 text-blue-400 shrink-0" />
                 <span className="text-sm text-blue-300">
-                  {cycleResult.totalReboots} {t('mavlink_config.ParameterTable.reboot2')}{cycleResult.totalReboots !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.performed')}
+                  {cycleResult.totalReboots} {t('mavlink_config.ParameterTable.reboot2')}{cycleResult.totalReboots !== 1 ? enPlural('s') : ''} {t('mavlink_config.ParameterTable.performed')}
                 </span>
               </div>
 
@@ -1618,7 +1618,7 @@ const ParameterTable: React.FC = () => {
                   <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-sm text-amber-300">
-                      {cycleResult.stillPending.length} {t('mavlink_config.ParameterTable.parameter')}{cycleResult.stillPending.length !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.couldNotBeSet')}
+                      {cycleResult.stillPending.length} {t('mavlink_config.ParameterTable.parameter')}{cycleResult.stillPending.length !== 1 ? enPlural('s') : ''} {t('mavlink_config.ParameterTable.couldNotBeSet')}
                     </span>
                     <p className="font-mono text-xs text-amber-400/70 mt-1 break-words">
                       {cycleResult.stillPending.map(p => p.id).join(', ')}

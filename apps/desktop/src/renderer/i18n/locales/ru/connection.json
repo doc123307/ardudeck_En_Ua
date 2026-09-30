@@ -73,7 +73,16 @@
       "autopilot": "Автопилот",
       "vehicle": "Аппарат",
       "systemId": "System ID",
-      "deviceNotShowingGetDriverHelp": "Устройство не видно? Помощь с драйверами"
+      "deviceNotShowingGetDriverHelp": "Устройство не видно? Помощь с драйверами",
+      "batteryFullAgain": "Батарея снова заряжена",
+      "thisArdupilotOnlyChargesOnBoot": "Эта версия ArduPilot заряжает только при старте: нажмите «Возродить»",
+      "theVehicleRefusedTheChange": "Аппарат отклонил изменение",
+      "respawningAtHome": "Возрождение дома",
+      "inavRunningOnTcp5760": "iNav работает на TCP :5760",
+      "ardupilotRunningOnTcp5760": "ArduPilot {{ardupilotVehicleType}} работает на TCP :5760",
+      "px4RunningOnUdp14550": "PX4 {{px4VehicleType}} работает на UDP :14550",
+      "clickToDownloadAndLaunch": "Кликните, чтобы скачать и запустить",
+      "launchVirtualFlightController": "Запустить виртуальный полётный контроллер"
     },
     "DriverAssistant": {
       "macos1014HasBuiltIn": "В macOS 10.14+ есть встроенная поддержка. Устанавливайте, только если устройство не определяется.",
@@ -86,7 +95,12 @@
       "linuxIncludesBuiltInDriversFor": "Linux имеет встроенные драйверы для большинства микросхем USB-serial. Если устройство не определяется, проверьте, есть ли у вас права на доступ к последовательным портам (добавьте пользователя в группу",
       "group": ").",
       "troubleshooting": "Устранение проблем",
-      "afterInstallingAllowTheExtensionIn": "После установки разрешите расширение в System Settings → Privacy & Security"
+      "afterInstallingAllowTheExtensionIn": "После установки разрешите расширение в System Settings → Privacy & Security",
+      "siliconLabs": "Silicon Labs",
+      "tryADifferentUsbCableSome": "Попробуйте другой USB-кабель (некоторые только для зарядки)",
+      "tryADifferentUsbPortAvoid": "Попробуйте другой USB-порт (избегайте USB-хабов)",
+      "unplugAndReplugTheDevice": "Отключите и снова подключите устройство",
+      "restartTheApplicationAfterInstallingDrivers": "Перезапустите приложение после установки драйверов"
     },
     "LinksManager": {
       "server": "Сервер",
@@ -145,7 +159,10 @@
       "fixForMe": "Исправить за меня",
       "settingsAppliedRestartTheVehicleButton": "Настройки применены. Перезапустите аппарат (кнопка выше), чтобы они вступили в силу — канал потом переподключится сам.",
       "hideTechnicalDetails": "Скрыть технические подробности",
-      "showTechnicalDetails": "Показать технические подробности"
+      "showTechnicalDetails": "Показать технические подробности",
+      "isNotLoadedYet": "{{param}} ещё не загружен",
+      "theVehicleRejected": "Аппарат отклонил: {{v1}}",
+      "applyingSettingsFailed": "Не удалось применить настройки."
     },
     "RadioSetupWizard": {
       "findRadio": "Поиск радио",
@@ -190,7 +207,15 @@
       "theRemainingItemCannotBeFixed": "Оставшееся нельзя исправить отсюда (см. выше). Телеметрия работает в любом случае.",
       "radioLinkFullySetUp": "Радиоканал полностью настроен.",
       "telemetryStickControlAndSignalStrength": "Телеметрия, управление стиками и уровень сигнала идут через радио. Дальше всё как с модемом SiK: просто подключайтесь на",
-      "wheneverYouFlyOrDrive": "каждый раз, когда летаете или ездите."
+      "wheneverYouFlyOrDrive": "каждый раз, когда летаете или ездите.",
+      "theModuleKeptRefusingTheChange": "Модуль постоянно отклонял изменение — приёмник ещё был запитан и на связи. Полностью обесточьте аппарат (батарею И USB-кабель) и нажмите «Начать» ещё раз.",
+      "theModuleStoppedResponding": "Модуль перестал отвечать.",
+      "couldNotOpenThePortIs": "Не удалось открыть порт. Возможно, его использует другая программа?",
+      "couldNotListenOnTheWifi": "Не удалось прослушивать WiFi-порт. Возможно, UDP 14550 использует другая программа?",
+      "couldNotReadVehicleSettings": "Не удалось прочитать настройки аппарата.",
+      "theVehicleRejected": "Аппарат отклонил: {{v1}}",
+      "applyingSettingsFailed": "Не удалось применить настройки.",
+      "theRestartCommandWasNotAccepted": "Команда перезапуска не принята."
     },
     "RecentConnectionsButton": {
       "recentConnections": "Последние подключения ({{length}})",

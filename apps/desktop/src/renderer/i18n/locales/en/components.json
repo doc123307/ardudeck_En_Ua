@@ -22,7 +22,10 @@
       "sendsRcChannelsOverrideToThe": "Sends RC_CHANNELS_OVERRIDE to the connected vehicle. The joystick WILL command the aircraft.",
       "joystickControlsVehicle": "Joystick controls vehicle",
       "framesSToVehicle": "frames/s to vehicle",
-      "offSendsNothingToTheAircraft": "Off - sends nothing to the aircraft"
+      "offSendsNothingToTheAircraft": "Off - sends nothing to the aircraft",
+      "offTheSlidersBelowAreDriving": "Off - the sliders below are driving RC",
+      "waitingForAHandsetSetEdgetx": "Waiting for a handset - set EdgeTX to USB Joystick mode",
+      "moveIt": "move it"
     }
   }
 }

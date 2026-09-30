@@ -14,7 +14,7 @@ const state: ArbiterState = { trainerActive: false, owner: null };
 type Listener = (trainerActive: boolean) => void;
 const listeners = new Set<Listener>();
 
-export const TRAINER_OWNS_STICKS = 'Trainer session active - the Trainer owns the sticks';
+export const TRAINER_OWNS_STICKS = t('utils.rc_source_arbiter.trainerSessionActiveTheTrainerOwns');
 
 export function claimRcOverride(owner: RcOverrideOwner): { ok: boolean; reason?: string } {
   if (state.trainerActive) return { ok: false, reason: TRAINER_OWNS_STICKS };

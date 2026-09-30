@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { CargoDetail, InstalledModule, ModuleProgress, PublicCargo, UpdateAvailable } from '../../shared/module-types.js';
+import { t } from '../i18n';
 
 interface ModuleState {
   // State
@@ -98,7 +99,7 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
     try {
       const result = await window.electronAPI.moduleActivate(key);
       if (!result.success) {
-        set({ activating: false, error: result.error || 'Activation failed' });
+        set({ activating: false, error: result.error || t('stores.module_store.activationFailed') });
         return result;
       }
       // Refresh module list
@@ -144,7 +145,7 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
     try {
       const result = await window.electronAPI.moduleUpdate(slug);
       if (!result.success) {
-        set({ updating: null, error: result.error || 'Update failed' });
+        set({ updating: null, error: result.error || t('stores.module_store.updateFailed') });
         return result;
       }
       await get().loadModules();
@@ -174,7 +175,7 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
         await get().loadModules();
         await get().checkUpdates();
       } else {
-        set({ error: result.error || `Update failed for ${slug}` });
+        set({ error: result.error || t('stores.module_store.updateFailedFor', { slug }) });
       }
     }
     set({ updating: null });
@@ -186,7 +187,7 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
     try {
       const result = await window.electronAPI.moduleSetEnabled(slug, enabled);
       if (!result.success) {
-        set({ error: result.error || 'Toggle failed' });
+        set({ error: result.error || t('stores.module_store.toggleFailed') });
         return { success: false, error: result.error };
       }
       if (result.modules) set({ modules: result.modules });
@@ -223,7 +224,7 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
     try {
       const result = await window.electronAPI.moduleInstallFree(slug);
       if (!result.success) {
-        set({ installingSlug: null, error: result.error || 'Install failed' });
+        set({ installingSlug: null, error: result.error || t('stores.module_store.installFailed') });
         return result;
       }
       await get().loadModules();

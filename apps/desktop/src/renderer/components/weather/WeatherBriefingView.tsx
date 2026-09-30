@@ -55,10 +55,10 @@ const STATUS_ICON: Record<WxStatus, LucideIcon> = {
   nogo: XCircle,
 };
 const SOURCE_LABEL: Record<WeatherLocationSource, string> = {
-  vehicle: 'Vehicle position',
-  home: 'Home position',
-  map: 'Map center',
-  override: 'Picked location',
+  get vehicle() { return tr('weather.WeatherBriefingView.vehiclePosition'); },
+  get home() { return tr('weather.WeatherBriefingView.homePosition'); },
+  get map() { return tr('weather.WeatherBriefingView.mapCenter'); },
+  get override() { return tr('weather.WeatherBriefingView.pickedLocation'); },
 };
 
 /** Picked locations read as their place name; auto sources read as their origin. */
@@ -114,24 +114,24 @@ function worstReason(wx: WeatherSummary, windUnit: Parameters<typeof formatWindS
   switch (driver.k) {
     case 'windGustMs':
       return nogo
-        ? `Gusts of ${wind(wx.windGustMs)} exceed the safe limit (${wind(WEATHER_THRESHOLDS.windGustMs.nogo)}). Risk of loss of control.`
-        : `Gusts of ${wind(wx.windGustMs)} are approaching the limit (${wind(WEATHER_THRESHOLDS.windGustMs.nogo)}). Monitor closely.`;
+        ? tr('weather.WeatherBriefingView.gustsOfExceedTheSafeLimit', { v1: wind(wx.windGustMs), v2: wind(WEATHER_THRESHOLDS.windGustMs.nogo) })
+        : tr('weather.WeatherBriefingView.gustsOfAreApproachingTheLimit', { v1: wind(wx.windGustMs), v2: wind(WEATHER_THRESHOLDS.windGustMs.nogo) });
     case 'windSpeedMs':
       return nogo
-        ? `Sustained wind of ${wind(wx.windSpeedMs)} exceeds the safe limit (${wind(WEATHER_THRESHOLDS.windSpeedMs.nogo)}).`
-        : `Sustained wind of ${wind(wx.windSpeedMs)} is approaching the limit (${wind(WEATHER_THRESHOLDS.windSpeedMs.nogo)}).`;
+        ? tr('weather.WeatherBriefingView.sustainedWindOfExceedsTheSafe', { v1: wind(wx.windSpeedMs), v2: wind(WEATHER_THRESHOLDS.windSpeedMs.nogo) })
+        : tr('weather.WeatherBriefingView.sustainedWindOfIsApproachingThe', { v1: wind(wx.windSpeedMs), v2: wind(WEATHER_THRESHOLDS.windSpeedMs.nogo) });
     case 'visibilityM':
       return nogo
-        ? `Low visibility of ${(wx.visibilityM / 1000).toFixed(1)} km, below the ${(WEATHER_THRESHOLDS.visibilityM.nogo / 1000).toFixed(1)} km minimum.`
-        : `Reduced visibility of ${(wx.visibilityM / 1000).toFixed(1)} km. Maintain visual line of sight.`;
+        ? tr('weather.WeatherBriefingView.lowVisibilityOfKmBelowThe', { v1: (wx.visibilityM / 1000).toFixed(1), v2: (WEATHER_THRESHOLDS.visibilityM.nogo / 1000).toFixed(1) })
+        : tr('weather.WeatherBriefingView.reducedVisibilityOfKmMaintainVisual', { v1: (wx.visibilityM / 1000).toFixed(1) });
     case 'precipMm':
       return nogo
-        ? `Precipitation of ${wx.precipMm.toFixed(1)} mm. Electronics at risk, do not launch.`
-        : `Light precipitation of ${wx.precipMm.toFixed(1)} mm detected. Protect the airframe.`;
+        ? tr('weather.WeatherBriefingView.precipitationOfMmElectronicsAtRisk', { v1: wx.precipMm.toFixed(1) })
+        : tr('weather.WeatherBriefingView.lightPrecipitationOfMmDetectedProtect', { v1: wx.precipMm.toFixed(1) });
     case 'precipProbPct':
       return nogo
-        ? `High chance of precipitation (${Math.round(wx.precipProbPct)}%). Expect rain within the hour.`
-        : `Rising chance of precipitation (${Math.round(wx.precipProbPct)}%). Watch the sky.`;
+        ? tr('weather.WeatherBriefingView.highChanceOfPrecipitationExpectRain', { v1: Math.round(wx.precipProbPct) })
+        : tr('weather.WeatherBriefingView.risingChanceOfPrecipitationWatchThe', { v1: Math.round(wx.precipProbPct) });
   }
 }
 
@@ -347,7 +347,7 @@ export function WeatherBriefingView() {
                           unit="mm"
                           valueColor={GRADE_COLOR[grade('precipMm')]}
                           track={highTrack(weather.precipMm, 'precipMm', grade('precipMm'),
-                            `Caution ${WEATHER_THRESHOLDS.precipMm.caution} mm, no-go ${WEATHER_THRESHOLDS.precipMm.nogo} mm`)}
+                            tr('weather.WeatherBriefingView.cautionMmNoGoMm', { caution: WEATHER_THRESHOLDS.precipMm.caution, nogo: WEATHER_THRESHOLDS.precipMm.nogo }))}
                           animate={animate}
                         />
                         <MetricTile
@@ -367,7 +367,7 @@ export function WeatherBriefingView() {
                           unit="km"
                           valueColor={GRADE_COLOR[grade('visibilityM')]}
                           track={lowTrack(weather.visibilityM, 'visibilityM', grade('visibilityM'),
-                            `Caution below ${(WEATHER_THRESHOLDS.visibilityM.caution / 1000).toFixed(1)} km, no-go below ${(WEATHER_THRESHOLDS.visibilityM.nogo / 1000).toFixed(1)} km`)}
+                            tr('weather.WeatherBriefingView.cautionBelowKmNoGoBelow', { v1: (WEATHER_THRESHOLDS.visibilityM.caution / 1000).toFixed(1), v2: (WEATHER_THRESHOLDS.visibilityM.nogo / 1000).toFixed(1) }))}
                           animate={animate}
                         />
                       </div>

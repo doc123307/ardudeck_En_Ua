@@ -11,7 +11,7 @@ import { LuaPreviewPanel } from './LuaPreviewPanel';
 import { GraphToolbar } from './GraphToolbar';
 import { useLuaGraphStore } from '../../stores/lua-graph-store';
 import { compileGraph } from './lua-compiler';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 export function LuaGraphView() {
   const nodes = useLuaGraphStore((s) => s.nodes);
@@ -56,7 +56,7 @@ export function LuaGraphView() {
 
         {/* Status Bar */}
         <div className="flex items-center gap-4 px-3 py-1 bg-surface border-t border-subtle text-[10px] text-content-secondary">
-          <span>{nodes.length} {t('lua_graph.LuaGraphView.node')}{nodes.length !== 1 ? 's' : ''}</span>
+          <span>{nodes.length} {t('lua_graph.LuaGraphView.node')}{nodes.length !== 1 ? enPlural('s') : ''}</span>
           <span className="w-px h-3 bg-subtle" />
           <span
             className={compileResult.success ? 'text-emerald-500' : 'text-red-400'}

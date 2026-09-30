@@ -69,7 +69,7 @@ export function ContainersPanel() {
       const logs = await window.electronAPI.companionGetContainerLogs(id);
       setContainerLogs(logs);
     } catch {
-      setContainerLogs('Failed to fetch logs');
+      setContainerLogs(t('companion.ContainersPanel.failedToFetchLogs'));
     } finally {
       setLogsLoading(false);
     }

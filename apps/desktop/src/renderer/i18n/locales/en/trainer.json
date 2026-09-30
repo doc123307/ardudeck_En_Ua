@@ -70,7 +70,8 @@
       "deleteItAndBuildItAgain": ". Delete it and build it again to finish.",
       "delete": "Delete",
       "cancel": "Cancel",
-      "deleting": "Deleting…"
+      "deleting": "Deleting…",
+      "this": "this"
     },
     "TrainerVehicleStep": {
       "vehicle": "Vehicle",
@@ -80,7 +81,10 @@
       "lens": "Lens",
       "heldLevelByItsMountSo": "Held level by its mount, so the horizon never tilts. That means no attitude cue at all, which is a genuinely different skill to fly behind.",
       "takeOffPoint": "Take-off point",
-      "flightController": "Flight controller"
+      "flightController": "Flight controller",
+      "whateverWasLastSetUpIn": "Whatever was last set up in the launcher.",
+      "stabilised": "Stabilised",
+      "waitingForAGpsFix": "waiting for a GPS fix"
     },
     "TrainerView": {
       "region": "Region",

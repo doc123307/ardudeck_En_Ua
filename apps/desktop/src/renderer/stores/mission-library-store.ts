@@ -12,6 +12,7 @@ import type {
   AbortReason,
 } from '../../shared/mission-library-types';
 import type { VaultMission } from '../../shared/ipc-channels';
+import { t } from '../i18n';
 
 type ViewMode = 'grid' | 'list';
 
@@ -107,7 +108,7 @@ export const useMissionLibraryStore = create<MissionLibraryStore>((set, get) => 
     if (!mission) return false;
     const result = await window.electronAPI?.fleetRepoSnapshotMissionDoc(site, { ...mission, site });
     if (!result?.success) {
-      set({ error: result?.error ?? 'Could not write to the backup' });
+      set({ error: result?.error ?? t('stores.mission_library_store.couldNotWriteToTheBackup') });
       return false;
     }
     // Remember the project on the local copy so the next save goes to the same
@@ -120,7 +121,7 @@ export const useMissionLibraryStore = create<MissionLibraryStore>((set, get) => 
   pullMissionFromVault: async (path) => {
     const mission = await window.electronAPI?.fleetRepoReadMissionDoc(path);
     if (!mission) {
-      set({ error: 'Could not read that mission from the backup' });
+      set({ error: t('stores.mission_library_store.couldNotReadThatMissionFrom') });
       return null;
     }
     const stored = await window.electronAPI?.missionLibraryImportDoc(mission);

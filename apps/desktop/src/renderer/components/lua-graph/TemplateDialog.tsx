@@ -27,7 +27,7 @@ import {
 import { GRAPH_TEMPLATES } from './graph-templates';
 import { useLuaGraphStore } from '../../stores/lua-graph-store';
 import { ConfirmDialog } from './ConfirmDialog';
-import { t as tr } from '../../i18n';
+import { t as tr, enPlural } from '../../i18n';
 
 // ── Category styling ────────────────────────────────────────────
 
@@ -247,13 +247,13 @@ export function TemplateDialog({ onClose }: TemplateDialogProps) {
                               <div className="flex items-center gap-1 text-[10px] text-content-tertiary">
                                 <GitFork className="w-3 h-3" />
                                 <span>
-                                  {nodeCount} {tr('lua_graph.TemplateDialog.node')}{nodeCount !== 1 ? 's' : ''}
+                                  {nodeCount} {tr('lua_graph.TemplateDialog.node')}{nodeCount !== 1 ? enPlural('s') : ''}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1 text-[10px] text-content-tertiary">
                                 <ArrowRight className="w-3 h-3" />
                                 <span>
-                                  {edgeCount} {tr('lua_graph.TemplateDialog.connection')}{edgeCount !== 1 ? 's' : ''}
+                                  {edgeCount} {tr('lua_graph.TemplateDialog.connection')}{edgeCount !== 1 ? enPlural('s') : ''}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1 text-[10px] text-content-tertiary">

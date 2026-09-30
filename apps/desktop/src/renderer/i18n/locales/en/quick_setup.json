@@ -62,7 +62,15 @@
       "thisWillOverwriteYourCurrentSettings": "This will overwrite your current settings",
       "makeSureYouVeBackedUp": "Make sure you've backed up your configuration if you want to preserve your current settings. The changes will be saved to EEPROM immediately.",
       "back": "Back",
-      "applyConfiguration": "Apply Configuration"
+      "applyConfiguration": "Apply Configuration",
+      "rollPitchRate": "Roll/Pitch Rate: {{rollRate}}",
+      "yawRate": "Yaw Rate: {{yawRate}}",
+      "landingTimeoutSeconds": "Landing timeout: {{offDelay}} seconds",
+      "platformAirplane": "Platform: Airplane",
+      "servoMixerRules": "Servo mixer: {{length}} rules",
+      "motorMixerMotors": "Motor mixer: {{length}} motors",
+      "platformMultirotor": "Platform: Multirotor",
+      "motorMixerQuadXMotors": "Motor mixer: Quad X ({{length}} motors)"
     },
     "PresetSelectionStep": {
       "presetsAvailable": "presets available",
@@ -194,7 +202,13 @@
       "conservativePidsForEfficiencyGpsCruise": "Conservative PIDs for efficiency. GPS cruise and RTH for safety. ANGLE mode for easy recovery.",
       "fixedWing": "Fixed Wing",
       "multirotor": "Multirotor",
-      "maxRotation": "{{rollRate}}% max rotation"
+      "maxRotation": "{{rollRate}}% max rotation",
+      "flyingWingElevonMixing2Servos": "Flying wing elevon mixing (2 servos)",
+      "singleMotor": "Single motor",
+      "traditionalSetupAileronElevatorRudder": "Traditional setup: Aileron/Elevator/Rudder",
+      "quadXMotorLayout": "Quad X motor layout",
+      "rollPitchRate": "Roll/Pitch Rate: {{rollRate}}",
+      "yawRate": "Yaw Rate: {{yawRate}}"
     }
   }
 }

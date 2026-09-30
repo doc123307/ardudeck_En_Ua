@@ -13,7 +13,7 @@ const STATUS_DOT_COLORS: Record<FlightStatus, string> = {
 
 const STATUS_LABELS: Record<FlightStatus, string> = {
   planned: 'Planned',
-  in_progress: 'In Progress',
+  get in_progress() { return t('mission_library.MissionCard.inProgress'); },
   completed: 'Completed',
   aborted: 'Aborted',
 };
@@ -41,7 +41,7 @@ function formatRelativeDate(iso: string): string {
   const diffHr = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHr / 24);
 
-  if (diffMin < 1) return 'Just now';
+  if (diffMin < 1) return t('mission_library.MissionCard.justNow');
   if (diffMin < 60) return `${diffMin}m ago`;
   if (diffHr < 24) return `${diffHr}h ago`;
   if (diffDay < 7) return `${diffDay}d ago`;

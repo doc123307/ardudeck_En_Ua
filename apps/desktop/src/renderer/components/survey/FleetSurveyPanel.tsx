@@ -60,7 +60,7 @@ export function FleetSurveyPanel({ onClose }: { onClose: () => void }) {
         setUploadStatus(a.vehicleKey, 'uploading');
         const res = await window.electronAPI?.uploadMissionToVehicle?.(a.vehicleKey, a.missionItems);
         if (res?.success) setUploadStatus(a.vehicleKey, 'complete');
-        else setUploadStatus(a.vehicleKey, 'error', res?.error ?? 'Upload failed');
+        else setUploadStatus(a.vehicleKey, 'error', res?.error ?? t('survey.FleetSurveyPanel.uploadFailed'));
       }
     } finally {
       setUploading(false);

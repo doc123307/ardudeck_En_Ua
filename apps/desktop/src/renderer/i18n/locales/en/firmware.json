@@ -199,7 +199,8 @@
       "freeOneOfTheFourScreens": ": free one of the four screens there and install again.",
       "monochromeRadiosHaveNoWidgetsSo": "Monochrome radios have no widgets, so install also points every model's telemetry screen at the script. Nothing to set up on the radio: eject, unplug, press",
       "readTheGuideForMonochromeRadios": "Read the guide for monochrome radios",
-      "afterInstallingEjectTheSdVolume": "After installing: eject the SD volume, unplug USB, then on the radio add the widget to a model screen (long-press TELE, full-screen widget). Packages are downloaded from their official repositories at install time."
+      "afterInstallingEjectTheSdVolume": "After installing: eject the SD volume, unplug USB, then on the radio add the widget to a model screen (long-press TELE, full-screen widget). Packages are downloaded from their official repositories at install time.",
+      "versionUnknown": "version unknown"
     }
   }
 }

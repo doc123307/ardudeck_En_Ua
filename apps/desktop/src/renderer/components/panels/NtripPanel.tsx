@@ -25,7 +25,7 @@ const STATE_LABEL: Record<NtripStatus['state'], string> = {
   connecting: 'Connecting',
   connected: 'Connected',
   reconnecting: 'Reconnecting',
-  error: 'Error',
+  get error() { return t('panels.NtripPanel.error'); },
 };
 
 const STATE_DOT: Record<NtripStatus['state'], string> = {
@@ -134,7 +134,7 @@ export function NtripPanel() {
       setStatus((s) => ({
         ...s,
         state: 'error',
-        error: `"${host}" is a mountpoint, not a caster host. Put the caster server name in Host and "${host}" in Mountpoint.`,
+        error: t('panels.NtripPanel.isAMountpointNotACaster', { host }),
       }));
       return;
     }
@@ -474,9 +474,9 @@ export function NtripPanel() {
                   label={t('panels.NtripPanel.ggaUpload')}
                   value={
                     status.ggaState === 'off'
-                      ? 'Off'
+                      ? t('panels.NtripPanel.off')
                       : status.ggaState === 'waiting-for-fix'
-                        ? 'Waiting for fix'
+                        ? t('panels.NtripPanel.waitingForFix')
                         : `Sent ${status.ggaSentCount}`
                   }
                 />

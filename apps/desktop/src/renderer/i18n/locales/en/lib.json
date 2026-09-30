@@ -127,6 +127,9 @@
       "twoCombinedPitchYawSurfacesCleaner": "Two combined pitch/yaw surfaces, cleaner drag profile",
       "throttle": "Throttle"
     },
+    "registry": {
+      "noDefaultTemplateForType": "No default template for type {{type}}"
+    },
     "rover_ackermann": {
       "carStyleSingleThrottleSteeringServo": "Car-style: single throttle, steering servo",
       "roverFrame": "Rover frame",

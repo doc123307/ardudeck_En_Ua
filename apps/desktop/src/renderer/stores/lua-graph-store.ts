@@ -16,6 +16,7 @@ import {
 } from '@xyflow/react';
 import type { GraphNodeData, GraphEdgeData, GraphFile, NodeCategory } from '../components/lua-graph/lua-graph-types';
 import { getNodeDefinition, getEffectivePorts } from '../components/lua-graph/node-library';
+import { t } from '../i18n';
 
 // ── Undo / Redo Snapshot ────────────────────────────────────────
 
@@ -87,7 +88,7 @@ function nextNodeId(): string {
 const DEFAULT_STATE = {
   nodes: [] as Node<GraphNodeData>[],
   edges: [] as Edge<GraphEdgeData>[],
-  graphName: 'Untitled Script',
+  get graphName() { return t('stores.lua_graph_store.untitledScript'); },
   graphDescription: '',
   runIntervalMs: 1000,
   filePath: null as string | null,

@@ -54,7 +54,7 @@ export function GpsSetupCard(): JSX.Element {
   const tiles = useMemo(() => (
     isPx4
       ? PX4_GPS_PORTS.filter((p) => p.value !== 0).map((p) => ({
-          value: p.value, name: p.label, sub: 'PX4 port' as string | null,
+          value: p.value, name: p.label, sub: t('mavlink_config.GpsSetupCard.px4Port') as string | null,
         }))
       : apPorts.map((p) => ({
           value: p.index,
@@ -172,7 +172,7 @@ export function GpsSetupCard(): JSX.Element {
                   key={p.value}
                   onClick={() => write(
                     isPx4 ? px4SerialGpsWrites(p.value) : apSerialGpsWrites(p.value),
-                    `${p.name} set to GPS`,
+                    t('mavlink_config.GpsSetupCard.setToGps', { name: p.name }),
                   )}
                   disabled={busy}
                   data-tip={isPx4
@@ -201,7 +201,7 @@ export function GpsSetupCard(): JSX.Element {
             })}
 
             <button
-              onClick={() => write(isPx4 ? px4CanGpsWrites() : apCanGpsWrites(), 'DroneCAN enabled')}
+              onClick={() => write(isPx4 ? px4CanGpsWrites() : apCanGpsWrites(), t('mavlink_config.GpsSetupCard.dronecanEnabled'))}
               disabled={busy}
               data-tip={t('mavlink_config.GpsSetupCard.here3Here4OrA')}
               className={`relative flex flex-col items-center rounded-lg border px-2 py-2 transition-colors disabled:opacity-40 ${

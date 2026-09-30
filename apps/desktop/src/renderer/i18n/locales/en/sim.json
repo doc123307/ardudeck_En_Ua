@@ -15,7 +15,14 @@
       "applyAsFencesFc": "Apply as fences → FC",
       "clearAllFencesOnTheFlight": "Clear all fences on the flight controller",
       "clearFc": "Clear FC",
-      "removeAllObstacles": "Remove all obstacles"
+      "removeAllObstacles": "Remove all obstacles",
+      "noObstaclesToApply": "No obstacles to apply",
+      "uploadFailed": "Upload failed: {{error}}",
+      "fenceUploadFailed": "Fence upload failed",
+      "appliedObstacleAsExclusionFences": "Applied {{length}} obstacle{{v2}} as exclusion fences",
+      "applyFailed": "Apply failed",
+      "clearedFcFences": "Cleared FC fences",
+      "clearFailed": "Clear failed"
     },
     "SimStreamControl": {
       "publishThe3dViewAsAn": "Publish the 3D view as an RTSP stream for OpenCV, VLC or ffmpeg",
@@ -86,7 +93,18 @@
       "gust": "Gust",
       "waitingForTheMotorLayoutFrom": "Waiting for the motor layout from the engine (",
       "motors2": "motors)...",
-      "motorSpins": "Motor {{v1}} spins {{v2}}{{v3}}"
+      "motorSpins": "Motor {{v1}} spins {{v2}}{{v3}}",
+      "payOutTheWinchLowerThe": "Pay out the winch (lower the load)",
+      "holdTheWinch": "Hold the winch",
+      "reelInTheWinchRaiseThe": "Reel in the winch (raise the load)",
+      "disableToTestTheGpsLoss": "Disable to test the GPS-loss failsafe / EKF fallback (SIM_GPS1_ENABLE)",
+      "simulateGpsJammingSimGps1Jam": "Simulate GPS jamming (SIM_GPS1_JAM)",
+      "disableTheBarometerSimBaroDisable": "Disable the barometer (SIM_BARO_DISABLE)",
+      "failThePrimaryCompassSimMag1": "Fail the primary compass (SIM_MAG1_FAIL)",
+      "failTheSecondaryCompassSimMag2": "Fail the secondary compass (SIM_MAG2_FAIL)",
+      "dropRcToTriggerTheRadio": "Drop RC to trigger the radio failsafe (SIM_RC_FAIL)",
+      "clickToFail": " - click to fail",
+      "failed": " - FAILED"
     },
     "SimWorldView": {
       "chase": "Chase",
@@ -138,7 +156,25 @@
       "collapse": "Collapse",
       "expandFlightControlPanel": "Expand flight control panel",
       "collapseFlightControlPanel": "Collapse flight control panel",
-      "perMotorOutputBarHeightThrottle": "Per-motor output (bar height = throttle command, colour = arm load)"
+      "perMotorOutputBarHeightThrottle": "Per-motor output (bar height = throttle command, colour = arm load)",
+      "simConnected": "Sim Connected",
+      "vehicleLive": "Vehicle Live",
+      "connectedWaitingForGps": "Connected, waiting for GPS",
+      "waitingForSitl": "Waiting for SITL",
+      "altitudeAboveHomePositionDown": "Altitude above home (-position.down)",
+      "groundSpeedFromHorizontalVelocity": "Ground speed from horizontal velocity",
+      "rollAttitude": "Roll attitude",
+      "pitchAttitude": "Pitch attitude",
+      "loadedBatteryVoltage": "Loaded battery voltage",
+      "slungLoadCableTensionCableM": "Slung-load cable tension (cable {{v1}} m)",
+      "loadReleased": "Load released",
+      "airframeLoadFactorSpecificForceG": "Airframe load factor (specific force / g). 1.0 in level hover; higher in pull-ups / hard turns",
+      "worstPerArmBendingMomentThrust": "Worst per-arm bending moment (thrust x arm length)",
+      "totalRotorThrustCyanToRed": "Total rotor thrust (cyan-to-red per-motor arrows)",
+      "gravityMGGreyArrowStraight": "Gravity, m·g (grey arrow, straight down)",
+      "airframeParasiticRotorMomentumDragOrange": "Airframe parasitic + rotor momentum drag (orange arrow)",
+      "netResultantForceAcceleratingTheAirframe": "Net resultant force accelerating the airframe (white arrow); near zero in a steady hover",
+      "connecting": "Connecting..."
     },
     "sim_test_conditions": {
       "motorOut": "Motor out",

@@ -18,7 +18,7 @@ import { MultiVehiclePanel } from './MultiVehiclePanel';
 import { RadioSetupWizard } from './RadioSetupWizard';
 import { RadioPreflightCard } from './RadioPreflightCard';
 import type { StreamDiagnosis } from '../../../shared/link-doctor-types';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 const BAUD_RATES = [1500000, 921600, 460800, 230400, 115200, 57600, 38400, 19200, 9600];
 
@@ -224,14 +224,14 @@ export function ConnectionPanel() {
       // Believe the gauge, not the write.
       for (let i = 0; i < 12; i++) {
         await new Promise((r) => setTimeout(r, 250));
-        if (useTelemetryStore.getState().battery.voltage > before + 0.5) return 'Battery full again';
+        if (useTelemetryStore.getState().battery.voltage > before + 0.5) return t('connection.ConnectionPanel.batteryFullAgain');
       }
       const echo = await window.electronAPI?.readParameterBatch?.(['SIM_BATT_VOLTAGE']);
       const accepted = echo?.values?.['SIM_BATT_VOLTAGE'];
       return typeof accepted === 'number' && Math.abs(accepted - full) < 0.2
-        ? 'This ArduPilot only charges on boot: press Respawn'
-        : 'The vehicle refused the change';
-    }, 'Battery full again');
+        ? t('connection.ConnectionPanel.thisArdupilotOnlyChargesOnBoot')
+        : t('connection.ConnectionPanel.theVehicleRefusedTheChange');
+    }, t('connection.ConnectionPanel.batteryFullAgain'));
   }, [runSitlAction]);
 
   // Respawn = reboot the autopilot. On a simulated vehicle that puts it back on
@@ -239,7 +239,7 @@ export function ConnectionPanel() {
   const respawnSitl = useCallback(() => {
     void runSitlAction('respawn', async () => {
       await window.electronAPI?.mavlinkReboot?.();
-    }, 'Respawning at home');
+    }, t('connection.ConnectionPanel.respawningAtHome'));
   }, [runSitlAction]);
 
   const linkUp = connectionState.isConnected;
@@ -297,11 +297,11 @@ export function ConnectionPanel() {
     : 'iNav';
   const sitlSubtitle = anySitlDownloading ? `Downloading${activeDownloadProgress ? ` ${activeDownloadProgress.progress}%` : '...'}`
     : anySitlStarting ? 'Starting...'
-    : inavIsRunning ? 'iNav running on TCP :5760'
-    : ardupilotIsRunning ? `ArduPilot ${ardupilotVehicleType} running on TCP :5760`
-    : px4IsRunning ? `PX4 ${px4VehicleType} running on UDP :14550`
-    : activeNeedsDownload ? 'Click to download and launch'
-    : 'Launch virtual flight controller';
+    : inavIsRunning ? t('connection.ConnectionPanel.inavRunningOnTcp5760')
+    : ardupilotIsRunning ? t('connection.ConnectionPanel.ardupilotRunningOnTcp5760', { ardupilotVehicleType })
+    : px4IsRunning ? t('connection.ConnectionPanel.px4RunningOnUdp14550', { px4VehicleType })
+    : activeNeedsDownload ? t('connection.ConnectionPanel.clickToDownloadAndLaunch')
+    : t('connection.ConnectionPanel.launchVirtualFlightController');
 
   // Initialize SITL listeners and check status on mount
   useEffect(() => {
@@ -1125,7 +1125,7 @@ export function ConnectionPanel() {
               <span className="text-xs font-medium text-content flex-1 text-left">{t('connection.ConnectionPanel.mavlinkSigning')}</span>
               {savedKeys.length > 0 && (
                 <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${keyMismatch ? 'text-red-400 bg-red-400/10' : 'text-emerald-400 bg-emerald-400/10'}`}>
-                  {keyMismatch ? t('connection.ConnectionPanel.mismatch') : `${savedKeys.length} key${savedKeys.length > 1 ? 's' : ''}`}
+                  {keyMismatch ? t('connection.ConnectionPanel.mismatch') : `${savedKeys.length} key${savedKeys.length > 1 ? enPlural('s') : ''}`}
                 </span>
               )}
               <svg className={`w-3.5 h-3.5 text-content-secondary transition-transform ${showSigning ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1296,7 +1296,7 @@ export function ConnectionPanel() {
               {forwardStatus?.running && (
                 <span className="text-[10px] font-medium px-1.5 py-0.5 rounded text-emerald-400 bg-emerald-400/10">
                   {forwardStatus.endpoints.length + forwardStatus.learned.length > 0
-                    ? `${forwardStatus.endpoints.length + forwardStatus.learned.length} client${forwardStatus.endpoints.length + forwardStatus.learned.length > 1 ? 's' : ''}`
+                    ? `${forwardStatus.endpoints.length + forwardStatus.learned.length} client${forwardStatus.endpoints.length + forwardStatus.learned.length > 1 ? enPlural('s') : ''}`
                     : t('connection.ConnectionPanel.listening')}
                 </span>
               )}

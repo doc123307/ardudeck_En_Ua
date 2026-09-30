@@ -203,7 +203,7 @@ export function SitlStatusPanel() {
                 gps.fixType >= 3 ? 'text-green-400' : 'text-amber-400'
               }`}
             >
-              {gps.fixType >= 3 ? '3D Fix' : gps.fixType === 2 ? '2D Fix' : t('panels.SitlStatusPanel.noFix')}
+              {gps.fixType >= 3 ? t('panels.SitlStatusPanel.n3dFix') : gps.fixType === 2 ? t('panels.SitlStatusPanel.n2dFix') : t('panels.SitlStatusPanel.noFix')}
             </span>
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs">

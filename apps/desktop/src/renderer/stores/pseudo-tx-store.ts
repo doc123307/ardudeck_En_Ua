@@ -52,7 +52,7 @@ let vehicleFrameCount = 0;
 let vehicleFpsWindowStart = 0;
 
 const EMPTY_DEVICE: RawDevice = { axes: [], buttons: [] };
-const VIRTUAL_DEVICE_NAME = 'On-screen sticks';
+const VIRTUAL_DEVICE_NAME = tr('stores.pseudo_tx_store.onScreenSticks');
 
 /** RCMAP_* from the vehicle, so the sticks land on the channels it reads. */
 function rcFunctionsFromParams(): RcFunctionMap {
@@ -356,7 +356,7 @@ export const usePseudoTxStore = create<PseudoTxState>((set, get) => ({
     // which is how this shipped looking connected while sending absolutely nothing.
     if (!bridge?.ardupilotSitlRcSend) {
       if (!get().sendError) {
-        set({ sendError: 'No SITL RC bridge in this window - frames are going nowhere' });
+        set({ sendError: tr('stores.pseudo_tx_store.noSitlRcBridgeInThis') });
       }
       return;
     }
@@ -371,14 +371,14 @@ export const usePseudoTxStore = create<PseudoTxState>((set, get) => ({
       aux3: n(ch[6] ?? 1500),
       aux4: n(ch[7] ?? 1500),
     }).catch((e: unknown) => {
-      set({ sendError: `SITL rejected RC: ${String(e)}` });
+      set({ sendError: tr('stores.pseudo_tx_store.sitlRejectedRc', { v1: String(e) }) });
     });
 
     if (get().vehicleControl) {
       const { connectionState } = useConnectionStore.getState();
       if (!connectionState.isConnected || connectionState.protocol !== 'mavlink') {
         get().disableVehicleControl();
-        set({ vehicleSendError: 'Vehicle link lost - joystick control released' });
+        set({ vehicleSendError: tr('stores.pseudo_tx_store.vehicleLinkLostJoystickControlReleased') });
         return;
       }
       const packed = packOverrideChannels(ch, get().mapping);
@@ -386,7 +386,7 @@ export const usePseudoTxStore = create<PseudoTxState>((set, get) => ({
       if (vehicleFpsWindowStart === 0) vehicleFpsWindowStart = now;
       void bridge.rcOverrideSetChannels?.(packed).then((r) => {
         if (r && r.success === false) {
-          set({ vehicleSendError: r.error ?? 'Override rejected by the link' });
+          set({ vehicleSendError: r.error ?? tr('stores.pseudo_tx_store.overrideRejectedByTheLink') });
           return;
         }
         vehicleFrameCount++;

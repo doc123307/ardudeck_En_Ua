@@ -92,7 +92,9 @@
       "setupRequired": "Setup Required",
       "armModeNotConfiguredClickBelow": "ARM mode not configured. Click below to auto-configure for SITL testing.",
       "setupForSitl": "Setup for SITL",
-      "loadingConfiguration": "Loading configuration..."
+      "loadingConfiguration": "Loading configuration...",
+      "notUploaded": "not uploaded",
+      "idle2": "idle"
     },
     "FlightModePanel": {
       "armed": "Armed",
@@ -139,7 +141,18 @@
       "sendsYourSticksToTheVehicle": "Sends your sticks to the vehicle. Only the channels you assigned are sent; everything else stays with the receiver.",
       "release": "Release",
       "takeControl": "Take control",
-      "armedTheSticksAreLiveThis": "Armed. The sticks are live: this window must keep focus, because a browser stops reporting the controller when it does not have it."
+      "armedTheSticksAreLiveThis": "Armed. The sticks are live: this window must keep focus, because a browser stops reporting the controller when it does not have it.",
+      "notAssigned": "not assigned",
+      "controllerDisconnectedSticksReleased": "Controller disconnected, sticks released",
+      "couldNotTakeTheSticks": "Could not take the sticks",
+      "on": "On",
+      "axisN": "axis {{n}}",
+      "buttonN": "button {{n}}",
+      "chN": "Ch {{n}}",
+      "axis_Roll": "Roll",
+      "axis_Pitch": "Pitch",
+      "axis_Throttle": "Throttle",
+      "axis_Yaw": "Yaw"
     },
     "MapPanel": {
       "changeMapLayer": "Change map layer",
@@ -179,7 +192,22 @@
       "toggleAttitudeIndicator": "Toggle attitude indicator",
       "attitude": "Attitude",
       "toggleMissionOverlaysWaypointsGeofenceRally": "Toggle mission overlays (waypoints, geofence, rally)",
-      "mission": "Mission"
+      "mission": "Mission",
+      "useSplitPreset": "Use split preset",
+      "theSplitCockpitLayoutASaved": "The split cockpit layout (a saved layout named \"split\" wins)",
+      "useMyCurrentLayout": "Use my current layout",
+      "keepWhatIsOnScreenAs": "Keep what is on screen as the split layout",
+      "keepCurrentDoNotSwitch": "Keep current, do not switch",
+      "leaveTheLayoutAsItIs": "Leave the layout as it is",
+      "realSize": "Real Size",
+      "autoSize": "Auto Size",
+      "vehicleAtRealProfileSize": "Vehicle at real profile size",
+      "vehicleAutoScaledToStayVisible": "Vehicle auto-scaled to stay visible",
+      "toggleMissionOverlays": "Toggle mission overlays",
+      "toggleTerrainElevation": "Toggle terrain elevation",
+      "noVehicleSelectedClickAVehicle": "No vehicle selected: click a vehicle marker before commanding.",
+      "mapCommandsNeedAnArmedVehicle": "Map commands need an armed vehicle.",
+      "commandDroppedVehicleDisarmed": "Command dropped: vehicle disarmed."
     },
     "MessagesPanel": {
       "noMessages": "No messages",
@@ -190,7 +218,8 @@
     "ModeAnnunciator": {
       "changeFlightMode": "Change flight mode",
       "still": "still",
-      "still2": "· still"
+      "still2": "· still",
+      "engaged": "Engaged"
     },
     "ModePicker": {
       "filterModes": "Filter modes…",
@@ -260,7 +289,11 @@
       "dropped": "Dropped",
       "basePosition": "Base position",
       "ggaUpload": "GGA upload",
-      "rtcmMessages": "RTCM messages"
+      "rtcmMessages": "RTCM messages",
+      "error": "Error",
+      "isAMountpointNotACaster": "\"{{host}}\" is a mountpoint, not a caster host. Put the caster server name in Host and \"{{host}}\" in Mountpoint.",
+      "off": "Off",
+      "waitingForFix": "Waiting for fix"
     },
     "PositionPanel": {
       "latitude": "Latitude",
@@ -316,7 +349,9 @@
       "battery": "Battery",
       "voltage": "Voltage:",
       "current": "Current:",
-      "systemLoad": "System Load:"
+      "systemLoad": "System Load:",
+      "n3dFix": "3D Fix",
+      "n2dFix": "2D Fix"
     },
     "SpeedPanel": {
       "ground": "Ground",
@@ -388,7 +423,10 @@
       "climbingTo": "Climbing to {{v1}}…",
       "didNotReachVehicleStillArmed": "Did not reach {{v1}}: vehicle still armed in QHover, take RC control",
       "settingMisTakeoffAltM": "Setting MIS_TAKEOFF_ALT={{altitudeM}}m...",
-      "px4AutoTakeoffToM": "PX4 auto-takeoff to {{altitudeM}}m..."
+      "px4AutoTakeoffToM": "PX4 auto-takeoff to {{altitudeM}}m...",
+      "climbTo": "Climb to",
+      "autoLaunchAndClimbTo": "Auto-launch and climb to",
+      "climbVerticallyTo": "Climb vertically to"
     }
   }
 }

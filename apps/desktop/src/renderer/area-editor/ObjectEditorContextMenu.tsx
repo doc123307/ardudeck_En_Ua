@@ -114,7 +114,7 @@ export function ObjectEditorContextMenu(): JSX.Element | null {
             />
             <Item
               label={obj.role === 'guide' ? t('area_editor.ObjectEditorContextMenu.clearGuideRole') : t('area_editor.ObjectEditorContextMenu.markAsGuide')}
-              hint={obj.role === 'guide' ? undefined : 'no waypoints'}
+              hint={obj.role === 'guide' ? undefined : t('area_editor.ObjectEditorContextMenu.noWaypoints')}
               onClick={run(() => setObjectRole(obj.id, obj.role === 'guide' ? null : 'guide'))}
             />
           </>

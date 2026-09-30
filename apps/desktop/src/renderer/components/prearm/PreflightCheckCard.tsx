@@ -11,7 +11,7 @@ import {
 import { PreArmParamFix } from './PreArmParamFix';
 import { SafetyConfigCard } from './SafetyConfigCard';
 import { PanelContainer } from '../panels/panel-utils';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 export function PreflightCheckCard() {
   const messages = useMessagesStore((s) => s.messages);
@@ -84,7 +84,7 @@ export function PreflightCheckCard() {
             <span className="text-[10px] text-blue-400 animate-pulse">{t('prearm.PreflightCheckCard.checking')}</span>
           ) : issueCount > 0 ? (
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400">
-              {issueCount} {t('prearm.PreflightCheckCard.issue')}{issueCount !== 1 ? 's' : ''}
+              {issueCount} {t('prearm.PreflightCheckCard.issue')}{issueCount !== 1 ? enPlural('s') : ''}
             </span>
           ) : (
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">

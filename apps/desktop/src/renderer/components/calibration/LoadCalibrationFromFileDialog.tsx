@@ -32,7 +32,7 @@ import { useCalibrationStore, type LoadedCalParam, type CategoryValidation } fro
 import {
   type CalibrationCategory,
 } from '../../../shared/calibration-param-groups';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 interface Props {
   onClose: () => void;
@@ -56,9 +56,9 @@ function formatValue(v: number | undefined): string {
 
 /** Human-readable reason a category can't be applied. Returns null if it can. */
 function getBlockedReason(v: CategoryValidation): string | null {
-  if (!v.hasCalData) return 'No calibration data: all offsets in the file are zero';
-  if (v.idStatus === 'mismatch') return 'Sensor IDs do not match this flight controller';
-  if (v.idStatus === 'missing') return 'File contains no sensor IDs, cannot verify the source board';
+  if (!v.hasCalData) return t('calibration.LoadCalibrationFromFileDialog.noCalibrationDataAllOffsetsIn');
+  if (v.idStatus === 'mismatch') return t('calibration.LoadCalibrationFromFileDialog.sensorIdsDoNotMatchThis');
+  if (v.idStatus === 'missing') return t('calibration.LoadCalibrationFromFileDialog.fileContainsNoSensorIdsCannot');
   return null;
 }
 
@@ -245,7 +245,7 @@ export function LoadCalibrationFromFileDialog({ onClose }: Props) {
               >
                 {isApplying
                   ? t('calibration.LoadCalibrationFromFileDialog.applying')
-                  : t('calibration.LoadCalibrationFromFileDialog.applyParam', { totalSelected, v2: totalSelected !== 1 ? 's' : '' })}
+                  : t('calibration.LoadCalibrationFromFileDialog.applyParam', { totalSelected, v2: totalSelected !== 1 ? enPlural('s') : '' })}
               </button>
             </div>
           </>
@@ -291,7 +291,7 @@ function CategoryCard({
           <div className="text-xs text-content-tertiary">
             {totalCount === 0
               ? t('calibration.LoadCalibrationFromFileDialog.noCalibrationValuesInFile')
-              : t('calibration.LoadCalibrationFromFileDialog.paramFromFile', { writableCount, v2: writableCount !== 1 ? 's' : '' })}
+              : t('calibration.LoadCalibrationFromFileDialog.paramFromFile', { writableCount, v2: writableCount !== 1 ? enPlural('s') : '' })}
           </div>
         </div>
         {totalCount > 0 && (
@@ -420,7 +420,7 @@ function ResultView({ result, onDone }: ResultViewProps) {
           <div className="flex items-center gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
             <span className="text-sm text-emerald-300">
-              {applied} {t('calibration.LoadCalibrationFromFileDialog.calibrationParam')}{applied !== 1 ? 's' : ''} {t('calibration.LoadCalibrationFromFileDialog.writtenAndSavedToFlash')}
+              {applied} {t('calibration.LoadCalibrationFromFileDialog.calibrationParam')}{applied !== 1 ? enPlural('s') : ''} {t('calibration.LoadCalibrationFromFileDialog.writtenAndSavedToFlash')}
             </span>
           </div>
         )}
@@ -428,7 +428,7 @@ function ResultView({ result, onDone }: ResultViewProps) {
           <div className="flex items-center gap-3">
             <XCircle className="w-5 h-5 text-red-400 shrink-0" />
             <span className="text-sm text-red-300">
-              {failed} {t('calibration.LoadCalibrationFromFileDialog.param2')}{failed !== 1 ? 's' : ''} {t('calibration.LoadCalibrationFromFileDialog.failedNoParamValueConfirmationFrom')}
+              {failed} {t('calibration.LoadCalibrationFromFileDialog.param2')}{failed !== 1 ? enPlural('s') : ''} {t('calibration.LoadCalibrationFromFileDialog.failedNoParamValueConfirmationFrom')}
             </span>
           </div>
         )}

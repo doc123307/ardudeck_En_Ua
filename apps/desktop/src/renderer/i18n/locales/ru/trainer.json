@@ -70,7 +70,8 @@
       "deleteItAndBuildItAgain": ". Удалите и постройте заново, чтобы завершить.",
       "delete": "Удалить",
       "cancel": "Отмена",
-      "deleting": "Удаление…"
+      "deleting": "Удаление…",
+      "this": "этот"
     },
     "TrainerVehicleStep": {
       "vehicle": "Аппарат",
@@ -80,7 +81,10 @@
       "lens": "Объектив",
       "heldLevelByItsMountSo": "Крепление держит её ровно, так что горизонт никогда не наклоняется. Значит, никаких подсказок о положении — это действительно другой навык пилотирования.",
       "takeOffPoint": "Точка взлёта",
-      "flightController": "Полётный контроллер"
+      "flightController": "Полётный контроллер",
+      "whateverWasLastSetUpIn": "То, что последним настроено в лаунчере.",
+      "stabilised": "Стабилизированная",
+      "waitingForAGpsFix": "ожидание GPS-фикса"
     },
     "TrainerView": {
       "region": "Регион",

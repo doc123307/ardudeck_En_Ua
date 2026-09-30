@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * Whether the board actually carries a 3D accelerometer calibration.
  *
@@ -55,7 +56,7 @@ export function accelCalibrationState(
 export function accelCalibrationNote(state: AccelCalibrationState): string | null {
   if (state.unknown || state.calibrated) return null;
   const which = state.missing.length > 1
-    ? `Accelerometers ${state.missing.join(' and ')} have`
-    : `Accelerometer ${state.missing[0]} has`;
-  return `${which} no stored 3D calibration. Run the Quick calibration (one position, vehicle level) or the 6-point one: the Level calibration only sets trims and will not clear "3D Accel calibration needed".`;
+    ? t('calibration.accel_calibration_state.accelerometersHave', { v1: state.missing.join(' and ') })
+    : t('calibration.accel_calibration_state.accelerometerHas', { v1: state.missing[0] });
+  return t('calibration.accel_calibration_state.noStored3dCalibrationRunThe', { which });
 }

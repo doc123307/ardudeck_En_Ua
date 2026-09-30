@@ -540,7 +540,7 @@ export default function ArduPilotSitlTab() {
                       <option key={f.value} value={f.value}>{f.label}</option>
                     ))
                   : groupedFrames.map(([category, frames]) => (
-                      <optgroup key={category} label={category}>
+                      <optgroup key={category} label={t(`sitl.ArduPilotSitlTab.group_${category}`)}>
                         {frames.map((f) => (
                           <option key={f.value} value={f.value}>{f.label}</option>
                         ))}
@@ -1410,8 +1410,8 @@ function FrameCatalogStatus({
                            { dot: 'bg-content-tertiary',         text: 'text-content-tertiary', label: 'pending' };
 
   const tooltip = error
-    ? `Couldn't reach upstream: ${error}\nClick to retry.`
-    : 'Frame list mirrors ArduPilot upstream `vehicleinfo.py`. Click to refresh.';
+    ? t('sitl.ArduPilotSitlTab.couldnTReachUpstreamClickTo', { error })
+    : t('sitl.ArduPilotSitlTab.frameListMirrorsArdupilotUpstreamVehicleinfo');
 
   return (
     <div className="flex items-center gap-1.5">

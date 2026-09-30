@@ -43,7 +43,9 @@
       "leavingTheCliTabWillSend": "Вихід із вкладки CLI надішле команду exit, яка перезавантажить польотний контролер (2–4 секунди).",
       "theAppWillAutomaticallyReconnectAfter": "Програма автоматично перепідключиться після перезапуску плати.",
       "stayInCli": "Лишитися в CLI",
-      "leaveAndReboot": "Вийти й перезавантажити"
+      "leaveAndReboot": "Вийти й перезавантажити",
+      "fixedWing": "Літак",
+      "defaultAltitudeReferenceResetToHome": "Типовий відлік висоти скинуто на «Дім» (апарат відхилив відлік від рельєфу)."
     }
   }
 }

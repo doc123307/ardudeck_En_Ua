@@ -22,7 +22,9 @@
       "disbandsThisFleetItsWingmenReturn": "Disbands this fleet - its wingmen return to manual control",
       "dropFromTheFleetTheRest": "Drop {{label}} from the fleet - the rest hold formation",
       "disbandFleet": "Disband fleet",
-      "leaveFleet": "Leave fleet"
+      "leaveFleet": "Leave fleet",
+      "drone": "drone",
+      "drones": "drones"
     },
     "FleetCoordination": {
       "everyConnectedVehicleArmsAndClimbs": "Every connected vehicle arms and climbs to {{alt}} m together",
@@ -38,7 +40,8 @@
       "takeOff": "Take off",
       "reFormSFleet": "Re-form {{label}}'s fleet: {{label2}}",
       "fliesItsUploadedMissionInAuto": "{{label}} flies its uploaded mission in AUTO; its wingmen hold formation and follow",
-      "startMission": "Start mission"
+      "startMission": "Start mission",
+      "engineError": "engine error"
     },
     "FleetDisclosure": {
       "fleets": "Fleets",
@@ -54,7 +57,13 @@
       "cancel": "Cancel",
       "arm": "Arm",
       "disarm": "Disarm",
-      "start": "Start"
+      "start": "Start",
+      "sendHomeRtl": "Send {{length}} {{noun}} home (RTL)?",
+      "startMissionOn": "Start mission on {{length}} {{noun}}?",
+      "vehicle": "vehicle",
+      "vehicles": "vehicles",
+      "armVehicles": "Arm {{length}} {{noun}}?",
+      "disarmVehicles": "Disarm {{length}} {{noun}}?"
     },
     "FleetStrip": {
       "clickToDeselect": "{{label}} - click to deselect",
@@ -79,6 +88,11 @@
       "diamond": "Diamond",
       "boxGrid": "Box (grid)",
       "surveySweepWide": "Survey sweep (wide)"
+    },
+    "HeartbeatDot": {
+      "receivingHeartbeat": "Receiving heartbeat",
+      "noHeartbeatYet": "No heartbeat yet",
+      "noHeartbeatForS": "No heartbeat for {{v1}}s"
     },
     "MissionPathsToggle": {
       "missionPaths": "Mission paths",

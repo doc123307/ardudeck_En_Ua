@@ -16,7 +16,7 @@ const STATUS_COLORS: Record<FlightStatus, string> = {
 
 const STATUS_LABELS: Record<FlightStatus, string> = {
   planned: 'Planned',
-  in_progress: 'In Progress',
+  get in_progress() { return t('mission_library.MissionDetailPanel.inProgress'); },
   completed: 'Completed',
   aborted: 'Aborted',
 };

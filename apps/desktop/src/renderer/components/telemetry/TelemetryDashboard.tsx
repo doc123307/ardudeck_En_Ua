@@ -1042,13 +1042,13 @@ function TelemetryDashboardImpl() {
     try {
       if (how === 'copy') {
         await navigator.clipboard.writeText(payload);
-        return 'Copied';
+        return t('telemetry.TelemetryDashboard.copied');
       }
-      if (how === 'file') return (await window.electronAPI?.exportLayoutFile(exportFileName(name), payload)) ? 'Saved' : null;
+      if (how === 'file') return (await window.electronAPI?.exportLayoutFile(exportFileName(name), payload)) ? t('telemetry.TelemetryDashboard.saved') : null;
       await window.electronAPI?.shareLayout(exportFileName(name), payload);
       return null;
     } catch {
-      return 'Could not share';
+      return t('telemetry.TelemetryDashboard.couldNotShare');
     }
   }, [layouts]);
 

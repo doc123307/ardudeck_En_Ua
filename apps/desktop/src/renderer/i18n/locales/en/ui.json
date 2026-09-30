@@ -22,18 +22,26 @@
     "InfoCard": {
       "tip": "Tip:"
     },
+    "PresetSelector": {
+      "quickPresets": "Quick Presets",
+      "clickToApplyATuningStyle": "Click to apply a tuning style"
+    },
     "ProfileManager": {
       "resetToFactoryDefaults": "Reset to factory defaults",
       "reset": "Reset",
       "name": "Name...",
       "saveCurrentSettingsAsAProfile": "Save current settings as a profile",
-      "save": "Save"
+      "save": "Save",
+      "myProfiles": "My Profiles"
     },
     "RateCurve": {
       "responseCurve": "Response Curve",
       "max": "Max:",
       "stick": "Stick",
       "rate": "Rate"
+    },
+    "TagInput": {
+      "addTags": "Add tags..."
     }
   }
 }

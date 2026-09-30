@@ -26,7 +26,9 @@
       "armAndDisarm": "Arm and disarm",
       "requireAPosition": "Require a position",
       "refuseToArmWithoutAnAbsolute": "Refuse to arm without an absolute position, so it can always return home",
-      "notNeeded": "Not needed"
+      "notNeeded": "Not needed",
+      "on": "on",
+      "skipped": "skipped"
     },
     "AutotuneTab": {
       "thisVehicleHasNoAutotune": "This vehicle has no autotune",
@@ -161,7 +163,10 @@
       "readingLevel": "Reading level",
       "notLevel": "Not level",
       "hideTheFullList": "Hide the full list",
-      "everyOrientation": "Every orientation"
+      "everyOrientation": "Every orientation",
+      "onItsSideTopFacing": "on its side, top facing {{topSide}}",
+      "upsideDown": "upside down",
+      "forward": "forward"
     },
     "CompassCard": {
       "compasses": "Compasses",
@@ -184,7 +189,13 @@
       "useThisCompassForHeading": "Use this compass for heading",
       "inUse": "In use",
       "notUsed": "Not used",
-      "calibrateTheCompass": "Calibrate the compass →"
+      "calibrateTheCompass": "Calibrate the compass →",
+      "dronecanNodeExternalGpsOrCan": "DroneCAN node, external (GPS or CAN module)",
+      "i2cBusAddress0xExternalUsually": "I2C bus {{busNumber}}, address 0x{{v2}}, external (usually the GPS)",
+      "i2cBusAddress0xOnThe": "I2C bus {{busNumber}}, address 0x{{v2}}, on the autopilot",
+      "spiOnTheAutopilot": "SPI, on the autopilot",
+      "external": "external",
+      "onboard": "onboard"
     },
     "EscTelemetryCard": {
       "motorOutputs": "Motor Outputs",
@@ -264,7 +275,8 @@
       "eraseAllLogs": "Erase all logs",
       "willBeRemovedFromTheFlight": "will be removed from the flight controller. This cannot be undone.",
       "directoriesMustBeEmptyNonEmpty": "Directories must be empty - non-empty directories will be rejected by the FC.",
-      "currentName": "Current name:"
+      "currentName": "Current name:",
+      "directory": "directory"
     },
     "FlightModesTab": {
       "position1Low": "Position 1 (Low)",
@@ -359,7 +371,9 @@
       "youHaveUnsavedChangesClick": "You have unsaved changes. Click",
       "saveAllChanges": "\"Save All Changes\"",
       "inTheHeaderToSave": "in the header to save.",
-      "modeReference": "Mode Reference"
+      "modeReference": "Mode Reference",
+      "driveModes": "drive modes",
+      "flightModes": "flight modes"
     },
     "FrameDiagram": {
       "frame": "Frame",
@@ -404,7 +418,10 @@
       "setsSerialProtocolToGpsAt": "{{v1}}Sets SERIAL{{value}}_PROTOCOL to GPS at 230400 baud",
       "here3Here4OrA": "Here 3, Here 4, or a Here 2 switched to CAN mode",
       "px4AssignsAPortToEach": "PX4 assigns a port to each GPS, with the baud left on auto.",
-      "ardupilotAssignsAProtocolToEach": "ArduPilot assigns a protocol to each serial port, and which socket a SERIALn is wired to depends on the board: on a Cube the GPS1 socket is SERIAL3. Each tile shows what that port carries today."
+      "ardupilotAssignsAProtocolToEach": "ArduPilot assigns a protocol to each serial port, and which socket a SERIALn is wired to depends on the board: on a Cube the GPS1 socket is SERIAL3. Each tile shows what that port carries today.",
+      "px4Port": "PX4 port",
+      "setToGps": "{{name}} set to GPS",
+      "dronecanEnabled": "DroneCAN enabled"
     },
     "LoggingTab": {
       "onlyWhileArmed": "Only while armed",
@@ -504,7 +521,8 @@
       "parameter2": "Parameter",
       "original": "Original",
       "new": "New",
-      "writeToFlash": "Write to Flash"
+      "writeToFlash": "Write to Flash",
+      "failedToWrite": "Failed to write {{v1}}"
     },
     "MotorTestTab": {
       "commandFailed": "Command failed",
@@ -592,7 +610,29 @@
       "safetyOnPressToRelease": "Safety on, press to release",
       "noSafetyLiveAtBoot": "No safety, live at boot",
       "outputsStayInhibitedUntilTheButton": "Outputs stay inhibited until the button is held for about two seconds. This is what \"PreArm: Hardware safety switch\" means.",
-      "outputsAreLiveAsSoonAs": "Outputs are live as soon as the vehicle is armed, with no button press. Only sensible when no button is fitted."
+      "outputsAreLiveAsSoonAs": "Outputs are live as soon as the vehicle is armed, with no button press. Only sensible when no button is fitted.",
+      "builtInLed": "Built-in LED",
+      "internalToshibaled": "Internal ToshibaLED",
+      "externalToshibaled": "External ToshibaLED",
+      "externalPca9685": "External PCA9685",
+      "oreoLed": "Oreo LED",
+      "ncp5623External": "NCP5623 External",
+      "ncp5623Internal": "NCP5623 Internal",
+      "profiledSpi": "ProfiLED SPI",
+      "lp5562External": "LP5562 External",
+      "lp5562Internal": "LP5562 Internal",
+      "is31fl3195External": "IS31FL3195 External",
+      "is31fl3195Internal": "IS31FL3195 Internal",
+      "profiledIomcu": "ProfiLED IOMCU",
+      "builtInBuzzer": "Built-in buzzer",
+      "neopixel1": "NeoPixel 1",
+      "neopixel2": "NeoPixel 2",
+      "neopixel3": "NeoPixel 3",
+      "neopixel4": "NeoPixel 4",
+      "profiled1": "ProfiLED 1",
+      "profiled2": "ProfiLED 2",
+      "profiled3": "ProfiLED 3",
+      "profiledClock": "ProfiLED Clock"
     },
     "OutputCards": {
       "noOutputHasAFunctionYet": "No output has a function yet.",
@@ -608,7 +648,12 @@
       "reversed": "Reversed",
       "everyOutputHasAFunction": "Every output has a function.",
       "outputUnassigned": "{{length}} output{{v2}} unassigned ({{v3}}{{v4}}).",
-      "openAllOutputs": "Open all outputs"
+      "openAllOutputs": "Open all outputs",
+      "deflectsEitherSideOfTrimThe": "Deflects either side of trim. The arc shows share of travel, not degrees.",
+      "runsBothWaysFromACentre": "Runs both ways from a centre stop, so trim is neutral.",
+      "runsOneWayFromMinTo": "Runs one way, from min to max.",
+      "switchesBetweenTwoStatesThereIs": "Switches between two states; there is no travel to set.",
+      "drivenByTheMixerMinAnd": "Driven by the mixer. Min and max are ESC calibration, not travel."
     },
     "OutputVisual": {
       "off": "Off",
@@ -617,7 +662,12 @@
       "reverse": "reverse",
       "stop": "stop",
       "forward": "forward",
-      "sFrom": "µs from"
+      "sFrom": "µs from",
+      "servoWaitingForOutput": "Servo {{channel}}: waiting for output",
+      "servoAtS": "Servo {{channel}} at {{pwm}} µs",
+      "servoAtS2": "Servo {{channel}} at {{pwm}} µs{{v3}}",
+      "servoIsOutsideTheLimitAt": "Servo {{channel}} is outside the limit at {{pwm}} µs",
+      "on": "On"
     },
     "ParamHistoryModal": {
       "restoredParameterToPreviousValuesWrite": "Restored {{applied}} parameter{{v2}} to previous values{{v3}}. Write to Flash to persist.",
@@ -638,7 +688,8 @@
       "oldValue": "Old Value",
       "newValue": "New Value",
       "checkpoint": "checkpoint",
-      "close": "Close"
+      "close": "Close",
+      "justNow": "Just now"
     },
     "ParameterTable": {
       "parametersSavedToFlashSuccessfully": "Parameters saved to flash successfully",
@@ -766,7 +817,13 @@
       "reboot2": "reboot",
       "performed": "performed",
       "couldNotBeSet": "could not be set:",
-      "theseParametersMayNotExistIn": "These parameters may not exist in this firmware version"
+      "theseParametersMayNotExistIn": "These parameters may not exist in this firmware version",
+      "failedToWrite": "Failed to write {{v1}}",
+      "saveAllChangesToKeepThem": " — Save All Changes to keep them after a reboot",
+      "writtenByTheVehicleYourValue": "Written by the vehicle: your value can be overwritten",
+      "clickToEdit": "Click to edit",
+      "openPx4Docs": "Open PX4 docs",
+      "openArdupilotDocs": "Open ArduPilot docs"
     },
     "PidTuningTab": {
       "roll": "Roll",
@@ -829,7 +886,9 @@
       "ffFeedforward2": "FF (Feedforward)",
       "anticipatesStickMovementsForFasterResponse": "Anticipates stick movements for faster response. Useful for agile flying but can cause overshoot.",
       "useAutotuneForBestResults": "Use AutoTune for Best Results",
-      "forOptimalPerformanceUseArdupilotS": "For optimal performance, use ArduPilot's AutoTune flight mode. It will automatically tune your PID values by flying test maneuvers. Set one of your flight mode slots to AutoTune, then fly in calm conditions."
+      "forOptimalPerformanceUseArdupilotS": "For optimal performance, use ArduPilot's AutoTune flight mode. It will automatically tune your PID values by flying test maneuvers. Set one of your flight mode slots to AutoTune, then fly in calm conditions.",
+      "leftRightTilt": "Left/right tilt",
+      "forwardBackTilt": "Forward/back tilt"
     },
     "PlaneTuningTab": {
       "noAirspeedParametersHaveBeenRead": "No airspeed parameters have been read from this vehicle yet.",
@@ -868,7 +927,28 @@
       "noRefusalsReportedTheVehicleArms": "No refusals reported. The vehicle arms when you ask it to.",
       "noMatchingCheck": "No matching check",
       "stopCheckingBeforeArmingOnlyDo": "Stop checking {{name}} before arming. Only do this when the hardware is genuinely absent.",
-      "skipThisCheck": "Skip this check"
+      "skipThisCheck": "Skip this check",
+      "letTheBoardSettleOrCheck": "Let the board settle, or check the barometer is not in airflow.",
+      "waitForA3dFixOr": "Wait for a 3D fix, or move where the sky is open.",
+      "runTheQuickAccelerometerCalibrationOne": "Run the Quick accelerometer calibration (one position, vehicle level) or the 6-point one. Level only sets trims and never clears this.",
+      "calibrateTheCompass": "Calibrate the compass.",
+      "aParameterIsOutOfRange": "A parameter is out of range; the message names it.",
+      "calibrateTheRadioAndCentreThe": "Calibrate the radio and centre the sticks.",
+      "checkTheSupplyToTheAutopilot": "Check the supply to the autopilot, it is outside the safe range.",
+      "chargeThePackOrLowerThe": "Charge the pack or lower the arming voltage.",
+      "calibrateOrDisableTheAirspeedSensor": "Calibrate or disable the airspeed sensor.",
+      "noCardOrLoggingFailedTo": "No card, or logging failed to start. Turn logging off if the vehicle has no card.",
+      "pressTheSafetySwitchUntilThe": "Press the safety switch until the light goes solid.",
+      "theReceiverIsNotConfiguredAs": "The receiver is not configured as ArduPilot expects; let it finish, or re-seat it.",
+      "theEstimatorIsNotHappyYet": "The estimator is not happy yet. Keep the vehicle still, or check the messages above.",
+      "loadAValidMissionOrClear": "Load a valid mission, or clear the one on board.",
+      "checkTheRangefinderWiringAndIts": "Check the rangefinder wiring and its parameters.",
+      "checkTheCameraOrGimbalIs": "Check the camera or gimbal is powered and reporting.",
+      "theCompanionComputerHasNotAuthorised": "The companion computer has not authorised arming.",
+      "visualOdometryIsNotReporting": "Visual odometry is not reporting.",
+      "theInFlightFftIsNot": "The in-flight FFT is not producing data.",
+      "thingIs": "thing is",
+      "thingsAre": "things are"
     },
     "Px4ArmingConfig": {
       "armingWithoutGnss": "Arming without GNSS",
@@ -909,7 +989,10 @@
       "circuitBreakers": "Circuit breakers",
       "px4ProtectsTheseBehindASpecific": "PX4 protects these behind a specific unlock value rather than a simple switch, because each one removes a safety check outright.",
       "unlockValueUnknown": "unlock value unknown",
-      "checkOff": "Check off"
+      "checkOff": "Check off",
+      "checkIs": "check is",
+      "checksAre": "checks are",
+      "checksSwitchedOff": "{{n}} {{what}} switched off"
     },
     "Px4BatteryConfig": {
       "batteryMonitoringPx4": "Battery Monitoring (PX4)",
@@ -956,7 +1039,9 @@
       "currentSensorScaling": "Current sensor scaling.",
       "tip": "Tip:",
       "toCalibrateVoltageMeasureThePack": "To calibrate voltage, measure the pack with a multimeter and adjust until the reported voltage matches. For current, compare against a watt meter during a hover test.",
-      "youHaveUnsavedChangesChangesAre": "You have unsaved changes. Changes are written to the vehicle as you edit."
+      "youHaveUnsavedChangesChangesAre": "You have unsaved changes. Changes are written to the vehicle as you edit.",
+      "powerModuleAnalog": "Power Module / Analog",
+      "externalAdc": "External / ADC"
     },
     "Px4CompassCard": {
       "off": "Off",
@@ -997,7 +1082,11 @@
       "connectToTheVehicleAndMove": "Connect to the vehicle and move your mode switch to see the active slot highlighted live.",
       "youHaveUnsavedChangesClick": "You have unsaved changes. Click",
       "writeToFlash": "\"Write to Flash\"",
-      "inTheHeaderToSave": "in the header to save."
+      "inTheHeaderToSave": "in the header to save.",
+      "positionSlow": "Position Slow",
+      "followMe": "Follow Me",
+      "precisionLand": "Precision Land",
+      "altitudeCruise": "Altitude Cruise"
     },
     "Px4LoggingConfig": {
       "fromArmUntilDisarm": "From arm until disarm",
@@ -1029,7 +1118,16 @@
       "missionLogASmallSecondFile": "Mission log (a small second file)",
       "off": "Off",
       "allMissionMessages": "All mission messages",
-      "geotaggingOnly": "Geotagging only"
+      "geotaggingOnly": "Geotagging only",
+      "defaultSet": "Default set",
+      "estimatorReplay": "Estimator replay",
+      "thermalCalibration": "Thermal calibration",
+      "systemIdentification": "System identification",
+      "highRate": "High rate",
+      "sensorComparison": "Sensor comparison",
+      "computerVisionAndAvoidance": "Computer vision and avoidance",
+      "rawFifoHighRateImu": "Raw FIFO high-rate IMU",
+      "rawFifoHighRateMagnetometer": "Raw FIFO high-rate magnetometer"
     },
     "Px4ReceiverConfig": {
       "roll": "Roll",
@@ -1086,7 +1184,11 @@
       "toggleChannelReverse": "Toggle channel reverse",
       "reversed": "Reversed",
       "normal": "Normal",
-      "changesAreStagedUntilYouSave": "Changes are staged until you Save All Changes in the header. ArduPilot-style automatic stick calibration is not available over MAVLink for PX4, so set endpoints manually using the live bars above."
+      "changesAreStagedUntilYouSave": "Changes are staged until you Save All Changes in the header. ArduPilot-style automatic stick calibration is not available over MAVLink for PX4, so set endpoints manually using the live bars above.",
+      "rcOnly": "RC only",
+      "joystickOnly": "Joystick only",
+      "rcAndJoystick": "RC and Joystick",
+      "stickInputDisabled": "Stick input disabled"
     },
     "Px4ServoOutput": {
       "mainOutputs": "Main outputs",
@@ -1140,7 +1242,8 @@
       "px4ThinsItsStreamsToStay": "PX4 thins its streams to stay under this. Set it below what the radio can carry, not at the serial baud rate: a 57600 baud SiK link moves far less than 5760 B/s once the radio's own overhead is paid.",
       "forwardingMessagesBetweenLinks": "Forwarding messages between links",
       "notForwardingBetweenLinks": "Not forwarding between links",
-      "changingTheModeOfTheLink": "Changing the mode of the link you are connected through takes effect immediately and can drop messages ArduDeck is using. Config mode over USB is fine; on a radio, Normal or Low Bandwidth is what you want."
+      "changingTheModeOfTheLink": "Changing the mode of the link you are connected through takes effect immediately and can drop messages ArduDeck is using. Config mode over USB is fine; on a radio, Normal or Low Bandwidth is what you want.",
+      "notSet": "not set"
     },
     "RateResponsePlot": {
       "stick": "stick %",
@@ -1336,7 +1439,9 @@
       "cruiseMS": "Cruise (m/s)",
       "maxMS": "Max (m/s)",
       "turnRadiusM": "Turn Radius (m)",
-      "startWithConservativeSpeeds25": "Start with conservative speeds (2-5 m/s) and increase gradually after testing. If your rover has skid steering (tank drive), enable pivot turns for sharper maneuvering."
+      "startWithConservativeSpeeds25": "Start with conservative speeds (2-5 m/s) and increase gradually after testing. If your rover has skid steering (tank drive), enable pivot turns for sharper maneuvering.",
+      "on": "on",
+      "off": "off"
     },
     "SafetyTab": {
       "value": "Value {{value}}",
@@ -1431,7 +1536,19 @@
       "applyPreset": "Apply Preset",
       "disableAllArmingChecks": "Disable all arming checks?",
       "armingCheckWillBeSetTo": "ARMING_CHECK will be set to 0. The vehicle will arm without validating sensors, GPS lock, or calibration. This can lead to flyaways and crashes.",
-      "disableChecks": "Disable Checks"
+      "disableChecks": "Disable Checks",
+      "holdMode": "Hold mode",
+      "returnMode": "Return mode",
+      "landMode": "Land mode",
+      "rcOnly": "RC only",
+      "mavlinkOnly": "MAVLink only",
+      "rcOrMavlinkWithFallback": "RC or MAVLink with fallback",
+      "rcOrMavlinkKeepFirst": "RC or MAVLink keep first",
+      "disableManualControl": "Disable manual control",
+      "returnAtCriticalLevelLandAt": "Return at critical level, land at emergency level",
+      "failedToSet": "Failed to set {{v1}}",
+      "failedToSet2": "Failed to set {{param}}",
+      "failedToSetFenceEnable": "Failed to set FENCE_ENABLE"
     },
     "SensorsTab": {
       "lastUpdate": "Last update: {{v1}}",
@@ -1461,7 +1578,11 @@
       "airSpeed": "Air Speed",
       "heading": "Heading",
       "sensorHealth": "Sensor Health",
-      "noTelemetryDataReceivedMakeSure": "No telemetry data received. Make sure you're connected to the flight controller."
+      "noTelemetryDataReceivedMakeSure": "No telemetry data received. Make sure you're connected to the flight controller.",
+      "noGps": "No GPS",
+      "noFix": "No Fix",
+      "rtkFloat": "RTK Float",
+      "rtkFixed": "RTK Fixed"
     },
     "SerialPortsTab": {
       "none": "None",
@@ -1525,7 +1646,9 @@
       "or": "or",
       "telemetryRadioUsually": "Telemetry radio: Usually",
       "baudOnTelem1": "baud on TELEM1",
-      "noSerialPortIsConfiguredFor": "No serial port is configured for RC Input (RCIN protocol). Your receiver will not work unless a port is set to RCIN or the receiver is connected via DroneCAN/PPM."
+      "noSerialPortIsConfiguredFor": "No serial port is configured for RC Input (RCIN protocol). Your receiver will not work unless a port is set to RCIN or the receiver is connected via DroneCAN/PPM.",
+      "rcPort": "RC Port",
+      "wifiPort": "Wifi Port"
     },
     "ServoOutputTab": {
       "function": "Function {{fn}}",
@@ -1555,7 +1678,8 @@
       "trim": "Trim",
       "max": "Max",
       "rel": "Rel",
-      "paramsNotLoadedForChannel": "(params not loaded for channel"
+      "paramsNotLoadedForChannel": "(params not loaded for channel",
+      "arduplaneMixerOverridesThisOutputDo": "ArduPlane mixer overrides this output. DO_SET_SERVO only works on Disabled (0), RCPassThru (1), or RCx_PASSTHRU (51-66) functions."
     },
     "SitlBatteryCard": {
       "simulatedPack": "Simulated pack",
@@ -1603,7 +1727,10 @@
       "moveThatStick": "Move that stick…",
       "assignAStick": "Assign a stick",
       "ardupilotOnlyPicksUpANew": "ArduPilot only picks up a new stick assignment after a restart.",
-      "rebootFlightController": "Reboot flight controller"
+      "rebootFlightController": "Reboot flight controller",
+      "isNowOnChannel": "{{v1}} is now on channel {{channel}}.",
+      "throttleMovedToTheElevatorStick": "Throttle moved to the elevator stick.",
+      "backToTheStandardStickAssignment": "Back to the standard stick assignment."
     },
     "StickTestPanel": {
       "failedToRelaxArmingCheck": "Failed to relax ARMING_CHECK",
@@ -1628,7 +1755,8 @@
       "fcColumnShowsWhatTheAutopilot": "FC column shows what the autopilot currently reads on",
       "msg65GreenMatchesYourSlider": "(msg 65). Green = matches your slider (override winning). Amber = mismatch. Dash = FC isn't reporting RC at all.",
       "armedInManualModeOverrideStreaming": "Armed in MANUAL mode. Override streaming at",
-      "hzClickReleaseToStopAnd": "Hz. Click Release to stop and disarm."
+      "hzClickReleaseToStopAnd": "Hz. Click Release to stop and disarm.",
+      "removePropellers": "remove propellers"
     },
     "SwitchActionsSection": {
       "switchActions": "Switch Actions",
@@ -1685,7 +1813,9 @@
       "appliesForThisSessionOnlyUsing": "Applies for this session only using SET_MESSAGE_INTERVAL. No parameters are written.",
       "onlyPossibleOnTheLinkThis": "Only possible on the link this app is connected through",
       "sending": "Sending…",
-      "tryNow": "Try now"
+      "tryNow": "Try now",
+      "requestedMeasured": "requested / measured",
+      "off": "off"
     },
     "ThrottleResponsePlot": {
       "limit": "limit",
@@ -1777,10 +1907,25 @@
       "standingArrowUp": "Standing, arrow up",
       "standingArrowDown": "Standing, arrow down",
       "readingLevelTipTheNoseUp": "Reading level. Tip the nose up: pitch should go positive. Lift the left side: roll should go positive.",
-      "readingRollPitchIfTheVehicle": "Reading roll {{v1}}°, pitch {{v2}}°. If the vehicle is level, the orientation or the level calibration is wrong."
+      "readingRollPitchIfTheVehicle": "Reading roll {{v1}}°, pitch {{v2}}°. If the vehicle is level, the orientation or the level calibration is wrong.",
+      "custom41AndOlder": "Custom 4.1 and older",
+      "custom1": "Custom 1",
+      "custom2": "Custom 2"
     },
     "gps_setup": {
-      "disabled": "Disabled"
+      "disabled": "Disabled",
+      "frskyD": "FrSky D",
+      "frskySport": "FrSky SPort",
+      "frskyPassthrough": "FrSky passthrough",
+      "escTelemetry": "ESC telemetry",
+      "theGpsTypeIsSetTo": "The GPS type is set to None, so the autopilot is not looking for a GPS at all.",
+      "theGpsTypeAsksForDronecan": "The GPS type asks for DroneCAN, but the CAN port is not enabled for it.",
+      "noSerialPortIsSetTo": "No serial port is set to the GPS protocol, so nothing is listening to the socket.",
+      "gps1ConfigIsDisabledAnd": "GPS_1_CONFIG is Disabled and DroneCAN is off, so no GPS is expected on any port.",
+      "gps1OnPixhawkCube": "GPS1 on Pixhawk / Cube",
+      "gps2OnPixhawkCube": "GPS2 on Pixhawk / Cube",
+      "telem1OnPixhawkCube": "TELEM1 on Pixhawk / Cube",
+      "telem2OnPixhawkCube": "TELEM2 on Pixhawk / Cube"
     },
     "mavlink_pid_schemes": {
       "arducopter35": "ArduCopter 3.5+",
@@ -1798,7 +1943,10 @@
       "steeringAndSpeedControllers": "Steering and speed controllers",
       "steering": "Steering",
       "speed": "Speed",
-      "balance": "Balance"
+      "balance": "Balance",
+      "turnRateToSteeringOutput": "Turn rate to steering output",
+      "throttleToHoldTargetSpeed": "Throttle to hold target speed",
+      "pitchControlOnABalanceBot": "Pitch control on a balance bot"
     },
     "mavlink_presets": {
       "safeModesOnlyStabilizeAltholdLoiter": "Safe modes only - Stabilize, AltHold, Loiter, RTL",

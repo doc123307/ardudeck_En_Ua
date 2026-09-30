@@ -35,7 +35,7 @@ import {
   type DistanceUnit,
 } from '../../shared/user-units.js';
 import logoImage from '../assets/logo.png';
-import { t } from '../i18n';
+import { t, enPlural } from '../i18n';
 
 // ---- icons (16px line) ----
 const S = { className: 'w-4 h-4', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
@@ -65,7 +65,7 @@ const IRedo = () => <svg {...S}><path d="M15 14l5-5-5-5" /><path d="M20 9H9a5 5 
 const THEME_CYCLE: ThemePreference[] = ['dark', 'light', 'system'];
 const THEME_ICON: Record<ThemePreference, () => JSX.Element> = { dark: IMoon, light: ISun, system: IMonitor };
 const THEME_TIP: Record<ThemePreference, string> = {
-  dark: 'Theme: Dark (click for Light)', light: 'Theme: Light (click for System)', system: 'Theme: System (click for Dark)',
+  get dark() { return t('area_editor.ObjectEditorApp.themeDarkClickForLight'); }, get light() { return t('area_editor.ObjectEditorApp.themeLightClickForSystem'); }, get system() { return t('area_editor.ObjectEditorApp.themeSystemClickForDark'); },
 };
 
 const TOOLS: { id: AreaTool; icon: () => JSX.Element; tip: string }[] = [
@@ -419,7 +419,7 @@ export function ObjectEditorApp(): JSX.Element {
               data-tip={t('area_editor.ObjectEditorApp.removeAllBranchesFromThisCorridor')}
               className="text-xs text-content-secondary hover:text-content underline-offset-2 hover:underline"
             >
-              {t('area_editor.ObjectEditorApp.clear')} {selectedBranchCount} {t('area_editor.ObjectEditorApp.branch')}{selectedBranchCount > 1 ? 'es' : ''}
+              {t('area_editor.ObjectEditorApp.clear')} {selectedBranchCount} {t('area_editor.ObjectEditorApp.branch')}{selectedBranchCount > 1 ? enPlural('es') : ''}
             </button>
           )}
           {tool === 'hole' && (
@@ -489,13 +489,13 @@ export function ObjectEditorApp(): JSX.Element {
               {t('area_editor.ObjectEditorApp.saved')}
             </span>
           )}
-          <ActionButton tip="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo}><IUndo /></ActionButton>
-          <ActionButton tip="Redo (Ctrl+Shift+Z)" disabled={!canRedo} onClick={redo}><IRedo /></ActionButton>
+          <ActionButton tip={t('area_editor.ObjectEditorApp.undoCtrlZ')} disabled={!canUndo} onClick={undo}><IUndo /></ActionButton>
+          <ActionButton tip={t('area_editor.ObjectEditorApp.redoCtrlShiftZ')} disabled={!canRedo} onClick={redo}><IRedo /></ActionButton>
           <div className="w-px h-6 bg-subtle mx-1" />
-          <ActionButton tip="Zoom to fit all objects" disabled={!hasValid} onClick={handleFit}><IFit /></ActionButton>
-          <ActionButton tip="Import KML / KMZ / GeoJSON / Shapefile" onClick={() => void handleImport()}><IImport /></ActionButton>
-          <ActionButton tip="Export areas as KML" disabled={!hasValid} onClick={() => void handleExport('kml')}><IExportKml /></ActionButton>
-          <ActionButton tip="Export areas as KMZ" disabled={!hasValid} onClick={() => void handleExport('kmz')}><IExportKmz /></ActionButton>
+          <ActionButton tip={t('area_editor.ObjectEditorApp.zoomToFitAllObjects')} disabled={!hasValid} onClick={handleFit}><IFit /></ActionButton>
+          <ActionButton tip={t('area_editor.ObjectEditorApp.importKmlKmzGeojsonShapefile')} onClick={() => void handleImport()}><IImport /></ActionButton>
+          <ActionButton tip={t('area_editor.ObjectEditorApp.exportAreasAsKml')} disabled={!hasValid} onClick={() => void handleExport('kml')}><IExportKml /></ActionButton>
+          <ActionButton tip={t('area_editor.ObjectEditorApp.exportAreasAsKmz')} disabled={!hasValid} onClick={() => void handleExport('kmz')}><IExportKmz /></ActionButton>
           <button
             type="button" onClick={handleSend} disabled={!hasCommittable || sent}
             data-tip={t('area_editor.ObjectEditorApp.sendTheseAreasToTheMission')}

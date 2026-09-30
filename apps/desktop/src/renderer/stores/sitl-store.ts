@@ -209,7 +209,7 @@ export const useSitlStore = create<SitlStore>()(
 
         const profile = getCurrentProfile();
         if (!profile) {
-          set({ lastError: 'No profile selected' });
+          set({ lastError: t('stores.sitl_store.noProfileSelected') });
           return false;
         }
 
@@ -239,12 +239,12 @@ export const useSitlStore = create<SitlStore>()(
             }
             return true;
           } else {
-            set({ isStarting: false, lastError: result.error ?? 'Failed to start SITL' });
+            set({ isStarting: false, lastError: result.error ?? t('stores.sitl_store.failedToStartSitl') });
             appendOutput(`Error: ${result.error}\n`, true);
             return false;
           }
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.sitl_store.unknownError');
           set({ isStarting: false, lastError: message });
           appendOutput(`Error: ${message}\n`, true);
           return false;
@@ -265,12 +265,12 @@ export const useSitlStore = create<SitlStore>()(
         try {
           await window.electronAPI.sitlStop();
           set({ isRunning: false, isStopping: false });
-          appendOutput('SITL stopped.\n');
+          appendOutput(t('stores.sitl_store.sitlStopped'));
           return true;
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.sitl_store.unknownError');
           set({ isStopping: false, lastError: message });
-          appendOutput(`Error stopping: ${message}\n`, true);
+          appendOutput(t('stores.sitl_store.errorStopping', { message }), true);
           return false;
         }
       },
@@ -318,7 +318,7 @@ export const useSitlStore = create<SitlStore>()(
 
         // Check for duplicate name
         if (profiles.some((p) => p.name === name)) {
-          set({ lastError: 'Profile name already exists' });
+          set({ lastError: t('stores.sitl_store.profileNameAlreadyExists') });
           return null;
         }
 
@@ -355,7 +355,7 @@ export const useSitlStore = create<SitlStore>()(
 
         // Can't delete standard profiles
         if (profile.isStandard) {
-          set({ lastError: 'Cannot delete standard profiles' });
+          set({ lastError: t('stores.sitl_store.cannotDeleteStandardProfiles') });
           return false;
         }
 
@@ -478,17 +478,17 @@ export const useSitlStore = create<SitlStore>()(
 
           if (result.success) {
             set({ isFlightGearRunning: true, isFlightGearStarting: false });
-            appendOutput(`FlightGear launched with aircraft: ${flightGearConfig.aircraft}, airport: ${flightGearConfig.airport}\n`);
+            appendOutput(t('stores.sitl_store.flightgearLaunchedWithAircraftAirport', { aircraft: flightGearConfig.aircraft, airport: flightGearConfig.airport }));
             return true;
           } else {
-            set({ isFlightGearStarting: false, flightGearError: result.error ?? 'Failed to launch FlightGear' });
-            appendOutput(`FlightGear error: ${result.error}\n`, true);
+            set({ isFlightGearStarting: false, flightGearError: result.error ?? t('stores.sitl_store.failedToLaunchFlightgear') });
+            appendOutput(t('stores.sitl_store.flightgearError', { error: result.error }), true);
             return false;
           }
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.sitl_store.unknownError');
           set({ isFlightGearStarting: false, flightGearError: message });
-          appendOutput(`FlightGear error: ${message}\n`, true);
+          appendOutput(t('stores.sitl_store.flightgearError2', { message }), true);
           return false;
         }
       },
@@ -506,12 +506,12 @@ export const useSitlStore = create<SitlStore>()(
         try {
           await window.electronAPI.simulatorStopFlightGear();
           set({ isFlightGearRunning: false });
-          appendOutput('FlightGear stopped.\n');
+          appendOutput(t('stores.sitl_store.flightgearStopped'));
           return true;
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.sitl_store.unknownError');
           set({ flightGearError: message });
-          appendOutput(`FlightGear stop error: ${message}\n`, true);
+          appendOutput(t('stores.sitl_store.flightgearStopError', { message }), true);
           return false;
         }
       },
@@ -566,20 +566,20 @@ export const useSitlStore = create<SitlStore>()(
 
           if (result.success) {
             set({ isXPlaneRunning: true, isXPlaneStarting: false });
-            appendOutput('X-Plane launched. Configure Data Output in X-Plane:\n');
+            appendOutput(t('stores.sitl_store.xPlaneLaunchedConfigureDataOutput'));
             appendOutput('  - Settings → Data Output → Network\n');
-            appendOutput('  - Send to: 127.0.0.1:49000\n');
+            appendOutput(t('stores.sitl_store.sendTo127001'));
             appendOutput('  - Enable: speeds, attitudes, lat/lon/alt\n');
             return true;
           } else {
-            set({ isXPlaneStarting: false, xplaneError: result.error ?? 'Failed to launch X-Plane' });
-            appendOutput(`X-Plane error: ${result.error}\n`, true);
+            set({ isXPlaneStarting: false, xplaneError: result.error ?? t('stores.sitl_store.failedToLaunchXPlane') });
+            appendOutput(t('stores.sitl_store.xPlaneError', { error: result.error }), true);
             return false;
           }
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.sitl_store.unknownError');
           set({ isXPlaneStarting: false, xplaneError: message });
-          appendOutput(`X-Plane error: ${message}\n`, true);
+          appendOutput(t('stores.sitl_store.xPlaneError2', { message }), true);
           return false;
         }
       },
@@ -597,12 +597,12 @@ export const useSitlStore = create<SitlStore>()(
         try {
           await window.electronAPI.simulatorStopXPlane();
           set({ isXPlaneRunning: false });
-          appendOutput('X-Plane stopped.\n');
+          appendOutput(t('stores.sitl_store.xPlaneStopped'));
           return true;
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.sitl_store.unknownError');
           set({ xplaneError: message });
-          appendOutput(`X-Plane stop error: ${message}\n`, true);
+          appendOutput(t('stores.sitl_store.xPlaneStopError', { message }), true);
           return false;
         }
       },
@@ -619,7 +619,7 @@ export const useSitlStore = create<SitlStore>()(
           return false;
         }
 
-        appendOutput('Starting protocol bridge...\n');
+        appendOutput(t('stores.sitl_store.startingProtocolBridge'));
 
         try {
           const result = await window.electronAPI.bridgeStart();
@@ -629,12 +629,12 @@ export const useSitlStore = create<SitlStore>()(
             appendOutput('Protocol bridge started (FlightGear <-> iNav SITL)\n');
             return true;
           } else {
-            appendOutput(`Bridge error: ${result.error}\n`, true);
+            appendOutput(t('stores.sitl_store.bridgeError', { error: result.error }), true);
             return false;
           }
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
-          appendOutput(`Bridge error: ${message}\n`, true);
+          const message = error instanceof Error ? error.message : t('stores.sitl_store.unknownError');
+          appendOutput(t('stores.sitl_store.bridgeError2', { message }), true);
           return false;
         }
       },
@@ -647,16 +647,16 @@ export const useSitlStore = create<SitlStore>()(
           return false;
         }
 
-        appendOutput('Stopping protocol bridge...\n');
+        appendOutput(t('stores.sitl_store.stoppingProtocolBridge'));
 
         try {
           await window.electronAPI.bridgeStop();
           set({ isBridgeRunning: false });
-          appendOutput('Protocol bridge stopped.\n');
+          appendOutput(t('stores.sitl_store.protocolBridgeStopped'));
           return true;
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
-          appendOutput(`Bridge stop error: ${message}\n`, true);
+          const message = error instanceof Error ? error.message : t('stores.sitl_store.unknownError');
+          appendOutput(t('stores.sitl_store.bridgeStopError', { message }), true);
           return false;
         }
       },
@@ -687,8 +687,8 @@ export const useSitlStore = create<SitlStore>()(
           const xplane = detectedSimulators.find((s) => s.name === 'xplane');
           const hasXPlane = xplane?.installed || !!customXPlanePath;
           if (!hasXPlane) {
-            set({ xplaneError: 'X-Plane is not installed. Set a custom path or install X-Plane.' });
-            appendOutput('X-Plane is not installed. Please install it or set a custom path.\n', true);
+            set({ xplaneError: t('stores.sitl_store.xPlaneIsNotInstalledSet') });
+            appendOutput(t('stores.sitl_store.xPlaneIsNotInstalledPlease'), true);
             return false;
           }
 
@@ -699,11 +699,11 @@ export const useSitlStore = create<SitlStore>()(
           }
 
           // Wait for X-Plane to initialize
-          appendOutput('Waiting for X-Plane to initialize (10 seconds)...\n');
+          appendOutput(t('stores.sitl_store.waitingForXPlaneToInitialize'));
           await new Promise((resolve) => setTimeout(resolve, 10000));
 
           // Step 2: Start SITL with X-Plane simulator mode
-          appendOutput('Starting iNav SITL...\n');
+          appendOutput(t('stores.sitl_store.startingInavSitl'));
           const sitlSuccess = await startSitl();
           if (!sitlSuccess) {
             await get().stopXPlane();
@@ -711,17 +711,17 @@ export const useSitlStore = create<SitlStore>()(
           }
 
           appendOutput('========== SIMULATION READY ==========\n');
-          appendOutput('X-Plane is now controlled by iNav SITL.\n');
-          appendOutput('Make sure X-Plane Data Output is configured to send to 127.0.0.1:49000\n');
-          appendOutput('Connect ArduDeck to TCP 127.0.0.1:5760 to access telemetry.\n');
+          appendOutput(t('stores.sitl_store.xPlaneIsNowControlledBy'));
+          appendOutput(t('stores.sitl_store.makeSureXPlaneDataOutput'));
+          appendOutput(t('stores.sitl_store.connectArdudeckToTcp1270'));
 
         } else {
           // FlightGear flow: FlightGear → Bridge → SITL
           const flightGear = detectedSimulators.find((s) => s.name === 'flightgear');
           const hasFlightGear = flightGear?.installed || !!customFlightGearPath;
           if (!hasFlightGear) {
-            set({ flightGearError: 'FlightGear is not installed. Set a custom path or install FlightGear.' });
-            appendOutput('FlightGear is not installed. Please install it or set a custom path.\n', true);
+            set({ flightGearError: t('stores.sitl_store.flightgearIsNotInstalledSetA') });
+            appendOutput(t('stores.sitl_store.flightgearIsNotInstalledPleaseInstall'), true);
             return false;
           }
 
@@ -739,11 +739,11 @@ export const useSitlStore = create<SitlStore>()(
           }
 
           // Wait for FlightGear to initialize
-          appendOutput('Waiting for FlightGear to initialize (15-30 seconds)...\n');
+          appendOutput(t('stores.sitl_store.waitingForFlightgearToInitialize15'));
           await new Promise((resolve) => setTimeout(resolve, 15000));
 
           // Step 3: Start SITL
-          appendOutput('Starting iNav SITL...\n');
+          appendOutput(t('stores.sitl_store.startingInavSitl'));
           const sitlSuccess = await startSitl();
           if (!sitlSuccess) {
             await get().stopBridge();
@@ -752,8 +752,8 @@ export const useSitlStore = create<SitlStore>()(
           }
 
           appendOutput('========== SIMULATION READY ==========\n');
-          appendOutput('FlightGear is now controlled by iNav SITL.\n');
-          appendOutput('Connect ArduDeck to TCP 127.0.0.1:5760 to access telemetry.\n');
+          appendOutput(t('stores.sitl_store.flightgearIsNowControlledByInav'));
+          appendOutput(t('stores.sitl_store.connectArdudeckToTcp1270'));
         }
 
         return true;
@@ -803,16 +803,16 @@ export const useSitlStore = create<SitlStore>()(
         // Listen for errors
         const unsubError = window.electronAPI.onSitlError((error) => {
           set({ lastError: error, isRunning: false, isStarting: false });
-          appendOutput(`Process error: ${error}\n`, true);
+          appendOutput(t('stores.sitl_store.processError', { error }), true);
         });
 
         // Listen for exit
         const unsubExit = window.electronAPI.onSitlExit((data) => {
           set({ isRunning: false, isStarting: false, isStopping: false });
           if (data.code !== null) {
-            appendOutput(`\nSITL exited with code ${data.code}\n`);
+            appendOutput(t('stores.sitl_store.sitlExitedWithCode', { code: data.code }));
           } else if (data.signal) {
-            appendOutput(`\nSITL killed by signal ${data.signal}\n`);
+            appendOutput(t('stores.sitl_store.sitlKilledBySignal', { signal: data.signal }));
           }
         });
 

@@ -850,10 +850,10 @@ export function getPresetSummary(preset: QuickSetupPreset): {
            preset.aircraft.servoMixerRules.some(r2 => r2.servoIndex === r.servoIndex && r2.inputSource === SERVO_INPUT_SOURCE.STABILIZED_PITCH)
   );
   const servoConfig = hasElevonMixing
-    ? ['Flying wing elevon mixing (2 servos)', 'Single motor']
+    ? [t('quick_setup.quick_setup_presets.flyingWingElevonMixing2Servos'), t('quick_setup.quick_setup_presets.singleMotor')]
     : preset.aircraft.platformType === PLATFORM_TYPE.AIRPLANE
-      ? ['Traditional setup: Aileron/Elevator/Rudder', 'Single motor']
-      : ['Quad X motor layout'];
+      ? [t('quick_setup.quick_setup_presets.traditionalSetupAileronElevatorRudder'), t('quick_setup.quick_setup_presets.singleMotor')]
+      : [t('quick_setup.quick_setup_presets.quadXMotorLayout')];
 
   return {
     sections: [
@@ -877,8 +877,8 @@ export function getPresetSummary(preset: QuickSetupPreset): {
         items: [
           `RC Rate: ${preset.rates.rcRate}`,
           `Expo: ${preset.rates.rcExpo}%`,
-          `Roll/Pitch Rate: ${preset.rates.rollRate}`,
-          `Yaw Rate: ${preset.rates.yawRate}`,
+          t('quick_setup.quick_setup_presets.rollPitchRate', { rollRate: preset.rates.rollRate }),
+          t('quick_setup.quick_setup_presets.yawRate', { yawRate: preset.rates.yawRate }),
         ],
       },
       {

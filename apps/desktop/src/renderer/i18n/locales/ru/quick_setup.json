@@ -62,7 +62,15 @@
       "thisWillOverwriteYourCurrentSettings": "Это перезапишет ваши текущие настройки",
       "makeSureYouVeBackedUp": "Сделайте резервную копию конфигурации, если хотите сохранить текущие настройки. Изменения сразу запишутся в EEPROM.",
       "back": "Назад",
-      "applyConfiguration": "Применить конфигурацию"
+      "applyConfiguration": "Применить конфигурацию",
+      "rollPitchRate": "Рейт крена/тангажа: {{rollRate}}",
+      "yawRate": "Рейт рыскания: {{yawRate}}",
+      "landingTimeoutSeconds": "Тайм-аут посадки: {{offDelay}} с",
+      "platformAirplane": "Платформа: самолёт",
+      "servoMixerRules": "Микшер серв: правил {{length}}",
+      "motorMixerMotors": "Микшер моторов: моторов {{length}}",
+      "platformMultirotor": "Платформа: мультиротор",
+      "motorMixerQuadXMotors": "Микшер моторов: Quad X (моторов {{length}})"
     },
     "PresetSelectionStep": {
       "presetsAvailable": "пресетов доступно",
@@ -194,7 +202,13 @@
       "conservativePidsForEfficiencyGpsCruise": "Консервативные PID для экономичности. GPS-круиз и RTH для безопасности. Режим ANGLE для лёгкого выхода из критических ситуаций.",
       "fixedWing": "Самолёт",
       "multirotor": "Мультиротор",
-      "maxRotation": "{{rollRate}}% макс. вращения"
+      "maxRotation": "{{rollRate}}% макс. вращения",
+      "flyingWingElevonMixing2Servos": "Элевонное микширование летающего крыла (2 сервы)",
+      "singleMotor": "Один мотор",
+      "traditionalSetupAileronElevatorRudder": "Классическая схема: элероны/руль высоты/руль направления",
+      "quadXMotorLayout": "Раскладка моторов Quad X",
+      "rollPitchRate": "Рейт крена/тангажа: {{rollRate}}",
+      "yawRate": "Рейт рыскания: {{yawRate}}"
     }
   }
 }

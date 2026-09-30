@@ -119,7 +119,7 @@ const PX4_PORT_CODES: Record<string, number> = {
 const PX4_PORT_LABELS: Record<string, string> = {
   TEL1: 'TELEM 1', TEL2: 'TELEM 2', TEL3: 'TELEM 3', TEL4: 'TELEM 4',
   GPS1: 'GPS 1', GPS2: 'GPS 2', GPS3: 'GPS 3',
-  RC: 'RC Port', WIFI: 'Wifi Port', URT6: 'UART 6',
+  get RC() { return t('mavlink_config.SerialPortsTab.rcPort'); }, get WIFI() { return t('mavlink_config.SerialPortsTab.wifiPort'); }, URT6: 'UART 6',
 };
 
 const PX4_FALLBACK_BAUDS = [9600, 19200, 38400, 57600, 115200, 230400, 460800, 500000, 921600, 1000000, 1500000, 2000000, 3000000];

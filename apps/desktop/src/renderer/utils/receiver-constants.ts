@@ -63,26 +63,26 @@ export const BF_PROVIDERS: ReadonlyArray<{ value: number; label: string }> = [
 
 /** Hint text keyed by iNav serialrx_provider name */
 export const PROTOCOL_HINTS: Record<string, string> = {
-  CRSF: 'Low-latency digital link. Used by TBS Crossfire and ExpressLRS receivers.',
-  SBUS: 'Inverted serial protocol. Common with FrSky and RadioLink receivers. Some boards need a hardware inverter.',
-  IBUS: 'FlySky digital protocol. Connect to a free UART RX pad.',
-  SPEK2048: 'Spektrum satellite receiver. Bind to transmitter first, then connect to UART.',
-  FPORT: 'FrSky F.Port combines SBUS + telemetry on a single wire.',
-  GHST: 'ImmersionRC Ghost ultra-low latency protocol.',
-  SRXL2: 'Spektrum SRXL2 bidirectional serial protocol.',
-  MSP: 'For GCS/SITL control only. Do not use with a physical receiver.',
+  get CRSF() { return t('utils.receiver_constants.lowLatencyDigitalLinkUsedBy'); },
+  get SBUS() { return t('utils.receiver_constants.invertedSerialProtocolCommonWithFrsky'); },
+  get IBUS() { return t('utils.receiver_constants.flyskyDigitalProtocolConnectToA'); },
+  get SPEK2048() { return t('utils.receiver_constants.spektrumSatelliteReceiverBindToTransmitter'); },
+  get FPORT() { return t('utils.receiver_constants.frskyFPortCombinesSbusTelemetry'); },
+  get GHST() { return t('utils.receiver_constants.immersionrcGhostUltraLowLatencyProtocol'); },
+  get SRXL2() { return t('utils.receiver_constants.spektrumSrxl2BidirectionalSerialProtocol'); },
+  get MSP() { return t('utils.receiver_constants.forGcsSitlControlOnlyDo'); },
 };
 
 /** Hint text keyed by Betaflight numeric provider value */
 export const BF_PROTOCOL_HINTS: Record<number, string> = {
-  9: 'Low-latency digital link. Used by TBS Crossfire and ExpressLRS receivers.',
-  2: 'Inverted serial protocol. Common with FrSky and RadioLink receivers.',
-  7: 'FlySky digital protocol. Connect to a free UART RX pad.',
-  1: 'Spektrum satellite receiver. Bind to transmitter first.',
-  12: 'FrSky F.Port combines SBUS + telemetry on a single wire.',
-  14: 'ImmersionRC Ghost ultra-low latency protocol.',
-  13: 'Spektrum SRXL2 bidirectional serial protocol.',
-  15: 'For GCS/SITL control only. Do not use with a physical receiver.',
+  get 9() { return t('utils.receiver_constants.lowLatencyDigitalLinkUsedBy'); },
+  get 2() { return t('utils.receiver_constants.invertedSerialProtocolCommonWithFrsky2'); },
+  get 7() { return t('utils.receiver_constants.flyskyDigitalProtocolConnectToA'); },
+  get 1() { return t('utils.receiver_constants.spektrumSatelliteReceiverBindToTransmitter2'); },
+  get 12() { return t('utils.receiver_constants.frskyFPortCombinesSbusTelemetry'); },
+  get 14() { return t('utils.receiver_constants.immersionrcGhostUltraLowLatencyProtocol'); },
+  get 13() { return t('utils.receiver_constants.spektrumSrxl2BidirectionalSerialProtocol'); },
+  get 15() { return t('utils.receiver_constants.forGcsSitlControlOnlyDo'); },
 };
 
 // =============================================================================

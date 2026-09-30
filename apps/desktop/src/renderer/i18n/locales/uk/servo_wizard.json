@@ -124,7 +124,18 @@
       "elevons": "Елевони:",
       "testBothRollAndPitchMovements": "Перевірте рухи і по крену, і по тангажу",
       "back": "← Назад",
-      "continueCalibrate": "Далі: калібрування →"
+      "continueCalibrate": "Далі: калібрування →",
+      "moveRollStickRightThisServo": "Стік крену ВПРАВО → ця серва має піти ВНИЗ",
+      "moveRollStickRightThisServo2": "Стік крену ВПРАВО → ця серва має піти ВГОРУ",
+      "pullPitchStickBackTrailingEdge": "Стік тангажу НА СЕБЕ → задня кромка має піти ВГОРУ",
+      "moveYawStickRightRudderShould": "Стік рискання ВПРАВО → кермо має відхилитися ВПРАВО",
+      "rollRightDownPitchBackUp": "Крен ВПРАВО → ВНИЗ. Тангаж НА СЕБЕ → ВГОРУ (задня кромка)",
+      "rollRightUpPitchBackUp": "Крен ВПРАВО → ВГОРУ. Тангаж НА СЕБЕ → ВГОРУ (задня кромка)",
+      "pitchBackAndYawRightTest": "Тангаж НА СЕБЕ і рискання ВПРАВО → перевірте обидва рухи",
+      "moveYawStickMotorShouldTilt": "Рухайте стік рискання → мотор має нахилятися",
+      "moveYawStickCameraShouldRotate": "Рухайте стік рискання → камера має обертатися горизонтально",
+      "movePitchStickCameraShouldTilt": "Рухайте стік тангажу → камера має нахилятися вгору/вниз",
+      "moveTheCorrespondingStick": "Рухайте відповідний стік"
     },
     "ServoTuningCard": {
       "servo": "Серва",
@@ -178,7 +189,8 @@
       "completeWizardFirst": "Спершу пройдіть майстер",
       "fineTuneServos": "Точне налаштування серв",
       "tune": "Налаштування",
-      "servos": "серв"
+      "servos": "серв",
+      "unknownError": "Невідома помилка"
     },
     "TraditionalPlaneDiagram": {
       "lAileron": "Лів. елерон",
@@ -219,7 +231,17 @@
       "tricopterWithYawServo": "Трикоптер із сервою рискання",
       "onlyTheRearYawServoNeeds": "Налаштування потребує лише задня серва рискання. Мотори налаштовуються окремо.",
       "n2AxisCameraGimbalPanTilt": "2-осьовий підвіс камери (pan/tilt)",
-      "forCameraStabilizationUsesRcInput": "Для стабілізації камери. Використовує вхід RC, а не стабілізований вихід."
+      "forCameraStabilizationUsesRcInput": "Для стабілізації камери. Використовує вхід RC, а не стабілізований вихід.",
+      "rcRollManual": "RC крен (ручний)",
+      "rcPitchManual": "RC тангаж (ручний)",
+      "rcYawManual": "RC рискання (ручне)",
+      "rcThrottleManual": "RC газ (ручний)",
+      "gimbalPitch": "Тангаж підвісу",
+      "gimbalRoll": "Крен підвісу",
+      "lAil": "Лів. елерон",
+      "rAil": "Прав. елерон",
+      "lElev": "Лів. кермо вис.",
+      "rElev": "Прав. кермо вис."
     }
   }
 }

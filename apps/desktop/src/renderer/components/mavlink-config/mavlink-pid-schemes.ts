@@ -310,9 +310,9 @@ function buildRoverScheme(parameters: Map<string, { value: number }>): PidScheme
       yaw: { p: 1.0, i: 1.0, d: 0, ff: 0 },
     },
     axisInfo: {
-      roll: { title: t('mavlink_config.mavlink_pid_schemes.steering'), sub: 'Turn rate to steering output' },
-      pitch: { title: t('mavlink_config.mavlink_pid_schemes.speed'), sub: 'Throttle to hold target speed' },
-      ...(balance ? { yaw: { title: t('mavlink_config.mavlink_pid_schemes.balance'), sub: 'Pitch control on a balance bot' } } : {}),
+      roll: { title: t('mavlink_config.mavlink_pid_schemes.steering'), sub: t('mavlink_config.mavlink_pid_schemes.turnRateToSteeringOutput') },
+      pitch: { title: t('mavlink_config.mavlink_pid_schemes.speed'), sub: t('mavlink_config.mavlink_pid_schemes.throttleToHoldTargetSpeed') },
+      ...(balance ? { yaw: { title: t('mavlink_config.mavlink_pid_schemes.balance'), sub: t('mavlink_config.mavlink_pid_schemes.pitchControlOnABalanceBot') } } : {}),
     },
   };
 }

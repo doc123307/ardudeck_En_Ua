@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { ConnectionState, ConnectOptions } from '../../shared/ipc-channels';
+import { t } from '../i18n';
 
 interface ConnectionStore {
   // State
@@ -36,11 +37,11 @@ export const useConnectionStore = create<ConnectionStore>((set, get) => ({
     try {
       const success = await window.electronAPI.connect(options);
       if (!success) {
-        set({ error: 'Connection failed' });
+        set({ error: t('stores.connection_store.connectionFailed') });
       }
       return success;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
+      const message = err instanceof Error ? err.message : t('stores.connection_store.unknownError');
       set({ error: message });
       return false;
     } finally {

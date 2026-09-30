@@ -17,7 +17,11 @@
       "clickAZoneHereOrOn": "Click a zone (here or on the map) to move, reshape, or delete it.",
       "polygon": "polygon",
       "circle": "circle",
-      "breach": "breach"
+      "breach": "breach",
+      "belowMinimumAltitude": "Below minimum altitude",
+      "aboveMaximumAltitude": "Above maximum altitude",
+      "outsideBoundary": "Outside boundary",
+      "fenceBreached": "Fence breached"
     },
     "FenceMapOverlay": {
       "clickToEditOrDeleteThis": "Click to edit or delete this zone",

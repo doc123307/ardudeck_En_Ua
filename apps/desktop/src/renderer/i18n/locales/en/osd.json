@@ -36,7 +36,16 @@
       "save": "Save",
       "noSavedHudsYet": "No saved HUDs yet.",
       "delete": "Delete",
-      "resetHudToDefaults": "Reset HUD to defaults"
+      "resetHudToDefaults": "Reset HUD to defaults",
+      "aircraft": "aircraft",
+      "profile_air": "Aircraft",
+      "profile_ground": "Ground",
+      "category_Power": "Power",
+      "category_Flight": "Flight",
+      "category_Speed": "Speed",
+      "category_Navigation": "Navigation",
+      "category_Environment": "Environment",
+      "category_Status": "Status"
     },
     "OsdDemoPanel": {
       "demoValues": "Demo Values",
@@ -133,7 +142,11 @@
       "noSavedLayoutsYet": "No saved layouts yet.",
       "deleteLayout": "Delete layout",
       "autoArrangeToCanvas": "Auto-arrange to canvas",
-      "resetToDefaults": "Reset to defaults"
+      "resetToDefaults": "Reset to defaults",
+      "betaflightInav": "Betaflight / iNAV",
+      "simulatorNotConnected": "Simulator (not connected)",
+      "writeTheElementLayoutToThe": "Write the element layout to the FC and save",
+      "writeTheCurrentFontToThe": "Write the current font to the FC's character NVM (analog/MAX7456), reboot to apply"
     },
     "OsdVideoBackdrop": {
       "showYourLiveVideoBehindThe": "Show your live video behind the OSD. Shared with the telemetry Vision panel.",
@@ -198,7 +211,16 @@
       "fontSize": "Font size {{v1}}",
       "transparency": "Transparency {{v1}}",
       "elements": "Elements",
-      "resetAllScreens": "Reset all screens"
+      "resetAllScreens": "Reset all screens",
+      "category_Flight": "Flight",
+      "category_Power": "Power",
+      "category_GPS": "GPS",
+      "category_Navigation": "Navigation",
+      "category_Link": "Link",
+      "category_Video": "Video",
+      "category_System": "System",
+      "category_Instruments": "Instruments",
+      "category_Grid": "Grid"
     },
     "RubyOsdPreview": {
       "noElementsEnabledOnScreen": "No elements enabled on screen",

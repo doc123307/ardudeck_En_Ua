@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 /**
  * Space-weather (planetary K-index) client for the pre-flight briefing. A
  * geomagnetic storm degrades GPS and swings the compass, and a compass
@@ -70,11 +71,11 @@ export function gScaleLabel(gScale: number): string {
 export function kpConditionLabel(kp: number): string {
   const g = gScaleFromKp(kp);
   if (g === 0) {
-    if (kp < 3) return 'Quiet';
-    if (kp < 4) return 'Unsettled';
-    return 'Active';
+    if (kp < 3) return t('utils.geomag_activity_api.quiet');
+    if (kp < 4) return t('utils.geomag_activity_api.unsettled');
+    return t('utils.geomag_activity_api.active');
   }
-  const severity = ['', 'Minor', 'Moderate', 'Strong', 'Severe', 'Extreme'][g] ?? 'Storm';
+  const severity = ['', t('utils.geomag_activity_api.minor'), t('utils.geomag_activity_api.moderate'), t('utils.geomag_activity_api.strong'), t('utils.geomag_activity_api.severe'), t('utils.geomag_activity_api.extreme')][g] ?? 'Storm';
   return `${severity} storm (${gScaleLabel(g)})`;
 }
 

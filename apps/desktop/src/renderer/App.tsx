@@ -132,7 +132,7 @@ const mavTypeToVehicleType: Record<number, VehicleType> = {
 };
 
 const VEHICLE_TYPE_NAMES: Record<VehicleType, string> = {
-  copter: 'Multicopter', plane: 'Fixed Wing', vtol: 'VTOL',
+  copter: 'Multicopter', get plane() { return t('app.App.fixedWing'); }, vtol: 'VTOL',
   rover: 'Rover', boat: 'Boat', sub: 'Submarine',
 };
 
@@ -801,7 +801,7 @@ function App() {
           settings.setDefaultCommandAltFrame('relative');
           useMessagesStore.getState().addMessage(
             6, 'INFO',
-            'Default altitude reference reset to Home (terrain-relative was refused by the vehicle).',
+            t('app.App.defaultAltitudeReferenceResetToHome'),
           );
         }
       }

@@ -7,7 +7,12 @@
       "noLogEntries": "Записів немає",
       "jumpToLatestPaused": "↓ До останніх (призупинено)",
       "noMessagesFromAutopilot": "Немає повідомлень від автопілота",
-      "fix": "Виправити ›"
+      "fix": "Виправити ›",
+      "dockLeft": "Закріпити ліворуч",
+      "dockBottom": "Закріпити внизу",
+      "dockRight": "Закріпити праворуч",
+      "entry": "запис",
+      "entries": "записів"
     }
   }
 }

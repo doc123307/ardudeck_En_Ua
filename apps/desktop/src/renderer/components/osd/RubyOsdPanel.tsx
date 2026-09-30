@@ -115,7 +115,7 @@ export function RubyOsdPanel() {
           if (items.length === 0) return null;
           return (
             <div key={cat} className="mb-1">
-              <div className="px-2 pt-1.5 pb-0.5 text-[9px] font-semibold uppercase tracking-wider text-content-tertiary">{cat}</div>
+              <div className="px-2 pt-1.5 pb-0.5 text-[9px] font-semibold uppercase tracking-wider text-content-tertiary">{t(`osd.RubyOsdPanel.category_${cat}`)}</div>
               {items.map((el) => {
                 const on = isElementEnabled(params, editingScreen, el.id);
                 return (

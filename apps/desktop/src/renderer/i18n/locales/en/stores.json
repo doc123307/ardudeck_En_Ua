@@ -1,5 +1,9 @@
 {
   "stores": {
+    "app_store": {
+      "installFailed": "Install failed",
+      "uninstallFailed": "Uninstall failed"
+    },
     "ardupilot_sitl_store": {
       "quadDefault": "Quad (default)",
       "quadPlus": "Quad Plus (+)",
@@ -18,7 +22,28 @@
       "sailboat": "Sailboat",
       "balanceBot": "Balance Bot",
       "vectoredDefault": "Vectored (default)",
-      "vectored6dof": "Vectored 6DOF"
+      "vectored6dof": "Vectored 6DOF",
+      "usingTrackForAutoUpgradedAfter": "Using {{upgraded}} track for \"{{model}}\" (auto-upgraded after a previous crash on {{releaseTrack}}).\n",
+      "hasCrashedOnEveryAvailableTrack": "\n\"{{model}}\" has crashed on every available track for this platform, skipping launch.\n",
+      "failedToStartSitl": "Failed to start SITL",
+      "unknownError": "Unknown error",
+      "sitlStopped": "SITL stopped.\n",
+      "errorStopping": "Error stopping: {{message}}\n",
+      "downloadedTo": "Downloaded to: {{path}}\n",
+      "downloadFailed": "Download failed",
+      "downloadFailed2": "Download failed: {{error}}\n",
+      "downloadError": "Download error: {{message}}\n",
+      "failedToDownloadBinary": "Failed to download {{suggestedTrack}} binary",
+      "browseFailed": "Browse failed",
+      "flightgearLaunchedItWillShowThe": "FlightGear launched, it will show the SITL vehicle once scenery finishes loading.\n",
+      "failedToLaunchFlightgear": "Failed to launch FlightGear",
+      "flightgearError": "FlightGear error: {{error}}\n",
+      "flightgearError2": "FlightGear error: {{message}}\n",
+      "processError": "Process error: {{error}}\n",
+      "sitlIsRestartingAtANew": "\nSITL is restarting at a new take-off point...\n",
+      "sitlExitedWithCode": "\nSITL exited with code {{code}}\n",
+      "sitlKilledBySignal": "\nSITL killed by signal {{signal}}\n",
+      "sitlIsBackUpTakingOff": "SITL is back up, taking off from {{lat}}, {{lon}} (alt {{alt}} m, heading {{heading}} deg).\n"
     },
     "calibration_store": {
       "waitingForFlightController": "Waiting for flight controller...",
@@ -26,15 +51,49 @@
       "finalizingCalibrationOnFlightController": "Finalizing calibration on flight controller...",
       "savingCalibration": "Saving calibration...",
       "noCompassFitnessReported": "No compass fitness reported.",
-      "recorded": "Recorded."
+      "recorded": "Recorded.",
+      "isNotSupportedForProtocol": "{{name}} is not supported for {{v2}} protocol",
+      "requiresSensorWhichIsNotAvailable": "{{name}} requires {{requiresSensor}} sensor which is not available",
+      "noCalibrationTypeSelected": "No calibration type selected",
+      "failedToStartCalibration": "Failed to start calibration",
+      "unknownError": "Unknown error",
+      "failedToConfirmPosition": "Failed to confirm position",
+      "failedToLoadSensorConfig": "Failed to load sensor config",
+      "failedToSaveCalibrationData": "Failed to save calibration data",
+      "failedToSave": "Failed to save",
+      "failedToSaveToPersistentStorage": "Failed to save to persistent storage",
+      "flightControllerReportedSuccessButThe": "Flight controller reported success, but the calibration parameters did not change. The calibration silently failed, please try again.",
+      "verificationFailed": "Verification failed",
+      "failedToLoadFile": "Failed to load file",
+      "failedToReadCalibrationParameters": "Failed to read calibration parameters",
+      "noTrackedParametersCouldBeRead": "No tracked parameters could be read from the flight controller",
+      "placeYourVehicleOnALevel": "Place your vehicle on a level surface",
+      "rotateYourVehicleInAllDirections": "Rotate your vehicle in all directions",
+      "keepYourVehicleCompletelyStill": "Keep your vehicle completely still",
+      "holdVehicleSteadyOverATextured": "Hold vehicle steady over a textured surface",
+      "followTheOnScreenInstructions": "Follow the on-screen instructions"
     },
     "cli_store": {
-      "failedToSaveConfiguration": "Failed to save configuration"
+      "failedToSaveConfiguration": "Failed to save configuration",
+      "unknownError": "Unknown error",
+      "savingConfigurationToEeprom": "Saving configuration to EEPROM...",
+      "boardIsRebooting": "Board is rebooting...",
+      "reconnectingToBoard": "Reconnecting to board...",
+      "configurationSavedBoardReconnected": "Configuration saved! Board reconnected.",
+      "configurationSavedReconnecting": "Configuration saved! Reconnecting..."
+    },
+    "connection_store": {
+      "connectionFailed": "Connection failed",
+      "unknownError": "Unknown error"
     },
     "fence_store": {
       "downloadedFenceItemsFromFlightController": "Downloaded {{length}} fence items from flight controller",
       "uploadedFenceItemsToFlightController": "Uploaded {{itemCount}} fence items to flight controller",
-      "fenceClearedFromFlightController": "Fence cleared from flight controller"
+      "fenceClearedFromFlightController": "Fence cleared from flight controller",
+      "failedToDownloadFence": "Failed to download fence",
+      "noFenceItemsToUpload": "No fence items to upload",
+      "failedToUploadFence": "Failed to upload fence",
+      "failedToClearFence": "Failed to clear fence"
     },
     "firmware_store": {
       "downloadingFirmware": "Downloading firmware...",
@@ -48,10 +107,92 @@
       "configuringBoardAsAirplane": "Configuring board as airplane...",
       "savingToEeprom": "Saving to EEPROM...",
       "rebootingBoard": "Rebooting board...",
-      "boardConfiguredAsAirplaneReconnectWhen": "Board configured as airplane! Reconnect when ready."
+      "boardConfiguredAsAirplaneReconnectWhen": "Board configured as airplane! Reconnect when ready.",
+      "noUsbDeviceDetectedMakeSure": "No USB device detected. Make sure your flight controller is connected.",
+      "detectionFailed": "Detection failed",
+      "noStm32BootloaderFoundOnMake": "No STM32 bootloader found on {{port}}. Make sure the board is in bootloader mode.",
+      "probeFailed": "Probe failed",
+      "couldNotIdentifyBoardOnSelect": "Could not identify board on {{port}}. Select your board manually.",
+      "mavlinkQueryFailed": "MAVLink query failed",
+      "firmwareApiNotAvailableCheckPreload": "Firmware API not available - check preload.ts",
+      "failedToFetchBoardsNoError": "Failed to fetch boards (no error message)",
+      "failedToFetchBoards": "Failed to fetch boards",
+      "firmwareVersionsApiNotAvailableCheck": "Firmware versions API not available - check preload.ts",
+      "failedToFetchVersionsNoError": "Failed to fetch versions (no error message)",
+      "failedToFetchVersions": "Failed to fetch versions",
+      "noBoardConnectedClickConnectFirst": "No board connected. Click Connect first.",
+      "vehicleTypeMismatchYouSelectedBut": "Vehicle type mismatch: you selected {{selectedVehicleType}} but the chosen version is {{vehicleType}}. Reselect the vehicle and version, then try again.",
+      "noFirmwareFileSelected": "No firmware file selected",
+      "noFirmwareVersionSelected": "No firmware version selected",
+      "downloadFailed": "Download failed",
+      "failedToEnterBootloader": "Failed to enter bootloader",
+      "noPortFoundForReconnection": "No port found for reconnection",
+      "couldNotConnectAfterFlashThe": "Could not connect after flash. The USB-serial chip may need a physical unplug/replug. ",
+      "disconnectTheBoardReconnectItThen": "Disconnect the board, reconnect it, then use Servo Wizard to configure as airplane.",
+      "failedToReadInavMixerConfig": "Failed to read iNav mixer config",
+      "failedToSetPlatformTypeTo": "Failed to set platform type to airplane",
+      "configurationFailed": "Configuration failed"
+    },
+    "fleet_repo_store": {
+      "myVehicle": "My Vehicle",
+      "vaultUnavailable": "Vault unavailable",
+      "noParametersLoadedToSnapshot": "No parameters loaded to snapshot.",
+      "couldNotIdentifyTheVehiclePick": "Could not identify the vehicle. Pick one under \"Working on\" in the vault.",
+      "snapshotFailed": "Snapshot failed",
+      "snapshotSavedParams": "Snapshot saved ({{length}} params)",
+      "noChangesSinceLastSnapshot": "No changes since last snapshot",
+      "newVehicle": "New vehicle",
+      "newVehicleSavedParams": "New vehicle \"{{displayName}}\" saved ({{length}} params)",
+      "noMissionLoadedToSnapshot": "No mission loaded to snapshot.",
+      "missionSavedTo": "Mission saved to {{site}}",
+      "missionUnchangedSinceLastSnapshot": "Mission unchanged since last snapshot",
+      "noSurveyPolygonOnTheMap": "No survey polygon on the map to snapshot.",
+      "boundarySavedTo": "Boundary saved to {{site}}",
+      "boundaryUnchangedSinceLastSnapshot": "Boundary unchanged since last snapshot",
+      "renameFailed": "Rename failed",
+      "linkFailed": "Link failed",
+      "vehicleLinkedSnapshotsContinueInThat": "Vehicle linked; snapshots continue in that unit",
+      "couldNotReadSnapshotFromThe": "Could not read snapshot from the vault.",
+      "thatSnapshotBelongsToNotThe": "That snapshot belongs to {{ownerName}}, not the connected vehicle. Open a snapshot from this vehicle's history, or set \"Working on\" to {{ownerName}} if this is that aircraft.",
+      "thatSnapshotWasTakenFromBut": "That snapshot was taken from {{snapshotFirmware}}, but this vehicle is running {{liveFirmware}}. Its parameter names do not carry across flight stacks.",
+      "restoredParameter": "Restored {{applied}} parameter{{v2}}",
+      "syncedWithGithub": "Synced with GitHub",
+      "syncFailed": "Sync failed"
+    },
+    "flight_control_store": {
+      "rejectedByTheLink": "rejected by the link",
+      "rcOverrideUnavailable": "RC override unavailable",
+      "trainerSessionActiveTheTrainerOwns": "Trainer session active - the Trainer owns the sticks"
+    },
+    "group_shape_store": {
+      "roundedEveryGauge": "Rounded (every gauge)",
+      "roundedEndsOnly": "Rounded (ends only)",
+      "flatCardNoBulgeTheOriginal": "Flat card, no bulge - the original look",
+      "everyRoundGaugeBulgesItsOwn": "Every round gauge bulges its own circle",
+      "onlyTheRunSEndsBulge": "Only the run's ends bulge, gauges in the middle stay flush"
+    },
+    "guide_store": {
+      "importNotAvailable": "Import not available",
+      "emptyFile": "Empty file",
+      "noPolygonsOrLinesFoundIn": "No polygons or lines found in the file",
+      "noValidPointsToAdd": "No valid points to add.",
+      "aPolygonNeedsAtLeast3": "A polygon needs at least 3 points - add as markers instead.",
+      "rtkPoints": "RTK points {{v1}}"
     },
     "legacy_config_store": {
-      "failedToSaveConfiguration": "Failed to save configuration"
+      "failedToSaveConfiguration": "Failed to save configuration",
+      "failedToLoadConfig": "Failed to load config",
+      "savingConfigurationToEeprom": "Saving configuration to EEPROM...",
+      "boardIsRebooting": "Board is rebooting...",
+      "reconnectingToBoard": "Reconnecting to board...",
+      "configurationSavedBoardRebootedPleaseReconnect": "Configuration saved! Board rebooted. Please reconnect."
+    },
+    "lua_graph_store": {
+      "untitledScript": "Untitled Script"
+    },
+    "mission_library_store": {
+      "couldNotWriteToTheBackup": "Could not write to the backup",
+      "couldNotReadThatMissionFrom": "Could not read that mission from the backup"
     },
     "mission_store": {
       "noWaypointsOnFc": "No waypoints on FC",
@@ -64,7 +205,36 @@
       "downloadedWaypointsFromFlightControllerInto": "Downloaded {{length}} waypoints from flight controller into \"{{name}}\"",
       "uploadedWaypointsToFlightController": "Uploaded {{itemCount}} waypoints to flight controller",
       "missionClearedFromFlightController": "Mission cleared from flight controller",
-      "recoveredWaypointsFromYourLastSession": "Recovered {{length}} waypoints from your last session"
+      "recoveredWaypointsFromYourLastSession": "Recovered {{length}} waypoints from your last session",
+      "failedToDownloadWaypointsMspNot": "Failed to download waypoints - MSP not supported",
+      "failedToDownloadMission": "Failed to download mission",
+      "noWaypointsToUploadAllGroups": "No waypoints to upload (all groups deselected?)",
+      "failedToUploadWaypoints": "Failed to upload waypoints",
+      "failedToUploadMission": "Failed to upload mission",
+      "noWaypointsInThisGroupTo": "No waypoints in this group to upload",
+      "failedToUploadMissionToVehicle": "Failed to upload mission to vehicle",
+      "noWaypointsInThisGroupTo2": "No waypoints in this group to save",
+      "failedToClearWaypoints": "Failed to clear waypoints",
+      "failedToClearMission": "Failed to clear mission"
+    },
+    "modes_wizard_store": {
+      "failedToLoadModesFromFc": "Failed to load modes from FC",
+      "failedToLoadModes": "Failed to load modes",
+      "failedToClearModeSlot": "Failed to clear mode slot {{i}}",
+      "failedToSetMode": "Failed to set mode {{i}}",
+      "modesSentButEepromSaveFailed": "Modes sent but EEPROM save failed",
+      "failedToSaveModes": "Failed to save modes"
+    },
+    "module_store": {
+      "activationFailed": "Activation failed",
+      "updateFailed": "Update failed",
+      "updateFailedFor": "Update failed for {{slug}}",
+      "toggleFailed": "Toggle failed",
+      "installFailed": "Install failed"
+    },
+    "orchestrator_engine_store": {
+      "failedToStartMultiVehicle": "Failed to start multi-vehicle",
+      "failedToAddSource": "Failed to add source"
     },
     "osd_store": {
       "readingFromFlightController": "Reading from flight controller...",
@@ -92,16 +262,69 @@
       "uploadingFontToFcNvm": "Uploading font to FC NVM…",
       "fontUploadedCharsRebootTheFc": "Font uploaded ({{written}} chars), reboot the FC to apply",
       "fontUploadFailed": "Font upload failed: {{v1}}",
-      "fontUploadFailed2": "Font upload failed: {{msg}}"
+      "fontUploadFailed2": "Font upload failed: {{msg}}",
+      "unknownBundledFont": "Unknown bundled font: {{name}}",
+      "failedToLoadFont": "Failed to load font"
+    },
+    "parameter_store": {
+      "failedToRequestParameters": "Failed to request parameters",
+      "failedToSetParameter": "Failed to set parameter"
     },
     "pseudo_tx_store": {
       "switchTheUsbTransmitterOnFirst": "Switch the USB transmitter on first",
-      "needsAConnectedMavlinkVehicle": "Needs a connected MAVLink vehicle"
+      "needsAConnectedMavlinkVehicle": "Needs a connected MAVLink vehicle",
+      "onScreenSticks": "On-screen sticks",
+      "noSitlRcBridgeInThis": "No SITL RC bridge in this window - frames are going nowhere",
+      "sitlRejectedRc": "SITL rejected RC: {{v1}}",
+      "vehicleLinkLostJoystickControlReleased": "Vehicle link lost - joystick control released",
+      "overrideRejectedByTheLink": "Override rejected by the link"
+    },
+    "px4_sitl_store": {
+      "downloadedTo": "Downloaded to: {{path}}\n",
+      "downloadFailed": "Download failed",
+      "downloadFailed2": "Download failed: {{error}}\n",
+      "unknownError": "Unknown error",
+      "downloadError": "Download error: {{message}}\n",
+      "failedToStartSitl": "Failed to start SITL",
+      "sitlStopped": "SITL stopped.\n",
+      "disconnectingFromStoppedSitl": "Disconnecting from stopped SITL.\n",
+      "errorStopping": "Error stopping: {{message}}\n",
+      "processError": "Process error: {{error}}\n",
+      "sitlIsRestarting": "\nSITL is restarting...\n",
+      "sitlExitedWithCode": "\nSITL exited with code {{code}}\n",
+      "sitlKilledBySignal": "\nSITL killed by signal {{signal}}\n",
+      "sitlIsBackUpTakingOff": "SITL is back up, taking off from {{lat}}, {{lon}} (alt {{alt}} m, heading {{heading}} deg).\n"
+    },
+    "quick_setup_store": {
+      "noPresetSelected": "No preset selected",
+      "failedToApplyPreset": "Failed to apply preset",
+      "failedToChangePlatformType": "Failed to change platform type",
+      "failedToReconnectAfterPlatformChange": "Failed to reconnect after platform change. Please reconnect manually and try again.",
+      "unknownErrorDuringPlatformChange": "Unknown error during platform change",
+      "configuringServoMixer": "Configuring servo mixer",
+      "clearingServoMixer": "Clearing servo mixer",
+      "notConnectedToFlightControllerPlease": "Not connected to flight controller. Please connect first.",
+      "failedToSetPids": "Failed to set PIDs",
+      "failedToSetRates": "Failed to set rates",
+      "connectionLostDuringSetupPleaseReconnect": "Connection lost during setup. Please reconnect and try again.",
+      "failedToSaveToEeprom": "Failed to save to EEPROM",
+      "applyFailed": "Apply failed",
+      "cliApplyFailed": "CLI apply failed",
+      "platformMultirotor": "Multirotor",
+      "platformAirplane": "Airplane",
+      "platformHelicopter": "Helicopter",
+      "platformTricopter": "Tricopter",
+      "platformRover": "Rover",
+      "platformBoat": "Boat"
     },
     "rally_store": {
       "downloadedRallyPointsFromFlightController": "Downloaded {{length}} rally points from flight controller",
       "uploadedRallyPointsToFlightController": "Uploaded {{itemCount}} rally points to flight controller",
-      "rallyPointsClearedFromFlightController": "Rally points cleared from flight controller"
+      "rallyPointsClearedFromFlightController": "Rally points cleared from flight controller",
+      "failedToDownloadRallyPoints": "Failed to download rally points",
+      "noRallyPointsToUpload": "No rally points to upload",
+      "failedToUploadRallyPoints": "Failed to upload rally points",
+      "failedToClearRallyPoints": "Failed to clear rally points"
     },
     "servo_wizard_store": {
       "aircraft": "Aircraft",
@@ -113,15 +336,102 @@
       "calibrate": "Calibrate",
       "adjustServoLimits": "Adjust servo limits",
       "save": "Save",
-      "reviewAndSave": "Review and save"
+      "reviewAndSave": "Review and save",
+      "servoOutputsAreNotAvailableOn": "Servo outputs are not available on this board in multirotor mode. This is a hardware limitation - not all flight controller boards can output servo signals when configured as a quad/hex.",
+      "noServoOutputsAvailableOnThis": "No servo outputs available on this board for gimbal control.",
+      "noServoOutputsDetectedEnsureYour": "No servo outputs detected. Ensure your board supports servos.",
+      "servoConfigurationNotSupportedOnThis": "Servo configuration not supported on this firmware. iNav 2.0.0 may be too old - try updating to a newer version.",
+      "unknownError": "Unknown error",
+      "failedToCheckServoSupportPlease": "Failed to check servo support. Please try again.",
+      "couldNotChangePlatformToFor": "Could not change platform to {{platformName}}. For iNav 2.0.0, you may need to use iNav Configurator to change the mixer type, then reconnect.",
+      "errorChangingPlatformTryUsingInav": "Error changing platform: {{v1}}. Try using iNav Configurator to change the mixer type.",
+      "failedToSetServoConfig": "Failed to set servo {{servoIndex}} config",
+      "failedToSaveToEeprom": "Failed to save to EEPROM",
+      "failedToSave": "Failed to save",
+      "possibleCauses1FcNotConfigured": ". Possible causes: (1) FC not configured as airplane/fixed-wing, (2) iNav version too old, (3) Board has no servo outputs.",
+      "yourFcFirmwareMayNotSupport": ". Your FC firmware may not support servo configuration via MSP. Try using iNav Configurator CLI."
     },
     "settings_store": {
-      "udpListen": "UDP :{{v1}} listen ({{v2}})"
+      "udpListen": "UDP :{{v1}} listen ({{v2}})",
+      "newBoard": "New Board"
+    },
+    "signing_store": {
+      "failedToSetKey": "Failed to set key",
+      "unknownError": "Unknown error",
+      "failedToEnableSigning": "Failed to enable signing",
+      "failedToSendToFc": "Failed to send to FC"
     },
     "sitl_store": {
       "freshInavInstallWithFactoryDefaults": "Fresh iNav install with factory defaults. Use for general testing.",
       "preConfiguredForFixedWingTesting": "Pre-configured for fixed-wing testing with airplane mixer.",
-      "preConfiguredForQuadTestingWith": "Pre-configured for quad testing with X mixer."
+      "preConfiguredForQuadTestingWith": "Pre-configured for quad testing with X mixer.",
+      "noProfileSelected": "No profile selected",
+      "failedToStartSitl": "Failed to start SITL",
+      "unknownError": "Unknown error",
+      "sitlStopped": "SITL stopped.\n",
+      "errorStopping": "Error stopping: {{message}}\n",
+      "profileNameAlreadyExists": "Profile name already exists",
+      "cannotDeleteStandardProfiles": "Cannot delete standard profiles",
+      "flightgearLaunchedWithAircraftAirport": "FlightGear launched with aircraft: {{aircraft}}, airport: {{airport}}\n",
+      "failedToLaunchFlightgear": "Failed to launch FlightGear",
+      "flightgearError": "FlightGear error: {{error}}\n",
+      "flightgearError2": "FlightGear error: {{message}}\n",
+      "flightgearStopped": "FlightGear stopped.\n",
+      "flightgearStopError": "FlightGear stop error: {{message}}\n",
+      "xPlaneLaunchedConfigureDataOutput": "X-Plane launched. Configure Data Output in X-Plane:\n",
+      "sendTo127001": "  - Send to: 127.0.0.1:49000\n",
+      "failedToLaunchXPlane": "Failed to launch X-Plane",
+      "xPlaneError": "X-Plane error: {{error}}\n",
+      "xPlaneError2": "X-Plane error: {{message}}\n",
+      "xPlaneStopped": "X-Plane stopped.\n",
+      "xPlaneStopError": "X-Plane stop error: {{message}}\n",
+      "startingProtocolBridge": "Starting protocol bridge...\n",
+      "bridgeError": "Bridge error: {{error}}\n",
+      "bridgeError2": "Bridge error: {{message}}\n",
+      "stoppingProtocolBridge": "Stopping protocol bridge...\n",
+      "protocolBridgeStopped": "Protocol bridge stopped.\n",
+      "bridgeStopError": "Bridge stop error: {{message}}\n",
+      "xPlaneIsNotInstalledSet": "X-Plane is not installed. Set a custom path or install X-Plane.",
+      "xPlaneIsNotInstalledPlease": "X-Plane is not installed. Please install it or set a custom path.\n",
+      "waitingForXPlaneToInitialize": "Waiting for X-Plane to initialize (10 seconds)...\n",
+      "startingInavSitl": "Starting iNav SITL...\n",
+      "xPlaneIsNowControlledBy": "X-Plane is now controlled by iNav SITL.\n",
+      "makeSureXPlaneDataOutput": "Make sure X-Plane Data Output is configured to send to 127.0.0.1:49000\n",
+      "connectArdudeckToTcp1270": "Connect ArduDeck to TCP 127.0.0.1:5760 to access telemetry.\n",
+      "flightgearIsNotInstalledSetA": "FlightGear is not installed. Set a custom path or install FlightGear.",
+      "flightgearIsNotInstalledPleaseInstall": "FlightGear is not installed. Please install it or set a custom path.\n",
+      "waitingForFlightgearToInitialize15": "Waiting for FlightGear to initialize (15-30 seconds)...\n",
+      "flightgearIsNowControlledByInav": "FlightGear is now controlled by iNav SITL.\n",
+      "processError": "Process error: {{error}}\n",
+      "sitlExitedWithCode": "\nSITL exited with code {{code}}\n",
+      "sitlKilledBySignal": "\nSITL killed by signal {{signal}}\n"
+    },
+    "survey_area_store": {
+      "couldNotWriteToTheVault": "Could not write to the vault",
+      "couldNotReadThatAreaFrom": "Could not read that area from the vault"
+    },
+    "survey_store": {
+      "recomputingWaypoints": "Recomputing {{v1}} waypoints...",
+      "generatingWaypoints": "Generating waypoints...",
+      "importNotAvailable": "Import not available",
+      "emptyFile": "Empty file",
+      "noPolygonBoundaryOrLineFound": "No polygon boundary or line found in the file",
+      "importingSurveyGeneratingWaypoints": "Importing survey - generating waypoints...",
+      "generatorFailed": "Generator failed: {{message}}",
+      "couldNotGenerateASurveyFrom": "Could not generate a survey from the imported area(s)",
+      "loadingSurvey": "Loading survey...",
+      "reloadingSavedArea": "Reloading saved area..."
+    },
+    "swarm_sitl_store": {
+      "failedToStartSwarm": "Failed to start swarm",
+      "unknownError": "Unknown error"
+    },
+    "weather_store": {
+      "weatherDataUnavailableCheckYourInternet": "Weather data unavailable. Check your internet connection and try again."
+    },
+    "wind_store": {
+      "windDataUnavailable": "Wind data unavailable",
+      "windFetchFailed": "Wind fetch failed"
     }
   }
 }

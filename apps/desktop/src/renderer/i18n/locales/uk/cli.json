@@ -6,7 +6,12 @@
       "tabComplete": "Tab: доповнення",
       "upDownHistory": "Вгору/Вниз: історія",
       "ctrlCCopyAbort": "Ctrl+C: копіювати/перервати",
-      "ctrlVPaste": "Ctrl+V: вставити"
+      "ctrlVPaste": "Ctrl+V: вставити",
+      "ardudeckCliTerminal": "  {{Y}}Термінал CLI ArduDeck{{R}}",
+      "typeHelpForAvailableCommands": "  Введіть {{G}}help{{R}}, щоб побачити доступні команди",
+      "typeDumpForFullConfigAutocomplete": "  Введіть {{G}}dump{{R}} для повної конфігурації (автодоповнення)",
+      "pressTabForCommandCompletion": "  Натисніть {{M}}Tab{{R}} для доповнення команди",
+      "pressUpDownForCommandHistory": "  Натисніть {{M}}Up/Down{{R}} для історії команд"
     },
     "CliView": {
       "cliTerminal": "Термінал CLI",

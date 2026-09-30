@@ -24,7 +24,10 @@
       "savesStayOnThisComputerUntil": "Saves stay on this computer until you set it up.",
       "copyingOnline": "Copying online...",
       "copyOnlineNow": "Copy online now",
-      "openBackupSync": "Open Backup & Sync"
+      "openBackupSync": "Open Backup & Sync",
+      "backupIsOnLastCopiedOnline": "Backup is on. Last copied online {{v1}}.",
+      "backupIsOnButNothingHas": "Backup is on, but nothing has been copied online yet.",
+      "backupIsOffYourSavesStay": "Backup is off: your saves stay on this computer only."
     },
     "VaultView": {
       "couldNotReachGithub": "Could not reach GitHub",
@@ -140,7 +143,8 @@
       "n2LookBackAnytime": "2. Look back anytime",
       "flyingWorseAfterAChangeOpen": "Flying worse after a change? Open an old copy, see exactly which settings are different, and put them back with one click.",
       "n3KeepItSafeOnlineOptional": "3. Keep it safe online (optional)",
-      "connectAFreeGithubAccountAnd": "Connect a free GitHub account and your copies are backed up to the cloud and shared with your other computers."
+      "connectAFreeGithubAccountAnd": "Connect a free GitHub account and your copies are backed up to the cloud and shared with your other computers.",
+      "boundary": " - boundary"
     }
   }
 }

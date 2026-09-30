@@ -7,6 +7,7 @@
 
 import type { TrafficCategory, TrafficContact } from '../../../../shared/traffic-types';
 import type { ProximityTier } from './proximity';
+import { t } from '../../../i18n';
 
 export const SOURCE_COLOR = {
   adsb: '#38bdf8', // sky-400
@@ -61,8 +62,8 @@ export const CATEGORY_LABEL: Record<TrafficCategory, string> = {
   glider: 'Glider',
   balloon: 'Balloon',
   uav: 'UAV',
-  ground: 'Ground vehicle',
-  unknown: 'Unknown type',
+  get ground() { return t('map.contact_style.groundVehicle'); },
+  get unknown() { return t('map.contact_style.unknownType'); },
 };
 
 /** SVG inner markup for a 20x20 viewBox, pointing "up" (north) before rotation. */

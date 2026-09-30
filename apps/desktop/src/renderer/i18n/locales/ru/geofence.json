@@ -17,7 +17,11 @@
       "clickAZoneHereOrOn": "Щёлкните зону (здесь или на карте), чтобы переместить, изменить форму или удалить её.",
       "polygon": "полигон",
       "circle": "круг",
-      "breach": "нарушение"
+      "breach": "нарушение",
+      "belowMinimumAltitude": "Ниже минимальной высоты",
+      "aboveMaximumAltitude": "Выше максимальной высоты",
+      "outsideBoundary": "За границей",
+      "fenceBreached": "Геозона нарушена"
     },
     "FenceMapOverlay": {
       "clickToEditOrDeleteThis": "Щёлкните, чтобы изменить или удалить эту зону",

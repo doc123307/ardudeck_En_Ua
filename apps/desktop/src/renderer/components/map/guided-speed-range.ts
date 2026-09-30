@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * What speed a guided command may actually ask for.
  *
@@ -62,6 +63,6 @@ export function speedRangeHint(range: SpeedRange, unitLabel: string, toDisplay: 
   const lo = toDisplay(range.min);
   const hi = toDisplay(range.max);
   return range.enforced
-    ? `AIRSPEED_MIN..MAX is ${lo}-${hi} ${unitLabel}; outside that the vehicle refuses the command`
-    : `WPNAV_SPEED allows up to ${hi} ${unitLabel}`;
+    ? t('map.guided_speed_range.airspeedMinMaxIsOutsideThat', { lo, hi, unitLabel })
+    : t('map.guided_speed_range.wpnavSpeedAllowsUpTo', { hi, unitLabel });
 }

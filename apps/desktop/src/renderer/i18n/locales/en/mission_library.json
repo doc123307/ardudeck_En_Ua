@@ -55,7 +55,9 @@
       "saveACopyToYourBackup": "Save a copy to your backup so your other computers can open it",
       "duplicate": "Duplicate",
       "clickAgainToConfirm": "Click again to confirm",
-      "delete": "Delete"
+      "delete": "Delete",
+      "inProgress": "In Progress",
+      "justNow": "Just now"
     },
     "MissionDetailPanel": {
       "edit": "Edit",
@@ -76,7 +78,8 @@
       "loadIntoEditor": "Load into Editor",
       "duplicate": "Duplicate",
       "confirmDelete": "Confirm Delete",
-      "delete": "Delete"
+      "delete": "Delete",
+      "inProgress": "In Progress"
     },
     "MissionLibraryView": {
       "lastModified": "Last Modified",
@@ -117,7 +120,11 @@
       "duplicate": "Duplicate",
       "clickAgainToConfirm": "Click again to confirm",
       "delete": "Delete",
-      "saveMissionToBackup": "Save mission to backup"
+      "saveMissionToBackup": "Save mission to backup",
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "aborted": "Aborted",
+      "planned": "Planned"
     },
     "ProjectsBrowser": {
       "noProjectsYet": "No projects yet",
@@ -130,7 +137,9 @@
       "missions2": "Missions",
       "wps": "WPs",
       "anOlderWaypointsOnlySaveIt": "An older waypoints-only save. It can be restored from the Fleet Vault, but it has no groups or surveys to edit.",
-      "waypointsOnly": "waypoints only"
+      "waypointsOnly": "waypoints only",
+      "project": "project",
+      "projects": "projects"
     },
     "SaveMissionModal": {
       "missionNameIsRequired": "Mission name is required",

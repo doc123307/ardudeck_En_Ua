@@ -1318,9 +1318,9 @@ function SplitLayoutPrompt({ onChoose }: { onChoose: (action: 'preset' | 'curren
         <div className="text-sm font-semibold text-content">{tr('panels.MapPanel.splitViewLayout')}</div>
         <div className="mt-0.5 text-xs text-content-secondary">{tr('panels.MapPanel.switchTheInstrumentsToALayout')}</div>
         <div className="mt-3 space-y-2">
-          {opt('Use split preset', 'The split cockpit layout (a saved layout named "split" wins)', 'preset')}
-          {opt('Use my current layout', 'Keep what is on screen as the split layout', 'current')}
-          {opt('Keep current, do not switch', 'Leave the layout as it is', 'keep')}
+          {opt(tr('panels.MapPanel.useSplitPreset'), tr('panels.MapPanel.theSplitCockpitLayoutASaved'), 'preset')}
+          {opt(tr('panels.MapPanel.useMyCurrentLayout'), tr('panels.MapPanel.keepWhatIsOnScreenAs'), 'current')}
+          {opt(tr('panels.MapPanel.keepCurrentDoNotSwitch'), tr('panels.MapPanel.leaveTheLayoutAsItIs'), 'keep')}
         </div>
         <label className="mt-3 flex items-center gap-2 text-xs text-content-secondary cursor-pointer select-none">
           <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="accent-blue-600" />
@@ -1646,8 +1646,8 @@ const TelemetryMap3D = React.memo(function TelemetryMap3D() {
   const toolbarContent = useMemo(() => (
     <>
       <div className="my-0.5 border-t border-subtle" />
-      {toggleBtn(followVehicle ? 'Following' : 'Free', followVehicle, () => setFollowVehicle(f => !f), followVehicle ? 'Following vehicle' : 'Free camera', icons.crosshair)}
-      {toggleBtn(useRealVehicleSize ? 'Real Size' : 'Auto Size', useRealVehicleSize, () => setUseRealVehicleSize(v => !v), useRealVehicleSize ? 'Vehicle at real profile size' : 'Vehicle auto-scaled to stay visible', icons.resize)}
+      {toggleBtn(followVehicle ? tr('panels.MapPanel.following') : tr('panels.MapPanel.free'), followVehicle, () => setFollowVehicle(f => !f), followVehicle ? tr('panels.MapPanel.followingVehicle') : tr('panels.MapPanel.freeCamera'), icons.crosshair)}
+      {toggleBtn(useRealVehicleSize ? tr('panels.MapPanel.realSize') : tr('panels.MapPanel.autoSize'), useRealVehicleSize, () => setUseRealVehicleSize(v => !v), useRealVehicleSize ? tr('panels.MapPanel.vehicleAtRealProfileSize') : tr('panels.MapPanel.vehicleAutoScaledToStayVisible'), icons.resize)}
       {/* Overflow toggle */}
       <button
         onClick={() => setShowMoreTools(v => !v)}
@@ -1661,10 +1661,10 @@ const TelemetryMap3D = React.memo(function TelemetryMap3D() {
       </button>
       {showMoreTools && (
         <>
-          {toggleBtn('Compass', showCompass, () => setShowCompass(v => !v), 'Toggle compass', icons.compass)}
-          {toggleBtn('Attitude', showAttitude, () => toggleInstrument('attitude'), 'Toggle attitude indicator', icons.attitude)}
-          {toggleBtn('Mission', showMission, () => setShowMission(v => !v), 'Toggle mission overlays', icons.mission)}
-          {toggleBtn('Height', showTerrain, () => setShowTerrain(v => !v), 'Toggle terrain elevation', icons.height)}
+          {toggleBtn('Compass', showCompass, () => setShowCompass(v => !v), tr('panels.MapPanel.toggleCompass'), icons.compass)}
+          {toggleBtn('Attitude', showAttitude, () => toggleInstrument('attitude'), tr('panels.MapPanel.toggleAttitudeIndicator'), icons.attitude)}
+          {toggleBtn('Mission', showMission, () => setShowMission(v => !v), tr('panels.MapPanel.toggleMissionOverlays'), icons.mission)}
+          {toggleBtn('Height', showTerrain, () => setShowTerrain(v => !v), tr('panels.MapPanel.toggleTerrainElevation'), icons.height)}
           <div className="my-0.5 border-t border-subtle" />
           <button
             onClick={clearTrail}
@@ -2354,11 +2354,11 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
   // Both refusals say WHY. Silence here reads as "the fleet ignores right-click".
   const handleMapContextMenu = useCallback((lat: number, lon: number) => {
     if (!selectedVehicleId && !fleetActive) {
-      showMapNotice('No vehicle selected: click a vehicle marker before commanding.');
+      showMapNotice(tr('panels.MapPanel.noVehicleSelectedClickAVehicle'));
       return;
     }
     if (!useTelemetryStore.getState().flight.armed) {
-      showMapNotice('Map commands need an armed vehicle.');
+      showMapNotice(tr('panels.MapPanel.mapCommandsNeedAnArmedVehicle'));
       return;
     }
     setCommandPopup({ lat, lon });
@@ -2419,7 +2419,7 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
   const handleCommandConfirm = useCallback(async (command: MapCommand, options?: { preferScript?: boolean }) => {
     // Safety: verify still armed before sending any flight command
     if (!useTelemetryStore.getState().flight.armed) {
-      showMapNotice('Command dropped: vehicle disarmed.');
+      showMapNotice(tr('panels.MapPanel.commandDroppedVehicleDisarmed'));
       setCommandPopup(null);
       return;
     }

@@ -35,7 +35,7 @@ registerSurveyGenerator({
 registerSurveyGenerator({
   id: 'builtin.crosshatch',
   version: '1.0.0',
-  displayName: 'Crosshatch',
+  get displayName() { return t('survey.index.crosshatch'); },
   get description() { return t('survey.index.twoPerpendicularGridPassesHigherPhoto'); },
   capabilities: {
     supportsHoles: true,
@@ -50,7 +50,7 @@ registerSurveyGenerator({
 registerSurveyGenerator({
   id: 'builtin.circular',
   version: '1.0.0',
-  displayName: 'Circular',
+  get displayName() { return t('survey.index.circular'); },
   get description() { return t('survey.index.orbitAPointOfInterestAt'); },
   capabilities: {
     supportsHoles: false,
@@ -65,7 +65,7 @@ registerSurveyGenerator({
 registerSurveyGenerator({
   id: 'builtin.spiral',
   version: '1.0.0',
-  displayName: 'Spiral',
+  get displayName() { return t('survey.index.spiral'); },
   get description() { return t('survey.index.inwardOrOutwardSpiralWithinThe'); },
   capabilities: {
     supportsHoles: false,
@@ -80,7 +80,7 @@ registerSurveyGenerator({
 registerSurveyGenerator({
   id: 'builtin.corridor',
   version: '1.0.0',
-  displayName: 'Corridor',
+  get displayName() { return t('survey.index.corridor'); },
   get description() { return t('survey.index.linearSurveyAlongACenterlineRoads'); },
   capabilities: {
     supportsHoles: false,
@@ -95,7 +95,7 @@ registerSurveyGenerator({
 registerSurveyGenerator({
   id: 'builtin.panorama',
   version: '1.0.0',
-  displayName: 'Panorama',
+  get displayName() { return t('survey.index.panorama'); },
   get description() { return t('survey.index.captureALineShorelineCliffFrontage'); },
   capabilities: {
     supportsHoles: false,
@@ -110,7 +110,7 @@ registerSurveyGenerator({
 registerSurveyGenerator({
   id: 'builtin.perimeter-fill',
   version: '1.0.0',
-  displayName: 'Perimeter Fill',
+  get displayName() { return t('survey.index.perimeterFill'); },
   get description() { return t('survey.index.nPerimeterPassesFollowedByA'); },
   capabilities: {
     supportsHoles: false,

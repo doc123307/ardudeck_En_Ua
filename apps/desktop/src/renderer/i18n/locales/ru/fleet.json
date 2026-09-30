@@ -22,7 +22,9 @@
       "disbandsThisFleetItsWingmenReturn": "Расформировывает этот флот — ведомые возвращаются к ручному управлению",
       "dropFromTheFleetTheRest": "Вывести {{label}} из флота — остальные держат строй",
       "disbandFleet": "Расформировать флот",
-      "leaveFleet": "Выйти из флота"
+      "leaveFleet": "Выйти из флота",
+      "drone": "дрон",
+      "drones": "дронов"
     },
     "FleetCoordination": {
       "everyConnectedVehicleArmsAndClimbs": "Каждый подключённый аппарат армится и вместе набирает {{alt}} м",
@@ -38,7 +40,8 @@
       "takeOff": "Взлёт",
       "reFormSFleet": "Перестроить флот {{label}}: {{label2}}",
       "fliesItsUploadedMissionInAuto": "{{label}} выполняет загруженную миссию в AUTO; ведомые держат строй и следуют за ним",
-      "startMission": "Запустить миссию"
+      "startMission": "Запустить миссию",
+      "engineError": "ошибка движка"
     },
     "FleetDisclosure": {
       "fleets": "Флоты",
@@ -54,7 +57,13 @@
       "cancel": "Отмена",
       "arm": "Армить",
       "disarm": "Дизармить",
-      "start": "Старт"
+      "start": "Старт",
+      "sendHomeRtl": "Отправить домой (RTL) {{length}} {{noun}}?",
+      "startMissionOn": "Начать миссию на {{length}} {{noun}}?",
+      "vehicle": "аппарат",
+      "vehicles": "аппарат(а/ов)",
+      "armVehicles": "Армировать {{length}} {{noun}}?",
+      "disarmVehicles": "Дизармировать {{length}} {{noun}}?"
     },
     "FleetStrip": {
       "clickToDeselect": "{{label}} — щёлкните, чтобы снять выбор",
@@ -79,6 +88,11 @@
       "diamond": "Ромб",
       "boxGrid": "Коробка (сетка)",
       "surveySweepWide": "Прочёсывание (широкое)"
+    },
+    "HeartbeatDot": {
+      "receivingHeartbeat": "Heartbeat поступает",
+      "noHeartbeatYet": "Heartbeat ещё не поступал",
+      "noHeartbeatForS": "Нет heartbeat {{v1}} с"
     },
     "MissionPathsToggle": {
       "missionPaths": "Маршруты миссий",

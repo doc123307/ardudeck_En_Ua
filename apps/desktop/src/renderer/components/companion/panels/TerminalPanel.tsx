@@ -130,8 +130,8 @@ export function TerminalPanel() {
     const C = '\x1b[1;36m';
     const G = '\x1b[1;32m';
     const R = '\x1b[0m';
-    term.writeln(`${C}ArduDeck Companion Terminal${R}`);
-    term.writeln(`${G}Connected to remote PTY on companion computer${R}`);
+    term.writeln(t('companion.TerminalPanel.ardudeckCompanionTerminal', { C, R }));
+    term.writeln(t('companion.TerminalPanel.connectedToRemotePtyOnCompanion', { G, R }));
     term.writeln('');
 
     return () => {

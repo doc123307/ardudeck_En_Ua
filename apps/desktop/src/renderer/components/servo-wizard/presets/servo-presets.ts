@@ -26,12 +26,12 @@ export const INPUT_SOURCE_NAMES: Record<number, string> = {
   1: 'Pitch',
   2: 'Yaw',
   3: 'Throttle',
-  4: 'RC Roll (manual)',
-  5: 'RC Pitch (manual)',
-  6: 'RC Yaw (manual)',
-  7: 'RC Throttle (manual)',
-  12: 'Gimbal Pitch',
-  13: 'Gimbal Roll',
+  get 4() { return t('servo_wizard.servo_presets.rcRollManual'); },
+  get 5() { return t('servo_wizard.servo_presets.rcPitchManual'); },
+  get 6() { return t('servo_wizard.servo_presets.rcYawManual'); },
+  get 7() { return t('servo_wizard.servo_presets.rcThrottleManual'); },
+  get 12() { return t('servo_wizard.servo_presets.gimbalPitch'); },
+  get 13() { return t('servo_wizard.servo_presets.gimbalRoll'); },
 };
 
 // Control surface types
@@ -58,14 +58,14 @@ export const CONTROL_SURFACE_INFO: Record<ControlSurface, {
 }> = {
   aileron_left: {
     name: 'Left Aileron',
-    shortName: 'L Ail',
+    get shortName() { return t('servo_wizard.servo_presets.lAil'); },
     get description() { return t('servo_wizard.servo_presets.rollsThePlaneLeftWhenDown'); },
     inputSource: SERVO_INPUT_SOURCE.STABILIZED_ROLL,
     defaultRate: 100,
   },
   aileron_right: {
     name: 'Right Aileron',
-    shortName: 'R Ail',
+    get shortName() { return t('servo_wizard.servo_presets.rAil'); },
     get description() { return t('servo_wizard.servo_presets.rollsThePlaneRightWhenDown'); },
     inputSource: SERVO_INPUT_SOURCE.STABILIZED_ROLL,
     defaultRate: -100, // Inverted from left
@@ -86,14 +86,14 @@ export const CONTROL_SURFACE_INFO: Record<ControlSurface, {
   },
   elevon_left: {
     name: 'Left Elevon',
-    shortName: 'L Elev',
+    get shortName() { return t('servo_wizard.servo_presets.lElev'); },
     get description() { return t('servo_wizard.servo_presets.flyingWingCombinesRollAndPitch'); },
     inputSource: SERVO_INPUT_SOURCE.STABILIZED_ROLL, // Has both roll + pitch
     defaultRate: 100,
   },
   elevon_right: {
     name: 'Right Elevon',
-    shortName: 'R Elev',
+    get shortName() { return t('servo_wizard.servo_presets.rElev'); },
     get description() { return t('servo_wizard.servo_presets.flyingWingCombinesRollAndPitch'); },
     inputSource: SERVO_INPUT_SOURCE.STABILIZED_ROLL,
     defaultRate: -100,

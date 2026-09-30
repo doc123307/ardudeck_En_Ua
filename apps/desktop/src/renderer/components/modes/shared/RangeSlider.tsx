@@ -170,10 +170,10 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
             const isSelected = isPreset(preset);
             const isAlways = preset === 'always';
             const hints: Record<string, string> = {
-              low: 'Switch DOWN',
-              mid: 'Switch MID',
-              high: 'Switch UP',
-              always: 'Always ON',
+              low: t('modes.RangeSlider.switchDown'),
+              mid: t('modes.RangeSlider.switchMid'),
+              high: t('modes.RangeSlider.switchUp'),
+              always: t('modes.RangeSlider.alwaysOn'),
             };
             return (
               <button

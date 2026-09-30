@@ -16,7 +16,7 @@ import type { SerialPortInfo } from '../../stores/firmware-store';
 import { LinksManager } from './LinksManager';
 import { HeartbeatDot } from '../fleet/HeartbeatDot';
 import { STATE_COLORS, getModeCategoryVar } from '../map/tactical-icon-pool';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 /** Friendly label for a source's bearer, used in the vehicle list and source chips. */
 function bearerLabel(bearer: string): string {
@@ -227,7 +227,7 @@ export function MultiVehiclePanel() {
         </div>
         <div className="min-w-0 flex-1">
           <div className="text-sm font-semibold text-content">{t('connection.MultiVehiclePanel.multiVehicleIsOn')}</div>
-          <div className="text-xs text-content-secondary">{vehicles.length} {t('connection.MultiVehiclePanel.vehicle')}{vehicles.length === 1 ? '' : 's'} {t('connection.MultiVehiclePanel.connected')}</div>
+          <div className="text-xs text-content-secondary">{vehicles.length} {t('connection.MultiVehiclePanel.vehicle')}{vehicles.length === 1 ? '' : enPlural('s')} {t('connection.MultiVehiclePanel.connected')}</div>
         </div>
         <button onClick={stop} disabled={busy} className="rounded-md border border-subtle px-3 py-1.5 text-xs text-content-secondary hover:bg-surface-raised disabled:opacity-50">{t('connection.MultiVehiclePanel.stop')}</button>
       </div>

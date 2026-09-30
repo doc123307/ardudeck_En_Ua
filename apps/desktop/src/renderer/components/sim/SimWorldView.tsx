@@ -863,14 +863,14 @@ export default function SimWorldView() {
   const engineConnected = status === 'connected';
   const live = engineConnected || hud !== null;
   const pillLabel = engineConnected
-    ? 'Sim Connected'
+    ? tr('sim.SimWorldView.simConnected')
     : hud
-      ? 'Vehicle Live'
+      ? tr('sim.SimWorldView.vehicleLive')
       : isConnected
-        ? 'Connected, waiting for GPS'
+        ? tr('sim.SimWorldView.connectedWaitingForGps')
         : status === 'connecting'
-          ? 'Connecting...'
-          : 'Waiting for SITL';
+          ? tr('sim.SimWorldView.connecting')
+          : tr('sim.SimWorldView.waitingForSitl');
   // Amber = connected/handshaking but no vehicle on screen yet.
   const pending = !live && (isConnected || status === 'connecting');
 
@@ -1072,13 +1072,13 @@ export default function SimWorldView() {
       <div className="absolute bottom-3 inset-x-0 z-10 flex flex-col items-center gap-2 px-3 pointer-events-none">
         {hud && (
           <div className="flex items-end gap-2 flex-wrap justify-center pointer-events-auto">
-            <HudTile label="ALT" value={altitude.toFixed(1)} unit="m" tip="Altitude above home (-position.down)" />
-            <HudTile label="SPD" value={speed.toFixed(1)} unit="m/s" tip="Ground speed from horizontal velocity" />
-            <HudTile label="ROLL" value={rad2deg(hud.euler.roll).toFixed(0)} unit="°" tip="Roll attitude" />
-            <HudTile label="PITCH" value={rad2deg(hud.euler.pitch).toFixed(0)} unit="°" tip="Pitch attitude" />
+            <HudTile label="ALT" value={altitude.toFixed(1)} unit="m" tip={tr('sim.SimWorldView.altitudeAboveHomePositionDown')} />
+            <HudTile label="SPD" value={speed.toFixed(1)} unit="m/s" tip={tr('sim.SimWorldView.groundSpeedFromHorizontalVelocity')} />
+            <HudTile label="ROLL" value={rad2deg(hud.euler.roll).toFixed(0)} unit="°" tip={tr('sim.SimWorldView.rollAttitude')} />
+            <HudTile label="PITCH" value={rad2deg(hud.euler.pitch).toFixed(0)} unit="°" tip={tr('sim.SimWorldView.pitchAttitude')} />
             <HudTile label="YAW" value={((rad2deg(hud.euler.yaw) + 360) % 360).toFixed(0)} unit="°" tip="Heading" />
             {typeof hud.batteryVoltage === 'number' && (
-              <HudTile label="BATT" value={hud.batteryVoltage.toFixed(1)} unit="V" tip="Loaded battery voltage" />
+              <HudTile label="BATT" value={hud.batteryVoltage.toFixed(1)} unit="V" tip={tr('sim.SimWorldView.loadedBatteryVoltage')} />
             )}
             {hud.load && (
               <HudTile
@@ -1086,8 +1086,8 @@ export default function SimWorldView() {
                 value={hud.load.attached ? hud.load.tension.toFixed(0) : 'REL'}
                 unit={hud.load.attached ? 'N' : ''}
                 tip={hud.load.attached
-                  ? `Slung-load cable tension (cable ${hud.load.cableLength.toFixed(1)} m)`
-                  : 'Load released'}
+                  ? tr('sim.SimWorldView.slungLoadCableTensionCableM', { v1: hud.load.cableLength.toFixed(1) })
+                  : tr('sim.SimWorldView.loadReleased')}
                 accent={hud.load.attached ? undefined : 'amber'}
               />
             )}
@@ -1097,17 +1097,17 @@ export default function SimWorldView() {
                   label="LOAD"
                   value={hud.diagnostics.loadFactor.toFixed(2)}
                   unit="g"
-                  tip="Airframe load factor (specific force / g). 1.0 in level hover; higher in pull-ups / hard turns"
+                  tip={tr('sim.SimWorldView.airframeLoadFactorSpecificForceG')}
                   accent={hud.diagnostics.loadFactor > 4 ? 'red' : hud.diagnostics.loadFactor > 2 ? 'amber' : undefined}
                 />
-                <HudTile label="ARM MAX" value={hud.diagnostics.maxArmMoment.toFixed(1)} unit="N·m" tip="Worst per-arm bending moment (thrust x arm length)" />
+                <HudTile label="ARM MAX" value={hud.diagnostics.maxArmMoment.toFixed(1)} unit="N·m" tip={tr('sim.SimWorldView.worstPerArmBendingMomentThrust')} />
                 <HudTile
                   label="THRUST"
                   value={Math.hypot(...hud.diagnostics.netThrustBody).toFixed(0)}
                   unit="N"
-                  tip="Total rotor thrust (cyan-to-red per-motor arrows)"
+                  tip={tr('sim.SimWorldView.totalRotorThrustCyanToRed')}
                 />
-                <HudTile label="WEIGHT" value={hud.diagnostics.weight.toFixed(0)} unit="N" tip="Gravity, m·g (grey arrow, straight down)" />
+                <HudTile label="WEIGHT" value={hud.diagnostics.weight.toFixed(0)} unit="N" tip={tr('sim.SimWorldView.gravityMGGreyArrowStraight')} />
                 <HudTile
                   label="DRAG"
                   value={Math.hypot(
@@ -1116,13 +1116,13 @@ export default function SimWorldView() {
                     hud.diagnostics.airframeDragBody[2] + hud.diagnostics.momentumDragBody[2],
                   ).toFixed(0)}
                   unit="N"
-                  tip="Airframe parasitic + rotor momentum drag (orange arrow)"
+                  tip={tr('sim.SimWorldView.airframeParasiticRotorMomentumDragOrange')}
                 />
                 <HudTile
                   label="NET"
                   value={Math.hypot(...hud.diagnostics.netForceWorld).toFixed(0)}
                   unit="N"
-                  tip="Net resultant force accelerating the airframe (white arrow); near zero in a steady hover"
+                  tip={tr('sim.SimWorldView.netResultantForceAcceleratingTheAirframe')}
                   accent={Math.hypot(...hud.diagnostics.netForceWorld) > hud.diagnostics.weight * 0.5 ? 'amber' : undefined}
                 />
                 <MotorBars diag={hud.diagnostics} />

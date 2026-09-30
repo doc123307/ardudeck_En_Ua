@@ -905,7 +905,7 @@ function MemberCell({
     if (el) innerRefs.set(memberId, el);
     else innerRefs.delete(memberId);
   }, [innerRefs, memberId]);
-  const cross = fit?.axis === 'height' ? 'Height' : 'Width';
+  const cross = fit?.axis === 'height' ? t('map.DockedGroup.height') : t('map.DockedGroup.width');
   const body = fit ? (
     // The zoom rides the outer box so the measured inner never carries it.
     <div style={fit.factor < 1 ? ({ zoom: fit.factor, [fit.axis]: '100%' } as CSSProperties) : (fit.axis === 'height' ? { height: '100%' } : undefined)}>

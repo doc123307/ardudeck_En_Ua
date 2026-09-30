@@ -59,7 +59,7 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
         setRun({ kind: 'error', message: result?.error || t('calibration.LargeVehicleMagCalDialog.commandFailed') });
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
+      const message = err instanceof Error ? err.message : t('calibration.LargeVehicleMagCalDialog.unknownError');
       setRun({ kind: 'error', message });
     }
   };

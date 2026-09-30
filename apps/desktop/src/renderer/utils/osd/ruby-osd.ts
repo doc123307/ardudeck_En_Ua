@@ -213,7 +213,7 @@ const OSD_BLOCK_TOKEN_COUNT = 6 + 6 + 7 + MODEL_MAX_OSD_SCREENS * 6 + 1; // 50
 export function parseOsdBlock(text: string): RubyOsdParams {
   const toks = text.split(/\s+/).filter(Boolean);
   const i0 = toks.indexOf('osd:');
-  if (i0 < 0) throw new Error('ruby-osd: no "osd:" block found');
+  if (i0 < 0) throw new Error(t('utils.ruby_osd.rubyOsdNoOsdBlockFound'));
   let k = i0 + 1;
   const num = (): number => Number(toks[k++]);
   const boolean = (): boolean => num() !== 0;
@@ -340,7 +340,7 @@ export function applyPreset(p: RubyOsdParams, screen: number, preset: number): R
 export function spliceOsdBlock(modelText: string, params: RubyOsdParams): string {
   const lines = modelText.split('\n');
   const start = lines.findIndex((l) => l.trim().startsWith('osd:'));
-  if (start < 0) throw new Error('ruby-osd: no "osd:" block to splice');
+  if (start < 0) throw new Error(t('utils.ruby_osd.rubyOsdNoOsdBlockTo'));
   let count = 0;
   let end = start;
   for (let li = start; li < lines.length; li++) {

@@ -328,7 +328,7 @@ function HomeReadout({ treatment }: { treatment: ReadoutTreatment }): JSX.Elemen
   const r: Readout = {
     tag: 'HOME',
     value: distance !== null ? formatDistanceFromMeters(distance, distanceUnit) : '--',
-    detail: active ? 'to launch' : 'no home',
+    detail: active ? t('map.CompactReadout.toLaunch') : t('map.CompactReadout.noHome'),
     fraction: null,
     known: active,
     color: active ? GAUGE_COLORS.green : GAUGE_COLORS.tickMinor,
@@ -352,7 +352,7 @@ function LinkReadout({ treatment }: { treatment: ReadoutTreatment }): JSX.Elemen
   const r: Readout = {
     tag: 'LINK',
     value: known ? `${state.pct}%` : '--',
-    detail: known ? (state.fromModem ? 'TLM RSSI' : 'RSSI') : state.kind === 'unconfigured' ? t('map.CompactReadout.notSetUp') : 'no RSSI',
+    detail: known ? (state.fromModem ? 'TLM RSSI' : 'RSSI') : state.kind === 'unconfigured' ? t('map.CompactReadout.notSetUp') : t('map.CompactReadout.noRssi'),
     fraction: known ? state.pct / 100 : 0,
     known,
     color: known ? bandColor(state.pct) : GAUGE_COLORS.tickMinor,

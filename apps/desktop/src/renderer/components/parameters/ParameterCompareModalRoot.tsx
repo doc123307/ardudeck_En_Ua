@@ -6,7 +6,7 @@ import { useNavigationStore } from '../../stores/navigation-store.js';
 import { useCompareModalHostStore } from './compare-modal-host.js';
 import { classifySitlUnsafeParam } from '../../../shared/sitl-unsafe-params.js';
 import { formatParamValue } from '../../../shared/parameter-types.js';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 /**
  * Global parameter compare/apply modal. Mounted once at App root so it's
@@ -154,7 +154,7 @@ function CompareView({
         <p className="text-sm text-content-secondary mt-1">
           {diffs.length === 0
             ? t('parameters.ParameterCompareModalRoot.noDifferencesFoundAllParametersAlready')
-            : t('parameters.ParameterCompareModalRoot.parameterWillChangePickWhichTo', { length: diffs.length, v2: diffs.length !== 1 ? 's' : '' })}
+            : t('parameters.ParameterCompareModalRoot.parameterWillChangePickWhichTo', { length: diffs.length, v2: diffs.length !== 1 ? enPlural('s') : '' })}
         </p>
         {fileVehicleType && currentVehicleType && fileVehicleType !== currentVehicleType && (
           <div className="mt-2 flex items-center gap-2 px-3 py-2 bg-amber-500/10 border border-amber-500/30 rounded-lg">
@@ -175,8 +175,8 @@ function CompareView({
             <div className="flex-1 text-xs">
               <div className="text-blue-300">
                 {safeMode
-                  ? t('parameters.ParameterCompareModalRoot.sitlSafeModeHidesHardwareIdentity', { size: unsafeMap.size, v2: unsafeMap.size !== 1 ? 's' : '' })
-                  : t('parameters.ParameterCompareModalRoot.paramBelowAreFlaggedAsHardware', { size: unsafeMap.size, v2: unsafeMap.size !== 1 ? 's' : '' })}
+                  ? t('parameters.ParameterCompareModalRoot.sitlSafeModeHidesHardwareIdentity', { size: unsafeMap.size, v2: unsafeMap.size !== 1 ? enPlural('s') : '' })
+                  : t('parameters.ParameterCompareModalRoot.paramBelowAreFlaggedAsHardware', { size: unsafeMap.size, v2: unsafeMap.size !== 1 ? enPlural('s') : '' })}
               </div>
               <button
                 onClick={() => setSafeMode(v => !v)}
@@ -291,7 +291,7 @@ function CompareView({
             disabled={isApplying || selectedCount === 0}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-surface-raised text-white disabled:text-content-tertiary rounded-lg text-sm font-medium transition-colors"
           >
-            {isApplying ? t('parameters.ParameterCompareModalRoot.writing') : t('parameters.ParameterCompareModalRoot.applyParam', { selectedCount, v2: selectedCount !== 1 ? 's' : '' })}
+            {isApplying ? t('parameters.ParameterCompareModalRoot.writing') : t('parameters.ParameterCompareModalRoot.applyParam', { selectedCount, v2: selectedCount !== 1 ? enPlural('s') : '' })}
           </button>
         )}
       </div>
@@ -315,14 +315,14 @@ function SummaryView({ result, onClose, onGoToParameters }: SummaryViewProps) {
         <div className="flex items-center gap-3">
           <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
           <span className="text-sm text-emerald-300">
-            {result.applied} {t('parameters.ParameterCompareModalRoot.parameter2')}{result.applied !== 1 ? 's' : ''} {t('parameters.ParameterCompareModalRoot.applied')}
+            {result.applied} {t('parameters.ParameterCompareModalRoot.parameter2')}{result.applied !== 1 ? enPlural('s') : ''} {t('parameters.ParameterCompareModalRoot.applied')}
           </span>
         </div>
         {result.failed > 0 && (
           <div className="flex items-center gap-3">
             <XCircle className="w-5 h-5 text-red-400 shrink-0" />
             <span className="text-sm text-red-300">
-              {result.failed} {t('parameters.ParameterCompareModalRoot.parameter2')}{result.failed !== 1 ? 's' : ''} {t('parameters.ParameterCompareModalRoot.failed')}
+              {result.failed} {t('parameters.ParameterCompareModalRoot.parameter2')}{result.failed !== 1 ? enPlural('s') : ''} {t('parameters.ParameterCompareModalRoot.failed')}
             </span>
           </div>
         )}
@@ -337,8 +337,8 @@ function SummaryView({ result, onClose, onGoToParameters }: SummaryViewProps) {
                 {t('parameters.ParameterCompareModalRoot.notSavedPermanentlyYet')}
               </span>
               <p className="text-xs text-content-secondary mt-1">
-                {t('parameters.ParameterCompareModalRoot.theVehicleIsUsing')} {result.applied === 1 ? 'this value' : 'these values'} {t('parameters.ParameterCompareModalRoot.nowBut')}
-                {' '}{result.applied === 1 ? 'it' : 'they'} {t('parameters.ParameterCompareModalRoot.willRevertOnTheNextReboot')} <span className="text-content font-medium">{t('parameters.ParameterCompareModalRoot.saveAllChanges')}</span> {t('parameters.ParameterCompareModalRoot.onTheParametersScreen')}
+                {t('parameters.ParameterCompareModalRoot.theVehicleIsUsing')} {result.applied === 1 ? t('parameters.ParameterCompareModalRoot.thisValue') : t('parameters.ParameterCompareModalRoot.theseValues')} {t('parameters.ParameterCompareModalRoot.nowBut')}
+                {' '}{result.applied === 1 ? t('parameters.ParameterCompareModalRoot.it') : t('parameters.ParameterCompareModalRoot.they')} {t('parameters.ParameterCompareModalRoot.willRevertOnTheNextReboot')} <span className="text-content font-medium">{t('parameters.ParameterCompareModalRoot.saveAllChanges')}</span> {t('parameters.ParameterCompareModalRoot.onTheParametersScreen')}
               </p>
               <button
                 onClick={onGoToParameters}

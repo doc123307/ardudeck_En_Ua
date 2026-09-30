@@ -22,18 +22,26 @@
     "InfoCard": {
       "tip": "Совет:"
     },
+    "PresetSelector": {
+      "quickPresets": "Быстрые пресеты",
+      "clickToApplyATuningStyle": "Кликните, чтобы применить стиль настройки"
+    },
     "ProfileManager": {
       "resetToFactoryDefaults": "Сбросить к заводским настройкам",
       "reset": "Сбросить",
       "name": "Название...",
       "saveCurrentSettingsAsAProfile": "Сохранить текущие настройки как профиль",
-      "save": "Сохранить"
+      "save": "Сохранить",
+      "myProfiles": "Мои профили"
     },
     "RateCurve": {
       "responseCurve": "Кривая отклика",
       "max": "Макс:",
       "stick": "Стик",
       "rate": "Rate"
+    },
+    "TagInput": {
+      "addTags": "Добавить теги..."
     }
   }
 }

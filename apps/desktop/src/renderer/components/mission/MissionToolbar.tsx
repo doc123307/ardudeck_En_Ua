@@ -26,7 +26,7 @@ import { useCargoEnabled, MISSION_LIBRARY_CARGO_SLUG } from '../../modules/capab
 import { useFleetVehicles } from '../../hooks/useFleet';
 import { useVehicleAppearanceStore, resolveVehicleColor } from '../../stores/vehicle-appearance-store';
 import { buildArduPilotWireMission } from '../../../shared/mission-wire';
-import { t as tr } from '../../i18n';
+import { t as tr, enPlural } from '../../i18n';
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -232,7 +232,7 @@ function SaveMenu({
                   tint="bg-purple-500/10 text-purple-700 dark:text-purple-300"
                   title={tr('mission.MissionToolbar.saveProject')}
                   titleClass="text-purple-700 dark:text-purple-300"
-                  detail="The whole plan in ArduDeck: waypoint groups, every survey area and its settings, all editable later"
+                  detail={tr('mission.MissionToolbar.theWholePlanInArdudeckWaypoint')}
                   onClick={() => { onLibrary(); setOpen(false); }}
                 />
                 <div className="my-1 h-px bg-subtle" />
@@ -242,7 +242,7 @@ function SaveMenu({
               icon={<ListOrdered className="w-3.5 h-3.5" />}
               tint="bg-sky-500/10 text-sky-700 dark:text-sky-300"
               title={tr('mission.MissionToolbar.waypointsFileWaypoints')}
-              detail={`QGC WPL · ArduPilot / Mission Planner${multipleGroups ? ' · flattens groups' : ''}`}
+              detail={tr('mission.MissionToolbar.qgcWplArdupilotMissionPlanner', { v1: multipleGroups ? ' · flattens groups' : '' })}
               onClick={() => { onExport('waypoints'); setOpen(false); }}
             />
             <ExportMenuItem
@@ -256,7 +256,7 @@ function SaveMenu({
               icon={<Globe className="w-3.5 h-3.5" />}
               tint="bg-amber-500/10 text-amber-700 dark:text-amber-300"
               title={tr('mission.MissionToolbar.djiKmzKmz')}
-              detail="DJI Fly waypoint mission · plain waypoints only"
+              detail={tr('mission.MissionToolbar.djiFlyWaypointMissionPlainWaypoints')}
               onClick={() => { onExport('kmz'); setOpen(false); }}
             />
           </div>
@@ -917,7 +917,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
           <div className="bg-surface-raised rounded-lg shadow-xl border border-default p-6 max-w-md mx-4">
             <h3 className="text-lg font-semibold text-content mb-2">{tr('mission.MissionToolbar.clearMission')}</h3>
             <p className="text-content-secondary text-sm mb-4">
-              {tr('mission.MissionToolbar.thisRemovesAll')} {missionStore.missionItems.length} {tr('mission.MissionToolbar.waypoint')}{missionStore.missionItems.length === 1 ? '' : 's'} {tr('mission.MissionToolbar.andEveryGroupFromTheWorking')}
+              {tr('mission.MissionToolbar.thisRemovesAll')} {missionStore.missionItems.length} {tr('mission.MissionToolbar.waypoint')}{missionStore.missionItems.length === 1 ? '' : enPlural('s')} {tr('mission.MissionToolbar.andEveryGroupFromTheWorking')}
             </p>
             <div className="flex justify-end gap-3">
               <button

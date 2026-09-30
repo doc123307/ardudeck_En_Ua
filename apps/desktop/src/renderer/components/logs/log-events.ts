@@ -31,22 +31,22 @@ export const MODE_COLORS: Record<string, string> = {
 
 /** ArduPilot LogErrorSubsystem ids (AP_Logger). */
 const ERR_SUBSYSTEMS: Record<number, string> = {
-  1: 'Main', 2: 'Radio', 3: 'Compass', 4: 'Optical flow',
-  5: 'Radio failsafe', 6: 'Battery failsafe', 8: 'GCS failsafe',
-  9: 'Fence failsafe', 10: 'Flight mode', 11: 'GPS', 12: 'Crash check',
-  13: 'Flip', 15: 'Parachute', 16: 'EKF check', 17: 'EKF failsafe',
-  18: 'Baro', 19: 'CPU load', 20: 'ADSB failsafe', 21: 'Terrain',
-  22: 'Navigation', 23: 'Terrain failsafe', 24: 'EKF primary',
-  25: 'Thrust loss check', 26: 'Sensor failsafe', 27: 'Leak failsafe',
-  28: 'Pilot input', 29: 'Vibration failsafe', 30: 'Internal error',
-  31: 'Dead-reckoning failsafe',
+  1: 'Main', 2: 'Radio', 3: 'Compass', get 4() { return t('logs.log_events.opticalFlow'); },
+  get 5() { return t('logs.log_events.radioFailsafe'); }, get 6() { return t('logs.log_events.batteryFailsafe'); }, get 8() { return t('logs.log_events.gcsFailsafe'); },
+  get 9() { return t('logs.log_events.fenceFailsafe'); }, get 10() { return t('logs.log_events.flightMode'); }, 11: 'GPS', get 12() { return t('logs.log_events.crashCheck'); },
+  13: 'Flip', 15: 'Parachute', get 16() { return t('logs.log_events.ekfCheck'); }, get 17() { return t('logs.log_events.ekfFailsafe'); },
+  18: 'Baro', get 19() { return t('logs.log_events.cpuLoad'); }, get 20() { return t('logs.log_events.adsbFailsafe'); }, 21: 'Terrain',
+  22: 'Navigation', get 23() { return t('logs.log_events.terrainFailsafe'); }, get 24() { return t('logs.log_events.ekfPrimary'); },
+  get 25() { return t('logs.log_events.thrustLossCheck'); }, get 26() { return t('logs.log_events.sensorFailsafe'); }, get 27() { return t('logs.log_events.leakFailsafe'); },
+  get 28() { return t('logs.log_events.pilotInput'); }, get 29() { return t('logs.log_events.vibrationFailsafe'); }, get 30() { return t('logs.log_events.internalError'); },
+  get 31() { return t('logs.log_events.deadReckoningFailsafe'); },
 };
 
 /** Per-subsystem error-code meanings; generic fallbacks below. */
 const ERR_CODES_BY_SUBSYS: Record<number, Record<number, string>> = {
   2: { 2: 'late frame' },
-  11: { 2: 'GPS glitch', 0: 'glitch cleared' },
-  12: { 1: 'CRASH DETECTED', 2: 'loss of control' },
+  11: { get 2() { return t('logs.log_events.gpsGlitch'); }, 0: 'glitch cleared' },
+  12: { 1: 'CRASH DETECTED', get 2() { return t('logs.log_events.lossOfControl'); } },
   16: { 2: 'bad variance', 0: 'variance cleared' },
   18: { 2: 'baro glitch', 0: 'glitch cleared' },
   25: { 1: 'THRUST LOSS' },
@@ -60,51 +60,35 @@ const ERR_CODES_GENERIC: Record<number, string> = {
 
 /** ArduPilot LogEvent ids (AP_Logger LogEvent enum). */
 const EV_NAMES: Record<number, string> = {
-  10: 'Armed', 11: 'Disarmed', 15: 'Auto armed',
-  17: 'Land complete (maybe)', 18: 'Land complete', 19: 'Lost GPS',
-  21: 'Flip start', 22: 'Flip end', 25: 'Home set',
-  26: 'Simple mode on', 27: 'Simple mode off', 28: 'Not landed',
-  29: 'Super simple mode on',
-  30: 'AutoTune initialised', 31: 'AutoTune off', 32: 'AutoTune restart',
-  33: 'AutoTune success', 34: 'AutoTune failed', 35: 'AutoTune reached limit',
-  36: 'AutoTune pilot testing', 37: 'AutoTune gains saved',
-  38: 'Trim saved', 39: 'Waypoint saved',
-  41: 'Fence enabled', 42: 'Fence disabled',
-  43: 'Acro trainer off', 44: 'Acro trainer leveling', 45: 'Acro trainer limited',
-  46: 'Gripper grab', 47: 'Gripper release',
-  49: 'Parachute disabled', 50: 'Parachute enabled', 51: 'PARACHUTE RELEASED',
-  52: 'Landing gear deployed', 53: 'Landing gear retracted',
-  54: 'MOTORS EMERGENCY STOPPED', 55: 'Motors emergency stop cleared',
-  56: 'Motors interlock disabled', 57: 'Motors interlock enabled',
-  58: 'Rotor runup complete', 59: 'ROTOR SPEED BELOW CRITICAL',
-  60: 'EKF altitude reset', 61: 'Land cancelled by pilot', 62: 'EKF yaw reset',
-  63: 'ADSB avoidance enabled', 64: 'ADSB avoidance disabled',
-  65: 'Proximity avoidance enabled', 66: 'Proximity avoidance disabled',
-  67: 'GPS primary changed',
-  71: 'ZigZag point A stored', 72: 'ZigZag point B stored',
-  73: 'Land repositioning active', 74: 'Standby enabled', 75: 'Standby disabled',
+  10: 'Armed', 11: 'Disarmed', get 15() { return t('logs.log_events.autoArmed'); },
+  get 17() { return t('logs.log_events.landCompleteMaybe'); }, get 18() { return t('logs.log_events.landComplete'); }, get 19() { return t('logs.log_events.lostGps'); },
+  get 21() { return t('logs.log_events.flipStart'); }, get 22() { return t('logs.log_events.flipEnd'); }, get 25() { return t('logs.log_events.homeSet'); },
+  get 26() { return t('logs.log_events.simpleModeOn'); }, get 27() { return t('logs.log_events.simpleModeOff'); }, get 28() { return t('logs.log_events.notLanded'); },
+  get 29() { return t('logs.log_events.superSimpleModeOn'); },
+  get 30() { return t('logs.log_events.autotuneInitialised'); }, get 31() { return t('logs.log_events.autotuneOff'); }, get 32() { return t('logs.log_events.autotuneRestart'); },
+  get 33() { return t('logs.log_events.autotuneSuccess'); }, get 34() { return t('logs.log_events.autotuneFailed'); }, get 35() { return t('logs.log_events.autotuneReachedLimit'); },
+  get 36() { return t('logs.log_events.autotunePilotTesting'); }, get 37() { return t('logs.log_events.autotuneGainsSaved'); },
+  get 38() { return t('logs.log_events.trimSaved'); }, get 39() { return t('logs.log_events.waypointSaved'); },
+  get 41() { return t('logs.log_events.fenceEnabled'); }, get 42() { return t('logs.log_events.fenceDisabled'); },
+  get 43() { return t('logs.log_events.acroTrainerOff'); }, get 44() { return t('logs.log_events.acroTrainerLeveling'); }, get 45() { return t('logs.log_events.acroTrainerLimited'); },
+  get 46() { return t('logs.log_events.gripperGrab'); }, get 47() { return t('logs.log_events.gripperRelease'); },
+  get 49() { return t('logs.log_events.parachuteDisabled'); }, get 50() { return t('logs.log_events.parachuteEnabled'); }, 51: 'PARACHUTE RELEASED',
+  get 52() { return t('logs.log_events.landingGearDeployed'); }, get 53() { return t('logs.log_events.landingGearRetracted'); },
+  54: 'MOTORS EMERGENCY STOPPED', get 55() { return t('logs.log_events.motorsEmergencyStopCleared'); },
+  get 56() { return t('logs.log_events.motorsInterlockDisabled'); }, get 57() { return t('logs.log_events.motorsInterlockEnabled'); },
+  get 58() { return t('logs.log_events.rotorRunupComplete'); }, 59: 'ROTOR SPEED BELOW CRITICAL',
+  get 60() { return t('logs.log_events.ekfAltitudeReset'); }, get 61() { return t('logs.log_events.landCancelledByPilot'); }, get 62() { return t('logs.log_events.ekfYawReset'); },
+  get 63() { return t('logs.log_events.adsbAvoidanceEnabled'); }, get 64() { return t('logs.log_events.adsbAvoidanceDisabled'); },
+  get 65() { return t('logs.log_events.proximityAvoidanceEnabled'); }, get 66() { return t('logs.log_events.proximityAvoidanceDisabled'); },
+  get 67() { return t('logs.log_events.gpsPrimaryChanged'); },
+  get 71() { return t('logs.log_events.zigzagPointAStored'); }, get 72() { return t('logs.log_events.zigzagPointBStored'); },
+  get 73() { return t('logs.log_events.landRepositioningActive'); }, get 74() { return t('logs.log_events.standbyEnabled'); }, get 75() { return t('logs.log_events.standbyDisabled'); },
 };
 
 /** ArduPilot ModeReason enum: why the vehicle changed flight mode. */
-const MODE_REASONS: Record<number, string> = {
-  0: 'unknown', 1: 'RC command', 2: 'GCS command', 3: 'radio failsafe',
-  4: 'battery failsafe', 5: 'GCS failsafe', 6: 'EKF failsafe', 7: 'GPS glitch',
-  8: 'mission end', 9: 'throttle land escape', 10: 'fence breach',
-  11: 'terrain failsafe', 12: 'brake timeout', 13: 'flip complete',
-  14: 'avoidance', 15: 'avoidance recovery', 16: 'throw complete',
-  17: 'terminate', 18: 'toy mode', 19: 'crash failsafe', 20: 'soaring FBW-B',
-  21: 'soaring thermal detected', 22: 'soaring in thermal', 23: 'unavailable',
-  24: 'autorotation start', 25: 'autorotation bailout',
-  26: 'soaring drift exceeded', 27: 'rtl complete switching to vtol land',
-  28: 'rtl complete switching to fixed wing autoland', 29: 'mission cmd',
-  30: 'frsky command', 31: 'fence return previous mode',
-  32: 'QRTL instead of RTL', 33: 'auto rtl exit', 34: 'loiter alt reached QLand',
-  35: 'loiter alt in vtol land', 36: 'radio failsafe recovery',
-  37: 'QLand instead of RTL', 38: 'deadreckon failsafe',
-  39: 'mode takeoff failsafe', 40: 'DDS command', 41: 'aux function',
-  42: 'lua command', 43: 'auto landing pattern', 44: 'rc emergency stop',
-  45: 'crow mode switch',
-};
+/** ArduPilot ModeReason enum: why the vehicle changed flight mode (labels in locales, logs.log_events.modeReasonN). */
+const MODE_REASON_MAX = 45;
+const modeReason = (n: number): string => (n >= 0 && n <= MODE_REASON_MAX ? t(`logs.log_events.modeReason${n}`) : String(n));
 
 /** Event ids that deserve attention even though they are "events" not errors. */
 const EV_WARN_IDS = new Set([19, 51, 54, 59, 60, 62]);
@@ -183,7 +167,7 @@ export function extractLogEvents(log: { messages: LogMessages; metadata?: { vehi
       kind: 'MODE',
       severity: 'info',
       label: t('logs.log_events.mode', { name }),
-      detail: typeof rsn === 'number' ? `reason: ${MODE_REASONS[rsn] ?? rsn}` : undefined,
+      detail: typeof rsn === 'number' ? t('logs.log_events.reasonDetail', { reason: modeReason(rsn) }) : undefined,
     });
   }
 

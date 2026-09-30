@@ -12,7 +12,7 @@ import { useConnectionStore } from '../../stores/connection-store';
 import { FENCE_BREACH } from '../../../shared/fence-types';
 import { useSettingsStore } from '../../stores/settings-store';
 import { formatAltitudeFromMeters } from '../../../shared/user-units.js';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 interface FenceListPanelProps {
   readOnly?: boolean;
@@ -53,12 +53,12 @@ export function FenceListPanel({ readOnly = false }: FenceListPanelProps) {
     if (fenceStatus.breachStatus === 0) return null;
 
     const breachTypes: Record<number, string> = {
-      [FENCE_BREACH.MINALT]: 'Below minimum altitude',
-      [FENCE_BREACH.MAXALT]: 'Above maximum altitude',
-      [FENCE_BREACH.BOUNDARY]: 'Outside boundary',
+      [FENCE_BREACH.MINALT]: t('geofence.FenceListPanel.belowMinimumAltitude'),
+      [FENCE_BREACH.MAXALT]: t('geofence.FenceListPanel.aboveMaximumAltitude'),
+      [FENCE_BREACH.BOUNDARY]: t('geofence.FenceListPanel.outsideBoundary'),
     };
 
-    return breachTypes[fenceStatus.breachType] || 'Fence breached';
+    return breachTypes[fenceStatus.breachType] || t('geofence.FenceListPanel.fenceBreached');
   };
 
   const breachText = getBreachStatusText();
@@ -220,11 +220,11 @@ export function FenceListPanel({ readOnly = false }: FenceListPanelProps) {
       {/* Status Bar */}
       <div className="p-2 border-t border-subtle text-xs text-content-secondary flex items-center justify-between">
         <span>
-          {polygons.length} {t('geofence.FenceListPanel.polygon')}{polygons.length !== 1 ? 's' : ''}, {circles.length} {t('geofence.FenceListPanel.circle')}{circles.length !== 1 ? 's' : ''}
+          {polygons.length} {t('geofence.FenceListPanel.polygon')}{polygons.length !== 1 ? enPlural('s') : ''}, {circles.length} {t('geofence.FenceListPanel.circle')}{circles.length !== 1 ? enPlural('s') : ''}
         </span>
         {fenceStatus && fenceStatus.breachCount > 0 && (
           <span className="text-red-400">
-            {fenceStatus.breachCount} {t('geofence.FenceListPanel.breach')}{fenceStatus.breachCount !== 1 ? 'es' : ''}
+            {fenceStatus.breachCount} {t('geofence.FenceListPanel.breach')}{fenceStatus.breachCount !== 1 ? enPlural('es') : ''}
           </span>
         )}
       </div>

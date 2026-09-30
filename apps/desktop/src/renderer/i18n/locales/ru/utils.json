@@ -62,6 +62,10 @@
       "horizontalWindSpeedAndDirection": "Скорость и направление горизонтального ветра",
       "verticalWindComponent": "Вертикальная составляющая ветра"
     },
+    "fence_check": {
+      "outsideFenceNotInsideAnyInclusion": "вне геозоны: не внутри ни одного разрешённого полигона",
+      "outsideFenceNotInsideAnyInclusion2": "вне геозоны: не внутри ни одного разрешённого круга"
+    },
     "flight_briefing": {
       "flightTime": "Время полёта",
       "estimatedAtCruiseSpeed": "оценка на крейсерской скорости",
@@ -74,6 +78,35 @@
       "onTheFinalBattery": "на последней батарее",
       "maxFromHome": "Макс. от дома",
       "wind": "Ветер"
+    },
+    "font_renderer": {
+      "analogPal3016": "Аналог PAL (30×16)",
+      "analogNtsc3013": "Аналог NTSC (30×13)",
+      "hdzero5018": "HDZero (50×18)",
+      "walksnail5320": "Walksnail (53×20)",
+      "betaflightHdO35320": "Betaflight HD / O3 (53×20)"
+    },
+    "geomag_activity_api": {
+      "quiet": "Спокойно",
+      "unsettled": "Неустойчиво",
+      "active": "Активно",
+      "minor": "Слабая",
+      "moderate": "Умеренная",
+      "strong": "Сильная",
+      "severe": "Очень сильная",
+      "extreme": "Экстремальная"
+    },
+    "geomag_thresholds": {
+      "stormCompassAndGpsAccuracyReduced": "{{lead}} (буря {{v2}}): точность компаса и GPS снижена, не калибруйте.",
+      "unsettledFieldHoldOffOnCompass": "{{lead}}: неустойчивое поле, отложите калибровку компаса."
+    },
+    "ip_geolocation": {
+      "geolocationNotSupported": "Геолокация не поддерживается"
+    },
+    "joystick_safety": {
+      "assignRollPitchThrottleAndYaw": "Сначала назначьте крен, тангаж, газ и рыскание",
+      "centreTheStick": "Отцентрируйте стик: {{v1}}",
+      "closeTheThrottle": "Уберите газ"
     },
     "radio_preflight": {
       "stickControlOverTheRadioLink": "Управление стиками через радиоканал",
@@ -90,13 +123,29 @@
     },
     "rc_source_arbiter": {
       "joystickControlOwnsTheRcLink": "RC-каналом управляет джойстик",
-      "virtualRcSlidersOwnTheRc": "RC-каналом управляют виртуальные RC-ползунки"
+      "virtualRcSlidersOwnTheRc": "RC-каналом управляют виртуальные RC-ползунки",
+      "trainerSessionActiveTheTrainerOwns": "Активен сеанс Тренажёра — стиками управляет Тренажёр"
     },
     "receiver_constants": {
       "none": "Нет",
       "serial": "Serial",
       "spektrum": "Spektrum",
-      "fport": "FPort"
+      "fport": "FPort",
+      "lowLatencyDigitalLinkUsedBy": "Цифровой канал с низкой задержкой. Используется приёмниками TBS Crossfire и ExpressLRS.",
+      "invertedSerialProtocolCommonWithFrsky": "Инвертированный последовательный протокол. Распространён в приёмниках FrSky и RadioLink. Некоторым платам нужен аппаратный инвертор.",
+      "flyskyDigitalProtocolConnectToA": "Цифровой протокол FlySky. Подключите к свободному пину UART RX.",
+      "spektrumSatelliteReceiverBindToTransmitter": "Спутниковый приёмник Spektrum. Сначала привяжите к пульту, затем подключите к UART.",
+      "frskyFPortCombinesSbusTelemetry": "FrSky F.Port объединяет SBUS и телеметрию в одном проводе.",
+      "immersionrcGhostUltraLowLatencyProtocol": "Протокол ImmersionRC Ghost со сверхнизкой задержкой.",
+      "spektrumSrxl2BidirectionalSerialProtocol": "Двунаправленный последовательный протокол Spektrum SRXL2.",
+      "forGcsSitlControlOnlyDo": "Только для управления с НСУ/SITL. Не используйте с физическим приёмником.",
+      "invertedSerialProtocolCommonWithFrsky2": "Инвертированный последовательный протокол. Распространён в приёмниках FrSky и RadioLink.",
+      "spektrumSatelliteReceiverBindToTransmitter2": "Спутниковый приёмник Spektrum. Сначала привяжите к пульту."
+    },
+    "rssi_state": {
+      "noTelemetryLink": "Нет канала телеметрии",
+      "rssiReportingIsOffOnThe": "Передача RSSI на аппарате выключена (RSSI_TYPE = 0)",
+      "theReceiverIsConnectedButReports": "Приёмник подключён, но не сообщает уровень сигнала. RSSI_TYPE должен соответствовать приёмнику (3 для CRSF/ELRS)."
     },
     "ruby_osd": {
       "videoMbps": "Видео Мбит/с",
@@ -140,7 +189,13 @@
       "speedAltitude": "Скорость и высота",
       "heading": "Курс",
       "altitudeGraph": "График высоты",
-      "instruments": "Приборы"
+      "instruments": "Приборы",
+      "rubyOsdNoOsdBlockFound": "ruby-osd: блок \"osd:\" не найден",
+      "rubyOsdNoOsdBlockTo": "ruby-osd: нет блока \"osd:\" для вставки"
+    },
+    "stick_assign": {
+      "pitchUnused": "Тангаж (не используется)",
+      "yawUnused": "Рыскание (не используется)"
     }
   }
 }

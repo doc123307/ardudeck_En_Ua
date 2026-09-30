@@ -33,7 +33,7 @@ const MODES: Record<number, { label: string; detail: string }> = {
 const INSTANCES = [0, 1, 2] as const;
 
 function modeLabel(value: number | undefined): string {
-  if (value === undefined) return 'not set';
+  if (value === undefined) return t('mavlink_config.Px4TelemetryRates.notSet');
   return MODES[value]?.label ?? `Mode ${value}`;
 }
 
@@ -126,7 +126,7 @@ export default function Px4TelemetryRates(): JSX.Element {
                 )}
 
                 <label className="mt-3 mb-1 block text-[11px] text-content-secondary">
-                  {t('mavlink_config.Px4TelemetryRates.budget')} {rate === undefined ? 'not set' : rate === 0 ? 'unlimited' : `${rate} B/s`}
+                  {t('mavlink_config.Px4TelemetryRates.budget')} {rate === undefined ? t('mavlink_config.Px4TelemetryRates.notSet') : rate === 0 ? 'unlimited' : `${rate} B/s`}
                 </label>
                 <input
                   type="range"

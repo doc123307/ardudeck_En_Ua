@@ -90,7 +90,8 @@
       "driftedFromAppliedState": "drifted from applied state",
       "lastAppliedTo": "Last applied to",
       "reconnectToVerifyLiveState": "· reconnect to verify live state",
-      "allLiveValuesMatch": "· all live values match"
+      "allLiveValuesMatch": "· all live values match",
+      "notAppliedYet": "not applied yet"
     },
     "PhysicsAdvanced": {
       "physicsSitlFidelity": "Physics (SITL fidelity)",
@@ -151,7 +152,15 @@
       "view": "View",
       "auditLog": "audit log (",
       "noSigningEventsRecordedYet": "No signing events recorded yet.",
-      "attestsTheMavlinkLinkAndGround": "Attests the MAVLink link and ground station only, not the airframe. Signing is authentication, not encryption, and a USB connection bypasses it."
+      "attestsTheMavlinkLinkAndGround": "Attests the MAVLink link and ground station only, not the airframe. Signing is authentication, not encryption, and a USB connection bypasses it.",
+      "keySet": "Key set",
+      "keySentToFc": "Key sent to FC",
+      "signingEnabled": "Signing enabled",
+      "signingDisabled": "Signing disabled",
+      "autoMatchedOnConnect": "Auto-matched on connect",
+      "keyMismatch": "Key mismatch",
+      "keyRemoved": "Key removed",
+      "autoEnabledAtStartup": "Auto-enabled at startup"
     },
     "SettingsView": {
       "yourProfileIsNotCompatibleWith": "Your {{v1}} profile is not compatible with {{v2}}",
@@ -424,7 +433,23 @@
       "exportParmFile": "Export .parm file",
       "clickAgainToDelete": "Click again to delete",
       "delete": "Delete",
-      "delete2": "Delete?"
+      "delete2": "Delete?",
+      "required": "Required",
+      "invalidNumber": "Invalid number",
+      "fixedWing": "Fixed Wing",
+      "maritime": "Maritime",
+      "dive": "Dive",
+      "operation": "Operation",
+      "hex": "Hex",
+      "octo": "Octo",
+      "quad": "Quad",
+      "mustBeWholeNumber": "Must be whole number",
+      "useDxpFormatEG10x5": "Use DxP format (e.g. 10x5)",
+      "diameter140": "Diameter: 1-40\"",
+      "pitch120": "Pitch: 1-20\"",
+      "mustBeAValidNumber": "Must be a valid number",
+      "mustBeAWholeNumber": "Must be a whole number",
+      "vtolMotors2": "{{vtolMotorCount}} VTOL motors"
     },
     "SigningSection": {
       "enterAPassphrase": "Enter a passphrase",
@@ -624,7 +649,11 @@
       "applyCancelledNoParametersWereChanged": "Apply cancelled, no parameters were changed",
       "appliedParamTo": "Applied {{appliedCount}} param{{v2}} to {{v3}}{{flashNote}}{{failMsg}}",
       "backupFailedApplyAborted": "Backup failed, apply aborted",
-      "applyCancelled": "Apply cancelled"
+      "applyCancelled": "Apply cancelled",
+      "vehicle": "Vehicle",
+      "andSavedToFlash": " and saved to flash",
+      "sitlFlashNotRequired": " (SITL, flash not required)",
+      "notSavedToFlashWillReset": " (not saved to flash, will reset on reboot)"
     }
   }
 }

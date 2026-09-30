@@ -36,8 +36,8 @@ export function OsdSyncBar() {
     target === 'ardupilot'
       ? `ArduPilot${connectionState.vehicleType ? ` ${connectionState.vehicleType}` : ''}`
       : target === 'msp'
-        ? connectionState.fcVariant || 'Betaflight / iNAV'
-        : 'Simulator (not connected)';
+        ? connectionState.fcVariant || t('osd.OsdSyncBar.betaflightInav')
+        : t('osd.OsdSyncBar.simulatorNotConnected');
 
   const screens = availableScreens.length > 0 ? availableScreens : [...AP_OSD_SCREENS];
 
@@ -82,9 +82,9 @@ export function OsdSyncBar() {
         >
           <DownloadIcon /> {t('osd.OsdSyncBar.loadFromFc')}
         </button>
-        <UploadButton offline={offline} busy={fc.busy} onUpload={uploadToFc} label={t('osd.OsdSyncBar.uploadLayout')} confirmLabel={t('osd.OsdSyncBar.confirmLayout')} tip={offline ? 'Connect a flight controller first' : 'Write the element layout to the FC and save'} />
+        <UploadButton offline={offline} busy={fc.busy} onUpload={uploadToFc} label={t('osd.OsdSyncBar.uploadLayout')} confirmLabel={t('osd.OsdSyncBar.confirmLayout')} tip={offline ? t('osd.OsdSyncBar.connectAFlightControllerFirst') : t('osd.OsdSyncBar.writeTheElementLayoutToThe')} />
         {target === 'msp' && (
-          <UploadButton offline={offline} busy={fc.busy} onUpload={uploadFontToFc} label={t('osd.OsdSyncBar.uploadFont')} confirmLabel={t('osd.OsdSyncBar.confirmFont')} tip="Write the current font to the FC's character NVM (analog/MAX7456), reboot to apply" />
+          <UploadButton offline={offline} busy={fc.busy} onUpload={uploadFontToFc} label={t('osd.OsdSyncBar.uploadFont')} confirmLabel={t('osd.OsdSyncBar.confirmFont')} tip={t('osd.OsdSyncBar.writeTheCurrentFontToThe')} />
         )}
       </div>
 

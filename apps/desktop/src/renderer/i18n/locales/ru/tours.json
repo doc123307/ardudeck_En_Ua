@@ -20,7 +20,11 @@
       "connecting": "Подключение...",
       "launch": "Запустить {{sitlLabel}}",
       "iLlConnectMyOwnFc": "Подключу собственный FC",
-      "notNow": "Не сейчас"
+      "notNow": "Не сейчас",
+      "ardupilotSitl": "ArduPilot SITL",
+      "failedToStartSitl": "Не удалось запустить SITL",
+      "sitlStartedButTcpConnectionFailed": "SITL запущен, но TCP-соединение не удалось",
+      "unknownError": "Неизвестная ошибка"
     },
     "TourPanelsGate": {
       "layoutAdjustment": "Изменение раскладки",

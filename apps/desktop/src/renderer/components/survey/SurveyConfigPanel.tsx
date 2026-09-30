@@ -70,7 +70,7 @@ import {
 } from '../../../shared/user-units.js';
 import { useVehicleProfileStore } from '../../stores/vehicle-profile-store';
 import { AD_FEAT, supports } from '../../../shared/vehicle-profile';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 // Pattern catalog. Each entry advertises which modes it applies to so the UI
 // can filter without scattering conditional logic across the component.
@@ -600,7 +600,7 @@ export function SurveyConfigPanel() {
       // Each sortie is its own complete flight: takeoff -> slice -> RTL.
       const items = surveyToMissionItems({ ...result, waypoints: slice }, fullConfig, firmware);
       const group = createManualGroup({
-        name: `${baseName} · ${isCorridor && mode === 'sections' ? 'Section' : 'Flight'} ${i + 1}/${sorties.length}`,
+        name: `${baseName} · ${isCorridor && mode === 'sections' ? t('survey.SurveyConfigPanel.section') : t('survey.SurveyConfigPanel.flight')} ${i + 1}/${sorties.length}`,
         color: GROUP_COLOR_PALETTE[i % GROUP_COLOR_PALETTE.length]!,
       });
       return { group: { ...group, separateFlight: true }, items };
@@ -900,7 +900,7 @@ export function SurveyConfigPanel() {
                       }`}
                       title={dir === 'inward' ? t('survey.SurveyConfigPanel.startAtPerimeterEndAtCenter') : t('survey.SurveyConfigPanel.startAtCenterEndAtPerimeter')}
                     >
-                      {dir === 'inward' ? 'In' : t('survey.SurveyConfigPanel.out')}
+                      {dir === 'inward' ? t('survey.SurveyConfigPanel.in') : t('survey.SurveyConfigPanel.out')}
                     </button>
                   );
                 })}
@@ -1313,7 +1313,7 @@ export function SurveyConfigPanel() {
                     {t('survey.SurveyConfigPanel.bendsSharperThanThisGetRacetrack')}
                     {' '}{hairpinCount === 0
                       ? t('survey.SurveyConfigPanel.noBendOnThisCentrelineIs')
-                      : `${hairpinCount} bend${hairpinCount === 1 ? '' : 's'} qualify.`}
+                      : `${hairpinCount} bend${hairpinCount === 1 ? '' : enPlural('s')} qualify.`}
                   </p>
                   {(config.maxTurnAngle ?? 15) < TURN_LOOP_MIN_DEG && hairpinCount > 0 && (
                     <p className="text-[10px] text-amber-400/90 leading-snug -mt-1">
@@ -1714,7 +1714,7 @@ export function SurveyConfigPanel() {
                       className="w-full py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-content hover:text-purple-300 transition-colors"
                       title={t('survey.SurveyConfigPanel.oneAircraftEachFlightIsA')}
                     >
-                      {t('survey.SurveyConfigPanel.splitAlongTheRoute')}{corridorSectionCount} {corridorSectionCount === 1 ? 'section' : 'sections'})
+                      {t('survey.SurveyConfigPanel.splitAlongTheRoute')}{corridorSectionCount} {corridorSectionCount === 1 ? t('survey.SurveyConfigPanel.section2') : t('survey.SurveyConfigPanel.sections')})
                     </button>
                     <div className="flex items-center gap-2 px-0.5">
                       <label className="text-[10px] text-content-tertiary whitespace-nowrap">{t('survey.SurveyConfigPanel.sectionLength')}</label>

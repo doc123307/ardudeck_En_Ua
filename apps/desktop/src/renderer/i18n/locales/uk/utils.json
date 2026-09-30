@@ -62,6 +62,10 @@
       "horizontalWindSpeedAndDirection": "Швидкість і напрямок горизонтального вітру",
       "verticalWindComponent": "Вертикальна складова вітру"
     },
+    "fence_check": {
+      "outsideFenceNotInsideAnyInclusion": "поза огорожею: не всередині жодного дозволеного полігона",
+      "outsideFenceNotInsideAnyInclusion2": "поза огорожею: не всередині жодного дозволеного кола"
+    },
     "flight_briefing": {
       "flightTime": "Час польоту",
       "estimatedAtCruiseSpeed": "оцінка на крейсерській швидкості",
@@ -74,6 +78,35 @@
       "onTheFinalBattery": "на останній батареї",
       "maxFromHome": "Макс. від дому",
       "wind": "Вітер"
+    },
+    "font_renderer": {
+      "analogPal3016": "Аналог PAL (30×16)",
+      "analogNtsc3013": "Аналог NTSC (30×13)",
+      "hdzero5018": "HDZero (50×18)",
+      "walksnail5320": "Walksnail (53×20)",
+      "betaflightHdO35320": "Betaflight HD / O3 (53×20)"
+    },
+    "geomag_activity_api": {
+      "quiet": "Спокійно",
+      "unsettled": "Нестійко",
+      "active": "Активно",
+      "minor": "Слабка",
+      "moderate": "Помірна",
+      "strong": "Сильна",
+      "severe": "Дуже сильна",
+      "extreme": "Екстремальна"
+    },
+    "geomag_thresholds": {
+      "stormCompassAndGpsAccuracyReduced": "{{lead}} (буря {{v2}}): точність компаса й GPS знижена, не калібруйте.",
+      "unsettledFieldHoldOffOnCompass": "{{lead}}: нестійке поле, відкладіть калібрування компаса."
+    },
+    "ip_geolocation": {
+      "geolocationNotSupported": "Геолокація не підтримується"
+    },
+    "joystick_safety": {
+      "assignRollPitchThrottleAndYaw": "Спершу призначте крен, тангаж, газ і рискання",
+      "centreTheStick": "Відцентруйте стік: {{v1}}",
+      "closeTheThrottle": "Приберіть газ"
     },
     "radio_preflight": {
       "stickControlOverTheRadioLink": "Керування стіками через радіоканал",
@@ -90,13 +123,29 @@
     },
     "rc_source_arbiter": {
       "joystickControlOwnsTheRcLink": "RC-каналом керує джойстик",
-      "virtualRcSlidersOwnTheRc": "RC-каналом керують віртуальні RC-повзунки"
+      "virtualRcSlidersOwnTheRc": "RC-каналом керують віртуальні RC-повзунки",
+      "trainerSessionActiveTheTrainerOwns": "Активний сеанс Тренажера — стіками керує Тренажер"
     },
     "receiver_constants": {
       "none": "Немає",
       "serial": "Serial",
       "spektrum": "Spektrum",
-      "fport": "FPort"
+      "fport": "FPort",
+      "lowLatencyDigitalLinkUsedBy": "Цифровий канал з низькою затримкою. Використовується приймачами TBS Crossfire і ExpressLRS.",
+      "invertedSerialProtocolCommonWithFrsky": "Інвертований послідовний протокол. Поширений у приймачах FrSky і RadioLink. Деяким платам потрібен апаратний інвертор.",
+      "flyskyDigitalProtocolConnectToA": "Цифровий протокол FlySky. Під'єднайте до вільного піна UART RX.",
+      "spektrumSatelliteReceiverBindToTransmitter": "Супутниковий приймач Spektrum. Спершу прив'яжіть до пульта, потім під'єднайте до UART.",
+      "frskyFPortCombinesSbusTelemetry": "FrSky F.Port поєднує SBUS і телеметрію в одному дроті.",
+      "immersionrcGhostUltraLowLatencyProtocol": "Протокол ImmersionRC Ghost з наднизькою затримкою.",
+      "spektrumSrxl2BidirectionalSerialProtocol": "Двонаправлений послідовний протокол Spektrum SRXL2.",
+      "forGcsSitlControlOnlyDo": "Лише для керування з НСК/SITL. Не використовуйте з фізичним приймачем.",
+      "invertedSerialProtocolCommonWithFrsky2": "Інвертований послідовний протокол. Поширений у приймачах FrSky і RadioLink.",
+      "spektrumSatelliteReceiverBindToTransmitter2": "Супутниковий приймач Spektrum. Спершу прив'яжіть до пульта."
+    },
+    "rssi_state": {
+      "noTelemetryLink": "Немає каналу телеметрії",
+      "rssiReportingIsOffOnThe": "Передавання RSSI на апараті вимкнено (RSSI_TYPE = 0)",
+      "theReceiverIsConnectedButReports": "Приймач підключено, але він не повідомляє рівень сигналу. RSSI_TYPE має відповідати приймачу (3 для CRSF/ELRS)."
     },
     "ruby_osd": {
       "videoMbps": "Відео Мбіт/с",
@@ -140,7 +189,13 @@
       "speedAltitude": "Швидкість і висота",
       "heading": "Курс",
       "altitudeGraph": "Графік висоти",
-      "instruments": "Прилади"
+      "instruments": "Прилади",
+      "rubyOsdNoOsdBlockFound": "ruby-osd: блок \"osd:\" не знайдено",
+      "rubyOsdNoOsdBlockTo": "ruby-osd: немає блоку \"osd:\" для вставлення"
+    },
+    "stick_assign": {
+      "pitchUnused": "Тангаж (не використовується)",
+      "yawUnused": "Рискання (не використовується)"
     }
   }
 }

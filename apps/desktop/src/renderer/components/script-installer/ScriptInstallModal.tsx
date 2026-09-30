@@ -139,9 +139,9 @@ function ExplainerStage({ onContinue, onCancel }: { onContinue: () => void; onCa
   const isConnected = useConnectionStore(s => s.connectionState.isConnected);
   const isMavlink = useConnectionStore(s => s.connectionState.protocol === 'mavlink');
   const blockReason = !isConnected
-    ? 'Connect to a flight controller to continue.'
+    ? t('script_installer.ScriptInstallModal.connectToAFlightControllerTo')
     : !isMavlink
-      ? 'Vehicle is connected via MSP. The Lua installer requires a MAVLink connection (ArduPilot).'
+      ? t('script_installer.ScriptInstallModal.vehicleIsConnectedViaMspThe')
       : null;
   const blocked = blockReason !== null;
 

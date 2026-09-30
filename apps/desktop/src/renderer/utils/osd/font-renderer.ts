@@ -13,6 +13,7 @@ import {
   OSD_CHAR_WIDTH,
   OSD_CHAR_HEIGHT,
 } from '@ardudeck/msp-ts';
+import { t } from '../../i18n';
 
 // Re-export for convenience
 export { OSD_CHAR_WIDTH, OSD_CHAR_HEIGHT };
@@ -44,11 +45,11 @@ export const OSD_GRID: Record<VideoType, OsdGridSize> = {
 
 /** Human labels for the format picker. */
 export const OSD_FORMAT_LABELS: Record<VideoType, string> = {
-  PAL: 'Analog PAL (30×16)',
-  NTSC: 'Analog NTSC (30×13)',
-  HDZERO: 'HDZero (50×18)',
-  AVATAR: 'Walksnail (53×20)',
-  BFHD: 'Betaflight HD / O3 (53×20)',
+  get PAL() { return t('utils.font_renderer.analogPal3016'); },
+  get NTSC() { return t('utils.font_renderer.analogNtsc3013'); },
+  get HDZERO() { return t('utils.font_renderer.hdzero5018'); },
+  get AVATAR() { return t('utils.font_renderer.walksnail5320'); },
+  get BFHD() { return t('utils.font_renderer.betaflightHdO35320'); },
   DJIWTF: 'DJI WTFOS (60×22)',
 };
 

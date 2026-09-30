@@ -113,7 +113,18 @@
       "offlineDefaultList": "offline · default list",
       "noUpstreamDefaultsArdudeckBaselineOnly": "No upstream defaults - ArduDeck baseline only.",
       "loads": "Loads",
-      "onStart": "on start."
+      "onStart": "on start.",
+      "couldnTReachUpstreamClickTo": "Couldn't reach upstream: {{error}}\nClick to retry.",
+      "frameListMirrorsArdupilotUpstreamVehicleinfo": "Frame list mirrors ArduPilot upstream `vehicleinfo.py`. Click to refresh.",
+      "group_Multirotor": "Multirotor",
+      "group_Helicopter": "Helicopter",
+      "group_Plane": "Plane",
+      "group_Quadplane": "Quadplane",
+      "group_Tailsitter": "Tailsitter",
+      "group_Rover": "Rover",
+      "group_Boat": "Boat",
+      "group_Sub": "Sub",
+      "group_Other": "Other"
     },
     "CustomFramePanel": {
       "physical": "Physical",
@@ -159,7 +170,8 @@
       "frameName": "Frame name",
       "save": "Save",
       "activeFrameIsLoadedViaSitl": "Active frame is loaded via SITL",
-      "onNextStartStopRestartSitl": "on next start. Stop & restart SITL to apply."
+      "onNextStartStopRestartSitl": "on next start. Stop & restart SITL to apply.",
+      "vFullCharge": "V (full-charge)"
     },
     "Px4SitlTab": {
       "copter": "Copter",
@@ -242,7 +254,9 @@
       "injectSensorFailuresToTestFailsafe": "Inject sensor failures to test failsafe behavior. Click a sensor to toggle its failure state.",
       "gpsAdvanced": "GPS Advanced",
       "satellites": "Satellites",
-      "delay": "Delay"
+      "delay": "Delay",
+      "healthy": "healthy",
+      "unhealthy": "unhealthy"
     },
     "SitlView": {
       "cessna172p": "Cessna 172P",

@@ -361,7 +361,7 @@ function GpsInstrument(): JSX.Element {
         {connected ? (GPS_FIX_SHORT[fixType] ?? 'NO FIX') : '--'}
       </span>
       <span className="mt-1 text-[9px] leading-none text-[var(--gauge-text-dim)]">
-        {connected ? `${satellites} sats` : '-- sats'}
+        {connected ? `${satellites} sats` : tr('map.registry.sats')}
       </span>
     </RoundGauge>
   );

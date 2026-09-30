@@ -14,6 +14,7 @@
 
 import type { GeomagneticActivity } from './geomag-activity-api';
 import { gScaleFromKp, gScaleLabel } from './geomag-activity-api';
+import { t } from '../i18n';
 
 /** Same three-state grade the weather briefing uses (WxStatus). */
 export type GeomagStatus = 'go' | 'caution' | 'nogo';
@@ -59,9 +60,9 @@ export function kpReason(kp: number, context: 'now' | 'forecast'): string | null
   const lead = context === 'forecast' ? `Forecast ${kpText}` : kpText;
   if (status === 'nogo') {
     const g = gScaleFromKp(kp);
-    return `${lead} (${gScaleLabel(g)} storm): compass and GPS accuracy reduced, do not calibrate.`;
+    return t('utils.geomag_thresholds.stormCompassAndGpsAccuracyReduced', { lead, v2: gScaleLabel(g) });
   }
-  return `${lead}: unsettled field, hold off on compass calibration.`;
+  return t('utils.geomag_thresholds.unsettledFieldHoldOffOnCompass', { lead });
 }
 
 export interface GeomagVerdict {

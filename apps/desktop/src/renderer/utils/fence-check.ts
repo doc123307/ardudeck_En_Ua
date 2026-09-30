@@ -15,6 +15,7 @@ import { useParameterStore } from '../stores/parameter-store';
 import { useFenceStore } from '../stores/fence-store';
 import { useMissionStore } from '../stores/mission-store';
 import { useConnectionStore } from '../stores/connection-store';
+import { t } from '../i18n';
 
 const FENCE_TYPE_CIRCLE = 2; // bit: circle centered on home
 const FENCE_TYPE_POLYGON = 4; // bit: polygon(s)
@@ -73,7 +74,7 @@ function polygonFenceWarning(lat: number, lon: number): string | null {
   const { polygons, circles } = useFenceStore.getState();
   const inclusions = polygons.filter((p) => p.type === 'inclusion' && p.vertices.length >= 3);
   if (inclusions.length > 0 && !inclusions.some((p) => pointInPolygon(lat, lon, p.vertices))) {
-    return 'outside fence: not inside any inclusion polygon';
+    return t('utils.fence_check.outsideFenceNotInsideAnyInclusion');
   }
   for (const p of polygons) {
     if (p.type === 'exclusion' && p.vertices.length >= 3 && pointInPolygon(lat, lon, p.vertices)) {
@@ -82,7 +83,7 @@ function polygonFenceWarning(lat: number, lon: number): string | null {
   }
   const circleInclusions = circles.filter((c) => c.type === 'inclusion');
   if (circleInclusions.length > 0 && !circleInclusions.some((c) => haversine(c.center.lat, c.center.lon, lat, lon) <= c.radius)) {
-    return 'outside fence: not inside any inclusion circle';
+    return t('utils.fence_check.outsideFenceNotInsideAnyInclusion2');
   }
   for (const c of circles) {
     if (c.type === 'exclusion' && haversine(c.center.lat, c.center.lon, lat, lon) <= c.radius) {

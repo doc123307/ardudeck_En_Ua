@@ -24,6 +24,7 @@ import type {
   Px4SitlExitData,
   Px4SitlStartedData,
 } from '../../shared/ipc-channels.js';
+import { t } from '../i18n';
 
 // =============================================================================
 // Types
@@ -214,17 +215,17 @@ export const usePx4SitlStore = create<Px4SitlStore>()(
 
           if (result.success) {
             set({ isDownloading: false });
-            appendConsole(`Downloaded to: ${result.path}\n`);
+            appendConsole(t('stores.px4_sitl_store.downloadedTo', { path: result.path }));
             await get().checkBinary();
             return true;
           }
-          set({ isDownloading: false, lastError: result.error ?? 'Download failed' });
-          appendConsole(`Download failed: ${result.error}\n`, true);
+          set({ isDownloading: false, lastError: result.error ?? t('stores.px4_sitl_store.downloadFailed') });
+          appendConsole(t('stores.px4_sitl_store.downloadFailed2', { error: result.error }), true);
           return false;
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.px4_sitl_store.unknownError');
           set({ isDownloading: false, lastError: message });
-          appendConsole(`Download error: ${message}\n`, true);
+          appendConsole(t('stores.px4_sitl_store.downloadError', { message }), true);
           return false;
         }
       },
@@ -271,11 +272,11 @@ export const usePx4SitlStore = create<Px4SitlStore>()(
             }
             return true;
           }
-          set({ isStarting: false, lastError: result.error ?? 'Failed to start SITL' });
+          set({ isStarting: false, lastError: result.error ?? t('stores.px4_sitl_store.failedToStartSitl') });
           appendConsole(`Error: ${result.error}\n`, true);
           return false;
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.px4_sitl_store.unknownError');
           set({ isStarting: false, lastError: message });
           appendConsole(`Error: ${message}\n`, true);
           return false;
@@ -296,7 +297,7 @@ export const usePx4SitlStore = create<Px4SitlStore>()(
         try {
           await window.electronAPI.px4SitlStop();
           set({ isRunning: false, isStopping: false, pid: null });
-          appendConsole('SITL stopped.\n');
+          appendConsole(t('stores.px4_sitl_store.sitlStopped'));
           // The SITL link is UDP, which never "closes": killing px4 leaves the
           // app connected to silence (TCP-based ArduPilot SITL disconnects for
           // free when its socket dies). If the active connection is a PX4,
@@ -305,15 +306,15 @@ export const usePx4SitlStore = create<Px4SitlStore>()(
             const { useConnectionStore } = await import('./connection-store');
             const conn = useConnectionStore.getState();
             if (conn.connectionState.isConnected && conn.connectionState.firmware === 'px4') {
-              appendConsole('Disconnecting from stopped SITL.\n');
+              appendConsole(t('stores.px4_sitl_store.disconnectingFromStoppedSitl'));
               await conn.disconnect();
             }
           } catch { /* disconnect is best-effort; the stop itself succeeded */ }
           return true;
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : t('stores.px4_sitl_store.unknownError');
           set({ isStopping: false, lastError: message });
-          appendConsole(`Error stopping: ${message}\n`, true);
+          appendConsole(t('stores.px4_sitl_store.errorStopping', { message }), true);
           return false;
         }
       },
@@ -349,7 +350,7 @@ export const usePx4SitlStore = create<Px4SitlStore>()(
         // Listen for process errors
         const unsubError = window.electronAPI.onPx4SitlError((error: string) => {
           set({ lastError: error, isRunning: false, isStarting: false });
-          appendConsole(`Process error: ${error}\n`, true);
+          appendConsole(t('stores.px4_sitl_store.processError', { error }), true);
         });
 
         // Listen for exit
@@ -357,14 +358,14 @@ export const usePx4SitlStore = create<Px4SitlStore>()(
           // Half of a deliberate relaunch: a PX4_SITL_STARTED (or _ERROR)
           // follows, so don't report it as stopped here.
           if (data.relaunching) {
-            appendConsole('\nSITL is restarting...\n');
+            appendConsole(t('stores.px4_sitl_store.sitlIsRestarting'));
             return;
           }
           set({ isRunning: false, isStarting: false, isStopping: false, pid: null });
           if (data.code !== null) {
-            appendConsole(`\nSITL exited with code ${data.code}\n`);
+            appendConsole(t('stores.px4_sitl_store.sitlExitedWithCode', { code: data.code }));
           } else if (data.signal) {
-            appendConsole(`\nSITL killed by signal ${data.signal}\n`);
+            appendConsole(t('stores.px4_sitl_store.sitlKilledBySignal', { signal: data.signal }));
           }
         });
 
@@ -384,7 +385,7 @@ export const usePx4SitlStore = create<Px4SitlStore>()(
           });
           if (data.wasRelaunch) {
             const { lat, lng, alt, heading } = data.homeLocation;
-            appendConsole(`SITL is back up, taking off from ${lat}, ${lng} (alt ${alt} m, heading ${heading} deg).\n`);
+            appendConsole(t('stores.px4_sitl_store.sitlIsBackUpTakingOff', { lat, lon: lng, alt, heading }));
           }
         });
 
@@ -395,7 +396,7 @@ export const usePx4SitlStore = create<Px4SitlStore>()(
             set({ isDownloading: false });
             checkBinary();
           } else if (progress.status === 'error') {
-            set({ isDownloading: false, lastError: progress.error ?? 'Download failed' });
+            set({ isDownloading: false, lastError: progress.error ?? t('stores.px4_sitl_store.downloadFailed') });
           }
         });
 

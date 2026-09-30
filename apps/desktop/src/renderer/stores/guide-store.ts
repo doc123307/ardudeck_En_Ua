@@ -15,6 +15,7 @@ import { simplifyPolygon } from '../components/survey/geo-math';
 import { GROUP_COLOR_PALETTE } from '../../shared/mission-group-types';
 import { useSettingsStore } from './settings-store';
 import { useSurveyStore } from './survey-store';
+import { t } from '../i18n';
 
 export interface MapGuide {
   id: string;
@@ -96,16 +97,16 @@ export const useGuideStore = create<GuideStore>((set, get) => ({
 
   importGuides: async () => {
     const api = window.electronAPI;
-    if (!api?.importSurveyArea) return { ok: false, count: 0, error: 'Import not available' };
+    if (!api?.importSurveyArea) return { ok: false, count: 0, error: t('stores.guide_store.importNotAvailable') };
     const res = await api.importSurveyArea();
     if (!res.success) {
       return { ok: false, count: 0, error: res.error === 'Cancelled' ? undefined : res.error };
     }
-    if (!res.content || !res.format) return { ok: false, count: 0, error: 'Empty file' };
+    if (!res.content || !res.format) return { ok: false, count: 0, error: t('stores.guide_store.emptyFile') };
     const areas = parseGisArea(res.content, res.format);
     const lines = parseGisLines(res.content, res.format);
     if (areas.length === 0 && lines.length === 0) {
-      return { ok: false, count: 0, error: 'No polygons or lines found in the file' };
+      return { ok: false, count: 0, error: t('stores.guide_store.noPolygonsOrLinesFoundIn') };
     }
 
     // Same vertex thinning as the survey import: GIS boundaries are digitized
@@ -166,14 +167,14 @@ export const useGuideStore = create<GuideStore>((set, get) => ({
   },
 
   addSurveyedPoints: (points, opts) => {
-    if (points.length === 0) return { ok: false, error: 'No valid points to add.' };
+    if (points.length === 0) return { ok: false, error: t('stores.guide_store.noValidPointsToAdd') };
     if (opts.connect && points.length < 3) {
-      return { ok: false, error: 'A polygon needs at least 3 points - add as markers instead.' };
+      return { ok: false, error: t('stores.guide_store.aPolygonNeedsAtLeast3') };
     }
     const base = get().guides.length;
     const guide: MapGuide = {
       id: uuid(),
-      name: opts.name?.trim() || `RTK points ${base + 1}`,
+      name: opts.name?.trim() || t('stores.guide_store.rtkPoints', { v1: base + 1 }),
       polygon: points.map((p) => ({ lat: p.lat, lng: p.lng })),
       holes: [],
       visible: true,

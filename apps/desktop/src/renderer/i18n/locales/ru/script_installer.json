@@ -8,12 +8,17 @@
       "graph": "Граф",
       "source": "Код",
       "closeEsc": "Закрыть (Esc)",
-      "readOnlyReviewPanZoomIn": "Только просмотр. В режиме графа можно перемещать и масштабировать. Переключите вкладку, чтобы просмотреть код построчно."
+      "readOnlyReviewPanZoomIn": "Только просмотр. В режиме графа можно перемещать и масштабировать. Переключите вкладку, чтобы просмотреть код построчно.",
+      "graphReview": "ПРОСМОТР ГРАФА",
+      "sourceReview": "ПРОСМОТР КОДА"
     },
     "PreflightChecksList": {
       "now": "сейчас:",
       "need": "→ нужно:",
-      "applying": "Применение…"
+      "applying": "Применение…",
+      "rebootFlightController": "Перезагрузить полётный контроллер",
+      "disarmVehicle": "Дизармировать аппарат",
+      "fix": "Исправить"
     },
     "ScriptHealthBadge": {
       "luaV": "Lua v{{v1}}",
@@ -31,7 +36,9 @@
       "is0": "равен 0",
       "fcHasnTRebootedSinceInstall": "FC не перезагружался после установки (скрипты загружаются только при старте)",
       "scriptCrashedOnLoadCheckFc": "Скрипт упал при загрузке — проверьте сообщения STATUSTEXT от FC",
-      "openInstallerManage": "Открыть установщик / управление…"
+      "openInstallerManage": "Открыть установщик / управление…",
+      "mavlink": "MAVLink ✓",
+      "notConnected": "не подключено"
     },
     "ScriptInstallModal": {
       "installArdudeckCommandsOnThisVehicle": "Установить команды ArduDeck на этот аппарат",
@@ -105,7 +112,9 @@
       "close": "Закрыть",
       "retryAutomaticInstall": "Повторить автоматическую установку",
       "installFailed": "✗ Ошибка установки",
-      "tryAgain": "Попробовать ещё раз"
+      "tryAgain": "Попробовать ещё раз",
+      "connectToAFlightControllerTo": "Подключитесь к полётному контроллеру, чтобы продолжить.",
+      "vehicleIsConnectedViaMspThe": "Аппарат подключён через MSP. Установщику Lua нужно MAVLink-соединение (ArduPilot)."
     },
     "ardudeck_commands_graph": {
       "runEvery1000Ms": "Запуск каждые 1000 мс",

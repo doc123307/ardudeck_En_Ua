@@ -26,7 +26,10 @@
       "cameraCenter": "центр камеры"
     },
     "CompactReadout": {
-      "notSetUp": "не настроено"
+      "notSetUp": "не настроено",
+      "toLaunch": "до старта",
+      "noHome": "нет дома",
+      "noRssi": "нет RSSI"
     },
     "DockedGroup": {
       "displayForAll": "Вид для всех",
@@ -37,7 +40,9 @@
       "displayModeForTheWholeGroup": "Режим отображения для всей группы",
       "constellation": "Созвездие",
       "dockedGroup": "Группа приборов",
-      "dragOutOrClickToUndock": "Вытащите или щёлкните, чтобы отсоединить {{label}}"
+      "dragOutOrClickToUndock": "Вытащите или щёлкните, чтобы отсоединить {{label}}",
+      "height": "Высота",
+      "width": "Ширина"
     },
     "ElevationLegend": {
       "clickToEdit": "Щёлкните, чтобы изменить",
@@ -67,7 +72,8 @@
       "uploading": "Загрузка...",
       "uploadStart": "Загрузить и начать",
       "startAnyway": "Начать всё равно",
-      "confirm": "подтвердить"
+      "confirm": "подтвердить",
+      "noLink": "НЕТ СВЯЗИ"
     },
     "InstrumentsCatalog": {
       "summary": "Сводка",
@@ -109,7 +115,12 @@
       "onScreen": "на экране",
       "searchInstruments": "Поиск приборов",
       "close": "Закрыть",
-      "layoutAndPresets": "Макет и шаблоны"
+      "layoutAndPresets": "Макет и шаблоны",
+      "primaryFlight": "Основные пилотажные",
+      "theBasicTScanAttitudeSpeed": "Базовая T-схема: положение, скорость, высота, курс, вертикальная скорость.",
+      "packVoltageCurrentAndRemainingCapacity": "Напряжение батареи, ток и остаток ёмкости.",
+      "fixQualityMissionProgressAndWhere": "Качество фикса, прогресс миссии и где дом.",
+      "importedLayout": "Импортированная раскладка"
     },
     "InstrumentsLayer": {
       "analog": "Аналоговый",
@@ -135,7 +146,16 @@
       "fecCorrected": "Исправлено FEC",
       "freeSpaceInTheRadioS": "Свободное место в буфере передачи радио; около 0% — канал не успевает за исходящими данными",
       "txBufferFree": "Свободно в буфере Tx",
-      "noTelemetryModemIsReportingOn": "На этом канале ни один телеметрийный модем не отчитывается. RADIO_STATUS отправляют радио класса SiK/RFD900 и шлюзы wfb-ng или ELRS; прямой USB и обычные сетевые каналы его не отправляют."
+      "noTelemetryModemIsReportingOn": "На этом канале ни один телеметрийный модем не отчитывается. RADIO_STATUS отправляют радио класса SiK/RFD900 и шлюзы wfb-ng или ELRS; прямой USB и обычные сетевые каналы его не отправляют.",
+      "receivedSignalStrengthRawAndSik": "Уровень принятого сигнала (сырой и дБм по калибровке SiK; другие модемы масштабируют иначе)",
+      "backgroundNoiseFloorRawAndSik": "Уровень фонового шума (сырой и дБм по калибровке SiK)",
+      "whatTheGroundSideModemHears": "Что наземный модем слышит от аппарата",
+      "whatTheVehicleSideModemHears": "Что бортовой модем слышит от земли (передаётся обратно по каналу)",
+      "packetsLostToReceptionErrorsSince": "Пакеты, потерянные из-за ошибок приёма со старта (накоплено, с текущей скоростью)",
+      "damagedPacketsRepairedByForwardError": "Повреждённые пакеты, восстановленные кодом коррекции ошибок; рост счётчика означает, что канал работает на пределе",
+      "notSetUp": "не настроено",
+      "separateRcReceiverSignalReportedBy": "Сигнал отдельного RC-приёмника, сообщаемый полётным контроллером",
+      "notSetUp2": "НЕ НАСТРОЕНО"
     },
     "MapCommandPopup": {
       "flyHere": "Лететь сюда",
@@ -198,7 +218,13 @@
       "terrain": "Рельеф",
       "aboveTheGroundBelowTheVehicle": "Над землёй под аппаратом. Нужны данные рельефа или дальномер.",
       "sea": "Море",
-      "aboveMeanSeaLevelAmsl": "Над средним уровнем моря (AMSL)"
+      "aboveMeanSeaLevelAmsl": "Над средним уровнем моря (AMSL)",
+      "onArrivalItDependsOnQ": "Что будет после прибытия, зависит от Q_GUIDED_MODE, который ещё не прочитан.",
+      "onArrivalItTransitionsBackAnd": "После прибытия возвращается в режим висения и зависает там.",
+      "onArrivalItCirclesAsA": "После прибытия кружит как самолёт; зависать не будет (Q_GUIDED_MODE выключен).",
+      "transitionsToForwardFlightAndFlies": "Переходит в горизонтальный полёт и летит туда на крыле, а не в висении. {{arrival}}",
+      "climbAndReturn": "Набрать высоту и вернуться",
+      "confirmLand": "Подтвердить посадку"
     },
     "MapLayersControl": {
       "mapLayersOverlays": "Слои и наложения карты",
@@ -219,7 +245,8 @@
       "lat": "Шир.",
       "lng": "Долг.",
       "go": "Перейти",
-      "cancel": "Отмена"
+      "cancel": "Отмена",
+      "useThisPoint": "Использовать эту точку"
     },
     "MapSearchControl": {
       "noMatchFound": "Ничего не найдено",
@@ -303,6 +330,10 @@
       "openTheFullRtkNtripPanel": "Открыть полную панель RTK / NTRIP (список точек монтирования, TLS, настройки GGA)",
       "fullSettingsInPanel": "Все настройки в панели"
     },
+    "TerrainOverlayLayer": {
+      "no2dContext": "Нет 2D-контекста",
+      "tileLoadFailed": "Не удалось загрузить тайл"
+    },
     "TrafficAltitudeFilter": {
       "altitudeFilter": "Фильтр по высоте",
       "collapse": "Свернуть",
@@ -311,7 +342,8 @@
       "ceiling": "Верхняя граница",
       "hideTrafficAboveCeiling": "Скрывать трафик выше верхней границы",
       "belowTheFloorIsHiddenAbove": "Ниже нижней границы — скрыто. Выше верхней границы —",
-      "shrinksAndFades": "уменьшается и тускнеет"
+      "shrinksAndFades": "уменьшается и тускнеет",
+      "isHidden": "скрыто"
     },
     "WindControls": {
       "windAtAgl": "Ветер на {{v1}} над землёй",
@@ -319,7 +351,15 @@
       "playForecast": "Воспроизвести прогноз",
       "forecastHour": "Час прогноза",
       "regionalFlow25KmModelNot": "Региональный поток (модель ~25 км). Без деталей долин/хребтов — у рельефа доверяйте бортовым датчикам.",
-      "cycleUnitsMSKtMph": "Сменить единицы (м/с · узлы · миль/ч · км/ч)"
+      "cycleUnitsMSKtMph": "Сменить единицы (м/с · узлы · миль/ч · км/ч)",
+      "sun": "Вс",
+      "mon": "Пн",
+      "tue": "Вт",
+      "wed": "Ср",
+      "thu": "Чт",
+      "fri": "Пт",
+      "sat": "Сб",
+      "windDataUnavailable": "Данные о ветре недоступны"
     },
     "WindRoseCard": {
       "close": "Закрыть"
@@ -329,6 +369,20 @@
       "perimeterClear": "Периметр чист",
       "clearAlertLog": "Очистить журнал тревог",
       "awarenessOnlyMitigationIfAnyIs": "Только для информирования. Меры противодействия, если они есть, принимают отдельно уполномоченные стороны."
+    },
+    "contact_popup": {
+      "remoteId": "Remote ID",
+      "onGround": "На земле",
+      "groundSpeed": "Путевая скорость",
+      "vertSep": "Верт. раздел."
+    },
+    "contact_style": {
+      "groundVehicle": "Наземный аппарат",
+      "unknownType": "Неизвестный тип"
+    },
+    "guided_speed_range": {
+      "airspeedMinMaxIsOutsideThat": "AIRSPEED_MIN..MAX = {{lo}}-{{hi}} {{unitLabel}}; вне этого диапазона аппарат отклоняет команду",
+      "wpnavSpeedAllowsUpTo": "WPNAV_SPEED допускает до {{hi}} {{unitLabel}}"
     },
     "preset_layouts": {
       "gaugeBarAlongTheBottomCommand": "Полоса шкал внизу, командная панель слева.",
@@ -369,7 +423,8 @@
       "messages": "Сообщения",
       "flightControl": "Управление полётом",
       "compact": "Компактный",
-      "bar": "Полоса"
+      "bar": "Полоса",
+      "sats": "-- спутн."
     },
     "tactical_icon_pool": {
       "multirotor": "Мультиротор",
@@ -379,6 +434,10 @@
       "submarine": "Подводный аппарат",
       "antennaTracker": "Антенный трекер",
       "unknown": "Неизвестно"
+    },
+    "dock_groups": {
+      "analog": "Аналоговый",
+      "numeric": "Числовой"
     }
   }
 }

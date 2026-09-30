@@ -445,9 +445,9 @@ export default function SimTestPanel() {
               </button>
             </div>
             <div className="flex gap-1.5">
-              <WinchButton label={t('sim.SimTestPanel.lower')} onClick={() => setWinch(0.5)} tip="Pay out the winch (lower the load)" />
-              <WinchButton label={t('sim.SimTestPanel.hold')} onClick={() => setWinch(0)} tip="Hold the winch" />
-              <WinchButton label={t('sim.SimTestPanel.raise')} onClick={() => setWinch(-0.5)} tip="Reel in the winch (raise the load)" />
+              <WinchButton label={t('sim.SimTestPanel.lower')} onClick={() => setWinch(0.5)} tip={t('sim.SimTestPanel.payOutTheWinchLowerThe')} />
+              <WinchButton label={t('sim.SimTestPanel.hold')} onClick={() => setWinch(0)} tip={t('sim.SimTestPanel.holdTheWinch')} />
+              <WinchButton label={t('sim.SimTestPanel.raise')} onClick={() => setWinch(-0.5)} tip={t('sim.SimTestPanel.reelInTheWinchRaiseThe')} />
             </div>
             {load?.attached ? (
               <div className="text-[11px] text-content-secondary grid grid-cols-3 gap-1 pt-0.5">
@@ -490,13 +490,13 @@ export default function SimTestPanel() {
             active={cond.gpsEnable}
             okWhenActive
             onClick={() => applyPatch({ gpsEnable: !cond.gpsEnable })}
-            tip="Disable to test the GPS-loss failsafe / EKF fallback (SIM_GPS1_ENABLE)"
+            tip={t('sim.SimTestPanel.disableToTestTheGpsLoss')}
           />
           <FailToggle
             label={t('sim.SimTestPanel.gpsJamming')}
             active={cond.gpsJam}
             onClick={() => applyPatch({ gpsJam: !cond.gpsJam })}
-            tip="Simulate GPS jamming (SIM_GPS1_JAM)"
+            tip={t('sim.SimTestPanel.simulateGpsJammingSimGps1Jam')}
           />
         </div>
         <div className={row}>
@@ -535,19 +535,19 @@ export default function SimTestPanel() {
             label={t('sim.SimTestPanel.baro')}
             active={cond.baroDisable}
             onClick={() => applyPatch({ baroDisable: !cond.baroDisable })}
-            tip="Disable the barometer (SIM_BARO_DISABLE)"
+            tip={t('sim.SimTestPanel.disableTheBarometerSimBaroDisable')}
           />
           <FailToggle
             label={t('sim.SimTestPanel.compass1')}
             active={cond.mag1Fail}
             onClick={() => applyPatch({ mag1Fail: !cond.mag1Fail })}
-            tip="Fail the primary compass (SIM_MAG1_FAIL)"
+            tip={t('sim.SimTestPanel.failThePrimaryCompassSimMag1')}
           />
           <FailToggle
             label={t('sim.SimTestPanel.compass2')}
             active={cond.mag2Fail}
             onClick={() => applyPatch({ mag2Fail: !cond.mag2Fail })}
-            tip="Fail the secondary compass (SIM_MAG2_FAIL)"
+            tip={t('sim.SimTestPanel.failTheSecondaryCompassSimMag2')}
           />
         </div>
         <div className={row}>
@@ -571,7 +571,7 @@ export default function SimTestPanel() {
           label={t('sim.SimTestPanel.rcLoss')}
           active={cond.rcFail}
           onClick={() => applyPatch({ rcFail: !cond.rcFail })}
-          tip="Drop RC to trigger the radio failsafe (SIM_RC_FAIL)"
+          tip={t('sim.SimTestPanel.dropRcToTriggerTheRadio')}
         />
 
         {/* Weather (live to the engine, else SIM_WIND_*) */}
@@ -718,7 +718,7 @@ function MotorSchematic({
             <path d={arrow.d} fill="none" stroke={dead ? DEAD : MUTED} strokeOpacity={dead ? 0.5 : 0.75} strokeWidth="0.7" />
             <polygon points={arrow.head} style={{ fill: dead ? DEAD : MUTED, opacity: dead ? 0.5 : 0.85 }} />
             <g onClick={() => onFail(i)} style={{ cursor: dead ? 'default' : 'pointer' }}>
-              <title>{t('sim.SimTestPanel.motorSpins', { v1: i + 1, v2: m.spin.toUpperCase(), v3: dead ? ' - FAILED' : ' - click to fail' })}</title>
+              <title>{t('sim.SimTestPanel.motorSpins', { v1: i + 1, v2: m.spin.toUpperCase(), v3: dead ? t('sim.SimTestPanel.failed') : t('sim.SimTestPanel.clickToFail') })}</title>
               <circle cx={cx} cy={cy} r={DISC} style={{ fill: dead ? DEAD : LIVE, opacity: dead ? 0.95 : 0.9 }} />
               <text
                 x={cx}

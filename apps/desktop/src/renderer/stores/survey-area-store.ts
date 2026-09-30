@@ -8,6 +8,7 @@ import {
 } from '../../shared/survey-document-types';
 import { polygonArea } from '../components/survey/geo-math';
 import type { FleetRepoSite, VaultSurveyArea } from '../../shared/ipc-channels';
+import { t } from '../i18n';
 
 /**
  * Saved survey areas: the polygon and generator settings on their own, so a
@@ -94,7 +95,7 @@ export const useSurveyAreaStore = create<SurveyAreaStore>((set, get) => ({
     if (!doc) return false;
     const result = await window.electronAPI?.fleetRepoSnapshotSurveyArea(site, doc);
     if (!result?.success) {
-      set({ error: result?.error ?? 'Could not write to the vault' });
+      set({ error: result?.error ?? t('stores.survey_area_store.couldNotWriteToTheVault') });
       return false;
     }
     // Record the site on the local copy without bumping the revision: the
@@ -107,7 +108,7 @@ export const useSurveyAreaStore = create<SurveyAreaStore>((set, get) => ({
   pullFromVault: async (path) => {
     const doc = await window.electronAPI?.fleetRepoReadSurveyArea(path);
     if (!doc) {
-      set({ error: 'Could not read that area from the vault' });
+      set({ error: t('stores.survey_area_store.couldNotReadThatAreaFrom') });
       return null;
     }
     const stored = await window.electronAPI?.surveyAreaImportDoc(doc);

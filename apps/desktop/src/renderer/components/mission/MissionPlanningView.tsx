@@ -244,7 +244,7 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
           <div className="bg-surface rounded-xl border border-subtle p-4 text-left mb-6">
             <p className="text-sm text-content-secondary mb-3">{t('mission.MissionPlanningView.recommendedUpgrades')}</p>
             <div className="flex flex-wrap gap-2">
-              {['SpeedyBee F405 V3', 'Matek F405-SE', 'Kakute F7'].map((board) => (
+              {[t('mission.MissionPlanningView.speedybeeF405V3'), t('mission.MissionPlanningView.matekF405Se'), t('mission.MissionPlanningView.kakuteF7')].map((board) => (
                 <span key={board} className="px-2 py-1 bg-surface-raised rounded text-content text-xs">
                   {board}
                 </span>
@@ -320,7 +320,7 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
         <div className="text-sm text-content-secondary">
           <p className="mb-2">{t('mission.MissionPlanningView.boardsThatSupportMissionPlanning')}</p>
           <div className="flex flex-wrap justify-center gap-2">
-            {['Pixhawk', 'Cube', 'Matek F405-WSE', 'Kakute F7', 'Any iNav board'].map((board) => (
+            {['Pixhawk', 'Cube', t('mission.MissionPlanningView.matekF405Wse'), t('mission.MissionPlanningView.kakuteF7'), t('mission.MissionPlanningView.anyInavBoard')].map((board) => (
               <span key={board} className="px-2 py-1 bg-surface-raised rounded text-content-secondary text-xs">
                 {board}
               </span>

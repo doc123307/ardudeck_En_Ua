@@ -572,7 +572,7 @@ export const FEATURE_TOURS: FeatureTour[] = [
           <strong>{tr('feature_tours.registry.motorTest')}</strong> {tr('feature_tours.registry.spinsOneMotorAtATime')} <strong>{tr('feature_tours.registry.servoOutput')}</strong> {tr('feature_tours.registry.setsEachChannelSFunctionReverse')}
         </>
       )),
-      itemStep('servo-output', 'Servo Output', (
+      itemStep('servo-output', tr('feature_tours.registry.servoOutput'), (
         <>{tr('feature_tours.registry.eachOutputSFunctionReverseMin')}</>
       )),
       groupStep('safety-group', 'Safety', (

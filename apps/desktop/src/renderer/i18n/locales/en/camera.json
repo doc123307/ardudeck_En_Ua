@@ -36,7 +36,14 @@
       "addAFeed": "Add a feed",
       "orSwitchTo": "or switch to",
       "noVehiclesToShow": "No vehicles to show.",
-      "noFeedsConfiguredOpenSourcesTo": "No feeds configured. Open Sources to add one per vehicle."
+      "noFeedsConfiguredOpenSourcesTo": "No feeds configured. Open Sources to add one per vehicle.",
+      "centerCoords": "Center coords",
+      "flightHud": "Flight HUD",
+      "snapshotSaved": "Snapshot saved",
+      "snapshotFailed": "Snapshot failed: {{v1}}",
+      "recordFailed": "Record failed: {{v1}}",
+      "recordingSaved": "Recording saved",
+      "videoDiagnosticsCopied": "Video diagnostics copied"
     },
     "CameraSourceMenu": {
       "selectAVehicleToConfigureIts": "Select a vehicle to configure its camera feeds.",
@@ -85,7 +92,8 @@
       "videoStalledReconnecting": "Video stalled, reconnecting…",
       "theFeedStoppedDeliveringFramesRetrying": "The feed stopped delivering frames. Retrying automatically; replugging the device also recovers it.",
       "noVideo": "No video",
-      "reconnectNow": "Reconnect now"
+      "reconnectNow": "Reconnect now",
+      "noUrl": "no url"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "RC-driven mount, control it from your transmitter",
@@ -120,7 +128,12 @@
       "rtspIsServedOverTcpFor": "RTSP is served over TCP. For OpenCV, set",
       "toSkipTheUdpAttempt": "to skip the UDP attempt.",
       "copy": "Copy",
-      "encoderIsCpuLimitedUntickHud": "Encoder is CPU-limited. Untick HUD or shrink the panel to lighten it."
+      "encoderIsCpuLimitedUntickHud": "Encoder is CPU-limited. Untick HUD or shrink the panel to lighten it.",
+      "installingEngine": "Installing engine...",
+      "off": "Off",
+      "sendsThe3dViewOnlyWithout": "Sends the 3D view only, without HUD or controls.",
+      "sendsTheFollowedVehicleSView": "Sends the followed vehicle's view with HUD and OSD, rendered on its own so nothing on screen covers it.",
+      "sendsTheTerrainOnlyWithoutHud": "Sends the terrain only, without HUD or OSD."
     },
     "SyntheticVisionView": {
       "clickToMakeActive": "Click to make active",
@@ -128,7 +141,8 @@
       "syntheticVisionNeedsAGpsFix": "Synthetic vision needs a GPS fix from",
       "terrainM": "TERRAIN {{v1}} m",
       "loadingTerrain": "Loading terrain…",
-      "terrainDataUnavailableCheckTheInternet": "Terrain data unavailable, check the internet connection."
+      "terrainDataUnavailableCheckTheInternet": "Terrain data unavailable, check the internet connection.",
+      "theVehicle": "the vehicle"
     },
     "VideoLinkBanner": {
       "noVideoRetrying": "NO VIDEO · retrying",
@@ -173,7 +187,13 @@
       "pressAddAndSelectTheFeed": "- press Add and select the feed.",
       "nothingOnPort": "Nothing on port",
       "yetMakeSureTheGroundStation": "yet - make sure the ground station shows video and forwards to this computer's IP.",
-      "arrivingDataIsNotVideo": "Arriving data is not video:"
+      "arrivingDataIsNotVideo": "Arriving data is not video:",
+      "dongleConnected": "Dongle connected ({{dongleName}})",
+      "plugTheWifiDongleFromThe": "Plug the WiFi dongle from the camera kit into this computer",
+      "receiverComponentInstalled": "Receiver component installed",
+      "receiverComponentMissing": "Receiver component missing",
+      "pairingKeyImported": "Pairing key imported",
+      "pairingKeyMissing": "Pairing key missing"
     },
     "camera_presets": {
       "advertisedByVehicleMavlink": "Advertised by vehicle (MAVLink)",
@@ -240,6 +260,38 @@
       "rollPitchTiltRolloverAwareness": "Roll/pitch tilt (rollover awareness)",
       "distanceToActiveWaypoint": "Distance to active waypoint",
       "crosstrackError": "Crosstrack error"
+    },
+    "stream_health": {
+      "noFramesArriving": "No frames arriving",
+      "packetLossCheckTheRadioLink": "{{lossPct}}% packet loss: check the radio link",
+      "framesDroppedThisMachineIsBehind": "{{droppedFrames}} frames dropped: this machine is behind",
+      "requestingKeyframesAfterLoss": "Requesting keyframes after loss",
+      "onlyFps": "Only {{fps}} fps"
+    },
+    "useCameraStream": {
+      "noVideoArrivedTheFeedConnected": "No video arrived. The feed connected but sent no frames.",
+      "noPlaybackUrlYet": "no playback url yet",
+      "streamFailed": "Stream failed",
+      "unexpectedPlaybackDescriptor": "Unexpected playback descriptor",
+      "playbackError": "Playback error"
+    },
+    "useCanvasStream": {
+      "thisViewIsHiddenAnotherTab": "This view is hidden (another tab or collapsed). Show it, then start the stream.",
+      "couldNotCaptureTheView": "Could not capture the view: {{v1}}",
+      "couldNotCaptureThe3dView": "Could not capture the 3D view",
+      "mediaHubUnavailable": "Media hub unavailable",
+      "streamConnectionToTheMediaHub": "Stream connection to the media hub failed ({{why}})",
+      "frameCroppingIsNotSupportedBy": "frame cropping is not supported by this build",
+      "noVideoTrack": "no video track",
+      "noFramesIn3s": "no frames in 3s ({{detail}})",
+      "error": "Error"
+    },
+    "webrtc_diag": {
+      "noCandidates": "no candidates",
+      "noWebrtcConnectionsThisSession": "no WebRTC connections this session"
+    },
+    "whip_publish": {
+      "whipUnreachable": "WHIP unreachable: {{v1}}"
     }
   }
 }

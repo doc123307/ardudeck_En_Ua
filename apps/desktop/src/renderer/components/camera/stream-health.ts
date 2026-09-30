@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * What the video link is actually doing, from the WebRTC receiver's own stats.
  *
@@ -118,12 +119,12 @@ export function verdictFor(h: StreamHealth): HealthVerdict {
 
 /** Why it is not 'good', in the pilot's terms. Null when nothing is wrong. */
 export function healthReason(h: StreamHealth): string | null {
-  if (h.fps === 0) return 'No frames arriving';
+  if (h.fps === 0) return t('camera.stream_health.noFramesArriving');
   if (h.freezes > 0) return `Froze ${h.freezes}x (${h.freezeSeconds}s)`;
-  if (h.lossPct >= 5) return `${h.lossPct}% packet loss: check the radio link`;
+  if (h.lossPct >= 5) return t('camera.stream_health.packetLossCheckTheRadioLink', { lossPct: h.lossPct });
   if (h.lossPct >= 1) return `${h.lossPct}% packet loss`;
-  if (h.droppedFrames > 0) return `${h.droppedFrames} frames dropped: this machine is behind`;
-  if (h.keyframeRequests > 0) return 'Requesting keyframes after loss';
-  if (h.fps < 10) return `Only ${h.fps} fps`;
+  if (h.droppedFrames > 0) return t('camera.stream_health.framesDroppedThisMachineIsBehind', { droppedFrames: h.droppedFrames });
+  if (h.keyframeRequests > 0) return t('camera.stream_health.requestingKeyframesAfterLoss');
+  if (h.fps < 10) return t('camera.stream_health.onlyFps', { fps: h.fps });
   return null;
 }

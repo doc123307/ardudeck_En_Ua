@@ -336,7 +336,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
     const { protocol, fcVariant, sensors } = get();
 
     if (protocol && !calType.protocols.includes(protocol)) {
-      set({ error: `${calType.name} is not supported for ${protocol.toUpperCase()} protocol` });
+      set({ error: tr('stores.calibration_store.isNotSupportedForProtocol', { name: calType.name, v2: protocol.toUpperCase() }) });
       return;
     }
 
@@ -344,7 +344,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
     if (calType.requiresSensor) {
       const sensorKey = calType.requiresSensor as keyof SensorAvailability;
       if (!sensors[sensorKey]) {
-        set({ error: `${calType.name} requires ${calType.requiresSensor} sensor which is not available` });
+        set({ error: tr('stores.calibration_store.requiresSensorWhichIsNotAvailable', { name: calType.name, requiresSensor: calType.requiresSensor }) });
         return;
       }
     }
@@ -382,7 +382,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
   startCalibration: async () => {
     const { calibrationType, protocol } = get();
     if (!calibrationType || !protocol) {
-      set({ error: 'No calibration type selected' });
+      set({ error: tr('stores.calibration_store.noCalibrationTypeSelected') });
       return;
     }
 
@@ -450,7 +450,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
       });
 
       if (!result?.success) {
-        throw new Error(result?.error || 'Failed to start calibration');
+        throw new Error(result?.error || tr('stores.calibration_store.failedToStartCalibration'));
       }
 
       // For simple calibrations that complete immediately
@@ -459,7 +459,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
       }
       // Otherwise, wait for progress/complete events from main process
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
+      const message = err instanceof Error ? err.message : tr('stores.calibration_store.unknownError');
       set({
         isCalibrating: false,
         error: message,
@@ -476,7 +476,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
       const result = await window.electronAPI?.calibrationConfirmPosition(currentPosition);
 
       if (!result?.success) {
-        throw new Error(result?.error || 'Failed to confirm position');
+        throw new Error(result?.error || tr('stores.calibration_store.failedToConfirmPosition'));
       }
 
       const newStatus = [...get().positionStatus];
@@ -521,7 +521,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
         }
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
+      const message = err instanceof Error ? err.message : tr('stores.calibration_store.unknownError');
       set({ error: message });
     }
   },
@@ -568,7 +568,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
         });
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to load sensor config';
+      const message = err instanceof Error ? err.message : tr('stores.calibration_store.failedToLoadSensorConfig');
       console.warn('[Calibration] Failed to load sensor config:', message);
       set({
         isSensorsLoading: false,
@@ -608,7 +608,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
       const result = await window.electronAPI?.calibrationSetData(calibrationData);
 
       if (!result?.success) {
-        throw new Error(result?.error || 'Failed to save calibration data');
+        throw new Error(result?.error || tr('stores.calibration_store.failedToSaveCalibrationData'));
       }
 
       // Save to EEPROM
@@ -625,7 +625,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
         set({ isSaving: false, saveSuccess: true });
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to save';
+      const message = err instanceof Error ? err.message : tr('stores.calibration_store.failedToSave');
       set({ isSaving: false, saveError: message, saveSuccess: false });
     }
   },
@@ -647,12 +647,12 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
       }
 
       if (!result?.success) {
-        throw new Error(result?.error || 'Failed to save to persistent storage');
+        throw new Error(result?.error || tr('stores.calibration_store.failedToSaveToPersistentStorage'));
       }
 
       set({ isSavingPersistent: false, savePersistentSuccess: true });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to save to persistent storage';
+      const message = err instanceof Error ? err.message : tr('stores.calibration_store.failedToSaveToPersistentStorage');
       set({ isSavingPersistent: false, savePersistentError: message, savePersistentSuccess: false });
     }
   },
@@ -724,7 +724,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
               verification: result,
               calibrationSuccess: false,
               calibrationUnconfirmed: false,
-              error: 'Flight controller reported success, but the calibration parameters did not change. The calibration silently failed, please try again.',
+              error: tr('stores.calibration_store.flightControllerReportedSuccessButThe'),
             });
           } else {
             // 'verified' also settles any unconfirmed completion: the params
@@ -740,7 +740,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
           }
         })
         .catch((err) => {
-          const message = err instanceof Error ? err.message : 'Verification failed';
+          const message = err instanceof Error ? err.message : tr('stores.calibration_store.verificationFailed');
           set({ verification: { status: 'error', results: [], error: message } });
         });
     } else if (success && protocol === 'mavlink' && calibrationType && !trackedTable[calibrationType]) {
@@ -755,7 +755,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
   loadCalibrationFromFile: async () => {
     const result = await window.electronAPI?.loadParamsFromFile();
     if (!result?.success || !result.params) {
-      return { ok: false, error: result?.error ?? 'Failed to load file' };
+      return { ok: false, error: result?.error ?? tr('stores.calibration_store.failedToLoadFile') };
     }
 
     // Filter to only calibration params (accel + mag; gyro is intentionally
@@ -1089,7 +1089,7 @@ async function verifyCalibrationParams(
     return {
       status: 'error',
       results: [],
-      error: result?.error ?? 'Failed to read calibration parameters',
+      error: result?.error ?? tr('stores.calibration_store.failedToReadCalibrationParameters'),
     };
   }
 
@@ -1113,7 +1113,7 @@ async function verifyCalibrationParams(
     return {
       status: 'error',
       results,
-      error: 'No tracked parameters could be read from the flight controller',
+      error: tr('stores.calibration_store.noTrackedParametersCouldBeRead'),
     };
   }
 
@@ -1193,17 +1193,17 @@ function validateCategory(
 function getInitialStatusText(type: CalibrationTypeId): string {
   switch (type) {
     case 'accel-level':
-      return 'Place your vehicle on a level surface';
+      return tr('stores.calibration_store.placeYourVehicleOnALevel');
     case 'accel-6point':
-      return `Place vehicle ${ACCEL_6POINT_POSITIONS[0]}`;
+      return tr('stores.calibration_store.placeVehicle', { v1: ACCEL_6POINT_POSITIONS[0] });
     case 'compass':
-      return 'Rotate your vehicle in all directions';
+      return tr('stores.calibration_store.rotateYourVehicleInAllDirections');
     case 'gyro':
-      return 'Keep your vehicle completely still';
+      return tr('stores.calibration_store.keepYourVehicleCompletelyStill');
     case 'opflow':
-      return 'Hold vehicle steady over a textured surface';
+      return tr('stores.calibration_store.holdVehicleSteadyOverATextured');
     default:
-      return 'Follow the on-screen instructions';
+      return tr('stores.calibration_store.followTheOnScreenInstructions');
   }
 }
 

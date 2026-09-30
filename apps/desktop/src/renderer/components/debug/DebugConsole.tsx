@@ -4,7 +4,7 @@ import { useMessagesStore } from '../../stores/messages-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { matchPreArmError } from '../../../shared/prearm-checks';
 import { PreArmParamFix } from '../prearm/PreArmParamFix';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 const LOG_COLORS = {
   info: 'text-blue-400',
@@ -225,22 +225,22 @@ export function DebugConsole() {
 
         {/* Log count badge */}
         <span className={`text-xs text-content-tertiary ${side && !isExpanded ? 'hidden' : ''}`}>
-          {logs.length} {logs.length === 1 ? 'entry' : 'entries'}
+          {logs.length} {logs.length === 1 ? t('debug.DebugConsole.entry') : t('debug.DebugConsole.entries')}
         </span>
 
         {/* Messages count badge - show when connected via MAVLink and have messages */}
         {isMavlink && messages.length > 0 && !(side && !isExpanded) && (
           <span className="text-xs text-yellow-500/70">
-            {messages.length} msg{messages.length !== 1 ? 's' : ''}
+            {messages.length} msg{messages.length !== 1 ? enPlural('s') : ''}
           </span>
         )}
       </button>
 
         {/* Dock side: on the header so it is reachable collapsed too. */}
         <div className={`flex items-center gap-0.5 ${side && !isExpanded ? 'flex-col pb-2' : ''}`}>
-          {dockButton('left', 'Dock left', <rect x="1.5" y="2.5" width="5" height="11" rx="1.5" fill="currentColor" opacity="0.5" />)}
-          {dockButton('bottom', 'Dock bottom', <rect x="1.5" y="9" width="13" height="4.5" rx="1.5" fill="currentColor" opacity="0.5" />)}
-          {dockButton('right', 'Dock right', <rect x="9.5" y="2.5" width="5" height="11" rx="1.5" fill="currentColor" opacity="0.5" />)}
+          {dockButton('left', t('debug.DebugConsole.dockLeft'), <rect x="1.5" y="2.5" width="5" height="11" rx="1.5" fill="currentColor" opacity="0.5" />)}
+          {dockButton('bottom', t('debug.DebugConsole.dockBottom'), <rect x="1.5" y="9" width="13" height="4.5" rx="1.5" fill="currentColor" opacity="0.5" />)}
+          {dockButton('right', t('debug.DebugConsole.dockRight'), <rect x="9.5" y="2.5" width="5" height="11" rx="1.5" fill="currentColor" opacity="0.5" />)}
         </div>
       </div>
 

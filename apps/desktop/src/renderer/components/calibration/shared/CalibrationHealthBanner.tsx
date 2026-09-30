@@ -43,27 +43,27 @@ function assess(record: CalibrationRecordIpc): { tone: Tone; headline: string; d
   if (record.persistence && record.persistence.state !== 'verified') {
     return {
       tone: 'danger',
-      headline: `${name} calibration did not survive the reboot`,
+      headline: tr('calibration.CalibrationHealthBanner.calibrationDidNotSurviveTheReboot', { name }),
       detail: tr('calibration.CalibrationHealthBanner.doNotFlyOnThisCalibration', { summary: record.persistence.summary }),
     };
   }
   if (!record.persistence) {
     return {
       tone: 'warn',
-      headline: `${name} calibration not yet confirmed`,
+      headline: tr('calibration.CalibrationHealthBanner.calibrationNotYetConfirmed', { name }),
       detail: tr('calibration.CalibrationHealthBanner.rebootTheFlightControllerAndReconnect'),
     };
   }
   if (record.verdict === 'bad' || record.verdict === 'marginal') {
     return {
       tone: record.verdict === 'bad' ? 'danger' : 'warn',
-      headline: `${name} calibration is on the vehicle, but weak`,
+      headline: tr('calibration.CalibrationHealthBanner.calibrationIsOnTheVehicleBut', { name }),
       detail: record.summary,
     };
   }
   return {
     tone: 'good',
-    headline: `${name} calibration confirmed on the vehicle`,
+    headline: tr('calibration.CalibrationHealthBanner.calibrationConfirmedOnTheVehicle', { name }),
     detail: record.summary,
   };
 }

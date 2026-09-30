@@ -13,11 +13,11 @@ import { CALIBRATION_TYPES, type CalibrationVerification } from '../../../../sha
 import { boardSupportsPersistentParamSave } from '../../../../shared/board-mappings';
 import { CalibrationResultCard } from '../shared/CalibrationResultCard';
 import { CompassFitPanel } from '../shared/CompassFitPanel';
-import { t as tr } from '../../../i18n';
+import { t as tr, enPlural } from '../../../i18n';
 
 const ROTATION_NAMES: Record<number, string> = {
-  0: 'None', 1: 'Yaw 45', 2: 'Yaw 90', 3: 'Yaw 135', 4: 'Yaw 180',
-  5: 'Yaw 225', 6: 'Yaw 270', 7: 'Yaw 315', 8: 'Roll 180', 12: 'Pitch 180',
+  0: 'None', get 1() { return tr('calibration.CalibrationCompleteStep.yaw45'); }, get 2() { return tr('calibration.CalibrationCompleteStep.yaw90'); }, get 3() { return tr('calibration.CalibrationCompleteStep.yaw135'); }, get 4() { return tr('calibration.CalibrationCompleteStep.yaw180'); },
+  get 5() { return tr('calibration.CalibrationCompleteStep.yaw225'); }, get 6() { return tr('calibration.CalibrationCompleteStep.yaw270'); }, get 7() { return tr('calibration.CalibrationCompleteStep.yaw315'); }, get 8() { return tr('calibration.CalibrationCompleteStep.roll180'); }, get 12() { return tr('calibration.CalibrationCompleteStep.pitch180'); },
 };
 function rotationName(o: number | null): string {
   if (o == null) return '-';
@@ -522,7 +522,7 @@ function CalibrationVerificationCard({ verification }: { verification: Calibrati
           <p className={`text-sm font-medium ${palette.text} mb-1`}>
             {isUnchanged
               ? tr('calibration.CalibrationCompleteStep.calibrationMayNotHaveApplied')
-              : tr('calibration.CalibrationCompleteStep.calibrationVerifiedOfParameterUpdated', { changedCount, totalCount, v3: totalCount === 1 ? '' : 's' })}
+              : tr('calibration.CalibrationCompleteStep.calibrationVerifiedOfParameterUpdated', { changedCount, totalCount, v3: totalCount === 1 ? '' : enPlural('s') })}
           </p>
           <p className={`text-xs ${palette.sub}`}>
             {isUnchanged

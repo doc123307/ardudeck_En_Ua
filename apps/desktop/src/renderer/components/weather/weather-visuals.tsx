@@ -31,9 +31,9 @@ export const STATUS_PILL_WORD: Record<WxStatus, string> = {
 };
 
 export const STATUS_SUMMARY: Record<WxStatus, string> = {
-  go: 'Conditions are within limits for launch.',
-  caution: 'Conditions are marginal. Review the flagged parameters before launch.',
-  nogo: 'One or more parameters exceed safe limits. Do not launch.',
+  get go() { return t('weather.weather_visuals.conditionsAreWithinLimitsForLaunch'); },
+  get caution() { return t('weather.weather_visuals.conditionsAreMarginalReviewTheFlagged'); },
+  get nogo() { return t('weather.weather_visuals.oneOrMoreParametersExceedSafe'); },
 };
 
 /**

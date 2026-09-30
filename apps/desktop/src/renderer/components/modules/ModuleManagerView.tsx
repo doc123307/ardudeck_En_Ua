@@ -10,7 +10,7 @@ import type {
   CargoDetail,
   CargoPreviewBlock,
 } from '../../../shared/module-types';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 // ---------------------------------------------------------------------------
 // Icons
@@ -241,7 +241,7 @@ function ActivationProgress({ progress }: { progress: ModuleProgress }) {
     downloading: 'Downloading',
     verifying: 'Verifying',
     complete: 'Complete',
-    error: 'Error',
+    error: t('modules.ModuleManagerView.error'),
   };
 
   const stageColors: Record<ModuleProgress['stage'], string> = {
@@ -1330,7 +1330,7 @@ export function ModuleManagerView() {
                 {tab.id === 'installed' && updates.length > 0 && (
                   <span
                     className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                    data-tip={`${updates.length} update${updates.length > 1 ? 's' : ''} available`}
+                    data-tip={`${updates.length} update${updates.length > 1 ? enPlural('s') : ''} available`}
                   >
                     {updates.length} {t('modules.ModuleManagerView.new')}
                   </span>

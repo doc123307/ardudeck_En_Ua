@@ -31,17 +31,17 @@ const DRIVER_INFO: Record<string, DriverInfo[]> = {
       name: 'CP210x Driver',
       get description() { return t('connection.DriverAssistant.forSiliconLabsUsbUartBridges'); },
       url: 'https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers',
-      chips: ['CP210x', 'Silicon Labs'],
+      chips: ['CP210x', t('connection.DriverAssistant.siliconLabs')],
     },
   ],
   linux: [], // Linux has built-in drivers
 };
 
 const TROUBLESHOOTING_TIPS = [
-  'Try a different USB cable (some are charge-only)',
-  'Try a different USB port (avoid USB hubs)',
-  'Unplug and replug the device',
-  'Restart the application after installing drivers',
+  t('connection.DriverAssistant.tryADifferentUsbCableSome'),
+  t('connection.DriverAssistant.tryADifferentUsbPortAvoid'),
+  t('connection.DriverAssistant.unplugAndReplugTheDevice'),
+  t('connection.DriverAssistant.restartTheApplicationAfterInstallingDrivers'),
 ];
 
 function getOS(): 'darwin' | 'win32' | 'linux' {

@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { t } from '../../i18n';
 
 /** Telemetry within this window counts as a live heartbeat. */
 const LIVE_WINDOW_MS = 3000;
@@ -51,10 +52,10 @@ export function HeartbeatDot({ lastUpdate, className = '' }: HeartbeatDotProps) 
   const age = lastUpdate === null ? Infinity : Date.now() - lastUpdate;
   const live = age < LIVE_WINDOW_MS;
   const tip = live
-    ? 'Receiving heartbeat'
+    ? t('fleet.HeartbeatDot.receivingHeartbeat')
     : lastUpdate === null
-      ? 'No heartbeat yet'
-      : `No heartbeat for ${Math.round(age / 1000)}s`;
+      ? t('fleet.HeartbeatDot.noHeartbeatYet')
+      : t('fleet.HeartbeatDot.noHeartbeatForS', { v1: Math.round(age / 1000) });
 
   return (
     <span className={`relative inline-flex w-2.5 h-2.5 shrink-0 ${className}`} data-tip={tip}>

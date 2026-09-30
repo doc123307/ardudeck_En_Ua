@@ -160,7 +160,7 @@ export default function VtxConfigTab({ modified, setModified }: Props) {
         return;
       }
 
-      setSuccess('VTX configuration saved');
+      setSuccess(t('parameters.VtxConfigTab.vtxConfigurationSaved'));
       setModified(false);
     } catch (err) {
       console.error('[VtxConfig] Save error:', err);

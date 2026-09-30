@@ -1,3 +1,4 @@
+import { t as i18nT } from '../../i18n';
 // Spectral analysis for log signals (vibration / harmonic-notch tuning).
 // Pure math, no dependencies: iterative radix-2 FFT with Hann windowing and
 // Welch segment averaging. Amplitudes are calibrated so a pure sine of
@@ -7,7 +8,7 @@
 /** In-place iterative radix-2 FFT. Lengths must be a power of two. */
 export function fftInPlace(re: Float64Array, im: Float64Array): void {
   const n = re.length;
-  if (n !== im.length || (n & (n - 1)) !== 0) throw new Error('fft length must be a power of two');
+  if (n !== im.length || (n & (n - 1)) !== 0) throw new Error(i18nT('logs.log_fft.fftLengthMustBeAPower'));
 
   // Bit-reversal permutation
   for (let i = 1, j = 0; i < n; i++) {

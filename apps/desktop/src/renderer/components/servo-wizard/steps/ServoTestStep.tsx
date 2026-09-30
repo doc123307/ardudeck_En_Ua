@@ -175,28 +175,28 @@ export default function ServoTestStep() {
 function getServoTestInstruction(surface: string): string {
   switch (surface) {
     case 'aileron_left':
-      return 'Move roll stick RIGHT → this servo should move DOWN';
+      return t('servo_wizard.ServoTestStep.moveRollStickRightThisServo');
     case 'aileron_right':
-      return 'Move roll stick RIGHT → this servo should move UP';
+      return t('servo_wizard.ServoTestStep.moveRollStickRightThisServo2');
     case 'elevator':
-      return 'Pull pitch stick BACK → trailing edge should go UP';
+      return t('servo_wizard.ServoTestStep.pullPitchStickBackTrailingEdge');
     case 'rudder':
-      return 'Move yaw stick RIGHT → rudder should deflect RIGHT';
+      return t('servo_wizard.ServoTestStep.moveYawStickRightRudderShould');
     case 'elevon_left':
-      return 'Roll RIGHT → DOWN. Pitch BACK → UP (trailing edge)';
+      return t('servo_wizard.ServoTestStep.rollRightDownPitchBackUp');
     case 'elevon_right':
-      return 'Roll RIGHT → UP. Pitch BACK → UP (trailing edge)';
+      return t('servo_wizard.ServoTestStep.rollRightUpPitchBackUp');
     case 'vtail_left':
-      return 'Pitch BACK and Yaw RIGHT → test both movements';
+      return t('servo_wizard.ServoTestStep.pitchBackAndYawRightTest');
     case 'vtail_right':
-      return 'Pitch BACK and Yaw RIGHT → test both movements';
+      return t('servo_wizard.ServoTestStep.pitchBackAndYawRightTest');
     case 'yaw_servo':
-      return 'Move yaw stick → motor should tilt';
+      return t('servo_wizard.ServoTestStep.moveYawStickMotorShouldTilt');
     case 'gimbal_pan':
-      return 'Move yaw stick → camera should rotate horizontally';
+      return t('servo_wizard.ServoTestStep.moveYawStickCameraShouldRotate');
     case 'gimbal_tilt':
-      return 'Move pitch stick → camera should tilt up/down';
+      return t('servo_wizard.ServoTestStep.movePitchStickCameraShouldTilt');
     default:
-      return 'Move the corresponding stick';
+      return t('servo_wizard.ServoTestStep.moveTheCorrespondingStick');
   }
 }

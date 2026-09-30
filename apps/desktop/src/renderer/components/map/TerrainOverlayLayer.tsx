@@ -7,6 +7,7 @@ import {
   WATER_THRESHOLD,
   type ColorLookupTable,
 } from '../../utils/terrain-colors';
+import { t } from '../../i18n';
 
 const TERRAIN_TILE_URL = 'tile-cache://dem/{z}/{x}/{y}.png';
 
@@ -94,7 +95,7 @@ function createTerrainGridLayer(
       img.onload = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) {
-          done(new Error('No 2d context'), canvas);
+          done(new Error(t('map.TerrainOverlayLayer.no2dContext')), canvas);
           return;
         }
 
@@ -161,7 +162,7 @@ function createTerrainGridLayer(
       };
 
       img.onerror = () => {
-        done(new Error('Tile load failed'), canvas);
+        done(new Error(t('map.TerrainOverlayLayer.tileLoadFailed')), canvas);
       };
 
       img.src = url;

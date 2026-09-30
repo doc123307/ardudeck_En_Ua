@@ -97,7 +97,7 @@ async function fetchLocation(): Promise<GeoLocation> {
   try {
     const position = await new Promise<GeolocationPosition>((resolve, reject) => {
       if (!navigator.geolocation) {
-        reject(new Error('Geolocation not supported'));
+        reject(new Error(t('utils.ip_geolocation.geolocationNotSupported')));
         return;
       }
 
@@ -133,6 +133,7 @@ async function fetchLocation(): Promise<GeoLocation> {
  * Returns [location, isLoading]
  */
 import { useState, useEffect } from 'react';
+import { t } from '../i18n';
 
 export function useIpLocation(): [GeoLocation | null, boolean] {
   const [location, setLocation] = useState<GeoLocation | null>(getCachedLocation());

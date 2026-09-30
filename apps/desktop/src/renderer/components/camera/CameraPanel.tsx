@@ -35,9 +35,9 @@ const OSD_LABELS: Partial<Record<keyof OsdLayers, string>> = {
   cornerTelemetry: 'Telemetry',
   crosshair: 'Crosshair',
   northIndicator: 'Compass',
-  frameCenterCoords: 'Center coords',
+  get frameCenterCoords() { return tr('camera.CameraPanel.centerCoords'); },
   artificialHorizon: 'Horizon',
-  hud: 'Flight HUD',
+  get hud() { return tr('camera.CameraPanel.flightHud'); },
 };
 
 const ICON_BTN =
@@ -124,14 +124,14 @@ export function CameraPanel() {
   const handleSnapshot = async () => {
     if (!liveSourceId) return;
     const r = await window.electronAPI.cameraSnapshot(liveSourceId);
-    flash(r.ok ? `Snapshot saved` : `Snapshot failed: ${r.error ?? ''}`);
+    flash(r.ok ? tr('camera.CameraPanel.snapshotSaved') : tr('camera.CameraPanel.snapshotFailed', { v1: r.error ?? '' }));
   };
 
   const handleRecord = async () => {
     if (!liveSourceId) return;
     const r = await window.electronAPI.cameraRecordToggle(liveSourceId);
-    if (!r.ok) { flash(`Record failed: ${r.error ?? ''}`); return; }
-    if (recordingSourceId === liveSourceId) { setRecordingSourceId(null); flash('Recording saved'); }
+    if (!r.ok) { flash(tr('camera.CameraPanel.recordFailed', { v1: r.error ?? '' })); return; }
+    if (recordingSourceId === liveSourceId) { setRecordingSourceId(null); flash(tr('camera.CameraPanel.recordingSaved')); }
     else { setRecordingSourceId(liveSourceId); flash('Recording…'); }
   };
 
@@ -314,7 +314,7 @@ export function CameraPanel() {
                     setShowMoreMenu(false);
                     const text = await window.electronAPI.cameraDiagnostics();
                     await navigator.clipboard.writeText(`${text}\n--- webrtc (this window) ---\n${await describePeers()}`);
-                    flash('Video diagnostics copied');
+                    flash(tr('camera.CameraPanel.videoDiagnosticsCopied'));
                   }}
                 >
                   {tr('camera.CameraPanel.copyDiagnostics')}

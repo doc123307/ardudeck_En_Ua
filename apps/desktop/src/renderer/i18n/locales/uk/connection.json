@@ -73,7 +73,16 @@
       "autopilot": "Автопілот",
       "vehicle": "Апарат",
       "systemId": "System ID",
-      "deviceNotShowingGetDriverHelp": "Пристрій не видно? Допомога з драйверами"
+      "deviceNotShowingGetDriverHelp": "Пристрій не видно? Допомога з драйверами",
+      "batteryFullAgain": "Батарею знову заряджено",
+      "thisArdupilotOnlyChargesOnBoot": "Ця версія ArduPilot заряджає лише під час старту: натисніть «Відродити»",
+      "theVehicleRefusedTheChange": "Апарат відхилив зміну",
+      "respawningAtHome": "Відродження вдома",
+      "inavRunningOnTcp5760": "iNav працює на TCP :5760",
+      "ardupilotRunningOnTcp5760": "ArduPilot {{ardupilotVehicleType}} працює на TCP :5760",
+      "px4RunningOnUdp14550": "PX4 {{px4VehicleType}} працює на UDP :14550",
+      "clickToDownloadAndLaunch": "Клацніть, щоб завантажити й запустити",
+      "launchVirtualFlightController": "Запустити віртуальний польотний контролер"
     },
     "DriverAssistant": {
       "macos1014HasBuiltIn": "У macOS 10.14+ є вбудована підтримка. Встановлюйте, лише якщо пристрій не визначається.",
@@ -86,7 +95,12 @@
       "linuxIncludesBuiltInDriversFor": "Linux має вбудовані драйвери для більшості мікросхем USB-serial. Якщо пристрій не визначається, перевірте, чи є у вас права на доступ до послідовних портів (додайте користувача до групи",
       "group": ").",
       "troubleshooting": "Усунення проблем",
-      "afterInstallingAllowTheExtensionIn": "Після встановлення дозвольте розширення в System Settings → Privacy & Security"
+      "afterInstallingAllowTheExtensionIn": "Після встановлення дозвольте розширення в System Settings → Privacy & Security",
+      "siliconLabs": "Silicon Labs",
+      "tryADifferentUsbCableSome": "Спробуйте інший USB-кабель (деякі лише для заряджання)",
+      "tryADifferentUsbPortAvoid": "Спробуйте інший USB-порт (уникайте USB-хабів)",
+      "unplugAndReplugTheDevice": "Від'єднайте й знову під'єднайте пристрій",
+      "restartTheApplicationAfterInstallingDrivers": "Перезапустіть застосунок після встановлення драйверів"
     },
     "LinksManager": {
       "server": "Сервер",
@@ -145,7 +159,10 @@
       "fixForMe": "Виправити за мене",
       "settingsAppliedRestartTheVehicleButton": "Налаштування застосовано. Перезапустіть апарат (кнопка вище), щоб вони набули чинності — канал потім перепідключиться сам.",
       "hideTechnicalDetails": "Сховати технічні подробиці",
-      "showTechnicalDetails": "Показати технічні подробиці"
+      "showTechnicalDetails": "Показати технічні подробиці",
+      "isNotLoadedYet": "{{param}} ще не завантажено",
+      "theVehicleRejected": "Апарат відхилив: {{v1}}",
+      "applyingSettingsFailed": "Не вдалося застосувати налаштування."
     },
     "RadioSetupWizard": {
       "findRadio": "Пошук радіо",
@@ -190,7 +207,15 @@
       "theRemainingItemCannotBeFixed": "Решту неможливо виправити звідси (див. вище). Телеметрія працює в будь-якому разі.",
       "radioLinkFullySetUp": "Радіоканал повністю налаштовано.",
       "telemetryStickControlAndSignalStrength": "Телеметрія, керування стіками й рівень сигналу йдуть через радіо. Далі все як із модемом SiK: просто підключайтеся на",
-      "wheneverYouFlyOrDrive": "щоразу, коли літаєте чи їздите."
+      "wheneverYouFlyOrDrive": "щоразу, коли літаєте чи їздите.",
+      "theModuleKeptRefusingTheChange": "Модуль постійно відхиляв зміну — приймач ще живився й був на зв'язку. Повністю знеструмте апарат (батарею І USB-кабель) і натисніть «Почати» ще раз.",
+      "theModuleStoppedResponding": "Модуль перестав відповідати.",
+      "couldNotOpenThePortIs": "Не вдалося відкрити порт. Можливо, його використовує інша програма?",
+      "couldNotListenOnTheWifi": "Не вдалося прослуховувати WiFi-порт. Можливо, UDP 14550 використовує інша програма?",
+      "couldNotReadVehicleSettings": "Не вдалося прочитати налаштування апарата.",
+      "theVehicleRejected": "Апарат відхилив: {{v1}}",
+      "applyingSettingsFailed": "Не вдалося застосувати налаштування.",
+      "theRestartCommandWasNotAccepted": "Команду перезапуску не прийнято."
     },
     "RecentConnectionsButton": {
       "recentConnections": "Останні підключення ({{length}})",

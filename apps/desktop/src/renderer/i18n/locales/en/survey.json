@@ -39,7 +39,8 @@
       "ha": "ha ·",
       "uploading": "Uploading…",
       "uploadAll": "Upload all",
-      "bandsAreNonOverlappingMissionsUpload": "Bands are non-overlapping; missions upload sequentially to each vehicle on any connected link. Timing deconfliction is out of scope here."
+      "bandsAreNonOverlappingMissionsUpload": "Bands are non-overlapping; missions upload sequentially to each vehicle on any connected link. Timing deconfliction is out of scope here.",
+      "uploadFailed": "Upload failed"
     },
     "SurveyConfigPanel": {
       "grid": "Grid",
@@ -244,7 +245,11 @@
       "pickAPresetOrStayWith": "Pick a preset (or stay with current settings)",
       "pickATemplate": "Pick a template…",
       "saved": "Saved",
-      "deletePreset": "Delete preset"
+      "deletePreset": "Delete preset",
+      "section": "Section",
+      "in": "In",
+      "section2": "section",
+      "sections": "sections"
     },
     "SurveyMapOverlay": {
       "locked": " Locked",
@@ -252,6 +257,9 @@
       "clickToAddAPoint": "Click to add a point",
       "dragToShapeTheCurveRight": "Drag to shape the curve · right-click to reset",
       "clickToAddAControlPoint": "Click to add a control point"
+    },
+    "SurveyProgressOverlay": {
+      "etaMin": "ETA {{v1}} min"
     },
     "SurveyStartButton": {
       "areaSurvey": "Area survey",
@@ -282,7 +290,13 @@
       "inwardOrOutwardSpiralWithinThe": "Inward or outward spiral within the polygon.",
       "linearSurveyAlongACenterlineRoads": "Linear survey along a centerline (roads, rail, power lines, pipelines). Parallel strips with plane racetrack turns or copter on-the-spot turns.",
       "captureALineShorelineCliffFrontage": "Capture a line (shoreline, cliff, frontage): the drawn line is the subject, the flight path is derived to the side, and the camera yaws onto the subject the whole way.",
-      "nPerimeterPassesFollowedByA": "N perimeter passes followed by a grid fill of the interior."
+      "nPerimeterPassesFollowedByA": "N perimeter passes followed by a grid fill of the interior.",
+      "crosshatch": "Crosshatch",
+      "circular": "Circular",
+      "spiral": "Spiral",
+      "corridor": "Corridor",
+      "panorama": "Panorama",
+      "perimeterFill": "Perimeter Fill"
     },
     "survey_presets": {
       "n2dMapFastFlightSingleGrid": "2D map. Fast flight, single grid pass.",
@@ -321,7 +335,14 @@
       "returnToLaunchAfterTheLast": "Return to launch after the last line",
       "land": "Land",
       "landWhereTheSurveyEnds": "Land where the survey ends",
-      "stopAtTheLastLineSo": "Stop at the last line, so another survey or waypoint can follow"
+      "stopAtTheLastLineSo": "Stop at the last line, so another survey or waypoint can follow",
+      "groundVehicle": "Ground vehicle",
+      "submarine": "Submarine",
+      "noVehicleConnectedPickAnAirframe": "No vehicle connected - pick an airframe to plan for",
+      "overshootAndRacetracksAtHairpins": "overshoot and racetracks at hairpins",
+      "turnsOnTheSpotNoOvershoot2": "turns on the spot, no overshoot",
+      "verticalTakeoffAndLanding": "vertical takeoff and landing",
+      "normalTakeoffRtlHome": "normal takeoff, RTL home"
     }
   }
 }

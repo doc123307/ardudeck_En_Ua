@@ -405,7 +405,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-medium text-content">{t('mavlink_config.FlightModesTab.modeSwitchChannel')}</h3>
-              <p className="text-xs text-content-secondary mt-0.5">{t('mavlink_config.FlightModesTab.whichRcChannelControls')} {isRover ? 'drive modes' : 'flight modes'}</p>
+              <p className="text-xs text-content-secondary mt-0.5">{t('mavlink_config.FlightModesTab.whichRcChannelControls')} {isRover ? t('mavlink_config.FlightModesTab.driveModes') : t('mavlink_config.FlightModesTab.flightModes')}</p>
             </div>
             <div className="flex items-center gap-2">
               <select

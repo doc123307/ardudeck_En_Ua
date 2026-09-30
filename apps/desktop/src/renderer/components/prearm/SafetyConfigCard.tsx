@@ -18,7 +18,7 @@ import {
   type SafetySeverity,
 } from '../../../shared/safety-config-checks';
 import type { CalibrationRecordIpc, CalibrationVerdict } from '../../../shared/calibration-quality';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 const SEVERITY: Record<SafetySeverity, {
   icon: typeof ShieldAlert;
@@ -159,7 +159,7 @@ export function SafetyConfigCard() {
           {t('prearm.SafetyConfigCard.safetyConfiguration')}
         </h4>
         <span className="text-[11px] text-content-tertiary">
-          {findings.length} {t('prearm.SafetyConfigCard.item')}{findings.length === 1 ? '' : 's'}
+          {findings.length} {t('prearm.SafetyConfigCard.item')}{findings.length === 1 ? '' : enPlural('s')}
         </span>
       </div>
       {findings.map((finding) => (

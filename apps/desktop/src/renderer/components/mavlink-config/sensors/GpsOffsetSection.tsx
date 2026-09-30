@@ -20,7 +20,7 @@ import {
   dirtyParams,
   formatMeters,
 } from './gps-offset';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 const AXIS = {
   x: { get label() { return t('mavlink_config.GpsOffsetSection.xForward'); }, chip: 'bg-sky-500/15 text-sky-400', dot: 'bg-sky-400', line: 'stroke-sky-400', focus: 'focus:ring-sky-500/70' },
@@ -436,7 +436,7 @@ export const GpsOffsetSection: React.FC = () => {
         <div className="flex items-center gap-3 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
           <Zap className="w-4 h-4 text-amber-400 shrink-0" />
           <span className="flex-1 text-sm text-amber-300">
-            {dirty.length} {t('mavlink_config.GpsOffsetSection.change')}{dirty.length === 1 ? '' : 's'} {t('mavlink_config.GpsOffsetSection.stagedNothingIsWrittenToThe')}
+            {dirty.length} {t('mavlink_config.GpsOffsetSection.change')}{dirty.length === 1 ? '' : enPlural('s')} {t('mavlink_config.GpsOffsetSection.stagedNothingIsWrittenToThe')}
           </span>
           <button
             onClick={() => setPending(new Map())}

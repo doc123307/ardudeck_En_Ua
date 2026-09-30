@@ -13,7 +13,7 @@ import {
   normalizeAxes,
   toggleAxis,
 } from './autotune';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 const AXIS_CHIP: Record<string, { on: string; off: string }> = {
   Roll: {
@@ -254,7 +254,7 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
             <div className="flex items-center gap-3 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
               <Zap className="w-4 h-4 text-amber-400 shrink-0" />
               <span className="flex-1 text-sm text-amber-300">
-                {pending.size} {t('mavlink_config.AutotuneTab.change')}{pending.size === 1 ? '' : 's'} {t('mavlink_config.AutotuneTab.stagedNothingIsWrittenToThe')}
+                {pending.size} {t('mavlink_config.AutotuneTab.change')}{pending.size === 1 ? '' : enPlural('s')} {t('mavlink_config.AutotuneTab.stagedNothingIsWrittenToThe')}
               </span>
               <button
                 onClick={() => setPending(new Map())}

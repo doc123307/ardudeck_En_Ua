@@ -101,7 +101,7 @@ export function TrafficAltitudeFilterCard({ className }: { className?: string })
         </span>
       </button>
       <p className="text-[10px] text-content-tertiary mt-1.5 leading-snug">
-        {t('map.TrafficAltitudeFilter.belowTheFloorIsHiddenAbove')} {band.hardCeiling ? 'is hidden' : t('map.TrafficAltitudeFilter.shrinksAndFades')}.
+        {t('map.TrafficAltitudeFilter.belowTheFloorIsHiddenAbove')} {band.hardCeiling ? t('map.TrafficAltitudeFilter.isHidden') : t('map.TrafficAltitudeFilter.shrinksAndFades')}.
       </p>
     </div>
   );

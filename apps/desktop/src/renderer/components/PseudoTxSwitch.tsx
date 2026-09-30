@@ -119,7 +119,7 @@ function MappingPanel(): JSX.Element {
                     : 'bg-surface-raised text-content-secondary border border-subtle hover:text-content'
                 }`}
               >
-                {isLearning ? 'move it' : t('components.PseudoTxSwitch.assign')}
+                {isLearning ? t('components.PseudoTxSwitch.moveIt') : t('components.PseudoTxSwitch.assign')}
               </button>
 
               <button
@@ -223,10 +223,10 @@ export function PseudoTxSwitch(): JSX.Element {
   const sentFrames = usePseudoTxStore((s) => s.sentFrames);
 
   const detail = !enabled
-    ? 'Off - the sliders below are driving RC'
+    ? t('components.PseudoTxSwitch.offTheSlidersBelowAreDriving')
     : connected
       ? `${deviceName} - ${sentFrames} RC frames sent`
-      : 'Waiting for a handset - set EdgeTX to USB Joystick mode';
+      : t('components.PseudoTxSwitch.waitingForAHandsetSetEdgetx');
 
   return (
     <div className="bg-surface rounded-xl border border-subtle p-4">

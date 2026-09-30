@@ -62,6 +62,10 @@
       "horizontalWindSpeedAndDirection": "Horizontal wind speed and direction",
       "verticalWindComponent": "Vertical wind component"
     },
+    "fence_check": {
+      "outsideFenceNotInsideAnyInclusion": "outside fence: not inside any inclusion polygon",
+      "outsideFenceNotInsideAnyInclusion2": "outside fence: not inside any inclusion circle"
+    },
     "flight_briefing": {
       "flightTime": "Flight time",
       "estimatedAtCruiseSpeed": "estimated at cruise speed",
@@ -74,6 +78,35 @@
       "onTheFinalBattery": "on the final battery",
       "maxFromHome": "Max from home",
       "wind": "Wind"
+    },
+    "font_renderer": {
+      "analogPal3016": "Analog PAL (30×16)",
+      "analogNtsc3013": "Analog NTSC (30×13)",
+      "hdzero5018": "HDZero (50×18)",
+      "walksnail5320": "Walksnail (53×20)",
+      "betaflightHdO35320": "Betaflight HD / O3 (53×20)"
+    },
+    "geomag_activity_api": {
+      "quiet": "Quiet",
+      "unsettled": "Unsettled",
+      "active": "Active",
+      "minor": "Minor",
+      "moderate": "Moderate",
+      "strong": "Strong",
+      "severe": "Severe",
+      "extreme": "Extreme"
+    },
+    "geomag_thresholds": {
+      "stormCompassAndGpsAccuracyReduced": "{{lead}} ({{v2}} storm): compass and GPS accuracy reduced, do not calibrate.",
+      "unsettledFieldHoldOffOnCompass": "{{lead}}: unsettled field, hold off on compass calibration."
+    },
+    "ip_geolocation": {
+      "geolocationNotSupported": "Geolocation not supported"
+    },
+    "joystick_safety": {
+      "assignRollPitchThrottleAndYaw": "Assign roll, pitch, throttle and yaw first",
+      "centreTheStick": "Centre the {{v1}} stick{{v2}}",
+      "closeTheThrottle": "Close the throttle"
     },
     "radio_preflight": {
       "stickControlOverTheRadioLink": "Stick control over the radio link",
@@ -90,13 +123,29 @@
     },
     "rc_source_arbiter": {
       "joystickControlOwnsTheRcLink": "Joystick control owns the RC link",
-      "virtualRcSlidersOwnTheRc": "Virtual RC sliders own the RC link"
+      "virtualRcSlidersOwnTheRc": "Virtual RC sliders own the RC link",
+      "trainerSessionActiveTheTrainerOwns": "Trainer session active - the Trainer owns the sticks"
     },
     "receiver_constants": {
       "none": "None",
       "serial": "Serial",
       "spektrum": "Spektrum",
-      "fport": "FPort"
+      "fport": "FPort",
+      "lowLatencyDigitalLinkUsedBy": "Low-latency digital link. Used by TBS Crossfire and ExpressLRS receivers.",
+      "invertedSerialProtocolCommonWithFrsky": "Inverted serial protocol. Common with FrSky and RadioLink receivers. Some boards need a hardware inverter.",
+      "flyskyDigitalProtocolConnectToA": "FlySky digital protocol. Connect to a free UART RX pad.",
+      "spektrumSatelliteReceiverBindToTransmitter": "Spektrum satellite receiver. Bind to transmitter first, then connect to UART.",
+      "frskyFPortCombinesSbusTelemetry": "FrSky F.Port combines SBUS + telemetry on a single wire.",
+      "immersionrcGhostUltraLowLatencyProtocol": "ImmersionRC Ghost ultra-low latency protocol.",
+      "spektrumSrxl2BidirectionalSerialProtocol": "Spektrum SRXL2 bidirectional serial protocol.",
+      "forGcsSitlControlOnlyDo": "For GCS/SITL control only. Do not use with a physical receiver.",
+      "invertedSerialProtocolCommonWithFrsky2": "Inverted serial protocol. Common with FrSky and RadioLink receivers.",
+      "spektrumSatelliteReceiverBindToTransmitter2": "Spektrum satellite receiver. Bind to transmitter first."
+    },
+    "rssi_state": {
+      "noTelemetryLink": "No telemetry link",
+      "rssiReportingIsOffOnThe": "RSSI reporting is off on the vehicle (RSSI_TYPE = 0)",
+      "theReceiverIsConnectedButReports": "The receiver is connected but reports no signal strength. RSSI_TYPE needs to match the receiver (3 for CRSF/ELRS)."
     },
     "ruby_osd": {
       "videoMbps": "Video Mbps",
@@ -140,7 +189,13 @@
       "speedAltitude": "Speed & altitude",
       "heading": "Heading",
       "altitudeGraph": "Altitude graph",
-      "instruments": "Instruments"
+      "instruments": "Instruments",
+      "rubyOsdNoOsdBlockFound": "ruby-osd: no \"osd:\" block found",
+      "rubyOsdNoOsdBlockTo": "ruby-osd: no \"osd:\" block to splice"
+    },
+    "stick_assign": {
+      "pitchUnused": "Pitch (unused)",
+      "yawUnused": "Yaw (unused)"
     }
   }
 }

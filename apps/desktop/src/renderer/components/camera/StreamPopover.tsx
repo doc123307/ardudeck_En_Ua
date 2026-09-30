@@ -3,7 +3,7 @@ import { Copy, Check } from 'lucide-react';
 import type { CanvasStreamSnapshot } from './useCanvasStream';
 import type { PublishStats } from './whip-publish';
 import { streamReadUrls } from '../../../shared/camera-types';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 export function StreamPopover({ stream, path, installing, onStart, onStop, onInstall, onClose, className, hud }: {
   stream: CanvasStreamSnapshot;
@@ -32,18 +32,18 @@ export function StreamPopover({ stream, path, installing, onStart, onStop, onIns
   };
 
   const statusLine = live
-    ? `Live, ${stream.codec ?? 'video'}, ${stream.readers} reader${stream.readers === 1 ? '' : 's'}`
+    ? `Live, ${stream.codec ?? 'video'}, ${stream.readers} reader${stream.readers === 1 ? '' : enPlural('s')}`
     : installing
-      ? 'Installing engine...'
+      ? t('camera.StreamPopover.installingEngine')
       : stream.state === 'starting'
-        ? 'Starting...'
-        : 'Off';
+        ? t('camera.StreamPopover.starting')
+        : t('camera.StreamPopover.off');
 
   const what = !hud
-    ? 'Sends the 3D view only, without HUD or controls.'
+    ? t('camera.StreamPopover.sendsThe3dViewOnlyWithout')
     : hud.value
-      ? 'Sends the followed vehicle\'s view with HUD and OSD, rendered on its own so nothing on screen covers it.'
-      : 'Sends the terrain only, without HUD or OSD.';
+      ? t('camera.StreamPopover.sendsTheFollowedVehicleSView')
+      : t('camera.StreamPopover.sendsTheTerrainOnlyWithoutHud');
 
   return (
     <>

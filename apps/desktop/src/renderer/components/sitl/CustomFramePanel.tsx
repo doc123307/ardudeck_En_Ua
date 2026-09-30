@@ -52,7 +52,7 @@ const FIELD_GROUPS: { title: string; fields: SitlNumericFieldKey[] }[] = [
 ];
 
 const FIELD_HINTS: Partial<Record<SitlNumericFieldKey, string>> = {
-  maxVoltage: 'V (full-charge)',
+  get maxVoltage() { return tr('sitl.CustomFramePanel.vFullCharge'); },
   refBatRes: 'Ω (internal)',
   refAngle: 'deg',
   refVoltage: 'V',

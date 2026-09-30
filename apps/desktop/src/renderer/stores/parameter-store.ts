@@ -6,6 +6,7 @@ import { getDeclaredParamMeta } from './declared-param-meta';
 import { validateParameterValue, vehicleTypeToMavType, REBOOT_REQUIRED_OVERRIDES, type ParameterMetadataStore, type ValidationResult, type VehicleType } from '../../shared/parameter-metadata.js';
 import { createSearchRegex } from '../../shared/search-utils.js';
 import { useConnectionStore } from './connection-store';
+import { t } from '../i18n';
 
 export type SortColumn = 'name' | 'status';
 export type SortDirection = 'asc' | 'desc';
@@ -459,7 +460,7 @@ export const useParameterStore = create<ParameterStore>((set, get) => ({
       set({
         isLoading: false,
         downloadState: 'failed',
-        error: result?.error ?? 'Failed to request parameters'
+        error: result?.error ?? t('stores.parameter_store.failedToRequestParameters')
       });
     } else {
       paramFetchFailures = 0;
@@ -563,7 +564,7 @@ export const useParameterStore = create<ParameterStore>((set, get) => ({
     const result = await window.electronAPI?.setParameter(paramId, value, paramType);
 
     if (!result?.success) {
-      set({ error: result?.error ?? 'Failed to set parameter' });
+      set({ error: result?.error ?? t('stores.parameter_store.failedToSetParameter') });
       return false;
     }
 

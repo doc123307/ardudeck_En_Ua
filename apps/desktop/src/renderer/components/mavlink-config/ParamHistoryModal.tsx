@@ -9,7 +9,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { History, ChevronDown, ChevronRight, RotateCcw, Trash2, X, Loader2 } from 'lucide-react';
 import type { ParamCheckpoint, ParamChange } from '../../../shared/param-history-types';
 import { useParameterStore } from '../../stores/parameter-store';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 interface Props {
   boardUid: string;
@@ -26,7 +26,7 @@ function formatRelativeTime(timestamp: number): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (seconds < 60) return 'Just now';
+  if (seconds < 60) return t('mavlink_config.ParamHistoryModal.justNow');
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days < 30) return `${days}d ago`;
@@ -80,7 +80,7 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
         }
         if (applied > 0) {
           showToast(
-            t('mavlink_config.ParamHistoryModal.restoredParameterToPreviousValuesWrite', { applied, v2: applied !== 1 ? 's' : '', v3: failed > 0 ? ` (${failed} failed)` : '' }),
+            t('mavlink_config.ParamHistoryModal.restoredParameterToPreviousValuesWrite', { applied, v2: applied !== 1 ? enPlural('s') : '', v3: failed > 0 ? ` (${failed} failed)` : '' }),
             failed > 0 ? 'info' : 'success'
           );
         } else {
@@ -260,7 +260,7 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
         {/* Footer */}
         <div className="px-6 py-3 border-t border-subtle flex justify-between items-center">
           <span className="text-xs text-content-tertiary">
-            {checkpoints.length} {t('mavlink_config.ParamHistoryModal.checkpoint')}{checkpoints.length !== 1 ? 's' : ''}
+            {checkpoints.length} {t('mavlink_config.ParamHistoryModal.checkpoint')}{checkpoints.length !== 1 ? enPlural('s') : ''}
           </span>
           <button
             onClick={onClose}

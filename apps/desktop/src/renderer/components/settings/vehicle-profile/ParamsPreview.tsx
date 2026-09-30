@@ -5,7 +5,7 @@ import { getTemplate, defaultTemplateForType } from '../../../lib/vehicle-templa
 import { useConnectionStore } from '../../../stores/connection-store.js';
 import { useParameterStore } from '../../../stores/parameter-store.js';
 import { ApplyProfileButton } from './ApplyProfileButton.js';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 interface ParamsPreviewProps {
   vehicle: VehicleProfile;
@@ -146,7 +146,7 @@ function pickCollapsedStatus(args: {
 
   // Never applied.
   if (!lastApplied) {
-    return { containerClass: base, badge: 'not applied yet', badgeClass: 'text-content-tertiary', badgeIcon: <Circle className="w-2.5 h-2.5" /> };
+    return { containerClass: base, badge: t('settings.ParamsPreview.notAppliedYet'), badgeClass: 'text-content-tertiary', badgeIcon: <Circle className="w-2.5 h-2.5" /> };
   }
 
   // Applied but everything offline.
@@ -216,7 +216,7 @@ function StatusBanner({ lastApplied, lastAppliedTo, matchCount, driftCount, offl
     return (
       <div className="mt-2 flex items-center gap-2 text-[11px] text-amber-400">
         <AlertTriangle className="w-3 h-3" />
-        {t('settings.ParamsPreview.appliedTo')} {target} {when} · <span className="font-semibold">{driftCount}</span> {t('settings.ParamsPreview.param')}{driftCount === 1 ? '' : 's'} {t('settings.ParamsPreview.driftedFromAppliedState')}
+        {t('settings.ParamsPreview.appliedTo')} {target} {when} · <span className="font-semibold">{driftCount}</span> {t('settings.ParamsPreview.param')}{driftCount === 1 ? '' : enPlural('s')} {t('settings.ParamsPreview.driftedFromAppliedState')}
       </div>
     );
   }

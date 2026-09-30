@@ -51,6 +51,7 @@ import {
   unregisterSurveyGenerator,
   type SurveyGeneratorRegistration,
 } from '../components/survey/generator-registry';
+import { t } from '../i18n';
 
 type RegisterFn = (slug: string, name: MountPointName, component: ComponentType) => void;
 
@@ -115,7 +116,7 @@ export function createRendererHostApi(
 ): RendererHostApi {
   const requireVault = () => {
     if (!permissions.includes('vault')) {
-      throw new Error(`[module:${slug}] vault access requires the 'vault' manifest permission`);
+      throw new Error(t('modules.module_host_renderer.moduleVaultAccessRequiresTheVault', { slug }));
     }
   };
 
@@ -187,7 +188,7 @@ export function createRendererHostApi(
       tools: () => CLAUDE_LOG_TOOLS as unknown as unknown[],
       callTool: (name, input) => {
         const log = useLogStore.getState().currentLog;
-        if (!log) return { error: 'No flight log is open in the Log Explorer.' };
+        if (!log) return { error: t('modules.module_host_renderer.noFlightLogIsOpenIn') };
         return executeLogTool(name, input, log);
       },
     },
@@ -270,7 +271,7 @@ export function createRendererHostApi(
           ? { accepted: true, pointsAccepted: proposal.inclusion.length }
           : {
               accepted: true,
-              error: useFenceStore.getState().error ?? 'The vehicle did not confirm the fence',
+              error: useFenceStore.getState().error ?? t('modules.module_host_renderer.theVehicleDidNotConfirmThe'),
             };
       },
     },
@@ -288,7 +289,7 @@ export function createRendererHostApi(
     map: {
       registerLayer: (reg) => registerModuleMapLayer(slug, reg),
       unregisterLayer: (id) => unregisterModuleMapLayer(slug, id),
-      pickPolygon: (prompt) => startPolygonPick(prompt ?? 'Click the corners of the area'),
+      pickPolygon: (prompt) => startPolygonPick(prompt ?? t('modules.module_host_renderer.clickTheCornersOfTheArea')),
     },
 
     survey: {
@@ -344,14 +345,14 @@ export function createRendererHostApi(
         const ok = await useFleetRepoStore.getState().snapshotParams(note);
         return ok
           ? { success: true }
-          : { success: false, error: useFleetRepoStore.getState().lastError ?? 'Snapshot failed' };
+          : { success: false, error: useFleetRepoStore.getState().lastError ?? t('modules.module_host_renderer.snapshotFailed') };
       },
       snapshotAsNewVehicle: async (name?: string, note?: string) => {
         requireVault();
         const ok = await useFleetRepoStore.getState().snapshotAsNewVehicle(name, note);
         return ok
           ? { success: true }
-          : { success: false, error: useFleetRepoStore.getState().lastError ?? 'Snapshot failed' };
+          : { success: false, error: useFleetRepoStore.getState().lastError ?? t('modules.module_host_renderer.snapshotFailed') };
       },
       sync: async () => {
         requireVault();

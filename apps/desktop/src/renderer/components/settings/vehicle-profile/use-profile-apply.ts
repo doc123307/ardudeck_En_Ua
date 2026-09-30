@@ -9,7 +9,7 @@ import { prepareApply, finalizeApply, type ApplyGateResult } from '../../../lib/
 import { recordSitlApply } from '../../../lib/vehicle-templates/sitl-stickiness.js';
 import { saveParmToFile } from '../../../lib/vehicle-templates/export-parm.js';
 import { getTemplate, defaultTemplateForType } from '../../../lib/vehicle-templates/registry.js';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 /**
  * Hook: exposes `start` + `confirmRealFc` + `cancelRealFc` actions that drive
@@ -27,7 +27,7 @@ export function useProfileApply(profile: VehicleProfile) {
     const telemetry = useTelemetryStore.getState();
     const armed = !!telemetry.flight?.armed;
 
-    const label = connectionState.transport ?? (connectionState.isSitl ? 'SITL' : 'Vehicle');
+    const label = connectionState.transport ?? (connectionState.isSitl ? 'SITL' : t('settings.use_profile_apply.vehicle'));
 
     const params = new Map<string, { value: number; type: number }>();
     for (const [id, meta] of paramStore.parameters) {
@@ -184,13 +184,13 @@ export function useProfileApply(profile: VehicleProfile) {
 
     const failMsg = failedCount > 0 ? ` (${failedCount} failed)` : '';
     const flashNote =
-      flashed ? ' and saved to flash'
-      : gate.target.isSitl ? ' (SITL, flash not required)'
-      : ' (not saved to flash, will reset on reboot)';
+      flashed ? t('settings.use_profile_apply.andSavedToFlash')
+      : gate.target.isSitl ? t('settings.use_profile_apply.sitlFlashNotRequired')
+      : t('settings.use_profile_apply.notSavedToFlashWillReset');
     applyStore.getState().setStatus('done', profile.id);
     applyStore.getState().setToast({
       kind: 'success',
-      message: t('settings.use_profile_apply.appliedParamTo', { appliedCount, v2: appliedCount === 1 ? '' : 's', v3: gate.target.isSitl ? 'SITL' : 'vehicle', flashNote, failMsg }),
+      message: t('settings.use_profile_apply.appliedParamTo', { appliedCount, v2: appliedCount === 1 ? '' : enPlural('s'), v3: gate.target.isSitl ? 'SITL' : 'vehicle', flashNote, failMsg }),
       snapshotId: gate.pendingSnapshot.id,
       profileId: profile.id,
       rebootRequired: rebootRequired.length,

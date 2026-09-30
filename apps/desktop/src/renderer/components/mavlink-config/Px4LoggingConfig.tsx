@@ -31,16 +31,16 @@ const MODE_DEFAULT = 0;
 
 /** SDLOG_PROFILE bits, used when the vehicle's metadata is not loaded. */
 const PROFILE_FALLBACK: Record<number, string> = {
-  0: 'Default set',
-  1: 'Estimator replay',
-  2: 'Thermal calibration',
-  3: 'System identification',
-  4: 'High rate',
+  get 0() { return t('mavlink_config.Px4LoggingConfig.defaultSet'); },
+  get 1() { return t('mavlink_config.Px4LoggingConfig.estimatorReplay'); },
+  get 2() { return t('mavlink_config.Px4LoggingConfig.thermalCalibration'); },
+  get 3() { return t('mavlink_config.Px4LoggingConfig.systemIdentification'); },
+  get 4() { return t('mavlink_config.Px4LoggingConfig.highRate'); },
   5: 'Debug',
-  6: 'Sensor comparison',
-  7: 'Computer vision and avoidance',
-  8: 'Raw FIFO high-rate IMU',
-  9: 'Raw FIFO high-rate magnetometer',
+  get 6() { return t('mavlink_config.Px4LoggingConfig.sensorComparison'); },
+  get 7() { return t('mavlink_config.Px4LoggingConfig.computerVisionAndAvoidance'); },
+  get 8() { return t('mavlink_config.Px4LoggingConfig.rawFifoHighRateImu'); },
+  get 9() { return t('mavlink_config.Px4LoggingConfig.rawFifoHighRateMagnetometer'); },
 };
 
 export default function Px4LoggingConfig(): JSX.Element {

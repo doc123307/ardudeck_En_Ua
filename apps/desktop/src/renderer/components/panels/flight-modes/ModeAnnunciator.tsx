@@ -70,7 +70,7 @@ function ModeAnnunciatorImpl({
   const badgeText =
     phase === 'requesting' ? 'Requesting…'
     : phase === 'rejected' ? rejectLabel
-    : 'Engaged';
+    : t('panels.ModeAnnunciator.engaged');
   const modeText = phase === 'requesting' && requestedName ? requestedName : currentName;
   const modeCls = phase === 'requesting' ? 'text-content-secondary' : 'text-content';
 

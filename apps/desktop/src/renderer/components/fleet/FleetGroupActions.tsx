@@ -31,7 +31,7 @@ export function FleetGroupActions() {
   };
 
   const confirmThen = (message: string, cmd: VehicleCommand) => setPending({ message, cmd });
-  const noun = selected.length === 1 ? 'vehicle' : 'vehicles';
+  const noun = selected.length === 1 ? t('fleet.FleetGroupActions.vehicle') : t('fleet.FleetGroupActions.vehicles');
 
   const btn = 'px-2 py-1 text-[11px] rounded bg-surface-raised hover:bg-surface-solid text-content transition-colors disabled:opacity-50';
 
@@ -58,10 +58,10 @@ export function FleetGroupActions() {
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-1.5">
-          <button disabled={busy} className={btn} onClick={() => confirmThen(`Arm ${selected.length} ${noun}?`, { kind: 'arm' })}>{t('fleet.FleetGroupActions.arm')}</button>
-          <button disabled={busy} className={btn} onClick={() => confirmThen(`Disarm ${selected.length} ${noun}?`, { kind: 'disarm' })}>{t('fleet.FleetGroupActions.disarm')}</button>
-          <button disabled={busy} className={btn} onClick={() => confirmThen(`Send ${selected.length} ${noun} home (RTL)?`, { kind: 'rtl' })}>RTL</button>
-          <button disabled={busy} className={btn} onClick={() => confirmThen(`Start mission on ${selected.length} ${noun}?`, { kind: 'mission-start' })}>{t('fleet.FleetGroupActions.start')}</button>
+          <button disabled={busy} className={btn} onClick={() => confirmThen(t('fleet.FleetGroupActions.armVehicles', { length: selected.length, noun }), { kind: 'arm' })}>{t('fleet.FleetGroupActions.arm')}</button>
+          <button disabled={busy} className={btn} onClick={() => confirmThen(t('fleet.FleetGroupActions.disarmVehicles', { length: selected.length, noun }), { kind: 'disarm' })}>{t('fleet.FleetGroupActions.disarm')}</button>
+          <button disabled={busy} className={btn} onClick={() => confirmThen(t('fleet.FleetGroupActions.sendHomeRtl', { length: selected.length, noun }), { kind: 'rtl' })}>RTL</button>
+          <button disabled={busy} className={btn} onClick={() => confirmThen(t('fleet.FleetGroupActions.startMissionOn', { length: selected.length, noun }), { kind: 'mission-start' })}>{t('fleet.FleetGroupActions.start')}</button>
         </div>
       )}
     </div>

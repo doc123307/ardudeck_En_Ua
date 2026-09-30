@@ -64,7 +64,8 @@
       "haveAWayToAbortDisarm": "Майте спосіб перервати (перемикач дизарму або ручне перевизначення)",
       "refresh": "Оновити",
       "saving": "Збереження...",
-      "saveLaunchConfig": "Зберегти налаштування запуску"
+      "saveLaunchConfig": "Зберегти налаштування запуску",
+      "launchConfigurationSaved": "Налаштування запуску збережено"
     },
     "FilterConfigTab": {
       "firstOrderGentleSlope": "Перший порядок, пологий спад",
@@ -125,7 +126,8 @@
       "dTerm": "D-складова:",
       "moreAggressiveFilteringHereReducesMotor": "Агресивніша фільтрація тут зменшує нагрів моторів і коливання.",
       "setTo0": "Значення 0:",
-      "disablesThatFilterCompletely": "повністю вимикає цей фільтр."
+      "disablesThatFilterCompletely": "повністю вимикає цей фільтр.",
+      "filterSettingsSaved": "Налаштування фільтрів збережено!"
     },
     "MotorMixerTab": {
       "mostCommonDroneLayout": "Найпоширеніша схема дрона",
@@ -188,7 +190,17 @@
       "clockwise": "За годинниковою",
       "counterClockwise": "Проти годинникової",
       "frontOfAircraft": "Перед апарата",
-      "numbersInTheDiagramMatchMotor": "Номери на схемі відповідають виходам моторів на польотному контролері (M0, M1 тощо). Протилежні мотори обертаються в протилежні боки, щоб компенсувати крутний момент."
+      "numbersInTheDiagramMatchMotor": "Номери на схемі відповідають виходам моторів на польотному контролері (M0, M1 тощо). Протилежні мотори обертаються в протилежні боки, щоб компенсувати крутний момент.",
+      "thisIsWhatMostRacingAnd": "Так зроблено більшість гоночних і фристайл-дронів. Форма X дає збалансоване керування в усіх напрямках.",
+      "motorsAreArrangedInAShape": "Мотори розташовано хрестом +. Один мотор дивиться вперед. Рідше, але добре підходить для деяких рам.",
+      "sixMotorsProvideMorePowerAnd": "Шість моторів дають більше потужності й резервування. Якщо один мотор відмовить, можна встигнути безпечно сісти.",
+      "mostAirplanesHaveOneMotorAt": "Більшість літаків мають один мотор спереду (тягнучий) або ззаду (штовхальний). Керування — рулями.",
+      "twoWingMotorsSpinningOppositeDirections": "Два мотори на крилах обертаються в протилежні боки. Рискання — прискоренням одного мотора й уповільненням іншого.",
+      "twoWingMotorsAtEqualSpeed": "Два мотори на крилах з однаковою швидкістю. Для літаків із кермом напрямку/хвостом для рискання.",
+      "vtolAircraft4LiftingMotorsLike": "VTOL: 4 підйомні мотори (як у квадро) плюс 1 штовхальний для горизонтального польоту. Найпопулярніша схема VTOL.",
+      "vtolWith3MotorsThatTilt": "VTOL із 3 поворотними моторами для переходу. Легший за QuadPlane, але механічно складніший.",
+      "motor2": "мотор",
+      "motors": "моторів"
     },
     "MspConfigView": {
       "slowPredictableGreatForLearning": "Повільно й передбачувано — чудово для навчання",
@@ -398,7 +410,56 @@
       "safety": "Безпека",
       "sensors": "Датчики",
       "settingsChangedThatRequireAReboot": "Змінено налаштування, що потребують перезавантаження.",
-      "rebootNow": "Перезавантажити зараз"
+      "rebootNow": "Перезавантажити зараз",
+      "safetySwitchArmsDisarmsYourAircraft": "ЗАПОБІЖНИК — армує/дизармує апарат. Завжди тримайте його на перемикачі!",
+      "beginnerModeAircraftStaysLevelAutomatically": "РЕЖИМ ДЛЯ ПОЧАТКІВЦІВ — апарат сам тримається рівно. Найкраще для навчання!",
+      "trainingModeSelfLevelsAtCenter": "НАВЧАЛЬНИЙ РЕЖИМ — вирівнюється біля центру, дозволяє фліпи на повному стіку",
+      "holdsCurrentAltitudeUsingBarometerGps": "Утримує поточну висоту за барометром/GPS. Газ керує швидкістю набору/зниження.",
+      "maintainsCurrentMagneticHeadingUsefulFor": "Тримає поточний магнітний курс. Корисно для польоту по прямій.",
+      "stickDirectionsAreRelativeToPilot": "Напрямки стіків відносно пілота, а не апарата — корисно для початківців",
+      "resetsHeadfreeReferenceDirection": "Скидає опорний напрямок headfree",
+      "stabilizesCameraServoOutput": "Стабілізує вихід серви камери",
+      "returnToHomeAircraftWillClimb": "Повернення додому — апарат набере безпечну висоту й полетить до точки старту. Ключова функція безпеки!",
+      "gpsPositionHoldAircraftWillStay": "Утримання позиції GPS — апарат стоїть на місці. Чудово для аерофото або коли треба зупинитися.",
+      "directServoMotorControlWithoutStabilization": "Пряме керування сервами/моторами без стабілізації. Лише для досвідчених пілотів!",
+      "makesYourAircraftBeepGreatFor": "Апарат пищить — чудово, щоб знайти його в траві!",
+      "turnsOffLedStrip": "Вимикає світлодіодну стрічку",
+      "turnsOnNavigationLights": "Вмикає навігаційні вогні",
+      "turnsOffOnScreenDisplay": "Вимикає екранне меню (OSD)",
+      "enablesTelemetryTransmission": "Вмикає передавання телеметрії",
+      "automaticallyTunesPidValuesDuringFlight": "Автоматично налаштовує PID у польоті",
+      "recordsFlightDataForTuningAnalysis": "Записує польотні дані для аналізу налаштування",
+      "emergencyModeTriggersFailsafeBehaviorNormally": "АВАРІЙНИЙ РЕЖИМ — запускає failsafe. Зазвичай вмикається автоматично при втраті сигналу.",
+      "executeUploadedWaypointMissionAircraftWill": "Виконати завантажену місію. Апарат автоматично пролетить усі точки.",
+      "keepsFullStickAuthorityEvenAt": "Повне керування навіть на нульовому газі. Необхідно для фристайл-трюків і фліпів.",
+      "setsCurrentPositionAsNewHome": "Задає поточну позицію новою точкою дому. Використовуйте, якщо змінили місце під час сесії.",
+      "allowGroundControlStationToSend": "Дозволити наземній станції надсилати навігаційні команди («летіти сюди» тощо).",
+      "activatesFlaperonsForSlowerLandingApproach": "Вмикає флаперони для повільнішого заходу на посадку. Елерони опускаються й працюють як закрилки.",
+      "autoCoordinatesRudderWithAileronsFor": "Автоматично координує кермо напрямку з елеронами для плавних розворотів. Чудово для початківців на літаках.",
+      "automaticLaunchSequenceForFixedWing": "Автоматичний запуск літака. Киньте літак — він сам набере безпечну висоту.",
+      "automaticallyAdjustsServoTrimDuringFlight": "Автоматично регулює трим серв у польоті",
+      "fixedWingCruiseModeMaintainsHeading": "Крейсерський режим літака — тримає курс і висоту. Ідеально для далеких польотів.",
+      "aggressiveBrakingWhenReleasingSticksOn": "Різке гальмування мультиротора при відпусканні стіків",
+      "safetySwitchMustBeEnabledBefore": "Запобіжник — має бути ввімкнений перед армуванням. Запобігає випадковому армуванню.",
+      "flipCrashedAircraftBackOverUsing": "Перевертає апарат після падіння обертанням моторів. Лише для мультироторів.",
+      "maintainsCurrentHeadingWhileAllowingAltitude": "Тримає поточний курс, дозволяючи керувати висотою. Добре для польоту по прямій.",
+      "enableInFlightWaypointPlanningVia": "Увімкнути планування точок у польоті командами стіків.",
+      "enablesThermalDetectionAndCirclingFor": "Вмикає пошук терміків і кружляння в них для планерів",
+      "unknownMode": "Невідомий режим",
+      "switchA": "Перемикач A",
+      "switchB": "Перемикач B",
+      "switchC": "Перемикач C",
+      "switchD": "Перемикач D",
+      "switchE": "Перемикач E",
+      "switchF": "Перемикач F",
+      "switchG": "Перемикач G",
+      "switchH": "Перемикач H",
+      "switchI": "Перемикач I",
+      "switchJ": "Перемикач J",
+      "switchK": "Перемикач K",
+      "switchL": "Перемикач L",
+      "failedToChangePlatformType": "Не вдалося змінити тип платформи",
+      "rebootFailed": "Помилка перезавантаження: "
     },
     "NavigationTab": {
       "stayAtCurrentHeightCouldHit": "Лишатися на поточній висоті, можливе зіткнення з перешкодами!",
@@ -470,7 +531,11 @@
       "checkGpsSatelliteCount8Before": "Перед автономним польотом перевірте кількість супутників GPS (8+)",
       "configureFailsafeToRthForAdded": "Для додаткової безпеки налаштуйте failsafe на RTH",
       "refresh": "Оновити",
-      "saveNavigationConfig": "Зберегти налаштування навігації"
+      "saveNavigationConfig": "Зберегти налаштування навігації",
+      "fakeTesting": "Фіктивний (тестування)",
+      "egnosEurope": "EGNOS (Європа)",
+      "msasJapan": "MSAS (Японія)",
+      "gaganIndia": "GAGAN (Індія)"
     },
     "ParameterCompareModalRoot": {
       "reviewParameterChanges": "Перегляд змін параметрів",
@@ -515,7 +580,11 @@
       "goToParametersTabToFlash": "Перейти на вкладку параметрів для запису у флеш і перезавантаження",
       "notFoundOnThisFirmware": "не знайдено в цій прошивці:",
       "theseMayBecomeAvailableAfterReboot": "Вони можуть з'явитися після перезавантаження",
-      "done": "Готово"
+      "done": "Готово",
+      "thisValue": "це значення",
+      "theseValues": "ці значення",
+      "it": "його",
+      "they": "їх"
     },
     "ParametersView": {
       "parametersSavedToFlashSuccessfully": "Параметри успішно збережено у флеш",
@@ -640,7 +709,14 @@
       "vehicle": "Апарат",
       "applyingParameters": "Застосування параметрів...",
       "applying": "Застосування...",
-      "applyParameter": "Застосувати параметри: {{length}}"
+      "applyParameter": "Застосувати параметри: {{length}}",
+      "failedToWrite": "Не вдалося записати {{v1}}",
+      "noParametersToSave": "Немає параметрів для збереження",
+      "noChangedParametersToSave": "Немає змінених параметрів для збереження",
+      "noNonDefaultParametersToSave": "Немає нетипових параметрів для збереження",
+      "saveAllChangesToKeepThem": " — натисніть «Зберегти всі зміни», щоб вони лишилися після перезавантаження",
+      "theCurrentFile": "поточного файлу",
+      "theVehicle": "апарата"
     },
     "PortsTab": {
       "none": "Немає",
@@ -846,7 +922,13 @@
       "returnToHome2": "Повернення додому",
       "inavSAdvancedNavigationFeaturesRth": "Розширені навігаційні функції iNav (RTH, точки маршруту, утримання позиції) налаштовуються на вкладці",
       "navigation": "«Навігація»",
-      "tabTheFailsafeRthOptionAbove": ". Варіант RTH для failsafe вище використовує ці налаштування."
+      "tabTheFailsafeRthOptionAbove": ". Варіант RTH для failsafe вище використовує ці налаштування.",
+      "failedToSaveFailsafe": "Не вдалося зберегти failsafe",
+      "failedToSaveGpsRescue": "Не вдалося зберегти GPS Rescue",
+      "failedToSaveGpsRescuePids": "Не вдалося зберегти PID GPS Rescue",
+      "failedToSaveRxConfigVia": "Не вдалося зберегти налаштування RX через MSP",
+      "failedToSaveArmingSettings": "Не вдалося зберегти налаштування армування",
+      "modified": "Змінено"
     },
     "ServoMixerTab": {
       "respondsToRoll": "Реагує на крен",
@@ -888,7 +970,15 @@
       "forComplexSetupsMostUsersDon": "Для складних конфігурацій. Більшості користувачів це не потрібно.",
       "noRules": "Немає правил",
       "refresh": "Оновити",
-      "save": "Зберегти"
+      "save": "Зберегти",
+      "rcRollRaw": "RC крен (сирий)",
+      "rcPitchRaw": "RC тангаж (сирий)",
+      "rcYawRaw": "RC рискання (сире)",
+      "rcThrottleRaw": "RC газ (сирий)",
+      "gimbalPitch": "Тангаж підвісу",
+      "gimbalRoll": "Крен підвісу",
+      "flapInput": "Вхід закрилків",
+      "notConfigured": "Не налаштовано"
     },
     "ServoTuningTab": {
       "checkingServoSupport": "Перевірка підтримки серво...",
@@ -960,7 +1050,8 @@
       "coordinateFrequenciesWithOtherPilotsAt": "Узгоджуйте частоти з іншими пілотами на полі",
       "refresh": "Оновити",
       "saving": "Збереження...",
-      "saveVtxConfig": "Зберегти налаштування VTX"
+      "saveVtxConfig": "Зберегти налаштування VTX",
+      "vtxConfigurationSaved": "Налаштування VTX збережено"
     },
     "non_default_palette": {
       "orangeQgc": "Помаранчевий (QGC)",

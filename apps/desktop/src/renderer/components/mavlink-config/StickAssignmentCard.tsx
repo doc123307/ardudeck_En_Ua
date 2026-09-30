@@ -90,7 +90,7 @@ export function StickAssignmentCard(): JSX.Element {
       baselineRef.current = [];
       void write(
         assignChannel(rcmap, fn, channel),
-        `${stickLabel(fn, isGround)} is now on channel ${channel}.`,
+        t('mavlink_config.StickAssignmentCard.isNowOnChannel', { v1: stickLabel(fn, isGround), channel }),
       );
       return;
     }
@@ -149,7 +149,7 @@ export function StickAssignmentCard(): JSX.Element {
           // on a custom assignment keeps it, throttle and pitch just trade.
           onClick={() => write(
             assignChannel(rcmap, 'throttle', rcmap.pitch),
-            'Throttle moved to the elevator stick.',
+            t('mavlink_config.StickAssignmentCard.throttleMovedToTheElevatorStick'),
           )}
           disabled={disabled}
           data-tip={t('mavlink_config.StickAssignmentCard.driveOnTheSelfCenteringStick')}
@@ -161,7 +161,7 @@ export function StickAssignmentCard(): JSX.Element {
           </div>
         </button>
         <button
-          onClick={() => write(DEFAULT_RCMAP, 'Back to the standard stick assignment.')}
+          onClick={() => write(DEFAULT_RCMAP, t('mavlink_config.StickAssignmentCard.backToTheStandardStickAssignment'))}
           disabled={disabled}
           data-tip={t('mavlink_config.StickAssignmentCard.roll1Pitch2Throttle3')}
           className={presetButton}

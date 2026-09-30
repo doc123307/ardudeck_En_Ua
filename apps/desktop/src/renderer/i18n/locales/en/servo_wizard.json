@@ -124,7 +124,18 @@
       "elevons": "Elevons:",
       "testBothRollAndPitchMovements": "Test both roll and pitch movements",
       "back": "← Back",
-      "continueCalibrate": "Continue: Calibrate →"
+      "continueCalibrate": "Continue: Calibrate →",
+      "moveRollStickRightThisServo": "Move roll stick RIGHT → this servo should move DOWN",
+      "moveRollStickRightThisServo2": "Move roll stick RIGHT → this servo should move UP",
+      "pullPitchStickBackTrailingEdge": "Pull pitch stick BACK → trailing edge should go UP",
+      "moveYawStickRightRudderShould": "Move yaw stick RIGHT → rudder should deflect RIGHT",
+      "rollRightDownPitchBackUp": "Roll RIGHT → DOWN. Pitch BACK → UP (trailing edge)",
+      "rollRightUpPitchBackUp": "Roll RIGHT → UP. Pitch BACK → UP (trailing edge)",
+      "pitchBackAndYawRightTest": "Pitch BACK and Yaw RIGHT → test both movements",
+      "moveYawStickMotorShouldTilt": "Move yaw stick → motor should tilt",
+      "moveYawStickCameraShouldRotate": "Move yaw stick → camera should rotate horizontally",
+      "movePitchStickCameraShouldTilt": "Move pitch stick → camera should tilt up/down",
+      "moveTheCorrespondingStick": "Move the corresponding stick"
     },
     "ServoTuningCard": {
       "servo": "Servo",
@@ -178,7 +189,8 @@
       "completeWizardFirst": "Complete wizard first",
       "fineTuneServos": "Fine-tune servos",
       "tune": "Tune",
-      "servos": "servos"
+      "servos": "servos",
+      "unknownError": "Unknown error"
     },
     "TraditionalPlaneDiagram": {
       "lAileron": "L Aileron",
@@ -219,7 +231,17 @@
       "tricopterWithYawServo": "Tricopter with yaw servo",
       "onlyTheRearYawServoNeeds": "Only the rear yaw servo needs configuration. Motors are handled separately.",
       "n2AxisCameraGimbalPanTilt": "2-axis camera gimbal (pan/tilt)",
-      "forCameraStabilizationUsesRcInput": "For camera stabilization. Uses RC input, not stabilized output."
+      "forCameraStabilizationUsesRcInput": "For camera stabilization. Uses RC input, not stabilized output.",
+      "rcRollManual": "RC Roll (manual)",
+      "rcPitchManual": "RC Pitch (manual)",
+      "rcYawManual": "RC Yaw (manual)",
+      "rcThrottleManual": "RC Throttle (manual)",
+      "gimbalPitch": "Gimbal Pitch",
+      "gimbalRoll": "Gimbal Roll",
+      "lAil": "L Ail",
+      "rAil": "R Ail",
+      "lElev": "L Elev",
+      "rElev": "R Elev"
     }
   }
 }

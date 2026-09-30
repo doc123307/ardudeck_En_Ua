@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /** Last few hub WebRTC connections, failed ones included, for the renderer half of "Copy diagnostics". */
 
 const KEEP = 6;
@@ -24,7 +25,7 @@ export function candidateSummary(sdp: string): string {
       const f = l.split(' ');
       return `${f[2] ?? '?'} ${f[4] ?? '?'}:${f[5] ?? '?'} ${f[7] ?? '?'}`;
     });
-  return out.length ? out.join(', ') : 'no candidates';
+  return out.length ? out.join(', ') : t('camera.webrtc_diag.noCandidates');
 }
 
 async function snapshotPairs(rec: PeerRecord): Promise<void> {
@@ -68,7 +69,7 @@ export function trackPeer(label: string, pc: RTCPeerConnection): (remoteSdp: str
 }
 
 export async function describePeers(): Promise<string> {
-  if (!records.length) return 'no WebRTC connections this session';
+  if (!records.length) return t('camera.webrtc_diag.noWebrtcConnectionsThisSession');
   const lines: string[] = [];
   for (const rec of records) {
     await snapshotPairs(rec);

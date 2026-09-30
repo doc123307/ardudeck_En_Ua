@@ -78,13 +78,13 @@ export function OutputVisual({
             style={{ background: on ? accent : 'var(--text-tertiary)', opacity: live ? 1 : 0.35 }}
           />
           <div className="min-w-0">
-            <div className="text-sm text-content">{on ? 'On' : t('mavlink_config.OutputVisual.off')}</div>
+            <div className="text-sm text-content">{on ? t('mavlink_config.OutputVisual.on') : t('mavlink_config.OutputVisual.off')}</div>
             <div className="text-[11px] text-content-tertiary">
               {label} {t('mavlink_config.OutputVisual.switchesBetween')} {min} {t('mavlink_config.OutputVisual.and')} {max} µs
             </div>
           </div>
         </div>
-        {footer(live === null ? `Servo ${channel}: waiting for output` : `Servo ${channel} at ${live.pwm} µs`)}
+        {footer(live === null ? t('mavlink_config.OutputVisual.servoWaitingForOutput', { channel }) : t('mavlink_config.OutputVisual.servoAtS', { channel, pwm: live.pwm }))}
       </div>
     );
   }
@@ -134,7 +134,7 @@ export function OutputVisual({
             <span>{t('mavlink_config.OutputVisual.forward')}</span>
           </div>
         </div>
-        {footer(live === null ? `Servo ${channel}: waiting for output` : `Servo ${channel} at ${live.pwm} µs${live.stale ? ' (stale)' : ''}`)}
+        {footer(live === null ? t('mavlink_config.OutputVisual.servoWaitingForOutput', { channel }) : t('mavlink_config.OutputVisual.servoAtS2', { channel, pwm: live.pwm, v3: live.stale ? ' (stale)' : '' }))}
       </div>
     );
   }
@@ -169,7 +169,7 @@ export function OutputVisual({
             )}
           </div>
         </div>
-        {footer(live === null ? `Servo ${channel}: waiting for output` : `Servo ${channel} at ${live.pwm} µs${live.stale ? ' (stale)' : ''}`)}
+        {footer(live === null ? t('mavlink_config.OutputVisual.servoWaitingForOutput', { channel }) : t('mavlink_config.OutputVisual.servoAtS2', { channel, pwm: live.pwm, v3: live.stale ? ' (stale)' : '' }))}
       </div>
     );
   }
@@ -246,10 +246,10 @@ export function OutputVisual({
 
       {footer(
         live === null
-          ? `Servo ${channel}: waiting for output`
+          ? t('mavlink_config.OutputVisual.servoWaitingForOutput', { channel })
           : beyond
-            ? `Servo ${channel} is outside the limit at ${live.pwm} µs`
-            : `Servo ${channel} at ${live.pwm} µs${live.stale ? ' (stale)' : ''}`
+            ? t('mavlink_config.OutputVisual.servoIsOutsideTheLimitAt', { channel, pwm: live.pwm })
+            : t('mavlink_config.OutputVisual.servoAtS2', { channel, pwm: live.pwm, v3: live.stale ? ' (stale)' : '' })
       )}
     </div>
   );

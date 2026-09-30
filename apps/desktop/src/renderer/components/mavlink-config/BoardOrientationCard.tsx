@@ -76,7 +76,7 @@ export function BoardOrientationCard(): JSX.Element {
 
   const arrowSide = sideInVehicle(pose, [1, 0, 0]);
   const topSide = sideInVehicle(pose, [0, 0, -1]);
-  const facing = topSide === 'up' ? 'upright' : topSide === 'down' ? 'upside down' : `on its side, top facing ${topSide}`;
+  const facing = topSide === 'up' ? 'upright' : topSide === 'down' ? t('mavlink_config.BoardOrientationCard.upsideDown') : t('mavlink_config.BoardOrientationCard.onItsSideTopFacing', { topSide });
 
   return (
     <div className="bg-surface rounded-xl border border-subtle p-5">
@@ -147,7 +147,7 @@ export function BoardOrientationCard(): JSX.Element {
           <div className="rounded-lg border border-subtle bg-surface-raised p-3 text-xs">
             <div className="text-content-tertiary mb-1">{t('mavlink_config.BoardOrientationCard.onTheModelNow')}</div>
             <div className="text-content">
-              {t('mavlink_config.BoardOrientationCard.arrowPoints')} {arrowSide === 'front' ? 'forward' : arrowSide}{t('mavlink_config.BoardOrientationCard.board')} {facing}
+              {t('mavlink_config.BoardOrientationCard.arrowPoints')} {arrowSide === 'front' ? t('mavlink_config.BoardOrientationCard.forward') : arrowSide}{t('mavlink_config.BoardOrientationCard.board')} {facing}
             </div>
             <div className="mt-1 text-[11px] text-content-tertiary">
               {t('mavlink_config.BoardOrientationCard.goByTheArrowPrintedOn')}

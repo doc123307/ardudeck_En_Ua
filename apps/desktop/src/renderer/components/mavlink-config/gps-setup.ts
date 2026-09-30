@@ -51,14 +51,14 @@ const AP_PROTOCOL_NAMES: Record<number, string> = {
   0: 'console',
   1: 'MAVLink',
   2: 'MAVLink2',
-  3: 'FrSky D',
-  4: 'FrSky SPort',
+  get 3() { return t('mavlink_config.gps_setup.frskyD'); },
+  get 4() { return t('mavlink_config.gps_setup.frskySport'); },
   5: 'GPS',
   9: 'rangefinder',
-  10: 'FrSky passthrough',
+  get 10() { return t('mavlink_config.gps_setup.frskyPassthrough'); },
   11: 'lidar',
   13: 'beacon',
-  16: 'ESC telemetry',
+  get 16() { return t('mavlink_config.gps_setup.escTelemetry'); },
   19: 'servo bus',
   21: 'wind vane',
   23: 'RC in',
@@ -110,11 +110,11 @@ export function readApGpsSetup(get: (name: string) => number | undefined): ApGps
 
   let problem: string | null = null;
   if (type === 0) {
-    problem = 'The GPS type is set to None, so the autopilot is not looking for a GPS at all.';
+    problem = t('mavlink_config.gps_setup.theGpsTypeIsSetTo');
   } else if (wantsCan && !canReady) {
-    problem = 'The GPS type asks for DroneCAN, but the CAN port is not enabled for it.';
+    problem = t('mavlink_config.gps_setup.theGpsTypeAsksForDronecan');
   } else if (!wantsCan && gpsPorts.length === 0) {
-    problem = 'No serial port is set to the GPS protocol, so nothing is listening to the socket.';
+    problem = t('mavlink_config.gps_setup.noSerialPortIsSetTo');
   }
 
   return { type, gpsPorts, wantsCan, canReady, bus, problem };
@@ -181,7 +181,7 @@ export function readPx4GpsSetup(get: (name: string) => number | undefined): Px4G
 
   let problem: string | null = null;
   if (port === 0 && !canEnabled) {
-    problem = 'GPS_1_CONFIG is Disabled and DroneCAN is off, so no GPS is expected on any port.';
+    problem = t('mavlink_config.gps_setup.gps1ConfigIsDisabledAnd');
   }
 
   return { port, baud, canEnabled, bus, problem };
@@ -211,9 +211,9 @@ export function portLabel(options: GpsPortOption[], value: number): string {
  * place of it, because a board is free to wire it differently.
  */
 export function apSocketHint(index: number): string | null {
-  if (index === 3) return 'GPS1 on Pixhawk / Cube';
-  if (index === 4) return 'GPS2 on Pixhawk / Cube';
-  if (index === 1) return 'TELEM1 on Pixhawk / Cube';
-  if (index === 2) return 'TELEM2 on Pixhawk / Cube';
+  if (index === 3) return t('mavlink_config.gps_setup.gps1OnPixhawkCube');
+  if (index === 4) return t('mavlink_config.gps_setup.gps2OnPixhawkCube');
+  if (index === 1) return t('mavlink_config.gps_setup.telem1OnPixhawkCube');
+  if (index === 2) return t('mavlink_config.gps_setup.telem2OnPixhawkCube');
   return null;
 }

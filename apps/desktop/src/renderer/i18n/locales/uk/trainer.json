@@ -70,7 +70,8 @@
       "deleteItAndBuildItAgain": ". Видаліть і побудуйте знову, щоб завершити.",
       "delete": "Видалити",
       "cancel": "Скасувати",
-      "deleting": "Видалення…"
+      "deleting": "Видалення…",
+      "this": "цей"
     },
     "TrainerVehicleStep": {
       "vehicle": "Апарат",
@@ -80,7 +81,10 @@
       "lens": "Об'єктив",
       "heldLevelByItsMountSo": "Кріплення тримає її рівно, тож горизонт ніколи не нахиляється. Отже, жодних підказок про положення — це справді інша навичка пілотування.",
       "takeOffPoint": "Точка зльоту",
-      "flightController": "Польотний контролер"
+      "flightController": "Польотний контролер",
+      "whateverWasLastSetUpIn": "Те, що востаннє налаштовано в лаунчері.",
+      "stabilised": "Стабілізована",
+      "waitingForAGpsFix": "очікування GPS-фіксу"
     },
     "TrainerView": {
       "region": "Регіон",

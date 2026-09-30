@@ -26,6 +26,17 @@ function pluralSuffixes(text: string): string[] {
 const english = flatten(loadLocaleTree('en'));
 const translations = { uk: flatten(loadLocaleTree('uk')), ru: flatten(loadLocaleTree('ru')) };
 
+// i18next reads these option names instead of interpolating them: {{lng}} silently
+// switches the language of that one lookup rather than printing a longitude.
+const RESERVED = ['lng', 'lngs', 'ns', 'context', 'defaultValue', 'replace', 'returnObjects', 'joinArrays', 'postProcess', 'interpolation', 'ordinal'];
+
+describe('English source', () => {
+  it('uses no i18next option names as placeholders', () => {
+    const clashes = Object.entries(english).filter(([, text]) => placeholders(text).some((p) => RESERVED.includes(p)));
+    expect(clashes).toEqual([]);
+  });
+});
+
 describe.each(Object.entries(translations))('%s translation', (_lang, strings) => {
   it('has exactly the English keys', () => {
     const missing = Object.keys(english).filter((key) => !(key in strings));

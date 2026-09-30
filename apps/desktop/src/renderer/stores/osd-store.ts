@@ -307,7 +307,7 @@ export const useOsdStore = create<OsdStore>((set, get) => ({
   loadBundledFont: async (name: string) => {
     const content = BUNDLED_FONTS[name];
     if (!content) {
-      set({ fontError: `Unknown bundled font: ${name}` });
+      set({ fontError: tr('stores.osd_store.unknownBundledFont', { name }) });
       return;
     }
     set({ isLoadingFont: true, fontError: null });
@@ -318,7 +318,7 @@ export const useOsdStore = create<OsdStore>((set, get) => ({
       savePersisted(get());
     } catch (err) {
       set({
-        fontError: err instanceof Error ? err.message : 'Failed to load font',
+        fontError: err instanceof Error ? err.message : tr('stores.osd_store.failedToLoadFont'),
         isLoadingFont: false,
       });
     }
@@ -332,7 +332,7 @@ export const useOsdStore = create<OsdStore>((set, get) => ({
       get().updateScreenBuffer();
     } catch (err) {
       set({
-        fontError: err instanceof Error ? err.message : 'Failed to load font',
+        fontError: err instanceof Error ? err.message : tr('stores.osd_store.failedToLoadFont'),
         isLoadingFont: false,
       });
     }

@@ -92,7 +92,9 @@
       "setupRequired": "Потрібне налаштування",
       "armModeNotConfiguredClickBelow": "Режим ARM не налаштовано. Натисніть нижче, щоб автоматично налаштувати для тестування в SITL.",
       "setupForSitl": "Налаштувати для SITL",
-      "loadingConfiguration": "Завантаження конфігурації..."
+      "loadingConfiguration": "Завантаження конфігурації...",
+      "notUploaded": "не вивантажено",
+      "idle2": "очікування"
     },
     "FlightModePanel": {
       "armed": "Заармлено",
@@ -139,7 +141,18 @@
       "sendsYourSticksToTheVehicle": "Надсилає ваші стіки апарату. Надсилаються лише призначені канали; решта лишається за приймачем.",
       "release": "Відпустити",
       "takeControl": "Взяти керування",
-      "armedTheSticksAreLiveThis": "Заармлено. Стіки активні: це вікно має лишатися у фокусі, бо браузер припиняє передавати дані контролера, коли вікно не у фокусі."
+      "armedTheSticksAreLiveThis": "Заармлено. Стіки активні: це вікно має лишатися у фокусі, бо браузер припиняє передавати дані контролера, коли вікно не у фокусі.",
+      "notAssigned": "не призначено",
+      "controllerDisconnectedSticksReleased": "Контролер від'єднано, стіки відпущено",
+      "couldNotTakeTheSticks": "Не вдалося перехопити стіки",
+      "on": "Увімк.",
+      "axisN": "вісь {{n}}",
+      "buttonN": "кнопка {{n}}",
+      "chN": "Кан {{n}}",
+      "axis_Roll": "Крен",
+      "axis_Pitch": "Тангаж",
+      "axis_Throttle": "Газ",
+      "axis_Yaw": "Рискання"
     },
     "MapPanel": {
       "changeMapLayer": "Змінити шар карти",
@@ -179,7 +192,22 @@
       "toggleAttitudeIndicator": "Перемкнути авіагоризонт",
       "attitude": "Орієнтація",
       "toggleMissionOverlaysWaypointsGeofenceRally": "Перемкнути накладки місії (точки, геозона, rally)",
-      "mission": "Місія"
+      "mission": "Місія",
+      "useSplitPreset": "Використати пресет поділу",
+      "theSplitCockpitLayoutASaved": "Розкладка кабіни з поділом (перевагу має збережена розкладка «split»)",
+      "useMyCurrentLayout": "Використати мою поточну розкладку",
+      "keepWhatIsOnScreenAs": "Залишити те, що на екрані, як розкладку поділу",
+      "keepCurrentDoNotSwitch": "Залишити поточну, не перемикати",
+      "leaveTheLayoutAsItIs": "Лишити розкладку як є",
+      "realSize": "Реальний розмір",
+      "autoSize": "Авторозмір",
+      "vehicleAtRealProfileSize": "Апарат у реальному розмірі з профілю",
+      "vehicleAutoScaledToStayVisible": "Апарат автоматично масштабується, щоб бути видимим",
+      "toggleMissionOverlays": "Перемкнути накладки місії",
+      "toggleTerrainElevation": "Перемкнути висоти рельєфу",
+      "noVehicleSelectedClickAVehicle": "Апарат не вибрано: клацніть маркер апарата, перш ніж давати команди.",
+      "mapCommandsNeedAnArmedVehicle": "Команди з карти потребують армованого апарата.",
+      "commandDroppedVehicleDisarmed": "Команду скасовано: апарат дизармовано."
     },
     "MessagesPanel": {
       "noMessages": "Немає повідомлень",
@@ -190,7 +218,8 @@
     "ModeAnnunciator": {
       "changeFlightMode": "Змінити польотний режим",
       "still": "досі",
-      "still2": "· досі"
+      "still2": "· досі",
+      "engaged": "Активовано"
     },
     "ModePicker": {
       "filterModes": "Фільтр режимів…",
@@ -260,7 +289,11 @@
       "dropped": "Втрачено",
       "basePosition": "Позиція бази",
       "ggaUpload": "Передавання GGA",
-      "rtcmMessages": "Повідомлення RTCM"
+      "rtcmMessages": "Повідомлення RTCM",
+      "error": "Помилка",
+      "isAMountpointNotACaster": "«{{host}}» — це точка монтування, а не хост кастера. Вкажіть ім'я сервера кастера в Host, а «{{host}}» — у Mountpoint.",
+      "off": "Вимк.",
+      "waitingForFix": "Очікування фіксу"
     },
     "PositionPanel": {
       "latitude": "Широта",
@@ -316,7 +349,9 @@
       "battery": "Батарея",
       "voltage": "Напруга:",
       "current": "Струм:",
-      "systemLoad": "Навантаження системи:"
+      "systemLoad": "Навантаження системи:",
+      "n3dFix": "3D-фікс",
+      "n2dFix": "2D-фікс"
     },
     "SpeedPanel": {
       "ground": "Шляхова",
@@ -388,7 +423,10 @@
       "climbingTo": "Набір до {{v1}}…",
       "didNotReachVehicleStillArmed": "Не досягнуто {{v1}}: апарат досі заармлено в QHover, візьміть керування з пульта",
       "settingMisTakeoffAltM": "Встановлення MIS_TAKEOFF_ALT={{altitudeM}} м...",
-      "px4AutoTakeoffToM": "Автозліт PX4 до {{altitudeM}} м..."
+      "px4AutoTakeoffToM": "Автозліт PX4 до {{altitudeM}} м...",
+      "climbTo": "Набрати висоту до",
+      "autoLaunchAndClimbTo": "Автозапуск і набір висоти до",
+      "climbVerticallyTo": "Вертикальний набір до"
     }
   }
 }

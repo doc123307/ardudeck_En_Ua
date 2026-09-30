@@ -20,7 +20,8 @@
       "worksInsideArdudeck": "Працює всередині ArduDeck",
       "noBuild": "Немає збірки для {{label}}",
       "previous": "Попереднє",
-      "next": "Наступне"
+      "next": "Наступне",
+      "unreleased": "не випущено"
     },
     "HangarApps": {
       "installedApps": "Встановлені програми",
@@ -100,7 +101,8 @@
       "updatingAll": "Оновлення всіх…",
       "updateAll": "Оновити всі ({{length}})",
       "checking": "Перевірка…",
-      "checkUpdates": "Перевірити оновлення"
+      "checkUpdates": "Перевірити оновлення",
+      "error": "Помилка"
     },
     "ModulePanelWindow": {
       "restore": "Відновити",
@@ -119,7 +121,22 @@
       "keptAsTheyAre": "Лишаються як є:",
       "cancel": "Скасувати",
       "writing": "Запис...",
-      "writeToAircraft": "Записати в апарат"
+      "writeToAircraft": "Записати в апарат",
+      "theReturnPoint": "точку повернення"
+    },
+    "module_host_renderer": {
+      "moduleVaultAccessRequiresTheVault": "[module:{{slug}}] доступ до сховища потребує дозволу маніфесту «vault»",
+      "noFlightLogIsOpenIn": "У Log Explorer не відкрито жодного журналу польоту.",
+      "theVehicleDidNotConfirmThe": "Апарат не підтвердив огорожу",
+      "clickTheCornersOfTheArea": "Клацніть по кутах ділянки",
+      "snapshotFailed": "Не вдалося зробити знімок"
+    },
+    "module_mission_panel_registry": {
+      "moduleMissionPanelNeedsAComponent": "[module:{{slug}}] панелі місії {{id}} потрібен компонент"
+    },
+    "module_proposal_registry": {
+      "anotherProposalIsAlreadyOpen": "Уже відкрито іншу пропозицію",
+      "aFenceNeedsAtLeastThree": "Огорожі потрібно щонайменше три точки"
     }
   }
 }

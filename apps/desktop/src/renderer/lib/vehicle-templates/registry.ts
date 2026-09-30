@@ -39,6 +39,7 @@ import { boatCatamaran }  from './templates/boat-catamaran.js';
 
 // Sub
 import { subVectored6 } from './templates/sub-vectored-6.js';
+import { t as tr } from '../../i18n';
 
 /**
  * The full template registry. Add new templates here and they automatically
@@ -85,6 +86,6 @@ export function defaultTemplateForType(type: VehicleType): VehicleTemplate {
     sub:    'sub-vectored-6',
   };
   const t = getTemplate(fallbacks[type]);
-  if (!t) throw new Error(`No default template for type ${type}`);
+  if (!t) throw new Error(tr('lib.registry.noDefaultTemplateForType', { type }));
   return t;
 }

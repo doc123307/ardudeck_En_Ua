@@ -80,8 +80,8 @@ const PidTuningTab: React.FC = () => {
   // Aircraft wording unless the scheme names its own controllers, and no third
   // card for a vehicle that has only two.
   const axisInfo = scheme?.axisInfo ?? {
-    roll: { title: t('mavlink_config.PidTuningTab.roll'), sub: 'Left/right tilt' },
-    pitch: { title: t('mavlink_config.PidTuningTab.pitch'), sub: 'Forward/back tilt' },
+    roll: { title: t('mavlink_config.PidTuningTab.roll'), sub: t('mavlink_config.PidTuningTab.leftRightTilt') },
+    pitch: { title: t('mavlink_config.PidTuningTab.pitch'), sub: t('mavlink_config.PidTuningTab.forwardBackTilt') },
     yaw: { title: t('mavlink_config.PidTuningTab.yaw'), sub: 'Rotation' },
   };
   const showYawAxis = scheme ? (!scheme.axisInfo || !!scheme.axisInfo.yaw) : true;

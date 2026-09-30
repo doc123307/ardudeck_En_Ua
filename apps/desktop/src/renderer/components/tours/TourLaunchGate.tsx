@@ -21,7 +21,7 @@ export function TourLaunchGate({ tour, onLaunched, onUseOwnFc, onInstallSitl, on
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const sitlKind = tour.demo?.sitl ?? 'ardupilot';
-  const sitlLabel = sitlKind === 'ardupilot' ? 'ArduPilot SITL' : 'iNav SITL';
+  const sitlLabel = sitlKind === 'ardupilot' ? t('tours.TourLaunchGate.ardupilotSitl') : 'iNav SITL';
 
   // For ArduPilot, check whether the binary has been downloaded yet.
   // iNav SITL ships bundled so it's always available.
@@ -54,7 +54,7 @@ export function TourLaunchGate({ tour, onLaunched, onUseOwnFc, onInstallSitl, on
           sitlKind === 'ardupilot'
             ? useArduPilotSitlStore.getState().lastError
             : useSitlStore.getState().lastError;
-        throw new Error(err ?? 'Failed to start SITL');
+        throw new Error(err ?? t('tours.TourLaunchGate.failedToStartSitl'));
       }
 
       setStatus('connecting');
@@ -67,12 +67,12 @@ export function TourLaunchGate({ tour, onLaunched, onUseOwnFc, onInstallSitl, on
         protocol: 'mavlink',
       });
       if (!connectOk) {
-        throw new Error('SITL started but TCP connection failed');
+        throw new Error(t('tours.TourLaunchGate.sitlStartedButTcpConnectionFailed'));
       }
 
       onLaunched();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Unknown error';
+      const msg = err instanceof Error ? err.message : t('tours.TourLaunchGate.unknownError');
       setErrorMsg(msg);
       setStatus('error');
     }

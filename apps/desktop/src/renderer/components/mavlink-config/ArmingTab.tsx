@@ -178,7 +178,7 @@ export default function ArmingTab({ onGoTo }: ArmingTabProps): JSX.Element {
                     ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
                     : 'bg-content-tertiary/15 text-content-secondary ring-1 ring-inset ring-content-tertiary/30'
                 }`}>
-                  {on ? 'on' : 'skipped'}
+                  {on ? t('mavlink_config.ArmingTab.on') : t('mavlink_config.ArmingTab.skipped')}
                 </span>
               </button>
             );

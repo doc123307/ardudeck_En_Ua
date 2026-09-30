@@ -5,10 +5,10 @@
 import { useState } from 'react';
 import { AlertTriangle, AlertCircle, CheckCircle2, ChevronRight } from 'lucide-react';
 import type { ValidationCheck, ValidationResult } from '../../../shared/mission-validation';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 const ACTION_LABELS: Record<NonNullable<ValidationCheck['action']>, string> = {
-  'connect-surveys': 'Connect surveys',
+  get 'connect-surveys'() { return t('mission.MissionValidationBadge.connectSurveys'); },
 };
 
 export function MissionValidationBadge({
@@ -45,9 +45,9 @@ export function MissionValidationBadge({
         <ChevronRight className={`w-3 h-3 transition-transform ${open ? 'rotate-90' : ''}`} />
         {errorCount > 0 ? <AlertCircle className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />}
         <span>
-          {errorCount > 0 && `${errorCount} error${errorCount === 1 ? '' : 's'}`}
+          {errorCount > 0 && `${errorCount} error${errorCount === 1 ? '' : enPlural('s')}`}
           {errorCount > 0 && warnCount > 0 && ' · '}
-          {warnCount > 0 && `${warnCount} warning${warnCount === 1 ? '' : 's'}`}
+          {warnCount > 0 && `${warnCount} warning${warnCount === 1 ? '' : enPlural('s')}`}
         </span>
       </button>
       {actionable.map((c) => (

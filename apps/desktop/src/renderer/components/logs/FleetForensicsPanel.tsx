@@ -11,7 +11,7 @@ import { AlertTriangle, ShieldCheck, Trash2, Plane, RefreshCw } from 'lucide-rea
 import type { VehicleFlightHistory, FlightSummary, FlightHealthStatus } from '../../../shared/fleet-log-types';
 import { deriveMaintenanceFlags } from '../../../shared/fleet-log-maintenance';
 import { FleetLogRetrieval } from './FleetLogRetrieval';
-import { t as tr } from '../../i18n';
+import { t as tr, enPlural } from '../../i18n';
 
 const STATUS_DOT: Record<FlightHealthStatus, string> = {
   pass: 'bg-emerald-500',
@@ -162,7 +162,7 @@ export function FleetForensicsPanel() {
                 {sev && <AlertTriangle className={`w-3.5 h-3.5 shrink-0 ${sev === 'fail' ? 'text-red-400' : 'text-amber-400'}`} />}
               </div>
               <div className="text-[11px] text-content-tertiary mt-0.5">
-                {v.flights.length} {tr('logs.FleetForensicsPanel.flight')}{v.flights.length === 1 ? '' : 's'} {tr('logs.FleetForensicsPanel.last')} {fmtDate(v.flights[0]!.startedAt)}
+                {v.flights.length} {tr('logs.FleetForensicsPanel.flight')}{v.flights.length === 1 ? '' : enPlural('s')} {tr('logs.FleetForensicsPanel.last')} {fmtDate(v.flights[0]!.startedAt)}
               </div>
             </button>
           );

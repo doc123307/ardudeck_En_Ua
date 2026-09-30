@@ -111,7 +111,7 @@ export function presentTakeoff(
     return {
       buttonLabel: t('panels.takeoff_strategies.autoTakeoff'),
       buttonHint:  t('panels.takeoff_strategies.armSwitchToAutoTakeoffClimb'),
-      dialogPrompt: 'Climb to',
+      dialogPrompt: t('panels.takeoff_strategies.climbTo'),
       dialogNote:  t('panels.takeoff_strategies.px4AutoTakeoffSetsMisTakeoff'),
     };
   }
@@ -120,20 +120,20 @@ export function presentTakeoff(
       return {
         buttonLabel: t('panels.takeoff_strategies.takeoff'),
         buttonHint:  t('panels.takeoff_strategies.armSwitchToGuidedClimbVertically'),
-        dialogPrompt: 'Climb to',
+        dialogPrompt: t('panels.takeoff_strategies.climbTo'),
       };
     case 'plane':
       return {
         buttonLabel: t('panels.takeoff_strategies.autoLaunch'),
         buttonHint:  t('panels.takeoff_strategies.setTkoffAltSwitchToTakeoff'),
-        dialogPrompt: 'Auto-launch and climb to',
+        dialogPrompt: t('panels.takeoff_strategies.autoLaunchAndClimbTo'),
         dialogNote:  t('panels.takeoff_strategies.planeGoesIntoTakeoffModeNeeds'),
       };
     case 'vtol':
       return {
         buttonLabel: t('panels.takeoff_strategies.verticalTakeoff'),
         buttonHint:  t('panels.takeoff_strategies.armInQstabilizeSwitchToGuided'),
-        dialogPrompt: 'Climb vertically to',
+        dialogPrompt: t('panels.takeoff_strategies.climbVerticallyTo'),
         dialogNote:  t('panels.takeoff_strategies.hoversUpUsingQModesNav'),
       };
     case 'rover':

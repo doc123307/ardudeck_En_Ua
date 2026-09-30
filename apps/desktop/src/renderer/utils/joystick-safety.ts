@@ -8,6 +8,7 @@
  */
 
 import { RC_MID, shapeAxis, type ChannelMap, type RawDevice } from './pseudo-tx';
+import { t, enPlural } from '../i18n';
 
 /** Stick units (-1..1) a control may sit from centre and still count as centred. */
 const CENTRE_TOLERANCE = 0.12;
@@ -51,7 +52,7 @@ export function preflightForControl(mapping: ChannelMap[], dev: RawDevice): Cont
   const yaw = channelValue(mapping, dev, 3);
 
   if (roll === null || pitch === null || throttle === null || yaw === null) {
-    problems.push('Assign roll, pitch, throttle and yaw first');
+    problems.push(t('utils.joystick_safety.assignRollPitchThrottleAndYaw'));
     return { ok: false, problems };
   }
 
@@ -60,11 +61,11 @@ export function preflightForControl(mapping: ChannelMap[], dev: RawDevice): Cont
   if (Math.abs(pitch) > CENTRE_TOLERANCE) offCentre.push('pitch');
   if (Math.abs(yaw) > CENTRE_TOLERANCE) offCentre.push('yaw');
   if (offCentre.length > 0) {
-    problems.push(`Centre the ${offCentre.join(', ')} stick${offCentre.length > 1 ? 's' : ''}`);
+    problems.push(t('utils.joystick_safety.centreTheStick', { v1: offCentre.join(', '), v2: offCentre.length > 1 ? enPlural('s') : '' }));
   }
 
   // Throttle runs -1 (idle) to +1 (full), so the fraction of travel is (v+1)/2.
-  if ((throttle + 1) / 2 > THROTTLE_MAX_FRACTION) problems.push('Close the throttle');
+  if ((throttle + 1) / 2 > THROTTLE_MAX_FRACTION) problems.push(t('utils.joystick_safety.closeTheThrottle'));
 
   return { ok: problems.length === 0, problems };
 }

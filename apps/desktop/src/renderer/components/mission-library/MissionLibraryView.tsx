@@ -371,10 +371,10 @@ export function MissionLibraryView() {
                       : m.lastFlightStatus === 'aborted' ? 'bg-red-500/10 text-red-400'
                       : m.lastFlightStatus === 'planned' ? 'bg-blue-500/10 text-blue-400'
                       : '';
-                    const statusLabel = m.lastFlightStatus === 'completed' ? 'Completed'
-                      : m.lastFlightStatus === 'in_progress' ? 'In Progress'
-                      : m.lastFlightStatus === 'aborted' ? 'Aborted'
-                      : m.lastFlightStatus === 'planned' ? 'Planned'
+                    const statusLabel = m.lastFlightStatus === 'completed' ? tr('mission_library.MissionLibraryView.completed')
+                      : m.lastFlightStatus === 'in_progress' ? tr('mission_library.MissionLibraryView.inProgress')
+                      : m.lastFlightStatus === 'aborted' ? tr('mission_library.MissionLibraryView.aborted')
+                      : m.lastFlightStatus === 'planned' ? tr('mission_library.MissionLibraryView.planned')
                       : null;
                     return (
                       <tr

@@ -8,7 +8,7 @@ import { getSnapshot } from '../../../lib/vehicle-templates/snapshot.js';
 import { buildUndoDiffs } from '../../../lib/vehicle-templates/apply.js';
 import { useProfileApply } from './use-profile-apply.js';
 import { RealFcApplyConfirm } from './RealFcApplyConfirm.js';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 /**
  * Mount once at App root. Renders:
@@ -114,7 +114,7 @@ function ToastCard({ toast, onDismiss, onUndo }: ToastCardProps) {
           {!!toast.rebootRequired && (
             <div className="mt-1 flex items-center gap-1 text-[11px] text-amber-300">
               <RotateCw className="w-3 h-3" />
-              {toast.rebootRequired} {t('settings.ProfileApplyOverlay.param')}{toast.rebootRequired === 1 ? '' : 's'} {t('settings.ProfileApplyOverlay.requireRebootToTakeEffect')}
+              {toast.rebootRequired} {t('settings.ProfileApplyOverlay.param')}{toast.rebootRequired === 1 ? '' : enPlural('s')} {t('settings.ProfileApplyOverlay.requireRebootToTakeEffect')}
             </div>
           )}
           {onUndo && (

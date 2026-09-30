@@ -23,11 +23,11 @@ import { t } from '../../../i18n';
 // iNav flags: 'Accelerometer', 'Compass', 'No Gyro'
 // Betaflight flags: 'Acc Calibration', 'No Gyro'
 const CALIBRATION_ARMING_FLAGS: Record<CalibrationTypeId, string[]> = {
-  'accel-level': ['Accelerometer', 'Acc Calibration'],
-  'accel-quick': ['Accelerometer', 'Acc Calibration'],
-  'accel-6point': ['Accelerometer', 'Acc Calibration'],
-  compass: ['Compass'],
-  gyro: ['No Gyro'],
+  'accel-level': [t('calibration.SelectCalibrationStep.accelerometer'), t('calibration.SelectCalibrationStep.accCalibration')],
+  'accel-quick': [t('calibration.SelectCalibrationStep.accelerometer'), t('calibration.SelectCalibrationStep.accCalibration')],
+  'accel-6point': [t('calibration.SelectCalibrationStep.accelerometer'), t('calibration.SelectCalibrationStep.accCalibration')],
+  compass: [t('calibration.SelectCalibrationStep.compass')],
+  gyro: [t('calibration.SelectCalibrationStep.noGyro')],
   opflow: [], // No specific arming flag for optical flow
 };
 

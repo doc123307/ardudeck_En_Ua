@@ -16,13 +16,13 @@ import { Px4CompassCard } from './Px4CompassCard';
 import { t } from '../../i18n';
 
 function place(slot: CompassSlot): string {
-  if (slot.bus === 'DroneCAN') return `DroneCAN node, external (GPS or CAN module)`;
+  if (slot.bus === 'DroneCAN') return t('mavlink_config.CompassCard.dronecanNodeExternalGpsOrCan');
   if (slot.bus === 'I2C') {
     return slot.external
-      ? `I2C bus ${slot.busNumber}, address 0x${slot.address.toString(16)}, external (usually the GPS)`
-      : `I2C bus ${slot.busNumber}, address 0x${slot.address.toString(16)}, on the autopilot`;
+      ? t('mavlink_config.CompassCard.i2cBusAddress0xExternalUsually', { busNumber: slot.busNumber, v2: slot.address.toString(16) })
+      : t('mavlink_config.CompassCard.i2cBusAddress0xOnThe', { busNumber: slot.busNumber, v2: slot.address.toString(16) });
   }
-  if (slot.bus === 'SPI') return 'SPI, on the autopilot';
+  if (slot.bus === 'SPI') return t('mavlink_config.CompassCard.spiOnTheAutopilot');
   return `${slot.bus} bus`;
 }
 
@@ -169,7 +169,7 @@ function ArduPilotCompassCard(): JSX.Element {
                   <span className={`rounded px-1.5 py-0.5 text-[10px] ${
                     slot.external ? 'bg-emerald-500/15 text-emerald-300' : 'bg-surface-overlay text-content-tertiary'
                   }`}>
-                    {slot.external ? 'external' : 'onboard'}
+                    {slot.external ? t('mavlink_config.CompassCard.external') : t('mavlink_config.CompassCard.onboard')}
                   </span>
                   {!slot.calibrated && (
                     <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">

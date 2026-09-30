@@ -24,7 +24,7 @@ import { useFleetRepoStore, useCurrentVaultUnit, isRestoreTargetMatch, isRestore
 import { VaultAutoSyncToggle } from './VaultAutoSyncToggle';
 import { useParameterStore } from '../../stores/parameter-store';
 import { useConnectionStore } from '../../stores/connection-store';
-import { t as tr } from '../../i18n';
+import { t as tr, enPlural } from '../../i18n';
 
 function timeAgo(ts: number): string {
   const s = Math.floor((Date.now() - ts) / 1000);
@@ -508,7 +508,7 @@ function DiffPanel() {
             </table>
             {diff.missingOnVehicle.length > 0 && (
               <p className="text-[10px] text-content-tertiary mt-3">
-                {diff.missingOnVehicle.length} {tr('vault.VaultView.snapshotParam')}{diff.missingOnVehicle.length === 1 ? '' : 's'} {tr('vault.VaultView.notPresentOnThisVehicleSkipped')}
+                {diff.missingOnVehicle.length} {tr('vault.VaultView.snapshotParam')}{diff.missingOnVehicle.length === 1 ? '' : enPlural('s')} {tr('vault.VaultView.notPresentOnThisVehicleSkipped')}
               </p>
             )}
           </div>
@@ -522,7 +522,7 @@ function DiffPanel() {
                   onChange={(e) => { setIncludeCal(e.target.checked); setConfirming(false); }}
                   className="w-3.5 h-3.5 rounded"
                 />
-                {tr('vault.VaultView.include')} {calCount} {tr('vault.VaultView.calibrationParam')}{calCount === 1 ? '' : 's'}
+                {tr('vault.VaultView.include')} {calCount} {tr('vault.VaultView.calibrationParam')}{calCount === 1 ? '' : enPlural('s')}
               </label>
             )}
             <div className="flex-1" />
@@ -533,7 +533,7 @@ function DiffPanel() {
             ) : confirming ? (
               <div className="flex items-center gap-2">
                 <span className="text-[11px] text-content-secondary">
-                  {tr('vault.VaultView.write')} {applicable} {tr('vault.VaultView.value')}{applicable === 1 ? '' : 's'} {tr('vault.VaultView.toTheVehicle')}
+                  {tr('vault.VaultView.write')} {applicable} {tr('vault.VaultView.value')}{applicable === 1 ? '' : enPlural('s')} {tr('vault.VaultView.toTheVehicle')}
                 </span>
                 <button
                   onClick={async () => { setConfirming(false); await restoreSnapshot(includeCal); }}
@@ -668,7 +668,7 @@ export function VaultView() {
           <h1 className="text-sm font-semibold text-content leading-tight">{tr('vault.VaultView.fleetVault')}</h1>
           <p className="text-[10px] text-content-secondary">
             {tr('vault.VaultView.backupAndHistoryForSettingsMissions')}{' '}
-            {status ? `${status.commitCount} save${status.commitCount === 1 ? '' : 's'}` : tr('vault.VaultView.loading')}
+            {status ? `${status.commitCount} save${status.commitCount === 1 ? '' : enPlural('s')}` : tr('vault.VaultView.loading')}
             {status?.github.lastSyncAt ? tr('vault.VaultView.copiedOnline', { v1: timeAgo(status.github.lastSyncAt) }) : ''}
           </p>
         </div>
@@ -905,8 +905,8 @@ export function VaultView() {
                   >
                     <div className="text-xs text-content font-medium truncate">{s.site}</div>
                     <div className="text-[10px] text-content-tertiary">
-                      {s.missions.length} {tr('vault.VaultView.mission')}{s.missions.length === 1 ? '' : 's'}
-                      {s.hasBoundary ? ' - boundary' : ''}
+                      {s.missions.length} {tr('vault.VaultView.mission')}{s.missions.length === 1 ? '' : enPlural('s')}
+                      {s.hasBoundary ? tr('vault.VaultView.boundary') : ''}
                     </div>
                   </button>
                 );

@@ -154,11 +154,11 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
         setStep('connect');
       } else if (result.status === 'timeout') {
         setFailure(
-          'The module kept refusing the change - the receiver was still powered and linked. Unpower the vehicle completely (battery AND USB cable) and press Start again.',
+          t('connection.RadioSetupWizard.theModuleKeptRefusingTheChange'),
         );
       }
     } catch (e) {
-      setFailure(e instanceof Error ? e.message : 'The module stopped responding.');
+      setFailure(e instanceof Error ? e.message : t('connection.RadioSetupWizard.theModuleStoppedResponding'));
     } finally {
       setSwitching(false);
     }
@@ -174,8 +174,8 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
     if (!ok) {
       setFailure(
         radio.kind === 'serial'
-          ? 'Could not open the port. Is another program using it?'
-          : 'Could not listen on the WiFi port. Is another program using UDP 14550?',
+          ? t('connection.RadioSetupWizard.couldNotOpenThePortIs')
+          : t('connection.RadioSetupWizard.couldNotListenOnTheWifi'),
       );
     }
     // Success advances via the isConnected effect.
@@ -199,7 +199,7 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
       setChecks(result);
       if (result.every((c) => c.status === 'pass')) setStep('done');
     } catch (e) {
-      setFailure(e instanceof Error ? e.message : 'Could not read vehicle settings.');
+      setFailure(e instanceof Error ? e.message : t('connection.RadioSetupWizard.couldNotReadVehicleSettings'));
     } finally {
       setBusy(false);
     }
@@ -215,12 +215,12 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
         .map((f) => ({ paramId: f.param, value: f.value, type: paramTypes[f.param] ?? 6 }));
       const result = await window.electronAPI.setParameterBatch(batch);
       if ((result?.failed ?? []).length > 0) {
-        setFailure(`The vehicle rejected: ${result!.failed.join(', ')}`);
+        setFailure(t('connection.RadioSetupWizard.theVehicleRejected', { v1: result!.failed.join(', ') }));
       } else {
         setFixApplied(true);
       }
     } catch (e) {
-      setFailure(e instanceof Error ? e.message : 'Applying settings failed.');
+      setFailure(e instanceof Error ? e.message : t('connection.RadioSetupWizard.applyingSettingsFailed'));
     } finally {
       setBusy(false);
     }
@@ -233,7 +233,7 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
       await window.electronAPI.mavlinkReboot();
     } catch {
       setRestarting(false);
-      setFailure('The restart command was not accepted.');
+      setFailure(t('connection.RadioSetupWizard.theRestartCommandWasNotAccepted'));
     }
   };
 

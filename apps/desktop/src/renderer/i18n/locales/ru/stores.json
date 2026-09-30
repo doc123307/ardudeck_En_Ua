@@ -1,5 +1,9 @@
 {
   "stores": {
+    "app_store": {
+      "installFailed": "Ошибка установки",
+      "uninstallFailed": "Ошибка удаления"
+    },
     "ardupilot_sitl_store": {
       "quadDefault": "Квадро (по умолчанию)",
       "quadPlus": "Квадро плюс (+)",
@@ -18,7 +22,28 @@
       "sailboat": "Парусник",
       "balanceBot": "Балансирующий робот",
       "vectoredDefault": "Векторный (по умолчанию)",
-      "vectored6dof": "Векторный 6DOF"
+      "vectored6dof": "Векторный 6DOF",
+      "usingTrackForAutoUpgradedAfter": "Используется ветка {{upgraded}} для «{{model}}» (автоматически после предыдущего сбоя на {{releaseTrack}}).\n",
+      "hasCrashedOnEveryAvailableTrack": "\n«{{model}}» падает на всех доступных ветках для этой платформы, запуск пропущен.\n",
+      "failedToStartSitl": "Не удалось запустить SITL",
+      "unknownError": "Неизвестная ошибка",
+      "sitlStopped": "SITL остановлен.\n",
+      "errorStopping": "Ошибка остановки: {{message}}\n",
+      "downloadedTo": "Загружено в: {{path}}\n",
+      "downloadFailed": "Ошибка загрузки",
+      "downloadFailed2": "Ошибка загрузки: {{error}}\n",
+      "downloadError": "Ошибка загрузки: {{message}}\n",
+      "failedToDownloadBinary": "Не удалось загрузить бинарник {{suggestedTrack}}",
+      "browseFailed": "Ошибка выбора файла",
+      "flightgearLaunchedItWillShowThe": "FlightGear запущен, аппарат SITL появится, как только загрузится местность.\n",
+      "failedToLaunchFlightgear": "Не удалось запустить FlightGear",
+      "flightgearError": "Ошибка FlightGear: {{error}}\n",
+      "flightgearError2": "Ошибка FlightGear: {{message}}\n",
+      "processError": "Ошибка процесса: {{error}}\n",
+      "sitlIsRestartingAtANew": "\nSITL перезапускается в новой точке взлёта...\n",
+      "sitlExitedWithCode": "\nSITL завершился с кодом {{code}}\n",
+      "sitlKilledBySignal": "\nSITL завершён сигналом {{signal}}\n",
+      "sitlIsBackUpTakingOff": "SITL снова работает, взлёт с {{lat}}, {{lon}} (высота {{alt}} м, курс {{heading}}°).\n"
     },
     "calibration_store": {
       "waitingForFlightController": "Ожидание полётного контроллера...",
@@ -26,15 +51,49 @@
       "finalizingCalibrationOnFlightController": "Завершение калибровки на полётном контроллере...",
       "savingCalibration": "Сохранение калибровки...",
       "noCompassFitnessReported": "Качество калибровки компаса не сообщено.",
-      "recorded": "Записано."
+      "recorded": "Записано.",
+      "isNotSupportedForProtocol": "{{name}} не поддерживается для протокола {{v2}}",
+      "requiresSensorWhichIsNotAvailable": "{{name}} требует датчик {{requiresSensor}}, которого нет",
+      "noCalibrationTypeSelected": "Тип калибровки не выбран",
+      "failedToStartCalibration": "Не удалось начать калибровку",
+      "unknownError": "Неизвестная ошибка",
+      "failedToConfirmPosition": "Не удалось подтвердить положение",
+      "failedToLoadSensorConfig": "Не удалось загрузить настройки датчиков",
+      "failedToSaveCalibrationData": "Не удалось сохранить данные калибровки",
+      "failedToSave": "Не удалось сохранить",
+      "failedToSaveToPersistentStorage": "Не удалось сохранить в постоянную память",
+      "flightControllerReportedSuccessButThe": "Полётный контроллер сообщил об успехе, но параметры калибровки не изменились. Калибровка молча не удалась, попробуйте ещё раз.",
+      "verificationFailed": "Проверка не удалась",
+      "failedToLoadFile": "Не удалось загрузить файл",
+      "failedToReadCalibrationParameters": "Не удалось прочитать параметры калибровки",
+      "noTrackedParametersCouldBeRead": "Не удалось прочитать ни одного отслеживаемого параметра с полётного контроллера",
+      "placeYourVehicleOnALevel": "Поставьте аппарат на ровную поверхность",
+      "rotateYourVehicleInAllDirections": "Вращайте аппарат во всех направлениях",
+      "keepYourVehicleCompletelyStill": "Держите аппарат абсолютно неподвижно",
+      "holdVehicleSteadyOverATextured": "Держите аппарат неподвижно над текстурированной поверхностью",
+      "followTheOnScreenInstructions": "Следуйте указаниям на экране"
     },
     "cli_store": {
-      "failedToSaveConfiguration": "Не удалось сохранить конфигурацию"
+      "failedToSaveConfiguration": "Не удалось сохранить конфигурацию",
+      "unknownError": "Неизвестная ошибка",
+      "savingConfigurationToEeprom": "Запись конфигурации в EEPROM...",
+      "boardIsRebooting": "Плата перезагружается...",
+      "reconnectingToBoard": "Переподключение к плате...",
+      "configurationSavedBoardReconnected": "Конфигурация сохранена! Плата переподключена.",
+      "configurationSavedReconnecting": "Конфигурация сохранена! Переподключение..."
+    },
+    "connection_store": {
+      "connectionFailed": "Не удалось подключиться",
+      "unknownError": "Неизвестная ошибка"
     },
     "fence_store": {
       "downloadedFenceItemsFromFlightController": "Загружено элементов геозоны с полётного контроллера: {{length}}",
       "uploadedFenceItemsToFlightController": "Выгружено элементов геозоны на полётный контроллер: {{itemCount}}",
-      "fenceClearedFromFlightController": "Геозона удалена с полётного контроллера"
+      "fenceClearedFromFlightController": "Геозона удалена с полётного контроллера",
+      "failedToDownloadFence": "Не удалось загрузить геозону",
+      "noFenceItemsToUpload": "Нет элементов геозоны для выгрузки",
+      "failedToUploadFence": "Не удалось выгрузить геозону",
+      "failedToClearFence": "Не удалось очистить геозону"
     },
     "firmware_store": {
       "downloadingFirmware": "Загрузка прошивки...",
@@ -48,10 +107,92 @@
       "configuringBoardAsAirplane": "Настройка платы как самолёта...",
       "savingToEeprom": "Запись в EEPROM...",
       "rebootingBoard": "Перезагрузка платы...",
-      "boardConfiguredAsAirplaneReconnectWhen": "Плата настроена как самолёт! Переподключитесь, когда будете готовы."
+      "boardConfiguredAsAirplaneReconnectWhen": "Плата настроена как самолёт! Переподключитесь, когда будете готовы.",
+      "noUsbDeviceDetectedMakeSure": "USB-устройство не обнаружено. Убедитесь, что полётный контроллер подключён.",
+      "detectionFailed": "Не удалось определить",
+      "noStm32BootloaderFoundOnMake": "На {{port}} не найден загрузчик STM32. Убедитесь, что плата в режиме загрузчика.",
+      "probeFailed": "Ошибка опроса",
+      "couldNotIdentifyBoardOnSelect": "Не удалось определить плату на {{port}}. Выберите плату вручную.",
+      "mavlinkQueryFailed": "Ошибка запроса MAVLink",
+      "firmwareApiNotAvailableCheckPreload": "API прошивки недоступен — проверьте preload.ts",
+      "failedToFetchBoardsNoError": "Не удалось получить список плат (без сообщения об ошибке)",
+      "failedToFetchBoards": "Не удалось получить список плат",
+      "firmwareVersionsApiNotAvailableCheck": "API версий прошивки недоступен — проверьте preload.ts",
+      "failedToFetchVersionsNoError": "Не удалось получить версии (без сообщения об ошибке)",
+      "failedToFetchVersions": "Не удалось получить версии",
+      "noBoardConnectedClickConnectFirst": "Плата не подключена. Сначала нажмите «Подключить».",
+      "vehicleTypeMismatchYouSelectedBut": "Несоответствие типа аппарата: вы выбрали {{selectedVehicleType}}, а выбранная версия — {{vehicleType}}. Выберите аппарат и версию заново и повторите.",
+      "noFirmwareFileSelected": "Файл прошивки не выбран",
+      "noFirmwareVersionSelected": "Версия прошивки не выбрана",
+      "downloadFailed": "Ошибка загрузки",
+      "failedToEnterBootloader": "Не удалось перейти в загрузчик",
+      "noPortFoundForReconnection": "Не найден порт для переподключения",
+      "couldNotConnectAfterFlashThe": "Не удалось подключиться после прошивки. Возможно, USB-serial микросхеме нужно физическое отключение/подключение. ",
+      "disconnectTheBoardReconnectItThen": "Отключите плату, подключите снова, затем настройте её как самолёт в мастере серв.",
+      "failedToReadInavMixerConfig": "Не удалось прочитать настройки микшера iNav",
+      "failedToSetPlatformTypeTo": "Не удалось установить тип платформы «самолёт»",
+      "configurationFailed": "Ошибка конфигурации"
+    },
+    "fleet_repo_store": {
+      "myVehicle": "Мой аппарат",
+      "vaultUnavailable": "Хранилище недоступно",
+      "noParametersLoadedToSnapshot": "Нет загруженных параметров для снимка.",
+      "couldNotIdentifyTheVehiclePick": "Не удалось идентифицировать аппарат. Выберите его в пункте «Работаю с» в хранилище.",
+      "snapshotFailed": "Не удалось сделать снимок",
+      "snapshotSavedParams": "Снимок сохранён (параметров: {{length}})",
+      "noChangesSinceLastSnapshot": "Изменений с последнего снимка нет",
+      "newVehicle": "Новый аппарат",
+      "newVehicleSavedParams": "Новый аппарат «{{displayName}}» сохранён (параметров: {{length}})",
+      "noMissionLoadedToSnapshot": "Нет загруженной миссии для снимка.",
+      "missionSavedTo": "Миссия сохранена в {{site}}",
+      "missionUnchangedSinceLastSnapshot": "Миссия не изменилась с последнего снимка",
+      "noSurveyPolygonOnTheMap": "На карте нет полигона съёмки для снимка.",
+      "boundarySavedTo": "Граница сохранена в {{site}}",
+      "boundaryUnchangedSinceLastSnapshot": "Граница не изменилась с последнего снимка",
+      "renameFailed": "Не удалось переименовать",
+      "linkFailed": "Не удалось связать",
+      "vehicleLinkedSnapshotsContinueInThat": "Аппарат связан; снимки продолжатся в этой записи",
+      "couldNotReadSnapshotFromThe": "Не удалось прочитать снимок из хранилища.",
+      "thatSnapshotBelongsToNotThe": "Этот снимок принадлежит {{ownerName}}, а не подключённому аппарату. Откройте снимок из истории этого аппарата или установите «Работаю с» на {{ownerName}}, если это тот же аппарат.",
+      "thatSnapshotWasTakenFromBut": "Этот снимок снят с {{snapshotFirmware}}, а на аппарате работает {{liveFirmware}}. Названия параметров не переносятся между полётными стеками.",
+      "restoredParameter": "Восстановлено параметров: {{applied}}",
+      "syncedWithGithub": "Синхронизировано с GitHub",
+      "syncFailed": "Ошибка синхронизации"
+    },
+    "flight_control_store": {
+      "rejectedByTheLink": "отклонено каналом",
+      "rcOverrideUnavailable": "RC override недоступен",
+      "trainerSessionActiveTheTrainerOwns": "Активен сеанс Тренажёра — стиками управляет Тренажёр"
+    },
+    "group_shape_store": {
+      "roundedEveryGauge": "Скруглённые (каждый индикатор)",
+      "roundedEndsOnly": "Скруглённые (только края)",
+      "flatCardNoBulgeTheOriginal": "Плоская карточка, без выступов — исходный вид",
+      "everyRoundGaugeBulgesItsOwn": "Каждый круглый индикатор выступает собственным кругом",
+      "onlyTheRunSEndsBulge": "Выступают только края ряда, индикаторы посередине вровень"
+    },
+    "guide_store": {
+      "importNotAvailable": "Импорт недоступен",
+      "emptyFile": "Пустой файл",
+      "noPolygonsOrLinesFoundIn": "В файле не найдено полигонов или линий",
+      "noValidPointsToAdd": "Нет корректных точек для добавления.",
+      "aPolygonNeedsAtLeast3": "Полигону нужно минимум 3 точки — добавьте как маркеры.",
+      "rtkPoints": "RTK-точки {{v1}}"
     },
     "legacy_config_store": {
-      "failedToSaveConfiguration": "Не удалось сохранить конфигурацию"
+      "failedToSaveConfiguration": "Не удалось сохранить конфигурацию",
+      "failedToLoadConfig": "Не удалось загрузить конфигурацию",
+      "savingConfigurationToEeprom": "Запись конфигурации в EEPROM...",
+      "boardIsRebooting": "Плата перезагружается...",
+      "reconnectingToBoard": "Переподключение к плате...",
+      "configurationSavedBoardRebootedPleaseReconnect": "Конфигурация сохранена! Плата перезагружена. Переподключитесь."
+    },
+    "lua_graph_store": {
+      "untitledScript": "Скрипт без названия"
+    },
+    "mission_library_store": {
+      "couldNotWriteToTheBackup": "Не удалось записать в резервную копию",
+      "couldNotReadThatMissionFrom": "Не удалось прочитать эту миссию из резервной копии"
     },
     "mission_store": {
       "noWaypointsOnFc": "На FC нет путевых точек",
@@ -64,7 +205,36 @@
       "downloadedWaypointsFromFlightControllerInto": "Загружено точек с полётного контроллера в «{{name}}»: {{length}}",
       "uploadedWaypointsToFlightController": "Выгружено точек на полётный контроллер: {{itemCount}}",
       "missionClearedFromFlightController": "Миссия удалена с полётного контроллера",
-      "recoveredWaypointsFromYourLastSession": "Восстановлено точек из прошлого сеанса: {{length}}"
+      "recoveredWaypointsFromYourLastSession": "Восстановлено точек из прошлого сеанса: {{length}}",
+      "failedToDownloadWaypointsMspNot": "Не удалось загрузить точки — MSP не поддерживается",
+      "failedToDownloadMission": "Не удалось загрузить миссию",
+      "noWaypointsToUploadAllGroups": "Нет точек для выгрузки (все группы выключены?)",
+      "failedToUploadWaypoints": "Не удалось выгрузить точки",
+      "failedToUploadMission": "Не удалось выгрузить миссию",
+      "noWaypointsInThisGroupTo": "В этой группе нет точек для выгрузки",
+      "failedToUploadMissionToVehicle": "Не удалось выгрузить миссию на аппарат",
+      "noWaypointsInThisGroupTo2": "В этой группе нет точек для сохранения",
+      "failedToClearWaypoints": "Не удалось очистить точки",
+      "failedToClearMission": "Не удалось очистить миссию"
+    },
+    "modes_wizard_store": {
+      "failedToLoadModesFromFc": "Не удалось загрузить режимы с FC",
+      "failedToLoadModes": "Не удалось загрузить режимы",
+      "failedToClearModeSlot": "Не удалось очистить слот режима {{i}}",
+      "failedToSetMode": "Не удалось задать режим {{i}}",
+      "modesSentButEepromSaveFailed": "Режимы отправлены, но запись в EEPROM не удалась",
+      "failedToSaveModes": "Не удалось сохранить режимы"
+    },
+    "module_store": {
+      "activationFailed": "Ошибка активации",
+      "updateFailed": "Ошибка обновления",
+      "updateFailedFor": "Ошибка обновления {{slug}}",
+      "toggleFailed": "Не удалось переключить",
+      "installFailed": "Ошибка установки"
+    },
+    "orchestrator_engine_store": {
+      "failedToStartMultiVehicle": "Не удалось запустить многоаппаратный режим",
+      "failedToAddSource": "Не удалось добавить источник"
     },
     "osd_store": {
       "readingFromFlightController": "Чтение с полётного контроллера...",
@@ -92,16 +262,69 @@
       "uploadingFontToFcNvm": "Выгрузка шрифта в NVM FC…",
       "fontUploadedCharsRebootTheFc": "Шрифт выгружен ({{written}} символов), перезагрузите FC, чтобы применить",
       "fontUploadFailed": "Ошибка выгрузки шрифта: {{v1}}",
-      "fontUploadFailed2": "Ошибка выгрузки шрифта: {{msg}}"
+      "fontUploadFailed2": "Ошибка выгрузки шрифта: {{msg}}",
+      "unknownBundledFont": "Неизвестный встроенный шрифт: {{name}}",
+      "failedToLoadFont": "Не удалось загрузить шрифт"
+    },
+    "parameter_store": {
+      "failedToRequestParameters": "Не удалось запросить параметры",
+      "failedToSetParameter": "Не удалось задать параметр"
     },
     "pseudo_tx_store": {
       "switchTheUsbTransmitterOnFirst": "Сначала включите USB-пульт",
-      "needsAConnectedMavlinkVehicle": "Нужен подключённый MAVLink-аппарат"
+      "needsAConnectedMavlinkVehicle": "Нужен подключённый MAVLink-аппарат",
+      "onScreenSticks": "Экранные стики",
+      "noSitlRcBridgeInThis": "В этом окне нет RC-моста SITL — кадры никуда не идут",
+      "sitlRejectedRc": "SITL отклонил RC: {{v1}}",
+      "vehicleLinkLostJoystickControlReleased": "Связь с аппаратом потеряна — управление джойстиком отпущено",
+      "overrideRejectedByTheLink": "Override отклонён каналом"
+    },
+    "px4_sitl_store": {
+      "downloadedTo": "Загружено в: {{path}}\n",
+      "downloadFailed": "Ошибка загрузки",
+      "downloadFailed2": "Ошибка загрузки: {{error}}\n",
+      "unknownError": "Неизвестная ошибка",
+      "downloadError": "Ошибка загрузки: {{message}}\n",
+      "failedToStartSitl": "Не удалось запустить SITL",
+      "sitlStopped": "SITL остановлен.\n",
+      "disconnectingFromStoppedSitl": "Отключение от остановленного SITL.\n",
+      "errorStopping": "Ошибка остановки: {{message}}\n",
+      "processError": "Ошибка процесса: {{error}}\n",
+      "sitlIsRestarting": "\nSITL перезапускается...\n",
+      "sitlExitedWithCode": "\nSITL завершился с кодом {{code}}\n",
+      "sitlKilledBySignal": "\nSITL завершён сигналом {{signal}}\n",
+      "sitlIsBackUpTakingOff": "SITL снова работает, взлёт с {{lat}}, {{lon}} (высота {{alt}} м, курс {{heading}}°).\n"
+    },
+    "quick_setup_store": {
+      "noPresetSelected": "Пресет не выбран",
+      "failedToApplyPreset": "Не удалось применить пресет",
+      "failedToChangePlatformType": "Не удалось сменить тип платформы",
+      "failedToReconnectAfterPlatformChange": "Не удалось переподключиться после смены платформы. Переподключитесь вручную и попробуйте ещё раз.",
+      "unknownErrorDuringPlatformChange": "Неизвестная ошибка при смене платформы",
+      "configuringServoMixer": "Настройка микшера серв",
+      "clearingServoMixer": "Очистка микшера серв",
+      "notConnectedToFlightControllerPlease": "Нет соединения с полётным контроллером. Сначала подключитесь.",
+      "failedToSetPids": "Не удалось задать PID",
+      "failedToSetRates": "Не удалось задать рейты",
+      "connectionLostDuringSetupPleaseReconnect": "Соединение потеряно во время настройки. Переподключитесь и попробуйте ещё раз.",
+      "failedToSaveToEeprom": "Не удалось записать в EEPROM",
+      "applyFailed": "Ошибка применения",
+      "cliApplyFailed": "Ошибка применения через CLI",
+      "platformMultirotor": "Мультиротор",
+      "platformAirplane": "Самолёт",
+      "platformHelicopter": "Вертолёт",
+      "platformTricopter": "Трикоптер",
+      "platformRover": "Ровер",
+      "platformBoat": "Лодка"
     },
     "rally_store": {
       "downloadedRallyPointsFromFlightController": "Загружено точек сбора с полётного контроллера: {{length}}",
       "uploadedRallyPointsToFlightController": "Выгружено точек сбора на полётный контроллер: {{itemCount}}",
-      "rallyPointsClearedFromFlightController": "Точки сбора удалены с полётного контроллера"
+      "rallyPointsClearedFromFlightController": "Точки сбора удалены с полётного контроллера",
+      "failedToDownloadRallyPoints": "Не удалось загрузить точки сбора",
+      "noRallyPointsToUpload": "Нет точек сбора для выгрузки",
+      "failedToUploadRallyPoints": "Не удалось выгрузить точки сбора",
+      "failedToClearRallyPoints": "Не удалось очистить точки сбора"
     },
     "servo_wizard_store": {
       "aircraft": "Аппарат",
@@ -113,15 +336,102 @@
       "calibrate": "Калибровка",
       "adjustServoLimits": "Настройте пределы серв",
       "save": "Сохранение",
-      "reviewAndSave": "Просмотрите и сохраните"
+      "reviewAndSave": "Просмотрите и сохраните",
+      "servoOutputsAreNotAvailableOn": "Выходы серв недоступны на этой плате в режиме мультиротора. Это аппаратное ограничение — не все полётные контроллеры могут выдавать сигналы серв в конфигурации квадро/гекса.",
+      "noServoOutputsAvailableOnThis": "На этой плате нет выходов серв для управления подвесом.",
+      "noServoOutputsDetectedEnsureYour": "Выходов серв не обнаружено. Убедитесь, что плата поддерживает сервы.",
+      "servoConfigurationNotSupportedOnThis": "Настройка серв не поддерживается этой прошивкой. iNav 2.0.0 может быть слишком старой — попробуйте обновиться.",
+      "unknownError": "Неизвестная ошибка",
+      "failedToCheckServoSupportPlease": "Не удалось проверить поддержку серв. Попробуйте ещё раз.",
+      "couldNotChangePlatformToFor": "Не удалось сменить платформу на {{platformName}}. Для iNav 2.0.0 может понадобиться сменить тип микшера в iNav Configurator, затем переподключиться.",
+      "errorChangingPlatformTryUsingInav": "Ошибка смены платформы: {{v1}}. Попробуйте сменить тип микшера в iNav Configurator.",
+      "failedToSetServoConfig": "Не удалось задать настройки сервы {{servoIndex}}",
+      "failedToSaveToEeprom": "Не удалось записать в EEPROM",
+      "failedToSave": "Не удалось сохранить",
+      "possibleCauses1FcNotConfigured": ". Возможные причины: (1) FC не настроен как самолёт, (2) слишком старая версия iNav, (3) у платы нет выходов серв.",
+      "yourFcFirmwareMayNotSupport": ". Прошивка FC может не поддерживать настройку серв через MSP. Попробуйте CLI в iNav Configurator."
     },
     "settings_store": {
-      "udpListen": "UDP :{{v1}} прослушивание ({{v2}})"
+      "udpListen": "UDP :{{v1}} прослушивание ({{v2}})",
+      "newBoard": "Новая плата"
+    },
+    "signing_store": {
+      "failedToSetKey": "Не удалось задать ключ",
+      "unknownError": "Неизвестная ошибка",
+      "failedToEnableSigning": "Не удалось включить подпись",
+      "failedToSendToFc": "Не удалось отправить на FC"
     },
     "sitl_store": {
       "freshInavInstallWithFactoryDefaults": "Чистая iNav с заводскими настройками. Для общего тестирования.",
       "preConfiguredForFixedWingTesting": "Предварительно настроено для тестирования самолёта с микшером airplane.",
-      "preConfiguredForQuadTestingWith": "Предварительно настроено для тестирования квадро с микшером X."
+      "preConfiguredForQuadTestingWith": "Предварительно настроено для тестирования квадро с микшером X.",
+      "noProfileSelected": "Профиль не выбран",
+      "failedToStartSitl": "Не удалось запустить SITL",
+      "unknownError": "Неизвестная ошибка",
+      "sitlStopped": "SITL остановлен.\n",
+      "errorStopping": "Ошибка остановки: {{message}}\n",
+      "profileNameAlreadyExists": "Профиль с таким названием уже существует",
+      "cannotDeleteStandardProfiles": "Стандартные профили нельзя удалить",
+      "flightgearLaunchedWithAircraftAirport": "FlightGear запущен, самолёт: {{aircraft}}, аэропорт: {{airport}}\n",
+      "failedToLaunchFlightgear": "Не удалось запустить FlightGear",
+      "flightgearError": "Ошибка FlightGear: {{error}}\n",
+      "flightgearError2": "Ошибка FlightGear: {{message}}\n",
+      "flightgearStopped": "FlightGear остановлен.\n",
+      "flightgearStopError": "Ошибка остановки FlightGear: {{message}}\n",
+      "xPlaneLaunchedConfigureDataOutput": "X-Plane запущен. Настройте Data Output в X-Plane:\n",
+      "sendTo127001": "  - Отправлять на: 127.0.0.1:49000\n",
+      "failedToLaunchXPlane": "Не удалось запустить X-Plane",
+      "xPlaneError": "Ошибка X-Plane: {{error}}\n",
+      "xPlaneError2": "Ошибка X-Plane: {{message}}\n",
+      "xPlaneStopped": "X-Plane остановлен.\n",
+      "xPlaneStopError": "Ошибка остановки X-Plane: {{message}}\n",
+      "startingProtocolBridge": "Запуск протокольного моста...\n",
+      "bridgeError": "Ошибка моста: {{error}}\n",
+      "bridgeError2": "Ошибка моста: {{message}}\n",
+      "stoppingProtocolBridge": "Остановка протокольного моста...\n",
+      "protocolBridgeStopped": "Протокольный мост остановлен.\n",
+      "bridgeStopError": "Ошибка остановки моста: {{message}}\n",
+      "xPlaneIsNotInstalledSet": "X-Plane не установлен. Укажите свой путь или установите X-Plane.",
+      "xPlaneIsNotInstalledPlease": "X-Plane не установлен. Установите его или укажите свой путь.\n",
+      "waitingForXPlaneToInitialize": "Ожидание инициализации X-Plane (10 секунд)...\n",
+      "startingInavSitl": "Запуск iNav SITL...\n",
+      "xPlaneIsNowControlledBy": "X-Plane теперь управляется iNav SITL.\n",
+      "makeSureXPlaneDataOutput": "Убедитесь, что Data Output в X-Plane отправляет на 127.0.0.1:49000\n",
+      "connectArdudeckToTcp1270": "Подключите ArduDeck к TCP 127.0.0.1:5760, чтобы получить телеметрию.\n",
+      "flightgearIsNotInstalledSetA": "FlightGear не установлен. Укажите свой путь или установите FlightGear.",
+      "flightgearIsNotInstalledPleaseInstall": "FlightGear не установлен. Установите его или укажите свой путь.\n",
+      "waitingForFlightgearToInitialize15": "Ожидание инициализации FlightGear (15–30 секунд)...\n",
+      "flightgearIsNowControlledByInav": "FlightGear теперь управляется iNav SITL.\n",
+      "processError": "Ошибка процесса: {{error}}\n",
+      "sitlExitedWithCode": "\nSITL завершился с кодом {{code}}\n",
+      "sitlKilledBySignal": "\nSITL завершён сигналом {{signal}}\n"
+    },
+    "survey_area_store": {
+      "couldNotWriteToTheVault": "Не удалось записать в хранилище",
+      "couldNotReadThatAreaFrom": "Не удалось прочитать этот участок из хранилища"
+    },
+    "survey_store": {
+      "recomputingWaypoints": "Пересчёт точек ({{v1}})...",
+      "generatingWaypoints": "Генерация точек...",
+      "importNotAvailable": "Импорт недоступен",
+      "emptyFile": "Пустой файл",
+      "noPolygonBoundaryOrLineFound": "В файле не найдено границы-полигона или линии",
+      "importingSurveyGeneratingWaypoints": "Импорт съёмки — генерация точек...",
+      "generatorFailed": "Ошибка генератора: {{message}}",
+      "couldNotGenerateASurveyFrom": "Не удалось сгенерировать съёмку из импортированных участков",
+      "loadingSurvey": "Загрузка съёмки...",
+      "reloadingSavedArea": "Перезагрузка сохранённого участка..."
+    },
+    "swarm_sitl_store": {
+      "failedToStartSwarm": "Не удалось запустить рой",
+      "unknownError": "Неизвестная ошибка"
+    },
+    "weather_store": {
+      "weatherDataUnavailableCheckYourInternet": "Данные о погоде недоступны. Проверьте интернет-соединение и попробуйте ещё раз."
+    },
+    "wind_store": {
+      "windDataUnavailable": "Данные о ветре недоступны",
+      "windFetchFailed": "Не удалось получить данные о ветре"
     }
   }
 }

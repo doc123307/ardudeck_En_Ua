@@ -17,7 +17,7 @@ import { PARAMETER_GROUPS } from '../../../shared/parameter-groups';
 import { MspConfigView } from './MspConfigView';
 import MavlinkConfigView from '../mavlink-config/MavlinkConfigView';
 import { LegacyConfigView } from '../legacy-config';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 // Simple toast notification state
 type ToastType = 'success' | 'error' | 'info';
@@ -216,7 +216,7 @@ export function ParametersView() {
       const result = connectionState.firmware === 'px4'
         ? await commitStagedParams().then(r => r.failed.length === 0
             ? { success: true as const }
-            : { success: false as const, error: `Failed to write ${r.failed.join(', ')}` })
+            : { success: false as const, error: t('parameters.ParametersView.failedToWrite', { v1: r.failed.join(', ') }) })
         : await window.electronAPI?.writeParamsToFlash();
       if (result?.success) {
         // Check if any written params require a reboot
@@ -287,7 +287,7 @@ export function ParametersView() {
         .map(p => ({ id: p.id, value: p.value }));
 
       if (params.length === 0) {
-        const labels = { all: 'No parameters to save', changed: 'No changed parameters to save', nondefault: 'No non-default parameters to save' };
+        const labels = { all: t('parameters.ParametersView.noParametersToSave'), changed: t('parameters.ParametersView.noChangedParametersToSave'), nondefault: t('parameters.ParametersView.noNonDefaultParametersToSave') };
         showToast(labels[mode], 'info');
         return;
       }
@@ -295,7 +295,7 @@ export function ParametersView() {
       const vehicleType = connectionState.vehicleType || connectionState.fcVariant;
       const result = await window.electronAPI?.saveParamsToFile(params, vehicleType);
       if (result?.success) {
-        showToast(t('parameters.ParametersView.savedParameterToFile', { length: params.length, v2: params.length !== 1 ? 's' : '' }), 'success');
+        showToast(t('parameters.ParametersView.savedParameterToFile', { length: params.length, v2: params.length !== 1 ? enPlural('s') : '' }), 'success');
       } else if (result?.error && result.error !== 'Cancelled') {
         showToast(result.error, 'error');
       }
@@ -322,9 +322,9 @@ export function ParametersView() {
   const handleApplySelectedParams = useCallback(async () => {
     const result = await applySelectedFileParams();
     if (result.applied > 0) {
-      showToast(t('parameters.ParametersView.appliedParameterToVehicle', { applied: result.applied, v2: result.applied !== 1 ? 's' : '', v3: result.failed > 0 ? ` (${result.failed} failed)` : '', v4: result.applied > 0 ? ' — Save All Changes to keep them after a reboot' : '' }), result.failed > 0 ? 'info' : 'success');
+      showToast(t('parameters.ParametersView.appliedParameterToVehicle', { applied: result.applied, v2: result.applied !== 1 ? enPlural('s') : '', v3: result.failed > 0 ? ` (${result.failed} failed)` : '', v4: result.applied > 0 ? t('parameters.ParametersView.saveAllChangesToKeepThem') : '' }), result.failed > 0 ? 'info' : 'success');
     } else if (result.failed > 0) {
-      showToast(t('parameters.ParametersView.failedToApplyParameter', { failed: result.failed, v2: result.failed !== 1 ? 's' : '' }), 'error');
+      showToast(t('parameters.ParametersView.failedToApplyParameter', { failed: result.failed, v2: result.failed !== 1 ? enPlural('s') : '' }), 'error');
     }
   }, [applySelectedFileParams, showToast]);
 
@@ -860,7 +860,7 @@ export function ParametersView() {
               </span>
             ) : (
               <span className="text-sm text-amber-300">
-                {t('parameters.ParametersView.rebootRequiredFor')} {rebootRequiredParams.length} {t('parameters.ParametersView.parameter')}{rebootRequiredParams.length !== 1 ? 's' : ''} {t('parameters.ParametersView.toTakeEffect')}
+                {t('parameters.ParametersView.rebootRequiredFor')} {rebootRequiredParams.length} {t('parameters.ParametersView.parameter')}{rebootRequiredParams.length !== 1 ? enPlural('s') : ''} {t('parameters.ParametersView.toTakeEffect')}
                 {' '}<span className="font-mono text-xs text-amber-400/70">{rebootRequiredParams.join(', ')}</span>
               </span>
             )}
@@ -1162,8 +1162,8 @@ export function ParametersView() {
               <h3 className="text-lg font-semibold text-content">{t('parameters.ParametersView.compareParameters')}</h3>
               <p className="text-sm text-content-secondary mt-1">
                 {fileParamDiffs.length === 0
-                  ? t('parameters.ParametersView.noDifferencesFoundAllFileParameters', { v1: offlineMode ? 'the current file' : 'the vehicle' })
-                  : t('parameters.ParametersView.parameterDifferBetweenFilesSelectWhich', { length: fileParamDiffs.length, v2: fileParamDiffs.length !== 1 ? 's' : '' })
+                  ? t('parameters.ParametersView.noDifferencesFoundAllFileParameters', { v1: offlineMode ? t('parameters.ParametersView.theCurrentFile') : t('parameters.ParametersView.theVehicle') })
+                  : t('parameters.ParametersView.parameterDifferBetweenFilesSelectWhich', { length: fileParamDiffs.length, v2: fileParamDiffs.length !== 1 ? enPlural('s') : '' })
                 }
               </p>
               {(() => {
@@ -1290,7 +1290,7 @@ export function ParametersView() {
                 >
                   {isApplyingFileParams
                     ? t('parameters.ParametersView.applying')
-                    : t('parameters.ParametersView.applyParameter', { length: fileParamDiffs.filter(d => d.selected).length, v2: fileParamDiffs.filter(d => d.selected).length !== 1 ? 's' : '' })
+                    : t('parameters.ParametersView.applyParameter', { length: fileParamDiffs.filter(d => d.selected).length, v2: fileParamDiffs.filter(d => d.selected).length !== 1 ? enPlural('s') : '' })
                   }
                 </button>
               )}

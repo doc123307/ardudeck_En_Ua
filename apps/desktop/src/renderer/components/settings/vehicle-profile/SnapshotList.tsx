@@ -4,7 +4,7 @@ import type { VehicleProfile } from '../../../stores/settings-store.js';
 import { useSettingsStore } from '../../../stores/settings-store.js';
 import { listSnapshots, deleteSnapshot } from '../../../lib/vehicle-templates/snapshot.js';
 import { useProfileUndo } from './use-profile-undo.js';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 interface SnapshotListProps {
   profile: VehicleProfile;
@@ -26,7 +26,7 @@ export function SnapshotList({ profile }: SnapshotListProps) {
         title={t('settings.SnapshotList.viewApplyHistorySnapshots')}
       >
         <Clock className="w-3 h-3" />
-        {snapshots.length} {t('settings.SnapshotList.snapshot')}{snapshots.length === 1 ? '' : 's'}
+        {snapshots.length} {t('settings.SnapshotList.snapshot')}{snapshots.length === 1 ? '' : enPlural('s')}
       </button>
 
       {open && (

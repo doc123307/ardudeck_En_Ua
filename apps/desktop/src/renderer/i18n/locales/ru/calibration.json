@@ -79,7 +79,16 @@
       "parameter": "Параметр",
       "before": "До",
       "after": "После",
-      "delta": "Разница"
+      "delta": "Разница",
+      "yaw45": "Рыскание 45",
+      "yaw90": "Рыскание 90",
+      "yaw135": "Рыскание 135",
+      "yaw180": "Рыскание 180",
+      "yaw225": "Рыскание 225",
+      "yaw270": "Рыскание 270",
+      "yaw315": "Рыскание 315",
+      "roll180": "Крен 180",
+      "pitch180": "Тангаж 180"
     },
     "CalibrationHeader": {
       "select": "Выбор",
@@ -90,7 +99,11 @@
     },
     "CalibrationHealthBanner": {
       "doNotFlyOnThisCalibration": "{{summary}} Не летайте с этой калибровкой. Повторите её.",
-      "rebootTheFlightControllerAndReconnect": "Перезагрузите полётный контроллер и подключитесь снова. ArduDeck считает значения и подтвердит, что они сохранились."
+      "rebootTheFlightControllerAndReconnect": "Перезагрузите полётный контроллер и подключитесь снова. ArduDeck считает значения и подтвердит, что они сохранились.",
+      "calibrationDidNotSurviveTheReboot": "Калибровка «{{name}}» не сохранилась после перезагрузки",
+      "calibrationNotYetConfirmed": "Калибровка «{{name}}» ещё не подтверждена",
+      "calibrationIsOnTheVehicleBut": "Калибровка «{{name}}» есть на аппарате, но слабая",
+      "calibrationConfirmedOnTheVehicle": "Калибровка «{{name}}» подтверждена на аппарате"
     },
     "CalibrationProgress": {
       "calibrating": "Калибровка...",
@@ -126,7 +139,8 @@
       "lowerPriority": "Низший приоритет",
       "inUse": "Используется",
       "notUsed": "Не используется",
-      "keepTheCompassInTheBest": "Выбирайте компас по лучшему расположению, а не по лучшей оценке: встроенный находится в поле батареи, которое меняется с потребляемым током, и никакая калибровка этого не исправит."
+      "keepTheCompassInTheBest": "Выбирайте компас по лучшему расположению, а не по лучшей оценке: встроенный находится в поле батареи, которое меняется с потребляемым током, и никакая калибровка этого не исправит.",
+      "good": "хорошо"
     },
     "CompassMotDialog": {
       "good": "Хорошо",
@@ -186,7 +200,8 @@
       "close": "Закрыть",
       "cancel": "Отмена",
       "running": "Выполняется...",
-      "runCalibration": "Запустить калибровку"
+      "runCalibration": "Запустить калибровку",
+      "unknownError": "Неизвестная ошибка"
     },
     "LiveOrientationGuide": {
       "noAttitudeTelemetryPositionCannotBe": "Нет телеметрии ориентации: положение невозможно проверить",
@@ -227,7 +242,10 @@
       "rebootTheFlightControllerToMake": "Перезагрузите полётный контроллер, чтобы все значения калибровки корректно загрузились из EEPROM. Некоторые параметры IMU/компаса действуют только после запуска.",
       "done": "Готово",
       "rebooting": "Перезагрузка…",
-      "rebootNow": "Перезагрузить сейчас"
+      "rebootNow": "Перезагрузить сейчас",
+      "noCalibrationDataAllOffsetsIn": "Нет данных калибровки: все смещения в файле нулевые",
+      "sensorIdsDoNotMatchThis": "ID датчиков не соответствуют этому полётному контроллеру",
+      "fileContainsNoSensorIdsCannot": "Файл не содержит ID датчиков, невозможно проверить исходную плату"
     },
     "PositionDiagram": {
       "levelSurface": "Ровная поверхность",
@@ -292,7 +310,11 @@
       "restoreAccMagCalibrationFromA": "Восстановление калибровки ACC / MAG из файла .param. Перед записью ID датчиков исходной платы сверяются с этим FC.",
       "open": "Открыть",
       "ensureYourVehicleIsDisarmedAnd": "Перед калибровкой убедитесь, что аппарат дизармлен и находится в безопасном месте.",
-      "forBestResultsDisconnectMotors": " Для лучшего результата отсоедините моторы."
+      "forBestResultsDisconnectMotors": " Для лучшего результата отсоедините моторы.",
+      "accelerometer": "Акселерометр",
+      "accCalibration": "Калибровка акселерометра",
+      "compass": "Компас",
+      "noGyro": "Без гироскопа"
     },
     "VehicleCalibrationPanel": {
       "thisVehicle": "Этот аппарат",
@@ -308,7 +330,17 @@
       "calibrationStored": "Калибровка сохранена",
       "calibrationFailed": "Калибровка не удалась",
       "fitQuality": "Качество калибровки",
-      "done": "Готово"
+      "done": "Готово",
+      "motorsWillSpinRemoveThePropellers": "Моторы будут вращаться. Снимите пропеллеры и закрепите аппарат.",
+      "removeThePropellersBeforeStarting": "Снимите пропеллеры перед началом.",
+      "theVehicleMustBeDisarmed": "Аппарат должен быть дизармирован.",
+      "putTheVehicleDownAndKeep": "Поставьте аппарат и держите неподвижно.",
+      "useASurfaceYouKnowTo": "Используйте поверхность, которая точно ровная."
+    },
+    "accel_calibration_state": {
+      "accelerometersHave": "Акселерометры {{v1}}:",
+      "accelerometerHas": "Акселерометр {{v1}}:",
+      "noStored3dCalibrationRunThe": "{{which}} нет сохранённой 3D-калибровки. Выполните быструю калибровку (одно положение, аппарат ровно) или 6-точечную: калибровка уровня лишь задаёт тримы и не уберёт «3D Accel calibration needed»."
     }
   }
 }

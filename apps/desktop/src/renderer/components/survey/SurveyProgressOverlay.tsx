@@ -28,6 +28,7 @@ import {
   type GroupProgress,
   type ProgressWaypoint,
 } from './survey-progress';
+import { t } from '../../i18n';
 
 const POSITION_SAMPLE_MS = 1000;
 
@@ -172,7 +173,7 @@ export const SurveyProgressOverlay = React.memo(function SurveyProgressOverlay()
 
 function formatEta(seconds: number): string {
   if (seconds < 60) return 'ETA <1 min';
-  return `ETA ${Math.round(seconds / 60)} min`;
+  return t('survey.SurveyProgressOverlay.etaMin', { v1: Math.round(seconds / 60) });
 }
 
 function formatRemaining(meters: number): string {

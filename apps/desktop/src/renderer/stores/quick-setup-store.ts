@@ -16,6 +16,7 @@ import {
 } from '../components/quick-setup/presets/quick-setup-presets';
 import { useConnectionStore } from './connection-store';
 import { preferredRcChannels } from './pseudo-tx-store';
+import { t } from '../i18n';
 
 // ============================================================================
 // Types
@@ -173,7 +174,7 @@ export const useQuickSetupStore = create<QuickSetupState>((set, get) => ({
   // ============================================================================
 
   openWizard: async (boardType, fcVariant, fcVersion) => {
-    const platformNames = ['Multirotor', 'Airplane', 'Helicopter', 'Tricopter', 'Rover', 'Boat'];
+    const platformNames = [t('stores.quick_setup_store.platformMultirotor'), t('stores.quick_setup_store.platformAirplane'), t('stores.quick_setup_store.platformHelicopter'), t('stores.quick_setup_store.platformTricopter'), t('stores.quick_setup_store.platformRover'), t('stores.quick_setup_store.platformBoat')];
 
     // Fetch current platform from FC
     let currentPlatform: number | null = null;
@@ -279,7 +280,7 @@ export const useQuickSetupStore = create<QuickSetupState>((set, get) => ({
     if (!preset) return;
 
     const { currentPlatform, currentPlatformName } = get();
-    const platformNames = ['Multirotor', 'Airplane', 'Helicopter', 'Tricopter', 'Rover', 'Boat'];
+    const platformNames = [t('stores.quick_setup_store.platformMultirotor'), t('stores.quick_setup_store.platformAirplane'), t('stores.quick_setup_store.platformHelicopter'), t('stores.quick_setup_store.platformTricopter'), t('stores.quick_setup_store.platformRover'), t('stores.quick_setup_store.platformBoat')];
 
     // Check platform mismatch immediately
     if (currentPlatform !== null && preset.aircraft.platformType !== currentPlatform) {
@@ -385,7 +386,7 @@ export const useQuickSetupStore = create<QuickSetupState>((set, get) => ({
   applyPreset: async () => {
     const { selectedPreset, boardType } = get();
     if (!selectedPreset) {
-      set({ applyError: 'No preset selected' });
+      set({ applyError: t('stores.quick_setup_store.noPresetSelected') });
       return false;
     }
 
@@ -404,7 +405,7 @@ export const useQuickSetupStore = create<QuickSetupState>((set, get) => ({
         return await applyPresetViaMsp(selectedPreset, set, get);
       }
     } catch (error) {
-      const msg = error instanceof Error ? error.message : 'Failed to apply preset';
+      const msg = error instanceof Error ? error.message : t('stores.quick_setup_store.failedToApplyPreset');
       console.error('[QuickSetup] Apply failed:', msg);
       set({
         isApplying: false,
@@ -455,7 +456,7 @@ export const useQuickSetupStore = create<QuickSetupState>((set, get) => ({
     try {
       // 1. Set platform type via MSP
       const success = await window.electronAPI?.mspSetInavPlatformType(platformMismatch.requiredPlatform);
-      if (!success) throw new Error('Failed to change platform type');
+      if (!success) throw new Error(t('stores.quick_setup_store.failedToChangePlatformType'));
 
       // 2. Save to EEPROM
       set({ platformChangeState: 'saving' });
@@ -484,7 +485,7 @@ export const useQuickSetupStore = create<QuickSetupState>((set, get) => ({
       if (reconnected) {
         // Successfully reconnected - update platform state
         console.log('[QuickSetup] Reconnected after platform change, updating platform state');
-        const platformNames = ['Multirotor', 'Airplane', 'Helicopter', 'Tricopter', 'Rover', 'Boat'];
+        const platformNames = [t('stores.quick_setup_store.platformMultirotor'), t('stores.quick_setup_store.platformAirplane'), t('stores.quick_setup_store.platformHelicopter'), t('stores.quick_setup_store.platformTricopter'), t('stores.quick_setup_store.platformRover'), t('stores.quick_setup_store.platformBoat')];
 
         set({
           // Update current platform to the new platform
@@ -509,7 +510,7 @@ export const useQuickSetupStore = create<QuickSetupState>((set, get) => ({
         // Failed to reconnect - show error
         set({
           platformChangeState: 'error',
-          platformChangeError: 'Failed to reconnect after platform change. Please reconnect manually and try again.',
+          platformChangeError: t('stores.quick_setup_store.failedToReconnectAfterPlatformChange'),
         });
         useConnectionStore.getState().setPlatformChangeInProgress(false);
       }
@@ -517,7 +518,7 @@ export const useQuickSetupStore = create<QuickSetupState>((set, get) => ({
       console.error('[QuickSetup] Platform change error:', err);
       set({
         platformChangeState: 'error',
-        platformChangeError: err instanceof Error ? err.message : 'Unknown error during platform change',
+        platformChangeError: err instanceof Error ? err.message : t('stores.quick_setup_store.unknownErrorDuringPlatformChange'),
       });
       useConnectionStore.getState().setPlatformChangeInProgress(false);
     }
@@ -667,7 +668,7 @@ async function applyPresetViaMsp(
     { name: 'Checking platform', status: 'pending' },
     { name: 'Setting PIDs', status: 'pending' },
     { name: 'Setting Rates', status: 'pending' },
-    { name: isFixedWing ? 'Configuring servo mixer' : 'Clearing servo mixer', status: 'pending' },
+    { name: isFixedWing ? t('stores.quick_setup_store.configuringServoMixer') : t('stores.quick_setup_store.clearingServoMixer'), status: 'pending' },
     ...(hasMotorMixer ? [{ name: 'Configuring motor mixer', status: 'pending' as const }] : []),
     { name: 'Setting failsafe', status: 'pending' },
     { name: 'Clearing old modes', status: 'pending' },
@@ -708,7 +709,7 @@ async function applyPresetViaMsp(
     // CRITICAL: Check connection FIRST before doing anything
     const connState = useConnectionStore.getState().connectionState;
     if (!connState.isConnected) {
-      throw new Error('Not connected to flight controller. Please connect first.');
+      throw new Error(t('stores.quick_setup_store.notConnectedToFlightControllerPlease'));
     }
 
     // 0. Exit CLI mode if active (prevents "MSP blocked - CLI mode active" errors)
@@ -739,7 +740,7 @@ async function applyPresetViaMsp(
     updateTask('in_progress');
     const currentMixer = await window.electronAPI?.mspGetInavMixerConfig();
     if (currentMixer && currentMixer.platformType !== preset.aircraft.platformType) {
-      const platformNames = ['Multirotor', 'Airplane', 'Helicopter', 'Tricopter', 'Rover', 'Boat'];
+      const platformNames = [t('stores.quick_setup_store.platformMultirotor'), t('stores.quick_setup_store.platformAirplane'), t('stores.quick_setup_store.platformHelicopter'), t('stores.quick_setup_store.platformTricopter'), t('stores.quick_setup_store.platformRover'), t('stores.quick_setup_store.platformBoat')];
       const currentName = platformNames[currentMixer.platformType] ?? 'Unknown';
       const requiredName = platformNames[preset.aircraft.platformType] ?? 'Unknown';
 
@@ -765,14 +766,14 @@ async function applyPresetViaMsp(
       pitch: preset.pids.pitch,
       yaw: preset.pids.yaw,
     });
-    if (!pidSuccess) throw new Error('Failed to set PIDs');
+    if (!pidSuccess) throw new Error(t('stores.quick_setup_store.failedToSetPids'));
     updateTask('completed');
     nextTask();
 
     // 3. Set Rates
     updateTask('in_progress');
     const ratesSuccess = await window.electronAPI?.mspSetRcTuning(preset.rates);
-    if (!ratesSuccess) throw new Error('Failed to set rates');
+    if (!ratesSuccess) throw new Error(t('stores.quick_setup_store.failedToSetRates'));
     updateTask('completed');
     nextTask();
 
@@ -910,7 +911,7 @@ async function applyPresetViaMsp(
     const connBeforeModes = useConnectionStore.getState().connectionState;
     if (!connBeforeModes.isConnected) {
       console.warn('[QuickSetup] Connection lost before mode configuration');
-      throw new Error('Connection lost during setup. Please reconnect and try again.');
+      throw new Error(t('stores.quick_setup_store.connectionLostDuringSetupPleaseReconnect'));
     }
 
     // Small delay to ensure stable connection
@@ -959,7 +960,7 @@ async function applyPresetViaMsp(
     // 9. Save to EEPROM
     updateTask('in_progress');
     const eepromSuccess = await window.electronAPI?.mspSaveEeprom();
-    if (!eepromSuccess) throw new Error('Failed to save to EEPROM');
+    if (!eepromSuccess) throw new Error(t('stores.quick_setup_store.failedToSaveToEeprom'));
     updateTask('completed');
 
     // Clear platform change flag
@@ -975,7 +976,7 @@ async function applyPresetViaMsp(
     // Clear platform change flag on error too
     useConnectionStore.getState().setPlatformChangeInProgress(false);
 
-    const msg = error instanceof Error ? error.message : 'Apply failed';
+    const msg = error instanceof Error ? error.message : t('stores.quick_setup_store.applyFailed');
     set({
       isApplying: false,
       applyError: msg,
@@ -1077,7 +1078,7 @@ async function applyPresetViaCli(
 
     return true;
   } catch (error) {
-    const msg = error instanceof Error ? error.message : 'CLI apply failed';
+    const msg = error instanceof Error ? error.message : t('stores.quick_setup_store.cliApplyFailed');
     console.error('[QuickSetup CLI] Error:', msg);
     set({
       isApplying: false,

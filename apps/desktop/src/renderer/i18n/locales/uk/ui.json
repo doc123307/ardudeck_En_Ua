@@ -22,18 +22,26 @@
     "InfoCard": {
       "tip": "Порада:"
     },
+    "PresetSelector": {
+      "quickPresets": "Швидкі пресети",
+      "clickToApplyATuningStyle": "Клацніть, щоб застосувати стиль налаштування"
+    },
     "ProfileManager": {
       "resetToFactoryDefaults": "Скинути до заводських налаштувань",
       "reset": "Скинути",
       "name": "Назва...",
       "saveCurrentSettingsAsAProfile": "Зберегти поточні налаштування як профіль",
-      "save": "Зберегти"
+      "save": "Зберегти",
+      "myProfiles": "Мої профілі"
     },
     "RateCurve": {
       "responseCurve": "Крива відгуку",
       "max": "Макс:",
       "stick": "Стік",
       "rate": "Rate"
+    },
+    "TagInput": {
+      "addTags": "Додати теги..."
     }
   }
 }

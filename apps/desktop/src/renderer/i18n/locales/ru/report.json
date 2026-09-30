@@ -46,7 +46,12 @@
       "generatingReport": "Создание отчёта...",
       "generateSaveReport": "Создать и сохранить отчёт",
       "theReportWillBeSavedAs": "Отчёт будет сохранён как файл",
-      "fileThatYouCanShareWith": ", который можно передать команде разработчиков."
+      "fileThatYouCanShareWith": ", который можно передать команде разработчиков.",
+      "mavlinkVehicle": "MAVLink-аппарат",
+      "failedToCollectBoardDump": "Не удалось собрать дамп платы",
+      "noDescriptionProvided": "Описание не указано",
+      "reportSavedTo": "Отчёт сохранён в: {{filePath}}",
+      "failedToSaveReport": "Не удалось сохранить отчёт"
     }
   }
 }

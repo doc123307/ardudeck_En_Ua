@@ -99,7 +99,7 @@ export function ProjectsBrowser({ tabs }: { tabs: React.ReactNode }) {
         <div className="flex items-center gap-4 flex-wrap">
           {tabs}
           <span className="text-xs text-content-secondary">
-            {projects.length} {projects.length === 1 ? 'project' : 'projects'}
+            {projects.length} {projects.length === 1 ? t('mission_library.ProjectsBrowser.project') : t('mission_library.ProjectsBrowser.projects')}
           </span>
         </div>
       </div>

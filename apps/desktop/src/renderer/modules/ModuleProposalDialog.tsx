@@ -6,7 +6,7 @@ import {
   subscribeProposal,
   type PendingProposal,
 } from './module-proposal-registry';
-import { t } from '../i18n';
+import { t, enPlural } from '../i18n';
 
 function extent(points: { lat: number; lng: number }[]): string {
   if (points.length === 0) return '';
@@ -58,9 +58,9 @@ export function ModuleProposalDialog(): JSX.Element | null {
   const { proposal, from, existing } = pending;
   const kept: string[] = [];
   if (existing.exclusionShapes > 0) {
-    kept.push(`${existing.exclusionShapes} exclusion zone${existing.exclusionShapes === 1 ? '' : 's'}`);
+    kept.push(`${existing.exclusionShapes} exclusion zone${existing.exclusionShapes === 1 ? '' : enPlural('s')}`);
   }
-  if (existing.hasReturnPoint) kept.push('the return point');
+  if (existing.hasReturnPoint) kept.push(t('modules.ModuleProposalDialog.theReturnPoint'));
 
   return (
     <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/50">
@@ -81,7 +81,7 @@ export function ModuleProposalDialog(): JSX.Element | null {
           {existing.inclusionShapes > 0 && (
             <div className="mt-2 rounded border border-amber-500/60 px-2 py-1.5 text-xs text-amber-400">
               {t('modules.ModuleProposalDialog.thisReplacesTheInclusionFenceAlready')}{existing.inclusionShapes} {t('modules.ModuleProposalDialog.shape')}
-              {existing.inclusionShapes === 1 ? '' : 's'}, {existing.inclusionPoints} {t('modules.ModuleProposalDialog.pointsItWillNoLongerApply')}
+              {existing.inclusionShapes === 1 ? '' : enPlural('s')}, {existing.inclusionPoints} {t('modules.ModuleProposalDialog.pointsItWillNoLongerApply')}
             </div>
           )}
           {kept.length > 0 && (

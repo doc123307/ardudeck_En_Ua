@@ -442,25 +442,25 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
           return true;
         } else {
           const result = await window.electronAPI.mspSetFailsafeConfig(failsafe);
-          if (!result) throw new Error('Failed to save failsafe');
+          if (!result) throw new Error(t('parameters.SafetyTab.failedToSaveFailsafe'));
         }
       }
 
       // Save GPS Rescue (Betaflight)
       if (!isInav && gpsRescueChanged) {
         const result = await window.electronAPI.mspSetGpsRescue(gpsRescue);
-        if (!result) throw new Error('Failed to save GPS Rescue');
+        if (!result) throw new Error(t('parameters.SafetyTab.failedToSaveGpsRescue'));
       }
 
       if (!isInav && gpsPidsChanged) {
         const result = await window.electronAPI.mspSetGpsRescuePids(gpsPids);
-        if (!result) throw new Error('Failed to save GPS Rescue PIDs');
+        if (!result) throw new Error(t('parameters.SafetyTab.failedToSaveGpsRescuePids'));
       }
 
       // Save Betaflight receiver config via MSP
       if (!isInav && bfReceiverChanged) {
         const result = await window.electronAPI.mspSetRxConfig(bfReceiver.serialrxProvider);
-        if (!result) throw new Error('Failed to save RX config via MSP');
+        if (!result) throw new Error(t('parameters.SafetyTab.failedToSaveRxConfigVia'));
       }
 
       // Save arming safety (iNav)
@@ -471,7 +471,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
             'nav_extra_arming_safety': arming.navExtraArmingSafety,
             'gps_min_sats': arming.navGpsMinSats,
           });
-          if (!result) throw new Error('Failed to save arming settings');
+          if (!result) throw new Error(t('parameters.SafetyTab.failedToSaveArmingSettings'));
         } else {
           // CLI path for SITL arming settings (CLI 'save' persists + reboots)
           await window.electronAPI.mspStopTelemetry();
@@ -565,7 +565,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
         icon={<AlertTriangle className="w-5 h-5 text-amber-400" />}
         color="amber"
         defaultOpen={true}
-        badge={failsafeChanged ? 'Modified' : undefined}
+        badge={failsafeChanged ? t('parameters.SafetyTab.modified') : undefined}
         badgeColor="yellow"
       >
         <div className="mt-4 space-y-6">
@@ -664,7 +664,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
           icon={<Home className="w-5 h-5 text-green-400" />}
           color="green"
           defaultOpen={false}
-          badge={gpsRescueChanged || gpsPidsChanged ? 'Modified' : undefined}
+          badge={gpsRescueChanged || gpsPidsChanged ? t('parameters.SafetyTab.modified') : undefined}
           badgeColor="green"
         >
           <div className="mt-4 space-y-6">
@@ -905,7 +905,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
           icon={<Radio className="w-5 h-5 text-purple-400" />}
           color="purple"
           defaultOpen={false}
-          badge={armingChanged ? 'Modified' : undefined}
+          badge={armingChanged ? t('parameters.SafetyTab.modified') : undefined}
           badgeColor="purple"
         >
           <div className="mt-4 space-y-6">

@@ -9,6 +9,7 @@ import { DEFAULT_USER_UNIT_PREFERENCES, normalizeUserUnitPreferences, type UserU
 import type { AltReferenceFrame } from '../../shared/mission-types.js';
 import { applyLanguage, getInitialLanguage, isAppLanguage, type AppLanguage } from '../i18n';
 import { t } from '../i18n';
+import { t as tr } from '../i18n';
 
 /**
  * Vehicle type for visualization
@@ -1168,7 +1169,7 @@ export const useSettingsStore = create<SettingsStore>()(
 
     // 3. Active profile has a different boardUid → create a blank profile for the new board
     const newId = `vehicle-${Date.now()}`;
-    const displayName = boardName || boardId || 'New Board';
+    const displayName = boardName || boardId || tr('stores.settings_store.newBoard');
     const newVehicle: VehicleProfile = {
       id: newId,
       name: displayName,

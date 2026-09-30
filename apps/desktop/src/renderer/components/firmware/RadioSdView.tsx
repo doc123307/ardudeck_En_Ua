@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigationStore } from '../../stores/navigation-store';
 import { BwGuide } from '../radio-hud/BwGuide';
 import type { EdgeTxScanResult, EdgeTxSdCard, EdgeTxPackageInfo, InstallProgress, InstalledPackageRecord, TelemetryScreenSummary } from '../../../shared/edgetx-types';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 /**
  * Radio (EdgeTX) tab: installs curated SD-card packages (Yaapu telemetry,
@@ -125,7 +125,7 @@ export function RadioSdView() {
                   {card.radioLabel && <span className="ml-2 text-xs text-content-secondary">{card.volumeName}</span>}
                 </span>
                 <span className="text-content-secondary text-xs">
-                  {card.firmwareVersion ? `EdgeTX ${card.firmwareVersion}` : card.sdCardVersion ? t('firmware.RadioSdView.edgetxSd', { sdCardVersion: card.sdCardVersion }) : 'version unknown'}
+                  {card.firmwareVersion ? `EdgeTX ${card.firmwareVersion}` : card.sdCardVersion ? t('firmware.RadioSdView.edgetxSd', { sdCardVersion: card.sdCardVersion }) : t('firmware.RadioSdView.versionUnknown')}
                   {' · '}
                   {(card.freeBytes / 1e6).toFixed(0)} {t('firmware.RadioSdView.mbFree')}
                 </span>
@@ -254,7 +254,7 @@ export function RadioSdView() {
                 <>
                   <p className="text-content">
                     {t('firmware.RadioSdView.setUpOnTheRadioTelemetry')}{' '}
-                    {screens.added + screens.already} {t('firmware.RadioSdView.model')}{screens.added + screens.already === 1 ? '' : 's'}.
+                    {screens.added + screens.already} {t('firmware.RadioSdView.model')}{screens.added + screens.already === 1 ? '' : enPlural('s')}.
                   </p>
                   <p>{t('firmware.RadioSdView.ejectUnplugThenPress')} <span className="text-content">PAGE</span> {t('firmware.RadioSdView.fromTheMainView')}</p>
                   {screens.full.length > 0 && (

@@ -6,7 +6,12 @@
       "tabComplete": "Tab: Complete",
       "upDownHistory": "Up/Down: History",
       "ctrlCCopyAbort": "Ctrl+C: Copy/Abort",
-      "ctrlVPaste": "Ctrl+V: Paste"
+      "ctrlVPaste": "Ctrl+V: Paste",
+      "ardudeckCliTerminal": "  {{Y}}ArduDeck CLI Terminal{{R}}",
+      "typeHelpForAvailableCommands": "  Type {{G}}help{{R}} for available commands",
+      "typeDumpForFullConfigAutocomplete": "  Type {{G}}dump{{R}} for full config (autocomplete)",
+      "pressTabForCommandCompletion": "  Press {{M}}Tab{{R}} for command completion",
+      "pressUpDownForCommandHistory": "  Press {{M}}Up/Down{{R}} for command history"
     },
     "CliView": {
       "cliTerminal": "CLI Terminal",

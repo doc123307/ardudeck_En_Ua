@@ -444,7 +444,7 @@ const RoverTuningTab: React.FC<RoverTuningTabProps> = ({ section = 'speed-steeri
               <span className={`text-[10px] uppercase tracking-wide ${
                 values.ATC_BRAKE ? 'text-amber-300' : 'text-content-tertiary'
               }`}>
-                {values.ATC_BRAKE ? 'on' : 'off'}
+                {values.ATC_BRAKE ? tr('mavlink_config.RoverTuningTab.on') : tr('mavlink_config.RoverTuningTab.off')}
               </span>
             </button>
 

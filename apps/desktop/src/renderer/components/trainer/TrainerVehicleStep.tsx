@@ -57,7 +57,7 @@ export function TrainerVehicleStep({
             active={camera === null}
             onClick={() => onCamera(null)}
             label={t('trainer.TrainerVehicleStep.theTrainerSOwn')}
-            blurb="Whatever was last set up in the launcher."
+            blurb={t('trainer.TrainerVehicleStep.whateverWasLastSetUpIn')}
           />
           {kinds.map((k) => (
             <KindCard
@@ -72,7 +72,7 @@ export function TrainerVehicleStep({
               }
               label={k.label}
               blurb={k.blurb}
-              badge={k.stabilised ? 'Stabilised' : undefined}
+              badge={k.stabilised ? t('trainer.TrainerVehicleStep.stabilised') : undefined}
             />
           ))}
         </div>
@@ -130,7 +130,7 @@ export function TrainerVehicleStep({
           value={
             status?.home
               ? `${status.home.lat.toFixed(5)}, ${status.home.lon.toFixed(5)}`
-              : 'waiting for a GPS fix'
+              : t('trainer.TrainerVehicleStep.waitingForAGpsFix')
           }
         />
         <Row label={t('trainer.TrainerVehicleStep.flightController')} value="ArduDeck keeps it" />

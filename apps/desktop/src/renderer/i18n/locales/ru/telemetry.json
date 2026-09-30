@@ -57,7 +57,9 @@
       "noLink": "Нет связи",
       "armed": "Армирован",
       "disarmed": "Дизармирован",
-      "notConnected": "Не подключено"
+      "notConnected": "Не подключено",
+      "copied": "Скопировано",
+      "couldNotShare": "Не удалось поделиться"
     },
     "workspace_layouts": {
       "map": "Карта",
@@ -68,7 +70,13 @@
       "mapWithSyntheticVisionSplit": "Карта с разделением на синтетическое зрение.",
       "mapAndVisionSideBySide": "Карта и зрение рядом.",
       "mission": "Миссия",
-      "mapWaypointsAltitudeProfile": "Карта, путевые точки, профиль высоты."
+      "mapWaypointsAltitudeProfile": "Карта, путевые точки, профиль высоты.",
+      "thatFileIsNotValidJson": "Этот файл не является корректным JSON.",
+      "thatFileIsNotAnArdudeck": "Этот файл не является раскладкой рабочего пространства ArduDeck.",
+      "theLayoutInThatFileHas": "Раскладка в этом файле не содержит расположения панелей.",
+      "importedLayout": "Импортированная раскладка",
+      "unknownInstrumentPreset": "Неизвестный пресет приборов {{name}}",
+      "pilotCockpit": "Кабина пилота"
     }
   }
 }

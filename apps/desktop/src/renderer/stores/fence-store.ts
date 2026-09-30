@@ -126,7 +126,7 @@ export const useFenceStore = create<FenceStore>((set, get) => ({
     try {
       const result = await window.electronAPI?.downloadFence();
       if (!result?.success) {
-        set({ error: result?.error || 'Failed to download fence', isLoading: false, progress: null });
+        set({ error: result?.error || t('stores.fence_store.failedToDownloadFence'), isLoading: false, progress: null });
       }
       // Items will be set via IPC events (onFenceComplete)
     } catch (err) {
@@ -139,7 +139,7 @@ export const useFenceStore = create<FenceStore>((set, get) => ({
     const items = buildFenceItems(polygons, circles, returnPoint);
 
     if (items.length === 0) {
-      set({ error: 'No fence items to upload' });
+      set({ error: t('stores.fence_store.noFenceItemsToUpload') });
       return false;
     }
 
@@ -149,7 +149,7 @@ export const useFenceStore = create<FenceStore>((set, get) => ({
       if (result?.success) {
         return true;
       } else {
-        set({ error: result?.error || 'Failed to upload fence', isLoading: false, progress: null });
+        set({ error: result?.error || t('stores.fence_store.failedToUploadFence'), isLoading: false, progress: null });
         return false;
       }
     } catch (err) {
@@ -165,7 +165,7 @@ export const useFenceStore = create<FenceStore>((set, get) => ({
       if (result?.success) {
         return true;
       } else {
-        set({ error: result?.error || 'Failed to clear fence', isLoading: false });
+        set({ error: result?.error || t('stores.fence_store.failedToClearFence'), isLoading: false });
         return false;
       }
     } catch (err) {

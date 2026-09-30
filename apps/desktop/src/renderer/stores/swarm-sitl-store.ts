@@ -20,6 +20,7 @@ import type {
   OrchestratorSource,
 } from '../../shared/ipc-channels';
 import { useArduPilotSitlStore } from './ardupilot-sitl-store';
+import { t } from '../i18n';
 
 const MAX_LOG_LINES = 500;
 
@@ -101,7 +102,7 @@ export const useSwarmSitlStore = create<SwarmSitlStore>()(
             formation,
           });
           if (!result.success) {
-            set({ isStarting: false, lastError: result.error ?? 'Failed to start swarm' });
+            set({ isStarting: false, lastError: result.error ?? t('stores.swarm_sitl_store.failedToStartSwarm') });
             return false;
           }
 
@@ -126,7 +127,7 @@ export const useSwarmSitlStore = create<SwarmSitlStore>()(
           }));
           return true;
         } catch (err) {
-          set({ isStarting: false, lastError: err instanceof Error ? err.message : 'Unknown error' });
+          set({ isStarting: false, lastError: err instanceof Error ? err.message : t('stores.swarm_sitl_store.unknownError') });
           return false;
         }
       },

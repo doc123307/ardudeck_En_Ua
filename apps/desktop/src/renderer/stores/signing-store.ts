@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { SigningStatus } from '../../shared/ipc-channels.js';
+import { t } from '../i18n';
 
 interface SavedKeyInfo {
   fingerprint: string;
@@ -67,10 +68,10 @@ export const useSigningStore = create<SigningStore>((set, get) => ({
         set({ hasKey: true, loading: false });
         return true;
       }
-      set({ loading: false, error: result?.error || 'Failed to set key' });
+      set({ loading: false, error: result?.error || t('stores.signing_store.failedToSetKey') });
       return false;
     } catch (err) {
-      set({ loading: false, error: err instanceof Error ? err.message : 'Unknown error' });
+      set({ loading: false, error: err instanceof Error ? err.message : t('stores.signing_store.unknownError') });
       return false;
     }
   },
@@ -83,10 +84,10 @@ export const useSigningStore = create<SigningStore>((set, get) => ({
         set({ enabled: true, loading: false });
         return true;
       }
-      set({ loading: false, error: result?.error || 'Failed to enable signing' });
+      set({ loading: false, error: result?.error || t('stores.signing_store.failedToEnableSigning') });
       return false;
     } catch (err) {
-      set({ loading: false, error: err instanceof Error ? err.message : 'Unknown error' });
+      set({ loading: false, error: err instanceof Error ? err.message : t('stores.signing_store.unknownError') });
       return false;
     }
   },
@@ -109,10 +110,10 @@ export const useSigningStore = create<SigningStore>((set, get) => ({
         set({ sentToFc: true, loading: false });
         return true;
       }
-      set({ loading: false, error: result?.error || 'Failed to send to FC' });
+      set({ loading: false, error: result?.error || t('stores.signing_store.failedToSendToFc') });
       return false;
     } catch (err) {
-      set({ loading: false, error: err instanceof Error ? err.message : 'Unknown error' });
+      set({ loading: false, error: err instanceof Error ? err.message : t('stores.signing_store.unknownError') });
       return false;
     }
   },

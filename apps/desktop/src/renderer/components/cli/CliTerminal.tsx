@@ -172,12 +172,12 @@ export default function CliTerminal({ onReady }: CliTerminalProps) {
     };
 
     term.writeln(`${C}╔${'═'.repeat(W)}╗${R}`);
-    term.writeln(line(`  ${Y}ArduDeck CLI Terminal${R}`, 23));
+    term.writeln(line(t('cli.CliTerminal.ardudeckCliTerminal', { Y, R }), 23));
     term.writeln(`${C}╠${'═'.repeat(W)}╣${R}`);
-    term.writeln(line(`  Type ${G}help${R} for available commands`, 34));
-    term.writeln(line(`  Type ${G}dump${R} for full config (autocomplete)`, 42));
-    term.writeln(line(`  Press ${M}Tab${R} for command completion`, 34));
-    term.writeln(line(`  Press ${M}Up/Down${R} for command history`, 35));
+    term.writeln(line(t('cli.CliTerminal.typeHelpForAvailableCommands', { G, R }), 34));
+    term.writeln(line(t('cli.CliTerminal.typeDumpForFullConfigAutocomplete', { G, R }), 42));
+    term.writeln(line(t('cli.CliTerminal.pressTabForCommandCompletion', { M, R }), 34));
+    term.writeln(line(t('cli.CliTerminal.pressUpDownForCommandHistory', { M, R }), 35));
     term.writeln(`${C}╚${'═'.repeat(W)}╝${R}`);
     term.writeln('');
 

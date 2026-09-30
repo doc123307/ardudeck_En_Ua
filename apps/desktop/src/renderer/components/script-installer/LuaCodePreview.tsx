@@ -160,7 +160,7 @@ function FullscreenViewer({ filename, version, sha256, sizeKb, lineGroups, initi
         <div className="flex items-center justify-between px-4 py-3 border-b border-subtle bg-surface text-sm">
           <div className="flex items-center gap-4 text-content-secondary min-w-0">
             <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider rounded bg-purple-600/30 text-purple-300 border border-purple-600/40">
-              {view === 'graph' ? 'GRAPH REVIEW' : 'SOURCE REVIEW'}
+              {view === 'graph' ? t('script_installer.LuaCodePreview.graphReview') : t('script_installer.LuaCodePreview.sourceReview')}
             </span>
             <ViewToggle value={view} onChange={setView} />
             <span className="font-mono text-content">{filename}</span>

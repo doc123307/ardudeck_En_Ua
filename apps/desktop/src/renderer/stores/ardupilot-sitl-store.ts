@@ -357,7 +357,7 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
         const upgraded = autoUpgradedFrames[frameKey];
         const releaseTrack = upgraded ?? get().releaseTrack;
         if (upgraded && upgraded !== get().releaseTrack) {
-          appendOutput(`Using ${upgraded} track for "${model}" (auto-upgraded after a previous crash on ${get().releaseTrack}).\n`);
+          appendOutput(tr('stores.ardupilot_sitl_store.usingTrackForAutoUpgradedAfter', { upgraded, model, releaseTrack: get().releaseTrack }));
           set({ releaseTrack: upgraded });
         }
 
@@ -376,7 +376,7 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
           };
           const suggested = safeFallback[vehicleType];
           if (suggested && suggested !== model) {
-            appendOutput(`\n"${model}" has crashed on every available track for this platform, skipping launch.\n`);
+            appendOutput(tr('stores.ardupilot_sitl_store.hasCrashedOnEveryAvailableTrack', { model }));
             set({
               crashRecovery: {
                 kind: 'switch-frame',
@@ -430,12 +430,12 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
             }
             return true;
           } else {
-            set({ isStarting: false, lastError: result.error ?? 'Failed to start SITL' });
+            set({ isStarting: false, lastError: result.error ?? tr('stores.ardupilot_sitl_store.failedToStartSitl') });
             appendOutput(`Error: ${result.error}\n`, true);
             return false;
           }
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : tr('stores.ardupilot_sitl_store.unknownError');
           set({ isStarting: false, lastError: message });
           appendOutput(`Error: ${message}\n`, true);
           return false;
@@ -464,12 +464,12 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
 
           await window.electronAPI.ardupilotSitlStop();
           set({ isRunning: false, isStopping: false });
-          appendOutput('SITL stopped.\n');
+          appendOutput(tr('stores.ardupilot_sitl_store.sitlStopped'));
           return true;
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : tr('stores.ardupilot_sitl_store.unknownError');
           set({ isStopping: false, lastError: message });
-          appendOutput(`Error stopping: ${message}\n`, true);
+          appendOutput(tr('stores.ardupilot_sitl_store.errorStopping', { message }), true);
           return false;
         }
       },
@@ -486,19 +486,19 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
 
           if (result.success) {
             set({ isDownloading: false });
-            appendOutput(`Downloaded to: ${result.path}\n`);
+            appendOutput(tr('stores.ardupilot_sitl_store.downloadedTo', { path: result.path }));
             // Refresh binary info
             await get().checkBinary();
             return true;
           } else {
-            set({ isDownloading: false, lastError: result.error ?? 'Download failed' });
-            appendOutput(`Download failed: ${result.error}\n`, true);
+            set({ isDownloading: false, lastError: result.error ?? tr('stores.ardupilot_sitl_store.downloadFailed') });
+            appendOutput(tr('stores.ardupilot_sitl_store.downloadFailed2', { error: result.error }), true);
             return false;
           }
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown error';
+          const message = error instanceof Error ? error.message : tr('stores.ardupilot_sitl_store.unknownError');
           set({ isDownloading: false, lastError: message });
-          appendOutput(`Download error: ${message}\n`, true);
+          appendOutput(tr('stores.ardupilot_sitl_store.downloadError', { message }), true);
           return false;
         }
       },
@@ -588,7 +588,7 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
             const after = await window.electronAPI.ardupilotSitlCheckBinary(recovery.vehicleType, recovery.suggestedTrack);
             set({ binaryInfo: after, isDownloading: false });
             if (!after.exists) {
-              set({ lastError: `Failed to download ${recovery.suggestedTrack} binary` });
+              set({ lastError: tr('stores.ardupilot_sitl_store.failedToDownloadBinary', { suggestedTrack: recovery.suggestedTrack }) });
               return;
             }
           }
@@ -714,7 +714,7 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
             await get().detectFlightGear();
           }
         } catch (err) {
-          set({ flightGearError: err instanceof Error ? err.message : 'Browse failed' });
+          set({ flightGearError: err instanceof Error ? err.message : tr('stores.ardupilot_sitl_store.browseFailed') });
         }
       },
 
@@ -740,16 +740,16 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
           );
           if (result.success) {
             set({ flightGearRunning: true, flightGearStarting: false });
-            appendOutput('FlightGear launched, it will show the SITL vehicle once scenery finishes loading.\n');
+            appendOutput(tr('stores.ardupilot_sitl_store.flightgearLaunchedItWillShowThe'));
             return true;
           }
-          set({ flightGearStarting: false, flightGearError: result.error ?? 'Failed to launch FlightGear' });
-          appendOutput(`FlightGear error: ${result.error}\n`, true);
+          set({ flightGearStarting: false, flightGearError: result.error ?? tr('stores.ardupilot_sitl_store.failedToLaunchFlightgear') });
+          appendOutput(tr('stores.ardupilot_sitl_store.flightgearError', { error: result.error }), true);
           return false;
         } catch (err) {
-          const message = err instanceof Error ? err.message : 'Unknown error';
+          const message = err instanceof Error ? err.message : tr('stores.ardupilot_sitl_store.unknownError');
           set({ flightGearStarting: false, flightGearError: message });
-          appendOutput(`FlightGear error: ${message}\n`, true);
+          appendOutput(tr('stores.ardupilot_sitl_store.flightgearError2', { message }), true);
           return false;
         }
       },
@@ -788,7 +788,7 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
         // Listen for errors
         const unsubError = window.electronAPI.onArdupilotSitlError((error) => {
           set({ lastError: error, isRunning: false, isStarting: false });
-          appendOutput(`Process error: ${error}\n`, true);
+          appendOutput(tr('stores.ardupilot_sitl_store.processError', { error }), true);
         });
 
         // Listen for exit
@@ -800,7 +800,7 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
           // An ARDUPILOT_SITL_STARTED confirms the new process, or an
           // ARDUPILOT_SITL_ERROR reports that it never came back.
           if (data.relaunching) {
-            appendOutput('\nSITL is restarting at a new take-off point...\n');
+            appendOutput(tr('stores.ardupilot_sitl_store.sitlIsRestartingAtANew'));
             return;
           }
           set({ isRunning: false, isStarting: false, isStopping: false, isRcSending: false });
@@ -810,9 +810,9 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
             void get().stopFlightGear();
           }
           if (data.code !== null) {
-            appendOutput(`\nSITL exited with code ${data.code}\n`);
+            appendOutput(tr('stores.ardupilot_sitl_store.sitlExitedWithCode', { code: data.code }));
           } else if (data.signal) {
-            appendOutput(`\nSITL killed by signal ${data.signal}\n`);
+            appendOutput(tr('stores.ardupilot_sitl_store.sitlKilledBySignal', { signal: data.signal }));
           }
           // Early-crash recovery — record the (frame, track) crash, then
           // decide what to suggest based on the per-frame ledger:
@@ -893,7 +893,7 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
           });
           if (data.wasRelaunch) {
             const { lat, lng, alt, heading } = data.homeLocation;
-            appendOutput(`SITL is back up, taking off from ${lat}, ${lng} (alt ${alt} m, heading ${heading} deg).\n`);
+            appendOutput(tr('stores.ardupilot_sitl_store.sitlIsBackUpTakingOff', { lat, lon: lng, alt, heading }));
           }
         });
 
@@ -904,7 +904,7 @@ export const useArduPilotSitlStore = create<ArduPilotSitlStore>()(
             set({ isDownloading: false });
             checkBinary();
           } else if (progress.status === 'error') {
-            set({ isDownloading: false, lastError: progress.error ?? 'Download failed' });
+            set({ isDownloading: false, lastError: progress.error ?? tr('stores.ardupilot_sitl_store.downloadFailed') });
           }
         });
 

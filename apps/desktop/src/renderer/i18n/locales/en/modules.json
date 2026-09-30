@@ -20,7 +20,8 @@
       "worksInsideArdudeck": "Works inside ArduDeck",
       "noBuild": "No {{label}} build",
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "unreleased": "unreleased"
     },
     "HangarApps": {
       "installedApps": "Installed apps",
@@ -100,7 +101,8 @@
       "updatingAll": "Updating all…",
       "updateAll": "Update all ({{length}})",
       "checking": "Checking…",
-      "checkUpdates": "Check updates"
+      "checkUpdates": "Check updates",
+      "error": "Error"
     },
     "ModulePanelWindow": {
       "restore": "Restore",
@@ -119,7 +121,22 @@
       "keptAsTheyAre": "Kept as they are:",
       "cancel": "Cancel",
       "writing": "Writing...",
-      "writeToAircraft": "Write to aircraft"
+      "writeToAircraft": "Write to aircraft",
+      "theReturnPoint": "the return point"
+    },
+    "module_host_renderer": {
+      "moduleVaultAccessRequiresTheVault": "[module:{{slug}}] vault access requires the 'vault' manifest permission",
+      "noFlightLogIsOpenIn": "No flight log is open in the Log Explorer.",
+      "theVehicleDidNotConfirmThe": "The vehicle did not confirm the fence",
+      "clickTheCornersOfTheArea": "Click the corners of the area",
+      "snapshotFailed": "Snapshot failed"
+    },
+    "module_mission_panel_registry": {
+      "moduleMissionPanelNeedsAComponent": "[module:{{slug}}] mission panel {{id}} needs a component"
+    },
+    "module_proposal_registry": {
+      "anotherProposalIsAlreadyOpen": "Another proposal is already open",
+      "aFenceNeedsAtLeastThree": "A fence needs at least three points"
     }
   }
 }

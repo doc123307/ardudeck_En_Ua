@@ -32,27 +32,27 @@ interface PrearmPanelProps {
 
 /** What actually clears each refusal, in the pilot's terms. */
 const ADVICE: Record<number, { fix: string; tab?: string; view?: string; tabLabel?: string }> = {
-  1: { fix: 'Let the board settle, or check the barometer is not in airflow.' },
-  3: { fix: 'Wait for a 3D fix, or move where the sky is open.' },
+  1: { get fix() { return t('mavlink_config.PrearmPanel.letTheBoardSettleOrCheck'); } },
+  3: { get fix() { return t('mavlink_config.PrearmPanel.waitForA3dFixOr'); } },
   // Level writes AHRS_TRIM_* only; this check reads INS_ACCOFFS_*/INS_ACCSCAL_*,
   // which only the six-point calibration writes.
-  4: { fix: 'Run the Quick accelerometer calibration (one position, vehicle level) or the 6-point one. Level only sets trims and never clears this.', view: 'calibration', get tabLabel() { return t('mavlink_config.PrearmPanel.openCalibration'); } },
-  2: { fix: 'Calibrate the compass.', view: 'calibration', get tabLabel() { return t('mavlink_config.PrearmPanel.openCalibration'); } },
-  5: { fix: 'A parameter is out of range; the message names it.', tab: 'parameters', get tabLabel() { return t('mavlink_config.PrearmPanel.openParameters'); } },
-  6: { fix: 'Calibrate the radio and centre the sticks.', tab: 'receiver', get tabLabel() { return t('mavlink_config.PrearmPanel.openRc'); } },
-  7: { fix: 'Check the supply to the autopilot, it is outside the safe range.' },
-  8: { fix: 'Charge the pack or lower the arming voltage.', tab: 'battery', get tabLabel() { return t('mavlink_config.PrearmPanel.openBattery'); } },
-  9: { fix: 'Calibrate or disable the airspeed sensor.' },
-  10: { fix: 'No card, or logging failed to start. Turn logging off if the vehicle has no card.', tab: 'logging', get tabLabel() { return t('mavlink_config.PrearmPanel.openLogging'); } },
-  11: { fix: 'Press the safety switch until the light goes solid.' },
-  12: { fix: 'The receiver is not configured as ArduPilot expects; let it finish, or re-seat it.' },
-  13: { fix: 'The estimator is not happy yet. Keep the vehicle still, or check the messages above.' },
-  14: { fix: 'Load a valid mission, or clear the one on board.', tab: 'mission', get tabLabel() { return t('mavlink_config.PrearmPanel.openMission'); } },
-  15: { fix: 'Check the rangefinder wiring and its parameters.' },
-  16: { fix: 'Check the camera or gimbal is powered and reporting.' },
-  17: { fix: 'The companion computer has not authorised arming.' },
-  18: { fix: 'Visual odometry is not reporting.' },
-  19: { fix: 'The in-flight FFT is not producing data.' },
+  4: { get fix() { return t('mavlink_config.PrearmPanel.runTheQuickAccelerometerCalibrationOne'); }, view: 'calibration', get tabLabel() { return t('mavlink_config.PrearmPanel.openCalibration'); } },
+  2: { get fix() { return t('mavlink_config.PrearmPanel.calibrateTheCompass'); }, view: 'calibration', get tabLabel() { return t('mavlink_config.PrearmPanel.openCalibration'); } },
+  5: { get fix() { return t('mavlink_config.PrearmPanel.aParameterIsOutOfRange'); }, tab: 'parameters', get tabLabel() { return t('mavlink_config.PrearmPanel.openParameters'); } },
+  6: { get fix() { return t('mavlink_config.PrearmPanel.calibrateTheRadioAndCentreThe'); }, tab: 'receiver', get tabLabel() { return t('mavlink_config.PrearmPanel.openRc'); } },
+  7: { get fix() { return t('mavlink_config.PrearmPanel.checkTheSupplyToTheAutopilot'); } },
+  8: { get fix() { return t('mavlink_config.PrearmPanel.chargeThePackOrLowerThe'); }, tab: 'battery', get tabLabel() { return t('mavlink_config.PrearmPanel.openBattery'); } },
+  9: { get fix() { return t('mavlink_config.PrearmPanel.calibrateOrDisableTheAirspeedSensor'); } },
+  10: { get fix() { return t('mavlink_config.PrearmPanel.noCardOrLoggingFailedTo'); }, tab: 'logging', get tabLabel() { return t('mavlink_config.PrearmPanel.openLogging'); } },
+  11: { get fix() { return t('mavlink_config.PrearmPanel.pressTheSafetySwitchUntilThe'); } },
+  12: { get fix() { return t('mavlink_config.PrearmPanel.theReceiverIsNotConfiguredAs'); } },
+  13: { get fix() { return t('mavlink_config.PrearmPanel.theEstimatorIsNotHappyYet'); } },
+  14: { get fix() { return t('mavlink_config.PrearmPanel.loadAValidMissionOrClear'); }, tab: 'mission', get tabLabel() { return t('mavlink_config.PrearmPanel.openMission'); } },
+  15: { get fix() { return t('mavlink_config.PrearmPanel.checkTheRangefinderWiringAndIts'); } },
+  16: { get fix() { return t('mavlink_config.PrearmPanel.checkTheCameraOrGimbalIs'); } },
+  17: { get fix() { return t('mavlink_config.PrearmPanel.theCompanionComputerHasNotAuthorised'); } },
+  18: { get fix() { return t('mavlink_config.PrearmPanel.visualOdometryIsNotReporting'); } },
+  19: { get fix() { return t('mavlink_config.PrearmPanel.theInFlightFftIsNot'); } },
 };
 
 export function PrearmPanel({ model, value, onWrite, onGoTo }: PrearmPanelProps): JSX.Element {
@@ -91,7 +91,7 @@ export function PrearmPanel({ model, value, onWrite, onGoTo }: PrearmPanelProps)
             {armed
               ? t('mavlink_config.PrearmPanel.checksPassedAndTheMotorsAre')
               : blocked
-                ? t('mavlink_config.PrearmPanel.inTheWayNewestFirst', { length: failures.length, v2: failures.length === 1 ? 'thing is' : 'things are' })
+                ? t('mavlink_config.PrearmPanel.inTheWayNewestFirst', { length: failures.length, v2: failures.length === 1 ? t('mavlink_config.PrearmPanel.thingIs') : t('mavlink_config.PrearmPanel.thingsAre') })
                 : t('mavlink_config.PrearmPanel.noRefusalsReportedTheVehicleArms')}
           </p>
         </div>

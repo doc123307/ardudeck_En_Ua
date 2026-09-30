@@ -79,7 +79,16 @@
       "parameter": "Parameter",
       "before": "Before",
       "after": "After",
-      "delta": "Delta"
+      "delta": "Delta",
+      "yaw45": "Yaw 45",
+      "yaw90": "Yaw 90",
+      "yaw135": "Yaw 135",
+      "yaw180": "Yaw 180",
+      "yaw225": "Yaw 225",
+      "yaw270": "Yaw 270",
+      "yaw315": "Yaw 315",
+      "roll180": "Roll 180",
+      "pitch180": "Pitch 180"
     },
     "CalibrationHeader": {
       "select": "Select",
@@ -90,7 +99,11 @@
     },
     "CalibrationHealthBanner": {
       "doNotFlyOnThisCalibration": "{{summary}} Do not fly on this calibration. Run it again.",
-      "rebootTheFlightControllerAndReconnect": "Reboot the flight controller and reconnect. ArduDeck will read the values back and confirm they stuck."
+      "rebootTheFlightControllerAndReconnect": "Reboot the flight controller and reconnect. ArduDeck will read the values back and confirm they stuck.",
+      "calibrationDidNotSurviveTheReboot": "{{name}} calibration did not survive the reboot",
+      "calibrationNotYetConfirmed": "{{name}} calibration not yet confirmed",
+      "calibrationIsOnTheVehicleBut": "{{name}} calibration is on the vehicle, but weak",
+      "calibrationConfirmedOnTheVehicle": "{{name}} calibration confirmed on the vehicle"
     },
     "CalibrationProgress": {
       "calibrating": "Calibrating...",
@@ -126,7 +139,8 @@
       "lowerPriority": "Lower priority",
       "inUse": "In use",
       "notUsed": "Not used",
-      "keepTheCompassInTheBest": "Keep the compass in the best position rather than the best score: an onboard one sits in the battery's field, which moves with current draw and no calibration corrects that."
+      "keepTheCompassInTheBest": "Keep the compass in the best position rather than the best score: an onboard one sits in the battery's field, which moves with current draw and no calibration corrects that.",
+      "good": "good"
     },
     "CompassMotDialog": {
       "good": "Good",
@@ -186,7 +200,8 @@
       "close": "Close",
       "cancel": "Cancel",
       "running": "Running...",
-      "runCalibration": "Run Calibration"
+      "runCalibration": "Run Calibration",
+      "unknownError": "Unknown error"
     },
     "LiveOrientationGuide": {
       "noAttitudeTelemetryPositionCannotBe": "No attitude telemetry: position cannot be checked",
@@ -227,7 +242,10 @@
       "rebootTheFlightControllerToMake": "Reboot the flight controller to make sure all calibration values are loaded from EEPROM cleanly. Some IMU/compass parameters only take effect on boot.",
       "done": "Done",
       "rebooting": "Rebooting…",
-      "rebootNow": "Reboot now"
+      "rebootNow": "Reboot now",
+      "noCalibrationDataAllOffsetsIn": "No calibration data: all offsets in the file are zero",
+      "sensorIdsDoNotMatchThis": "Sensor IDs do not match this flight controller",
+      "fileContainsNoSensorIdsCannot": "File contains no sensor IDs, cannot verify the source board"
     },
     "PositionDiagram": {
       "levelSurface": "Level Surface",
@@ -292,7 +310,11 @@
       "restoreAccMagCalibrationFromA": "Restore ACC / MAG calibration from a .param file. The source board's sensor IDs are verified against this FC before writing.",
       "open": "Open",
       "ensureYourVehicleIsDisarmedAnd": "Ensure your vehicle is disarmed and in a safe location before calibrating.",
-      "forBestResultsDisconnectMotors": " For best results, disconnect motors."
+      "forBestResultsDisconnectMotors": " For best results, disconnect motors.",
+      "accelerometer": "Accelerometer",
+      "accCalibration": "Acc Calibration",
+      "compass": "Compass",
+      "noGyro": "No Gyro"
     },
     "VehicleCalibrationPanel": {
       "thisVehicle": "This vehicle",
@@ -308,7 +330,17 @@
       "calibrationStored": "Calibration stored",
       "calibrationFailed": "Calibration failed",
       "fitQuality": "Fit quality",
-      "done": "Done"
+      "done": "Done",
+      "motorsWillSpinRemoveThePropellers": "Motors will spin. Remove the propellers and secure the airframe.",
+      "removeThePropellersBeforeStarting": "Remove the propellers before starting.",
+      "theVehicleMustBeDisarmed": "The vehicle must be disarmed.",
+      "putTheVehicleDownAndKeep": "Put the vehicle down and keep it still.",
+      "useASurfaceYouKnowTo": "Use a surface you know to be level."
+    },
+    "accel_calibration_state": {
+      "accelerometersHave": "Accelerometers {{v1}} have",
+      "accelerometerHas": "Accelerometer {{v1}} has",
+      "noStored3dCalibrationRunThe": "{{which}} no stored 3D calibration. Run the Quick calibration (one position, vehicle level) or the 6-point one: the Level calibration only sets trims and will not clear \"3D Accel calibration needed\"."
     }
   }
 }

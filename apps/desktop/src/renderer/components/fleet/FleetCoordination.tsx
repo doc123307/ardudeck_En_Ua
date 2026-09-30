@@ -85,7 +85,7 @@ export function FleetCoordination() {
           }`}
           data-tip={t('fleet.FleetCoordination.latestReportFromTheCoordinationEngine')}
         >
-          {controlIsError ? 'engine error' : lastControl.state ?? lastControl.type}
+          {controlIsError ? t('fleet.FleetCoordination.engineError') : lastControl.state ?? lastControl.type}
           {lastControl.message ? `: ${lastControl.message}` : ''}
         </div>
       )}

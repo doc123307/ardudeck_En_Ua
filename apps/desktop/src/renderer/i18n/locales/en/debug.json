@@ -7,7 +7,12 @@
       "noLogEntries": "No log entries",
       "jumpToLatestPaused": "↓ Jump to latest (paused)",
       "noMessagesFromAutopilot": "No messages from autopilot",
-      "fix": "Fix ›"
+      "fix": "Fix ›",
+      "dockLeft": "Dock left",
+      "dockBottom": "Dock bottom",
+      "dockRight": "Dock right",
+      "entry": "entry",
+      "entries": "entries"
     }
   }
 }

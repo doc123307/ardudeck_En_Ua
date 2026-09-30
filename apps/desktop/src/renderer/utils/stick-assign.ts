@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 /**
  * Putting a flight function on a different stick.
  *
@@ -92,5 +93,5 @@ export function stickLabel(fn: StickFunction, isGround: boolean): string {
   if (!isGround) {
     return { roll: 'Roll', pitch: 'Pitch', throttle: 'Throttle', yaw: 'Yaw' }[fn];
   }
-  return { roll: 'Steering', pitch: 'Pitch (unused)', throttle: 'Throttle', yaw: 'Yaw (unused)' }[fn];
+  return { roll: 'Steering', pitch: t('utils.stick_assign.pitchUnused'), throttle: 'Throttle', yaw: t('utils.stick_assign.yawUnused') }[fn];
 }

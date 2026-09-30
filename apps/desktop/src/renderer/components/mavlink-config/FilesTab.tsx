@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { useConnectionStore } from '../../stores/connection-store';
 import { scanCardUsage, type CardUsage } from './card-usage';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 interface DirEntry {
   kind: 'dir' | 'file';
@@ -652,7 +652,7 @@ function SdStorageCard({
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xs text-content-secondary">
                   {t('mavlink_config.FilesTab.flightLogs')} <span className="text-content font-medium">{formatSize(cardUsage.logBytes)}</span>
-                  {' '}in {cardUsage.logCount} {t('mavlink_config.FilesTab.file')}{cardUsage.logCount === 1 ? '' : 's'}
+                  {' '}in {cardUsage.logCount} {t('mavlink_config.FilesTab.file')}{cardUsage.logCount === 1 ? '' : enPlural('s')}
                 </span>
                 <span className="text-xs text-content-secondary">
                   {t('mavlink_config.FilesTab.otherData')} <span className="text-content font-medium">{formatSize(cardUsage.otherBytes)}</span>
@@ -668,7 +668,7 @@ function SdStorageCard({
               </p>
               {cardUsage.unreadable.length > 0 && (
                 <p className="text-[11px] text-amber-400 mt-1">
-                  {cardUsage.unreadable.length} {t('mavlink_config.FilesTab.folder')}{cardUsage.unreadable.length === 1 ? '' : 's'} {t('mavlink_config.FilesTab.couldNotBeReadSoThe')}
+                  {cardUsage.unreadable.length} {t('mavlink_config.FilesTab.folder')}{cardUsage.unreadable.length === 1 ? '' : enPlural('s')} {t('mavlink_config.FilesTab.couldNotBeReadSoThe')}
                 </p>
               )}
             </>
@@ -793,7 +793,7 @@ function ConfirmDeleteModal({
 }) {
   return (
     <ModalShell onCancel={onCancel}>
-      <div className="text-content font-medium mb-1">{t('mavlink_config.FilesTab.delete')} {entry.kind === 'dir' ? 'directory' : 'file'}?</div>
+      <div className="text-content font-medium mb-1">{t('mavlink_config.FilesTab.delete')} {entry.kind === 'dir' ? t('mavlink_config.FilesTab.directory') : t('mavlink_config.FilesTab.file')}?</div>
       <div className="text-xs text-content-secondary mb-4 break-all">
         <span className="font-mono">{entry.name}</span> {t('mavlink_config.FilesTab.willBeRemovedFromTheFlight')}
         {entry.kind === 'dir' && (
@@ -830,7 +830,7 @@ function RenameModal({
   const [name, setName] = useState(entry.name);
   return (
     <ModalShell onCancel={onCancel}>
-      <div className="text-content font-medium mb-1">{t('mavlink_config.FilesTab.rename')} {entry.kind === 'dir' ? 'directory' : 'file'}</div>
+      <div className="text-content font-medium mb-1">{t('mavlink_config.FilesTab.rename')} {entry.kind === 'dir' ? t('mavlink_config.FilesTab.directory') : t('mavlink_config.FilesTab.file')}</div>
       <div className="text-xs text-content-secondary mb-3 break-all">
         {t('mavlink_config.FilesTab.currentName')} <span className="font-mono">{entry.name}</span>
       </div>

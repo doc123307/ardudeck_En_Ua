@@ -6,6 +6,7 @@
 
 import type { ComponentType } from 'react';
 import type { MissionPanelRegistration } from '@ardudeck/module-sdk';
+import { t } from '../i18n';
 
 export interface ModuleMissionPanel {
   key: string;
@@ -41,7 +42,7 @@ export function subscribeModuleMissionPanels(cb: () => void): () => void {
 export function registerModuleMissionPanel(slug: string, reg: MissionPanelRegistration): void {
   if (!reg?.id) throw new Error(`[module:${slug}] mission panel needs an id`);
   if (typeof reg.component !== 'function') {
-    throw new Error(`[module:${slug}] mission panel ${reg.id} needs a component`);
+    throw new Error(t('modules.module_mission_panel_registry.moduleMissionPanelNeedsAComponent', { slug, id: reg.id }));
   }
   const key = panelKey(slug, reg.id);
   registry.set(key, {

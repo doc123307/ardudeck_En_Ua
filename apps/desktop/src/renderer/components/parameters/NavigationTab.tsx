@@ -60,15 +60,15 @@ const GPS_PROVIDER_NAMES: Record<number, string> = {
   0: 'NMEA',
   1: 'u-blox',
   2: 'MSP',
-  3: 'Fake (Testing)',
+  get 3() { return t('parameters.NavigationTab.fakeTesting'); },
 };
 
 const GPS_SBAS_NAMES: Record<number, string> = {
   0: 'Auto',
-  1: 'EGNOS (Europe)',
+  get 1() { return t('parameters.NavigationTab.egnosEurope'); },
   2: 'WAAS (USA)',
-  3: 'MSAS (Japan)',
-  4: 'GAGAN (India)',
+  get 3() { return t('parameters.NavigationTab.msasJapan'); },
+  get 4() { return t('parameters.NavigationTab.gaganIndia'); },
   5: 'None',
 };
 

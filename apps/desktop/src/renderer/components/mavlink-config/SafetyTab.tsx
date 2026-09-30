@@ -75,21 +75,21 @@ type ConfirmAction = { type: 'preset'; key: string } | { type: 'no-checks' };
 // Fallback enum labels for PX4 failsafe/geofence params, used when bundled
 // metadata is unavailable. Labels mirror the PX4 parameter metadata values.
 const PX4_ENUM_FALLBACK: Record<string, Record<number, string>> = {
-  NAV_RCL_ACT: { 1: 'Hold mode', 2: 'Return mode', 3: 'Land mode', 5: 'Terminate', 6: 'Disarm' },
+  NAV_RCL_ACT: { get 1() { return t('mavlink_config.SafetyTab.holdMode'); }, get 2() { return t('mavlink_config.SafetyTab.returnMode'); }, get 3() { return t('mavlink_config.SafetyTab.landMode'); }, 5: 'Terminate', 6: 'Disarm' },
   COM_RC_IN_MODE: {
-    0: 'RC only',
-    1: 'MAVLink only',
-    2: 'RC or MAVLink with fallback',
-    3: 'RC or MAVLink keep first',
-    4: 'Disable manual control',
+    get 0() { return t('mavlink_config.SafetyTab.rcOnly'); },
+    get 1() { return t('mavlink_config.SafetyTab.mavlinkOnly'); },
+    get 2() { return t('mavlink_config.SafetyTab.rcOrMavlinkWithFallback'); },
+    get 3() { return t('mavlink_config.SafetyTab.rcOrMavlinkKeepFirst'); },
+    get 4() { return t('mavlink_config.SafetyTab.disableManualControl'); },
     5: 'Prio: RC > MAVL 1 > MAVL 2',
     6: 'Prio: MAVL 1 > MAVL 2 > RC',
     7: 'Prio: RC > MAVL 2 > MAVL 1',
     8: 'Prio: MAVL 2 > MAVL 1 > RC',
   },
-  NAV_DLL_ACT: { 0: 'Disabled', 1: 'Hold mode', 2: 'Return mode', 3: 'Land mode', 5: 'Terminate', 6: 'Disarm' },
-  COM_LOW_BAT_ACT: { 0: 'Warning', 2: 'Land mode', 3: 'Return at critical level, land at emergency level' },
-  GF_ACTION: { 0: 'None', 1: 'Warning', 2: 'Hold mode', 3: 'Return mode', 4: 'Terminate', 5: 'Land mode' },
+  NAV_DLL_ACT: { 0: 'Disabled', get 1() { return t('mavlink_config.SafetyTab.holdMode'); }, get 2() { return t('mavlink_config.SafetyTab.returnMode'); }, get 3() { return t('mavlink_config.SafetyTab.landMode'); }, 5: 'Terminate', 6: 'Disarm' },
+  COM_LOW_BAT_ACT: { 0: 'Warning', get 2() { return t('mavlink_config.SafetyTab.landMode'); }, get 3() { return t('mavlink_config.SafetyTab.returnAtCriticalLevelLandAt'); } },
+  GF_ACTION: { 0: 'None', 1: 'Warning', get 2() { return t('mavlink_config.SafetyTab.holdMode'); }, get 3() { return t('mavlink_config.SafetyTab.returnMode'); }, 4: 'Terminate', get 5() { return t('mavlink_config.SafetyTab.landMode'); } },
 };
 
 const Px4SafetyConfig: React.FC<{
@@ -394,7 +394,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
       if (!ok) failed.push(param);
     }
     if (failed.length > 0) {
-      reportWriteError(`Failed to set ${failed.join(', ')}`);
+      reportWriteError(t('mavlink_config.SafetyTab.failedToSet', { v1: failed.join(', ') }));
     }
   }, [setParameter, reportWriteError]);
 
@@ -426,7 +426,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
   const writeArmingCheck = useCallback(async (value: number) => {
     if (!armingModel) return;
     const ok = await setParameter(armingModel.param, value);
-    if (!ok) reportWriteError(`Failed to set ${armingModel.param}`);
+    if (!ok) reportWriteError(t('mavlink_config.SafetyTab.failedToSet2', { param: armingModel.param }));
   }, [armingModel, setParameter, reportWriteError]);
 
   const toggleArmingCheck = useCallback((bit: number) => {
@@ -737,7 +737,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
             <button
               onClick={async () => {
                 const ok = await setParameter('FENCE_ENABLE', safetyValues.fenceEnable ? 0 : 1);
-                if (!ok) reportWriteError('Failed to set FENCE_ENABLE');
+                if (!ok) reportWriteError(t('mavlink_config.SafetyTab.failedToSetFenceEnable'));
               }}
               className={`relative w-12 h-6 rounded-full transition-colors ${
                 safetyValues.fenceEnable ? 'bg-blue-500' : 'bg-surface-raised'

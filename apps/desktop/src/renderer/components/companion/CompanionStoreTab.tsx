@@ -27,7 +27,7 @@ import {
   type CompanionTemplate,
   type BoardFamily,
 } from './companion-templates';
-import { t as tr } from '../../i18n';
+import { t as tr, enPlural } from '../../i18n';
 
 // ── Per-template icons ──────────────────────────────────────────
 
@@ -89,7 +89,7 @@ function BoardSelectionView({ onSelectBoard }: { onSelectBoard: (board: BoardFam
               </div>
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-subtle">
                 <span className="text-[10px] text-content-tertiary">
-                  {templateCounts[key]} {tr('companion.CompanionStoreTab.template')}{templateCounts[key] !== 1 ? 's' : ''}
+                  {templateCounts[key]} {tr('companion.CompanionStoreTab.template')}{templateCounts[key] !== 1 ? enPlural('s') : ''}
                 </span>
                 <ArrowRight className="w-3.5 h-3.5 text-content-tertiary group-hover:text-content-secondary transition-colors" />
               </div>
@@ -182,7 +182,7 @@ function TemplateListView({
                           </div>
                         )}
                         <div className="text-[10px] text-content-tertiary">
-                          {template.boardVariants.length} {tr('companion.CompanionStoreTab.board')}{template.boardVariants.length !== 1 ? 's' : ''}
+                          {template.boardVariants.length} {tr('companion.CompanionStoreTab.board')}{template.boardVariants.length !== 1 ? enPlural('s') : ''}
                         </div>
                         <div className="flex-1" />
                         <ArrowRight className="w-3.5 h-3.5 text-content-tertiary group-hover:text-content-secondary transition-colors" />

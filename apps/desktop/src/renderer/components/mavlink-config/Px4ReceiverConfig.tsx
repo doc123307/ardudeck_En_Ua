@@ -115,10 +115,10 @@ const SWITCH_MAPS: { id: string; fallbackId?: string; label: string; hint: strin
 const MAX_CHANNEL_MAP = 18;
 
 const INPUT_MODE_FALLBACK: Record<number, string> = {
-  0: 'RC only',
-  1: 'Joystick only',
-  2: 'RC and Joystick',
-  3: 'Stick input disabled',
+  get 0() { return t('mavlink_config.Px4ReceiverConfig.rcOnly'); },
+  get 1() { return t('mavlink_config.Px4ReceiverConfig.joystickOnly'); },
+  get 2() { return t('mavlink_config.Px4ReceiverConfig.rcAndJoystick'); },
+  get 3() { return t('mavlink_config.Px4ReceiverConfig.stickInputDisabled'); },
 };
 
 // =============================================================================

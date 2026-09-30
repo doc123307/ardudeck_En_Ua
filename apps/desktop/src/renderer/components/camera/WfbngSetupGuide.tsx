@@ -11,7 +11,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { StreamDiagnosis } from '../../../shared/link-doctor-types';
 import type { WfbngStatus } from '../../../shared/camera-types';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 const CHANNELS = [36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 149, 153, 157, 161, 165, 169, 173, 177];
 
@@ -112,16 +112,16 @@ export function WfbngSetupGuide({ port }: { port: number }) {
           <>
             {chip(
               status.dongleName !== null,
-              `Dongle connected (${status.dongleName})`,
-              'Plug the WiFi dongle from the camera kit into this computer',
+              t('camera.WfbngSetupGuide.dongleConnected', { dongleName: status.dongleName }),
+              t('camera.WfbngSetupGuide.plugTheWifiDongleFromThe'),
             )}
             {status.driverNote && (
               <p className="pl-3.5 text-[9px] leading-tight text-content-tertiary">{status.driverNote}</p>
             )}
             {chip(
               status.receiverInstalled,
-              'Receiver component installed',
-              'Receiver component missing',
+              t('camera.WfbngSetupGuide.receiverComponentInstalled'),
+              t('camera.WfbngSetupGuide.receiverComponentMissing'),
               <button
                 onClick={() => void installReceiver()}
                 disabled={installing}
@@ -133,8 +133,8 @@ export function WfbngSetupGuide({ port }: { port: number }) {
             {installError && <p className="text-[10px] leading-tight text-red-400">{installError}</p>}
             {chip(
               status.gsKeyImported,
-              'Pairing key imported',
-              'Pairing key missing',
+              t('camera.WfbngSetupGuide.pairingKeyImported'),
+              t('camera.WfbngSetupGuide.pairingKeyMissing'),
               <button onClick={() => void importKey()} className="rounded bg-surface-raised px-1.5 py-0.5 text-[10px] text-content hover:bg-surface-raised">
                 {t('camera.WfbngSetupGuide.importGsKey')}
               </button>,
@@ -198,7 +198,7 @@ export function WfbngSetupGuide({ port }: { port: number }) {
             </code>
             {localIps.length > 0 ? (
               <p className="mt-0.5 text-[9px] text-content-tertiary">
-                {t('camera.WfbngSetupGuide.thisComputerSAddress')}{localIps.length > 1 ? 'es' : ''}: {localIps.join(', ')}
+                {t('camera.WfbngSetupGuide.thisComputerSAddress')}{localIps.length > 1 ? enPlural('es') : ''}: {localIps.join(', ')}
               </p>
             ) : (
               <p className="mt-0.5 text-[9px] text-content-tertiary">{t('camera.WfbngSetupGuide.findingThisComputerSNetworkAddress')}</p>

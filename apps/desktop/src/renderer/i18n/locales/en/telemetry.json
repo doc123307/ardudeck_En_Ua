@@ -57,7 +57,9 @@
       "noLink": "No Link",
       "armed": "Armed",
       "disarmed": "Disarmed",
-      "notConnected": "Not connected"
+      "notConnected": "Not connected",
+      "copied": "Copied",
+      "couldNotShare": "Could not share"
     },
     "workspace_layouts": {
       "map": "Map",
@@ -68,7 +70,13 @@
       "mapWithSyntheticVisionSplit": "Map with synthetic vision split.",
       "mapAndVisionSideBySide": "Map and Vision side by side.",
       "mission": "Mission",
-      "mapWaypointsAltitudeProfile": "Map, waypoints, altitude profile."
+      "mapWaypointsAltitudeProfile": "Map, waypoints, altitude profile.",
+      "thatFileIsNotValidJson": "That file is not valid JSON.",
+      "thatFileIsNotAnArdudeck": "That file is not an ArduDeck workspace layout.",
+      "theLayoutInThatFileHas": "The layout in that file has no panel arrangement.",
+      "importedLayout": "Imported layout",
+      "unknownInstrumentPreset": "Unknown instrument preset {{name}}",
+      "pilotCockpit": "Pilot cockpit"
     }
   }
 }

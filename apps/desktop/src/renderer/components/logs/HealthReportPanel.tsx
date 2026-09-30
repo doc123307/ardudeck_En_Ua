@@ -6,7 +6,7 @@ import { AiWarningDialog } from './AiAnalysisPanel';
 import type { ExplorerPreset, HealthCheckResult } from '@ardudeck/dataflash-parser';
 import { formatAltitudeFromMeters, formatCapacityFromMah, formatSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
 import { ADVISOR_CARGO_SLUG, useCargoEnabled } from '../../modules/capabilities';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 type ParsedLog = NonNullable<ReturnType<typeof useLogStore.getState>['currentLog']>;
 
@@ -253,7 +253,7 @@ Return 3-6 cards. Most important issues first.`;
           )}
           {warnCount > 0 && (
             <span className="px-2 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
-              {warnCount} {t('logs.HealthReportPanel.warning')}{warnCount > 1 ? 's' : ''}
+              {warnCount} {t('logs.HealthReportPanel.warning')}{warnCount > 1 ? enPlural('s') : ''}
             </span>
           )}
           {passCount > 0 && (
@@ -402,7 +402,7 @@ Return 3-6 cards. Most important issues first.`;
       {skipCount > 0 && (
         <details className="text-sm text-content-secondary">
           <summary className="cursor-pointer hover:text-content-secondary">
-            {skipCount} {t('logs.HealthReportPanel.check')}{skipCount > 1 ? 's' : ''} {t('logs.HealthReportPanel.skippedNoData')}
+            {skipCount} {t('logs.HealthReportPanel.check')}{skipCount > 1 ? enPlural('s') : ''} {t('logs.HealthReportPanel.skippedNoData')}
           </summary>
           <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
             {healthResults.filter((r) => r.status === 'skip').map((result) => (

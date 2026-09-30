@@ -55,7 +55,9 @@
       "saveACopyToYourBackup": "Сохранить копию в резервное хранилище, чтобы её могли открыть ваши другие компьютеры",
       "duplicate": "Дублировать",
       "clickAgainToConfirm": "Щёлкните ещё раз для подтверждения",
-      "delete": "Удалить"
+      "delete": "Удалить",
+      "inProgress": "В процессе",
+      "justNow": "Только что"
     },
     "MissionDetailPanel": {
       "edit": "Редактировать",
@@ -76,7 +78,8 @@
       "loadIntoEditor": "Загрузить в редактор",
       "duplicate": "Дублировать",
       "confirmDelete": "Подтвердить удаление",
-      "delete": "Удалить"
+      "delete": "Удалить",
+      "inProgress": "В процессе"
     },
     "MissionLibraryView": {
       "lastModified": "Последнее изменение",
@@ -117,7 +120,11 @@
       "duplicate": "Дублировать",
       "clickAgainToConfirm": "Щёлкните ещё раз для подтверждения",
       "delete": "Удалить",
-      "saveMissionToBackup": "Сохранить миссию в резервное хранилище"
+      "saveMissionToBackup": "Сохранить миссию в резервное хранилище",
+      "completed": "Завершена",
+      "inProgress": "В процессе",
+      "aborted": "Прервана",
+      "planned": "Запланирована"
     },
     "ProjectsBrowser": {
       "noProjectsYet": "Проектов пока нет",
@@ -130,7 +137,9 @@
       "missions2": "Миссии",
       "wps": "WP",
       "anOlderWaypointsOnlySaveIt": "Старое сохранение только с точками. Его можно восстановить из «Хранилища флота», но в нём нет групп и съёмок для редактирования.",
-      "waypointsOnly": "только точки"
+      "waypointsOnly": "только точки",
+      "project": "проект",
+      "projects": "проектов"
     },
     "SaveMissionModal": {
       "missionNameIsRequired": "Нужно название миссии",

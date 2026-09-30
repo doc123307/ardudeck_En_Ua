@@ -124,7 +124,18 @@
       "elevons": "Элевоны:",
       "testBothRollAndPitchMovements": "Проверьте движения и по крену, и по тангажу",
       "back": "← Назад",
-      "continueCalibrate": "Далее: калибровка →"
+      "continueCalibrate": "Далее: калибровка →",
+      "moveRollStickRightThisServo": "Стик крена ВПРАВО → эта серва должна пойти ВНИЗ",
+      "moveRollStickRightThisServo2": "Стик крена ВПРАВО → эта серва должна пойти ВВЕРХ",
+      "pullPitchStickBackTrailingEdge": "Стик тангажа НА СЕБЯ → задняя кромка должна пойти ВВЕРХ",
+      "moveYawStickRightRudderShould": "Стик рыскания ВПРАВО → руль должен отклониться ВПРАВО",
+      "rollRightDownPitchBackUp": "Крен ВПРАВО → ВНИЗ. Тангаж НА СЕБЯ → ВВЕРХ (задняя кромка)",
+      "rollRightUpPitchBackUp": "Крен ВПРАВО → ВВЕРХ. Тангаж НА СЕБЯ → ВВЕРХ (задняя кромка)",
+      "pitchBackAndYawRightTest": "Тангаж НА СЕБЯ и рыскание ВПРАВО → проверьте оба движения",
+      "moveYawStickMotorShouldTilt": "Двигайте стик рыскания → мотор должен наклоняться",
+      "moveYawStickCameraShouldRotate": "Двигайте стик рыскания → камера должна вращаться горизонтально",
+      "movePitchStickCameraShouldTilt": "Двигайте стик тангажа → камера должна наклоняться вверх/вниз",
+      "moveTheCorrespondingStick": "Двигайте соответствующий стик"
     },
     "ServoTuningCard": {
       "servo": "Серва",
@@ -178,7 +189,8 @@
       "completeWizardFirst": "Сначала пройдите мастер",
       "fineTuneServos": "Точная настройка серв",
       "tune": "Настройка",
-      "servos": "серв"
+      "servos": "серв",
+      "unknownError": "Неизвестная ошибка"
     },
     "TraditionalPlaneDiagram": {
       "lAileron": "Лев. элерон",
@@ -219,7 +231,17 @@
       "tricopterWithYawServo": "Трикоптер с сервой рыскания",
       "onlyTheRearYawServoNeeds": "Настройки требует только задняя серва рыскания. Моторы настраиваются отдельно.",
       "n2AxisCameraGimbalPanTilt": "2-осевой подвес камеры (pan/tilt)",
-      "forCameraStabilizationUsesRcInput": "Для стабилизации камеры. Использует вход RC, а не стабилизированный выход."
+      "forCameraStabilizationUsesRcInput": "Для стабилизации камеры. Использует вход RC, а не стабилизированный выход.",
+      "rcRollManual": "RC крен (ручной)",
+      "rcPitchManual": "RC тангаж (ручной)",
+      "rcYawManual": "RC рыскание (ручное)",
+      "rcThrottleManual": "RC газ (ручной)",
+      "gimbalPitch": "Тангаж подвеса",
+      "gimbalRoll": "Крен подвеса",
+      "lAil": "Лев. элерон",
+      "rAil": "Прав. элерон",
+      "lElev": "Лев. руль выс.",
+      "rElev": "Прав. руль выс."
     }
   }
 }

@@ -52,9 +52,9 @@ export function VaultSyncBadge({ variant = 'icon' }: VaultSyncBadgeProps) {
 
   const tip = connected
     ? lastSyncAt
-      ? `Backup is on. Last copied online ${timeAgo(lastSyncAt)}.`
-      : 'Backup is on, but nothing has been copied online yet.'
-    : 'Backup is off: your saves stay on this computer only.';
+      ? t('vault.VaultSyncBadge.backupIsOnLastCopiedOnline', { v1: timeAgo(lastSyncAt) })
+      : t('vault.VaultSyncBadge.backupIsOnButNothingHas')
+    : t('vault.VaultSyncBadge.backupIsOffYourSavesStay');
 
   const openVault = () => {
     setOpen(false);

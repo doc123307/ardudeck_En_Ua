@@ -1,6 +1,7 @@
 import { MAP_INSTRUMENTS } from '../components/map/instruments/registry';
 import { GAUGE_DIAMETER } from '../components/map/instruments/RoundGauge';
 import { DemoCanvas, usePhaseLoop } from './demo-kit';
+import { t } from '../i18n';
 
 const SCALE = 0.6;
 const SIZE = GAUGE_DIAMETER * SCALE;

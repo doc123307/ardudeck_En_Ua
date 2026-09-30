@@ -107,7 +107,7 @@ export default function ServoWizard() {
         });
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
+      const message = err instanceof Error ? err.message : t('servo_wizard.ServoWizard.unknownError');
       setMixerChangeStatus({ type: 'error', message: t('servo_wizard.ServoWizard.failedTryInavConfiguratorCli', { message }) });
     } finally {
       setIsChangingMixer(false);

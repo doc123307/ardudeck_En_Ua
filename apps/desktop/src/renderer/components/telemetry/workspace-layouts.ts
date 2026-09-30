@@ -118,16 +118,16 @@ export function parseImport(raw: string): { name: string; layout: WorkspaceLayou
   try {
     parsed = JSON.parse(raw);
   } catch {
-    return { error: 'That file is not valid JSON.' };
+    return { error: t('telemetry.workspace_layouts.thatFileIsNotValidJson') };
   }
   const p = (parsed ?? {}) as { app?: unknown; kind?: unknown; name?: unknown; layout?: unknown };
-  if (p.app !== 'ardudeck' || p.kind !== EXPORT_KIND) return { error: 'That file is not an ArduDeck workspace layout.' };
+  if (p.app !== 'ardudeck' || p.kind !== EXPORT_KIND) return { error: t('telemetry.workspace_layouts.thatFileIsNotAnArdudeck') };
   const layout = p.layout;
   const dock = isWorkspaceV2(layout) ? layout.dock : layout;
-  if (!isDock(dock)) return { error: 'The layout in that file has no panel arrangement.' };
+  if (!isDock(dock)) return { error: t('telemetry.workspace_layouts.theLayoutInThatFileHas') };
   const extras = isWorkspaceV2(layout) ? sanitizeExtras(layout.extras) : undefined;
   const description = isWorkspaceV2(layout) && typeof layout.description === 'string' ? layout.description.trim() : '';
-  const name = typeof p.name === 'string' && p.name.trim() ? p.name.trim() : 'Imported layout';
+  const name = typeof p.name === 'string' && p.name.trim() ? p.name.trim() : t('telemetry.workspace_layouts.importedLayout');
   return {
     name,
     layout: { v: 2, dock, ...(extras ? { extras } : {}), ...(description ? { description } : {}) },
@@ -149,11 +149,11 @@ export function uniqueLayoutName(name: string, taken: string[]): string {
 
 function presetCockpit(name: string): InstrumentLayoutSnapshot {
   const preset = PRESET_INSTRUMENT_LAYOUTS.find((p) => p.name === name);
-  if (!preset) throw new Error(`Unknown instrument preset ${name}`);
+  if (!preset) throw new Error(t('telemetry.workspace_layouts.unknownInstrumentPreset', { name }));
   return preset.layout;
 }
 
-const PILOT_COCKPIT = 'Pilot cockpit';
+const PILOT_COCKPIT = t('telemetry.workspace_layouts.pilotCockpit');
 
 /** Pilot cockpit with the gauge bar centred and lifted clear of the edge, for the shorter mission map. */
 function missionCockpit(): InstrumentLayoutSnapshot {

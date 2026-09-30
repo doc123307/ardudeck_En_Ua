@@ -16,12 +16,20 @@
       "calm": "Спокійно",
       "noStormForecastIn72h": "Бур не прогнозується протягом 72 год",
       "wmm2025IsOutsideItsValidityWindow": "WMM2025 поза межами періоду чинності; значення схилення й поля приблизні.",
-      "kpFromNoaaSwpcFieldFrom": "Kp від NOAA SWPC · поле з WMM2025 (офлайн)"
+      "kpFromNoaaSwpcFieldFrom": "Kp від NOAA SWPC · поле з WMM2025 (офлайн)",
+      "cautionKpNoGoKpG1": "Обережно Kp {{caution}}, не літати Kp {{nogo}} (буря G1)",
+      "highestPredictedKpInTheNext": "Найвищий прогнозований Kp у найближчі 72 години",
+      "within72h": "протягом 72 год"
     },
     "LocationPicker": {
       "pickTheBriefingLocationOnA": "Виберіть місце для прогнозу на карті",
       "planned": "Заплановане",
-      "changeLocation": "Змінити місце"
+      "changeLocation": "Змінити місце",
+      "vehiclePosition": "Позиція апарата",
+      "homePosition": "Позиція дому",
+      "mapCenter": "Центр карти",
+      "pickedLocation": "Вибране місце",
+      "noPosition": "Немає позиції"
     },
     "LocationPickerDialog": {
       "briefingLocation": "Місце для прогнозу",
@@ -72,14 +80,33 @@
       "precip2": "опади",
       "mm": "мм,",
       "visibilityBelow": "видимість нижче",
-      "km": "км."
+      "km": "км.",
+      "vehiclePosition": "Позиція апарата",
+      "homePosition": "Позиція дому",
+      "mapCenter": "Центр карти",
+      "pickedLocation": "Вибране місце",
+      "gustsOfExceedTheSafeLimit": "Пориви {{v1}} перевищують безпечну межу ({{v2}}). Ризик втрати керування.",
+      "gustsOfAreApproachingTheLimit": "Пориви {{v1}} наближаються до межі ({{v2}}). Уважно стежте.",
+      "sustainedWindOfExceedsTheSafe": "Сталий вітер {{v1}} перевищує безпечну межу ({{v2}}).",
+      "sustainedWindOfIsApproachingThe": "Сталий вітер {{v1}} наближається до межі ({{v2}}).",
+      "lowVisibilityOfKmBelowThe": "Низька видимість {{v1}} км, нижче мінімуму {{v2}} км.",
+      "reducedVisibilityOfKmMaintainVisual": "Знижена видимість {{v1}} км. Зберігайте візуальний контакт.",
+      "precipitationOfMmElectronicsAtRisk": "Опади {{v1}} мм. Електроніка під загрозою, не запускайте.",
+      "lightPrecipitationOfMmDetectedProtect": "Виявлено слабкі опади {{v1}} мм. Захистіть апарат.",
+      "highChanceOfPrecipitationExpectRain": "Висока ймовірність опадів ({{v1}}%). Очікуйте дощу протягом години.",
+      "risingChanceOfPrecipitationWatchThe": "Ймовірність опадів зростає ({{v1}}%). Стежте за небом.",
+      "cautionMmNoGoMm": "Обережно {{caution}} мм, не літати {{nogo}} мм",
+      "cautionBelowKmNoGoBelow": "Обережно нижче {{v1}} км, не літати нижче {{v2}} км"
     },
     "weather_visuals": {
       "rain": "Дощ",
       "fog": "Туман",
       "overcast": "Суцільна хмарність",
       "partlyCloudy": "Мінлива хмарність",
-      "clear": "Ясно"
+      "clear": "Ясно",
+      "conditionsAreWithinLimitsForLaunch": "Умови в межах норми для старту.",
+      "conditionsAreMarginalReviewTheFlagged": "Умови на межі. Перегляньте позначені параметри перед стартом.",
+      "oneOrMoreParametersExceedSafe": "Один або кілька параметрів перевищують безпечні межі. Не запускайте."
     }
   }
 }

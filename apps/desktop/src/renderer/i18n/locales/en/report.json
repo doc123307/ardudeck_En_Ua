@@ -46,7 +46,12 @@
       "generatingReport": "Generating Report...",
       "generateSaveReport": "Generate & Save Report",
       "theReportWillBeSavedAs": "The report will be saved as a",
-      "fileThatYouCanShareWith": "file that you can share with the development team."
+      "fileThatYouCanShareWith": "file that you can share with the development team.",
+      "mavlinkVehicle": "MAVLink vehicle",
+      "failedToCollectBoardDump": "Failed to collect board dump",
+      "noDescriptionProvided": "No description provided",
+      "reportSavedTo": "Report saved to: {{filePath}}",
+      "failedToSaveReport": "Failed to save report"
     }
   }
 }

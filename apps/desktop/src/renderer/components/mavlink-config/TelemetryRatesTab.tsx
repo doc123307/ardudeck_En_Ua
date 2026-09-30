@@ -251,7 +251,7 @@ function ArduPilotTelemetryRates() {
               <span className="ml-2 text-xs font-mono text-content-secondary">{scheme}{channel}_*</span>
             </h4>
             <span className="text-xs text-content-secondary">
-              {isMyLink ? 'requested / measured' : t('mavlink_config.TelemetryRatesTab.requestedNotTheLinkIAm')}
+              {isMyLink ? t('mavlink_config.TelemetryRatesTab.requestedMeasured') : t('mavlink_config.TelemetryRatesTab.requestedNotTheLinkIAm')}
             </span>
           </div>
 
@@ -298,7 +298,7 @@ function ArduPilotTelemetryRates() {
                     className="flex-1 accent-teal-400"
                   />
                   <span className="w-16 text-right text-sm text-content tabular-nums">
-                    {hz === 0 ? 'off' : `${hz} Hz`}
+                    {hz === 0 ? t('mavlink_config.TelemetryRatesTab.off') : `${hz} Hz`}
                   </span>
                   <span
                     className={`w-20 text-right text-xs tabular-nums ${starved ? 'text-amber-400' : 'text-content-secondary'}`}

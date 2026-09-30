@@ -37,7 +37,7 @@ import { useConnectionStore } from '../../stores/connection-store';
 import { useActiveVehicleIdentity } from '../../hooks/useFleet';
 import { useResolvedTheme } from '../../hooks/useTheme';
 import { FieldGraph } from './FieldGraph';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 // GraphSpec moved to inspector-store.ts so the store can own the canonical
 // list of plotted graphs (survives view switches). Imported above as a type.
@@ -103,7 +103,7 @@ function GraphHeaderActions(props: IDockviewHeaderActionsProps): JSX.Element | n
     // tabs in main, the user closes them explicitly via the tab's X.
     window.electronAPI.openDetachedWindow({
       componentId: 'inspector-graphs',
-      title: t('inspector.MavlinkInspectorView.inspectorGraph', { length: specs.length, v2: specs.length === 1 ? '' : 's' }),
+      title: t('inspector.MavlinkInspectorView.inspectorGraph', { length: specs.length, v2: specs.length === 1 ? '' : enPlural('s') }),
       initialBounds: { width: 1000, height: 700 },
       props: { initialGraphs: specs, initialSamples, initialOverlays },
     });
@@ -114,7 +114,7 @@ function GraphHeaderActions(props: IDockviewHeaderActionsProps): JSX.Element | n
       data-tour="inspector-popout"
       onClick={handleClick}
       className="h-7 px-2 mx-0.5 rounded-md inline-flex items-center gap-1.5 text-xs transition-colors text-content-secondary hover:text-content hover:bg-surface-raised"
-      title={t('inspector.MavlinkInspectorView.openAllTabInANew', { length: props.group.panels.length, v2: props.group.panels.length === 1 ? '' : 's' })}
+      title={t('inspector.MavlinkInspectorView.openAllTabInANew', { length: props.group.panels.length, v2: props.group.panels.length === 1 ? '' : enPlural('s') })}
     >
       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -286,7 +286,7 @@ export function MavlinkInspectorView(): JSX.Element {
             <div className="text-xs text-content-secondary tabular-nums">
               {isConnected ? (
                 <>
-                  {totalMsgs} {t('inspector.MavlinkInspectorView.message')} {totalMsgs === 1 ? 'type' : 'types'}
+                  {totalMsgs} {t('inspector.MavlinkInspectorView.message')} {totalMsgs === 1 ? t('inspector.MavlinkInspectorView.type') : t('inspector.MavlinkInspectorView.types')}
                   {' · '}
                   {totalRate.hz.toFixed(1)} {t('inspector.MavlinkInspectorView.hzTotal')}
                   {' · '}

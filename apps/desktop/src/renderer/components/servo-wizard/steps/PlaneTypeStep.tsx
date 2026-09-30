@@ -7,7 +7,7 @@
 import { AircraftPreset, getPresetsByCategory } from '../presets/servo-presets';
 import { useServoWizardStore } from '../../../stores/servo-wizard-store';
 import { Lightbulb, RotateCcw } from 'lucide-react';
-import { t } from '../../../i18n';
+import { t, enPlural } from '../../../i18n';
 
 // Compact card - moved outside to prevent re-creation on every render
 function PresetCard({
@@ -32,7 +32,7 @@ function PresetCard({
         <span className="text-2xl">{preset.icon}</span>
         <div>
           <div className="text-sm font-medium text-content">{preset.name}</div>
-          <div className="text-xs text-content-secondary">{preset.servoCount} {t('servo_wizard.PlaneTypeStep.servo')}{preset.servoCount !== 1 ? 's' : ''}</div>
+          <div className="text-xs text-content-secondary">{preset.servoCount} {t('servo_wizard.PlaneTypeStep.servo')}{preset.servoCount !== 1 ? enPlural('s') : ''}</div>
         </div>
       </div>
     </button>

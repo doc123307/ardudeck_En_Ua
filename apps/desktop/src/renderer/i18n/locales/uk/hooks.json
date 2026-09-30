@@ -2,6 +2,10 @@
   "hooks": {
     "useFleet": {
       "fleet": "Флот ({{fleetCount}})"
+    },
+    "useModeRequest": {
+      "noResponse": "Немає відповіді",
+      "notSent": "Не надіслано"
     }
   }
 }

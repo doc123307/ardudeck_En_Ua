@@ -91,6 +91,12 @@ if (hasDom) document.documentElement.lang = i18n.language;
  */
 export const t = i18n.t.bind(i18n);
 
+/**
+ * An English plural ending ("s", "es") glued onto a translated word. Ukrainian and Russian
+ * inflect the word itself, so the suffix only applies while the UI is in English.
+ */
+export const enPlural = (suffix: string): string => (i18n.language?.startsWith('en') ? suffix : '');
+
 export function applyLanguage(language: AppLanguage): void {
   if (i18n.language !== language) void i18n.changeLanguage(language);
   if (!hasDom) return;

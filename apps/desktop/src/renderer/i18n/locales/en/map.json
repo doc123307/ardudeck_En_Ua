@@ -26,7 +26,10 @@
       "cameraCenter": "camera center"
     },
     "CompactReadout": {
-      "notSetUp": "not set up"
+      "notSetUp": "not set up",
+      "toLaunch": "to launch",
+      "noHome": "no home",
+      "noRssi": "no RSSI"
     },
     "DockedGroup": {
       "displayForAll": "Display for all",
@@ -37,7 +40,9 @@
       "displayModeForTheWholeGroup": "Display mode for the whole group",
       "constellation": "Constellation",
       "dockedGroup": "Docked group",
-      "dragOutOrClickToUndock": "Drag out or click to undock {{label}}"
+      "dragOutOrClickToUndock": "Drag out or click to undock {{label}}",
+      "height": "Height",
+      "width": "Width"
     },
     "ElevationLegend": {
       "clickToEdit": "Click to edit",
@@ -67,7 +72,8 @@
       "uploading": "Uploading...",
       "uploadStart": "Upload & Start",
       "startAnyway": "Start anyway",
-      "confirm": "confirm"
+      "confirm": "confirm",
+      "noLink": "NO LINK"
     },
     "InstrumentsCatalog": {
       "summary": "Summary",
@@ -109,7 +115,12 @@
       "onScreen": "on screen",
       "searchInstruments": "Search instruments",
       "close": "Close",
-      "layoutAndPresets": "Layout and presets"
+      "layoutAndPresets": "Layout and presets",
+      "primaryFlight": "Primary flight",
+      "theBasicTScanAttitudeSpeed": "The basic-T scan: attitude, speed, altitude, heading, vertical speed.",
+      "packVoltageCurrentAndRemainingCapacity": "Pack voltage, current and remaining capacity.",
+      "fixQualityMissionProgressAndWhere": "Fix quality, mission progress and where home is.",
+      "importedLayout": "Imported layout"
     },
     "InstrumentsLayer": {
       "analog": "Analog",
@@ -135,7 +146,16 @@
       "fecCorrected": "FEC corrected",
       "freeSpaceInTheRadioS": "Free space in the radio's transmit buffer; near 0% the link cannot keep up with outgoing data",
       "txBufferFree": "Tx buffer free",
-      "noTelemetryModemIsReportingOn": "No telemetry modem is reporting on this link. RADIO_STATUS comes from SiK/RFD900-class radios and wfb-ng or ELRS gateways; direct USB and plain network links do not send it."
+      "noTelemetryModemIsReportingOn": "No telemetry modem is reporting on this link. RADIO_STATUS comes from SiK/RFD900-class radios and wfb-ng or ELRS gateways; direct USB and plain network links do not send it.",
+      "receivedSignalStrengthRawAndSik": "Received signal strength (raw and SiK-calibrated dBm; other modems scale differently)",
+      "backgroundNoiseFloorRawAndSik": "Background noise floor (raw and SiK-calibrated dBm)",
+      "whatTheGroundSideModemHears": "What the ground-side modem hears from the vehicle",
+      "whatTheVehicleSideModemHears": "What the vehicle-side modem hears from the ground (reported back over the link)",
+      "packetsLostToReceptionErrorsSince": "Packets lost to reception errors since boot (cumulative, with current rate)",
+      "damagedPacketsRepairedByForwardError": "Damaged packets repaired by forward error correction; rising counts mean the link is working hard",
+      "notSetUp": "not set up",
+      "separateRcReceiverSignalReportedBy": "Separate RC receiver signal reported by the flight controller",
+      "notSetUp2": "NOT SET UP"
     },
     "MapCommandPopup": {
       "flyHere": "Fly here",
@@ -198,7 +218,13 @@
       "terrain": "Terrain",
       "aboveTheGroundBelowTheVehicle": "Above the ground below the vehicle. Needs terrain data or a rangefinder.",
       "sea": "Sea",
-      "aboveMeanSeaLevelAmsl": "Above mean sea level (AMSL)"
+      "aboveMeanSeaLevelAmsl": "Above mean sea level (AMSL)",
+      "onArrivalItDependsOnQ": "On arrival it depends on Q_GUIDED_MODE, which has not been read yet.",
+      "onArrivalItTransitionsBackAnd": "On arrival it transitions back and hovers there.",
+      "onArrivalItCirclesAsA": "On arrival it circles as a plane; it will not hover (Q_GUIDED_MODE is off).",
+      "transitionsToForwardFlightAndFlies": "Transitions to forward flight and flies there on the wing, not in hover. {{arrival}}",
+      "climbAndReturn": "Climb and return",
+      "confirmLand": "Confirm Land"
     },
     "MapLayersControl": {
       "mapLayersOverlays": "Map layers & overlays",
@@ -219,7 +245,8 @@
       "lat": "Lat",
       "lng": "Lng",
       "go": "Go",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "useThisPoint": "Use this point"
     },
     "MapSearchControl": {
       "noMatchFound": "No match found",
@@ -303,6 +330,10 @@
       "openTheFullRtkNtripPanel": "Open the full RTK / NTRIP panel (mountpoint list, TLS, GGA settings)",
       "fullSettingsInPanel": "Full settings in panel"
     },
+    "TerrainOverlayLayer": {
+      "no2dContext": "No 2d context",
+      "tileLoadFailed": "Tile load failed"
+    },
     "TrafficAltitudeFilter": {
       "altitudeFilter": "Altitude filter",
       "collapse": "Collapse",
@@ -311,7 +342,8 @@
       "ceiling": "Ceiling",
       "hideTrafficAboveCeiling": "Hide traffic above ceiling",
       "belowTheFloorIsHiddenAbove": "Below the floor is hidden. Above the ceiling",
-      "shrinksAndFades": "shrinks and fades"
+      "shrinksAndFades": "shrinks and fades",
+      "isHidden": "is hidden"
     },
     "WindControls": {
       "windAtAgl": "Wind at {{v1}} AGL",
@@ -319,7 +351,15 @@
       "playForecast": "Play forecast",
       "forecastHour": "Forecast hour",
       "regionalFlow25KmModelNot": "Regional flow (~25 km model). Not valley/ridge detail, trust onboard sensors near terrain.",
-      "cycleUnitsMSKtMph": "Cycle units (m/s · kt · mph · km/h)"
+      "cycleUnitsMSKtMph": "Cycle units (m/s · kt · mph · km/h)",
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "windDataUnavailable": "Wind data unavailable"
     },
     "WindRoseCard": {
       "close": "Close"
@@ -329,6 +369,20 @@
       "perimeterClear": "Perimeter clear",
       "clearAlertLog": "Clear alert log",
       "awarenessOnlyMitigationIfAnyIs": "Awareness only. Mitigation, if any, is performed by separately authorized parties."
+    },
+    "contact_popup": {
+      "remoteId": "Remote ID",
+      "onGround": "On ground",
+      "groundSpeed": "Ground speed",
+      "vertSep": "Vert sep"
+    },
+    "contact_style": {
+      "groundVehicle": "Ground vehicle",
+      "unknownType": "Unknown type"
+    },
+    "guided_speed_range": {
+      "airspeedMinMaxIsOutsideThat": "AIRSPEED_MIN..MAX is {{lo}}-{{hi}} {{unitLabel}}; outside that the vehicle refuses the command",
+      "wpnavSpeedAllowsUpTo": "WPNAV_SPEED allows up to {{hi}} {{unitLabel}}"
     },
     "preset_layouts": {
       "gaugeBarAlongTheBottomCommand": "Gauge bar along the bottom, command rail down the left.",
@@ -369,7 +423,8 @@
       "messages": "Messages",
       "flightControl": "Flight control",
       "compact": "Compact",
-      "bar": "Bar"
+      "bar": "Bar",
+      "sats": "-- sats"
     },
     "tactical_icon_pool": {
       "multirotor": "Multirotor",
@@ -379,6 +434,10 @@
       "submarine": "Submarine",
       "antennaTracker": "Antenna Tracker",
       "unknown": "Unknown"
+    },
+    "dock_groups": {
+      "analog": "Analog",
+      "numeric": "Numeric"
     }
   }
 }

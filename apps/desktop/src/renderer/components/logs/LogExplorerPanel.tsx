@@ -753,7 +753,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
         if (!el) return;
         el.style.cursor = 'ns-resize';
         el.style.pointerEvents = 'auto';
-        el.title = 'Scroll to zoom this axis, drag to pan, double-click for auto';
+        el.title = tr('logs.LogExplorerPanel.scrollToZoomThisAxisDrag');
 
         // Pin as we go: without recording the range, the next auto-refit on an
         // X change would immediately undo the gesture. The ref is written
@@ -1243,7 +1243,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
                     </div>
                   ) : (
                     <span className="text-[9px] text-content-tertiary tabular-nums shrink-0">
-                      {seriesCount} {tr('logs.LogExplorerPanel.series')} {groupCount} {groupCount === 1 ? 'group' : 'groups'}
+                      {seriesCount} {tr('logs.LogExplorerPanel.series')} {groupCount} {groupCount === 1 ? tr('logs.LogExplorerPanel.group') : tr('logs.LogExplorerPanel.groups')}
                     </span>
                   )}
                 </>
@@ -1839,10 +1839,10 @@ function FlightPathPanel() {
         {/* Path color mode */}
         <div className="flex bg-surface-overlay rounded-md backdrop-blur-sm overflow-hidden">
           {([
-            ['solid', 'Solid'],
-            ['mode', 'Modes'],
-            ['altitude', 'Altitude'],
-            ['speed', 'Speed'],
+            ['solid', tr('logs.LogExplorerPanel.pathSolid')],
+            ['mode', tr('logs.LogExplorerPanel.pathModes')],
+            ['altitude', tr('logs.LogExplorerPanel.pathAltitude')],
+            ['speed', tr('logs.LogExplorerPanel.pathSpeed')],
           ] as [PathColorMode, string][]).map(([key, label]) => (
             <button
               key={key}

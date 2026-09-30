@@ -46,7 +46,12 @@
       "generatingReport": "Створення звіту...",
       "generateSaveReport": "Створити й зберегти звіт",
       "theReportWillBeSavedAs": "Звіт буде збережено як файл",
-      "fileThatYouCanShareWith": ", який можна передати команді розробників."
+      "fileThatYouCanShareWith": ", який можна передати команді розробників.",
+      "mavlinkVehicle": "MAVLink-апарат",
+      "failedToCollectBoardDump": "Не вдалося зібрати дамп плати",
+      "noDescriptionProvided": "Опис не надано",
+      "reportSavedTo": "Звіт збережено в: {{filePath}}",
+      "failedToSaveReport": "Не вдалося зберегти звіт"
     }
   }
 }

@@ -125,10 +125,10 @@ function clampSpeedMetersPerSecondToRules(mps: number, rules: FieldValidation): 
 function validateSpeedField(value: string, rules: FieldValidation, unit: SpeedUnit): string | null {
   const trimmed = value.trim();
   if (trimmed === '') {
-    return rules.required ? 'Required' : null;
+    return rules.required ? tr('settings.SettingsView.required') : null;
   }
   const displayValue = Number(trimmed);
-  if (!Number.isFinite(displayValue)) return 'Invalid number';
+  if (!Number.isFinite(displayValue)) return tr('settings.SettingsView.invalidNumber');
 
   const metersPerSecond = toMetersPerSecondFromSpeedUnit(displayValue, unit);
   if (rules.min !== undefined && metersPerSecond < rules.min) {
@@ -246,7 +246,7 @@ const VEHICLE_ICONS: Record<VehicleType, React.ReactNode> = {
 
 const VEHICLE_TYPE_NAMES: Record<VehicleType, string> = {
   copter: 'Multicopter',
-  plane: 'Fixed Wing',
+  get plane() { return tr('settings.SettingsView.fixedWing'); },
   vtol: 'VTOL',
   rover: 'Rover',
   boat: 'Boat',
@@ -784,10 +784,10 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
       case 'copter':
       case 'plane':
       case 'vtol': return 'Flight';
-      case 'boat': return 'Maritime';
-      case 'sub': return 'Dive';
-      case 'rover': return 'Drive';
-      default: return 'Operation';
+      case 'boat': return tr('settings.SettingsView.maritime');
+      case 'sub': return tr('settings.SettingsView.dive');
+      case 'rover': return tr('settings.SettingsView.drive');
+      default: return tr('settings.SettingsView.operation');
     }
   };
 
@@ -1460,7 +1460,7 @@ export function SettingsView() {
                         {activeVehicle.type === 'sub' && tr('settings.SettingsView.depth')}
                       </div>
                       <div className="text-sm text-content font-medium">
-                        {activeVehicle.type === 'copter' && `${fmtLength(activeVehicle.frameSize || 127, dimensionUnit)} ${activeVehicle.motorCount === 6 ? 'Hex' : activeVehicle.motorCount === 8 ? 'Octo' : 'Quad'}`}
+                        {activeVehicle.type === 'copter' && `${fmtLength(activeVehicle.frameSize || 127, dimensionUnit)} ${activeVehicle.motorCount === 6 ? tr('settings.SettingsView.hex') : activeVehicle.motorCount === 8 ? tr('settings.SettingsView.octo') : tr('settings.SettingsView.quad')}`}
                         {activeVehicle.type === 'plane' && fmtLength(activeVehicle.wingspan || 1200, dimensionUnit)}
                         {activeVehicle.type === 'vtol' && fmtLength(activeVehicle.wingspan || 1500, dimensionUnit)}
                         {activeVehicle.type === 'rover' && (activeVehicle.driveType === 'ackermann' ? tr('settings.SettingsView.car') : activeVehicle.driveType === 'skid' ? tr('settings.SettingsView.skid') : tr('settings.SettingsView.tank'))}
@@ -2866,25 +2866,25 @@ const MISSION_FIELD_RULES: Record<string, FieldValidation> = {
 function validateField(value: string, rules: FieldValidation, isText?: boolean): string | null {
   const trimmed = value.trim();
   if (trimmed === '') {
-    return rules.required ? 'Required' : null;
+    return rules.required ? tr('settings.SettingsView.required') : null;
   }
   if (isText) return null;
   const num = Number(trimmed);
-  if (isNaN(num)) return 'Invalid number';
+  if (isNaN(num)) return tr('settings.SettingsView.invalidNumber');
   if (rules.min !== undefined && num < rules.min) return `Min: ${rules.min}`;
   if (rules.max !== undefined && num > rules.max) return `Max: ${rules.max}`;
-  if (rules.integer && !Number.isInteger(num)) return 'Must be whole number';
+  if (rules.integer && !Number.isInteger(num)) return tr('settings.SettingsView.mustBeWholeNumber');
   return null;
 }
 
 function validateAltitudeField(value: string, rules: FieldValidation, unit: AltitudeUnit): string | null {
   const trimmed = value.trim();
   if (trimmed === '') {
-    return rules.required ? 'Required' : null;
+    return rules.required ? tr('settings.SettingsView.required') : null;
   }
   const displayValue = Number(trimmed);
-  if (!Number.isFinite(displayValue)) return 'Invalid number';
-  if (rules.integer && unit === 'm' && !Number.isInteger(displayValue)) return 'Must be whole number';
+  if (!Number.isFinite(displayValue)) return tr('settings.SettingsView.invalidNumber');
+  if (rules.integer && unit === 'm' && !Number.isInteger(displayValue)) return tr('settings.SettingsView.mustBeWholeNumber');
 
   const displayMin = rules.min === undefined ? undefined : Number(altitudeInputValueFromMeters(rules.min, unit));
   const displayMax = rules.max === undefined ? undefined : Number(altitudeInputValueFromMeters(rules.max, unit));
@@ -2918,12 +2918,12 @@ function PropSizeInput({
 
   const validate = (v: string): string | null => {
     if (!v) return null;
-    if (!/^\d+(?:\.\d+)?x\d+(?:\.\d+)?$/.test(v)) return 'Use DxP format (e.g. 10x5)';
+    if (!/^\d+(?:\.\d+)?x\d+(?:\.\d+)?$/.test(v)) return tr('settings.SettingsView.useDxpFormatEG10x5');
     const parts = v.split('x').map(Number);
     const diam = parts[0];
     const pitch = parts[1];
-    if (!diam || diam < 1 || diam > 40) return 'Diameter: 1-40"';
-    if (!pitch || pitch < 1 || pitch > 20) return 'Pitch: 1-20"';
+    if (!diam || diam < 1 || diam > 40) return tr('settings.SettingsView.diameter140');
+    if (!pitch || pitch < 1 || pitch > 20) return tr('settings.SettingsView.pitch120');
     return null;
   };
 
@@ -3004,10 +3004,10 @@ function clampDimensionMillimetersToRules(millimeters: number, rules: FieldValid
 function validateDimensionField(value: string, rules: FieldValidation, unit: DimensionUnit): string | null {
   const trimmed = value.trim();
   if (trimmed === '') {
-    return rules.required ? 'Required' : null;
+    return rules.required ? tr('settings.SettingsView.required') : null;
   }
   const displayValue = Number(trimmed);
-  if (!Number.isFinite(displayValue)) return 'Must be a valid number';
+  if (!Number.isFinite(displayValue)) return tr('settings.SettingsView.mustBeAValidNumber');
 
   const millimeters = toMillimetersFromDimensionUnit(displayValue, unit);
   if (rules.min !== undefined && millimeters < rules.min) {
@@ -3017,7 +3017,7 @@ function validateDimensionField(value: string, rules: FieldValidation, unit: Dim
     return `Max: ${dimensionInputValueFromMillimeters(rules.max, unit)} ${UNIT_LABELS.dimensions[unit]}`;
   }
   if (unit === 'mm' && rules.integer && !Number.isInteger(displayValue)) {
-    return 'Must be a whole number';
+    return tr('settings.SettingsView.mustBeAWholeNumber');
   }
   return null;
 }
@@ -3119,10 +3119,10 @@ function clampAreaSquareCentimetersToRules(squareCentimeters: number, rules: Fie
 function validateAreaSquareCentimetersField(value: string, rules: FieldValidation, unit: AreaUnit): string | null {
   const trimmed = value.trim();
   if (trimmed === '') {
-    return rules.required ? 'Required' : null;
+    return rules.required ? tr('settings.SettingsView.required') : null;
   }
   const displayValue = Number(trimmed);
-  if (!Number.isFinite(displayValue)) return 'Must be a valid number';
+  if (!Number.isFinite(displayValue)) return tr('settings.SettingsView.mustBeAValidNumber');
 
   const squareCentimeters = toSquareCentimetersFromAreaUnit(displayValue, unit);
   if (rules.min !== undefined && squareCentimeters < rules.min) {
@@ -3361,10 +3361,10 @@ function clampWeightGramsToRules(grams: number, rules: FieldValidation): number 
 function validateWeightField(value: string, rules: FieldValidation, unit: WeightUnit): string | null {
   const trimmed = value.trim();
   if (trimmed === '') {
-    return rules.required ? 'Required' : null;
+    return rules.required ? tr('settings.SettingsView.required') : null;
   }
   const displayValue = Number(trimmed);
-  if (!Number.isFinite(displayValue)) return 'Must be a valid number';
+  if (!Number.isFinite(displayValue)) return tr('settings.SettingsView.mustBeAValidNumber');
 
   const grams = toGramsFromWeightUnit(displayValue, unit);
   if (rules.min !== undefined && grams < rules.min) {
@@ -3374,7 +3374,7 @@ function validateWeightField(value: string, rules: FieldValidation, unit: Weight
     return `Max: ${weightInputValueFromGrams(rules.max, unit)} ${UNIT_LABELS.weight[unit]}`;
   }
   if (unit === 'g' && rules.integer && !Number.isInteger(displayValue)) {
-    return 'Must be a whole number';
+    return tr('settings.SettingsView.mustBeAWholeNumber');
   }
   return null;
 }
@@ -3474,11 +3474,11 @@ function capacityInputStep(unit: ElectricCapacityUnit): string {
 
 function validateCapacityField(value: string, rules: FieldValidation, unit: ElectricCapacityUnit): string | null {
   if (value.trim() === '') {
-    return rules.required ? 'Required' : null;
+    return rules.required ? tr('settings.SettingsView.required') : null;
   }
 
   const displayValue = Number(value);
-  if (!Number.isFinite(displayValue)) return 'Must be a valid number';
+  if (!Number.isFinite(displayValue)) return tr('settings.SettingsView.mustBeAValidNumber');
 
   const mah = toMahFromCapacityUnit(displayValue, unit);
   if (rules.min !== undefined && mah < rules.min) {
@@ -3488,7 +3488,7 @@ function validateCapacityField(value: string, rules: FieldValidation, unit: Elec
     return `Max: ${capacityInputValueFromMah(rules.max, unit)} ${UNIT_LABELS.electricCapacity[unit]}`;
   }
   if (unit === 'mah' && rules.integer && !Number.isInteger(displayValue)) {
-    return 'Must be a whole number';
+    return tr('settings.SettingsView.mustBeAWholeNumber');
   }
   return null;
 }
@@ -4457,7 +4457,7 @@ function VehicleCard({
         break;
       case 'vtol':
         if (vehicle.wingspan) parts.push(fmtLength(vehicle.wingspan, dimensionUnit));
-        if (vehicle.vtolMotorCount) parts.push(`${vehicle.vtolMotorCount} VTOL motors`);
+        if (vehicle.vtolMotorCount) parts.push(tr('settings.SettingsView.vtolMotors2', { vtolMotorCount: vehicle.vtolMotorCount }));
         parts.push(batteryStr);
         break;
       case 'rover':

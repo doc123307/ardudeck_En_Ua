@@ -295,7 +295,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
               : { color: GAUGE_COLORS.textDim, border: `1px solid ${GAUGE_COLORS.bezelEdge}` }
           }
         >
-          {!connected ? 'NO LINK' : flight.armed ? 'ARMED' : 'DISARMED'}
+          {!connected ? tr('map.FlightControlInstrument.noLink') : flight.armed ? 'ARMED' : 'DISARMED'}
         </span>
       </div>}
 

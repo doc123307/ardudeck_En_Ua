@@ -47,7 +47,7 @@ export const ALL_ORIENTATIONS: Record<number, string> = {
   33: 'Pitch270Roll90', 34: 'Pitch270Roll180', 35: 'Pitch270Roll270',
   36: 'Yaw90Pitch180Roll90', 37: 'Yaw270Roll90', 38: 'Yaw293Pitch68Roll180',
   39: 'Pitch315', 40: 'Pitch315Roll90', 42: 'Roll45', 43: 'Roll315',
-  100: 'Custom 4.1 and older', 101: 'Custom 1', 102: 'Custom 2',
+  get 100() { return t('mavlink_config.board_orientation.custom41AndOlder'); }, get 101() { return t('mavlink_config.board_orientation.custom1'); }, get 102() { return t('mavlink_config.board_orientation.custom2'); },
 };
 
 export function orientationName(value: number): string {

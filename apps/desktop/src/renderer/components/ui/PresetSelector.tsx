@@ -8,6 +8,7 @@
 import React from 'react';
 import { Wand2, type LucideIcon } from 'lucide-react';
 import { useSettingsStore } from '../../stores/settings-store';
+import { t } from '../../i18n';
 
 export interface Preset {
   name: string;
@@ -33,8 +34,8 @@ export interface PresetSelectorProps<T extends Record<string, Preset>> {
 export function PresetSelector<T extends Record<string, Preset>>({
   presets,
   onApply,
-  label = 'Quick Presets',
-  hint = 'Click to apply a tuning style',
+  label = t('ui.PresetSelector.quickPresets'),
+  hint = t('ui.PresetSelector.clickToApplyATuningStyle'),
   activeKey,
 }: PresetSelectorProps<T>) {
   const showQuickPresets = useSettingsStore((s) => s.uiVisibility.showQuickPresets);

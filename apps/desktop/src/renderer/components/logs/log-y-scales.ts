@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 // How chart series are assigned to Y axes.
 //
 // Mission Planner's log browser keeps one axis per UNIT (AddYAxis(unit), reused
@@ -11,13 +12,13 @@ export const Y_MODE_ORDER: YMode[] = ['unit', 'shared', 'field'];
 
 export const Y_MODE_LABEL: Record<YMode, string> = {
   unit: 'Y: Unit',
-  shared: 'Y: Shared',
+  get shared() { return t('logs.log_y_scales.yShared'); },
   field: 'Y: Field',
 };
 
 export const Y_MODE_TIP: Record<YMode, string> = {
   unit: 'One axis per unit: fields measured in the same unit share a scale and stay comparable. Click for one shared axis.',
-  shared: 'One axis for every field, whatever its unit. Click to give each field its own scale.',
+  get shared() { return t('logs.log_y_scales.oneAxisForEveryFieldWhatever'); },
   field: 'Every field on its own auto-scaled axis, for comparing shapes rather than values. Click to group by unit again.',
 };
 

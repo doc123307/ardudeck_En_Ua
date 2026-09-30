@@ -92,7 +92,9 @@
       "setupRequired": "Нужна настройка",
       "armModeNotConfiguredClickBelow": "Режим ARM не настроен. Нажмите ниже, чтобы автоматически настроить для тестирования в SITL.",
       "setupForSitl": "Настроить для SITL",
-      "loadingConfiguration": "Загрузка конфигурации..."
+      "loadingConfiguration": "Загрузка конфигурации...",
+      "notUploaded": "не выгружено",
+      "idle2": "ожидание"
     },
     "FlightModePanel": {
       "armed": "Заармлен",
@@ -139,7 +141,18 @@
       "sendsYourSticksToTheVehicle": "Отправляет ваши стики аппарату. Отправляются только назначенные каналы; остальные остаются за приёмником.",
       "release": "Отпустить",
       "takeControl": "Взять управление",
-      "armedTheSticksAreLiveThis": "Заармлен. Стики активны: это окно должно оставаться в фокусе, так как браузер прекращает передавать данные контроллера, когда окно не в фокусе."
+      "armedTheSticksAreLiveThis": "Заармлен. Стики активны: это окно должно оставаться в фокусе, так как браузер прекращает передавать данные контроллера, когда окно не в фокусе.",
+      "notAssigned": "не назначено",
+      "controllerDisconnectedSticksReleased": "Контроллер отключён, стики отпущены",
+      "couldNotTakeTheSticks": "Не удалось перехватить стики",
+      "on": "Вкл.",
+      "axisN": "ось {{n}}",
+      "buttonN": "кнопка {{n}}",
+      "chN": "Кан {{n}}",
+      "axis_Roll": "Крен",
+      "axis_Pitch": "Тангаж",
+      "axis_Throttle": "Газ",
+      "axis_Yaw": "Рыскание"
     },
     "MapPanel": {
       "changeMapLayer": "Сменить слой карты",
@@ -179,7 +192,22 @@
       "toggleAttitudeIndicator": "Переключить авиагоризонт",
       "attitude": "Ориентация",
       "toggleMissionOverlaysWaypointsGeofenceRally": "Переключить наложения миссии (точки, геозона, rally)",
-      "mission": "Миссия"
+      "mission": "Миссия",
+      "useSplitPreset": "Использовать пресет разделения",
+      "theSplitCockpitLayoutASaved": "Раскладка кабины с разделением (приоритет у сохранённой раскладки «split»)",
+      "useMyCurrentLayout": "Использовать мою текущую раскладку",
+      "keepWhatIsOnScreenAs": "Оставить то, что на экране, как раскладку разделения",
+      "keepCurrentDoNotSwitch": "Оставить текущую, не переключать",
+      "leaveTheLayoutAsItIs": "Оставить раскладку как есть",
+      "realSize": "Реальный размер",
+      "autoSize": "Авторазмер",
+      "vehicleAtRealProfileSize": "Аппарат в реальном размере из профиля",
+      "vehicleAutoScaledToStayVisible": "Аппарат автоматически масштабируется, чтобы быть видимым",
+      "toggleMissionOverlays": "Переключить наложения миссии",
+      "toggleTerrainElevation": "Переключить высоты рельефа",
+      "noVehicleSelectedClickAVehicle": "Аппарат не выбран: кликните маркер аппарата, прежде чем давать команды.",
+      "mapCommandsNeedAnArmedVehicle": "Команды с карты требуют армированного аппарата.",
+      "commandDroppedVehicleDisarmed": "Команда отменена: аппарат дизармирован."
     },
     "MessagesPanel": {
       "noMessages": "Нет сообщений",
@@ -190,7 +218,8 @@
     "ModeAnnunciator": {
       "changeFlightMode": "Сменить полётный режим",
       "still": "всё ещё",
-      "still2": "· всё ещё"
+      "still2": "· всё ещё",
+      "engaged": "Активирован"
     },
     "ModePicker": {
       "filterModes": "Фильтр режимов…",
@@ -260,7 +289,11 @@
       "dropped": "Потеряно",
       "basePosition": "Позиция базы",
       "ggaUpload": "Передача GGA",
-      "rtcmMessages": "Сообщения RTCM"
+      "rtcmMessages": "Сообщения RTCM",
+      "error": "Ошибка",
+      "isAMountpointNotACaster": "«{{host}}» — это точка монтирования, а не хост кастера. Укажите имя сервера кастера в Host, а «{{host}}» — в Mountpoint.",
+      "off": "Выкл.",
+      "waitingForFix": "Ожидание фикса"
     },
     "PositionPanel": {
       "latitude": "Широта",
@@ -316,7 +349,9 @@
       "battery": "Батарея",
       "voltage": "Напряжение:",
       "current": "Ток:",
-      "systemLoad": "Нагрузка системы:"
+      "systemLoad": "Нагрузка системы:",
+      "n3dFix": "3D-фикс",
+      "n2dFix": "2D-фикс"
     },
     "SpeedPanel": {
       "ground": "Путевая",
@@ -388,7 +423,10 @@
       "climbingTo": "Набор до {{v1}}…",
       "didNotReachVehicleStillArmed": "Не достигнуто {{v1}}: аппарат всё ещё заармлен в QHover, возьмите управление с пульта",
       "settingMisTakeoffAltM": "Установка MIS_TAKEOFF_ALT={{altitudeM}} м...",
-      "px4AutoTakeoffToM": "Автовзлёт PX4 до {{altitudeM}} м..."
+      "px4AutoTakeoffToM": "Автовзлёт PX4 до {{altitudeM}} м...",
+      "climbTo": "Набрать высоту до",
+      "autoLaunchAndClimbTo": "Автозапуск и набор высоты до",
+      "climbVerticallyTo": "Вертикальный набор до"
     }
   }
 }

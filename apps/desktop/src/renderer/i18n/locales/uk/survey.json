@@ -39,7 +39,8 @@
       "ha": "га ·",
       "uploading": "Вивантаження…",
       "uploadAll": "Вивантажити все",
-      "bandsAreNonOverlappingMissionsUpload": "Смуги не перекриваються; місії вивантажуються по черзі на кожен апарат через будь-який підключений канал. Розведення за часом тут не враховується."
+      "bandsAreNonOverlappingMissionsUpload": "Смуги не перекриваються; місії вивантажуються по черзі на кожен апарат через будь-який підключений канал. Розведення за часом тут не враховується.",
+      "uploadFailed": "Помилка вивантаження"
     },
     "SurveyConfigPanel": {
       "grid": "Сітка",
@@ -244,7 +245,11 @@
       "pickAPresetOrStayWith": "Виберіть пресет (або залиште поточні налаштування)",
       "pickATemplate": "Виберіть шаблон…",
       "saved": "Збережені",
-      "deletePreset": "Видалити пресет"
+      "deletePreset": "Видалити пресет",
+      "section": "Секція",
+      "in": "Усередину",
+      "section2": "секція",
+      "sections": "секцій"
     },
     "SurveyMapOverlay": {
       "locked": " Заблоковано",
@@ -252,6 +257,9 @@
       "clickToAddAPoint": "Клацніть, щоб додати точку",
       "dragToShapeTheCurveRight": "Перетягуйте, щоб сформувати криву · правий клік — скинути",
       "clickToAddAControlPoint": "Клацніть, щоб додати контрольну точку"
+    },
+    "SurveyProgressOverlay": {
+      "etaMin": "Залишилось ~{{v1}} хв"
     },
     "SurveyStartButton": {
       "areaSurvey": "Площинна зйомка",
@@ -282,7 +290,13 @@
       "inwardOrOutwardSpiralWithinThe": "Спіраль усередину або назовні в межах полігона.",
       "linearSurveyAlongACenterlineRoads": "Лінійна зйомка вздовж осьової лінії (дороги, залізниця, ЛЕП, трубопроводи). Паралельні смуги з розворотами-«стадіонами» для літака або розворотами на місці для коптера.",
       "captureALineShorelineCliffFrontage": "Зйомка лінії (берег, скеля, фасад): намальована лінія — об'єкт, траєкторія польоту будується збоку, а камера весь час повернута до об'єкта.",
-      "nPerimeterPassesFollowedByA": "N проходів по периметру, потім заповнення внутрішньої частини сіткою."
+      "nPerimeterPassesFollowedByA": "N проходів по периметру, потім заповнення внутрішньої частини сіткою.",
+      "crosshatch": "Перехресна",
+      "circular": "Кругова",
+      "spiral": "Спіраль",
+      "corridor": "Коридор",
+      "panorama": "Панорама",
+      "perimeterFill": "Периметр + заповнення"
     },
     "survey_presets": {
       "n2dMapFastFlightSingleGrid": "2D-карта. Швидкий політ, один прохід сіткою.",
@@ -321,7 +335,14 @@
       "returnToLaunchAfterTheLast": "Повернення до точки старту після останньої лінії",
       "land": "Посадка",
       "landWhereTheSurveyEnds": "Посадка там, де закінчується зйомка",
-      "stopAtTheLastLineSo": "Зупинитися на останній лінії, щоб далі могла йти інша зйомка чи точка"
+      "stopAtTheLastLineSo": "Зупинитися на останній лінії, щоб далі могла йти інша зйомка чи точка",
+      "groundVehicle": "Наземний апарат",
+      "submarine": "Підводний апарат",
+      "noVehicleConnectedPickAnAirframe": "Апарат не підключено — виберіть тип, для якого планувати",
+      "overshootAndRacetracksAtHairpins": "винос і «стадіони» на різких розворотах",
+      "turnsOnTheSpotNoOvershoot2": "розворот на місці, без виносу",
+      "verticalTakeoffAndLanding": "вертикальні зліт і посадка",
+      "normalTakeoffRtlHome": "звичайний зліт, RTL додому"
     }
   }
 }

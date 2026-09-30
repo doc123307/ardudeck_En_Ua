@@ -22,7 +22,10 @@
       "sendsRcChannelsOverrideToThe": "Отправляет RC_CHANNELS_OVERRIDE подключённому аппарату. Джойстик БУДЕТ управлять аппаратом.",
       "joystickControlsVehicle": "Джойстик управляет аппаратом",
       "framesSToVehicle": "кадров/с на аппарат",
-      "offSendsNothingToTheAircraft": "Выкл. — ничего не отправляется аппарату"
+      "offSendsNothingToTheAircraft": "Выкл. — ничего не отправляется аппарату",
+      "offTheSlidersBelowAreDriving": "Выкл. — RC управляют ползунки ниже",
+      "waitingForAHandsetSetEdgetx": "Ожидание пульта — включите в EdgeTX режим USB Joystick",
+      "moveIt": "подвигайте"
     }
   }
 }

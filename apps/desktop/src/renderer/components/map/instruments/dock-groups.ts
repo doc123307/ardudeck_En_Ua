@@ -1,5 +1,6 @@
 /** Pure model of docked instrument groups; the store applies the results. */
 import type { DockOrientation } from './dock-snap';
+import { t } from '../../../i18n';
 
 export interface DockGroup {
   members: string[];
@@ -221,7 +222,7 @@ export function groupDisplayOptions(members: DisplayCapable[]): { ids: string[];
     common = common.filter((m) => own.has(m));
   }
   if (common.length < 2) return null;
-  const labels = new Map<string, string>([['analog', 'Analog'], ['numeric', 'Numeric']]);
+  const labels = new Map<string, string>([['analog', t('map.dock_groups.analog')], ['numeric', t('map.dock_groups.numeric')]]);
   for (const d of relevant) for (const v of d.variants ?? []) if (!labels.has(v.id)) labels.set(v.id, v.label);
   return { ids: relevant.map((d) => d.id), options: common.map((id) => ({ id, label: labels.get(id) ?? id })) };
 }

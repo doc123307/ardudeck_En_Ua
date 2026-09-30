@@ -11,6 +11,7 @@ import { create } from 'zustand';
 import type { WindBBox, WindField, WindAltitude } from '../../shared/wind-types';
 import { nextUnit, windUnitFromPreference, type WindUnit } from '../components/map/wind/wind-field';
 import { useSettingsStore } from './settings-store';
+import { t } from '../i18n';
 
 interface WindStore {
   field: WindField | null;
@@ -68,7 +69,7 @@ export const useWindStore = create<WindStore>((set, get) => ({
       if (get()._token !== token) return; // a newer request superseded this one
       if (!field) {
         console.warn('[wind] no field returned (fetch ok but empty)');
-        set({ loading: false, error: 'Wind data unavailable' });
+        set({ loading: false, error: t('stores.wind_store.windDataUnavailable') });
         return;
       }
       console.info('[wind] field loaded', { hours: field.frames.length, speedMax: field.speedMax, grid: `${field.width}x${field.height}` });
@@ -77,7 +78,7 @@ export const useWindStore = create<WindStore>((set, get) => ({
     } catch (err) {
       if (get()._token !== token) return;
       console.warn('[wind] fetch error', err);
-      set({ loading: false, error: 'Wind fetch failed' });
+      set({ loading: false, error: t('stores.wind_store.windFetchFailed') });
     }
   },
 

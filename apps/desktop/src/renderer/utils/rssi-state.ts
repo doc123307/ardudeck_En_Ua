@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 /**
  * What the vehicle's RSSI reading actually means.
  *
@@ -66,8 +67,8 @@ export function rssiText(state: RssiState): string {
 export function rssiHint(state: RssiState): string | null {
   switch (state.kind) {
     case 'value': return null;
-    case 'no-link': return 'No telemetry link';
-    case 'off': return 'RSSI reporting is off on the vehicle (RSSI_TYPE = 0)';
-    case 'unconfigured': return 'The receiver is connected but reports no signal strength. RSSI_TYPE needs to match the receiver (3 for CRSF/ELRS).';
+    case 'no-link': return t('utils.rssi_state.noTelemetryLink');
+    case 'off': return t('utils.rssi_state.rssiReportingIsOffOnThe');
+    case 'unconfigured': return t('utils.rssi_state.theReceiverIsConnectedButReports');
   }
 }

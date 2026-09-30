@@ -110,17 +110,17 @@ function vtolHint(
 ): string | null {
   if (vehicleClass !== 'vtol' || meta.modeTo !== 'GUIDED') return null;
   const arrival = qGuidedMode === undefined
-    ? 'On arrival it depends on Q_GUIDED_MODE, which has not been read yet.'
+    ? tr('map.MapCommandPopup.onArrivalItDependsOnQ')
     : qGuidedMode > 0
-      ? 'On arrival it transitions back and hovers there.'
-      : 'On arrival it circles as a plane; it will not hover (Q_GUIDED_MODE is off).';
-  return `Transitions to forward flight and flies there on the wing, not in hover. ${arrival}`;
+      ? tr('map.MapCommandPopup.onArrivalItTransitionsBackAnd')
+      : tr('map.MapCommandPopup.onArrivalItCirclesAsA');
+  return tr('map.MapCommandPopup.transitionsToForwardFlightAndFlies', { arrival });
 }
 
 const ACTIONS: ActionMeta[] = [
   { id: 'fly', zone: 'primary', get label() { return tr('map.MapCommandPopup.flyHere'); }, accent: 'cyan', icon: Navigation, go: 'Fly',
     get hint() { return tr('map.MapCommandPopup.guidedMoveToThisPointAt'); }, modeTo: 'GUIDED', supportedClasses: ALL },
-  { id: 'look', zone: 'primary', get label() { return tr('map.MapCommandPopup.lookHere'); }, accent: 'amber', icon: Crosshair, go: 'Look here',
+  { id: 'look', zone: 'primary', get label() { return tr('map.MapCommandPopup.lookHere'); }, accent: 'amber', icon: Crosshair, get go() { return tr('map.MapCommandPopup.lookHere'); },
     get hint() { return tr('map.MapCommandPopup.gimbalLocksOnAndTracksThis'); }, supportedClasses: ALL },
   { id: 'orbit', zone: 'primary', get label() { return tr('map.MapCommandPopup.orbit'); }, accent: 'violet', icon: RotateCw, go: 'Orbit',
     get hint() { return tr('map.MapCommandPopup.circleThisPointAtFixedAltitude'); }, modeTo: 'GUIDED', script: 'fallback', advanced: true, supportedClasses: AIR },
@@ -132,9 +132,9 @@ const ACTIONS: ActionMeta[] = [
     get hint() { return tr('map.MapCommandPopup.pullBackAndClimbWithThe'); }, modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
   { id: 'strafe', zone: 'secondary', get label() { return tr('map.MapCommandPopup.strafe'); }, accent: 'violet', icon: MoveHorizontal, go: 'Strafe',
     get hint() { return tr('map.MapCommandPopup.dollyPastTheTargetAtA'); }, modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
-  { id: 'climbRtl', zone: 'escape', get label() { return tr('map.MapCommandPopup.climbRtl'); }, accent: 'rose', icon: ArrowUpFromLine, go: 'Climb and return',
+  { id: 'climbRtl', zone: 'escape', get label() { return tr('map.MapCommandPopup.climbRtl'); }, accent: 'rose', icon: ArrowUpFromLine, get go() { return tr('map.MapCommandPopup.climbAndReturn'); },
     get hint() { return tr('map.MapCommandPopup.climbInPlaceToASafe'); }, modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
-  { id: 'land', zone: 'escape', get label() { return tr('map.MapCommandPopup.landHere'); }, accent: 'rose', icon: ArrowDownToLine, go: 'Confirm Land',
+  { id: 'land', zone: 'escape', get label() { return tr('map.MapCommandPopup.landHere'); }, accent: 'rose', icon: ArrowDownToLine, get go() { return tr('map.MapCommandPopup.confirmLand'); },
     get hint() { return tr('map.MapCommandPopup.flyToThisPointThenDescend'); }, modeTo: 'LAND', advanced: true, guarded: true, supportedClasses: ALL },
 ];
 

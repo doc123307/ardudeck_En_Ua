@@ -2,17 +2,17 @@ import { useState, useEffect, useCallback } from 'react';
 import { ShieldCheck, ShieldAlert, FileDown, ChevronDown, ChevronRight, RefreshCw } from 'lucide-react';
 import { useSigningStore } from '../../stores/signing-store';
 import type { SigningAuditEntry, SigningAuditEvent, ChainVerification } from '../../../shared/signing-audit-types';
-import { t as tr } from '../../i18n';
+import { t as tr, enPlural } from '../../i18n';
 
 const EVENT_LABELS: Record<SigningAuditEvent, string> = {
-  'key-set': 'Key set',
-  'key-sent-to-fc': 'Key sent to FC',
-  'signing-enabled': 'Signing enabled',
-  'signing-disabled': 'Signing disabled',
-  'key-auto-matched': 'Auto-matched on connect',
-  'key-mismatch': 'Key mismatch',
-  'key-removed': 'Key removed',
-  'startup-auto-enable': 'Auto-enabled at startup',
+  get 'key-set'() { return tr('settings.SecureLinkCompliance.keySet'); },
+  get 'key-sent-to-fc'() { return tr('settings.SecureLinkCompliance.keySentToFc'); },
+  get 'signing-enabled'() { return tr('settings.SecureLinkCompliance.signingEnabled'); },
+  get 'signing-disabled'() { return tr('settings.SecureLinkCompliance.signingDisabled'); },
+  get 'key-auto-matched'() { return tr('settings.SecureLinkCompliance.autoMatchedOnConnect'); },
+  get 'key-mismatch'() { return tr('settings.SecureLinkCompliance.keyMismatch'); },
+  get 'key-removed'() { return tr('settings.SecureLinkCompliance.keyRemoved'); },
+  get 'startup-auto-enable'() { return tr('settings.SecureLinkCompliance.autoEnabledAtStartup'); },
 };
 
 const EVENT_TONE: Record<SigningAuditEvent, string> = {
@@ -89,7 +89,7 @@ export function SecureLinkCompliance() {
           <div className="text-[10px] text-content-secondary">
             {chain
               ? chainOk
-                ? tr('settings.SecureLinkCompliance.signingEventLoggedHashChainVerified', { count: chain.count, v2: chain.count === 1 ? '' : 's' })
+                ? tr('settings.SecureLinkCompliance.signingEventLoggedHashChainVerified', { count: chain.count, v2: chain.count === 1 ? '' : enPlural('s') })
                 : tr('settings.SecureLinkCompliance.hashChainBrokenAtEntryLog', { brokenAtSeq: chain.brokenAtSeq })
               : tr('settings.SecureLinkCompliance.tamperEvidentLogOfSigningState')}
           </div>

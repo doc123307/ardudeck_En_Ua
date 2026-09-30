@@ -26,7 +26,9 @@
       "armAndDisarm": "Арм и дизарм",
       "requireAPosition": "Требовать позицию",
       "refuseToArmWithoutAnAbsolute": "Не армиться без абсолютной позиции, чтобы всегда можно было вернуться домой",
-      "notNeeded": "Не нужно"
+      "notNeeded": "Не нужно",
+      "on": "вкл.",
+      "skipped": "пропущено"
     },
     "AutotuneTab": {
       "thisVehicleHasNoAutotune": "У этого аппарата нет автонастройки",
@@ -161,7 +163,10 @@
       "readingLevel": "Определение уровня",
       "notLevel": "Не ровно",
       "hideTheFullList": "Скрыть полный список",
-      "everyOrientation": "Все ориентации"
+      "everyOrientation": "Все ориентации",
+      "onItsSideTopFacing": "на боку, верх смотрит {{topSide}}",
+      "upsideDown": "вверх ногами",
+      "forward": "вперёд"
     },
     "CompassCard": {
       "compasses": "Компасы",
@@ -184,7 +189,13 @@
       "useThisCompassForHeading": "Использовать этот компас для курса",
       "inUse": "Используется",
       "notUsed": "Не используется",
-      "calibrateTheCompass": "Откалибровать компас →"
+      "calibrateTheCompass": "Откалибровать компас →",
+      "dronecanNodeExternalGpsOrCan": "Узел DroneCAN, внешний (GPS или CAN-модуль)",
+      "i2cBusAddress0xExternalUsually": "Шина I2C {{busNumber}}, адрес 0x{{v2}}, внешний (обычно GPS)",
+      "i2cBusAddress0xOnThe": "Шина I2C {{busNumber}}, адрес 0x{{v2}}, на автопилоте",
+      "spiOnTheAutopilot": "SPI, на автопилоте",
+      "external": "внешний",
+      "onboard": "встроенный"
     },
     "EscTelemetryCard": {
       "motorOutputs": "Выходы моторов",
@@ -264,7 +275,8 @@
       "eraseAllLogs": "Удалить все журналы",
       "willBeRemovedFromTheFlight": "будет удалён с полётного контроллера. Это невозможно отменить.",
       "directoriesMustBeEmptyNonEmpty": "Папки должны быть пустыми — FC отклонит непустые папки.",
-      "currentName": "Текущее имя:"
+      "currentName": "Текущее имя:",
+      "directory": "папка"
     },
     "FlightModesTab": {
       "position1Low": "Положение 1 (низ)",
@@ -359,7 +371,9 @@
       "youHaveUnsavedChangesClick": "У вас есть несохранённые изменения. Нажмите",
       "saveAllChanges": "«Сохранить все изменения»",
       "inTheHeaderToSave": "в заголовке, чтобы сохранить.",
-      "modeReference": "Справочник режимов"
+      "modeReference": "Справочник режимов",
+      "driveModes": "режимы движения",
+      "flightModes": "полётные режимы"
     },
     "FrameDiagram": {
       "frame": "Рама",
@@ -404,7 +418,10 @@
       "setsSerialProtocolToGpsAt": "{{v1}}Устанавливает SERIAL{{value}}_PROTOCOL = GPS на 230400 бод",
       "here3Here4OrA": "Here 3, Here 4 или Here 2 в режиме CAN",
       "px4AssignsAPortToEach": "PX4 назначает порт каждому GPS, скорость остаётся автоматической.",
-      "ardupilotAssignsAProtocolToEach": "ArduPilot назначает протокол каждому последовательному порту, а то, к какому разъёму подключён SERIALn, зависит от платы: на Cube разъём GPS1 — это SERIAL3. Каждая плитка показывает, что сейчас передаёт этот порт."
+      "ardupilotAssignsAProtocolToEach": "ArduPilot назначает протокол каждому последовательному порту, а то, к какому разъёму подключён SERIALn, зависит от платы: на Cube разъём GPS1 — это SERIAL3. Каждая плитка показывает, что сейчас передаёт этот порт.",
+      "px4Port": "Порт PX4",
+      "setToGps": "{{name}} настроен на GPS",
+      "dronecanEnabled": "DroneCAN включён"
     },
     "LoggingTab": {
       "onlyWhileArmed": "Только в заармленном состоянии",
@@ -504,7 +521,8 @@
       "parameter2": "Параметр",
       "original": "Было",
       "new": "Новое",
-      "writeToFlash": "Записать во флеш"
+      "writeToFlash": "Записать во флеш",
+      "failedToWrite": "Не удалось записать {{v1}}"
     },
     "MotorTestTab": {
       "commandFailed": "Команда не выполнилась",
@@ -592,7 +610,29 @@
       "safetyOnPressToRelease": "Защита вкл., нажмите, чтобы снять",
       "noSafetyLiveAtBoot": "Без защиты, активно с запуска",
       "outputsStayInhibitedUntilTheButton": "Выходы заблокированы, пока кнопку не удержать около двух секунд. Именно это означает «PreArm: Hardware safety switch».",
-      "outputsAreLiveAsSoonAs": "Выходы активны сразу после арма, без нажатия кнопки. Имеет смысл, только если кнопки нет."
+      "outputsAreLiveAsSoonAs": "Выходы активны сразу после арма, без нажатия кнопки. Имеет смысл, только если кнопки нет.",
+      "builtInLed": "Встроенный светодиод",
+      "internalToshibaled": "Внутренний ToshibaLED",
+      "externalToshibaled": "Внешний ToshibaLED",
+      "externalPca9685": "Внешний PCA9685",
+      "oreoLed": "Oreo LED",
+      "ncp5623External": "NCP5623 внешний",
+      "ncp5623Internal": "NCP5623 внутренний",
+      "profiledSpi": "ProfiLED SPI",
+      "lp5562External": "LP5562 внешний",
+      "lp5562Internal": "LP5562 внутренний",
+      "is31fl3195External": "IS31FL3195 внешний",
+      "is31fl3195Internal": "IS31FL3195 внутренний",
+      "profiledIomcu": "ProfiLED IOMCU",
+      "builtInBuzzer": "Встроенная пищалка",
+      "neopixel1": "NeoPixel 1",
+      "neopixel2": "NeoPixel 2",
+      "neopixel3": "NeoPixel 3",
+      "neopixel4": "NeoPixel 4",
+      "profiled1": "ProfiLED 1",
+      "profiled2": "ProfiLED 2",
+      "profiled3": "ProfiLED 3",
+      "profiledClock": "ProfiLED Clock"
     },
     "OutputCards": {
       "noOutputHasAFunctionYet": "Ни одному выходу ещё не назначена функция.",
@@ -608,7 +648,12 @@
       "reversed": "Инвертировано",
       "everyOutputHasAFunction": "Каждому выходу назначена функция.",
       "outputUnassigned": "Не назначено выходов: {{length}} ({{v3}}{{v4}}).",
-      "openAllOutputs": "Открыть все выходы"
+      "openAllOutputs": "Открыть все выходы",
+      "deflectsEitherSideOfTrimThe": "Отклоняется в обе стороны от трима. Дуга показывает долю хода, а не градусы.",
+      "runsBothWaysFromACentre": "Вращается в обе стороны от центральной остановки, так что трим нейтральный.",
+      "runsOneWayFromMinTo": "Работает в одну сторону, от мин до макс.",
+      "switchesBetweenTwoStatesThereIs": "Переключается между двумя состояниями; хода для настройки нет.",
+      "drivenByTheMixerMinAnd": "Управляется микшером. Мин и макс — это калибровка ESC, а не ход."
     },
     "OutputVisual": {
       "off": "Выкл.",
@@ -617,7 +662,12 @@
       "reverse": "назад",
       "stop": "стоп",
       "forward": "вперёд",
-      "sFrom": "мкс от"
+      "sFrom": "мкс от",
+      "servoWaitingForOutput": "Серва {{channel}}: ожидание выхода",
+      "servoAtS": "Серва {{channel}} на {{pwm}} мкс",
+      "servoAtS2": "Серва {{channel}} на {{pwm}} мкс{{v3}}",
+      "servoIsOutsideTheLimitAt": "Серва {{channel}} за пределом: {{pwm}} мкс",
+      "on": "Вкл."
     },
     "ParamHistoryModal": {
       "restoredParameterToPreviousValuesWrite": "Восстановлены прежние значения параметров: {{applied}}{{v3}}. Запишите во флеш, чтобы сохранить.",
@@ -638,7 +688,8 @@
       "oldValue": "Старое значение",
       "newValue": "Новое значение",
       "checkpoint": "контрольная точка",
-      "close": "Закрыть"
+      "close": "Закрыть",
+      "justNow": "Только что"
     },
     "ParameterTable": {
       "parametersSavedToFlashSuccessfully": "Параметры успешно сохранены во флеш",
@@ -766,7 +817,13 @@
       "reboot2": "перезагрузка",
       "performed": "выполнено",
       "couldNotBeSet": "не удалось установить:",
-      "theseParametersMayNotExistIn": "Возможно, этих параметров нет в этой версии прошивки"
+      "theseParametersMayNotExistIn": "Возможно, этих параметров нет в этой версии прошивки",
+      "failedToWrite": "Не удалось записать {{v1}}",
+      "saveAllChangesToKeepThem": " — нажмите «Сохранить все изменения», чтобы они остались после перезагрузки",
+      "writtenByTheVehicleYourValue": "Записывается аппаратом: ваше значение может быть перезаписано",
+      "clickToEdit": "Кликните, чтобы редактировать",
+      "openPx4Docs": "Открыть документацию PX4",
+      "openArdupilotDocs": "Открыть документацию ArduPilot"
     },
     "PidTuningTab": {
       "roll": "Крен",
@@ -829,7 +886,9 @@
       "ffFeedforward2": "FF (прямая подача)",
       "anticipatesStickMovementsForFasterResponse": "Опережает движения стиков для более быстрого отклика. Полезно для манёвренного полёта, но может вызвать перерегулирование.",
       "useAutotuneForBestResults": "Используйте AutoTune для лучшего результата",
-      "forOptimalPerformanceUseArdupilotS": "Для оптимальных характеристик используйте полётный режим AutoTune в ArduPilot. Он автоматически настроит PID, выполняя тестовые манёвры. Назначьте AutoTune одному из слотов полётных режимов и летайте в спокойных условиях."
+      "forOptimalPerformanceUseArdupilotS": "Для оптимальных характеристик используйте полётный режим AutoTune в ArduPilot. Он автоматически настроит PID, выполняя тестовые манёвры. Назначьте AutoTune одному из слотов полётных режимов и летайте в спокойных условиях.",
+      "leftRightTilt": "Наклон влево/вправо",
+      "forwardBackTilt": "Наклон вперёд/назад"
     },
     "PlaneTuningTab": {
       "noAirspeedParametersHaveBeenRead": "Параметры воздушной скорости ещё не считаны с этого аппарата.",
@@ -868,7 +927,28 @@
       "noRefusalsReportedTheVehicleArms": "Отказов нет. Аппарат армится, когда вы это запрашиваете.",
       "noMatchingCheck": "Нет соответствующей проверки",
       "stopCheckingBeforeArmingOnlyDo": "Не проверять {{name}} перед армом. Делайте это, только если оборудование действительно отсутствует.",
-      "skipThisCheck": "Пропустить эту проверку"
+      "skipThisCheck": "Пропустить эту проверку",
+      "letTheBoardSettleOrCheck": "Дайте плате стабилизироваться или проверьте, не в потоке воздуха ли барометр.",
+      "waitForA3dFixOr": "Дождитесь 3D-фикса или перейдите туда, где открытое небо.",
+      "runTheQuickAccelerometerCalibrationOne": "Выполните быструю калибровку акселерометра (одно положение, аппарат ровно) или 6-точечную. Калибровка уровня лишь задаёт тримы и никогда этого не убирает.",
+      "calibrateTheCompass": "Откалибруйте компас.",
+      "aParameterIsOutOfRange": "Параметр вне допустимого диапазона; его название есть в сообщении.",
+      "calibrateTheRadioAndCentreThe": "Откалибруйте пульт и отцентрируйте стики.",
+      "checkTheSupplyToTheAutopilot": "Проверьте питание автопилота, оно вне безопасного диапазона.",
+      "chargeThePackOrLowerThe": "Зарядите батарею или уменьшите напряжение для арма.",
+      "calibrateOrDisableTheAirspeedSensor": "Откалибруйте или выключите датчик воздушной скорости.",
+      "noCardOrLoggingFailedTo": "Нет карты или журналирование не запустилось. Выключите журналирование, если на аппарате нет карты.",
+      "pressTheSafetySwitchUntilThe": "Нажмите предохранительный переключатель, пока индикатор не загорится постоянно.",
+      "theReceiverIsNotConfiguredAs": "Приёмник настроен не так, как ожидает ArduPilot; дождитесь завершения или переподключите его.",
+      "theEstimatorIsNotHappyYet": "Оценщик ещё не готов. Держите аппарат неподвижно или проверьте сообщения выше.",
+      "loadAValidMissionOrClear": "Загрузите корректную миссию или очистите ту, что на борту.",
+      "checkTheRangefinderWiringAndIts": "Проверьте подключение дальномера и его параметры.",
+      "checkTheCameraOrGimbalIs": "Проверьте, запитаны ли камера или подвес и отвечают ли они.",
+      "theCompanionComputerHasNotAuthorised": "Бортовой компьютер не разрешил арм.",
+      "visualOdometryIsNotReporting": "Визуальная одометрия не передаёт данные.",
+      "theInFlightFftIsNot": "FFT в полёте не выдаёт данных.",
+      "thingIs": "пункт",
+      "thingsAre": "пункт(а/ов)"
     },
     "Px4ArmingConfig": {
       "armingWithoutGnss": "Арм без GNSS",
@@ -909,7 +989,10 @@
       "circuitBreakers": "Предохранители (circuit breakers)",
       "px4ProtectsTheseBehindASpecific": "PX4 защищает их специальным значением разблокировки, а не простым переключателем, так как каждый полностью убирает проверку безопасности.",
       "unlockValueUnknown": "значение разблокировки неизвестно",
-      "checkOff": "Проверка выкл."
+      "checkOff": "Проверка выкл.",
+      "checkIs": "проверка",
+      "checksAre": "проверок",
+      "checksSwitchedOff": "Выключено {{what}}: {{n}}"
     },
     "Px4BatteryConfig": {
       "batteryMonitoringPx4": "Контроль батареи (PX4)",
@@ -956,7 +1039,9 @@
       "currentSensorScaling": "Масштаб датчика тока.",
       "tip": "Совет:",
       "toCalibrateVoltageMeasureThePack": "Чтобы откалибровать напряжение, измерьте батарею мультиметром и подбирайте значение, пока показания не совпадут. Для тока сравните с ваттметром во время теста зависания.",
-      "youHaveUnsavedChangesChangesAre": "У вас есть несохранённые изменения. Изменения записываются в аппарат при редактировании."
+      "youHaveUnsavedChangesChangesAre": "У вас есть несохранённые изменения. Изменения записываются в аппарат при редактировании.",
+      "powerModuleAnalog": "Модуль питания / аналоговый",
+      "externalAdc": "Внешний / АЦП"
     },
     "Px4CompassCard": {
       "off": "Выкл.",
@@ -997,7 +1082,11 @@
       "connectToTheVehicleAndMove": "Подключите аппарат и переключите переключатель режимов, чтобы увидеть активный слот вживую.",
       "youHaveUnsavedChangesClick": "У вас есть несохранённые изменения. Нажмите",
       "writeToFlash": "«Записать во флеш»",
-      "inTheHeaderToSave": "в заголовке, чтобы сохранить."
+      "inTheHeaderToSave": "в заголовке, чтобы сохранить.",
+      "positionSlow": "Position Slow",
+      "followMe": "Follow Me",
+      "precisionLand": "Precision Land",
+      "altitudeCruise": "Altitude Cruise"
     },
     "Px4LoggingConfig": {
       "fromArmUntilDisarm": "От арма до дизарма",
@@ -1029,7 +1118,16 @@
       "missionLogASmallSecondFile": "Журнал миссии (небольшой второй файл)",
       "off": "Выкл.",
       "allMissionMessages": "Все сообщения миссии",
-      "geotaggingOnly": "Только геотеги"
+      "geotaggingOnly": "Только геотеги",
+      "defaultSet": "Набор по умолчанию",
+      "estimatorReplay": "Воспроизведение оценщика",
+      "thermalCalibration": "Термокалибровка",
+      "systemIdentification": "Идентификация системы",
+      "highRate": "Высокая частота",
+      "sensorComparison": "Сравнение датчиков",
+      "computerVisionAndAvoidance": "Компьютерное зрение и уклонение",
+      "rawFifoHighRateImu": "Сырой FIFO IMU с высокой частотой",
+      "rawFifoHighRateMagnetometer": "Сырой FIFO магнитометра с высокой частотой"
     },
     "Px4ReceiverConfig": {
       "roll": "Крен",
@@ -1086,7 +1184,11 @@
       "toggleChannelReverse": "Переключить инверсию канала",
       "reversed": "Инвертировано",
       "normal": "Обычно",
-      "changesAreStagedUntilYouSave": "Изменения ждут, пока вы не нажмёте «Сохранить все изменения» в заголовке. Автоматическая калибровка стиков как в ArduPilot недоступна через MAVLink для PX4, так что задавайте крайние точки вручную по живым шкалам выше."
+      "changesAreStagedUntilYouSave": "Изменения ждут, пока вы не нажмёте «Сохранить все изменения» в заголовке. Автоматическая калибровка стиков как в ArduPilot недоступна через MAVLink для PX4, так что задавайте крайние точки вручную по живым шкалам выше.",
+      "rcOnly": "Только RC",
+      "joystickOnly": "Только джойстик",
+      "rcAndJoystick": "RC и джойстик",
+      "stickInputDisabled": "Ввод со стиков выключен"
     },
     "Px4ServoOutput": {
       "mainOutputs": "Основные выходы",
@@ -1140,7 +1242,8 @@
       "px4ThinsItsStreamsToStay": "PX4 прореживает потоки, чтобы уложиться в этот бюджет. Задайте его ниже возможностей радио, а не по скорости порта: канал SiK на 57600 бод передаёт гораздо меньше 5760 Б/с после накладных расходов самого радио.",
       "forwardingMessagesBetweenLinks": "Пересылает сообщения между каналами",
       "notForwardingBetweenLinks": "Не пересылает между каналами",
-      "changingTheModeOfTheLink": "Смена режима канала, через который вы подключены, действует сразу и может оборвать сообщения, которые использует ArduDeck. Режим Config через USB — нормально; на радио нужен Normal или Low Bandwidth."
+      "changingTheModeOfTheLink": "Смена режима канала, через который вы подключены, действует сразу и может оборвать сообщения, которые использует ArduDeck. Режим Config через USB — нормально; на радио нужен Normal или Low Bandwidth.",
+      "notSet": "не задано"
     },
     "RateResponsePlot": {
       "stick": "стик %",
@@ -1336,7 +1439,9 @@
       "cruiseMS": "Крейсер (м/с)",
       "maxMS": "Макс. (м/с)",
       "turnRadiusM": "Радиус поворота (м)",
-      "startWithConservativeSpeeds25": "Начните с осторожных скоростей (2–5 м/с) и постепенно увеличивайте после испытаний. Если у ровера танковое управление, включите разворот на месте для более крутых манёвров."
+      "startWithConservativeSpeeds25": "Начните с осторожных скоростей (2–5 м/с) и постепенно увеличивайте после испытаний. Если у ровера танковое управление, включите разворот на месте для более крутых манёвров.",
+      "on": "вкл.",
+      "off": "выкл."
     },
     "SafetyTab": {
       "value": "Значение {{value}}",
@@ -1431,7 +1536,19 @@
       "applyPreset": "Применить шаблон",
       "disableAllArmingChecks": "Отключить все проверки арма?",
       "armingCheckWillBeSetTo": "ARMING_CHECK будет установлен в 0. Аппарат будет армиться без проверки датчиков, фикса GPS и калибровки. Это может привести к улёту и аварии.",
-      "disableChecks": "Отключить проверки"
+      "disableChecks": "Отключить проверки",
+      "holdMode": "Режим Hold",
+      "returnMode": "Режим Return",
+      "landMode": "Режим Land",
+      "rcOnly": "Только RC",
+      "mavlinkOnly": "Только MAVLink",
+      "rcOrMavlinkWithFallback": "RC или MAVLink с резервированием",
+      "rcOrMavlinkKeepFirst": "RC или MAVLink, первое имеет приоритет",
+      "disableManualControl": "Выключить ручное управление",
+      "returnAtCriticalLevelLandAt": "Возврат на критическом уровне, посадка на аварийном",
+      "failedToSet": "Не удалось задать {{v1}}",
+      "failedToSet2": "Не удалось задать {{param}}",
+      "failedToSetFenceEnable": "Не удалось задать FENCE_ENABLE"
     },
     "SensorsTab": {
       "lastUpdate": "Последнее обновление: {{v1}}",
@@ -1461,7 +1578,11 @@
       "airSpeed": "Воздушная скорость",
       "heading": "Курс",
       "sensorHealth": "Состояние датчиков",
-      "noTelemetryDataReceivedMakeSure": "Данные телеметрии не поступают. Убедитесь, что вы подключены к полётному контроллеру."
+      "noTelemetryDataReceivedMakeSure": "Данные телеметрии не поступают. Убедитесь, что вы подключены к полётному контроллеру.",
+      "noGps": "Нет GPS",
+      "noFix": "Нет фикса",
+      "rtkFloat": "RTK Float",
+      "rtkFixed": "RTK Fixed"
     },
     "SerialPortsTab": {
       "none": "Нет",
@@ -1525,7 +1646,9 @@
       "or": "или",
       "telemetryRadioUsually": "Телеметрийное радио: обычно",
       "baudOnTelem1": "бод на TELEM1",
-      "noSerialPortIsConfiguredFor": "Ни один последовательный порт не настроен для входа RC (протокол RCIN). Приёмник не будет работать, пока какой-либо порт не будет установлен на RCIN или приёмник не подключён через DroneCAN/PPM."
+      "noSerialPortIsConfiguredFor": "Ни один последовательный порт не настроен для входа RC (протокол RCIN). Приёмник не будет работать, пока какой-либо порт не будет установлен на RCIN или приёмник не подключён через DroneCAN/PPM.",
+      "rcPort": "Порт RC",
+      "wifiPort": "Порт WiFi"
     },
     "ServoOutputTab": {
       "function": "Функция {{fn}}",
@@ -1555,7 +1678,8 @@
       "trim": "Трим",
       "max": "Макс",
       "rel": "Отн.",
-      "paramsNotLoadedForChannel": "(параметры не загружены для канала"
+      "paramsNotLoadedForChannel": "(параметры не загружены для канала",
+      "arduplaneMixerOverridesThisOutputDo": "Микшер ArduPlane переопределяет этот выход. DO_SET_SERVO работает только с функциями Disabled (0), RCPassThru (1) или RCx_PASSTHRU (51-66)."
     },
     "SitlBatteryCard": {
       "simulatedPack": "Симулируемая батарея",
@@ -1603,7 +1727,10 @@
       "moveThatStick": "Пошевелите этот стик…",
       "assignAStick": "Назначить стик",
       "ardupilotOnlyPicksUpANew": "ArduPilot применяет новое назначение стиков только после перезапуска.",
-      "rebootFlightController": "Перезагрузить полётный контроллер"
+      "rebootFlightController": "Перезагрузить полётный контроллер",
+      "isNowOnChannel": "{{v1}} теперь на канале {{channel}}.",
+      "throttleMovedToTheElevatorStick": "Газ перенесён на стик руля высоты.",
+      "backToTheStandardStickAssignment": "Возвращено стандартное назначение стиков."
     },
     "StickTestPanel": {
       "failedToRelaxArmingCheck": "Не удалось ослабить ARMING_CHECK",
@@ -1628,7 +1755,8 @@
       "fcColumnShowsWhatTheAutopilot": "Столбец FC показывает, что автопилот сейчас считывает в",
       "msg65GreenMatchesYourSlider": "(сообщ. 65). Зелёный — совпадает с ползунком (переопределение действует). Жёлтый — не совпадает. Прочерк — FC вообще не сообщает RC.",
       "armedInManualModeOverrideStreaming": "Заармлен в режиме MANUAL. Переопределение передаётся с частотой",
-      "hzClickReleaseToStopAnd": "Гц. Нажмите «Отпустить», чтобы остановить и дизармить."
+      "hzClickReleaseToStopAnd": "Гц. Нажмите «Отпустить», чтобы остановить и дизармить.",
+      "removePropellers": "снимите пропеллеры"
     },
     "SwitchActionsSection": {
       "switchActions": "Действия переключателей",
@@ -1685,7 +1813,9 @@
       "appliesForThisSessionOnlyUsing": "Действует только в этом сеансе через SET_MESSAGE_INTERVAL. Параметры не записываются.",
       "onlyPossibleOnTheLinkThis": "Возможно только на канале, которым подключена программа",
       "sending": "Отправка…",
-      "tryNow": "Попробовать сейчас"
+      "tryNow": "Попробовать сейчас",
+      "requestedMeasured": "запрошено / измерено",
+      "off": "выкл."
     },
     "ThrottleResponsePlot": {
       "limit": "предел",
@@ -1777,10 +1907,25 @@
       "standingArrowUp": "Стоя, стрелка вверх",
       "standingArrowDown": "Стоя, стрелка вниз",
       "readingLevelTipTheNoseUp": "Ровно. Поднимите нос: тангаж должен стать положительным. Поднимите левый бок: крен должен стать положительным.",
-      "readingRollPitchIfTheVehicle": "Крен {{v1}}°, тангаж {{v2}}°. Если аппарат стоит ровно, то неправильна ориентация или калибровка уровня."
+      "readingRollPitchIfTheVehicle": "Крен {{v1}}°, тангаж {{v2}}°. Если аппарат стоит ровно, то неправильна ориентация или калибровка уровня.",
+      "custom41AndOlder": "Своя (4.1 и старше)",
+      "custom1": "Своя 1",
+      "custom2": "Своя 2"
     },
     "gps_setup": {
-      "disabled": "Отключено"
+      "disabled": "Отключено",
+      "frskyD": "FrSky D",
+      "frskySport": "FrSky SPort",
+      "frskyPassthrough": "FrSky passthrough",
+      "escTelemetry": "Телеметрия ESC",
+      "theGpsTypeIsSetTo": "Тип GPS установлен на None, так что автопилот вообще не ищет GPS.",
+      "theGpsTypeAsksForDronecan": "Тип GPS требует DroneCAN, но CAN-порт для него не включён.",
+      "noSerialPortIsSetTo": "Ни один последовательный порт не настроен на протокол GPS, так что разъём никто не слушает.",
+      "gps1ConfigIsDisabledAnd": "GPS_1_CONFIG = Disabled, а DroneCAN выключен, так что GPS не ожидается ни на одном порту.",
+      "gps1OnPixhawkCube": "GPS1 на Pixhawk / Cube",
+      "gps2OnPixhawkCube": "GPS2 на Pixhawk / Cube",
+      "telem1OnPixhawkCube": "TELEM1 на Pixhawk / Cube",
+      "telem2OnPixhawkCube": "TELEM2 на Pixhawk / Cube"
     },
     "mavlink_pid_schemes": {
       "arducopter35": "ArduCopter 3.5+",
@@ -1798,7 +1943,10 @@
       "steeringAndSpeedControllers": "Регуляторы руля и скорости",
       "steering": "Руль",
       "speed": "Скорость",
-      "balance": "Баланс"
+      "balance": "Баланс",
+      "turnRateToSteeringOutput": "Скорость поворота → выход руля",
+      "throttleToHoldTargetSpeed": "Газ для удержания целевой скорости",
+      "pitchControlOnABalanceBot": "Управление тангажом балансирующего робота"
     },
     "mavlink_presets": {
       "safeModesOnlyStabilizeAltholdLoiter": "Только безопасные режимы — Stabilize, AltHold, Loiter, RTL",

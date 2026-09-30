@@ -79,7 +79,7 @@ import { useFleetRepoStore } from '../../stores/fleet-repo-store';
 import { emitParamsFlashed } from '../../modules/module-host-renderer';
 import { isCargoEnabled, VAULT_CARGO_SLUG } from '../../modules/capabilities';
 import PlaneTuningTab from './PlaneTuningTab';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 // Toast notification state
 type ToastType = 'success' | 'error' | 'info';
@@ -480,7 +480,7 @@ export const MavlinkConfigView: React.FC = () => {
       // PX4 persists each PARAM_SET on receipt; ArduPilot needs a flash flush.
       const staged = await commitStagedParams();
       const result = staged.failed.length > 0
-        ? { success: false as const, error: `Failed to write ${staged.failed.join(', ')}` }
+        ? { success: false as const, error: t('mavlink_config.MavlinkConfigView.failedToWrite', { v1: staged.failed.join(', ') }) }
         : connectionState.firmware === 'px4'
           ? { success: true as const }
           : await window.electronAPI?.writeParamsToFlash();
@@ -808,7 +808,7 @@ export const MavlinkConfigView: React.FC = () => {
                 <>
                   <span className="text-sm text-amber-300 font-medium">{t('mavlink_config.MavlinkConfigView.rebootRequired')}</span>
                   <span className="text-sm text-amber-400/70 ml-2">
-                    {rebootRequiredParams.length} {t('mavlink_config.MavlinkConfigView.parameter')}{rebootRequiredParams.length !== 1 ? 's' : ''} {t('mavlink_config.MavlinkConfigView.needARebootToTakeEffect')}
+                    {rebootRequiredParams.length} {t('mavlink_config.MavlinkConfigView.parameter')}{rebootRequiredParams.length !== 1 ? enPlural('s') : ''} {t('mavlink_config.MavlinkConfigView.needARebootToTakeEffect')}
                     {' '}<span className="font-mono text-xs">{rebootRequiredParams.join(', ')}</span>
                   </span>
                 </>

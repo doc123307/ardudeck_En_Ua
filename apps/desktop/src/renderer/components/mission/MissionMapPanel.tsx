@@ -241,7 +241,7 @@ import {
   ModulePolygonPickBar,
 } from '../panels/ModuleMapLayers';
 import { MapPicking } from '../../hooks/useMapPicking';
-import { t as tr } from '../../i18n';
+import { t as tr, enPlural } from '../../i18n';
 
 // Default center fallback (London) - will be overridden by IP geolocation
 const FALLBACK_CENTER: [number, number] = [51.505, -0.09];
@@ -1911,7 +1911,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
                 )}
                 <div className={flown.gaps.length > 0 ? 'text-red-400' : 'text-content-tertiary'}>
                   {flown.gaps.length > 0
-                    ? tr('mission.MissionMapPanel.bendCutPastTheSwathCoverage', { length: flown.gaps.length, v2: flown.gaps.length > 1 ? 's' : '' })
+                    ? tr('mission.MissionMapPanel.bendCutPastTheSwathCoverage', { length: flown.gaps.length, v2: flown.gaps.length > 1 ? enPlural('s') : '' })
                     : tr('mission.MissionMapPanel.everyBendStaysInsideTheSwath')}
                 </div>
               </div>

@@ -16,12 +16,20 @@
       "calm": "Спокойно",
       "noStormForecastIn72h": "Бурь не прогнозируется в течение 72 ч",
       "wmm2025IsOutsideItsValidityWindow": "WMM2025 вне периода действия; значения склонения и поля приблизительные.",
-      "kpFromNoaaSwpcFieldFrom": "Kp от NOAA SWPC · поле из WMM2025 (офлайн)"
+      "kpFromNoaaSwpcFieldFrom": "Kp от NOAA SWPC · поле из WMM2025 (офлайн)",
+      "cautionKpNoGoKpG1": "Осторожно Kp {{caution}}, не летать Kp {{nogo}} (буря G1)",
+      "highestPredictedKpInTheNext": "Наибольший прогнозируемый Kp в ближайшие 72 часа",
+      "within72h": "в течение 72 ч"
     },
     "LocationPicker": {
       "pickTheBriefingLocationOnA": "Выберите место для прогноза на карте",
       "planned": "Запланированное",
-      "changeLocation": "Изменить место"
+      "changeLocation": "Изменить место",
+      "vehiclePosition": "Позиция аппарата",
+      "homePosition": "Позиция дома",
+      "mapCenter": "Центр карты",
+      "pickedLocation": "Выбранное место",
+      "noPosition": "Нет позиции"
     },
     "LocationPickerDialog": {
       "briefingLocation": "Место для прогноза",
@@ -72,14 +80,33 @@
       "precip2": "осадки",
       "mm": "мм,",
       "visibilityBelow": "видимость ниже",
-      "km": "км."
+      "km": "км.",
+      "vehiclePosition": "Позиция аппарата",
+      "homePosition": "Позиция дома",
+      "mapCenter": "Центр карты",
+      "pickedLocation": "Выбранное место",
+      "gustsOfExceedTheSafeLimit": "Порывы {{v1}} превышают безопасный предел ({{v2}}). Риск потери управления.",
+      "gustsOfAreApproachingTheLimit": "Порывы {{v1}} приближаются к пределу ({{v2}}). Внимательно следите.",
+      "sustainedWindOfExceedsTheSafe": "Устойчивый ветер {{v1}} превышает безопасный предел ({{v2}}).",
+      "sustainedWindOfIsApproachingThe": "Устойчивый ветер {{v1}} приближается к пределу ({{v2}}).",
+      "lowVisibilityOfKmBelowThe": "Низкая видимость {{v1}} км, ниже минимума {{v2}} км.",
+      "reducedVisibilityOfKmMaintainVisual": "Пониженная видимость {{v1}} км. Сохраняйте визуальный контакт.",
+      "precipitationOfMmElectronicsAtRisk": "Осадки {{v1}} мм. Электроника под угрозой, не запускайте.",
+      "lightPrecipitationOfMmDetectedProtect": "Обнаружены слабые осадки {{v1}} мм. Защитите аппарат.",
+      "highChanceOfPrecipitationExpectRain": "Высокая вероятность осадков ({{v1}}%). Ожидайте дождь в течение часа.",
+      "risingChanceOfPrecipitationWatchThe": "Вероятность осадков растёт ({{v1}}%). Следите за небом.",
+      "cautionMmNoGoMm": "Осторожно {{caution}} мм, не летать {{nogo}} мм",
+      "cautionBelowKmNoGoBelow": "Осторожно ниже {{v1}} км, не летать ниже {{v2}} км"
     },
     "weather_visuals": {
       "rain": "Дождь",
       "fog": "Туман",
       "overcast": "Сплошная облачность",
       "partlyCloudy": "Переменная облачность",
-      "clear": "Ясно"
+      "clear": "Ясно",
+      "conditionsAreWithinLimitsForLaunch": "Условия в пределах нормы для старта.",
+      "conditionsAreMarginalReviewTheFlagged": "Условия на грани. Просмотрите отмеченные параметры перед стартом.",
+      "oneOrMoreParametersExceedSafe": "Один или несколько параметров превышают безопасные пределы. Не запускайте."
     }
   }
 }

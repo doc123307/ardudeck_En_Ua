@@ -6,7 +6,7 @@ import { useConnectionStore } from '../../../stores/connection-store.js';
 import { useParameterStore } from '../../../stores/parameter-store.js';
 import { inferProfileFromParams } from '../../../lib/vehicle-templates/import.js';
 import { Px4AirframePicker } from './Px4AirframePicker.js';
-import { t as tr } from '../../../i18n';
+import { t as tr, enPlural } from '../../../i18n';
 
 type CategoryFilter = 'all' | VehicleTemplate['category'];
 
@@ -182,7 +182,7 @@ export function VehicleTemplatePicker({ onSelect, onImportFromConnected, onClose
         )}
 
         <div className="px-5 py-3 border-t border-subtle text-[10px] text-content-secondary flex items-center justify-between">
-          <span>{isPx4 ? tr('settings.VehicleTemplatePicker.px4AirframeViaSysAutostartReboot') : `${filtered.length} template${filtered.length === 1 ? '' : 's'}`}</span>
+          <span>{isPx4 ? tr('settings.VehicleTemplatePicker.px4AirframeViaSysAutostartReboot') : `${filtered.length} template${filtered.length === 1 ? '' : enPlural('s')}`}</span>
           <span>{isPx4 ? tr('settings.VehicleTemplatePicker.escCancel') : tr('settings.VehicleTemplatePicker.navigateEnterSelectEscCancel')}</span>
         </div>
       </div>

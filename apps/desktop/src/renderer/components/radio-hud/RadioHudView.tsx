@@ -1309,7 +1309,7 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
   };
   const timer = `${String(Math.floor(data.flightSecs / 60)).padStart(2, '0')}:${String(data.flightSecs % 60).padStart(2, '0')}`;
   const ladder = mode === 'no-link' ? ['NO LINK', 'check RX power / binding']
-    : mode === 'no-mavlink' ? ['NO MAVLINK', 'ELRS MAVLink mode off?']
+    : mode === 'no-mavlink' ? ['NO MAVLINK', tr('radio_hud.RadioHudView.elrsMavlinkModeOff')]
     : mode === 'streams-off' ? ['STREAMS OFF', 'connect ArduDeck once'] : null;
   // horizon geometry, same math as the Lua
   const wide = screenW > 150;
@@ -1466,7 +1466,7 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
                 </>
               ) : (
                 <>
-                  <Txt x={0} y={10} size={SML * 1.2}>{data.lat != null ? data.lat.toFixed(6) : 'no position'}</Txt>
+                  <Txt x={0} y={10} size={SML * 1.2}>{data.lat != null ? data.lat.toFixed(6) : tr('radio_hud.RadioHudView.noPosition')}</Txt>
                   <Txt x={0} y={20} size={SML * 1.2}>{data.lon != null ? data.lon.toFixed(6) : ''}</Txt>
                   <Txt x={0} y={30}>{tr('radio_hud.RadioHudView.homeMBrg', { v1: Math.round(data.homeDist), v2: Math.round(data.homeBearing) })}</Txt>
                   <Txt x={0} y={38}>{data.wpNum > 0 ? tr('radio_hud.RadioHudView.wpMBrg', { wpNum: data.wpNum, v2: Math.round(data.wpDist), v3: Math.round(data.wpBearing) }) : tr('radio_hud.RadioHudView.noMissionWp')}</Txt>
@@ -1589,7 +1589,7 @@ export function RadioHudView() {
   const [pagesFrom, setPagesFrom] = useState<string | null>(null);
   const [confirmApply, setConfirmApply] = useState(false);
   const [layouts, setLayouts] = useState<SavedHudLayout[]>(() => loadLayouts());
-  const [layoutName, setLayoutName] = useState(() => loadLayouts()[0]?.name ?? 'My layout');
+  const [layoutName, setLayoutName] = useState(() => loadLayouts()[0]?.name ?? tr('radio_hud.RadioHudView.myLayout'));
   const [nameDraft, setNameDraft] = useState('');
   const [applyTarget, setApplyTarget] = useState<string>('');
   // Once the user picks a target themselves, a rescan must not move it back.
@@ -1651,7 +1651,7 @@ export function RadioHudView() {
     const result = renameLayout(layouts, layoutName, to);
     if (!result.renamed) {
       setNameDraft(layoutName);
-      setApplyState(`A layout called "${to}" already exists.`);
+      setApplyState(tr('radio_hud.RadioHudView.aLayoutCalledAlreadyExists', { to }));
       return;
     }
     persistLayouts(result.layouts);
@@ -1661,21 +1661,21 @@ export function RadioHudView() {
 
   const handleGenerateMaps = async () => {
     if (!mapCenter.lat && !mapCenter.lon) {
-      setMapGenState('Set a field center first (connect the vehicle or type coordinates)');
+      setMapGenState(tr('radio_hud.RadioHudView.setAFieldCenterFirstConnect'));
       return;
     }
-    setMapGenState('Stitching satellite images…');
+    setMapGenState(tr('radio_hud.RadioHudView.stitchingSatelliteImages'));
     try {
       // Match the placed map tile so the image fills it instead of
       // letterboxing; the widget subtracts its own caption strip.
       const mapTile = pages.flat().find((t) => t.id === 'map');
       const size = mapTile ? { w: mapTile.w - 2, h: mapTile.h - 20 } : undefined;
       const { maps, missingTiles } = await generateFieldMaps(mapCenter.lat, mapCenter.lon, size,
-        (d, total) => setMapGenState(`Stitching satellite images… ${d}/${total}`));
+        (d, total) => setMapGenState(tr('radio_hud.RadioHudView.stitchingSatelliteImages2', { d, total })));
       setFieldMaps(maps);
       setMapGenState(missingTiles > 0
-        ? `Ready (${maps.length} zooms), ${missingTiles} tiles missing - browse this area on the app map once to cache them, then regenerate`
-        : `Ready: ${maps.length} zoom levels, ships with next Apply`);
+        ? tr('radio_hud.RadioHudView.readyZoomsTilesMissingBrowseThis', { length: maps.length, missingTiles })
+        : tr('radio_hud.RadioHudView.readyZoomLevelsShipsWithNext', { length: maps.length }));
     } catch (e) {
       setMapGenState(null);
       setApplyError(e instanceof Error ? e.message : String(e));
@@ -1801,7 +1801,7 @@ export function RadioHudView() {
   }, []);
 
   const rescan = useCallback(async (announce = false) => {
-    if (announce) setApplyState('Looking for the radio…');
+    if (announce) setApplyState(tr('radio_hud.RadioHudView.lookingForTheRadio'));
     setIsScanning(true);
     try {
       const result = await window.electronAPI.edgetxScan();
@@ -1833,7 +1833,7 @@ export function RadioHudView() {
       if (announce) {
         setApplyState(found
           ? null
-          : 'No radio yet. On the radio choose USB Storage (SD); still looking.');
+          : tr('radio_hud.RadioHudView.noRadioYetOnTheRadio'));
       }
     } finally {
       setIsScanning(false);
@@ -1888,7 +1888,7 @@ export function RadioHudView() {
       return;
     }
     setApplyError(null);
-    setApplyState(connected ? null : 'Loaded from cached parameters (vehicle not currently connected)');
+    setApplyState(connected ? null : tr('radio_hud.RadioHudView.loadedFromCachedParametersVehicleNot'));
     setCfg((prev) => ({
       ...prev,
       name: String(suggested.name ?? ''),
@@ -1907,7 +1907,7 @@ export function RadioHudView() {
 
   const handleApply = async () => {
     setApplyError(null);
-    setApplyState('Looking for radio…');
+    setApplyState(tr('radio_hud.RadioHudView.lookingForRadio'));
     const result = await window.electronAPI.edgetxScan();
     setScan(result);
     const target = result.cards[0];
@@ -1918,7 +1918,7 @@ export function RadioHudView() {
     }
     // Always refresh the widget files: bundled source, instant, and it
     // guarantees the radio runs the same code this preview mirrors.
-    setApplyState('Installing widget…');
+    setApplyState(tr('radio_hud.RadioHudView.installingWidget'));
     const variant = SCREEN_MODELS.find((m) => m.w === screen.w && m.h === screen.h)?.variant ?? 'c480x320';
     const install = await window.electronAPI.edgetxInstall(target.volumePath, 'ardudeck-hud', variant);
     if (!install.success) {
@@ -1926,7 +1926,7 @@ export function RadioHudView() {
       setApplyError(install.error ?? tr('radio_hud.RadioHudView.widgetInstallFailed'));
       return;
     }
-    setApplyState('Writing config…');
+    setApplyState(tr('radio_hud.RadioHudView.writingConfig'));
     const cfgOut: Record<string, string | number> = {};
     if (cfg.name) cfgOut.name = cfg.name;
     if (cfg.cells > 0) {
@@ -1973,7 +1973,7 @@ export function RadioHudView() {
       .filter((i) => i.latitude !== 0 && i.longitude !== 0)
       .map((i) => ({ seq: i.seq, lat: i.latitude, lon: i.longitude }));
     if (!isBw && ((fieldMaps && fieldMaps.length > 0) || missionWps.length > 0)) {
-      setApplyState('Writing field maps…');
+      setApplyState(tr('radio_hud.RadioHudView.writingFieldMaps'));
       const mapsResult = await window.electronAPI.edgetxHudMapsWrite(target.volumePath, fieldMaps ?? [], missionWps);
       if (!mapsResult.ok) {
         setApplyState(null);
@@ -1982,10 +1982,10 @@ export function RadioHudView() {
       }
     }
     setApplyState(isBw
-      ? `Applied. Telemetry screen set on ${(install.screens?.added ?? 0) + (install.screens?.already ?? 0)} model(s) - eject, unplug, press PAGE on the radio.`
+      ? tr('radio_hud.RadioHudView.appliedTelemetryScreenSetOnModel', { v1: (install.screens?.added ?? 0) + (install.screens?.already ?? 0) })
       : applyTarget
-        ? `Applied to the model "${applyTarget}" only. Eject before unplugging the radio.`
-        : 'Applied to every model on this radio. Eject before unplugging.');
+        ? tr('radio_hud.RadioHudView.appliedToTheModelOnlyEject', { applyTarget })
+        : tr('radio_hud.RadioHudView.appliedToEveryModelOnThis'));
     setPagesFrom(applyTarget);
     await rescan();
   };
@@ -1994,9 +1994,9 @@ export function RadioHudView() {
     const target = scan?.cards[0];
     if (!target) return;
     setApplyError(null);
-    setApplyState('Removing widget…');
+    setApplyState(tr('radio_hud.RadioHudView.removingWidget'));
     const result = await window.electronAPI.edgetxRemove(target.volumePath, 'ardudeck-hud');
-    setApplyState(result.success ? 'Widget removed from the radio (config included).' : null);
+    setApplyState(result.success ? tr('radio_hud.RadioHudView.widgetRemovedFromTheRadioConfig') : null);
     if (!result.success) setApplyError(result.error ?? tr('radio_hud.RadioHudView.removeFailed'));
     await rescan();
   };
@@ -2005,8 +2005,8 @@ export function RadioHudView() {
   // machine; the second click is only asked for when something would be lost.
   const busyWithCard = isScanning || (applyState?.endsWith('…') ?? false);
   const applyLabel = !isBw && models.length > 0
-    ? (applyTarget ? `Apply to ${applyTarget}` : 'Apply to every model')
-    : 'Apply to radio';
+    ? (applyTarget ? tr('radio_hud.RadioHudView.applyTo', { applyTarget }) : tr('radio_hud.RadioHudView.applyToEveryModel'))
+    : tr('radio_hud.RadioHudView.applyToRadio');
   const targetOwnsLayout = models.some((m) => m.name === applyTarget && m.hasLayout);
   const applyNeedsConfirm = !isBw && models.length > 0 && pagesFrom !== null && pagesFrom !== applyTarget
     && (applyTarget === '' || targetOwnsLayout);
@@ -2018,12 +2018,12 @@ export function RadioHudView() {
     setApplyState('Ejecting…');
     try {
       if (typeof window.electronAPI.edgetxEject !== 'function') {
-        throw new Error('Eject needs an app restart to activate (new capability)');
+        throw new Error(tr('radio_hud.RadioHudView.ejectNeedsAnAppRestartTo'));
       }
       const result = await window.electronAPI.edgetxEject(target.volumePath);
       if (!result.ok) setApplyState(null);
       if (result.ok) {
-        setApplyState('Ejected. Unplug the radio; the widget reloads its config within seconds.');
+        setApplyState(tr('radio_hud.RadioHudView.ejectedUnplugTheRadioTheWidget'));
         await rescan();
       } else {
         setApplyError(result.error ?? tr('radio_hud.RadioHudView.ejectFailed'));
@@ -2134,7 +2134,7 @@ export function RadioHudView() {
                       setPages(saved.pages.map((p) => p.map((t) => fitTile(t, saved.screen, screen))));
                       setActivePage(0);
                       setLayoutName(saved.name);
-                      setPagesFrom(`the layout "${saved.name}"`);
+                      setPagesFrom(tr('radio_hud.RadioHudView.theLayout', { name: saved.name }));
                     }}
                     data-tip={tr('radio_hud.RadioHudView.layoutsLiveInArdudeckAndSave')}
                     className="px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content-secondary"
@@ -2155,12 +2155,12 @@ export function RadioHudView() {
                   />
                   <button
                     onClick={() => {
-                      const name = uniqueLayoutName(layouts, 'New layout');
+                      const name = uniqueLayoutName(layouts, tr('radio_hud.RadioHudView.newLayout'));
                       setLayoutName(name);
                       setNameDraft(name);
                       setPages([gridLayout(screen)]);
                       setActivePage(0);
-                      setPagesFrom(`the layout "${name}"`);
+                      setPagesFrom(tr('radio_hud.RadioHudView.theLayout', { name }));
                     }}
                     data-tip={tr('radio_hud.RadioHudView.startANewLayoutInArdudeck')}
                     className="px-3 py-1 text-xs rounded border bg-surface-input text-content-secondary border-subtle hover:text-content transition-colors"
@@ -2430,10 +2430,10 @@ export function RadioHudView() {
                     className="mt-1 w-full px-2 py-1.5 text-sm bg-surface-input border border-subtle rounded text-content"
                   />
                 </label>
-                {numField('Cells (S)', cfg.cells, 1, (v) => setCfg({ ...cfg, cells: v }), 'auto-detected from peak voltage', true)}
-                {numField('Capacity (mAh)', cfg.capacity, 100, (v) => setCfg({ ...cfg, capacity: v }), 'auto from vehicle telemetry', true)}
-                {numField('Low (V/cell)', cfg.low_cell, 0.05, (v) => setCfg({ ...cfg, low_cell: v }), 'value turns amber')}
-                {numField('Critical (V/cell)', cfg.crit_cell, 0.05, (v) => setCfg({ ...cfg, crit_cell: v }), 'value turns red')}
+                {numField(tr('radio_hud.RadioHudView.cellsS'), cfg.cells, 1, (v) => setCfg({ ...cfg, cells: v }), 'auto-detected from peak voltage', true)}
+                {numField(tr('radio_hud.RadioHudView.capacityMah'), cfg.capacity, 100, (v) => setCfg({ ...cfg, capacity: v }), 'auto from vehicle telemetry', true)}
+                {numField(tr('radio_hud.RadioHudView.lowVCell'), cfg.low_cell, 0.05, (v) => setCfg({ ...cfg, low_cell: v }), 'value turns amber')}
+                {numField(tr('radio_hud.RadioHudView.criticalVCell'), cfg.crit_cell, 0.05, (v) => setCfg({ ...cfg, crit_cell: v }), 'value turns red')}
               </div>
               {pages.length > 1 && (
                 <label className="flex items-center gap-2 pt-1">
@@ -2450,7 +2450,7 @@ export function RadioHudView() {
                     className="w-16 px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content"
                   />
                   <span className="text-xs text-content-tertiary">
-                    {cfg.pageSecs > 0 ? 'seconds' : tr('radio_hud.RadioHudView.seconds0OnlyByHand')}
+                    {cfg.pageSecs > 0 ? tr('radio_hud.RadioHudView.seconds') : tr('radio_hud.RadioHudView.seconds0OnlyByHand')}
                   </span>
                 </label>
               )}
@@ -2497,7 +2497,7 @@ export function RadioHudView() {
               {!isBw && models.length > 0 && (
                 <span className="text-content-tertiary">
                   {pagesFrom !== null && pagesFrom !== applyTarget
-                    ? tr('radio_hud.RadioHudView.thesePagesCameFrom', { v1: pagesFrom || 'the shared layout', v2: applyTarget ? `, applying puts them on ${applyTarget}` : '' })
+                    ? tr('radio_hud.RadioHudView.thesePagesCameFrom', { v1: pagesFrom || tr('radio_hud.RadioHudView.theSharedLayout'), v2: applyTarget ? tr('radio_hud.RadioHudView.applyingPutsThemOn', { applyTarget }) : '' })
                     : applyTarget
                       ? tr('radio_hud.RadioHudView.onlyUsesThisLayoutTheRest', { applyTarget })
                       : tr('radio_hud.RadioHudView.everyModelUsesThisLayoutUnless')}
@@ -2528,10 +2528,10 @@ export function RadioHudView() {
             if (ok) setPagesFrom(loadedSourceRef.current === 'model' ? applyTarget : '');
             setApplyState(ok
               ? loadedSourceRef.current === 'model'
-                ? `Loaded the layout "${applyTarget}" has of its own.`
+                ? tr('radio_hud.RadioHudView.loadedTheLayoutHasOfIts', { applyTarget })
                 : applyTarget
-                  ? `"${applyTarget}" has no layout of its own yet, so this is the shared one.`
-                  : 'Loaded the shared layout every model uses.'
+                  ? tr('radio_hud.RadioHudView.hasNoLayoutOfItsOwn', { applyTarget })
+                  : tr('radio_hud.RadioHudView.loadedTheSharedLayoutEveryModel')
               : null);
             if (!ok) setApplyError(tr('radio_hud.RadioHudView.noArdudeckConfigFoundOnThe'));
           }}

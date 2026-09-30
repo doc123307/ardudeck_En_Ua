@@ -334,11 +334,11 @@ function DroneBridgeUsbReader() {
       if (info?.settings) {
         setResult({ ssid: info.ssid, apIp: info.apIp, settings: info.settings });
       } else {
-        setResult({ ssid: null, apIp: null, settings: null, error: 'No DroneBridge data received. Is this a DroneBridge device?' });
+        setResult({ ssid: null, apIp: null, settings: null, error: t('companion.CompanionDashboard.noDronebridgeDataReceivedIsThis') });
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      setResult({ ssid: null, apIp: null, settings: null, error: `Failed to read serial: ${msg}` });
+      setResult({ ssid: null, apIp: null, settings: null, error: t('companion.CompanionDashboard.failedToReadSerial', { msg }) });
     } finally {
       setReading(false);
     }
@@ -384,7 +384,7 @@ function DroneBridgeUsbReader() {
               <div className="flex justify-between text-xs">
                 <span className="text-content-secondary">{t('companion.CompanionDashboard.mode')}</span>
                 <span className="text-content">{
-                  ({ 1: 'Access Point', 2: 'Station', 3: 'Long Range', 4: 'ESP-NOW Air', 5: 'ESP-NOW Ground' } as Record<number, string>)[Number(s['esp32_mode'])] ?? t('companion.CompanionDashboard.mode2', { v1: s['esp32_mode'] })
+                  ({ 1: t('companion.CompanionDashboard.accessPoint'), 2: 'Station', 3: t('companion.CompanionDashboard.longRange'), 4: t('companion.CompanionDashboard.espNowAir'), 5: t('companion.CompanionDashboard.espNowGround') } as Record<number, string>)[Number(s['esp32_mode'])] ?? t('companion.CompanionDashboard.mode2', { v1: s['esp32_mode'] })
                 }</span>
               </div>
             )}

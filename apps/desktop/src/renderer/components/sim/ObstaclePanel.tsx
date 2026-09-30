@@ -13,7 +13,7 @@ import { useSimObstaclesStore } from '../../stores/sim-obstacles-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { localToLatLng } from '../survey/geo-math';
 import { buildFenceItems, type PolygonFence, type CircleFence } from '../../../shared/fence-types';
-import { t } from '../../i18n';
+import { t, enPlural } from '../../i18n';
 
 export default function ObstaclePanel() {
   const obstacles = useSimObstaclesStore((s) => s.obstacles);
@@ -37,7 +37,7 @@ export default function ObstaclePanel() {
   const applyToFc = useCallback(async () => {
     const list = useSimObstaclesStore.getState().obstacles;
     if (list.length === 0) {
-      flash('No obstacles to apply');
+      flash(t('sim.ObstaclePanel.noObstaclesToApply'));
       return;
     }
     setApplying(true);
@@ -60,7 +60,7 @@ export default function ObstaclePanel() {
       const items = buildFenceItems(polygons, circles, null);
       const up = await window.electronAPI?.uploadFence?.(items);
       if (!up?.success) {
-        flash(up?.error ? `Upload failed: ${up.error}` : 'Fence upload failed');
+        flash(up?.error ? t('sim.ObstaclePanel.uploadFailed', { error: up.error }) : t('sim.ObstaclePanel.fenceUploadFailed'));
         return;
       }
       // Enable fence-based avoidance + Dijkstra path planning around exclusions.
@@ -71,9 +71,9 @@ export default function ObstaclePanel() {
         { paramId: 'OA_TYPE', value: 2, type: 9 }, // Dijkstra
         { paramId: 'FENCE_MARGIN', value: 2, type: 9 },
       ]);
-      flash(`Applied ${list.length} obstacle${list.length === 1 ? '' : 's'} as exclusion fences`);
+      flash(t('sim.ObstaclePanel.appliedObstacleAsExclusionFences', { length: list.length, v2: list.length === 1 ? '' : enPlural('s') }));
     } catch (e) {
-      flash(e instanceof Error ? e.message : 'Apply failed');
+      flash(e instanceof Error ? e.message : t('sim.ObstaclePanel.applyFailed'));
     } finally {
       setApplying(false);
     }
@@ -83,9 +83,9 @@ export default function ObstaclePanel() {
     setApplying(true);
     try {
       await window.electronAPI?.clearFence?.();
-      flash('Cleared FC fences');
+      flash(t('sim.ObstaclePanel.clearedFcFences'));
     } catch (e) {
-      flash(e instanceof Error ? e.message : 'Clear failed');
+      flash(e instanceof Error ? e.message : t('sim.ObstaclePanel.clearFailed'));
     } finally {
       setApplying(false);
     }

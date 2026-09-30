@@ -14,6 +14,7 @@ import { create } from 'zustand';
 import { useConnectionStore } from './connection-store';
 import { rcOverrideCall } from '../utils/rc-override-dispatch';
 import { claimRcOverride, releaseRcOverride, onTrainerActive } from '../utils/rc-source-arbiter';
+import { t } from '../i18n';
 
 /**
  * Transmit one RC-override frame over the correct protocol. MAVLink links use
@@ -35,7 +36,7 @@ function sendRcOverrideFrame(channels: number[]): void {
   const report = (r: boolean | { success?: boolean; error?: string } | undefined) => {
     const failed = r === false || (typeof r === 'object' && r !== null && r.success === false);
     const err = failed
-      ? (typeof r === 'object' && r !== null && r.error) || 'rejected by the link'
+      ? (typeof r === 'object' && r !== null && r.error) || t('stores.flight_control_store.rejectedByTheLink')
       : null;
     if (useFlightControlStore.getState().overrideError !== err) {
       useFlightControlStore.setState({ overrideError: err });
@@ -356,7 +357,7 @@ export const useFlightControlStore = create<FlightControlStore>((set, get) => ({
     }
     const claim = claimRcOverride('sliders');
     if (!claim.ok) {
-      set({ overrideError: claim.reason ?? 'RC override unavailable' });
+      set({ overrideError: claim.reason ?? t('stores.flight_control_store.rcOverrideUnavailable') });
       return;
     }
 
@@ -649,6 +650,6 @@ export function getModeName(boxId: number, fcVariant?: string): string {
 onTrainerActive((active) => {
   if (active && useFlightControlStore.getState().isOverrideActive) {
     useFlightControlStore.getState().stopOverride();
-    useFlightControlStore.setState({ overrideError: 'Trainer session active - the Trainer owns the sticks' });
+    useFlightControlStore.setState({ overrideError: t('stores.flight_control_store.trainerSessionActiveTheTrainerOwns') });
   }
 });

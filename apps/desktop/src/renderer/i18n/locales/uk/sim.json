@@ -15,7 +15,14 @@
       "applyAsFencesFc": "Застосувати як огорожі → FC",
       "clearAllFencesOnTheFlight": "Очистити всі огорожі на польотному контролері",
       "clearFc": "Очистити FC",
-      "removeAllObstacles": "Видалити всі перешкоди"
+      "removeAllObstacles": "Видалити всі перешкоди",
+      "noObstaclesToApply": "Немає перешкод для застосування",
+      "uploadFailed": "Помилка вивантаження: {{error}}",
+      "fenceUploadFailed": "Не вдалося вивантажити огорожу",
+      "appliedObstacleAsExclusionFences": "Застосовано перешкод як зон виключення: {{length}}",
+      "applyFailed": "Помилка застосування",
+      "clearedFcFences": "Огорожі на FC очищено",
+      "clearFailed": "Помилка очищення"
     },
     "SimStreamControl": {
       "publishThe3dViewAsAn": "Транслювати 3D-вигляд як RTSP-потік для OpenCV, VLC чи ffmpeg",
@@ -86,7 +93,18 @@
       "gust": "Порив",
       "waitingForTheMotorLayoutFrom": "Очікування схеми моторів від рушія (",
       "motors2": "моторів)...",
-      "motorSpins": "Мотор {{v1}} обертається {{v2}}{{v3}}"
+      "motorSpins": "Мотор {{v1}} обертається {{v2}}{{v3}}",
+      "payOutTheWinchLowerThe": "Розмотати лебідку (опустити вантаж)",
+      "holdTheWinch": "Утримувати лебідку",
+      "reelInTheWinchRaiseThe": "Намотати лебідку (підняти вантаж)",
+      "disableToTestTheGpsLoss": "Вимкніть, щоб перевірити failsafe втрати GPS / резерв EKF (SIM_GPS1_ENABLE)",
+      "simulateGpsJammingSimGps1Jam": "Імітувати глушіння GPS (SIM_GPS1_JAM)",
+      "disableTheBarometerSimBaroDisable": "Вимкнути барометр (SIM_BARO_DISABLE)",
+      "failThePrimaryCompassSimMag1": "Відмова основного компаса (SIM_MAG1_FAIL)",
+      "failTheSecondaryCompassSimMag2": "Відмова додаткового компаса (SIM_MAG2_FAIL)",
+      "dropRcToTriggerTheRadio": "Вимкнути RC, щоб спрацював radio failsafe (SIM_RC_FAIL)",
+      "clickToFail": " — клацніть, щоб викликати відмову",
+      "failed": " — ВІДМОВА"
     },
     "SimWorldView": {
       "chase": "Переслідування",
@@ -138,7 +156,25 @@
       "collapse": "Згорнути",
       "expandFlightControlPanel": "Розгорнути панель керування польотом",
       "collapseFlightControlPanel": "Згорнути панель керування польотом",
-      "perMotorOutputBarHeightThrottle": "Вихід кожного мотора (висота стовпця = команда газу, колір = навантаження променя)"
+      "perMotorOutputBarHeightThrottle": "Вихід кожного мотора (висота стовпця = команда газу, колір = навантаження променя)",
+      "simConnected": "Симуляцію підключено",
+      "vehicleLive": "Апарат наживо",
+      "connectedWaitingForGps": "Підключено, очікування GPS",
+      "waitingForSitl": "Очікування SITL",
+      "altitudeAboveHomePositionDown": "Висота над домом (-position.down)",
+      "groundSpeedFromHorizontalVelocity": "Шляхова швидкість із горизонтальної швидкості",
+      "rollAttitude": "Крен",
+      "pitchAttitude": "Тангаж",
+      "loadedBatteryVoltage": "Напруга батареї під навантаженням",
+      "slungLoadCableTensionCableM": "Натяг троса підвісного вантажу (трос {{v1}} м)",
+      "loadReleased": "Вантаж скинуто",
+      "airframeLoadFactorSpecificForceG": "Перевантаження планера (питома сила / g). 1,0 у рівному зависанні; більше при виходах із пікірування / різких розворотах",
+      "worstPerArmBendingMomentThrust": "Найбільший згинальний момент на промені (тяга × довжина променя)",
+      "totalRotorThrustCyanToRed": "Сумарна тяга роторів (стрілки моторів від блакитного до червоного)",
+      "gravityMGGreyArrowStraight": "Сила тяжіння, m·g (сіра стрілка, прямо вниз)",
+      "airframeParasiticRotorMomentumDragOrange": "Паразитний опір планера + імпульсний опір роторів (помаранчева стрілка)",
+      "netResultantForceAcceleratingTheAirframe": "Рівнодійна сила, що прискорює планер (біла стрілка); близька до нуля в стабільному зависанні",
+      "connecting": "Підключення..."
     },
     "sim_test_conditions": {
       "motorOut": "Відмова мотора",
