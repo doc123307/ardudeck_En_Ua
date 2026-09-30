@@ -4,6 +4,7 @@
  */
 
 import type { PreflightCheck, PreflightFix } from '../../../shared/script-installer-types';
+import { t } from '../../i18n';
 
 interface PreflightChecksListProps {
   checks: PreflightCheck[];
@@ -36,9 +37,9 @@ export function PreflightChecksList({ checks, busyFix, onApplyFix }: PreflightCh
                   <span className="text-sm font-medium text-content">{check.label}</span>
                   {check.currentValue !== undefined && (
                     <span className="text-[11px] font-mono text-content-secondary shrink-0">
-                      now: {String(check.currentValue)}
+                      {t('script_installer.PreflightChecksList.now')} {String(check.currentValue)}
                       {check.expectedValue !== undefined && check.severity !== 'pass' && (
-                        <> → need: {String(check.expectedValue)}</>
+                        <> {t('script_installer.PreflightChecksList.need')} {String(check.expectedValue)}</>
                       )}
                     </span>
                   )}
@@ -53,7 +54,7 @@ export function PreflightChecksList({ checks, busyFix, onApplyFix }: PreflightCh
                       disabled={isBusy}
                       className="px-3 py-1.5 text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isBusy ? 'Applying…' : fixLabel}
+                      {isBusy ? t('script_installer.PreflightChecksList.applying') : fixLabel}
                     </button>
                   </div>
                 )}

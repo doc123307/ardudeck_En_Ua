@@ -38,6 +38,7 @@ const DEMO_LINK = Array.from({ length: 48 }, (_, i) =>
 import { OSD_CHAR_WIDTH, OSD_CHAR_HEIGHT, getOsdCols, getOsdRows, isHdFormat, OSD_FORMAT_LABELS, type VideoType } from '../../utils/osd/font-renderer';
 import { getElementSize } from '../../utils/osd/element-sizes';
 import type { DemoTelemetry } from '../../utils/osd/element-renderers';
+import { t as tr } from '../../i18n';
 
 type OsdKind = 'text' | 'hud' | 'ruby';
 
@@ -78,7 +79,7 @@ function ResizeHandle({ onDrag }: { onDrag: (dx: number) => void }) {
     <div
       onPointerDown={down}
       className="w-1.5 shrink-0 cursor-col-resize bg-transparent hover:bg-blue-500/40 active:bg-blue-500/60 transition-colors"
-      title="Drag to resize"
+      title={tr('osd.OsdView.dragToResize')}
     />
   );
 }
@@ -254,7 +255,7 @@ export function OsdView() {
       : {
           ...hudValuesFromDemo(demoValues),
           linkHistory: hudConfig.widgets.linkGraph ? DEMO_LINK : undefined,
-          linkLabel: 'LINK (demo)',
+          linkLabel: tr('osd.OsdView.linkDemo'),
         };
 
   return (
@@ -262,14 +263,14 @@ export function OsdView() {
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-subtle bg-surface shrink-0 gap-4">
         <div className="flex items-center gap-3 shrink-0">
-          <h1 className="text-sm font-semibold text-content shrink-0 whitespace-nowrap">OSD Tool</h1>
+          <h1 className="text-sm font-semibold text-content shrink-0 whitespace-nowrap">{tr('osd.OsdView.osdTool')}</h1>
           <Segmented
             value={osdKind}
             onChange={setOsdKind}
             options={[
-              { value: 'hud', label: 'HUD', icon: MonitorPlay, tip: 'Graphical overlay ArduDeck draws over your video. Not uploaded to the flight controller.' },
-              { value: 'text', label: 'Text OSD', icon: Cpu, tip: 'Character OSD that lives in the flight controller (analog / Betaflight) or is drawn by your digital goggles.' },
-              { value: 'ruby', label: 'RubyFPV', icon: Radio, tip: 'OSD drawn by RubyFPV on its ground unit. Authored here, delivered to the board over the ArduDeck Agent.' },
+              { value: 'hud', label: 'HUD', icon: MonitorPlay, tip: tr('osd.OsdView.graphicalOverlayArdudeckDrawsOverYour') },
+              { value: 'text', label: tr('osd.OsdView.textOsd'), icon: Cpu, tip: tr('osd.OsdView.characterOsdThatLivesInThe') },
+              { value: 'ruby', label: 'RubyFPV', icon: Radio, tip: tr('osd.OsdView.osdDrawnByRubyfpvOnIts') },
             ]}
           />
           {osdKind !== 'ruby' && (
@@ -277,8 +278,8 @@ export function OsdView() {
               value={dataSource}
               onChange={setDataSource}
               options={[
-                { value: 'demo', label: 'Demo' },
-                { value: 'live', label: connectionState.isConnected ? 'Live' : 'Live (offline)' },
+                { value: 'demo', label: tr('osd.OsdView.demo') },
+                { value: 'live', label: connectionState.isConnected ? tr('osd.OsdView.live') : tr('osd.OsdView.liveOffline') },
               ]}
             />
           )}
@@ -287,28 +288,28 @@ export function OsdView() {
         <div className="flex items-center gap-3 flex-wrap justify-end flex-1 min-w-0">
           {osdKind === 'text' && (
             <>
-              <Select label="Font" value={currentFontName} disabled={isLoadingFont} onChange={loadBundledFont}
+              <Select label={tr('osd.OsdView.font')} value={currentFontName} disabled={isLoadingFont} onChange={loadBundledFont}
                 options={BUNDLED_FONT_NAMES.map((n) => ({ value: n, label: n }))} />
-              <Select label="Format" value={videoType} onChange={(v) => setVideoType(v as VideoType)}
+              <Select label={tr('osd.OsdView.format')} value={videoType} onChange={(v) => setVideoType(v as VideoType)}
                 options={(Object.keys(OSD_FORMAT_LABELS) as VideoType[]).map((k) => ({ value: k, label: OSD_FORMAT_LABELS[k] }))} />
             </>
           )}
           {osdKind !== 'ruby' && (
-            <Select label="Zoom" value={fitMode ? 'fit' : String(scale)}
+            <Select label={tr('osd.OsdView.zoom')} value={fitMode ? 'fit' : String(scale)}
               onChange={(v) => (v === 'fit' ? setFitMode(true) : setScale(parseInt(v)))}
-              options={[{ value: 'fit', label: 'Fit' }, ...[1, 2, 3, 4].map((s) => ({ value: String(s), label: `${s}x` }))]} />
+              options={[{ value: 'fit', label: tr('osd.OsdView.fit') }, ...[1, 2, 3, 4].map((s) => ({ value: String(s), label: `${s}x` }))]} />
           )}
           {osdKind === 'text' && (
             <>
               <label className="flex items-center gap-1.5 text-[11px] text-content-secondary">
                 <input type="checkbox" checked={showGrid} onChange={(e) => setShowGrid(e.target.checked)}
                   className="rounded bg-surface-raised border w-3 h-3" />
-                Grid
+                {tr('osd.OsdView.grid')}
               </label>
               <label className="flex items-center gap-1.5 text-[11px] text-content-secondary">
                 <input type="checkbox" checked={showLabels} onChange={(e) => setShowLabels(e.target.checked)}
                   className="rounded bg-surface-raised border w-3 h-3" />
-                Labels
+                {tr('osd.OsdView.labels')}
               </label>
             </>
           )}
@@ -317,7 +318,7 @@ export function OsdView() {
               <label className="text-[11px] text-content-secondary">BG</label>
               <input type="color" value={backgroundColor.startsWith('rgba') ? '#0064c8' : backgroundColor}
                 onChange={(e) => setBackgroundColor(e.target.value)}
-                className="w-6 h-5 rounded cursor-pointer bg-transparent border border-subtle" data-tip="Preview background (analog feed sits behind the OSD)" />
+                className="w-6 h-5 rounded cursor-pointer bg-transparent border border-subtle" data-tip={tr('osd.OsdView.previewBackgroundAnalogFeedSitsBehind')} />
             </div>
           )}
         </div>
@@ -355,7 +356,7 @@ export function OsdView() {
                   <FighterHud v={hudValues} config={hudConfig} profile={hudDesignGround ? 'ground' : 'air'} editable onMovePosition={(id, x, y) => setHudPosition(id, { x, y })} />
                 </div>
                 <div className="absolute -top-px right-1 -translate-y-full text-[10px] text-content-tertiary font-mono pb-1">
-                  HUD · drag the dashed widgets
+                  {tr('osd.OsdView.hudDragTheDashedWidgets')}
                 </div>
               </div>
             ) : osdKind === 'ruby' ? (
@@ -365,9 +366,9 @@ export function OsdView() {
                 {fontError}
               </div>
             ) : isLoadingFont ? (
-              <div className="text-content-secondary text-sm">Loading font…</div>
+              <div className="text-content-secondary text-sm">{tr('osd.OsdView.loadingFont')}</div>
             ) : !currentFont ? (
-              <div className="text-content-secondary text-sm">No font loaded</div>
+              <div className="text-content-secondary text-sm">{tr('osd.OsdView.noFontLoaded')}</div>
             ) : (
               <div
                 className="relative rounded-md ring-1 ring-black/40 shadow-2xl"
@@ -406,14 +407,14 @@ export function OsdView() {
 
           <p className="text-center pb-2 text-[10px] text-content-tertiary shrink-0">
             {osdKind === 'hud' ? (
-              'Drag the dashed widgets to reposition them'
+              tr('osd.OsdView.dragTheDashedWidgetsToReposition')
             ) : osdKind === 'ruby' ? (
-              'Toggle elements per screen · RubyFPV auto-arranges them and draws over your video · Export writes the .mdl OSD block'
+              tr('osd.OsdView.toggleElementsPerScreenRubyfpvAuto')
             ) : (
               <>
-                Drag elements to position · click to select
-                {target === 'ardupilot' && ' · dimmed elements aren’t on this board'}
-                {isHdFormat(videoType) && ' · digital OSD is drawn by your goggles using their own HD font - this previews the layout'}
+                {tr('osd.OsdView.dragElementsToPositionClickTo')}
+                {target === 'ardupilot' && tr('osd.OsdView.dimmedElementsArenTOnThis')}
+                {isHdFormat(videoType) && tr('osd.OsdView.digitalOsdIsDrawnByYour')}
               </>
             )}
           </p>

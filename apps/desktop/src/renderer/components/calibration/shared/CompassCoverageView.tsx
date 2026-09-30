@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import { CompassSphere } from './CompassSphere';
 import { coveredCount, SECTION_COUNT } from '../../../../shared/geodesic-grid';
 import { useCompassCoverageStore } from '../../../stores/compass-coverage-store';
+import { t } from '../../../i18n';
 
 interface CompassCoverageViewProps {
   /** False once the run has finished, to stop the idle spin. */
@@ -35,7 +36,7 @@ export function CompassCoverageView({ active = true }: CompassCoverageViewProps)
   const compasses = [...byCompass.entries()].sort((a, b) => a[0] - b[0]);
 
   if (compasses.length === 0) {
-    return <div className="text-[11px] text-content-secondary">Waiting for the first samples…</div>;
+    return <div className="text-[11px] text-content-secondary">{t('calibration.CompassCoverageView.waitingForTheFirstSamples')}</div>;
   }
 
   // One compass gets the full-size solid; several share the width.
@@ -55,14 +56,14 @@ export function CompassCoverageView({ active = true }: CompassCoverageViewProps)
               spinning={active}
             />
             <div className="text-center">
-              <div className="text-xs text-content-secondary">Compass {id + 1}</div>
+              <div className="text-xs text-content-secondary">{t('calibration.CompassCoverageView.compass')} {id + 1}</div>
               <div className="text-sm text-content">
                 <span className="font-mono text-cyan-400">{covered}</span>
-                <span className="text-content-secondary"> of {SECTION_COUNT}</span>
+                <span className="text-content-secondary"> {t('calibration.CompassCoverageView.of')} {SECTION_COUNT}</span>
               </div>
               <div className="text-[11px] text-content-secondary mt-0.5">
                 {remaining === 0
-                  ? 'Every direction sampled'
+                  ? t('calibration.CompassCoverageView.everyDirectionSampled')
                   : `${remaining} dark ${remaining === 1 ? 'patch' : 'patches'} left`}
               </div>
             </div>
@@ -70,7 +71,7 @@ export function CompassCoverageView({ active = true }: CompassCoverageViewProps)
         );
       })}
       <p className="w-full text-center text-[11px] text-content-tertiary">
-        Dark patches are directions with no samples yet. Drag a sphere to look around.
+        {t('calibration.CompassCoverageView.darkPatchesAreDirectionsWithNo')}
       </p>
     </div>
   );

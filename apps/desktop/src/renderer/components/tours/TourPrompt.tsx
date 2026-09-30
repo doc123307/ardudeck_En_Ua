@@ -1,5 +1,6 @@
 import { Sparkles, X } from 'lucide-react';
 import type { FeatureTour } from '../../feature-tours';
+import { t } from '../../i18n';
 
 interface TourPromptProps {
   tour: FeatureTour;
@@ -30,7 +31,7 @@ export function TourPrompt({ tour, onAccept, onDecline, onLater, onDisableAll }:
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'rgb(37 99 235)' }}>
-              Quick tour
+              {t('tours.TourPrompt.quickTour')}
             </span>
           </div>
           <h3 className="text-sm font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
@@ -44,8 +45,8 @@ export function TourPrompt({ tour, onAccept, onDecline, onLater, onDisableAll }:
           onClick={onLater}
           className="shrink-0 p-1 rounded-md transition-colors"
           style={{ color: 'var(--text-tertiary)' }}
-          title="Remind me later"
-          aria-label="Remind me later"
+          title={t('tours.TourPrompt.remindMeLater')}
+          aria-label={t('tours.TourPrompt.remindMeLater')}
         >
           <X className="w-3.5 h-3.5" />
         </button>
@@ -60,14 +61,14 @@ export function TourPrompt({ tour, onAccept, onDecline, onLater, onDisableAll }:
             border: '1px solid var(--border-default)',
           }}
         >
-          No thanks
+          {t('tours.TourPrompt.noThanks')}
         </button>
         <button
           onClick={onAccept}
           className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors"
           style={{ background: 'rgb(37 99 235)', color: '#fff' }}
         >
-          Show me
+          {t('tours.TourPrompt.showMe')}
         </button>
       </div>
       <div className="px-5 pb-3 -mt-1">
@@ -76,7 +77,7 @@ export function TourPrompt({ tour, onAccept, onDecline, onLater, onDisableAll }:
           className="text-[11px] underline underline-offset-2 transition-colors hover:opacity-80"
           style={{ color: 'var(--text-tertiary)' }}
         >
-          Don't offer tours again
+          {t('tours.TourPrompt.donTOfferToursAgain')}
         </button>
       </div>
     </div>

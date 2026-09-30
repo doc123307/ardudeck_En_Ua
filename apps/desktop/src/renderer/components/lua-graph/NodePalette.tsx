@@ -77,6 +77,7 @@ import type { NodeCategory } from './lua-graph-types';
 import { CATEGORY_COLORS, CATEGORY_LABELS } from './lua-graph-types';
 import { NODE_LIBRARY, getNodesByCategory } from './node-library';
 import { useLuaGraphStore } from '../../stores/lua-graph-store';
+import { t } from '../../i18n';
 
 // ── Icon Maps ───────────────────────────────────────────────────
 
@@ -197,7 +198,7 @@ export function NodePalette() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search nodes..."
+            placeholder={t('lua_graph.NodePalette.searchNodes')}
             className="w-full pl-8 pr-3 py-1.5 text-xs bg-surface-input border border-subtle rounded-md text-content placeholder:text-content-tertiary focus:outline-none focus:border-blue-500/40"
           />
         </div>
@@ -209,7 +210,7 @@ export function NodePalette() {
           // Search results — flat list
           <div className="flex flex-col gap-0.5 px-1">
             {filteredBySearch.length === 0 && (
-              <div className="text-xs text-content-tertiary text-center py-4">No matching nodes</div>
+              <div className="text-xs text-content-tertiary text-center py-4">{t('lua_graph.NodePalette.noMatchingNodes')}</div>
             )}
             {filteredBySearch.map((node) => (
               <NodeItem

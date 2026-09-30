@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * MAVLink PID Parameter Scheme Detection
  *
@@ -93,8 +94,8 @@ export interface PidScheme {
 
 const MODERN_COPTER_SCHEME: PidScheme = {
   id: 'modern-copter',
-  label: 'ArduCopter 3.5+',
-  description: 'Modern rate controller with feedforward',
+  get label() { return t('mavlink_config.mavlink_pid_schemes.arducopter35'); },
+  get description() { return t('mavlink_config.mavlink_pid_schemes.modernRateControllerWithFeedforward'); },
   hasFF: true,
   roll: { p: 'ATC_RAT_RLL_P', i: 'ATC_RAT_RLL_I', d: 'ATC_RAT_RLL_D', ff: 'ATC_RAT_RLL_FF' },
   pitch: { p: 'ATC_RAT_PIT_P', i: 'ATC_RAT_PIT_I', d: 'ATC_RAT_PIT_D', ff: 'ATC_RAT_PIT_FF' },
@@ -112,8 +113,8 @@ const MODERN_COPTER_SCHEME: PidScheme = {
 
 const LEGACY_COPTER_SCHEME: PidScheme = {
   id: 'legacy-copter',
-  label: 'ArduCopter (Legacy)',
-  description: 'Legacy rate controller (APM 2.5 / ArduCopter < 3.5)',
+  get label() { return t('mavlink_config.mavlink_pid_schemes.arducopterLegacy'); },
+  get description() { return t('mavlink_config.mavlink_pid_schemes.legacyRateControllerApm25'); },
   hasFF: false,
   roll: { p: 'RATE_RLL_P', i: 'RATE_RLL_I', d: 'RATE_RLL_D' },
   pitch: { p: 'RATE_PIT_P', i: 'RATE_PIT_I', d: 'RATE_PIT_D' },
@@ -148,7 +149,7 @@ export function buildPlaneScheme(parameters: Map<string, { value: number }>): Pi
   return {
     id: 'plane',
     label: 'ArduPlane',
-    description: 'Fixed-wing controller',
+    description: t('mavlink_config.mavlink_pid_schemes.fixedWingController'),
     hasFF: isModern,
     roll: {
       p: r('RLL_RATE_P', 'RLL2SRV_P'),
@@ -188,8 +189,8 @@ export function buildPlaneScheme(parameters: Map<string, { value: number }>): Pi
 
 export const QUADPLANE_SCHEME: PidScheme = {
   id: 'quadplane',
-  label: 'QuadPlane VTOL',
-  description: 'QuadPlane VTOL rate controller with feedforward',
+  get label() { return t('mavlink_config.mavlink_pid_schemes.quadplaneVtol'); },
+  get description() { return t('mavlink_config.mavlink_pid_schemes.quadplaneVtolRateControllerWithFeedforward'); },
   hasFF: true,
   roll: { p: 'Q_A_RAT_RLL_P', i: 'Q_A_RAT_RLL_I', d: 'Q_A_RAT_RLL_D', ff: 'Q_A_RAT_RLL_FF' },
   pitch: { p: 'Q_A_RAT_PIT_P', i: 'Q_A_RAT_PIT_I', d: 'Q_A_RAT_PIT_D', ff: 'Q_A_RAT_PIT_FF' },
@@ -215,8 +216,8 @@ export const QUADPLANE_SCHEME: PidScheme = {
  */
 export const PX4_MULTICOPTER_SCHEME: PidScheme = {
   id: 'px4-multicopter',
-  label: 'PX4 Multicopter',
-  description: 'PX4 multicopter rate controller',
+  get label() { return t('mavlink_config.mavlink_pid_schemes.px4Multicopter'); },
+  get description() { return t('mavlink_config.mavlink_pid_schemes.px4MulticopterRateController'); },
   hasFF: false,
   roll: { p: 'MC_ROLLRATE_P', i: 'MC_ROLLRATE_I', d: 'MC_ROLLRATE_D' },
   pitch: { p: 'MC_PITCHRATE_P', i: 'MC_PITCHRATE_I', d: 'MC_PITCHRATE_D' },
@@ -237,8 +238,8 @@ export const PX4_MULTICOPTER_SCHEME: PidScheme = {
  */
 export const PX4_FIXEDWING_SCHEME: PidScheme = {
   id: 'px4-fixedwing',
-  label: 'PX4 Fixed-wing',
-  description: 'PX4 fixed-wing rate controller with feedforward',
+  get label() { return t('mavlink_config.mavlink_pid_schemes.px4FixedWing'); },
+  get description() { return t('mavlink_config.mavlink_pid_schemes.px4FixedWingRateControllerWith'); },
   hasFF: true,
   roll: { p: 'FW_RR_P', i: 'FW_RR_I', d: 'FW_RR_D', ff: 'FW_RR_FF' },
   pitch: { p: 'FW_PR_P', i: 'FW_PR_I', d: 'FW_PR_D', ff: 'FW_PR_FF' },
@@ -296,7 +297,7 @@ function buildRoverScheme(parameters: Map<string, { value: number }>): PidScheme
   return {
     id: 'rover',
     label: 'ArduRover',
-    description: balance ? 'Steering, speed and balance controllers' : 'Steering and speed controllers',
+    description: balance ? t('mavlink_config.mavlink_pid_schemes.steeringSpeedAndBalanceControllers') : t('mavlink_config.mavlink_pid_schemes.steeringAndSpeedControllers'),
     hasFF: true,
     roll: { p: 'ATC_STR_RAT_P', i: 'ATC_STR_RAT_I', d: 'ATC_STR_RAT_D', ff: 'ATC_STR_RAT_FF' },
     pitch: { p: 'ATC_SPEED_P', i: 'ATC_SPEED_I', d: 'ATC_SPEED_D', ff: 'ATC_SPEED_FF' },
@@ -309,9 +310,9 @@ function buildRoverScheme(parameters: Map<string, { value: number }>): PidScheme
       yaw: { p: 1.0, i: 1.0, d: 0, ff: 0 },
     },
     axisInfo: {
-      roll: { title: 'Steering', sub: 'Turn rate to steering output' },
-      pitch: { title: 'Speed', sub: 'Throttle to hold target speed' },
-      ...(balance ? { yaw: { title: 'Balance', sub: 'Pitch control on a balance bot' } } : {}),
+      roll: { title: t('mavlink_config.mavlink_pid_schemes.steering'), sub: 'Turn rate to steering output' },
+      pitch: { title: t('mavlink_config.mavlink_pid_schemes.speed'), sub: 'Throttle to hold target speed' },
+      ...(balance ? { yaw: { title: t('mavlink_config.mavlink_pid_schemes.balance'), sub: 'Pitch control on a balance bot' } } : {}),
     },
   };
 }
@@ -368,7 +369,7 @@ export interface RateScheme {
 
 const MODERN_RATE_SCHEME: RateScheme = {
   id: 'modern-copter',
-  label: 'ArduCopter 3.5+',
+  get label() { return t('mavlink_config.mavlink_pid_schemes.arducopter35'); },
   hasExpo: true,
   rpLinked: true,
   rollPitch: { rate: 'ACRO_RP_RATE', expo: 'ACRO_RP_EXPO' },
@@ -382,7 +383,7 @@ const MODERN_RATE_SCHEME: RateScheme = {
 
 const LEGACY_RATE_SCHEME: RateScheme = {
   id: 'legacy-copter',
-  label: 'ArduCopter (Legacy)',
+  get label() { return t('mavlink_config.mavlink_pid_schemes.arducopterLegacy'); },
   hasExpo: false,
   rpLinked: true,
   rollPitch: { rate: 'ACRO_RP_P' },

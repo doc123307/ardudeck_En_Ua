@@ -2,6 +2,7 @@ import { CloudUpload, Download } from 'lucide-react';
 import type { MissionSummary, FlightStatus } from '../../../shared/mission-library-types';
 import { useSettingsStore } from '../../stores/settings-store';
 import { formatDistanceFromMeters } from '../../../shared/user-units.js';
+import { t } from '../../i18n';
 
 const STATUS_DOT_COLORS: Record<FlightStatus, string> = {
   planned: 'bg-blue-400',
@@ -93,7 +94,7 @@ export function MissionCard({ mission, isSelected, confirmDelete, onClick, onLoa
             </span>
           ) : (
             <span className="shrink-0 px-1.5 py-0.5 text-[10px] font-medium rounded border bg-surface-raised text-content-secondary border-subtle">
-              New
+              {t('mission_library.MissionCard.new')}
             </span>
           )}
         </div>
@@ -119,7 +120,7 @@ export function MissionCard({ mission, isSelected, confirmDelete, onClick, onLoa
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {mission.flightCount} flights
+            {mission.flightCount} {t('mission_library.MissionCard.flights')}
           </span>
         )}
         {vehicle && (
@@ -146,7 +147,7 @@ export function MissionCard({ mission, isSelected, confirmDelete, onClick, onLoa
         <button
           onClick={(e) => { e.stopPropagation(); onLoad(); }}
           className="p-1.5 rounded-md bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 transition-colors"
-          title="Load into Editor"
+          title={t('mission_library.MissionCard.loadIntoEditor')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -155,7 +156,7 @@ export function MissionCard({ mission, isSelected, confirmDelete, onClick, onLoa
         <button
           onClick={(e) => { e.stopPropagation(); onExport(); }}
           className="p-1.5 rounded-md bg-surface-raised hover:brightness-125 text-content-secondary transition-colors"
-          data-tip="Save this mission to a file (keeps groups and surveys)"
+          data-tip={t('mission_library.MissionCard.saveThisMissionToAFile')}
         >
           <Download className="w-3.5 h-3.5" />
         </button>
@@ -167,15 +168,15 @@ export function MissionCard({ mission, isSelected, confirmDelete, onClick, onLoa
               : 'bg-surface-raised hover:brightness-125 text-content-secondary'
           }`}
           data-tip={inBackup
-            ? 'Already in your backup. Save the current version again.'
-            : 'Save a copy to your backup so your other computers can open it'}
+            ? t('mission_library.MissionCard.alreadyInYourBackupSaveThe')
+            : t('mission_library.MissionCard.saveACopyToYourBackup')}
         >
           <CloudUpload className="w-3.5 h-3.5" />
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); onDuplicate(); }}
           className="p-1.5 rounded-md bg-surface-raised hover:bg-surface-raised text-content-secondary transition-colors"
-          title="Duplicate"
+          title={t('mission_library.MissionCard.duplicate')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -188,7 +189,7 @@ export function MissionCard({ mission, isSelected, confirmDelete, onClick, onLoa
               ? 'bg-red-600/40 text-red-400 ring-1 ring-red-500/60'
               : 'bg-red-600/20 hover:bg-red-600/40 text-red-400'
           }`}
-          title={confirmDelete ? 'Click again to confirm' : 'Delete'}
+          title={confirmDelete ? t('mission_library.MissionCard.clickAgainToConfirm') : t('mission_library.MissionCard.delete')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * Socket pictograms for the GPS wiring card: the connector a pilot is looking
  * at on the board, not a word. A GPS/TELEM port is drawn as its JST-GH shell
@@ -22,7 +23,7 @@ export function GpsPortGlyph({ kind, active = false, size = 54 }: GlyphProps): J
         viewBox="0 0 54 34"
         className={active ? 'text-emerald-400' : 'text-content-tertiary'}
         role="img"
-        aria-label="CAN bus"
+        aria-label={t('mavlink_config.GpsPortGlyph.canBus')}
       >
         <line x1="4" y1="17" x2="50" y2="17" stroke={stroke} strokeWidth="1.6" />
         <path
@@ -45,7 +46,7 @@ export function GpsPortGlyph({ kind, active = false, size = 54 }: GlyphProps): J
       viewBox="0 0 54 34"
       className={active ? 'text-emerald-400' : 'text-content-tertiary'}
       role="img"
-      aria-label="Serial socket"
+      aria-label={t('mavlink_config.GpsPortGlyph.serialSocket')}
     >
       <rect x="6" y="7" width="42" height="20" rx="3" fill={fill} stroke={stroke} strokeWidth="1.6" />
       <rect x="18" y="3.5" width="18" height="4" rx="1.5" fill={stroke} opacity="0.45" />

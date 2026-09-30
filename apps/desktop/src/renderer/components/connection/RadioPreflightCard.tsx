@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useParameterStore } from '../../stores/parameter-store';
 import { useMessagesStore } from '../../stores/messages-store';
 import { evaluateRadioPreflight } from '../../utils/radio-preflight';
+import { t } from '../../i18n';
 
 /**
  * Plain-language vehicle checks for flying/driving over a MAVLink radio
@@ -71,11 +72,11 @@ export function RadioPreflightCard() {
       <div className="card-body space-y-3">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-medium text-content">Radio Link Check</p>
+          <p className="text-sm font-medium text-content">{t('connection.RadioPreflightCard.radioLinkCheck')}</p>
           <p className="text-xs text-content-secondary">
             {allPass
-              ? 'The vehicle is fully set up for this radio link.'
-              : 'A few vehicle settings need adjusting for this radio link.'}
+              ? t('connection.RadioPreflightCard.theVehicleIsFullySetUp')
+              : t('connection.RadioPreflightCard.aFewVehicleSettingsNeedAdjusting')}
           </p>
         </div>
         {applied ? (
@@ -83,9 +84,9 @@ export function RadioPreflightCard() {
             onClick={reboot}
             disabled={rebooting}
             className="btn btn-primary text-xs shrink-0"
-            data-tip="The new settings take effect after a restart"
+            data-tip={t('connection.RadioPreflightCard.theNewSettingsTakeEffectAfter')}
           >
-            {rebooting ? 'Restarting...' : 'Restart vehicle'}
+            {rebooting ? t('connection.RadioPreflightCard.restarting') : t('connection.RadioPreflightCard.restartVehicle')}
           </button>
         ) : (
           fixable.length > 0 && (
@@ -93,9 +94,9 @@ export function RadioPreflightCard() {
               onClick={applyFixes}
               disabled={applying}
               className="btn btn-primary text-xs shrink-0"
-              data-tip="Applies the corrected settings to the vehicle"
+              data-tip={t('connection.RadioPreflightCard.appliesTheCorrectedSettingsToThe')}
             >
-              {applying ? 'Fixing...' : 'Fix for me'}
+              {applying ? t('connection.RadioPreflightCard.fixing') : t('connection.RadioPreflightCard.fixForMe')}
             </button>
           )
         )}
@@ -115,8 +116,7 @@ export function RadioPreflightCard() {
 
       {applied && (
         <p className="text-xs text-emerald-300">
-          Settings applied. Restart the vehicle (button above) to make them take effect - the link reconnects by
-          itself afterwards.
+          {t('connection.RadioPreflightCard.settingsAppliedRestartTheVehicleButton')}
         </p>
       )}
       {failure && <p className="text-xs text-red-300">{failure}</p>}
@@ -126,7 +126,7 @@ export function RadioPreflightCard() {
           onClick={() => setShowDetails((v) => !v)}
           className="text-xs text-content-secondary hover:text-content transition-colors"
         >
-          {showDetails ? 'Hide technical details' : 'Show technical details'}
+          {showDetails ? t('connection.RadioPreflightCard.hideTechnicalDetails') : t('connection.RadioPreflightCard.showTechnicalDetails')}
         </button>
       )}
       {showDetails && fixable.length > 0 && (

@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useMapInstrumentsStore, resolveInstrumentVisible } from '../../../stores/map-instruments-store';
 import { MAP_INSTRUMENTS } from './registry';
 import { InstrumentsCatalog } from './InstrumentsCatalog';
+import { t } from '../../../i18n';
 
 const gaugeIcon = (
   <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -30,12 +31,12 @@ export function InstrumentsMenu(): JSX.Element {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        data-tip="Map instruments"
+        data-tip={t('map.InstrumentsMenu.mapInstruments')}
         data-tour="map-instruments"
         className="px-2 py-1 inline-flex items-center gap-1.5 rounded text-xs bg-surface text-content hover:bg-surface-raised shadow-lg transition-colors"
       >
         {gaugeIcon}
-        <span className="font-medium">Instruments{count > 0 ? ` (${count})` : ''}</span>
+        <span className="font-medium">{t('map.InstrumentsMenu.instruments')}{count > 0 ? ` (${count})` : ''}</span>
       </button>
       {open && <InstrumentsCatalog onClose={() => setOpen(false)} />}
     </>

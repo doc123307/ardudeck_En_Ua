@@ -43,6 +43,7 @@ import {
 } from '../utils/rc-source-arbiter';
 import { useConnectionStore } from './connection-store';
 import { useParameterStore } from './parameter-store';
+import { t as tr } from '../i18n';
 
 /** 50 Hz, matching a real receiver's frame rate. */
 const POLL_MS = 20;
@@ -252,9 +253,9 @@ export const usePseudoTxStore = create<PseudoTxState>((set, get) => ({
   enableVehicleControl: () => {
     if (get().vehicleControl) return { ok: true };
     const { connectionState } = useConnectionStore.getState();
-    if (!get().enabled) return { ok: false, reason: 'Switch the USB transmitter on first' };
+    if (!get().enabled) return { ok: false, reason: tr('stores.pseudo_tx_store.switchTheUsbTransmitterOnFirst') };
     if (!connectionState.isConnected || connectionState.protocol !== 'mavlink') {
-      return { ok: false, reason: 'Needs a connected MAVLink vehicle' };
+      return { ok: false, reason: tr('stores.pseudo_tx_store.needsAConnectedMavlinkVehicle') };
     }
     const claim = claimRcOverride('joystick');
     if (!claim.ok) return { ok: false, reason: claim.reason };

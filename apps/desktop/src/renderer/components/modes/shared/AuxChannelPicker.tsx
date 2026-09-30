@@ -7,6 +7,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { AUX_CHANNELS } from '../presets/mode-presets';
+import { t } from '../../../i18n';
 
 interface AuxChannelPickerProps {
   selected: number;
@@ -60,7 +61,7 @@ export const AuxChannelPicker: React.FC<AuxChannelPickerProps> = ({
           <div className="flex items-center gap-3">
             {/* Live RC value */}
             <div className="text-right">
-              <div className="text-xs text-content-secondary">Current</div>
+              <div className="text-xs text-content-secondary">{t('modes.AuxChannelPicker.current')}</div>
               <div className="font-mono text-sm text-yellow-400">{currentRcValue}</div>
             </div>
             {/* Dropdown arrow */}

@@ -48,6 +48,7 @@ import { getModeCategory } from '../tactical-icon-pool';
 import { GAUGE_COLORS } from './RoundGauge';
 import { useInDock } from './dock-context';
 import { useVehicleClass } from '../../../hooks/useVehicleClass';
+import { t as tr } from '../../../i18n';
 
 const PICKER_WIDTH = 188;
 
@@ -88,7 +89,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
   const isPx4 = connectionState.firmware === 'px4';
   const activeModes = isPx4 ? PX4_FLIGHT_MODES : FLIGHT_MODES[vehicleClass];
   const missionModes = isPx4
-    ? { auto: encodePx4CustomMode(4, 4), pause: encodePx4CustomMode(4, 3), pauseLabel: 'Hold', abort: encodePx4CustomMode(4, 5), abortLabel: 'Return' }
+    ? { auto: encodePx4CustomMode(4, 4), pause: encodePx4CustomMode(4, 3), pauseLabel: tr('map.FlightControlInstrument.hold'), abort: encodePx4CustomMode(4, 5), abortLabel: tr('map.FlightControlInstrument.return') }
     : MISSION_MODES[vehicleClass];
   const capabilities = VEHICLE_CAPABILITIES[vehicleClass];
   const isInAuto = flight.modeNum === missionModes.auto;
@@ -201,7 +202,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
     });
     setTakeoffBusy(false);
     if (result.ok) {
-      flashStatus({ text: `Taking off to ${formatAltitudeFromMeters(takeoffAltM, altitudeUnit)}...`, type: 'success' });
+      flashStatus({ text: tr('map.FlightControlInstrument.takingOffTo', { v1: formatAltitudeFromMeters(takeoffAltM, altitudeUnit) }), type: 'success' });
     } else {
       flashStatus({ text: result.reason, type: 'error' });
     }
@@ -303,7 +304,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
           type="button"
           onClick={onArmClick}
           disabled={!connected || armBusy}
-          data-tip={armPending ? 'Press again to confirm' : flight.armed ? 'Disarm motors' : 'Arm motors'}
+          data-tip={armPending ? tr('map.FlightControlInstrument.pressAgainToConfirm') : flight.armed ? tr('map.FlightControlInstrument.disarmMotors') : tr('map.FlightControlInstrument.armMotors')}
           className={btnBase}
           style={armStyle}
         >
@@ -314,7 +315,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
           type="button"
           onClick={() => setPickerOpen((v) => !v)}
           disabled={!connected}
-          data-tip="Change flight mode"
+          data-tip={tr('map.FlightControlInstrument.changeFlightMode')}
           className={btnBase + ' flex-1 flex items-center gap-1.5 min-w-0'}
           style={{ border: `1px solid ${GAUGE_COLORS.bezelEdge}`, color: GAUGE_COLORS.text }}
         >
@@ -339,7 +340,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
             type="button"
             onClick={() => mode.requestMode(missionModes.abort)}
             disabled={!connected}
-            data-tip={`Abort to ${missionModes.abortLabel}`}
+            data-tip={tr('map.FlightControlInstrument.abortTo', { abortLabel: missionModes.abortLabel })}
             className={btnBase}
             style={{ color: GAUGE_COLORS.red, border: '1px solid rgba(248,113,113,0.5)' }}
           >
@@ -354,7 +355,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
             type="button"
             onClick={() => setTakeoffOpen((v) => !v)}
             disabled={!connected || takeoffBusy}
-            data-tip={takeoffOpen ? 'Cancel takeoff' : takeoffPresentation.buttonHint}
+            data-tip={takeoffOpen ? tr('map.FlightControlInstrument.cancelTakeoff') : takeoffPresentation.buttonHint}
             className={btnBase}
             style={{
               color: GAUGE_COLORS.green,
@@ -396,7 +397,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
               type="button"
               onClick={() => mode.requestMode(missionModes.pause, { skipConfirm: true })}
               disabled={!connected}
-              data-tip={`Pause mission (${missionModes.pauseLabel})`}
+              data-tip={tr('map.FlightControlInstrument.pauseMission', { pauseLabel: missionModes.pauseLabel })}
               className={btnBase + ' flex-1'}
               style={{ color: GAUGE_COLORS.amber, background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.5)' }}
             >
@@ -406,7 +407,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
               type="button"
               onClick={() => mode.requestMode(missionModes.abort)}
               disabled={!connected}
-              data-tip={`Abort to ${missionModes.abortLabel}`}
+              data-tip={tr('map.FlightControlInstrument.abortTo', { abortLabel: missionModes.abortLabel })}
               className={btnBase}
               style={{ color: GAUGE_COLORS.red, border: '1px solid rgba(248,113,113,0.5)' }}
             >
@@ -419,7 +420,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
               type="button"
               onClick={startMission}
               disabled={!connected}
-              data-tip="Resume mission (back to Auto)"
+              data-tip={tr('map.FlightControlInstrument.resumeMissionBackToAuto')}
               className={btnBase + ' flex-1 bg-blue-600 text-white hover:bg-blue-500'}
             >
               RESUME
@@ -428,7 +429,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
               type="button"
               onClick={() => mode.requestMode(missionModes.abort)}
               disabled={!connected}
-              data-tip={`Abort to ${missionModes.abortLabel}`}
+              data-tip={tr('map.FlightControlInstrument.abortTo', { abortLabel: missionModes.abortLabel })}
               className={btnBase}
               style={{ color: GAUGE_COLORS.red, border: '1px solid rgba(248,113,113,0.5)' }}
             >
@@ -442,9 +443,9 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
               onClick={onStart}
               disabled={!connected || missionCount === 0}
               data-tip={
-                missionCount === 0 ? 'No mission loaded'
-                  : missionDirty ? 'Mission not uploaded to the vehicle yet'
-                  : `Start mission (${missionCount} wp)`
+                missionCount === 0 ? tr('map.FlightControlInstrument.noMissionLoaded')
+                  : missionDirty ? tr('map.FlightControlInstrument.missionNotUploadedToTheVehicle')
+                  : tr('map.FlightControlInstrument.startMissionWp', { missionCount })
               }
               className={btnBase + ' flex-1 bg-blue-600 text-white hover:bg-blue-500'}
             >
@@ -454,7 +455,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
               type="button"
               onClick={() => mode.requestMode(missionModes.abort)}
               disabled={!connected}
-              data-tip={`Abort to ${missionModes.abortLabel}`}
+              data-tip={tr('map.FlightControlInstrument.abortTo', { abortLabel: missionModes.abortLabel })}
               className={btnBase}
               style={{ color: GAUGE_COLORS.red, border: '1px solid rgba(248,113,113,0.5)' }}
             >
@@ -480,13 +481,13 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
       {mode.pendingCommit != null && inlineRow(
         <>
           <span className="text-[10px] leading-none flex-1 min-w-0 truncate">
-            Engage {pendingMeta?.name ?? 'mode'}?
+            {tr('map.FlightControlInstrument.engage')} {pendingMeta?.name ?? 'mode'}?
           </span>
           <button type="button" onClick={mode.confirmCommit} className="text-[10px] font-semibold px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-500">
-            Engage
+            {tr('map.FlightControlInstrument.engage')}
           </button>
           <button type="button" onClick={mode.cancelCommit} className="text-[10px] px-2 py-1 rounded text-[var(--gauge-text-dim)] hover:text-[var(--gauge-text)]">
-            Cancel
+            {tr('map.FlightControlInstrument.cancel')}
           </button>
         </>,
       )}
@@ -494,7 +495,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
       {startGate && inlineRow(
         <>
           <span className="text-[10px] leading-none flex-1 min-w-0" style={{ color: GAUGE_COLORS.amber }}>
-            Mission not on vehicle
+            {tr('map.FlightControlInstrument.missionNotOnVehicle')}
           </span>
           <button
             type="button"
@@ -502,7 +503,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
             disabled={uploading}
             className="text-[10px] font-semibold px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 whitespace-nowrap"
           >
-            {uploading ? 'Uploading...' : 'Upload & Start'}
+            {uploading ? tr('map.FlightControlInstrument.uploading') : tr('map.FlightControlInstrument.uploadStart')}
           </button>
           <button
             type="button"
@@ -511,7 +512,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
             className="text-[10px] px-2 py-1 rounded whitespace-nowrap"
             style={{ color: GAUGE_COLORS.amber }}
           >
-            Start anyway
+            {tr('map.FlightControlInstrument.startAnyway')}
           </button>
           <button type="button" onClick={() => setStartGate(false)} className="text-[10px] px-1.5 py-1 rounded text-[var(--gauge-text-dim)] hover:text-[var(--gauge-text)]">
             ✕
@@ -557,7 +558,7 @@ export function FlightControlInstrument({ variant = 'full' }: { variant?: Flight
                               style={{ background: active ? '#fff' : categoryColor(m.name) }}
                             />
                             <span className="truncate">{m.name}</span>
-                            {m.commit && !active && <span className="ml-auto text-[9px] text-content-tertiary">confirm</span>}
+                            {m.commit && !active && <span className="ml-auto text-[9px] text-content-tertiary">{tr('map.FlightControlInstrument.confirm')}</span>}
                           </button>
                         );
                       })}

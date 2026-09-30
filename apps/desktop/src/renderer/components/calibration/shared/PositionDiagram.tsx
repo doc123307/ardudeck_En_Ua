@@ -3,6 +3,7 @@
  */
 
 import { ACCEL_6POINT_POSITIONS, type AccelPosition } from '../../../../shared/calibration-types';
+import { t } from '../../../i18n';
 
 interface PositionDiagramProps {
   position: AccelPosition;
@@ -39,7 +40,7 @@ export function PositionDiagram({ position, isActive = false, compact = false }:
             <path d="M100 40 L110 55 L105 55 L105 70 L95 70 L95 55 L90 55 Z" fill="currentColor" />
             {/* Level surface line */}
             <line x1="30" y1="160" x2="170" y2="160" stroke="currentColor" strokeWidth={1} strokeDasharray="4" />
-            <text x="100" y="180" textAnchor="middle" className="text-xs" fill="currentColor">Level Surface</text>
+            <text x="100" y="180" textAnchor="middle" className="text-xs" fill="currentColor">{t('calibration.PositionDiagram.levelSurface')}</text>
           </g>
         );
 
@@ -52,7 +53,7 @@ export function PositionDiagram({ position, isActive = false, compact = false }:
             <path d="M35 100 L50 90 L50 95 L70 95 L70 105 L50 105 L50 110 Z" fill="currentColor" />
             {/* Surface line */}
             <line x1="30" y1="160" x2="30" y2="40" stroke="currentColor" strokeWidth={1} strokeDasharray="4" />
-            <text x="15" y="100" textAnchor="middle" className="text-xs" fill="currentColor" transform="rotate(-90 15 100)">Surface</text>
+            <text x="15" y="100" textAnchor="middle" className="text-xs" fill="currentColor" transform="rotate(-90 15 100)">{t('calibration.PositionDiagram.surface')}</text>
           </g>
         );
 
@@ -65,7 +66,7 @@ export function PositionDiagram({ position, isActive = false, compact = false }:
             <path d="M165 100 L150 90 L150 95 L130 95 L130 105 L150 105 L150 110 Z" fill="currentColor" />
             {/* Surface line */}
             <line x1="170" y1="160" x2="170" y2="40" stroke="currentColor" strokeWidth={1} strokeDasharray="4" />
-            <text x="185" y="100" textAnchor="middle" className="text-xs" fill="currentColor" transform="rotate(90 185 100)">Surface</text>
+            <text x="185" y="100" textAnchor="middle" className="text-xs" fill="currentColor" transform="rotate(90 185 100)">{t('calibration.PositionDiagram.surface')}</text>
           </g>
         );
 
@@ -80,7 +81,7 @@ export function PositionDiagram({ position, isActive = false, compact = false }:
             <path d="M100 170 L90 155 L95 155 L95 140 L105 140 L105 155 L110 155 Z" fill="currentColor" />
             {/* Surface line */}
             <line x1="30" y1="175" x2="170" y2="175" stroke="currentColor" strokeWidth={1} strokeDasharray="4" />
-            <text x="100" y="190" textAnchor="middle" className="text-xs" fill="currentColor">Surface</text>
+            <text x="100" y="190" textAnchor="middle" className="text-xs" fill="currentColor">{t('calibration.PositionDiagram.surface')}</text>
           </g>
         );
 
@@ -95,7 +96,7 @@ export function PositionDiagram({ position, isActive = false, compact = false }:
             <path d="M100 30 L90 45 L95 45 L95 60 L105 60 L105 45 L110 45 Z" fill="currentColor" />
             {/* Surface line */}
             <line x1="30" y1="175" x2="170" y2="175" stroke="currentColor" strokeWidth={1} strokeDasharray="4" />
-            <text x="100" y="190" textAnchor="middle" className="text-xs" fill="currentColor">Surface</text>
+            <text x="100" y="190" textAnchor="middle" className="text-xs" fill="currentColor">{t('calibration.PositionDiagram.surface')}</text>
           </g>
         );
 
@@ -118,7 +119,7 @@ export function PositionDiagram({ position, isActive = false, compact = false }:
             <path d="M100 160 L110 145 L105 145 L105 130 L95 130 L95 145 L90 145 Z" fill="currentColor" />
             {/* Level surface line */}
             <line x1="30" y1="40" x2="170" y2="40" stroke="currentColor" strokeWidth={1} strokeDasharray="4" />
-            <text x="100" y="30" textAnchor="middle" className="text-xs" fill="currentColor">Supporting Surface</text>
+            <text x="100" y="30" textAnchor="middle" className="text-xs" fill="currentColor">{t('calibration.PositionDiagram.supportingSurface')}</text>
           </g>
         );
 

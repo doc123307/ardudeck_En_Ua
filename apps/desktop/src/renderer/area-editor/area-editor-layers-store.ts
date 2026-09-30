@@ -11,26 +11,27 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { LayerKey } from '../../shared/map-layers';
+import { t } from '../i18n';
 
 /** Base layers offered in the editor — the planning-relevant subset of MAP_LAYERS. */
 export const AREA_EDITOR_BASE_LAYERS: { key: LayerKey; label: string }[] = [
-  { key: 'googleSat', label: 'Satellite' },
-  { key: 'googleHybrid', label: 'Hybrid' },
-  { key: 'bingSat', label: 'Bing Sat' },
-  { key: 'bingHybrid', label: 'Bing Hybrid' },
-  { key: 'osm', label: 'Street' },
-  { key: 'terrain', label: 'Terrain' },
-  { key: 'dark', label: 'Dark' },
+  { key: 'googleSat', get label() { return t('area_editor.area_editor_layers_store.satellite'); } },
+  { key: 'googleHybrid', get label() { return t('area_editor.area_editor_layers_store.hybrid'); } },
+  { key: 'bingSat', get label() { return t('area_editor.area_editor_layers_store.bingSat'); } },
+  { key: 'bingHybrid', get label() { return t('area_editor.area_editor_layers_store.bingHybrid'); } },
+  { key: 'osm', get label() { return t('area_editor.area_editor_layers_store.street'); } },
+  { key: 'terrain', get label() { return t('area_editor.area_editor_layers_store.terrain'); } },
+  { key: 'dark', get label() { return t('area_editor.area_editor_layers_store.dark'); } },
 ];
 
 export type AreaEditorOverlayId = 'aviation' | 'zones' | 'wind' | 'traffic' | 'gliders';
 
 export const AREA_EDITOR_OVERLAYS: { id: AreaEditorOverlayId; label: string; hint: string }[] = [
-  { id: 'aviation', label: 'Aviation', hint: 'OpenAIP airfields, navaids and airspace (needs an OpenAIP key)' },
-  { id: 'zones', label: 'Zones', hint: 'DIPUL German UAS geo-zones (Germany only)' },
-  { id: 'wind', label: 'Wind', hint: 'Animated forecast wind (Open-Meteo)' },
-  { id: 'traffic', label: 'Traffic', hint: 'Live ADS-B aircraft' },
-  { id: 'gliders', label: 'Gliders', hint: 'Live OGN/FLARM gliders' },
+  { id: 'aviation', get label() { return t('area_editor.area_editor_layers_store.aviation'); }, get hint() { return t('area_editor.area_editor_layers_store.openaipAirfieldsNavaidsAndAirspaceNeeds'); } },
+  { id: 'zones', get label() { return t('area_editor.area_editor_layers_store.zones'); }, get hint() { return t('area_editor.area_editor_layers_store.dipulGermanUasGeoZonesGermany'); } },
+  { id: 'wind', get label() { return t('area_editor.area_editor_layers_store.wind'); }, get hint() { return t('area_editor.area_editor_layers_store.animatedForecastWindOpenMeteo'); } },
+  { id: 'traffic', get label() { return t('area_editor.area_editor_layers_store.traffic'); }, get hint() { return t('area_editor.area_editor_layers_store.liveAdsBAircraft'); } },
+  { id: 'gliders', get label() { return t('area_editor.area_editor_layers_store.gliders'); }, get hint() { return t('area_editor.area_editor_layers_store.liveOgnFlarmGliders'); } },
 ];
 
 interface LayersState {

@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { t } from '../../i18n';
 
 interface BitmaskEditorProps {
   paramId: string;
@@ -82,13 +83,13 @@ const BitmaskEditor: React.FC<BitmaskEditorProps> = ({ paramId, value, bitmask, 
             onClick={handleSelectAll}
             className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
           >
-            Select all
+            {t('mavlink_config.BitmaskEditor.selectAll')}
           </button>
           <button
             onClick={handleSelectNone}
             className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
           >
-            Select none
+            {t('mavlink_config.BitmaskEditor.selectNone')}
           </button>
         </div>
       </div>
@@ -118,14 +119,14 @@ const BitmaskEditor: React.FC<BitmaskEditorProps> = ({ paramId, value, bitmask, 
           onClick={onCancel}
           className="px-3 py-1.5 text-sm text-content-secondary hover:text-content transition-colors"
         >
-          Cancel
+          {t('mavlink_config.BitmaskEditor.cancel')}
         </button>
         <button
           onClick={() => onSave(currentValue)}
           disabled={!hasChanges}
           className="px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 disabled:bg-surface-raised text-blue-400 disabled:text-white-tertiary rounded-lg text-sm font-medium transition-colors"
         >
-          Apply
+          {t('mavlink_config.BitmaskEditor.apply')}
         </button>
       </div>
     </div>

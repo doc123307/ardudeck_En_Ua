@@ -7,6 +7,7 @@ import { useMapInstrumentsStore, sanitizeLayout, type InstrumentLayoutSnapshot }
 import { useMapSplitStore } from '../../stores/map-split-store';
 import { useCameraStore } from '../../stores/camera-store';
 import { PRESET_INSTRUMENT_LAYOUTS } from '../map/instruments/preset-layouts';
+import { t } from '../../i18n';
 
 export interface WorkspaceExtras {
   /** Cockpit on screen when captured, custom (unsaved) arrangements included. */
@@ -163,7 +164,7 @@ function missionCockpit(): InstrumentLayoutSnapshot {
   };
 }
 
-const MAP_PANEL = { id: 'map', contentComponent: 'MapPanel', title: 'Map' };
+const MAP_PANEL = { id: 'map', contentComponent: 'MapPanel', get title() { return t('telemetry.workspace_layouts.map'); } };
 
 const PILOT_DOCK: SerializedDockview = {
   grid: {
@@ -190,7 +191,7 @@ const FPV_DOCK: SerializedDockview = {
     height: 815,
     orientation: 'HORIZONTAL',
   },
-  panels: { map: MAP_PANEL, camera: { id: 'camera', contentComponent: 'CameraPanel', title: 'Vision' } },
+  panels: { map: MAP_PANEL, camera: { id: 'camera', contentComponent: 'CameraPanel', get title() { return t('telemetry.workspace_layouts.vision'); } } },
   activeGroup: '1',
 } as SerializedDockview;
 
@@ -217,8 +218,8 @@ const MISSION_DOCK: SerializedDockview = {
   },
   panels: {
     map: MAP_PANEL,
-    waypoints: { id: 'waypoints', contentComponent: 'WaypointTablePanel', title: 'Waypoints' },
-    altitudeProfile: { id: 'altitudeProfile', contentComponent: 'AltitudeProfilePanel', title: 'Altitude Profile' },
+    waypoints: { id: 'waypoints', contentComponent: 'WaypointTablePanel', get title() { return t('telemetry.workspace_layouts.waypoints'); } },
+    altitudeProfile: { id: 'altitudeProfile', contentComponent: 'AltitudeProfilePanel', get title() { return t('telemetry.workspace_layouts.altitudeProfile'); } },
   },
   activeGroup: '1',
 } as SerializedDockview;
@@ -233,8 +234,8 @@ export interface BuiltinLayout {
 
 export const BUILTIN_LAYOUTS = {
   pilotView: {
-    label: 'Pilot',
-    description: 'Map with synthetic vision split.',
+    get label() { return t('telemetry.workspace_layouts.pilot'); },
+    get description() { return t('telemetry.workspace_layouts.mapWithSyntheticVisionSplit'); },
     data: () => ({
       v: 2,
       dock: PILOT_DOCK,
@@ -249,7 +250,7 @@ export const BUILTIN_LAYOUTS = {
   },
   fpv: {
     label: 'FPV',
-    description: 'Map and Vision side by side.',
+    get description() { return t('telemetry.workspace_layouts.mapAndVisionSideBySide'); },
     data: () => ({
       v: 2,
       dock: FPV_DOCK,
@@ -263,8 +264,8 @@ export const BUILTIN_LAYOUTS = {
     }),
   },
   mission: {
-    label: 'Mission',
-    description: 'Map, waypoints, altitude profile.',
+    get label() { return t('telemetry.workspace_layouts.mission'); },
+    get description() { return t('telemetry.workspace_layouts.mapWaypointsAltitudeProfile'); },
     needsMissions: true,
     data: () => ({
       v: 2,

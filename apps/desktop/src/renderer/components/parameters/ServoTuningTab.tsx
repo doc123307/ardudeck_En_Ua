@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { useServoWizardStore } from '../../stores/servo-wizard-store';
 import { ServoTuningView } from '../servo-wizard/tuning';
 import { CircleSlash } from 'lucide-react';
+import { t } from '../../i18n';
 
 export default function ServoTuningTab() {
   const {
@@ -54,7 +55,7 @@ export default function ServoTuningTab() {
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <p className="text-sm">Checking servo support...</p>
+        <p className="text-sm">{t('parameters.ServoTuningTab.checkingServoSupport')}</p>
       </div>
     );
   }
@@ -66,24 +67,24 @@ export default function ServoTuningTab() {
         <CircleSlash className="w-16 h-16 text-content-secondary" />
         <div>
           <h2 className="text-xl font-bold text-content mb-2">
-            {isMultirotor ? 'Board Configured as Multirotor' : 'Servo Setup Not Available'}
+            {isMultirotor ? t('parameters.ServoTuningTab.boardConfiguredAsMultirotor') : t('parameters.ServoTuningTab.servoSetupNotAvailable')}
           </h2>
-          <p className="text-content-secondary">{supportError || 'Servo outputs are not available on this board configuration.'}</p>
+          <p className="text-content-secondary">{supportError || t('parameters.ServoTuningTab.servoOutputsAreNotAvailableOn')}</p>
         </div>
 
         <div className="bg-surface border rounded-xl p-4 text-left">
-          <p className="text-sm text-content font-medium mb-2">Servo Tuning is used for:</p>
+          <p className="text-sm text-content font-medium mb-2">{t('parameters.ServoTuningTab.servoTuningIsUsedFor')}</p>
           <ul className="text-xs text-content-secondary space-y-1 list-disc list-inside">
-            <li><strong>Fixed-wing aircraft</strong> - ailerons, elevator, rudder</li>
-            <li><strong>Flying wings</strong> - elevon mixing</li>
-            <li><strong>Gimbal servos</strong> - camera pan/tilt (requires compatible board)</li>
+            <li><strong>{t('parameters.ServoTuningTab.fixedWingAircraft')}</strong> {t('parameters.ServoTuningTab.aileronsElevatorRudder')}</li>
+            <li><strong>{t('parameters.ServoTuningTab.flyingWings')}</strong> {t('parameters.ServoTuningTab.elevonMixing')}</li>
+            <li><strong>{t('parameters.ServoTuningTab.gimbalServos')}</strong> {t('parameters.ServoTuningTab.cameraPanTiltRequiresCompatibleBoard')}</li>
           </ul>
         </div>
 
         {isMultirotor && (
           <div className="bg-blue-500/10 border-blue-500/30 rounded-xl p-4 w-full">
             <p className="text-sm text-blue-300">
-              To configure this board as a plane, use the Servo Wizard from the aircraft type selection or change the platform type in iNav Configurator.
+              {t('parameters.ServoTuningTab.toConfigureThisBoardAsA')}
             </p>
           </div>
         )}

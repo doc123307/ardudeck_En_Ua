@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Apple, ChevronLeft, ChevronRight, Download, Loader2, Monitor, Play, Terminal, Package, Puzzle } from 'lucide-react';
 import type { AppPlatform, AppPreviewBlock, HangarApp } from '../../../shared/app-types';
+import { t } from '../../i18n';
 
 const PLATFORMS: { id: AppPlatform; label: string; icon: typeof Apple }[] = [
   { id: 'darwin', label: 'macOS', icon: Apple },
@@ -94,7 +95,7 @@ export function HangarAppCard({
                 <button
                   type="button"
                   onClick={() => setPlaying(true)}
-                  aria-label="Play trailer"
+                  aria-label={t('modules.HangarAppCard.playTrailer')}
                   className="absolute inset-0 flex items-center justify-center"
                 >
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-black/55 transition-transform duration-200 group-hover:scale-110">
@@ -122,7 +123,7 @@ export function HangarAppCard({
               <div className="flex items-center gap-2">
                 <h3 className="truncate font-semibold text-content">{app.name}</h3>
                 <span className="shrink-0 rounded-full bg-sky-500/15 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-sky-400">
-                  App
+                  {t('modules.HangarAppCard.app')}
                 </span>
               </div>
               <p className="text-xs text-content-tertiary">
@@ -136,23 +137,23 @@ export function HangarAppCard({
               className="btn btn-primary flex shrink-0 items-center gap-1.5 disabled:opacity-60"
             >
               {installing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-              {installing ? 'Installing' : 'Install'}
+              {installing ? t('modules.HangarAppCard.installing') : t('modules.HangarAppCard.install')}
               {!installing && size && <span className="opacity-70">{humanSize(size)}</span>}
             </button>
           </div>
 
           <p className="line-clamp-3 text-sm leading-relaxed text-content-secondary">
-            {app.description ?? 'No description.'}
+            {app.description ?? t('modules.HangarAppCard.noDescription')}
           </p>
 
           <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-subtle pt-3">
-            {app.standalone && <Badge icon={Package} label="Runs standalone" />}
-            {app.insideArduDeck && <Badge icon={Puzzle} label="Works inside ArduDeck" />}
+            {app.standalone && <Badge icon={Package} label={t('modules.HangarAppCard.runsStandalone')} />}
+            {app.insideArduDeck && <Badge icon={Puzzle} label={t('modules.HangarAppCard.worksInsideArdudeck')} />}
             <span className="ml-auto flex items-center gap-1.5">
               {PLATFORMS.map(({ id, label, icon: Icon }) => (
                 <span
                   key={id}
-                  title={app.platforms.includes(id) ? `${label} build available` : `No ${label} build`}
+                  title={app.platforms.includes(id) ? `${label} build available` : t('modules.HangarAppCard.noBuild', { label })}
                   className={app.platforms.includes(id)
                     ? id === mine ? 'text-sky-400' : 'text-content-secondary'
                     : 'text-content-tertiary opacity-30'}
@@ -185,7 +186,7 @@ function Arrow({ side, onClick }: { side: 'left' | 'right'; onClick: () => void 
     <button
       type="button"
       onClick={onClick}
-      aria-label={side === 'left' ? 'Previous' : 'Next'}
+      aria-label={side === 'left' ? t('modules.HangarAppCard.previous') : t('modules.HangarAppCard.next')}
       className={`absolute top-1/2 -translate-y-1/2 ${side === 'left' ? 'left-1.5' : 'right-1.5'} flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white/80 opacity-0 transition-opacity hover:bg-black/75 group-hover:opacity-100`}
     >
       <Icon className="h-4 w-4" />

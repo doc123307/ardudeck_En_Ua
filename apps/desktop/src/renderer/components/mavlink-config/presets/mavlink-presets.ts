@@ -9,6 +9,7 @@
  */
 
 import { Egg, Drama, Zap, Film, type LucideIcon } from 'lucide-react';
+import { t } from '../../../i18n';
 
 // =============================================================================
 // Flight Mode Presets
@@ -23,22 +24,22 @@ export interface FlightModePreset {
 export const FLIGHT_MODE_PRESETS: Record<string, FlightModePreset> = {
   beginner: {
     name: 'Beginner Safe',
-    description: 'Safe modes only - Stabilize, AltHold, Loiter, RTL',
+    get description() { return t('mavlink_config.mavlink_presets.safeModesOnlyStabilizeAltholdLoiter'); },
     modes: [0, 2, 5, 6, 9, 6], // Stabilize, AltHold, Loiter, RTL, Land, RTL
   },
   intermediate: {
     name: 'Intermediate',
-    description: 'Add Auto and PosHold for missions',
+    get description() { return t('mavlink_config.mavlink_presets.addAutoAndPosholdForMissions'); },
     modes: [0, 2, 5, 3, 16, 6], // Stabilize, AltHold, Loiter, Auto, PosHold, RTL
   },
   advanced: {
     name: 'Advanced',
-    description: 'Full control with Acro and Sport modes',
+    get description() { return t('mavlink_config.mavlink_presets.fullControlWithAcroAndSport'); },
     modes: [0, 1, 13, 5, 3, 6], // Stabilize, Acro, Sport, Loiter, Auto, RTL
   },
   mapping: {
     name: 'Mapping/Survey',
-    description: 'Optimized for aerial mapping missions',
+    get description() { return t('mavlink_config.mavlink_presets.optimizedForAerialMappingMissions'); },
     modes: [5, 3, 24, 6, 9, 21], // Loiter, Auto, ZigZag, RTL, Land, SmartRTL
   },
 };
@@ -46,22 +47,22 @@ export const FLIGHT_MODE_PRESETS: Record<string, FlightModePreset> = {
 export const PLANE_FLIGHT_MODE_PRESETS: Record<string, FlightModePreset> = {
   beginner: {
     name: 'Beginner Safe',
-    description: 'Safe modes - FBWA, Loiter, RTL',
+    get description() { return t('mavlink_config.mavlink_presets.safeModesFbwaLoiterRtl'); },
     modes: [5, 5, 12, 12, 11, 11], // FBWA, FBWA, Loiter, Loiter, RTL, RTL
   },
   intermediate: {
     name: 'Intermediate',
-    description: 'Add Auto and Cruise for missions',
+    get description() { return t('mavlink_config.mavlink_presets.addAutoAndCruiseForMissions'); },
     modes: [5, 7, 12, 10, 11, 11], // FBWA, Cruise, Loiter, Auto, RTL, RTL
   },
   advanced: {
     name: 'Advanced',
-    description: 'Full control with Manual and Acro',
+    get description() { return t('mavlink_config.mavlink_presets.fullControlWithManualAndAcro'); },
     modes: [0, 4, 5, 12, 10, 11], // Manual, Acro, FBWA, Loiter, Auto, RTL
   },
   vtol: {
     name: 'VTOL QuadPlane',
-    description: 'QLoiter, FBWA, QRTL for VTOL aircraft',
+    get description() { return t('mavlink_config.mavlink_presets.qloiterFbwaQrtlForVtolAircraft'); },
     modes: [19, 19, 5, 5, 21, 21], // QLoiter, QLoiter, FBWA, FBWA, QRTL, QRTL
   },
 };
@@ -79,7 +80,7 @@ export interface SkillPreset {
 export const SKILL_PRESETS: Record<string, SkillPreset> = {
   beginner: {
     name: 'Beginner',
-    description: 'Soft, forgiving response. Great for learning.',
+    get description() { return t('mavlink_config.mavlink_presets.softForgivingResponseGreatForLearning'); },
     params: {
       // Slower rates
       'ACRO_RP_RATE': 90,
@@ -96,7 +97,7 @@ export const SKILL_PRESETS: Record<string, SkillPreset> = {
   },
   intermediate: {
     name: 'Intermediate',
-    description: 'Balanced response for general flying.',
+    get description() { return t('mavlink_config.mavlink_presets.balancedResponseForGeneralFlying'); },
     params: {
       'ACRO_RP_RATE': 180,
       'ACRO_Y_RATE': 90,
@@ -109,7 +110,7 @@ export const SKILL_PRESETS: Record<string, SkillPreset> = {
   },
   expert: {
     name: 'Expert',
-    description: 'Aggressive response for experienced pilots.',
+    get description() { return t('mavlink_config.mavlink_presets.aggressiveResponseForExperiencedPilots'); },
     params: {
       'ACRO_RP_RATE': 360,
       'ACRO_Y_RATE': 180,
@@ -135,7 +136,7 @@ export interface MissionPreset {
 export const MISSION_PRESETS: Record<string, MissionPreset> = {
   mapping: {
     name: 'Mapping/Survey',
-    description: 'Slow, stable flight for aerial mapping and photogrammetry.',
+    get description() { return t('mavlink_config.mavlink_presets.slowStableFlightForAerialMapping'); },
     params: {
       'WPNAV_SPEED': 500, // 5 m/s - slow for photos
       'WPNAV_ACCEL': 100,
@@ -146,7 +147,7 @@ export const MISSION_PRESETS: Record<string, MissionPreset> = {
   },
   surveillance: {
     name: 'Surveillance',
-    description: 'Moderate speed, good stability for video.',
+    get description() { return t('mavlink_config.mavlink_presets.moderateSpeedGoodStabilityForVideo'); },
     params: {
       'WPNAV_SPEED': 800, // 8 m/s
       'WPNAV_ACCEL': 150,
@@ -157,7 +158,7 @@ export const MISSION_PRESETS: Record<string, MissionPreset> = {
   },
   sport: {
     name: 'Sport',
-    description: 'Fast, responsive flight for fun flying.',
+    get description() { return t('mavlink_config.mavlink_presets.fastResponsiveFlightForFunFlying'); },
     params: {
       'WPNAV_SPEED': 1500, // 15 m/s
       'WPNAV_ACCEL': 400,
@@ -168,7 +169,7 @@ export const MISSION_PRESETS: Record<string, MissionPreset> = {
   },
   cinema: {
     name: 'Cinematic',
-    description: 'Ultra-smooth movements for professional video.',
+    get description() { return t('mavlink_config.mavlink_presets.ultraSmoothMovementsForProfessionalVideo'); },
     params: {
       'WPNAV_SPEED': 300, // 3 m/s - very slow
       'WPNAV_ACCEL': 50, // Very gentle acceleration
@@ -193,7 +194,7 @@ export interface SafetyPreset {
 export const SAFETY_PRESETS: Record<string, SafetyPreset> = {
   maximum: {
     name: 'Maximum Safety',
-    description: 'All safety features enabled. Recommended for beginners.',
+    get description() { return t('mavlink_config.mavlink_presets.allSafetyFeaturesEnabledRecommendedFor'); },
     params: {
       'FS_THR_ENABLE': 1, // RTL on throttle failsafe
       'FS_GCS_ENABLE': 1, // RTL on GCS failsafe
@@ -206,7 +207,7 @@ export const SAFETY_PRESETS: Record<string, SafetyPreset> = {
   },
   balanced: {
     name: 'Balanced',
-    description: 'Essential safety features without being restrictive.',
+    get description() { return t('mavlink_config.mavlink_presets.essentialSafetyFeaturesWithoutBeingRestrictive'); },
     params: {
       'FS_THR_ENABLE': 1,
       'FS_GCS_ENABLE': 0, // No GCS failsafe
@@ -219,7 +220,7 @@ export const SAFETY_PRESETS: Record<string, SafetyPreset> = {
   },
   minimal: {
     name: 'Minimal',
-    description: 'Only critical safety features. For experienced pilots.',
+    get description() { return t('mavlink_config.mavlink_presets.onlyCriticalSafetyFeaturesForExperienced'); },
     params: {
       'FS_THR_ENABLE': 1, // Keep throttle failsafe
       'FS_GCS_ENABLE': 0,
@@ -236,12 +237,12 @@ export const SAFETY_PRESETS: Record<string, SafetyPreset> = {
 // =============================================================================
 
 export const FAILSAFE_ACTIONS: Record<number, { name: string; description: string; safe: boolean }> = {
-  0: { name: 'Disabled', description: 'No action taken', safe: false },
-  1: { name: 'RTL', description: 'Return to launch point', safe: true },
-  2: { name: 'Land', description: 'Land immediately', safe: true },
-  3: { name: 'SmartRTL', description: 'Return via original path', safe: true },
-  4: { name: 'Brake', description: 'Stop and hover', safe: true },
-  5: { name: 'Land', description: 'Land at current position', safe: true },
+  0: { name: 'Disabled', get description() { return t('mavlink_config.mavlink_presets.noActionTaken'); }, safe: false },
+  1: { name: 'RTL', get description() { return t('mavlink_config.mavlink_presets.returnToLaunchPoint'); }, safe: true },
+  2: { name: 'Land', get description() { return t('mavlink_config.mavlink_presets.landImmediately'); }, safe: true },
+  3: { name: 'SmartRTL', get description() { return t('mavlink_config.mavlink_presets.returnViaOriginalPath'); }, safe: true },
+  4: { name: 'Brake', get description() { return t('mavlink_config.mavlink_presets.stopAndHover'); }, safe: true },
+  5: { name: 'Land', get description() { return t('mavlink_config.mavlink_presets.landAtCurrentPosition'); }, safe: true },
 };
 
 // =============================================================================
@@ -249,22 +250,22 @@ export const FAILSAFE_ACTIONS: Record<number, { name: string; description: strin
 // =============================================================================
 
 export const ARMING_CHECKS: Record<number, { name: string; description: string }> = {
-  1: { name: 'All', description: 'Enable all arming checks' },
-  2: { name: 'Barometer', description: 'Check barometer health' },
-  4: { name: 'Compass', description: 'Check compass health and calibration' },
-  8: { name: 'GPS Lock', description: 'Require GPS lock before arming' },
-  16: { name: 'INS', description: 'Check accelerometer/gyro health' },
-  32: { name: 'Parameters', description: 'Check for invalid parameters' },
-  64: { name: 'RC Channels', description: 'Check RC receiver is working' },
-  128: { name: 'Board Voltage', description: 'Check board voltage is stable' },
-  256: { name: 'Battery Level', description: 'Check battery has sufficient charge' },
-  512: { name: 'Airspeed', description: 'Check airspeed sensor (planes)' },
-  1024: { name: 'Logging', description: 'Check logging is working' },
-  2048: { name: 'Safety Switch', description: 'Check safety switch is disengaged' },
-  4096: { name: 'GPS Config', description: 'Check GPS configuration' },
-  8192: { name: 'System', description: 'Check system health' },
-  16384: { name: 'Mission', description: 'Check mission is valid' },
-  32768: { name: 'Rangefinder', description: 'Check rangefinder health' },
+  1: { name: 'All', get description() { return t('mavlink_config.mavlink_presets.enableAllArmingChecks'); } },
+  2: { name: 'Barometer', get description() { return t('mavlink_config.mavlink_presets.checkBarometerHealth'); } },
+  4: { name: 'Compass', get description() { return t('mavlink_config.mavlink_presets.checkCompassHealthAndCalibration'); } },
+  8: { name: 'GPS Lock', get description() { return t('mavlink_config.mavlink_presets.requireGpsLockBeforeArming'); } },
+  16: { name: 'INS', get description() { return t('mavlink_config.mavlink_presets.checkAccelerometerGyroHealth'); } },
+  32: { name: 'Parameters', get description() { return t('mavlink_config.mavlink_presets.checkForInvalidParameters'); } },
+  64: { name: 'RC Channels', get description() { return t('mavlink_config.mavlink_presets.checkRcReceiverIsWorking'); } },
+  128: { name: 'Board Voltage', get description() { return t('mavlink_config.mavlink_presets.checkBoardVoltageIsStable'); } },
+  256: { name: 'Battery Level', get description() { return t('mavlink_config.mavlink_presets.checkBatteryHasSufficientCharge'); } },
+  512: { name: 'Airspeed', get description() { return t('mavlink_config.mavlink_presets.checkAirspeedSensorPlanes'); } },
+  1024: { name: 'Logging', get description() { return t('mavlink_config.mavlink_presets.checkLoggingIsWorking'); } },
+  2048: { name: 'Safety Switch', get description() { return t('mavlink_config.mavlink_presets.checkSafetySwitchIsDisengaged'); } },
+  4096: { name: 'GPS Config', get description() { return t('mavlink_config.mavlink_presets.checkGpsConfiguration'); } },
+  8192: { name: 'System', get description() { return t('mavlink_config.mavlink_presets.checkSystemHealth'); } },
+  16384: { name: 'Mission', get description() { return t('mavlink_config.mavlink_presets.checkMissionIsValid'); } },
+  32768: { name: 'Rangefinder', get description() { return t('mavlink_config.mavlink_presets.checkRangefinderHealth'); } },
 };
 
 // =============================================================================
@@ -272,12 +273,12 @@ export const ARMING_CHECKS: Record<number, { name: string; description: string }
 // =============================================================================
 
 export const FENCE_TYPES: Record<number, { name: string; description: string }> = {
-  0: { name: 'Disabled', description: 'No geofence active' },
-  1: { name: 'Altitude', description: 'Maximum altitude limit' },
-  2: { name: 'Circle', description: 'Circular boundary around home' },
-  3: { name: 'Altitude + Circle', description: 'Both altitude and circular limits' },
-  4: { name: 'Polygon', description: 'Custom polygon boundary' },
-  7: { name: 'All', description: 'Altitude, circle, and polygon' },
+  0: { name: 'Disabled', get description() { return t('mavlink_config.mavlink_presets.noGeofenceActive'); } },
+  1: { name: 'Altitude', get description() { return t('mavlink_config.mavlink_presets.maximumAltitudeLimit'); } },
+  2: { name: 'Circle', get description() { return t('mavlink_config.mavlink_presets.circularBoundaryAroundHome'); } },
+  3: { name: 'Altitude + Circle', get description() { return t('mavlink_config.mavlink_presets.bothAltitudeAndCircularLimits'); } },
+  4: { name: 'Polygon', get description() { return t('mavlink_config.mavlink_presets.customPolygonBoundary'); } },
+  7: { name: 'All', get description() { return t('mavlink_config.mavlink_presets.altitudeCircleAndPolygon'); } },
 };
 
 // =============================================================================
@@ -285,17 +286,17 @@ export const FENCE_TYPES: Record<number, { name: string; description: string }> 
 // =============================================================================
 
 export const BATTERY_MONITORS: Record<number, { name: string; description: string }> = {
-  0: { name: 'Disabled', description: 'No battery monitoring' },
-  3: { name: 'Analog Voltage Only', description: 'Basic voltage monitoring' },
-  4: { name: 'Analog Voltage + Current', description: 'Full power monitoring' },
-  5: { name: 'Solo', description: '3DR Solo battery' },
-  6: { name: 'Bebop', description: 'Parrot Bebop battery' },
-  7: { name: 'SMBus-Maxell', description: 'Maxell smart battery' },
-  8: { name: 'UAVCAN', description: 'UAVCAN battery' },
-  9: { name: 'BLHeli ESC', description: 'BLHeli telemetry' },
-  10: { name: 'Sum of Selected', description: 'Sum multiple monitors' },
-  11: { name: 'FuelFlow', description: 'Fuel flow sensor' },
-  12: { name: 'FuelLevel PWM', description: 'Fuel level PWM sensor' },
+  0: { name: 'Disabled', get description() { return t('mavlink_config.mavlink_presets.noBatteryMonitoring'); } },
+  3: { name: 'Analog Voltage Only', get description() { return t('mavlink_config.mavlink_presets.basicVoltageMonitoring'); } },
+  4: { name: 'Analog Voltage + Current', get description() { return t('mavlink_config.mavlink_presets.fullPowerMonitoring'); } },
+  5: { name: 'Solo', get description() { return t('mavlink_config.mavlink_presets.n3drSoloBattery'); } },
+  6: { name: 'Bebop', get description() { return t('mavlink_config.mavlink_presets.parrotBebopBattery'); } },
+  7: { name: 'SMBus-Maxell', get description() { return t('mavlink_config.mavlink_presets.maxellSmartBattery'); } },
+  8: { name: 'UAVCAN', get description() { return t('mavlink_config.mavlink_presets.uavcanBattery'); } },
+  9: { name: 'BLHeli ESC', get description() { return t('mavlink_config.mavlink_presets.blheliTelemetry'); } },
+  10: { name: 'Sum of Selected', get description() { return t('mavlink_config.mavlink_presets.sumMultipleMonitors'); } },
+  11: { name: 'FuelFlow', get description() { return t('mavlink_config.mavlink_presets.fuelFlowSensor'); } },
+  12: { name: 'FuelLevel PWM', get description() { return t('mavlink_config.mavlink_presets.fuelLevelPwmSensor'); } },
 };
 
 // =============================================================================
@@ -320,7 +321,7 @@ export interface BatteryChemistryInfo {
 export const BATTERY_CHEMISTRIES: Record<BatteryChemistry, BatteryChemistryInfo> = {
   lipo: {
     name: 'LiPo',
-    description: 'Standard lithium polymer - most common for RC',
+    get description() { return t('mavlink_config.mavlink_presets.standardLithiumPolymerMostCommonFor'); },
     cellFull: 4.2,
     cellNominal: 3.7,
     cellStorage: 3.8,
@@ -330,7 +331,7 @@ export const BATTERY_CHEMISTRIES: Record<BatteryChemistry, BatteryChemistryInfo>
   },
   lihv: {
     name: 'LiHV',
-    description: 'High-voltage LiPo - 4.35V full charge',
+    get description() { return t('mavlink_config.mavlink_presets.highVoltageLipo435vFull'); },
     cellFull: 4.35,
     cellNominal: 3.8,
     cellStorage: 3.9,
@@ -340,7 +341,7 @@ export const BATTERY_CHEMISTRIES: Record<BatteryChemistry, BatteryChemistryInfo>
   },
   lion: {
     name: 'Li-Ion',
-    description: 'Lithium-ion - higher energy density, lower discharge rate',
+    get description() { return t('mavlink_config.mavlink_presets.lithiumIonHigherEnergyDensityLower'); },
     cellFull: 4.2,
     cellNominal: 3.6,
     cellStorage: 3.7,
@@ -350,7 +351,7 @@ export const BATTERY_CHEMISTRIES: Record<BatteryChemistry, BatteryChemistryInfo>
   },
   life: {
     name: 'LiFePO4',
-    description: 'Lithium iron phosphate - very stable, long cycle life',
+    get description() { return t('mavlink_config.mavlink_presets.lithiumIronPhosphateVeryStableLong'); },
     cellFull: 3.6,
     cellNominal: 3.3,
     cellStorage: 3.3,
@@ -418,7 +419,7 @@ export interface PidPreset {
 export const PID_PRESETS: Record<string, PidPreset> = {
   beginner: {
     name: 'Beginner',
-    description: 'Smooth & forgiving - great for learning',
+    get description() { return t('mavlink_config.mavlink_presets.smoothForgivingGreatForLearning'); },
     icon: Egg,
     iconColor: 'text-green-400',
     color: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
@@ -431,7 +432,7 @@ export const PID_PRESETS: Record<string, PidPreset> = {
   },
   freestyle: {
     name: 'Freestyle',
-    description: 'Responsive & smooth for tricks',
+    get description() { return t('mavlink_config.mavlink_presets.responsiveSmoothForTricks'); },
     icon: Drama,
     iconColor: 'text-purple-400',
     color: 'from-purple-500/20 to-violet-500/10 border-purple-500/30',
@@ -444,7 +445,7 @@ export const PID_PRESETS: Record<string, PidPreset> = {
   },
   racing: {
     name: 'Racing',
-    description: 'Snappy & precise for speed',
+    get description() { return t('mavlink_config.mavlink_presets.snappyPreciseForSpeed'); },
     icon: Zap,
     iconColor: 'text-red-400',
     color: 'from-red-500/20 to-orange-500/10 border-red-500/30',
@@ -457,7 +458,7 @@ export const PID_PRESETS: Record<string, PidPreset> = {
   },
   cinematic: {
     name: 'Cinematic',
-    description: 'Ultra-smooth for video',
+    get description() { return t('mavlink_config.mavlink_presets.ultraSmoothForVideo'); },
     icon: Film,
     iconColor: 'text-blue-400',
     color: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30',
@@ -495,7 +496,7 @@ export interface RatePreset {
 export const RATE_PRESETS: Record<string, RatePreset> = {
   beginner: {
     name: 'Beginner',
-    description: 'Slow & predictable - great for learning',
+    get description() { return t('mavlink_config.mavlink_presets.slowPredictableGreatForLearning'); },
     icon: Egg,
     iconColor: 'text-green-400',
     color: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
@@ -503,7 +504,7 @@ export const RATE_PRESETS: Record<string, RatePreset> = {
   },
   freestyle: {
     name: 'Freestyle',
-    description: 'Balanced for tricks & flow',
+    get description() { return t('mavlink_config.mavlink_presets.balancedForTricksFlow'); },
     icon: Drama,
     iconColor: 'text-purple-400',
     color: 'from-purple-500/20 to-violet-500/10 border-purple-500/30',
@@ -511,7 +512,7 @@ export const RATE_PRESETS: Record<string, RatePreset> = {
   },
   racing: {
     name: 'Racing',
-    description: 'Fast & responsive for speed',
+    get description() { return t('mavlink_config.mavlink_presets.fastResponsiveForSpeed'); },
     icon: Zap,
     iconColor: 'text-red-400',
     color: 'from-red-500/20 to-orange-500/10 border-red-500/30',
@@ -519,7 +520,7 @@ export const RATE_PRESETS: Record<string, RatePreset> = {
   },
   cinematic: {
     name: 'Cinematic',
-    description: 'Ultra-smooth for filming',
+    get description() { return t('mavlink_config.mavlink_presets.ultraSmoothForFilming'); },
     icon: Film,
     iconColor: 'text-blue-400',
     color: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30',

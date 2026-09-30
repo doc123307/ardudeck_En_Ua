@@ -26,6 +26,7 @@ import { VisionStreamControl } from './VisionStream';
 import { CameraSourceSwitch } from './CameraSourceSwitch';
 import { VideoLinkBanner } from './VideoLinkBanner';
 import { describePeers } from './webrtc-diag';
+import { t as tr } from '../../i18n';
 
 // Partial: the `waypoints` layer intentionally has no OSD toggle — the 3D
 // waypoint overlay is toggled from the HUD instruments editor (HudPanel) via the
@@ -140,7 +141,7 @@ export function CameraPanel() {
     <div className="relative flex h-full flex-col bg-surface">
       {/* Chrome */}
       <div className="flex shrink-0 items-center gap-1.5 border-b border-subtle bg-surface px-2 py-1.5">
-        <span className="text-xs font-medium text-content">Vision</span>
+        <span className="text-xs font-medium text-content">{tr('camera.CameraPanel.vision')}</span>
         {targetVehicle && <span className="text-[11px] text-content-secondary">· {targetVehicle.label}</span>}
 
         {/* Live feed / Synthetic vision toggle */}
@@ -150,8 +151,8 @@ export function CameraPanel() {
               key={m}
               onClick={() => store.setRenderMode(m)}
               className={`px-2 py-0.5 text-[11px] transition-colors ${renderMode === m ? 'bg-surface-raised text-content' : 'text-content-secondary hover:bg-surface-raised'}`}
-              title={m === 'live' ? 'Live camera feed' : 'Synthetic vision (3D terrain from GPS + attitude)'}
-            >{m === 'live' ? 'Live' : 'Synthetic'}</button>
+              title={m === 'live' ? tr('camera.CameraPanel.liveCameraFeed') : tr('camera.CameraPanel.syntheticVision3dTerrainFromGps')}
+            >{m === 'live' ? tr('camera.CameraPanel.live') : tr('camera.CameraPanel.synthetic')}</button>
           ))}
         </div>
 
@@ -175,8 +176,8 @@ export function CameraPanel() {
           <button
             onClick={() => store.setLockedVehicle(lockedVehicleKey ? null : activeVehicleKey)}
             className={`rounded px-1.5 py-0.5 text-[11px] ${lockedVehicleKey ? 'bg-blue-500/20 text-blue-300' : 'text-content-secondary hover:bg-surface-raised'}`}
-            title={lockedVehicleKey ? 'Locked to this vehicle, click to follow active' : 'Lock this panel to the current vehicle'}
-          >{lockedVehicleKey ? 'Locked' : 'Follow'}</button>
+            title={lockedVehicleKey ? tr('camera.CameraPanel.lockedToThisVehicleClickTo') : tr('camera.CameraPanel.lockThisPanelToTheCurrent')}
+          >{lockedVehicleKey ? tr('camera.CameraPanel.locked') : tr('camera.CameraPanel.follow')}</button>
         )}
 
         {viewMode === 'grid' && (
@@ -184,7 +185,7 @@ export function CameraPanel() {
             value={gridCols}
             onChange={(e) => store.setGridCols(Number(e.target.value))}
             className="rounded border border-subtle bg-surface-input px-1 py-0.5 text-[11px] text-content"
-            title="Grid columns"
+            title={tr('camera.CameraPanel.gridColumns')}
           >
             {[1, 2, 3, 4].map((n) => <option key={n} value={n}>{n}×</option>)}
           </select>
@@ -199,18 +200,18 @@ export function CameraPanel() {
               onClick={() => { if (liveSourceId) store.requestReconnect(liveSourceId); }}
               disabled={!liveSourceId}
               className={ICON_BTN}
-              data-tip="Reconnect the feed now"
+              data-tip={tr('camera.CameraPanel.reconnectTheFeedNow')}
             >
               <RotateCw className="h-3.5 w-3.5" />
             </button>
-            <button onClick={handleSnapshot} disabled={!liveSourceId} className={ICON_BTN} data-tip="Snapshot">
+            <button onClick={handleSnapshot} disabled={!liveSourceId} className={ICON_BTN} data-tip={tr('camera.CameraPanel.snapshot')}>
               <Camera className="h-3.5 w-3.5" />
             </button>
             <button
               onClick={handleRecord}
               disabled={!liveSourceId}
               className={`${ICON_BTN} ${recordingSourceId ? 'bg-red-500/20 text-red-300' : ''}`}
-              data-tip={recordingSourceId === liveSourceId ? 'Stop recording' : 'Record'}
+              data-tip={recordingSourceId === liveSourceId ? tr('camera.CameraPanel.stopRecording') : tr('camera.CameraPanel.record')}
             >
               <Circle className={`h-3 w-3 ${recordingSourceId === liveSourceId ? 'fill-current' : ''}`} />
             </button>
@@ -224,7 +225,7 @@ export function CameraPanel() {
           <button
             onClick={() => setShowOsdMenu((v) => !v)}
             className={`${ICON_BTN} ${store.showStats ? 'text-emerald-300' : ''}`}
-            data-tip="Overlays: OSD layers, link stats, terrain"
+            data-tip={tr('camera.CameraPanel.overlaysOsdLayersLinkStatsTerrain')}
           >
             <Layers className="h-3.5 w-3.5" />
           </button>
@@ -232,7 +233,7 @@ export function CameraPanel() {
             <>
               <div className="fixed inset-0 z-30" onClick={() => setShowOsdMenu(false)} />
               <div className="absolute right-0 top-7 z-40 w-52 rounded-lg border border-default bg-surface-solid p-1.5 shadow-xl">
-                <div className="px-1.5 pb-1 text-[10px] uppercase tracking-wide text-content-tertiary">OSD layers</div>
+                <div className="px-1.5 pb-1 text-[10px] uppercase tracking-wide text-content-tertiary">{tr('camera.CameraPanel.osdLayers')}</div>
                 {(Object.keys(OSD_LABELS) as (keyof OsdLayers)[]).map((k) => (
                   <label key={k} className="flex cursor-pointer items-center gap-2 rounded px-1.5 py-1 text-[11px] text-content hover:bg-surface-raised">
                     <input type="checkbox" checked={osd[k]} onChange={() => store.toggleOsd(k)} className="accent-blue-500" />
@@ -248,10 +249,10 @@ export function CameraPanel() {
                       onChange={() => store.setShowStats(!store.showStats)}
                       className="accent-blue-500"
                     />
-                    Link stats
+                    {tr('camera.CameraPanel.linkStats')}
                   </label>
                   <div className="px-1.5 pb-1 text-[10px] leading-snug text-content-tertiary">
-                    Bitrate, framerate, packet loss and dropped frames over the feed.
+                    {tr('camera.CameraPanel.bitrateFrameratePacketLossAndDropped')}
                   </div>
                 </div>
 
@@ -264,21 +265,21 @@ export function CameraPanel() {
                         onChange={(e) => store.setSvtSatellite(e.target.checked)}
                         className="accent-blue-500"
                       />
-                      Satellite imagery
+                      {tr('camera.CameraPanel.satelliteImagery')}
                     </label>
-                    <div className="px-1.5 pb-1 text-[10px] uppercase tracking-wide text-content-tertiary">Terrain detail</div>
+                    <div className="px-1.5 pb-1 text-[10px] uppercase tracking-wide text-content-tertiary">{tr('camera.CameraPanel.terrainDetail')}</div>
                     <div className="flex overflow-hidden rounded-md border border-subtle">
                       {(['low', 'medium', 'high'] as const).map((q) => (
                         <button
                           key={q}
                           onClick={() => store.setSvtQuality(q)}
                           className={`flex-1 px-1.5 py-0.5 text-[11px] capitalize transition-colors ${store.svtQuality === q ? 'bg-surface-raised text-content' : 'text-content-secondary hover:bg-surface-raised'}`}
-                          title={q === 'low' ? 'Fewer elevation samples, lightest on the GPU' : q === 'high' ? 'Most elevation detail, heaviest to load' : 'Balanced'}
+                          title={q === 'low' ? tr('camera.CameraPanel.fewerElevationSamplesLightestOnThe') : q === 'high' ? tr('camera.CameraPanel.mostElevationDetailHeaviestToLoad') : tr('camera.CameraPanel.balanced')}
                         >{q}</button>
                       ))}
                     </div>
                     <div className="px-1.5 pt-1 text-[10px] leading-snug text-content-tertiary">
-                      The ground nearest the aircraft always uses the sharpest imagery.
+                      {tr('camera.CameraPanel.theGroundNearestTheAircraftAlways')}
                     </div>
                   </div>
                 )}
@@ -292,7 +293,7 @@ export function CameraPanel() {
           <button
             onClick={() => setShowMoreMenu((v) => !v)}
             className={ICON_BTN}
-            data-tip="Feeds and diagnostics"
+            data-tip={tr('camera.CameraPanel.feedsAndDiagnostics')}
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
           </button>
@@ -306,7 +307,7 @@ export function CameraPanel() {
                     setShowSources(true);
                   }}
                 >
-                  Configure feeds
+                  {tr('camera.CameraPanel.configureFeeds')}
                 </MenuItem>
                 <MenuItem
                   onClick={async () => {
@@ -316,10 +317,10 @@ export function CameraPanel() {
                     flash('Video diagnostics copied');
                   }}
                 >
-                  Copy diagnostics
+                  {tr('camera.CameraPanel.copyDiagnostics')}
                 </MenuItem>
                 <div className="px-1.5 pt-1 text-[10px] leading-snug text-content-tertiary">
-                  Binary paths, versions, hub and ffmpeg logs, for a bug report.
+                  {tr('camera.CameraPanel.binaryPathsVersionsHubAndFfmpeg')}
                 </div>
               </div>
             </>
@@ -329,12 +330,12 @@ export function CameraPanel() {
 
       {engine && !engine.hubReady && engine.detail && (
         <div className="flex shrink-0 items-center gap-2 border-b border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[11px] text-amber-300">
-          <span className="flex-1">{installing ? (installLog ?? 'Installing video engine…') : engine.detail}</span>
+          <span className="flex-1">{installing ? (installLog ?? tr('camera.CameraPanel.installingVideoEngine')) : engine.detail}</span>
           <button
             onClick={handleInstallEngine}
             disabled={installing}
             className="shrink-0 rounded bg-amber-500/20 px-2 py-0.5 font-medium text-amber-200 hover:bg-amber-500/30 disabled:opacity-50"
-          >{installing ? '…' : 'Install'}</button>
+          >{installing ? '…' : tr('camera.CameraPanel.install')}</button>
         </div>
       )}
 
@@ -377,7 +378,7 @@ function FollowBody({ renderMode, syntheticFallback, targetVehicle, targetKey, a
   useEffect(() => { setErroredId(null); setLostAt(null); }, [source?.id, renderMode]);
 
   if (!targetKey) {
-    return <Empty>No vehicle selected. Connect or select a vehicle to view its feed.</Empty>;
+    return <Empty>{tr('camera.CameraPanel.noVehicleSelectedConnectOrSelect')}</Empty>;
   }
 
   const isPrimary = targetKey === activeKey;
@@ -387,10 +388,10 @@ function FollowBody({ renderMode, syntheticFallback, targetVehicle, targetKey, a
   if (renderMode === 'live' && !source) {
     return (
       <Empty>
-        No feed configured for {targetVehicle?.label ?? 'this vehicle'}.
-        <button onClick={onAddSource} className="ml-1 text-blue-400 hover:underline">Add a feed</button>
-        <span className="mx-1 text-content-tertiary">or switch to</span>
-        <span className="text-content-secondary">Synthetic</span>.
+        {tr('camera.CameraPanel.noFeedConfiguredFor')} {targetVehicle?.label ?? 'this vehicle'}.
+        <button onClick={onAddSource} className="ml-1 text-blue-400 hover:underline">{tr('camera.CameraPanel.addAFeed')}</button>
+        <span className="mx-1 text-content-tertiary">{tr('camera.CameraPanel.orSwitchTo')}</span>
+        <span className="text-content-secondary">{tr('camera.CameraPanel.synthetic')}</span>.
       </Empty>
     );
   }
@@ -441,8 +442,8 @@ function GridBody({ renderMode, syntheticFallback, vehicles, activeKey, osd, gri
     return (
       <Empty>
         {renderMode === 'synthetic'
-          ? 'No vehicles to show.'
-          : 'No feeds configured. Open Sources to add one per vehicle.'}
+          ? tr('camera.CameraPanel.noVehiclesToShow')
+          : tr('camera.CameraPanel.noFeedsConfiguredOpenSourcesTo')}
       </Empty>
     );
   }

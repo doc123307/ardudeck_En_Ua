@@ -9,21 +9,22 @@
  */
 
 import type { CameraPreset } from '../../../shared/camera-types';
+import { t } from '../../i18n';
 
 export const CAMERA_PRESETS: CameraPreset[] = [
   {
     id: 'mavlink',
-    label: 'Advertised by vehicle (MAVLink)',
+    get label() { return t('camera.camera_presets.advertisedByVehicleMavlink'); },
     kind: 'mavlink',
-    note: 'Auto-discovers the stream URI from VIDEO_STREAM_INFORMATION. Falls back to manual if the vehicle never advertises one.',
+    get note() { return t('camera.camera_presets.autoDiscoversTheStreamUriFrom'); },
   },
   {
     id: 'siyi-a8',
-    label: 'SIYI A8 mini / ZR10 / ZR30',
+    get label() { return t('camera.camera_presets.siyiA8MiniZr10Zr30'); },
     kind: 'rtsp',
     url: 'rtsp://192.168.144.25:8554/main.264',
     hfovDeg: 81,
-    note: 'Camera + autopilot must share the 192.168.144.x subnet. Set the IP in SIYI Assistant.',
+    get note() { return t('camera.camera_presets.cameraAutopilotMustShareThe192'); },
   },
   {
     id: 'siyi-zt6',
@@ -31,68 +32,68 @@ export const CAMERA_PRESETS: CameraPreset[] = [
     kind: 'rtsp',
     url: 'rtsp://192.168.144.25:8554/video2',
     hfovDeg: 81,
-    note: 'Multi-sensor cams expose /video1 (IR) and /video2 (RGB).',
+    get note() { return t('camera.camera_presets.multiSensorCamsExposeVideo1Ir'); },
   },
   {
     id: 'herelink',
-    label: 'Herelink (ground unit)',
+    get label() { return t('camera.camera_presets.herelinkGroundUnit'); },
     kind: 'rtsp',
     url: 'rtsp://192.168.43.1:8554/fpv_stream',
-    note: 'WiFi hotspot mode. USB-tether uses 192.168.42.129; station mode uses the assigned IP.',
+    get note() { return t('camera.camera_presets.wifiHotspotModeUsbTetherUses'); },
   },
   {
     id: 'runcam-wifilink',
-    label: 'RunCam WiFiLink / OpenIPC (wfb-ng)',
+    get label() { return t('camera.camera_presets.runcamWifilinkOpenipcWfbNg'); },
     kind: 'wfbng',
     url: 'udp://0.0.0.0:5600',
   },
   {
     id: 'rubyfpv',
-    label: 'RubyFPV (relayed video)',
+    get label() { return t('camera.camera_presets.rubyfpvRelayedVideo'); },
     kind: 'rubyfpv',
     url: 'udp://127.0.0.1:5600',
-    note: 'Enable "video forwarding to local network" in RubyFPV. The engine bridges its raw H.264/UDP into the hub.',
+    get note() { return t('camera.camera_presets.enableVideoForwardingToLocalNetwork'); },
   },
   {
     id: 'rtsp',
-    label: 'Custom RTSP URL',
+    get label() { return t('camera.camera_presets.customRtspUrl'); },
     kind: 'rtsp',
     url: 'rtsp://',
-    note: 'Any RTSP source. The hub republishes it as low-latency WebRTC.',
+    get note() { return t('camera.camera_presets.anyRtspSourceTheHubRepublishes'); },
   },
   {
     id: 'ardudeck-sim',
-    label: 'ArduDeck Simulator (FPV feed)',
+    get label() { return t('camera.camera_presets.ardudeckSimulatorFpvFeed'); },
     kind: 'rtsp',
     url: 'rtsp://127.0.0.1:8654/fpv',
-    note: 'Tick "Stream FPV to ArduDeck" in the simulator launcher. Swap in the simulator machine\'s address if it runs elsewhere. Port 8654 is the simulator\'s own media hub, kept clear of this one\'s 8554.',
+    get note() { return t('camera.camera_presets.tickStreamFpvToArdudeckIn'); },
   },
   {
     id: 'rtp-udp',
-    label: 'Custom RTP / UDP (H.264)',
+    get label() { return t('camera.camera_presets.customRtpUdpH264'); },
     kind: 'rtp-udp',
     url: 'udp://0.0.0.0:5600',
-    note: 'Raw H.264 over UDP, e.g. a companion-computer GStreamer pipeline.',
+    get note() { return t('camera.camera_presets.rawH264OverUdpE'); },
   },
   {
     id: 'srt',
-    label: 'Custom SRT',
+    get label() { return t('camera.camera_presets.customSrt'); },
     kind: 'srt',
     url: 'srt://0.0.0.0:8890?mode=listener',
-    note: 'Higher latency than RTP but resilient over lossy long-haul links.',
+    get note() { return t('camera.camera_presets.higherLatencyThanRtpButResilient'); },
   },
   {
     id: 'webrtc',
-    label: 'Custom WebRTC (WHEP)',
+    get label() { return t('camera.camera_presets.customWebrtcWhep'); },
     kind: 'webrtc',
     url: 'https://',
-    note: 'A WHEP endpoint published by a companion computer. Lowest latency, played directly.',
+    get note() { return t('camera.camera_presets.aWhepEndpointPublishedByA'); },
   },
   {
     id: 'uvc',
-    label: 'USB / HDMI capture device',
+    get label() { return t('camera.camera_presets.usbHdmiCaptureDevice'); },
     kind: 'uvc',
-    note: 'Analog-FPV-to-USB dongle or capture card on this machine. Played locally: the only path suitable for piloting.',
+    get note() { return t('camera.camera_presets.analogFpvToUsbDongleOr'); },
   },
 ];
 

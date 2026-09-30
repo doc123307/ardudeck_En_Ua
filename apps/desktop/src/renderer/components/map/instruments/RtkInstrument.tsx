@@ -14,6 +14,7 @@ import { GAUGE_COLORS } from './RoundGauge';
 import { InstrumentStrip } from './InstrumentStrip';
 import { useTelemetryFresh } from './useTelemetryFresh';
 import { useRtkStatus } from './useRtkStatus';
+import { t } from '../../../i18n';
 
 const POPOVER_WIDTH = 232;
 const BAUD_RATES = [9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600];
@@ -150,8 +151,8 @@ export function RtkInstrument(): JSX.Element {
   const sourceToggle = (
     <div className="flex rounded overflow-hidden border border-default">
       {([
-        { id: 'ntrip', label: 'NTRIP', tip: 'Corrections from an internet caster' },
-        { id: 'serial', label: 'Local base', tip: 'Corrections from a base receiver on a serial port. Works fully offline.' },
+        { id: 'ntrip', label: 'NTRIP', tip: t('map.RtkInstrument.correctionsFromAnInternetCaster') },
+        { id: 'serial', label: t('map.RtkInstrument.localBase'), tip: t('map.RtkInstrument.correctionsFromABaseReceiverOn') },
       ] as Array<{ id: RtkSource; label: string; tip: string }>).map((s) => (
         <button
           key={s.id}
@@ -177,7 +178,7 @@ export function RtkInstrument(): JSX.Element {
         ref={anchorRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
-        data-tip={busy ? 'RTK corrections status' : 'Set up RTK corrections'}
+        data-tip={busy ? t('map.RtkInstrument.rtkCorrectionsStatus') : t('map.RtkInstrument.setUpRtkCorrections')}
         className="flex items-center gap-2 w-full text-left cursor-pointer"
       >
         <span className="w-2 h-2 rounded-full shrink-0" style={{ background: dotColor }} />
@@ -211,17 +212,17 @@ export function RtkInstrument(): JSX.Element {
                   </div>
                   {errorText && <div className="text-[11px] text-red-400">{errorText}</div>}
                   <div className="space-y-1">
-                    <Row label="Received" value={formatBytes(status.bytesReceived)} />
-                    <Row label="Rate" value={`${formatRate(status.dataRateBps)}`} />
+                    <Row label={t('map.RtkInstrument.received')} value={formatBytes(status.bytesReceived)} />
+                    <Row label={t('map.RtkInstrument.rate')} value={`${formatRate(status.dataRateBps)}`} />
                     <Row
-                      label={status.owner === 'orchestrator' ? 'To fleet' : 'To vehicle'}
+                      label={status.owner === 'orchestrator' ? t('map.RtkInstrument.toFleet') : t('map.RtkInstrument.toVehicle')}
                       value={status.rtcmForwarded}
                     />
-                    {status.rtcmDropped > 0 && <Row label="Dropped" value={status.rtcmDropped} />}
-                    {status.mountpoint && <Row label="Mountpoint" value={status.mountpoint} />}
+                    {status.rtcmDropped > 0 && <Row label={t('map.RtkInstrument.dropped')} value={status.rtcmDropped} />}
+                    {status.mountpoint && <Row label={t('map.RtkInstrument.mountpoint')} value={status.mountpoint} />}
                     {status.basePosition && (
                       <Row
-                        label="Base"
+                        label={t('map.RtkInstrument.base')}
                         value={`${status.basePosition.lat.toFixed(5)}, ${status.basePosition.lon.toFixed(5)}`}
                       />
                     )}
@@ -231,7 +232,7 @@ export function RtkInstrument(): JSX.Element {
                     onClick={disconnect}
                     className="w-full py-1.5 rounded text-xs font-medium bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
                   >
-                    Disconnect
+                    {t('map.RtkInstrument.disconnect')}
                   </button>
                 </>
               ) : (
@@ -244,12 +245,12 @@ export function RtkInstrument(): JSX.Element {
                         <select
                           value={config.serialPath}
                           onChange={(e) => persist({ serialPath: e.target.value })}
-                          data-tip="Serial port of the base receiver"
+                          data-tip={t('map.RtkInstrument.serialPortOfTheBaseReceiver')}
                           className={`${INPUT_CLASS} font-mono flex-1 min-w-0`}
                         >
-                          <option value="">Port ({serialPorts.length})</option>
+                          <option value="">{t('map.RtkInstrument.port')}{serialPorts.length})</option>
                           {config.serialPath && !serialPorts.some((p) => p.path === config.serialPath) && (
-                            <option value={config.serialPath}>{config.serialPath} (not present)</option>
+                            <option value={config.serialPath}>{config.serialPath} {t('map.RtkInstrument.notPresent')}</option>
                           )}
                           {serialPorts.map((p) => (
                             <option key={p.path} value={p.path}>{p.path}</option>
@@ -258,7 +259,7 @@ export function RtkInstrument(): JSX.Element {
                         <button
                           type="button"
                           onClick={() => void refreshPorts()}
-                          data-tip="Rescan serial ports"
+                          data-tip={t('map.RtkInstrument.rescanSerialPorts')}
                           className="px-2 rounded text-xs bg-surface-raised text-content-secondary hover:text-content transition-colors"
                         >
                           ⟳
@@ -267,11 +268,11 @@ export function RtkInstrument(): JSX.Element {
                       <select
                         value={config.serialBaud}
                         onChange={(e) => persist({ serialBaud: Number(e.target.value) })}
-                        data-tip="Baud rate of the base receiver"
+                        data-tip={t('map.RtkInstrument.baudRateOfTheBaseReceiver')}
                         className={INPUT_CLASS}
                       >
                         {BAUD_RATES.map((b) => (
-                          <option key={b} value={b}>{b} baud</option>
+                          <option key={b} value={b}>{b} {t('map.RtkInstrument.baud')}</option>
                         ))}
                       </select>
                       <button
@@ -280,29 +281,29 @@ export function RtkInstrument(): JSX.Element {
                         disabled={!config.serialPath}
                         className="w-full py-1.5 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-40 transition-colors"
                       >
-                        Start corrections
+                        {t('map.RtkInstrument.startCorrections')}
                       </button>
                     </>
                   ) : hasCasterConfig ? (
                     <>
                       <div className="space-y-1">
-                        <Row label="Caster" value={`${config.host}:${config.port}`} />
-                        <Row label="Mountpoint" value={config.mountpoint} />
-                        {config.username && <Row label="User" value={config.username} />}
+                        <Row label={t('map.RtkInstrument.caster')} value={`${config.host}:${config.port}`} />
+                        <Row label={t('map.RtkInstrument.mountpoint')} value={config.mountpoint} />
+                        {config.username && <Row label={t('map.RtkInstrument.user')} value={config.username} />}
                       </div>
                       <button
                         type="button"
                         onClick={() => void connect()}
                         className="w-full py-1.5 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-500 transition-colors"
                       >
-                        Connect
+                        {t('map.RtkInstrument.connect')}
                       </button>
                     </>
                   ) : (
                     <>
                       <input
                         type="text"
-                        placeholder="Caster host, e.g. rtk2go.com"
+                        placeholder={t('map.RtkInstrument.casterHostEGRtk2goCom')}
                         value={config.host}
                         onChange={(e) => setConfig({ ...config, host: e.target.value })}
                         onBlur={(e) => persist({ host: e.target.value.trim() })}
@@ -310,7 +311,7 @@ export function RtkInstrument(): JSX.Element {
                       />
                       <input
                         type="text"
-                        placeholder="Mountpoint"
+                        placeholder={t('map.RtkInstrument.mountpoint')}
                         value={config.mountpoint}
                         onChange={(e) => setConfig({ ...config, mountpoint: e.target.value })}
                         onBlur={(e) => persist({ mountpoint: e.target.value.trim() })}
@@ -319,7 +320,7 @@ export function RtkInstrument(): JSX.Element {
                       <div className="flex gap-1.5">
                         <input
                           type="text"
-                          placeholder="User"
+                          placeholder={t('map.RtkInstrument.user')}
                           autoComplete="off"
                           value={config.username}
                           onChange={(e) => setConfig({ ...config, username: e.target.value })}
@@ -328,7 +329,7 @@ export function RtkInstrument(): JSX.Element {
                         />
                         <input
                           type="password"
-                          placeholder="Password"
+                          placeholder={t('map.RtkInstrument.password')}
                           autoComplete="new-password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
@@ -341,17 +342,17 @@ export function RtkInstrument(): JSX.Element {
                         disabled={!config.host.trim() || !config.mountpoint.trim()}
                         className="w-full py-1.5 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-40 transition-colors"
                       >
-                        Connect
+                        {t('map.RtkInstrument.connect')}
                       </button>
                     </>
                   )}
                   <button
                     type="button"
                     onClick={openPanel}
-                    data-tip="Open the full RTK / NTRIP panel (mountpoint list, TLS, GGA settings)"
+                    data-tip={t('map.RtkInstrument.openTheFullRtkNtripPanel')}
                     className="w-full text-center text-[11px] text-blue-500 hover:text-blue-400 transition-colors"
                   >
-                    Full settings in panel
+                    {t('map.RtkInstrument.fullSettingsInPanel')}
                   </button>
                 </>
               )}

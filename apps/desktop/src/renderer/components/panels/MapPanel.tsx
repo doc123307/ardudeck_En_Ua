@@ -80,6 +80,7 @@ import { ApiKeyDialog } from '../map/overlays/ApiKeyDialog';
 import { useOverlayStore } from '../../stores/overlay-store';
 import { useMapSplitStore, MAP_SPLIT_RATIO_MIN, MAP_SPLIT_RATIO_MAX } from '../../stores/map-split-store';
 import { PANEL_COMPONENTS, PANEL_RENDERERS, type PanelId } from './index';
+import { t as tr } from '../../i18n';
 
 const TELEMETRY_LAYERS = {
   osm: MAP_LAYERS.osm,
@@ -979,7 +980,7 @@ function LayerSwitcher({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="px-2 py-1 text-xs rounded bg-surface text-content hover:bg-surface-raised shadow-lg transition-colors flex items-center gap-1"
-        title="Change map layer"
+        title={tr('panels.MapPanel.changeMapLayer')}
       >
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -1044,13 +1045,13 @@ function SplitControl() {
         className={`w-full px-2 py-1 text-xs rounded shadow-lg transition-colors flex items-center gap-1.5 ${
           target ? 'bg-blue-600 text-white' : 'bg-surface text-content hover:bg-surface-raised'
         }`}
-        data-tip={target ? `Split with ${PANEL_COMPONENTS[target].title}` : 'Split the map with another panel'}
+        data-tip={target ? tr('panels.MapPanel.splitWith', { title: PANEL_COMPONENTS[target].title }) : tr('panels.MapPanel.splitTheMapWithAnotherPanel')}
       >
         <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <rect x="3" y="4" width="18" height="16" rx="1.5" />
           <line x1="12" y1="4" x2="12" y2="20" />
         </svg>
-        {target ? PANEL_COMPONENTS[target].title : 'Split'}
+        {target ? PANEL_COMPONENTS[target].title : tr('panels.MapPanel.split')}
       </button>
 
       {isOpen && (
@@ -1069,7 +1070,7 @@ function SplitControl() {
                   <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  Close split
+                  {tr('panels.MapPanel.closeSplit')}
                 </button>
                 <div className="my-1 border-t border-subtle" />
               </>
@@ -1085,7 +1086,7 @@ function SplitControl() {
                   id === target ? 'bg-blue-600 text-white' : 'text-content hover:bg-surface-raised'
                 }`}
               >
-                Split with {PANEL_COMPONENTS[id].title}
+                {tr('panels.MapPanel.splitWith2')} {PANEL_COMPONENTS[id].title}
               </button>
             ))}
           </div>
@@ -1154,13 +1155,13 @@ function SplitDivider({
       className={`group relative z-[900] w-1.5 h-full shrink-0 cursor-col-resize flex items-stretch justify-center ${
         dragging ? 'bg-blue-500' : 'bg-subtle hover:bg-blue-500/60'
       } transition-colors`}
-      data-tip="Drag to resize, or use the X to close the split"
+      data-tip={tr('panels.MapPanel.dragToResizeOrUseThe')}
     >
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={onClose}
         className="absolute top-2 left-1/2 -translate-x-1/2 z-[901] w-5 h-5 rounded-full bg-surface-solid border border-subtle text-content-secondary hover:text-content hover:bg-surface-raised shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-        data-tip="Close split"
+        data-tip={tr('panels.MapPanel.closeSplit')}
       >
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1314,8 +1315,8 @@ function SplitLayoutPrompt({ onChoose }: { onChoose: (action: 'preset' | 'curren
   return (
     <div className="absolute inset-0 z-[1500] flex items-center justify-center bg-black/40" onClick={() => onChoose('keep', false)}>
       <div className="w-[390px] rounded-xl bg-surface-solid border border-strong shadow-2xl p-4" onClick={(e) => e.stopPropagation()}>
-        <div className="text-sm font-semibold text-content">Split view layout</div>
-        <div className="mt-0.5 text-xs text-content-secondary">Switch the instruments to a layout sized for the half-width map?</div>
+        <div className="text-sm font-semibold text-content">{tr('panels.MapPanel.splitViewLayout')}</div>
+        <div className="mt-0.5 text-xs text-content-secondary">{tr('panels.MapPanel.switchTheInstrumentsToALayout')}</div>
         <div className="mt-3 space-y-2">
           {opt('Use split preset', 'The split cockpit layout (a saved layout named "split" wins)', 'preset')}
           {opt('Use my current layout', 'Keep what is on screen as the split layout', 'current')}
@@ -1323,7 +1324,7 @@ function SplitLayoutPrompt({ onChoose }: { onChoose: (action: 'preset' | 'curren
         </div>
         <label className="mt-3 flex items-center gap-2 text-xs text-content-secondary cursor-pointer select-none">
           <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="accent-blue-600" />
-          Remember my choice
+          {tr('panels.MapPanel.rememberMyChoice')}
         </label>
       </div>
     </div>
@@ -1653,10 +1654,10 @@ const TelemetryMap3D = React.memo(function TelemetryMap3D() {
         className={`px-2 py-1 text-xs rounded shadow-lg transition-colors flex items-center gap-1.5 ${
           showMoreTools ? 'bg-surface-raised text-content' : 'bg-surface text-content-secondary hover:text-content'
         }`}
-        title="More options"
+        title={tr('panels.MapPanel.moreOptions')}
       >
         {icons.more}
-        {showMoreTools ? 'Less' : 'More...'}
+        {showMoreTools ? tr('panels.MapPanel.less') : tr('panels.MapPanel.more')}
       </button>
       {showMoreTools && (
         <>
@@ -1668,19 +1669,19 @@ const TelemetryMap3D = React.memo(function TelemetryMap3D() {
           <button
             onClick={clearTrail}
             className="px-2 py-1 text-xs rounded bg-surface text-content hover:bg-surface-raised shadow-lg transition-colors flex items-center gap-1.5"
-            title="Clear flight trail"
+            title={tr('panels.MapPanel.clearFlightTrail')}
           >
             {icons.trash}
-            Clear Trail
+            {tr('panels.MapPanel.clearTrail')}
           </button>
           <button
             onClick={setHome}
             disabled={!hasValidGps}
             className="px-2 py-1 text-xs rounded bg-surface text-content hover:bg-surface-raised shadow-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
-            title="Set home to current position"
+            title={tr('panels.MapPanel.setHomeToCurrentPosition')}
           >
             {icons.home}
-            Set Home
+            {tr('panels.MapPanel.setHome')}
           </button>
         </>
       )}
@@ -1716,7 +1717,7 @@ const TelemetryMap3D = React.memo(function TelemetryMap3D() {
       {/* GPS warning */}
       {!hasValidGps && (
         <div className="absolute top-2 left-2 z-[1000] px-2 py-1 bg-yellow-600/90 text-white text-xs rounded shadow-lg">
-          No GPS fix
+          {tr('panels.MapPanel.noGpsFix')}
         </div>
       )}
 
@@ -1729,22 +1730,22 @@ const TelemetryMap3D = React.memo(function TelemetryMap3D() {
           <span className="font-mono text-content">{formatAltitudeFromMeters(position.alt, altitudeUnit)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-content-secondary">Rel</span>
+          <span className="text-content-secondary">{tr('panels.MapPanel.rel')}</span>
           <span className="font-mono text-content">{formatAltitudeFromMeters(position.relativeAlt, altitudeUnit)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-content-secondary">Spd</span>
+          <span className="text-content-secondary">{tr('panels.MapPanel.spd')}</span>
           <span className="font-mono text-content">{formatSpeedFromMetersPerSecond(vfrHud.groundspeed, speedUnit)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-content-secondary">Hdg</span>
+          <span className="text-content-secondary">{tr('panels.MapPanel.hdg')}</span>
           <span className="font-mono text-content">{vfrHud.heading.toFixed(0)}<span className="text-content-secondary ml-0.5">deg</span></span>
         </div>
         {homeStats && (
           <>
             <div className="border-t border-default my-1" />
             <div className="flex justify-between">
-              <span className="text-content-secondary">Home</span>
+              <span className="text-content-secondary">{tr('panels.MapPanel.home')}</span>
               <span className="font-mono text-emerald-400">{formatDistance(homeStats.distance, distanceUnit)}</span>
             </div>
           </>
@@ -2672,14 +2673,14 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span>
-            Large mission: showing key waypoints (launch, turns, landing) and the live target. The full flight path is still drawn.
+            {tr('panels.MapPanel.largeMissionShowingKeyWaypointsLaunch')}
           </span>
           {/* The banner is click-through so it never eats a map click; only the
               dismiss button opts back into pointer events. */}
           <button
             type="button"
             onClick={() => setLargeMissionNoticeDismissed(true)}
-            data-tip="Dismiss"
+            data-tip={tr('panels.MapPanel.dismiss')}
             className="pointer-events-auto ml-1 p-0.5 rounded text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -2719,7 +2720,7 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
       {/* GPS status overlay (below the Instruments menu button) */}
       {!hasValidGps && (
         <div className="absolute top-10 left-2 z-[1000] px-2 py-1 bg-yellow-600/90 text-white text-xs rounded shadow-lg">
-          No GPS fix
+          {tr('panels.MapPanel.noGpsFix')}
         </div>
       )}
 
@@ -2916,7 +2917,7 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
       {controlsHidden ? (
         <button
           onClick={() => setControlsHidden(false)}
-          data-tip="Show map controls"
+          data-tip={tr('panels.MapPanel.showMapControls')}
           data-arrange-chrome
           className="absolute top-2 right-2 z-[1100] p-1.5 rounded bg-surface text-content-secondary hover:text-content hover:bg-surface-raised shadow-lg transition-colors"
         >
@@ -2931,7 +2932,7 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
             the flight instruments. Sits at the top of the stack as its handle. */}
         <button
           onClick={() => setControlsHidden(true)}
-          data-tip="Hide map controls"
+          data-tip={tr('panels.MapPanel.hideMapControls')}
           className="self-end p-1.5 rounded bg-surface text-content-secondary hover:text-content hover:bg-surface-raised shadow-lg transition-colors"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -2954,7 +2955,7 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
               ? 'bg-blue-600 text-white'
               : 'bg-surface text-content hover:bg-surface-raised'
           }`}
-          title={followVehicle ? 'Following vehicle' : 'Free camera'}
+          title={followVehicle ? tr('panels.MapPanel.followingVehicle') : tr('panels.MapPanel.freeCamera')}
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <circle cx="12" cy="12" r="3" />
@@ -2963,7 +2964,7 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
             <line x1="2" y1="12" x2="6" y2="12" strokeLinecap="round" />
             <line x1="18" y1="12" x2="22" y2="12" strokeLinecap="round" />
           </svg>
-          {followVehicle ? 'Following' : 'Free'}
+          {followVehicle ? tr('panels.MapPanel.following') : tr('panels.MapPanel.free')}
         </button>
         <button
           onClick={() => setShowHeadingLine(!showHeadingLine)}
@@ -2972,12 +2973,12 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
               ? 'bg-blue-600 text-white'
               : 'bg-surface text-content hover:bg-surface-raised'
           }`}
-          title="Toggle heading line"
+          title={tr('panels.MapPanel.toggleHeadingLine')}
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 19V5m0 0l-4 4m4-4l4 4" />
           </svg>
-          HDG Line
+          {tr('panels.MapPanel.hdgLine')}
         </button>
         <button
           onClick={() => toggleInstrument('heading')}
@@ -2986,13 +2987,13 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
               ? 'bg-blue-600 text-white'
               : 'bg-surface text-content hover:bg-surface-raised'
           }`}
-          title="Toggle compass"
+          title={tr('panels.MapPanel.toggleCompass')}
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <circle cx="12" cy="12" r="10" />
             <polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88" fill="currentColor" stroke="none" />
           </svg>
-          Compass
+          {tr('panels.MapPanel.compass')}
         </button>
         <button
           onClick={() => toggleInstrument('attitude')}
@@ -3001,35 +3002,35 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
               ? 'bg-blue-600 text-white'
               : 'bg-surface text-content hover:bg-surface-raised'
           }`}
-          title="Toggle attitude indicator"
+          title={tr('panels.MapPanel.toggleAttitudeIndicator')}
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <circle cx="12" cy="12" r="10" />
             <path strokeLinecap="round" d="M4.93 12h14.14" />
             <path strokeLinecap="round" d="M8 9.5l4-2 4 2" />
           </svg>
-          Attitude
+          {tr('panels.MapPanel.attitude')}
         </button>
         <button
           onClick={clearTrail}
           className="px-2 py-1 text-xs rounded bg-surface text-content hover:bg-surface-raised shadow-lg transition-colors flex items-center gap-1.5"
-          title="Clear flight trail"
+          title={tr('panels.MapPanel.clearFlightTrail')}
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
-          Clear Trail
+          {tr('panels.MapPanel.clearTrail')}
         </button>
         <button
           onClick={setHome}
           disabled={!hasValidGps}
           className="px-2 py-1 text-xs rounded bg-surface text-content hover:bg-surface-raised shadow-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
-          title="Set home to current position"
+          title={tr('panels.MapPanel.setHomeToCurrentPosition')}
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
-          Set Home
+          {tr('panels.MapPanel.setHome')}
         </button>
         <button
           onClick={() => setShowMission(!showMission)}
@@ -3038,12 +3039,12 @@ const TelemetryMap2D = React.memo(function TelemetryMap2D() {
               ? 'bg-blue-600 text-white'
               : 'bg-surface text-content hover:bg-surface-raised'
           }`}
-          title="Toggle mission overlays (waypoints, geofence, rally)"
+          title={tr('panels.MapPanel.toggleMissionOverlaysWaypointsGeofenceRally')}
         >
           <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
           </svg>
-          Mission
+          {tr('panels.MapPanel.mission')}
         </button>
       </div>
       )}

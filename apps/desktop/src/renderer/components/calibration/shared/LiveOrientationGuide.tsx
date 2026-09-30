@@ -22,6 +22,7 @@ import type { AccelPosition } from '../../../../shared/calibration-types';
 import { OrientationScene } from './OrientationScene';
 import type { VehicleKind } from './vehicle-models';
 import { PositionDiagram } from './PositionDiagram';
+import { t } from '../../../i18n';
 
 interface LiveOrientationGuideProps {
   position: AccelPosition;
@@ -53,7 +54,7 @@ export function LiveOrientationGuide({ position, size = 220 }: LiveOrientationGu
         <div className="flex flex-col items-center gap-2">
           <PositionDiagram position={position} isActive compact />
           <span className="text-[11px] text-amber-400">
-            No attitude telemetry: position cannot be checked
+            {t('calibration.LiveOrientationGuide.noAttitudeTelemetryPositionCannotBe')}
           </span>
         </div>
       )}
@@ -69,7 +70,7 @@ export function LiveOrientationGuide({ position, size = 220 }: LiveOrientationGu
           }`}
         >
           {match.matched
-            ? `Held, ${match.errorDeg.toFixed(0)}° off`
+            ? t('calibration.LiveOrientationGuide.heldOff', { v1: match.errorDeg.toFixed(0) })
             : hint ?? `${match.errorDeg.toFixed(0)}° off`}
         </div>
       )}

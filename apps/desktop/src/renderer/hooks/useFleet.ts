@@ -9,6 +9,7 @@ import { useFleetTelemetryStore } from '../stores/fleet-telemetry-store';
 import { useTelemetryStore } from '../stores/telemetry-store';
 import { useConnectionStore } from '../stores/connection-store';
 import { mavTypeToTacticalClass, type TacticalVehicleClass, type VehicleState } from '../components/map/tactical-icon-pool';
+import { t } from '../i18n';
 
 /**
  * Fleet-aware connection identity for status chrome. "Connected" is true whenever
@@ -34,7 +35,7 @@ export function useActiveVehicleIdentity(): {
   if (primaryConnected) {
     return { connected: true, sysid: primarySysid ?? null, label: primarySysid ? `SYS ${primarySysid}` : null, fleetCount };
   }
-  if (fleetCount > 0) return { connected: true, sysid: null, label: `Fleet (${fleetCount})`, fleetCount };
+  if (fleetCount > 0) return { connected: true, sysid: null, label: t('hooks.useFleet.fleet', { fleetCount }), fleetCount };
   return { connected: false, sysid: null, label: null, fleetCount };
 }
 

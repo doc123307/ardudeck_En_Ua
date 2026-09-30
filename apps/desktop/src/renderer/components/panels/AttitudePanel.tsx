@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { PanelContainer, formatNumber } from './panel-utils';
+import { t } from '../../i18n';
 
 // Exported for reuse in MapPanel - memoized to prevent unnecessary re-renders
 export const AttitudeIndicator = React.memo(function AttitudeIndicator({ roll, pitch, heading, size = 200 }: { roll: number; pitch: number; heading: number; size?: number }) {
@@ -202,15 +203,15 @@ export const AttitudePanel = React.memo(function AttitudePanel() {
 
       <div className="flex gap-6 mt-4 text-sm">
         <div className="text-center">
-          <div className="text-content-secondary text-xs mb-0.5">Roll</div>
+          <div className="text-content-secondary text-xs mb-0.5">{t('panels.AttitudePanel.roll')}</div>
           <div className="font-mono text-content">{formatNumber(throttled.roll, 1)}°</div>
         </div>
         <div className="text-center">
-          <div className="text-content-secondary text-xs mb-0.5">Pitch</div>
+          <div className="text-content-secondary text-xs mb-0.5">{t('panels.AttitudePanel.pitch')}</div>
           <div className="font-mono text-content">{formatNumber(throttled.pitch, 1)}°</div>
         </div>
         <div className="text-center">
-          <div className="text-content-secondary text-xs mb-0.5">Yaw</div>
+          <div className="text-content-secondary text-xs mb-0.5">{t('panels.AttitudePanel.yaw')}</div>
           <div className="font-mono text-content">{formatNumber(throttled.yaw, 1)}°</div>
         </div>
       </div>

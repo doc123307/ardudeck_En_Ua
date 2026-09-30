@@ -5,6 +5,7 @@
  */
 
 import { ControlSurface } from '../presets/servo-presets';
+import { t } from '../../../i18n';
 
 interface Props {
   highlightSurface?: ControlSurface | null;
@@ -60,14 +61,14 @@ export default function TricopterDiagram({
       <circle cx="70" cy="45" r="20" fill="#374151" stroke="#6B7280" strokeWidth="2" />
       <circle cx="70" cy="45" r="8" fill="#6B7280" />
       <text x="70" y="75" textAnchor="middle" fill="#9CA3AF" fontSize="9">
-        Motor 1
+        {t('servo_wizard.TricopterDiagram.motor1')}
       </text>
 
       {/* Front right motor */}
       <circle cx="230" cy="45" r="20" fill="#374151" stroke="#6B7280" strokeWidth="2" />
       <circle cx="230" cy="45" r="8" fill="#6B7280" />
       <text x="230" y="75" textAnchor="middle" fill="#9CA3AF" fontSize="9">
-        Motor 2
+        {t('servo_wizard.TricopterDiagram.motor2')}
       </text>
 
       {/* Rear motor with servo */}
@@ -85,7 +86,7 @@ export default function TricopterDiagram({
         onClick={handleClick('yaw_servo')}
       />
       <text x="150" y="152" textAnchor="middle" fill="#9CA3AF" fontSize="9" fontWeight="500">
-        Yaw Servo
+        {t('servo_wizard.TricopterDiagram.yawServo')}
       </text>
       {servoLabels.yaw_servo && (
         <text x="185" y="163" textAnchor="start" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -110,7 +111,7 @@ export default function TricopterDiagram({
 
       {/* Info text */}
       <text x="150" y="195" textAnchor="middle" fill="#6B7280" fontSize="9">
-        Only yaw servo needs configuration
+        {t('servo_wizard.TricopterDiagram.onlyYawServoNeedsConfiguration')}
       </text>
     </svg>
   );

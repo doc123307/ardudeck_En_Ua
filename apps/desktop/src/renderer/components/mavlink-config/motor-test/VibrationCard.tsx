@@ -11,6 +11,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Activity } from 'lucide-react';
 import { useTelemetryStore } from '../../../stores/telemetry-store';
+import { t } from '../../../i18n';
 
 const GOOD_THRESHOLD = 30;
 const BAD_THRESHOLD = 60;
@@ -90,13 +91,13 @@ export const VibrationCard: React.FC = () => {
           <Activity className="w-5 h-5 text-orange-400" />
         </div>
         <div>
-          <div className="text-sm font-semibold text-content">Vibration</div>
-          <div className="text-[11px] text-content-secondary">m/s² · good &lt;30 · bad &gt;60</div>
+          <div className="text-sm font-semibold text-content">{t('mavlink_config.VibrationCard.vibration')}</div>
+          <div className="text-[11px] text-content-secondary">{t('mavlink_config.VibrationCard.mSGood30Bad60')}</div>
         </div>
       </div>
 
       {stale && (
-        <div className="text-xs text-content-secondary italic mb-3">No VIBRATION telemetry received yet…</div>
+        <div className="text-xs text-content-secondary italic mb-3">{t('mavlink_config.VibrationCard.noVibrationTelemetryReceivedYet')}</div>
       )}
 
       <div className="space-y-3">
@@ -109,7 +110,7 @@ export const VibrationCard: React.FC = () => {
           return (
             <div key={axis}>
               <div className="flex items-baseline justify-between mb-1">
-                <div className="text-[11px] uppercase tracking-wider text-content-secondary">Vib {axis.toUpperCase()}</div>
+                <div className="text-[11px] uppercase tracking-wider text-content-secondary">{t('mavlink_config.VibrationCard.vib')} {axis.toUpperCase()}</div>
                 <div className="text-sm font-mono font-semibold" style={{ color }}>
                   {value.toFixed(1)}
                 </div>
@@ -134,7 +135,7 @@ export const VibrationCard: React.FC = () => {
           const bad = value > 0;
           return (
             <div key={key} className="bg-surface-raised rounded-lg py-2">
-              <div className="text-[10px] uppercase tracking-wider text-content-secondary">Clip {i + 1}</div>
+              <div className="text-[10px] uppercase tracking-wider text-content-secondary">{t('mavlink_config.VibrationCard.clip')} {i + 1}</div>
               <div className={`text-sm font-mono font-semibold ${bad ? 'text-red-400' : 'text-content-secondary'}`}>
                 {value}
               </div>

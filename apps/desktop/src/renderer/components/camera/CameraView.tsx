@@ -19,6 +19,7 @@ import { CameraOverlays } from './CameraOverlays';
 import { StreamHealthReadout } from './StreamHealthReadout';
 import { useCameraStream } from './useCameraStream';
 import { projectPixelToGround, projectFrameCenter, type CameraPose } from './geolocation';
+import { t } from '../../i18n';
 
 interface CameraViewProps {
   source: CameraSourceConfig;
@@ -97,7 +98,7 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
     <div
       className="relative h-full w-full overflow-hidden bg-black"
       onClick={handleClick}
-      title={isPrimary ? 'Click to point gimbal at target' : 'Click to make active'}
+      title={isPrimary ? t('camera.CameraView.clickToPointGimbalAtTarget') : t('camera.CameraView.clickToMakeActive')}
     >
       <video ref={videoRef} className="h-full w-full object-contain" muted playsInline autoPlay />
 
@@ -122,20 +123,20 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
           {status === 'starting' ? (
             <>
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
-              <div className="text-xs text-white/70">Connecting to {source.label}…</div>
+              <div className="text-xs text-white/70">{t('camera.CameraView.connectingTo')} {source.label}…</div>
             </>
           ) : status === 'stalled' ? (
             <>
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500/30 border-t-amber-400" />
-              <div className="text-sm font-semibold text-amber-300">Video stalled, reconnecting…</div>
+              <div className="text-sm font-semibold text-amber-300">{t('camera.CameraView.videoStalledReconnecting')}</div>
               <div className="max-w-[80%] text-[11px] text-white/60">
-                The feed stopped delivering frames. Retrying automatically; replugging the device also recovers it.
+                {t('camera.CameraView.theFeedStoppedDeliveringFramesRetrying')}
               </div>
               <ReconnectButton sourceId={source.id} />
             </>
           ) : (
             <>
-              <div className="text-sm text-red-300">No video</div>
+              <div className="text-sm text-red-300">{t('camera.CameraView.noVideo')}</div>
               <ReconnectButton sourceId={source.id} />
               {/* The reason is the only diagnostic a field user can report, and
                   they report it by screenshot. Small grey text did not survive
@@ -165,7 +166,7 @@ function ReconnectButton({ sourceId }: { sourceId: string }) {
       onClick={() => requestReconnect(sourceId)}
       className="rounded-md border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white hover:bg-white/20"
     >
-      Reconnect now
+      {t('camera.CameraView.reconnectNow')}
     </button>
   );
 }

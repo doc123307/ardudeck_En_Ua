@@ -1,4 +1,5 @@
 import { GROUP_SHAPE_MODES, GROUP_SHAPE_LABELS, GROUP_SHAPE_DESCRIPTIONS, useGroupShapeStore } from '../../stores/group-shape-store';
+import { t } from '../../i18n';
 
 export function GroupShapeCard() {
   const mode = useGroupShapeStore((s) => s.mode);
@@ -13,8 +14,8 @@ export function GroupShapeCard() {
           </svg>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-content">Grouped gauge shape</h3>
-          <p className="text-xs text-content-secondary">How a docked group's backdrop treats round gauges</p>
+          <h3 className="text-sm font-medium text-content">{t('settings.GroupShapeCard.groupedGaugeShape')}</h3>
+          <p className="text-xs text-content-secondary">{t('settings.GroupShapeCard.howADockedGroupSBackdrop')}</p>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-2">

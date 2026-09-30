@@ -1,5 +1,6 @@
 import { BookOpen, Zap } from 'lucide-react';
 import type { ExperienceLevel } from '../../stores/settings-store';
+import { t } from '../../i18n';
 
 interface ExperienceLevelDialogProps {
   onSelect: (level: ExperienceLevel) => void;
@@ -11,9 +12,9 @@ export function ExperienceLevelDialog({ onSelect }: ExperienceLevelDialogProps) 
       <div className="bg-surface-solid rounded-2xl border border-subtle w-full max-w-lg mx-4 shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="px-6 pt-6 pb-2 text-center">
-          <h2 className="text-lg font-semibold text-content">Welcome to ArduDeck</h2>
+          <h2 className="text-lg font-semibold text-content">{t('ui.ExperienceLevelDialog.welcomeToArdudeck')}</h2>
           <p className="text-sm text-content-secondary mt-1">
-            Choose your experience level to tailor the interface
+            {t('ui.ExperienceLevelDialog.chooseYourExperienceLevelToTailor')}
           </p>
         </div>
 
@@ -27,9 +28,9 @@ export function ExperienceLevelDialog({ onSelect }: ExperienceLevelDialogProps) 
             <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
               <BookOpen className="w-5 h-5 text-blue-400" />
             </div>
-            <div className="text-sm font-semibold text-content mb-1">Beginner</div>
+            <div className="text-sm font-semibold text-content mb-1">{t('ui.ExperienceLevelDialog.beginner')}</div>
             <p className="text-xs text-content-secondary leading-relaxed">
-              Show tips, explanations, and guides throughout the interface to help you learn.
+              {t('ui.ExperienceLevelDialog.showTipsExplanationsAndGuidesThroughout')}
             </p>
           </button>
 
@@ -41,9 +42,9 @@ export function ExperienceLevelDialog({ onSelect }: ExperienceLevelDialogProps) 
             <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4 group-hover:bg-purple-500/20 transition-colors">
               <Zap className="w-5 h-5 text-purple-400" />
             </div>
-            <div className="text-sm font-semibold text-content mb-1">Advanced</div>
+            <div className="text-sm font-semibold text-content mb-1">{t('ui.ExperienceLevelDialog.advanced')}</div>
             <p className="text-xs text-content-secondary leading-relaxed">
-              Clean interface with no hand-holding. Hide educational cards and inline tips.
+              {t('ui.ExperienceLevelDialog.cleanInterfaceWithNoHandHolding')}
             </p>
           </button>
         </div>
@@ -51,7 +52,7 @@ export function ExperienceLevelDialog({ onSelect }: ExperienceLevelDialogProps) 
         {/* Footer hint */}
         <div className="px-6 pb-5 text-center">
           <p className="text-[11px] text-content-tertiary">
-            You can change this anytime in Settings
+            {t('ui.ExperienceLevelDialog.youCanChangeThisAnytimeIn')}
           </p>
         </div>
       </div>

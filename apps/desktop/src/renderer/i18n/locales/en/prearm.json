@@ -1,0 +1,27 @@
+{
+  "prearm": {
+    "PreArmParamFix": {
+      "openInParameters": "Open {{paramId}} in Parameters",
+      "openInParameters2": "Open in Parameters"
+    },
+    "PreflightCheckCard": {
+      "preFlightChecks": "Pre-flight Checks",
+      "checking": "Checking...",
+      "issue": "issue",
+      "ready": "Ready",
+      "recheck": "Recheck",
+      "readyToArm": "Ready to Arm"
+    },
+    "SafetyConfigCard": {
+      "doNotFly": "Do not fly",
+      "checkThis": "Check this",
+      "worthKnowing": "Worth knowing",
+      "setsTo": "Sets {{param}} to {{value}}",
+      "applying": "Applying…",
+      "applied": "Applied",
+      "couldNotWriteOpenTheParameter": "Could not write, open the parameter instead",
+      "safetyConfiguration": "Safety configuration",
+      "item": "item"
+    }
+  }
+}

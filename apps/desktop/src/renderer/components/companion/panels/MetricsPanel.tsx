@@ -1,5 +1,6 @@
 import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer } from '../../panels/panel-utils';
+import { t } from '../../../i18n';
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return '0 B';
@@ -71,14 +72,14 @@ function TempDisplay({ temp }: { temp: number }) {
   if (temp < 0) {
     return (
       <div className="flex items-center justify-center p-3 bg-surface-raised rounded-lg">
-        <span className="text-xs text-content-tertiary">Temp sensor unavailable</span>
+        <span className="text-xs text-content-tertiary">{t('companion.MetricsPanel.tempSensorUnavailable')}</span>
       </div>
     );
   }
 
   return (
     <div className={`flex items-center justify-between p-3 ${bgColor} rounded-lg`}>
-      <span className="text-xs text-content-secondary">CPU Temperature</span>
+      <span className="text-xs text-content-secondary">{t('companion.MetricsPanel.cpuTemperature')}</span>
       <div className="flex items-baseline gap-1">
         <span className={`text-xl font-mono font-bold ${color}`}>{temp.toFixed(0)}</span>
         <span className="text-xs text-content-secondary">°C</span>
@@ -94,8 +95,8 @@ export function MetricsPanel() {
     return (
       <PanelContainer className="flex items-center justify-center">
         <div className="text-center text-content-tertiary text-xs">
-          <div className="text-content-secondary mb-1">No metrics data</div>
-          <div>Waiting for agent connection...</div>
+          <div className="text-content-secondary mb-1">{t('companion.MetricsPanel.noMetricsData')}</div>
+          <div>{t('companion.MetricsPanel.waitingForAgentConnection')}</div>
         </div>
       </PanelContainer>
     );
@@ -119,7 +120,7 @@ export function MetricsPanel() {
           />
           <GaugeRing
             value={metrics.disk}
-            label="Disk"
+            label={t('companion.MetricsPanel.disk')}
             detail={`${formatBytes(metrics.diskUsed)} / ${formatBytes(metrics.diskTotal)}`}
             color="green"
           />

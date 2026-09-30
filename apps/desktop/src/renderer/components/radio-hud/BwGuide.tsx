@@ -8,13 +8,14 @@
  */
 
 import { X, Download, BookOpen, LayoutGrid, Volume2, Activity } from 'lucide-react';
+import { t as tr } from '../../i18n';
 
 /** The 128x64 screen, drawn to scale with its regions called out. */
 function ScreenMap() {
   const w = 128;
   const h = 64;
   return (
-    <svg viewBox={`-2 -2 ${w + 4} ${h + 4}`} className="w-full max-w-sm" role="img" aria-label="Screen layout">
+    <svg viewBox={`-2 -2 ${w + 4} ${h + 4}`} className="w-full max-w-sm" role="img" aria-label={tr('radio_hud.BwGuide.screenLayout')}>
       <rect x={0} y={0} width={w} height={h} rx={2} className="fill-[#c9d2bd] stroke-[#242b1f]" strokeWidth={1} />
       {/* top strip */}
       <rect x={0} y={0} width={w} height={8} className="fill-[#242b1f]" />
@@ -38,7 +39,7 @@ function ScreenMap() {
       ))}
       {/* bottom strip */}
       <rect x={0} y={56} width={w} height={8} className="fill-[#242b1f]" />
-      <text x={2} y={62} fontSize={5.5} fontFamily="monospace" className="fill-[#c9d2bd]">EKF3 IMU0 is using GPS</text>
+      <text x={2} y={62} fontSize={5.5} fontFamily="monospace" className="fill-[#c9d2bd]">{tr('radio_hud.BwGuide.ekf3Imu0IsUsingGps')}</text>
     </svg>
   );
 }
@@ -46,7 +47,7 @@ function ScreenMap() {
 /** Where PAGE lives on a Pocket-class radio. */
 function RadioFace() {
   return (
-    <svg viewBox="0 0 150 90" className="w-full max-w-[220px]" role="img" aria-label="Radio front">
+    <svg viewBox="0 0 150 90" className="w-full max-w-[220px]" role="img" aria-label={tr('radio_hud.BwGuide.radioFront')}>
       <rect x={1} y={1} width={148} height={88} rx={10} className="fill-surface-input stroke-subtle" strokeWidth={1.5} />
       <rect x={40} y={10} width={70} height={36} rx={2} className="fill-[#c9d2bd] stroke-subtle" strokeWidth={1} />
       <rect x={40} y={10} width={70} height={5} className="fill-[#242b1f]" />
@@ -57,7 +58,7 @@ function RadioFace() {
       <text x={55} y={64} fontSize={7} className="fill-teal-300">PAGE</text>
       <rect x={78} y={56} width={20} height={11} rx={3} className="fill-surface stroke-subtle" strokeWidth={1} />
       <text x={81} y={64} fontSize={7} className="fill-content-secondary">SYS</text>
-      <text x={46} y={80} fontSize={6.5} className="fill-content-secondary">press PAGE from the main view</text>
+      <text x={46} y={80} fontSize={6.5} className="fill-content-secondary">{tr('radio_hud.BwGuide.pressPageFromTheMainView')}</text>
     </svg>
   );
 }
@@ -74,24 +75,20 @@ const STEPS: Step[] = [
   {
     Icon: Download,
     color: 'text-sky-400',
-    title: 'Install it',
+    get title() { return tr('radio_hud.BwGuide.installIt'); },
     body: (
       <>
-        Power the radio, connect USB, choose <span className="text-content">USB Storage (SD)</span> on
-        its screen, then press Install here. ArduDeck copies the script and points every model's
-        telemetry screen at it, so there is nothing to set up on the radio.
+        {tr('radio_hud.BwGuide.powerTheRadioConnectUsbChoose')} <span className="text-content">{tr('radio_hud.BwGuide.usbStorageSd')}</span> {tr('radio_hud.BwGuide.onItsScreenThenPressInstall')}
       </>
     ),
   },
   {
     Icon: BookOpen,
     color: 'text-teal-400',
-    title: 'Open it',
+    get title() { return tr('radio_hud.BwGuide.openIt'); },
     body: (
       <>
-        Eject the card, unplug USB, then press <span className="text-content">PAGE</span> from the
-        main view until the ArduDeck screen appears. It sits with the radio's other telemetry
-        screens.
+        {tr('radio_hud.BwGuide.ejectTheCardUnplugUsbThen')} <span className="text-content">PAGE</span> {tr('radio_hud.BwGuide.fromTheMainViewUntilThe')}
       </>
     ),
     figure: <RadioFace />,
@@ -99,13 +96,10 @@ const STEPS: Step[] = [
   {
     Icon: Activity,
     color: 'text-emerald-400',
-    title: 'Read it',
+    get title() { return tr('radio_hud.BwGuide.readIt'); },
     body: (
       <>
-        Top strip: flight mode, armed timer, link quality. Bottom strip: the vehicle's own messages.
-        Between them, everything is a slot: the big readout, a left column, the horizon (or two more
-        data columns) and a right column. An <span className="text-content">S</span> before the
-        signal figure means the values come from EdgeTX's own sensors rather than passthrough.
+        {tr('radio_hud.BwGuide.topStripFlightModeArmedTimer')} <span className="text-content">S</span> {tr('radio_hud.BwGuide.beforeTheSignalFigureMeansThe')}
       </>
     ),
     figure: <ScreenMap />,
@@ -113,25 +107,20 @@ const STEPS: Step[] = [
   {
     Icon: LayoutGrid,
     color: 'text-violet-400',
-    title: 'Change what it shows',
+    get title() { return tr('radio_hud.BwGuide.changeWhatItShows'); },
     body: (
       <>
-        Press <span className="text-content">Edit slots</span>, click any slot in the preview and
-        pick a field. Set a slot to <span className="text-content">(empty)</span> and its neighbour
-        grows into the free row, so a trimmed layout gets bigger numbers rather than gaps. Apply
-        writes it to the card.
+        {tr('radio_hud.BwGuide.press')} <span className="text-content">{tr('radio_hud.BwGuide.editSlots')}</span>{tr('radio_hud.BwGuide.clickAnySlotInThePreview')} <span className="text-content">{tr('radio_hud.BwGuide.empty')}</span> {tr('radio_hud.BwGuide.andItsNeighbourGrowsIntoThe')}
       </>
     ),
   },
   {
     Icon: Volume2,
     color: 'text-amber-400',
-    title: 'Listen to it',
+    get title() { return tr('radio_hud.BwGuide.listenToIt'); },
     body: (
       <>
-        The callouts play whether or not the telemetry screen is open, so you can watch the aircraft:
-        telemetry gained and lost, battery thresholds, fence and EKF warnings. Arming calls stay
-        silent until the vehicle actually reports armed state, rather than guessing.
+        {tr('radio_hud.BwGuide.theCalloutsPlayWhetherOrNot')}
       </>
     ),
   },
@@ -149,13 +138,13 @@ export function BwGuide({ onClose }: { onClose: () => void }) {
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-subtle bg-surface-raised">
           <div>
-            <h3 className="text-sm font-medium text-content">The HUD on a monochrome radio</h3>
-            <p className="text-xs text-content-secondary">Pocket, Boxer, Zorro, TX12, MT12, T-Lite, X9D</p>
+            <h3 className="text-sm font-medium text-content">{tr('radio_hud.BwGuide.theHudOnAMonochromeRadio')}</h3>
+            <p className="text-xs text-content-secondary">{tr('radio_hud.BwGuide.pocketBoxerZorroTx12Mt12T')}</p>
           </div>
           <button
             onClick={onClose}
             className="p-1.5 rounded text-content-secondary hover:text-content hover:bg-surface-input transition-colors"
-            data-tip="Close"
+            data-tip={tr('radio_hud.BwGuide.close')}
           >
             <X className="w-4 h-4" />
           </button>

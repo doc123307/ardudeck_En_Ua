@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { PRIMARY_CHANNEL_COUNT, getChannelName, reorderChannels } from '../../utils/rc-channel-constants';
 import { INAV_SERIALRX_PROVIDER_INDEX } from '../../utils/receiver-constants';
+import { t } from '../../i18n';
 
 // =============================================================================
 // Types
@@ -43,36 +44,36 @@ interface ReceiverOption {
 const RECEIVER_OPTIONS: ReceiverOption[] = [
   {
     id: 'crsf',
-    label: 'TBS Crossfire / ExpressLRS',
-    description: 'CRSF protocol - most popular for long range FPV',
+    get label() { return t('parameters.ReceiverWizard.tbsCrossfireExpresslrs'); },
+    get description() { return t('parameters.ReceiverWizard.crsfProtocolMostPopularForLong'); },
     inavProvider: 'CRSF',
     bfProvider: 9,
   },
   {
     id: 'sbus',
-    label: 'SBUS (FrSky, Futaba)',
-    description: 'Inverted serial - requires UART with built-in inverter',
+    get label() { return t('parameters.ReceiverWizard.sbusFrskyFutaba'); },
+    get description() { return t('parameters.ReceiverWizard.invertedSerialRequiresUartWithBuilt'); },
     inavProvider: 'SBUS',
     bfProvider: 2,
   },
   {
     id: 'ibus',
     label: 'iBUS (FlySky)',
-    description: 'FlySky serial protocol - simple and reliable',
+    get description() { return t('parameters.ReceiverWizard.flyskySerialProtocolSimpleAndReliable'); },
     inavProvider: 'IBUS',
     bfProvider: 7,
   },
   {
     id: 'spektrum',
-    label: 'Spektrum',
-    description: 'DSMX/DSM2 satellite receiver',
+    get label() { return t('parameters.ReceiverWizard.spektrum'); },
+    get description() { return t('parameters.ReceiverWizard.dsmxDsm2SatelliteReceiver'); },
     inavProvider: 'SPEK2048',
     bfProvider: 1,
   },
   {
     id: 'msp',
     label: 'MSP (GCS / SITL)',
-    description: 'Receive RC via MSP from ground station or simulator',
+    get description() { return t('parameters.ReceiverWizard.receiveRcViaMspFromGround'); },
     inavProvider: 'MSP',
     bfProvider: 15,
   },
@@ -219,7 +220,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
       // 4. Advance to verify
       setStep('verify');
     } catch (error) {
-      setApplyError(error instanceof Error ? error.message : 'Configuration failed');
+      setApplyError(error instanceof Error ? error.message : t('parameters.ReceiverWizard.configurationFailed'));
     } finally {
       setIsApplying(false);
     }
@@ -235,12 +236,12 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
               <Radio className="w-5 h-5 text-blue-400" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-content">Receiver Setup</h2>
+              <h2 className="text-lg font-semibold text-content">{t('parameters.ReceiverWizard.receiverSetup')}</h2>
               <p className="text-xs text-content-secondary">
-                {step === 'select-rx' && 'Step 1 of 4 - Select receiver type'}
-                {step === 'select-port' && 'Step 2 of 4 - Select UART port'}
-                {step === 'verify' && 'Step 3 of 4 - Verify signal'}
-                {step === 'done' && 'Complete'}
+                {step === 'select-rx' && t('parameters.ReceiverWizard.step1Of4SelectReceiver')}
+                {step === 'select-port' && t('parameters.ReceiverWizard.step2Of4SelectUart')}
+                {step === 'verify' && t('parameters.ReceiverWizard.step3Of4VerifySignal')}
+                {step === 'done' && t('parameters.ReceiverWizard.complete')}
               </p>
             </div>
           </div>
@@ -295,7 +296,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
               {rxSuggestion && (
                 <div className="p-3 rounded-lg bg-green-500/10 border-green-500/20">
                   <p className="text-xs text-green-300">
-                    Suggested: {rxSuggestion.note}
+                    {t('parameters.ReceiverWizard.suggested')} {rxSuggestion.note}
                   </p>
                 </div>
               )}
@@ -329,7 +330,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
                             <span className="px-1.5 py-0.5 text-[10px] rounded bg-green-500/20 text-green-400">RX</span>
                           )}
                           {isSuggested && (
-                            <span className="px-1.5 py-0.5 text-[10px] rounded bg-green-500/20 text-green-400">Suggested</span>
+                            <span className="px-1.5 py-0.5 text-[10px] rounded bg-green-500/20 text-green-400">{t('parameters.ReceiverWizard.suggested2')}</span>
                           )}
                         </div>
                       </div>
@@ -352,7 +353,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
           {/* Step 3: Verify Signal */}
           {step === 'verify' && (
             <div className="space-y-4">
-              <p className="text-sm text-content-secondary">Move your transmitter sticks to verify signal.</p>
+              <p className="text-sm text-content-secondary">{t('parameters.ReceiverWizard.moveYourTransmitterSticksToVerify')}</p>
 
               {/* Primary sticks (reordered by rxMap) */}
               <div className="grid grid-cols-2 gap-x-6 gap-y-3">
@@ -429,25 +430,25 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
                 <Check className="w-8 h-8 text-green-400" />
               </div>
               <div className="text-center">
-                <h3 className="text-lg font-semibold text-content">Receiver Configured</h3>
+                <h3 className="text-lg font-semibold text-content">{t('parameters.ReceiverWizard.receiverConfigured')}</h3>
                 <p className="text-sm text-content-secondary mt-1">
-                  {selectedRx?.label} on {selectedPort !== null ? getPortName(selectedPort) : 'MSP'}
+                  {selectedRx?.label} {t('parameters.ReceiverWizard.on')} {selectedPort !== null ? getPortName(selectedPort) : 'MSP'}
                 </p>
               </div>
               <div className="text-xs text-content-secondary bg-surface-raised rounded-lg p-3 w-full max-w-xs">
                 <div className="flex justify-between">
-                  <span>Protocol:</span>
+                  <span>{t('parameters.ReceiverWizard.protocol')}</span>
                   <span className="text-content">{selectedRx?.label}</span>
                 </div>
                 {selectedPort !== null && (
                   <div className="flex justify-between mt-1">
-                    <span>Port:</span>
+                    <span>{t('parameters.ReceiverWizard.port')}</span>
                     <span className="text-content">{getPortName(selectedPort)}</span>
                   </div>
                 )}
                 <div className="flex justify-between mt-1">
-                  <span>Channels:</span>
-                  <span className="text-green-400">{channelsDetected} active</span>
+                  <span>{t('parameters.ReceiverWizard.channels')}</span>
+                  <span className="text-green-400">{channelsDetected} {t('parameters.ReceiverWizard.active')}</span>
                 </div>
               </div>
             </div>
@@ -465,7 +466,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
               className="px-4 py-2 rounded-lg text-sm text-content-secondary hover:text-content hover:bg-surface-raised transition-all flex items-center gap-1"
             >
               <ChevronLeft className="w-4 h-4" />
-              Back
+              {t('parameters.ReceiverWizard.back')}
             </button>
           ) : (
             <div />
@@ -488,7 +489,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
                   : 'bg-surface-raised text-content-secondary cursor-not-allowed'
               }`}
             >
-              {selectedRx?.id === 'msp' ? 'Apply' : 'Next'}
+              {selectedRx?.id === 'msp' ? t('parameters.ReceiverWizard.apply') : t('parameters.ReceiverWizard.next')}
               <ChevronRight className="w-4 h-4" />
             </button>
           )}
@@ -504,7 +505,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
               }`}
             >
               {isApplying && <Loader2 className="w-4 h-4 animate-spin" />}
-              {isApplying ? 'Applying...' : 'Apply & Verify'}
+              {isApplying ? t('parameters.ReceiverWizard.applying') : t('parameters.ReceiverWizard.applyVerify')}
             </button>
           )}
 
@@ -513,7 +514,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
               onClick={() => setStep('done')}
               className="px-4 py-2 rounded-lg text-sm bg-surface-raised text-content hover:bg-surface-raised transition-all"
             >
-              Skip
+              {t('parameters.ReceiverWizard.skip')}
             </button>
           )}
 
@@ -522,7 +523,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
               onClick={onClose}
               className="px-4 py-2 rounded-lg text-sm bg-blue-600 text-white hover:bg-blue-500 transition-all"
             >
-              Done
+              {t('parameters.ReceiverWizard.done')}
             </button>
           )}
         </div>

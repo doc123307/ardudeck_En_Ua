@@ -14,6 +14,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import type { ParameterWithMeta } from '../../../../shared/parameter-types';
+import { t } from '../../../i18n';
 
 interface Option {
   value: number;
@@ -107,7 +108,7 @@ export const Px4ServoRow: React.FC<Px4ServoRowProps> = React.memo(
               className="w-full h-8 px-2 text-sm rounded bg-surface-base border border-subtle text-content disabled:opacity-40"
             >
               {!functionOptions.some((o) => o.value === funcValue) && (
-                <option value={funcValue}>{`Unknown (${funcValue})`}</option>
+                <option value={funcValue}>{t('mavlink_config.Px4ServoRow.unknown', { funcValue })}</option>
               )}
               {functionOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>

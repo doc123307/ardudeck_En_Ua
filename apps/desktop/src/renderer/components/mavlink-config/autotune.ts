@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 // AUTOTUNE_AXES / AUTOTUNE_AGGR semantics, ported from the mobile AutoTune tab.
 
 export const AXIS_ROLL = 1;
@@ -35,9 +36,9 @@ export interface AggrChoice {
 }
 
 export const AGGR_CHOICES: ReadonlyArray<AggrChoice> = [
-  { value: 0.05, title: 'Gentle', blurb: 'Softer response, more margin. Camera work.' },
-  { value: 0.075, title: 'Middle', blurb: 'The usual starting point.' },
-  { value: 0.1, title: 'Snappy', blurb: 'Sharpest response ArduPilot will tune to.' },
+  { value: 0.05, get title() { return t('mavlink_config.autotune.gentle'); }, get blurb() { return t('mavlink_config.autotune.softerResponseMoreMarginCameraWork'); } },
+  { value: 0.075, get title() { return t('mavlink_config.autotune.middle'); }, get blurb() { return t('mavlink_config.autotune.theUsualStartingPoint'); } },
+  { value: 0.1, get title() { return t('mavlink_config.autotune.snappy'); }, get blurb() { return t('mavlink_config.autotune.sharpestResponseArdupilotWillTuneTo'); } },
 ];
 
 // Three-decimal compare: the vehicle's float32 returns 0.075 as 0.07499999832.

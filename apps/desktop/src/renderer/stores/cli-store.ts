@@ -7,6 +7,7 @@
 
 import { create } from 'zustand';
 import { useConnectionStore } from './connection-store';
+import { t } from '../i18n';
 
 // =============================================================================
 // Types
@@ -513,7 +514,7 @@ export const useCliStore = create<CliStore>((set, get) => ({
 
     } catch (err) {
       console.error('[CLI Store] Save failed:', err);
-      setRebootError(err instanceof Error ? err.message : 'Failed to save configuration');
+      setRebootError(err instanceof Error ? err.message : t('stores.cli_store.failedToSaveConfiguration'));
     }
   },
 

@@ -14,13 +14,14 @@ import TransmitterCheckStep from './steps/TransmitterCheckStep';
 import ConfigReviewStep from './steps/ConfigReviewStep';
 import ApplyStep from './steps/ApplyStep';
 import { Rocket, Target, Radio, ClipboardList, type LucideIcon } from 'lucide-react';
+import { t } from '../../i18n';
 
 // Step info for progress display
 const STEPS = [
-  { id: 'welcome', label: 'Select', icon: Target },
-  { id: 'transmitter', label: 'Check', icon: Radio },
-  { id: 'review', label: 'Review', icon: ClipboardList },
-  { id: 'apply', label: 'Apply', icon: Rocket },
+  { id: 'welcome', get label() { return t('quick_setup.QuickSetupWizard.select'); }, icon: Target },
+  { id: 'transmitter', get label() { return t('quick_setup.QuickSetupWizard.check'); }, icon: Radio },
+  { id: 'review', get label() { return t('quick_setup.QuickSetupWizard.review'); }, icon: ClipboardList },
+  { id: 'apply', get label() { return t('quick_setup.QuickSetupWizard.apply'); }, icon: Rocket },
 ] as const;
 
 export const QuickSetupWizard: React.FC = () => {
@@ -85,13 +86,13 @@ export const QuickSetupWizard: React.FC = () => {
               <Rocket className="w-5 h-5 text-blue-400" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-content">Quick Setup Wizard</h2>
-              <p className="text-xs text-content-secondary">Configure everything in one go</p>
+              <h2 className="text-lg font-semibold text-content">{t('quick_setup.QuickSetupWizard.quickSetupWizard')}</h2>
+              <p className="text-xs text-content-secondary">{t('quick_setup.QuickSetupWizard.configureEverythingInOneGo')}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {confirmClose && (
-              <span className="text-xs text-amber-400">Press again to discard setup</span>
+              <span className="text-xs text-amber-400">{t('quick_setup.QuickSetupWizard.pressAgainToDiscardSetup')}</span>
             )}
             <button
               onClick={handleClose}

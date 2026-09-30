@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { AlertTriangle, AlertCircle, CheckCircle2, ChevronRight } from 'lucide-react';
 import type { ValidationCheck, ValidationResult } from '../../../shared/mission-validation';
+import { t } from '../../i18n';
 
 const ACTION_LABELS: Record<NonNullable<ValidationCheck['action']>, string> = {
   'connect-surveys': 'Connect surveys',
@@ -25,7 +26,7 @@ export function MissionValidationBadge({
     return (
       <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] text-emerald-300">
         <CheckCircle2 className="w-3.5 h-3.5" />
-        Pre-flight OK
+        {t('mission.MissionValidationBadge.preFlightOk')}
       </div>
     );
   }

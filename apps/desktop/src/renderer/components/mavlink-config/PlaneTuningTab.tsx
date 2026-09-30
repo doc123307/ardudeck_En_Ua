@@ -17,6 +17,7 @@
 import { Gauge, Plane } from 'lucide-react';
 import { useParameterStore } from '../../stores/parameter-store';
 import { DraggableSlider } from '../ui/DraggableSlider';
+import { t } from '../../i18n';
 
 export default function PlaneTuningTab(): JSX.Element {
   const { parameters, setParameter } = useParameterStore();
@@ -49,7 +50,7 @@ export default function PlaneTuningTab(): JSX.Element {
   if (!has('AIRSPEED_CRUISE') && !has('AIRSPEED_MIN')) {
     return (
       <div className="rounded-xl border border-subtle bg-surface p-5 text-sm text-content-secondary">
-        No airspeed parameters have been read from this vehicle yet.
+        {t('mavlink_config.PlaneTuningTab.noAirspeedParametersHaveBeenRead')}
       </div>
     );
   }
@@ -62,46 +63,45 @@ export default function PlaneTuningTab(): JSX.Element {
             <Gauge className="h-5 w-5 text-sky-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-content">Airspeed envelope</h3>
+            <h3 className="font-medium text-content">{t('mavlink_config.PlaneTuningTab.airspeedEnvelope')}</h3>
             <p className="text-xs text-content-secondary">
-              The speeds this aircraft will fly, and the limits it will refuse to go outside
+              {t('mavlink_config.PlaneTuningTab.theSpeedsThisAircraftWillFly')}
             </p>
           </div>
         </div>
 
         <div className="space-y-4">
           <DraggableSlider
-            label="Cruise airspeed"
+            label={t('mavlink_config.PlaneTuningTab.cruiseAirspeed')}
             value={cruise}
             onChange={(v) => setParameter('AIRSPEED_CRUISE', v)}
             {...bounds('AIRSPEED_CRUISE', { min: 5, max: 100 })}
             color="#38BDF8"
-            hint={`${cruise.toFixed(0)} m/s - what it targets in AUTO and GUIDED unless told otherwise`}
+            hint={t('mavlink_config.PlaneTuningTab.mSWhatItTargetsIn', { v1: cruise.toFixed(0) })}
           />
 
           <DraggableSlider
-            label="Minimum airspeed"
+            label={t('mavlink_config.PlaneTuningTab.minimumAirspeed')}
             value={vmin}
             onChange={(v) => setParameter('AIRSPEED_MIN', v)}
             {...bounds('AIRSPEED_MIN', { min: 5, max: 100 }, { ceil: vmax - 1 })}
             color="#F59E0B"
-            hint={`${vmin.toFixed(0)} m/s - fly slower than this and it is heading for a stall`}
+            hint={t('mavlink_config.PlaneTuningTab.mSFlySlowerThanThis', { v1: vmin.toFixed(0) })}
           />
 
           <DraggableSlider
-            label="Maximum airspeed"
+            label={t('mavlink_config.PlaneTuningTab.maximumAirspeed')}
             value={vmax}
             onChange={(v) => setParameter('AIRSPEED_MAX', v)}
             {...bounds('AIRSPEED_MAX', { min: 5, max: 100 }, { floor: vmin + 1 })}
             color="#EF4444"
-            hint={`${vmax.toFixed(0)} m/s - a speed request above this is refused, not clamped`}
+            hint={t('mavlink_config.PlaneTuningTab.mSASpeedRequestAbove', { v1: vmax.toFixed(0) })}
           />
         </div>
 
         <p className="mt-3 rounded-md bg-surface-raised px-3 py-2 text-[11px] text-content-tertiary">
-          Fly here and mission speed changes must land between {vmin.toFixed(0)} and{' '}
-          {vmax.toFixed(0)} m/s. ArduPlane rejects anything outside that range instead of
-          clamping it to the nearest limit.
+          {t('mavlink_config.PlaneTuningTab.flyHereAndMissionSpeedChanges')} {vmin.toFixed(0)} {t('mavlink_config.PlaneTuningTab.and')}{' '}
+          {vmax.toFixed(0)} {t('mavlink_config.PlaneTuningTab.mSArduplaneRejectsAnythingOutside')}
         </p>
       </div>
 
@@ -112,9 +112,9 @@ export default function PlaneTuningTab(): JSX.Element {
               <Plane className="h-5 w-5 text-violet-400" />
             </div>
             <div className="flex-1">
-              <h3 className="font-medium text-content">Attitude limits</h3>
+              <h3 className="font-medium text-content">{t('mavlink_config.PlaneTuningTab.attitudeLimits')}</h3>
               <p className="text-xs text-content-secondary">
-                How far the autopilot is allowed to bank and pitch
+                {t('mavlink_config.PlaneTuningTab.howFarTheAutopilotIsAllowed')}
               </p>
             </div>
           </div>
@@ -122,32 +122,32 @@ export default function PlaneTuningTab(): JSX.Element {
           <div className="space-y-4">
             {has('ROLL_LIMIT_DEG') && (
               <DraggableSlider
-                label="Bank angle limit"
+                label={t('mavlink_config.PlaneTuningTab.bankAngleLimit')}
                 value={num('ROLL_LIMIT_DEG', 45)}
                 onChange={(v) => setParameter('ROLL_LIMIT_DEG', v)}
                 {...bounds('ROLL_LIMIT_DEG', { min: 0, max: 90 })}
                 color="#8B5CF6"
-                hint={`${num('ROLL_LIMIT_DEG', 45).toFixed(0)}° - tighter turns cost altitude and airspeed`}
+                hint={t('mavlink_config.PlaneTuningTab.tighterTurnsCostAltitudeAndAirspeed', { v1: num('ROLL_LIMIT_DEG', 45).toFixed(0) })}
               />
             )}
             {has('PTCH_LIM_MAX_DEG') && (
               <DraggableSlider
-                label="Pitch up limit"
+                label={t('mavlink_config.PlaneTuningTab.pitchUpLimit')}
                 value={num('PTCH_LIM_MAX_DEG', 25)}
                 onChange={(v) => setParameter('PTCH_LIM_MAX_DEG', v)}
                 {...bounds('PTCH_LIM_MAX_DEG', { min: 0, max: 90 })}
                 color="#22C55E"
-                hint={`${num('PTCH_LIM_MAX_DEG', 25).toFixed(0)}° - climb attitude ceiling`}
+                hint={t('mavlink_config.PlaneTuningTab.climbAttitudeCeiling', { v1: num('PTCH_LIM_MAX_DEG', 25).toFixed(0) })}
               />
             )}
             {has('PTCH_LIM_MIN_DEG') && (
               <DraggableSlider
-                label="Pitch down limit"
+                label={t('mavlink_config.PlaneTuningTab.pitchDownLimit')}
                 value={num('PTCH_LIM_MIN_DEG', -20)}
                 onChange={(v) => setParameter('PTCH_LIM_MIN_DEG', v)}
                 {...bounds('PTCH_LIM_MIN_DEG', { min: -90, max: 0 })}
                 color="#F97316"
-                hint={`${num('PTCH_LIM_MIN_DEG', -20).toFixed(0)}° - dive attitude floor`}
+                hint={t('mavlink_config.PlaneTuningTab.diveAttitudeFloor', { v1: num('PTCH_LIM_MIN_DEG', -20).toFixed(0) })}
               />
             )}
           </div>

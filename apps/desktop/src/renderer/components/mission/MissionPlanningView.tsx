@@ -34,6 +34,7 @@ import { useSurveyStore } from '../../stores/survey-store';
 import { useToursStore } from '../../stores/tours-store';
 import { isUnsupportedF3Board, hasInavF3Support } from '../../../shared/board-mappings';
 import { Map, AlertTriangle, Lightbulb, RefreshCw, Plane, Wrench } from 'lucide-react';
+import { t } from '../../i18n';
 
 // Reserved layout name for mission view (auto-save/restore)
 const MISSION_LAYOUT_NAME = '__mission_autosave';
@@ -86,7 +87,7 @@ function ensureFlightInfoPanel(api: DockviewApi): void {
   api.addPanel({
     id: 'flightInfo',
     component: 'FlightInfoPanel',
-    title: 'Flight Info',
+    title: t('mission.MissionPlanningView.flightInfo'),
     ...(refGroup ? { position: { referenceGroup: refGroup } } : {}),
   });
   // Keep Waypoints as the visible tab; Flight Info is a sibling.
@@ -104,7 +105,7 @@ function createDefaultLayout(api: DockviewApi): void {
   api.addPanel({
     id: 'missionMap',
     component: 'MissionMapPanel',
-    title: 'Mission Map',
+    title: t('mission.MissionPlanningView.missionMap'),
     position: { referenceGroup: mainGroup },
   });
 
@@ -113,7 +114,7 @@ function createDefaultLayout(api: DockviewApi): void {
   api.addPanel({
     id: 'waypointTable',
     component: 'WaypointTablePanel',
-    title: 'Waypoints',
+    title: t('mission.MissionPlanningView.waypoints'),
     position: { referenceGroup: rightGroup },
   });
 
@@ -126,7 +127,7 @@ function createDefaultLayout(api: DockviewApi): void {
   api.addPanel({
     id: 'altitudeProfile',
     component: 'AltitudeProfilePanel',
-    title: 'Altitude Profile',
+    title: t('mission.MissionPlanningView.altitudeProfile'),
     position: { referenceGroup: bottomGroup },
   });
 
@@ -184,19 +185,18 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
 
           {/* Title */}
           <h1 className="text-2xl font-bold text-content mb-3">
-            Legacy iNav Available
+            {t('mission.MissionPlanningView.legacyInavAvailable')}
           </h1>
 
           {/* Explanation */}
           <p className="text-content-secondary mb-6 leading-relaxed">
-            Your <span className="text-orange-400 font-medium">{boardId}</span> is an F3 board with 256KB flash.
-            You can flash <span className="text-blue-400 font-medium">iNav 2.6.1</span> for basic mission planning and GPS navigation.
+            {t('mission.MissionPlanningView.your')} <span className="text-orange-400 font-medium">{boardId}</span> {t('mission.MissionPlanningView.isAnF3BoardWith256kb')} <span className="text-blue-400 font-medium">{t('mission.MissionPlanningView.inav261')}</span> {t('mission.MissionPlanningView.forBasicMissionPlanningAndGps')}
           </p>
 
           {/* Note about limitations */}
           <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-6 text-left">
             <p className="text-yellow-400/90 text-sm">
-              <strong>Note:</strong> iNav 2.6.1 supports waypoint missions but lacks newer features like safehome and advanced failsafes available in modern iNav 7.x on F4+ boards.
+              <strong>{t('mission.MissionPlanningView.note')}</strong> {t('mission.MissionPlanningView.inav261SupportsWaypoint')}
             </p>
           </div>
 
@@ -206,13 +206,13 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
               onClick={() => setView('telemetry')}
               className="px-4 py-2 bg-surface-raised hover:bg-surface-raised text-content-secondary rounded-lg text-sm transition-colors"
             >
-              ← Back
+              {t('mission.MissionPlanningView.back')}
             </button>
             <button
               onClick={handleFlashInav}
               className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-medium transition-all shadow-lg shadow-blue-500/25"
             >
-              Flash iNav 2.6.1
+              {t('mission.MissionPlanningView.flashInav261')}
             </button>
           </div>
         </div>
@@ -232,18 +232,17 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
 
           {/* Title */}
           <h1 className="text-2xl font-bold text-content mb-3">
-            Hardware Upgrade Needed
+            {t('mission.MissionPlanningView.hardwareUpgradeNeeded')}
           </h1>
 
           {/* Explanation */}
           <p className="text-content-secondary mb-6 leading-relaxed">
-            Your <span className="text-red-400 font-medium">{boardId}</span> is an F3 board that was never supported by iNav.
-            For mission planning, you need an F4 or newer board.
+            {t('mission.MissionPlanningView.your')} <span className="text-red-400 font-medium">{boardId}</span> {t('mission.MissionPlanningView.isAnF3BoardThatWas')}
           </p>
 
           {/* Upgrade suggestions */}
           <div className="bg-surface rounded-xl border border-subtle p-4 text-left mb-6">
-            <p className="text-sm text-content-secondary mb-3">Recommended upgrades:</p>
+            <p className="text-sm text-content-secondary mb-3">{t('mission.MissionPlanningView.recommendedUpgrades')}</p>
             <div className="flex flex-wrap gap-2">
               {['SpeedyBee F405 V3', 'Matek F405-SE', 'Kakute F7'].map((board) => (
                 <span key={board} className="px-2 py-1 bg-surface-raised rounded text-content text-xs">
@@ -258,7 +257,7 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
             onClick={() => setView('telemetry')}
             className="px-4 py-2 bg-surface-raised hover:bg-surface-raised text-content-secondary rounded-lg text-sm transition-colors"
           >
-            ← Back to Telemetry
+            {t('mission.MissionPlanningView.backToTelemetry')}
           </button>
         </div>
       </div>
@@ -275,22 +274,21 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
 
         {/* Title */}
         <h1 className="text-2xl font-bold text-content mb-3">
-          Mission Planning Not Available
+          {t('mission.MissionPlanningView.missionPlanningNotAvailable')}
         </h1>
 
         {/* Explanation */}
         <p className="text-content-secondary mb-6 leading-relaxed">
-          Your <span className="text-orange-400 font-medium">{fcVariant === 'BTFL' ? 'Betaflight' : fcVariant}</span> flight controller
-          on <span className="text-blue-400">{boardId}</span> doesn't support autonomous waypoint missions.
+          {t('mission.MissionPlanningView.your')} <span className="text-orange-400 font-medium">{fcVariant === 'BTFL' ? 'Betaflight' : fcVariant}</span> {t('mission.MissionPlanningView.flightControllerOn')} <span className="text-blue-400">{boardId}</span> {t('mission.MissionPlanningView.doesnTSupportAutonomousWaypointMissions')}
           {fcVariant === 'BTFL' && (
-            <> Betaflight is designed for FPV racing and freestyle flying with manual control.</>
+            <> {t('mission.MissionPlanningView.betaflightIsDesignedForFpvRacing')}</>
           )}
         </p>
 
         {/* What you can do */}
         <div className="bg-surface rounded-xl border border-subtle p-6 text-left mb-6">
           <h3 className="text-sm font-medium text-content mb-4 flex items-center gap-2">
-            <Lightbulb className="w-4 h-4 text-amber-400 inline" /> Want autonomous missions? Here are your options:
+            <Lightbulb className="w-4 h-4 text-amber-400 inline" /> {t('mission.MissionPlanningView.wantAutonomousMissionsHereAreYour')}
           </h3>
           <div className="space-y-4">
             <div className="flex items-start gap-3">
@@ -298,10 +296,9 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
                 <RefreshCw className="w-5 h-5 text-blue-400" />
               </div>
               <div>
-                <h4 className="font-medium text-blue-400">Flash iNav Firmware</h4>
+                <h4 className="font-medium text-blue-400">{t('mission.MissionPlanningView.flashInavFirmware')}</h4>
                 <p className="text-sm text-content-secondary">
-                  iNav is a fork of Betaflight with full GPS navigation and mission planning support.
-                  Same board, different firmware. Go to <span className="text-content-secondary">Firmware Flash</span> and select iNav.
+                  {t('mission.MissionPlanningView.inavIsAForkOfBetaflight')} <span className="text-content-secondary">{t('mission.MissionPlanningView.firmwareFlash')}</span> {t('mission.MissionPlanningView.andSelectInav')}
                 </p>
               </div>
             </div>
@@ -310,10 +307,9 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
                 <Plane className="w-5 h-5 text-green-400" />
               </div>
               <div>
-                <h4 className="font-medium text-green-400">Use ArduPilot Hardware</h4>
+                <h4 className="font-medium text-green-400">{t('mission.MissionPlanningView.useArdupilotHardware')}</h4>
                 <p className="text-sm text-content-secondary">
-                  For the most advanced mission planning, consider a Pixhawk or compatible board running ArduPilot.
-                  Supports copters, planes, VTOLs, rovers, boats, and submarines.
+                  {t('mission.MissionPlanningView.forTheMostAdvancedMissionPlanning')}
                 </p>
               </div>
             </div>
@@ -322,7 +318,7 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
 
         {/* Supported boards */}
         <div className="text-sm text-content-secondary">
-          <p className="mb-2">Boards that support mission planning:</p>
+          <p className="mb-2">{t('mission.MissionPlanningView.boardsThatSupportMissionPlanning')}</p>
           <div className="flex flex-wrap justify-center gap-2">
             {['Pixhawk', 'Cube', 'Matek F405-WSE', 'Kakute F7', 'Any iNav board'].map((board) => (
               <span key={board} className="px-2 py-1 bg-surface-raised rounded text-content-secondary text-xs">
@@ -338,13 +334,13 @@ function MissionNotAvailable({ fcVariant, boardId }: { fcVariant: string; boardI
             onClick={handleFlashInav}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors"
           >
-            Flash iNav Firmware
+            {t('mission.MissionPlanningView.flashInavFirmware')}
           </button>
           <button
             onClick={() => setView('telemetry')}
             className="px-4 py-2 bg-surface-raised hover:bg-surface-raised text-content-secondary rounded-lg text-sm transition-colors"
           >
-            ← Back to Telemetry
+            {t('mission.MissionPlanningView.backToTelemetry')}
           </button>
         </div>
       </div>
@@ -424,7 +420,7 @@ export function MissionPlanningView() {
       api.addPanel({
         id: SURVEY_PANEL_ID,
         component: 'SurveyConfigPanel',
-        title: 'Survey',
+        title: t('mission.MissionPlanningView.survey'),
         ...(refGroup ? { position: { referenceGroup: refGroup } } : {}),
       });
       // Focus the new tab so the user lands on it after starting survey mode.
@@ -493,7 +489,7 @@ export function MissionPlanningView() {
       api.addPanel({
         id: FLIGHT_PREVIEW_PANEL_ID,
         component: 'FlightPreviewPanel',
-        title: 'Flight Preview',
+        title: t('mission.MissionPlanningView.flightPreview'),
         ...(refGroup ? { position: { referenceGroup: refGroup } } : {}),
       });
       api.getPanel(FLIGHT_PREVIEW_PANEL_ID)?.api.setActive();

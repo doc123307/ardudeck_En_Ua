@@ -7,6 +7,7 @@
  * key `map-instrument-layouts` and paste the snapshot here.
  */
 import type { InstrumentLayoutSnapshot } from '../../../stores/map-instruments-store';
+import { t } from '../../../i18n';
 
 export type PresetAccent = 'green' | 'blue' | 'amber' | 'violet';
 
@@ -263,9 +264,9 @@ const ROVER_COCKPIT: InstrumentLayoutSnapshot = {
 };
 
 export const PRESET_INSTRUMENT_LAYOUTS: PresetInstrumentLayout[] = [
-  { name: 'Pilot cockpit', description: 'Gauge bar along the bottom, command rail down the left.', accent: 'green', layout: PILOT_COCKPIT },
-  { name: 'Minimal', description: 'Just the ball, flight data and the status strips.', accent: 'blue', layout: MINIMAL },
-  { name: 'Strips only', description: 'Compact readout bands, maximum map.', accent: 'amber', layout: STRIPS_ONLY },
-  { name: 'Split cockpit', description: 'Slim set for the in-map split; applied automatically.', accent: 'violet', layout: SPLIT_COCKPIT },
-  { name: 'Rover', description: 'Ground set: tilt, steering and cross-track instead of the ball.', accent: 'amber', layout: ROVER_COCKPIT },
+  { name: 'Pilot cockpit', get description() { return t('map.preset_layouts.gaugeBarAlongTheBottomCommand'); }, accent: 'green', layout: PILOT_COCKPIT },
+  { name: 'Minimal', get description() { return t('map.preset_layouts.justTheBallFlightDataAnd'); }, accent: 'blue', layout: MINIMAL },
+  { name: 'Strips only', get description() { return t('map.preset_layouts.compactReadoutBandsMaximumMap'); }, accent: 'amber', layout: STRIPS_ONLY },
+  { name: 'Split cockpit', get description() { return t('map.preset_layouts.slimSetForTheInMap'); }, accent: 'violet', layout: SPLIT_COCKPIT },
+  { name: 'Rover', get description() { return t('map.preset_layouts.groundSetTiltSteeringAndCross'); }, accent: 'amber', layout: ROVER_COCKPIT },
 ];

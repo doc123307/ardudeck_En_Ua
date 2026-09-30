@@ -2,6 +2,7 @@ import { useState, type RefObject } from 'react';
 import { useCanvasStream } from '../camera/useCanvasStream';
 import { StreamPopover } from '../camera/StreamPopover';
 import { SIM_STREAM_PATH } from '../../../shared/camera-types';
+import { t } from '../../i18n';
 
 export function SimStreamControl({ canvasRef }: { canvasRef: RefObject<HTMLCanvasElement | null> }) {
   const stream = useCanvasStream(canvasRef, SIM_STREAM_PATH);
@@ -23,13 +24,13 @@ export function SimStreamControl({ canvasRef }: { canvasRef: RefObject<HTMLCanva
     <div className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        data-tip="Publish the 3D view as an RTSP stream for OpenCV, VLC or ffmpeg"
+        data-tip={t('sim.SimStreamControl.publishThe3dViewAsAn')}
         className={`flex items-center gap-1.5 rounded-lg border border-subtle px-3 py-1.5 text-xs font-medium shadow-lg transition-colors ${
           live ? 'bg-blue-600 text-white' : 'bg-surface-raised text-content-secondary hover:text-content'
         }`}
       >
         {live && <span className="h-1.5 w-1.5 rounded-full bg-rose-400" />}
-        Stream
+        {t('sim.SimStreamControl.stream')}
       </button>
       {open && (
         <StreamPopover

@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useGuideStore } from '../../stores/guide-store';
+import { t } from '../../i18n';
 
 // Numbered survey-point marker in the guide's colour, white halo for
 // legibility on any basemap.
@@ -74,7 +75,7 @@ export function GuidesOverlay() {
                   onClick={() => toggleGuide(g.id)}
                   className="w-full px-2 py-1 rounded text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 transition-colors"
                 >
-                  Hide point set
+                  {t('mission.GuidesOverlay.hidePointSet')}
                 </button>
               </div>
             </Popup>
@@ -92,19 +93,19 @@ export function GuidesOverlay() {
             <div className="space-y-1.5 min-w-[10rem]">
               <div className="text-xs font-medium">{g.name}</div>
               <div className="text-[10px] text-gray-500">
-                {g.polygon.length} points · reference line
+                {g.polygon.length} {t('mission.GuidesOverlay.pointsReferenceLine')}
               </div>
               <button
                 onClick={() => startSurveyFromGuide(g.id)}
                 className="w-full px-2 py-1 rounded text-xs font-medium bg-purple-600 hover:bg-purple-500 text-white transition-colors"
               >
-                Corridor survey along this line
+                {t('mission.GuidesOverlay.corridorSurveyAlongThisLine')}
               </button>
               <button
                 onClick={() => toggleGuide(g.id)}
                 className="w-full px-2 py-1 rounded text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 transition-colors"
               >
-                Hide line
+                {t('mission.GuidesOverlay.hideLine')}
               </button>
             </div>
           </Popup>
@@ -137,13 +138,13 @@ export function GuidesOverlay() {
                   onClick={() => startSurveyFromGuide(g.id)}
                   className="w-full px-2 py-1 rounded text-xs font-medium bg-purple-600 hover:bg-purple-500 text-white transition-colors"
                 >
-                  Plan survey here
+                  {t('mission.GuidesOverlay.planSurveyHere')}
                 </button>
                 <button
                   onClick={() => toggleGuide(g.id)}
                   className="w-full px-2 py-1 rounded text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 transition-colors"
                 >
-                  Hide guide
+                  {t('mission.GuidesOverlay.hideGuide')}
                 </button>
               </div>
             </Popup>

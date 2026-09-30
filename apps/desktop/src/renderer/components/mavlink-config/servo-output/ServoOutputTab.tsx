@@ -19,6 +19,7 @@ import { ServoRow } from './ServoRow';
 import { StickTestPanel } from './StickTestPanel';
 import Px4ServoOutput from './Px4ServoOutput';
 import OutputCards from './OutputCards';
+import { t } from '../../../i18n';
 
 const PWM_MIN = 800;
 const PWM_MAX = 2200;
@@ -51,7 +52,7 @@ const ServoOutputTab: React.FC = () => {
       .map(([fn, channels]) => ({
         fn,
         channels,
-        label: (getParameterMetadata('SERVO1_FUNCTION')?.values?.[fn]) ?? `Function ${fn}`,
+        label: (getParameterMetadata('SERVO1_FUNCTION')?.values?.[fn]) ?? t('mavlink_config.ServoOutputTab.function', { fn }),
       }));
   }, [parameters, getParameterMetadata]);
 
@@ -92,8 +93,8 @@ const ServoOutputTab: React.FC = () => {
             <Lightbulb className="w-5 h-5 text-amber-400" />
           </div>
           <div>
-            <p className="text-amber-300 font-medium">Parameters Not Loaded</p>
-            <p className="text-sm text-amber-400/80">Connect to a flight controller to edit servo outputs.</p>
+            <p className="text-amber-300 font-medium">{t('mavlink_config.ServoOutputTab.parametersNotLoaded')}</p>
+            <p className="text-sm text-amber-400/80">{t('mavlink_config.ServoOutputTab.connectToAFlightControllerTo')}</p>
           </div>
         </div>
       )}
@@ -104,18 +105,17 @@ const ServoOutputTab: React.FC = () => {
             <AlertTriangle className="mt-0.5 w-5 h-5 shrink-0 text-amber-400" />
             <div className="text-sm">
               <p className="font-medium text-amber-300">
-                More than one output is doing the same job
+                {t('mavlink_config.ServoOutputTab.moreThanOneOutputIsDoing')}
               </p>
               <ul className="mt-1 space-y-0.5 text-xs text-amber-200/90">
                 {duplicateFunctions.map((d) => (
                   <li key={d.fn}>
-                    {d.label} is on outputs {d.channels.join(' and ')}
+                    {d.label} {t('mavlink_config.ServoOutputTab.isOnOutputs')} {d.channels.join(' and ')}
                   </li>
                 ))}
               </ul>
               <p className="mt-1.5 text-xs text-amber-200/80">
-                That is right for a vehicle with two ESCs or paired servos, and wrong everywhere
-                else: a spare output driving nothing, or two devices fighting over one signal.
+                {t('mavlink_config.ServoOutputTab.thatIsRightForAVehicle')}
               </p>
             </div>
           </div>
@@ -130,18 +130,18 @@ const ServoOutputTab: React.FC = () => {
             <Move className="w-5 h-5 text-pink-400" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-content">Servo Output</h3>
+            <h3 className="text-base font-semibold text-content">{t('mavlink_config.ServoOutputTab.servoOutput')}</h3>
             <p className="text-sm text-content-secondary">
-              Per-channel function, range, and live output
+              {t('mavlink_config.ServoOutputTab.perChannelFunctionRangeAndLive')}
               {!hasLiveOutput && hasParameters && (
-                <span className="ml-2 text-content-tertiary">(no live telemetry)</span>
+                <span className="ml-2 text-content-tertiary">{t('mavlink_config.ServoOutputTab.noLiveTelemetry')}</span>
               )}
             </p>
           </div>
           <div className="ml-auto flex rounded-lg border border-subtle overflow-hidden text-xs">
             {([
-              { id: 'cards', label: 'In use', title: 'The functions this vehicle has, with their travel' },
-              { id: 'table', label: 'All outputs', title: 'Every channel, assigned or not, with raw values and per-output test' },
+              { id: 'cards', label: t('mavlink_config.ServoOutputTab.inUse'), title: t('mavlink_config.ServoOutputTab.theFunctionsThisVehicleHasWith') },
+              { id: 'table', label: t('mavlink_config.ServoOutputTab.allOutputs'), title: t('mavlink_config.ServoOutputTab.everyChannelAssignedOrNotWith') },
             ] as const).map((v) => (
               <button
                 key={v.id}
@@ -170,13 +170,13 @@ const ServoOutputTab: React.FC = () => {
         <div className={`rounded-lg border border-subtle overflow-hidden ${view === 'cards' ? 'hidden' : ''}`}>
           <div className="grid grid-cols-[40px_1fr_80px_minmax(180px,1fr)_70px_70px_70px_180px] gap-2 px-3 py-2 text-[11px] uppercase tracking-wide text-content-tertiary bg-surface-raised/40 border-b border-subtle">
             <div className="text-center">#</div>
-            <div>Position</div>
-            <div className="text-center">Reverse</div>
-            <div>Function</div>
-            <div className="text-center">Min</div>
-            <div className="text-center">Trim</div>
-            <div className="text-center">Max</div>
-            <div className="text-center">Test</div>
+            <div>{t('mavlink_config.ServoOutputTab.position')}</div>
+            <div className="text-center">{t('mavlink_config.ServoOutputTab.reverse')}</div>
+            <div>{t('mavlink_config.ServoOutputTab.function2')}</div>
+            <div className="text-center">{t('mavlink_config.ServoOutputTab.min')}</div>
+            <div className="text-center">{t('mavlink_config.ServoOutputTab.trim')}</div>
+            <div className="text-center">{t('mavlink_config.ServoOutputTab.max')}</div>
+            <div className="text-center">{t('mavlink_config.ServoOutputTab.test')}</div>
           </div>
           <div className="divide-y divide-subtle/60">
             {Array.from({ length: channelCount }, (_, i) => i + 1).map((ch) => (

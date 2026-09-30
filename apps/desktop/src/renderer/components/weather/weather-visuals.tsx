@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import type { WeatherSummary } from '../../utils/weather-api';
 import { STATUS_WORD, type WxStatus } from './weather-thresholds';
+import { t } from '../../i18n';
 
 export type Grade = WxStatus | 'info';
 
@@ -89,16 +90,16 @@ function isNight(wx: WeatherSummary): boolean {
 export function deriveCondition(wx: WeatherSummary): Condition {
   const night = isNight(wx);
   if (wx.precipMm >= 0.1 || wx.precipProbPct >= 60) {
-    return { label: 'Rain', Icon: CloudRain, isNight: night };
+    return { label: t('weather.weather_visuals.rain'), Icon: CloudRain, isNight: night };
   }
   if (wx.visibilityM > 0 && wx.visibilityM < 1000) {
-    return { label: 'Fog', Icon: CloudFog, isNight: night };
+    return { label: t('weather.weather_visuals.fog'), Icon: CloudFog, isNight: night };
   }
   if (wx.cloudCoverPct >= 85) {
-    return { label: 'Overcast', Icon: Cloud, isNight: night };
+    return { label: t('weather.weather_visuals.overcast'), Icon: Cloud, isNight: night };
   }
   if (wx.cloudCoverPct >= 40) {
-    return { label: 'Partly cloudy', Icon: CloudSun, isNight: night };
+    return { label: t('weather.weather_visuals.partlyCloudy'), Icon: CloudSun, isNight: night };
   }
-  return { label: 'Clear', Icon: night ? Moon : Sun, isNight: night };
+  return { label: t('weather.weather_visuals.clear'), Icon: night ? Moon : Sun, isNight: night };
 }

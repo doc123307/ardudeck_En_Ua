@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from 'lucide-react';
+import { t } from '../../../i18n';
 
 // Section component for displaying configuration details
 const ConfigSection: React.FC<{
@@ -50,7 +51,7 @@ export const ConfigReviewStep: React.FC = () => {
   if (!selectedPreset) {
     return (
       <div className="text-center py-8">
-        <p className="text-content-secondary">No preset selected. Please go back and select a preset.</p>
+        <p className="text-content-secondary">{t('quick_setup.ConfigReviewStep.noPresetSelectedPleaseGoBack')}</p>
       </div>
     );
   }
@@ -125,11 +126,10 @@ export const ConfigReviewStep: React.FC = () => {
           <selectedPreset.icon className="w-8 h-8 text-content" />
         </div>
         <h2 className="text-xl font-semibold text-content">
-          Review: {selectedPreset.name}
+          {t('quick_setup.ConfigReviewStep.review')} {selectedPreset.name}
         </h2>
         <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
-          The following configuration will be applied to your flight controller.
-          Review the settings below before proceeding.
+          {t('quick_setup.ConfigReviewStep.theFollowingConfigurationWillBeApplied')}
         </p>
       </div>
 
@@ -142,7 +142,7 @@ export const ConfigReviewStep: React.FC = () => {
               : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
           }`}
         >
-          {boardType === 'msp' ? 'Via MSP Protocol' : 'Via CLI Commands'}
+          {boardType === 'msp' ? t('quick_setup.ConfigReviewStep.viaMspProtocol') : t('quick_setup.ConfigReviewStep.viaCliCommands')}
         </span>
       </div>
 
@@ -151,7 +151,7 @@ export const ConfigReviewStep: React.FC = () => {
         {/* Aircraft Type */}
         <ConfigSection
           icon={<Plane className="w-5 h-5 text-sky-400" />}
-          title="Aircraft Type"
+          title={t('quick_setup.ConfigReviewStep.aircraftType')}
           items={aircraftItems}
           color="from-sky-500/10 to-blue-500/5 border-sky-500/20"
         />
@@ -159,7 +159,7 @@ export const ConfigReviewStep: React.FC = () => {
         {/* PIDs */}
         <ConfigSection
           icon={<SlidersHorizontal className="w-5 h-5 text-purple-400" />}
-          title="PID Tuning"
+          title={t('quick_setup.ConfigReviewStep.pidTuning')}
           items={pidItems}
           color="from-purple-500/10 to-violet-500/5 border-purple-500/20"
         />
@@ -167,7 +167,7 @@ export const ConfigReviewStep: React.FC = () => {
         {/* Rates */}
         <ConfigSection
           icon={<Gauge className="w-5 h-5 text-blue-400" />}
-          title="Rates"
+          title={t('quick_setup.ConfigReviewStep.rates')}
           items={rateItems}
           color="from-blue-500/10 to-cyan-500/5 border-blue-500/20"
         />
@@ -175,7 +175,7 @@ export const ConfigReviewStep: React.FC = () => {
         {/* Modes */}
         <ConfigSection
           icon={<Gamepad2 className="w-5 h-5 text-green-400" />}
-          title="Flight Modes"
+          title={t('quick_setup.ConfigReviewStep.flightModes')}
           items={modeItems}
           color="from-green-500/10 to-emerald-500/5 border-green-500/20"
         />
@@ -183,7 +183,7 @@ export const ConfigReviewStep: React.FC = () => {
         {/* Failsafe */}
         <ConfigSection
           icon={<Shield className="w-5 h-5 text-orange-400" />}
-          title="Failsafe"
+          title={t('quick_setup.ConfigReviewStep.failsafe')}
           items={failsafeItems}
           color="from-orange-500/10 to-amber-500/5 border-orange-500/20"
         />
@@ -195,11 +195,10 @@ export const ConfigReviewStep: React.FC = () => {
           <AlertTriangle className="w-5 h-5 text-amber-400" />
           <div>
             <h4 className="font-medium text-amber-200 text-sm">
-              This will overwrite your current settings
+              {t('quick_setup.ConfigReviewStep.thisWillOverwriteYourCurrentSettings')}
             </h4>
             <p className="text-xs text-amber-100/70 mt-1">
-              Make sure you've backed up your configuration if you want to preserve your
-              current settings. The changes will be saved to EEPROM immediately.
+              {t('quick_setup.ConfigReviewStep.makeSureYouVeBackedUp')}
             </p>
           </div>
         </div>
@@ -212,14 +211,14 @@ export const ConfigReviewStep: React.FC = () => {
           className="flex items-center gap-2 px-4 py-2 text-sm text-content-secondary hover:text-content hover:bg-surface-raised rounded-lg transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back
+          {t('quick_setup.ConfigReviewStep.back')}
         </button>
 
         <button
           onClick={nextStep}
           className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
         >
-          Apply Configuration
+          {t('quick_setup.ConfigReviewStep.applyConfiguration')}
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

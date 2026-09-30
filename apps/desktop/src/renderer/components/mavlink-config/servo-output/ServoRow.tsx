@@ -8,6 +8,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import type { ParameterWithMeta } from '../../../../shared/parameter-types';
+import { t } from '../../../i18n';
 
 interface Option {
   value: number;
@@ -117,7 +118,7 @@ export const ServoRow: React.FC<ServoRowProps> = React.memo(
               className="w-full h-8 px-2 text-sm rounded bg-surface-base border border-subtle text-content disabled:opacity-40"
             >
               {!functionOptions.some((o) => o.value === funcValue) && (
-                <option value={funcValue}>{`Unknown (${funcValue})`}</option>
+                <option value={funcValue}>{t('mavlink_config.ServoRow.unknown', { funcValue })}</option>
               )}
               {functionOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -167,15 +168,15 @@ export const ServoRow: React.FC<ServoRowProps> = React.memo(
             Disabled when the function is mixer-driven (ArduPlane mixer would
             overwrite SET_SERVO every cycle). */}
         <div className="flex items-center gap-1" title={testTooltip}>
-          <TestButton label="Min"  disabled={!canTestDirectly} onClick={() => pulse(minPwm)} />
-          <TestButton label="Trim" disabled={!canTestDirectly} onClick={() => pulse(trimPwm)} />
-          <TestButton label="Max"  disabled={!canTestDirectly} onClick={() => pulse(maxPwm)} />
-          <TestButton label="Rel"  disabled={!canTestDirectly} onClick={release} variant="release" />
+          <TestButton label={t('mavlink_config.ServoRow.min')}  disabled={!canTestDirectly} onClick={() => pulse(minPwm)} />
+          <TestButton label={t('mavlink_config.ServoRow.trim')} disabled={!canTestDirectly} onClick={() => pulse(trimPwm)} />
+          <TestButton label={t('mavlink_config.ServoRow.max')}  disabled={!canTestDirectly} onClick={() => pulse(maxPwm)} />
+          <TestButton label={t('mavlink_config.ServoRow.rel')}  disabled={!canTestDirectly} onClick={release} variant="release" />
         </div>
 
         {!hasParams && (
           <div className="col-span-8 text-xs text-content-tertiary text-center">
-            (params not loaded for channel {channel})
+            {t('mavlink_config.ServoRow.paramsNotLoadedForChannel')} {channel})
           </div>
         )}
       </div>

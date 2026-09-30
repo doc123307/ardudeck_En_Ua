@@ -18,6 +18,7 @@ import {
   subscribeModuleMapLayers,
   type ModuleMapLayer,
 } from '../../modules/module-map-registry';
+import { t } from '../../i18n';
 
 const GLYPH: Record<string, string> = {
   dot: '●',
@@ -270,7 +271,7 @@ export function ModulePolygonPickBar(): JSX.Element | null {
             <div className="text-[11px] text-content-tertiary tabular-nums">
               {ready
                 ? `${n} corners placed`
-                : `${n} of 3 corners - keep clicking`}
+                : t('panels.ModuleMapLayers.of3CornersKeepClicking', { n })}
             </div>
           </div>
         </div>
@@ -283,26 +284,26 @@ export function ModulePolygonPickBar(): JSX.Element | null {
             className="rounded px-2 py-1 text-xs text-content-secondary hover:bg-surface-hover hover:text-content disabled:opacity-40"
             disabled={n === 0}
             onClick={undoPickPoint}
-            data-tip="Backspace"
+            data-tip={t('panels.ModuleMapLayers.backspace')}
           >
-            Undo
+            {t('panels.ModuleMapLayers.undo')}
           </button>
           <button
             type="button"
             className="rounded px-2 py-1 text-xs text-content-secondary hover:bg-surface-hover hover:text-content"
             onClick={cancelPick}
-            data-tip="Escape"
+            data-tip={t('panels.ModuleMapLayers.escape')}
           >
-            Cancel
+            {t('panels.ModuleMapLayers.cancel')}
           </button>
           <button
             type="button"
             className="rounded bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
             disabled={!ready}
             onClick={finishPick}
-            data-tip="Double click the map, or Enter"
+            data-tip={t('panels.ModuleMapLayers.doubleClickTheMapOrEnter')}
           >
-            Done
+            {t('panels.ModuleMapLayers.done')}
           </button>
         </div>
       </div>

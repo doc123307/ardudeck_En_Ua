@@ -9,6 +9,7 @@ import { useCalibrationStore } from '../../../stores/calibration-store';
 import { useConnectionStore } from '../../../stores/connection-store';
 import { CALIBRATION_TYPES, ACCEL_6POINT_POSITIONS, type CalibrationTypeId } from '../../../../shared/calibration-types';
 import { PositionDiagram } from '../shared/PositionDiagram';
+import { t as tr } from '../../../i18n';
 
 // Color themes matching SelectCalibrationStep
 const CalibrationThemes: Record<CalibrationTypeId, {
@@ -193,12 +194,12 @@ export function PrepareCalibrationStep() {
   if (!calibrationType || !calTypeInfo) {
     return (
       <div className="text-center py-8">
-        <p className="text-content-secondary">No calibration type selected.</p>
+        <p className="text-content-secondary">{tr('calibration.PrepareCalibrationStep.noCalibrationTypeSelected')}</p>
         <button
           onClick={() => setStep('select')}
           className="mt-3 px-4 py-2 bg-surface-raised hover:bg-surface-raised rounded-lg text-content transition-colors"
         >
-          Go Back
+          {tr('calibration.PrepareCalibrationStep.goBack')}
         </button>
       </div>
     );
@@ -224,7 +225,7 @@ export function PrepareCalibrationStep() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-content">{calTypeInfo.name}</h3>
-                <p className="text-xs text-content-secondary">~{calTypeInfo.estimatedDuration}s duration</p>
+                <p className="text-xs text-content-secondary">~{calTypeInfo.estimatedDuration}{tr('calibration.PrepareCalibrationStep.sDuration')}</p>
               </div>
             </div>
 
@@ -234,7 +235,7 @@ export function PrepareCalibrationStep() {
                 theme.iconColor.replace('text-', 'bg-').replace('400', '500')
               } hover:brightness-110 text-white shadow-lg`}
             >
-              Start
+              {tr('calibration.PrepareCalibrationStep.start')}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
@@ -248,13 +249,13 @@ export function PrepareCalibrationStep() {
                 {/* Instructions */}
                 <div className="flex-1 space-y-2">
                   <InstructionItem theme={theme} num={1}>
-                    Place vehicle on a <strong className="text-content">level surface</strong>
+                    {tr('calibration.PrepareCalibrationStep.placeVehicleOnA')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.levelSurface')}</strong>
                   </InstructionItem>
                   <InstructionItem theme={theme} num={2}>
-                    Keep <strong className="text-content">completely still</strong> during calibration
+                    {tr('calibration.PrepareCalibrationStep.keep')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.completelyStill')}</strong> {tr('calibration.PrepareCalibrationStep.duringCalibration')}
                   </InstructionItem>
                   <InstructionItem theme={theme} num={3}>
-                    Click Start when ready
+                    {tr('calibration.PrepareCalibrationStep.clickStartWhenReady')}
                   </InstructionItem>
                 </div>
                 {/* Diagram */}
@@ -269,9 +270,9 @@ export function PrepareCalibrationStep() {
             {calibrationType === 'accel-6point' && (
               <>
                 <p className="text-content text-sm">
-                  Place vehicle in <strong className="text-content">6 positions</strong> - {isPx4
-                    ? 'each side is detected and captured automatically.'
-                    : "you'll be guided step by step."}
+                  {tr('calibration.PrepareCalibrationStep.placeVehicleIn')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.n6Positions')}</strong> - {isPx4
+                    ? tr('calibration.PrepareCalibrationStep.eachSideIsDetectedAndCaptured')
+                    : tr('calibration.PrepareCalibrationStep.youLlBeGuidedStepBy')}
                 </p>
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                   {ACCEL_6POINT_POSITIONS.map((pos, index) => (
@@ -285,8 +286,8 @@ export function PrepareCalibrationStep() {
                 </div>
                 <WarningBox>
                   {isPx4
-                    ? <>Hold each position <strong className="text-content">steady</strong> until the vehicle captures it.</>
-                    : <>Hold each position <strong className="text-content">steady</strong>, then confirm with the button.</>}
+                    ? <>{tr('calibration.PrepareCalibrationStep.holdEachPosition')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.steady')}</strong> {tr('calibration.PrepareCalibrationStep.untilTheVehicleCapturesIt')}</>
+                    : <>{tr('calibration.PrepareCalibrationStep.holdEachPosition')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.steady')}</strong>{tr('calibration.PrepareCalibrationStep.thenConfirmWithTheButton')}</>}
                 </WarningBox>
               </>
             )}
@@ -295,21 +296,21 @@ export function PrepareCalibrationStep() {
               <>
                 <div className="grid sm:grid-cols-3 gap-2">
                   <InstructionItem theme={theme} num={1}>
-                    Move away from <strong className="text-content">metal/electronics</strong>
+                    {tr('calibration.PrepareCalibrationStep.moveAwayFrom')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.metalElectronics')}</strong>
                   </InstructionItem>
                   <InstructionItem theme={theme} num={2}>
                     {isPx4
-                      ? <>Hold on a side, <strong className="text-content">rotate when prompted</strong></>
-                      : <><strong className="text-content">Rotate continuously</strong> in all directions</>}
+                      ? <>{tr('calibration.PrepareCalibrationStep.holdOnASide')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.rotateWhenPrompted')}</strong></>
+                      : <><strong className="text-content">{tr('calibration.PrepareCalibrationStep.rotateContinuously')}</strong> {tr('calibration.PrepareCalibrationStep.inAllDirections')}</>}
                   </InstructionItem>
                   <InstructionItem theme={theme} num={3}>
                     {isPx4
-                      ? <>Repeat for all <strong className="text-content">6 sides</strong></>
-                      : <>Continue until <strong className="text-content">every compass reaches 100%</strong></>}
+                      ? <>{tr('calibration.PrepareCalibrationStep.repeatForAll')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.n6Sides')}</strong></>
+                      : <>{tr('calibration.PrepareCalibrationStep.continueUntil')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.everyCompassReaches100')}</strong></>}
                   </InstructionItem>
                 </div>
                 <WarningBox>
-                  External compass must be firmly mounted.
+                  {tr('calibration.PrepareCalibrationStep.externalCompassMustBeFirmlyMounted')}
                 </WarningBox>
               </>
             )}
@@ -318,17 +319,17 @@ export function PrepareCalibrationStep() {
               <>
                 <div className="grid sm:grid-cols-3 gap-2">
                   <InstructionItem theme={theme} num={1}>
-                    Place on <strong className="text-content">stable surface</strong>
+                    {tr('calibration.PrepareCalibrationStep.placeOn')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.stableSurface')}</strong>
                   </InstructionItem>
                   <InstructionItem theme={theme} num={2}>
-                    Keep <strong className="text-content">completely still</strong>
+                    {tr('calibration.PrepareCalibrationStep.keep')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.completelyStill')}</strong>
                   </InstructionItem>
                   <InstructionItem theme={theme} num={3}>
-                    Auto-completes in seconds
+                    {tr('calibration.PrepareCalibrationStep.autoCompletesInSeconds')}
                   </InstructionItem>
                 </div>
                 <InfoBox theme={theme}>
-                  Gyro calibration runs automatically on boot. Manual calibration only needed for drift issues.
+                  {tr('calibration.PrepareCalibrationStep.gyroCalibrationRunsAutomaticallyOnBoot')}
                 </InfoBox>
               </>
             )}
@@ -336,13 +337,13 @@ export function PrepareCalibrationStep() {
             {calibrationType === 'opflow' && (
               <div className="grid sm:grid-cols-3 gap-2">
                 <InstructionItem theme={theme} num={1}>
-                  Hold <strong className="text-content">1-2m above textured surface</strong>
+                  {tr('calibration.PrepareCalibrationStep.hold')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.n12mAboveTexturedSurface')}</strong>
                 </InstructionItem>
                 <InstructionItem theme={theme} num={2}>
-                  Surface needs <strong className="text-content">visible patterns</strong>
+                  {tr('calibration.PrepareCalibrationStep.surfaceNeeds')} <strong className="text-content">{tr('calibration.PrepareCalibrationStep.visiblePatterns')}</strong>
                 </InstructionItem>
                 <InstructionItem theme={theme} num={3}>
-                  Keep still for ~{countdown}s
+                  {tr('calibration.PrepareCalibrationStep.keepStillFor')}{countdown}s
                 </InstructionItem>
               </div>
             )}
@@ -366,7 +367,7 @@ export function PrepareCalibrationStep() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Change calibration type
+          {tr('calibration.PrepareCalibrationStep.changeCalibrationType')}
         </button>
       </div>
     </div>

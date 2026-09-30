@@ -12,6 +12,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Compass, AlertTriangle, CheckCircle2, Loader2, Satellite } from 'lucide-react';
 import { useTelemetryStore } from '../../stores/telemetry-store';
+import { t } from '../../i18n';
 
 interface LargeVehicleMagCalDialogProps {
   onClose: () => void;
@@ -55,7 +56,7 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
       if (result?.success) {
         setRun({ kind: 'success' });
       } else {
-        setRun({ kind: 'error', message: result?.error || 'Command failed' });
+        setRun({ kind: 'error', message: result?.error || t('calibration.LargeVehicleMagCalDialog.commandFailed') });
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error';
@@ -87,10 +88,9 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
             <Compass className="w-5 h-5 text-amber-400" />
           </div>
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-content">Large Vehicle MagCal</h3>
+            <h3 className="text-sm font-semibold text-content">{t('calibration.LargeVehicleMagCalDialog.largeVehicleMagcal')}</h3>
             <p className="text-xs text-content-secondary mt-1 leading-relaxed">
-              Single-shot compass calibration for aircraft that cannot be rotated.
-              Point the vehicle in a known true direction and enter the heading below.
+              {t('calibration.LargeVehicleMagCalDialog.singleShotCompassCalibrationForAircraft')}
             </p>
           </div>
         </div>
@@ -102,8 +102,7 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
             <div className="flex items-start gap-2 p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30">
               <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <div className="text-xs text-amber-200">
-                <span className="font-medium">No GPS 3D lock.</span> A 3D fix is required so the
-                FC can derive the local earth-field vector. Calibration will fail without it.
+                <span className="font-medium">{t('calibration.LargeVehicleMagCalDialog.noGps3dLock')}</span> {t('calibration.LargeVehicleMagCalDialog.a3dFixIsRequiredSo')}
               </div>
             </div>
           )}
@@ -111,7 +110,7 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
             <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
               <Satellite className="w-4 h-4 text-emerald-400 shrink-0" />
               <div className="text-xs text-emerald-200">
-                GPS 3D fix ({gps?.satellites ?? 0} sats)
+                {t('calibration.LargeVehicleMagCalDialog.gps3dFix')}{gps?.satellites ?? 0} {t('calibration.LargeVehicleMagCalDialog.sats')}
               </div>
             </div>
           )}
@@ -119,7 +118,7 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
           {/* Heading input */}
           <div>
             <label className="block text-xs font-medium text-content-secondary mb-1.5">
-              Current True Heading (degrees)
+              {t('calibration.LargeVehicleMagCalDialog.currentTrueHeadingDegrees')}
             </label>
             <div className="flex gap-2">
               <input
@@ -141,14 +140,13 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
                 onClick={useLiveHeading}
                 disabled={run.kind === 'running' || run.kind === 'success'}
                 className="px-3 py-2 text-xs rounded-lg bg-surface border border-subtle hover:border-amber-400/60 hover:text-amber-300 text-content-secondary transition-colors disabled:opacity-50"
-                title={`Use live heading (${Math.round(liveHeading)}°)`}
+                title={t('calibration.LargeVehicleMagCalDialog.useLiveHeading', { v1: Math.round(liveHeading) })}
               >
-                Use Live ({Math.round(liveHeading)}°)
+                {t('calibration.LargeVehicleMagCalDialog.useLive')}{Math.round(liveHeading)}°)
               </button>
             </div>
             <p className="text-[11px] text-content-tertiary mt-1.5 leading-relaxed">
-              Heading is true (not magnetic). Use a known landmark, runway alignment,
-              or a separate compass. Accuracy directly affects calibration quality.
+              {t('calibration.LargeVehicleMagCalDialog.headingIsTrueNotMagneticUse')}
             </p>
           </div>
 
@@ -156,15 +154,14 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
           {run.kind === 'running' && (
             <div className="flex items-center gap-2 p-2.5 rounded-lg bg-blue-500/10 border border-blue-500/30">
               <Loader2 className="w-4 h-4 text-blue-400 animate-spin shrink-0" />
-              <div className="text-xs text-blue-200">Sending calibration command...</div>
+              <div className="text-xs text-blue-200">{t('calibration.LargeVehicleMagCalDialog.sendingCalibrationCommand')}</div>
             </div>
           )}
           {run.kind === 'success' && (
             <div className="flex items-start gap-2 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
               <div className="text-xs text-emerald-200">
-                <span className="font-medium">Calibration complete.</span> Compass offsets
-                have been written. A reboot is recommended for the new offsets to take effect.
+                <span className="font-medium">{t('calibration.LargeVehicleMagCalDialog.calibrationComplete')}</span> {t('calibration.LargeVehicleMagCalDialog.compassOffsetsHaveBeenWrittenA')}
               </div>
             </div>
           )}
@@ -182,7 +179,7 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
             onClick={onClose}
             className="px-3 py-1.5 rounded-lg text-xs text-content-secondary hover:text-content hover:bg-surface transition-colors"
           >
-            {run.kind === 'success' ? 'Close' : 'Cancel'}
+            {run.kind === 'success' ? t('calibration.LargeVehicleMagCalDialog.close') : t('calibration.LargeVehicleMagCalDialog.cancel')}
           </button>
           {run.kind !== 'success' && (
             <button
@@ -190,7 +187,7 @@ export function LargeVehicleMagCalDialog({ onClose }: LargeVehicleMagCalDialogPr
               disabled={!headingValid || run.kind === 'running'}
               className="px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-amber-600 hover:bg-amber-500 disabled:bg-amber-600/40 disabled:cursor-not-allowed transition-colors"
             >
-              {run.kind === 'running' ? 'Running...' : 'Run Calibration'}
+              {run.kind === 'running' ? t('calibration.LargeVehicleMagCalDialog.running') : t('calibration.LargeVehicleMagCalDialog.runCalibration')}
             </button>
           )}
         </div>

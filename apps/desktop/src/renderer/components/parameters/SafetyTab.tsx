@@ -42,39 +42,40 @@ import {
   Gamepad2,
   Monitor as MonitorIcon,
 } from 'lucide-react';
+import { t } from '../../i18n';
 
 const FAILSAFE_PROCEDURES = [
-  { value: 0, label: 'Land', icon: PlaneLanding, description: 'Land in place', color: 'amber' },
-  { value: 1, label: 'Drop', icon: AlertTriangle, description: 'Cut motors (dangerous!)', color: 'red' },
-  { value: 2, label: 'RTH', icon: Home, description: 'Return to home', color: 'green' },
-  { value: 3, label: 'None', icon: CircleSlash, description: 'Keep flying', color: 'gray' },
+  { value: 0, get label() { return t('parameters.SafetyTab.land'); }, icon: PlaneLanding, get description() { return t('parameters.SafetyTab.landInPlace'); }, color: 'amber' },
+  { value: 1, get label() { return t('parameters.SafetyTab.drop'); }, icon: AlertTriangle, get description() { return t('parameters.SafetyTab.cutMotorsDangerous'); }, color: 'red' },
+  { value: 2, label: 'RTH', icon: Home, get description() { return t('parameters.SafetyTab.returnToHome'); }, color: 'green' },
+  { value: 3, get label() { return t('parameters.SafetyTab.none'); }, icon: CircleSlash, get description() { return t('parameters.SafetyTab.keepFlying'); }, color: 'gray' },
 ] as const;
 
 // Receiver types (iNav)
 const RECEIVER_TYPES = [
-  { value: 'NONE', label: 'None', icon: CircleSlash },
-  { value: 'SERIAL', label: 'Serial', icon: Radio },
+  { value: 'NONE', get label() { return t('parameters.SafetyTab.none'); }, icon: CircleSlash },
+  { value: 'SERIAL', get label() { return t('parameters.SafetyTab.serial'); }, icon: Radio },
   { value: 'MSP', label: 'MSP', icon: MonitorIcon },
   { value: 'SIM (SITL)', label: 'SITL', icon: Gamepad2 },
 ] as const;
 
 // Betaflight receiver providers (serialrx_provider) - numeric values match FC encoding
 const BF_RECEIVER_PROVIDERS = [
-  { value: 0, label: 'Spektrum 1024', description: 'Spektrum DSM2 1024' },
-  { value: 1, label: 'Spektrum 2048', description: 'Spektrum DSM2/DSMX 2048' },
-  { value: 2, label: 'SBUS', description: 'FrSky SBUS/F.Port' },
-  { value: 3, label: 'SUMD', description: 'Graupner SUMD' },
-  { value: 4, label: 'SUMH', description: 'Graupner SUMH' },
-  { value: 5, label: 'XBus Mode B', description: 'JR XBus Mode B' },
-  { value: 6, label: 'XBus RJ01', description: 'JR XBus RJ01' },
-  { value: 7, label: 'IBUS', description: 'FlySky IBUS' },
-  { value: 8, label: 'Jeti ExBus', description: 'Jeti ExBus' },
-  { value: 9, label: 'CRSF', description: 'TBS Crossfire/ELRS' },
-  { value: 10, label: 'SRXL', description: 'Spektrum SRXL' },
-  { value: 12, label: 'F.Port', description: 'FrSky F.Port' },
-  { value: 13, label: 'SRXL2', description: 'Spektrum SRXL2' },
-  { value: 14, label: 'Ghost', description: 'ImmersionRC Ghost' },
-  { value: 15, label: 'MSP', description: 'MSP (for SITL/testing)' },
+  { value: 0, get label() { return t('parameters.SafetyTab.spektrum1024'); }, get description() { return t('parameters.SafetyTab.spektrumDsm21024'); } },
+  { value: 1, get label() { return t('parameters.SafetyTab.spektrum2048'); }, get description() { return t('parameters.SafetyTab.spektrumDsm2Dsmx2048'); } },
+  { value: 2, label: 'SBUS', get description() { return t('parameters.SafetyTab.frskySbusFPort'); } },
+  { value: 3, label: 'SUMD', get description() { return t('parameters.SafetyTab.graupnerSumd'); } },
+  { value: 4, label: 'SUMH', get description() { return t('parameters.SafetyTab.graupnerSumh'); } },
+  { value: 5, get label() { return t('parameters.SafetyTab.xbusModeB'); }, get description() { return t('parameters.SafetyTab.jrXbusModeB'); } },
+  { value: 6, get label() { return t('parameters.SafetyTab.xbusRj01'); }, get description() { return t('parameters.SafetyTab.jrXbusRj01'); } },
+  { value: 7, label: 'IBUS', get description() { return t('parameters.SafetyTab.flyskyIbus'); } },
+  { value: 8, get label() { return t('parameters.SafetyTab.jetiExbus'); }, get description() { return t('parameters.SafetyTab.jetiExbus'); } },
+  { value: 9, label: 'CRSF', get description() { return t('parameters.SafetyTab.tbsCrossfireElrs'); } },
+  { value: 10, label: 'SRXL', get description() { return t('parameters.SafetyTab.spektrumSrxl'); } },
+  { value: 12, get label() { return t('parameters.SafetyTab.fPort'); }, get description() { return t('parameters.SafetyTab.frskyFPort'); } },
+  { value: 13, label: 'SRXL2', get description() { return t('parameters.SafetyTab.spektrumSrxl2'); } },
+  { value: 14, get label() { return t('parameters.SafetyTab.ghost'); }, get description() { return t('parameters.SafetyTab.immersionrcGhost'); } },
+  { value: 15, label: 'MSP', get description() { return t('parameters.SafetyTab.mspForSitlTesting'); } },
 ] as const;
 
 // Quick select buttons (most common protocols)
@@ -87,16 +88,16 @@ const BF_QUICK_SELECT = [
 
 // GPS Rescue altitude modes
 const ALTITUDE_MODES = [
-  { value: 0, label: 'Maximum', description: 'Higher of current or set altitude' },
-  { value: 1, label: 'Fixed', description: 'Always climb to set altitude' },
-  { value: 2, label: 'Current', description: 'Use current altitude' },
+  { value: 0, get label() { return t('parameters.SafetyTab.maximum'); }, get description() { return t('parameters.SafetyTab.higherOfCurrentOrSetAltitude'); } },
+  { value: 1, get label() { return t('parameters.SafetyTab.fixed'); }, get description() { return t('parameters.SafetyTab.alwaysClimbToSetAltitude'); } },
+  { value: 2, get label() { return t('parameters.SafetyTab.current'); }, get description() { return t('parameters.SafetyTab.useCurrentAltitude'); } },
 ] as const;
 
 // Sanity check options
 const SANITY_CHECKS = [
-  { value: 0, label: 'Off', description: 'No safety checks' },
-  { value: 1, label: 'Flyaway', description: 'Detect flyaways only' },
-  { value: 2, label: 'All', description: 'All checks (recommended)' },
+  { value: 0, get label() { return t('parameters.SafetyTab.off'); }, get description() { return t('parameters.SafetyTab.noSafetyChecks'); } },
+  { value: 1, get label() { return t('parameters.SafetyTab.flyaway'); }, get description() { return t('parameters.SafetyTab.detectFlyawaysOnly'); } },
+  { value: 2, get label() { return t('parameters.SafetyTab.all'); }, get description() { return t('parameters.SafetyTab.allChecksRecommended'); } },
 ] as const;
 
 // Interfaces
@@ -404,7 +405,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
       }
     } catch (err) {
       console.error('[SafetyTab] Failed to load:', err);
-      setError('Failed to load safety configuration');
+      setError(t('parameters.SafetyTab.failedToLoadSafetyConfiguration'));
     } finally {
       setLoading(false);
     }
@@ -501,7 +502,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
       return true;
     } catch (err) {
       console.error('[SafetyTab] Save failed:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save settings');
+      setError(err instanceof Error ? err.message : t('parameters.SafetyTab.failedToSaveSettings'));
       try { await window.electronAPI.mspStartTelemetry(); } catch { /* ignore */ }
       return false;
     } finally {
@@ -533,7 +534,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
       <div className="flex items-center justify-center h-64">
         <div className="flex items-center gap-3 text-content-secondary">
           <RefreshCw className="w-5 h-5 animate-spin" />
-          <span>Loading safety configuration...</span>
+          <span>{t('parameters.SafetyTab.loadingSafetyConfiguration')}</span>
         </div>
       </div>
     );
@@ -560,7 +561,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
 
       {/* Failsafe Section */}
       <Section
-        title="Failsafe Behavior"
+        title={t('parameters.SafetyTab.failsafeBehavior')}
         icon={<AlertTriangle className="w-5 h-5 text-amber-400" />}
         color="amber"
         defaultOpen={true}
@@ -571,7 +572,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
           {/* Procedure Selection - Visual Cards */}
           <div>
             <label className="block text-sm font-medium text-content-secondary mb-3">
-              What should happen when signal is lost?
+              {t('parameters.SafetyTab.whatShouldHappenWhenSignalIs')}
             </label>
             <div className="grid grid-cols-4 gap-2">
               {FAILSAFE_PROCEDURES.map((proc) => {
@@ -604,7 +605,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
           {/* Timing Sliders */}
           <div className="grid grid-cols-2 gap-4">
             <DraggableSlider
-              label="Activation Delay"
+              label={t('parameters.SafetyTab.activationDelay')}
               value={failsafe.failsafeDelay}
               onChange={(v) => setFailsafe(prev => ({ ...prev, failsafeDelay: v }))}
               min={0}
@@ -612,10 +613,10 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
               step={1}
               unit="×0.1s"
               color="#F59E0B"
-              hint={`${(failsafe.failsafeDelay / 10).toFixed(1)}s before failsafe triggers`}
+              hint={t('parameters.SafetyTab.sBeforeFailsafeTriggers', { v1: (failsafe.failsafeDelay / 10).toFixed(1) })}
             />
             <DraggableSlider
-              label="Recovery Delay"
+              label={t('parameters.SafetyTab.recoveryDelay')}
               value={failsafe.failsafeOffDelay}
               onChange={(v) => setFailsafe(prev => ({ ...prev, failsafeOffDelay: v }))}
               min={0}
@@ -623,12 +624,12 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
               step={1}
               unit="×0.1s"
               color="#10B981"
-              hint={`${(failsafe.failsafeOffDelay / 10).toFixed(1)}s after signal recovery`}
+              hint={t('parameters.SafetyTab.sAfterSignalRecovery', { v1: (failsafe.failsafeOffDelay / 10).toFixed(1) })}
             />
           </div>
 
           <DraggableSlider
-            label="Failsafe Throttle"
+            label={t('parameters.SafetyTab.failsafeThrottle')}
             value={failsafe.failsafeThrottle}
             onChange={(v) => setFailsafe(prev => ({ ...prev, failsafeThrottle: v }))}
             min={1000}
@@ -636,13 +637,13 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
             step={10}
             unit="µs"
             color="#6366F1"
-            hint="Throttle value during land/drop"
+            hint={t('parameters.SafetyTab.throttleValueDuringLandDrop')}
           />
 
           {/* Min Distance for RTH */}
           {isInav && failsafe.failsafeProcedure === 2 && (
             <DraggableSlider
-              label="Minimum RTH Distance"
+              label={t('parameters.SafetyTab.minimumRthDistance')}
               value={failsafe.failsafeMinDistance}
               onChange={(v) => setFailsafe(prev => ({ ...prev, failsafeMinDistance: v }))}
               min={0}
@@ -650,7 +651,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
               step={10}
               unit="m"
               color="#8B5CF6"
-              hint="Distance below which RTH won't trigger (0 = always RTH)"
+              hint={t('parameters.SafetyTab.distanceBelowWhichRthWonT')}
             />
           )}
         </div>
@@ -659,7 +660,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
       {/* GPS Rescue Section (Betaflight only) */}
       {!isInav && (
         <Section
-          title="GPS Rescue (Return to Home)"
+          title={t('parameters.SafetyTab.gpsRescueReturnToHome')}
           icon={<Home className="w-5 h-5 text-green-400" />}
           color="green"
           defaultOpen={false}
@@ -671,8 +672,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
             <div className="flex items-start gap-3 p-3 bg-blue-500/10 border-blue-500/20 rounded-lg">
               <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
               <p className="text-sm text-blue-200/80">
-                GPS Rescue automatically flies your quad back home when activated via failsafe or a switch.
-                Configure the <strong>GPS_RESCUE</strong> mode in the Modes tab to enable switch activation.
+                {t('parameters.SafetyTab.gpsRescueAutomaticallyFliesYourQuad')} <strong>GPS_RESCUE</strong> {t('parameters.SafetyTab.modeInTheModesTabTo')}
               </p>
             </div>
 
@@ -681,10 +681,10 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-content flex items-center gap-2">
                   <ArrowUp className="w-4 h-4 text-blue-400" />
-                  Altitude & Climb
+                  {t('parameters.SafetyTab.altitudeClimb')}
                 </h4>
                 <DraggableSlider
-                  label="Rescue Altitude"
+                  label={t('parameters.SafetyTab.rescueAltitude')}
                   value={gpsRescue.initialAltitudeM}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, initialAltitudeM: v }))}
                   min={20}
@@ -694,7 +694,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   color="#3B82F6"
                 />
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-content-secondary w-28">Altitude Mode</span>
+                  <span className="text-sm text-content-secondary w-28">{t('parameters.SafetyTab.altitudeMode')}</span>
                   <select
                     value={gpsRescue.altitudeMode}
                     onChange={(e) => setGpsRescue(prev => ({ ...prev, altitudeMode: parseInt(e.target.value) }))}
@@ -706,7 +706,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   </select>
                 </div>
                 <DraggableSlider
-                  label="Ascend Rate"
+                  label={t('parameters.SafetyTab.ascendRate')}
                   value={gpsRescue.ascendRate}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, ascendRate: v }))}
                   min={100}
@@ -720,10 +720,10 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-content flex items-center gap-2">
                   <ArrowDown className="w-4 h-4 text-orange-400" />
-                  Return & Descent
+                  {t('parameters.SafetyTab.returnDescent')}
                 </h4>
                 <DraggableSlider
-                  label="Return Speed"
+                  label={t('parameters.SafetyTab.returnSpeed')}
                   value={gpsRescue.rescueGroundspeed}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, rescueGroundspeed: v }))}
                   min={100}
@@ -734,7 +734,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   hint={`${(gpsRescue.rescueGroundspeed / 100).toFixed(1)} m/s`}
                 />
                 <DraggableSlider
-                  label="Descend Rate"
+                  label={t('parameters.SafetyTab.descendRate')}
                   value={gpsRescue.descendRate}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, descendRate: v }))}
                   min={50}
@@ -745,7 +745,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   hint={`${(gpsRescue.descendRate / 100).toFixed(1)} m/s`}
                 />
                 <DraggableSlider
-                  label="Descent Distance"
+                  label={t('parameters.SafetyTab.descentDistance')}
                   value={gpsRescue.descentDistanceM}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, descentDistanceM: v }))}
                   min={5}
@@ -761,11 +761,11 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
             <div className="space-y-4">
               <h4 className="text-sm font-medium text-content flex items-center gap-2">
                 <Gauge className="w-4 h-4 text-orange-400" />
-                Throttle Limits
+                {t('parameters.SafetyTab.throttleLimits')}
               </h4>
               <div className="grid grid-cols-3 gap-4">
                 <DraggableSlider
-                  label="Min"
+                  label={t('parameters.SafetyTab.min')}
                   value={gpsRescue.throttleMin}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, throttleMin: v }))}
                   min={1000}
@@ -774,7 +774,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   color="#EF4444"
                 />
                 <DraggableSlider
-                  label="Hover"
+                  label={t('parameters.SafetyTab.hover')}
                   value={gpsRescue.throttleHover}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, throttleHover: v }))}
                   min={1000}
@@ -783,7 +783,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   color="#F59E0B"
                 />
                 <DraggableSlider
-                  label="Max"
+                  label={t('parameters.SafetyTab.max')}
                   value={gpsRescue.throttleMax}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, throttleMax: v }))}
                   min={1500}
@@ -799,10 +799,10 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-content flex items-center gap-2">
                   <Satellite className="w-4 h-4 text-cyan-400" />
-                  GPS Requirements
+                  {t('parameters.SafetyTab.gpsRequirements')}
                 </h4>
                 <DraggableSlider
-                  label="Min Satellites"
+                  label={t('parameters.SafetyTab.minSatellites')}
                   value={gpsRescue.minSats}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, minSats: v }))}
                   min={5}
@@ -810,7 +810,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   color="#06B6D4"
                 />
                 <DraggableSlider
-                  label="Min Distance"
+                  label={t('parameters.SafetyTab.minDistance')}
                   value={gpsRescue.minRescueDth}
                   onChange={(v) => setGpsRescue(prev => ({ ...prev, minRescueDth: v }))}
                   min={10}
@@ -818,16 +818,16 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   step={5}
                   unit="m"
                   color="#8B5CF6"
-                  hint="Rescue won't activate closer"
+                  hint={t('parameters.SafetyTab.rescueWonTActivateCloser')}
                 />
               </div>
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-content flex items-center gap-2">
                   <Shield className="w-4 h-4 text-amber-400" />
-                  Safety Checks
+                  {t('parameters.SafetyTab.safetyChecks')}
                 </h4>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-content-secondary w-24">Sanity</span>
+                  <span className="text-sm text-content-secondary w-24">{t('parameters.SafetyTab.sanity')}</span>
                   <select
                     value={gpsRescue.sanityChecks}
                     onChange={(e) => setGpsRescue(prev => ({ ...prev, sanityChecks: parseInt(e.target.value) }))}
@@ -849,12 +849,12 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                   {gpsRescue.allowArmingWithoutFix ? (
                     <>
                       <AlertTriangle className="w-4 h-4" />
-                      Arm Without GPS Fix
+                      {t('parameters.SafetyTab.armWithoutGpsFix')}
                     </>
                   ) : (
                     <>
                       <Lock className="w-4 h-4" />
-                      Require GPS Fix to Arm
+                      {t('parameters.SafetyTab.requireGpsFixToArm')}
                     </>
                   )}
                 </button>
@@ -868,8 +868,8 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
             >
               <div className="flex items-center gap-2">
                 <Settings className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-content">GPS Rescue PIDs</span>
-                <span className="text-xs text-content-secondary">(Advanced)</span>
+                <span className="text-sm text-content">{t('parameters.SafetyTab.gpsRescuePids')}</span>
+                <span className="text-xs text-content-secondary">{t('parameters.SafetyTab.advanced')}</span>
               </div>
               <ChevronDown className={`w-4 h-4 text-content-secondary transition-transform ${showGpsPids ? 'rotate-180' : ''}`} />
             </button>
@@ -877,19 +877,19 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
             {showGpsPids && (
               <div className="grid grid-cols-3 gap-6 p-4 bg-surface-raised rounded-lg">
                 <div className="space-y-3">
-                  <h5 className="text-xs font-medium text-orange-400">Throttle</h5>
+                  <h5 className="text-xs font-medium text-orange-400">{t('parameters.SafetyTab.throttle')}</h5>
                   <DraggableSlider label="P" value={gpsPids.throttleP} onChange={(v) => setGpsPids(prev => ({ ...prev, throttleP: v }))} min={0} max={200} color="#F97316" />
                   <DraggableSlider label="I" value={gpsPids.throttleI} onChange={(v) => setGpsPids(prev => ({ ...prev, throttleI: v }))} min={0} max={200} color="#FB923C" />
                   <DraggableSlider label="D" value={gpsPids.throttleD} onChange={(v) => setGpsPids(prev => ({ ...prev, throttleD: v }))} min={0} max={200} color="#FDBA74" />
                 </div>
                 <div className="space-y-3">
-                  <h5 className="text-xs font-medium text-blue-400">Velocity</h5>
+                  <h5 className="text-xs font-medium text-blue-400">{t('parameters.SafetyTab.velocity')}</h5>
                   <DraggableSlider label="P" value={gpsPids.velP} onChange={(v) => setGpsPids(prev => ({ ...prev, velP: v }))} min={0} max={200} color="#3B82F6" />
                   <DraggableSlider label="I" value={gpsPids.velI} onChange={(v) => setGpsPids(prev => ({ ...prev, velI: v }))} min={0} max={200} color="#60A5FA" />
                   <DraggableSlider label="D" value={gpsPids.velD} onChange={(v) => setGpsPids(prev => ({ ...prev, velD: v }))} min={0} max={200} color="#93C5FD" />
                 </div>
                 <div className="space-y-3">
-                  <h5 className="text-xs font-medium text-green-400">Yaw</h5>
+                  <h5 className="text-xs font-medium text-green-400">{t('parameters.SafetyTab.yaw')}</h5>
                   <DraggableSlider label="P" value={gpsPids.yawP} onChange={(v) => setGpsPids(prev => ({ ...prev, yawP: v }))} min={0} max={200} color="#22C55E" />
                 </div>
               </div>
@@ -901,7 +901,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
       {/* Receiver settings moved note */}
       {isInav && (
         <Section
-          title="Arming Safety"
+          title={t('parameters.SafetyTab.armingSafety')}
           icon={<Radio className="w-5 h-5 text-purple-400" />}
           color="purple"
           defaultOpen={false}
@@ -911,7 +911,7 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
           <div className="mt-4 space-y-6">
             {/* Arming Safety */}
             <div>
-              <label className="block text-sm font-medium text-content-secondary mb-3">Navigation Arming Safety</label>
+              <label className="block text-sm font-medium text-content-secondary mb-3">{t('parameters.SafetyTab.navigationArmingSafety')}</label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setArming(prev => ({ ...prev, navExtraArmingSafety: 'ON' }))}
@@ -923,9 +923,9 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <Lock className="w-5 h-5" />
-                    <span className="font-medium">Enabled</span>
+                    <span className="font-medium">{t('parameters.SafetyTab.enabled')}</span>
                   </div>
-                  <p className="text-xs opacity-70">Require GPS fix & safe conditions to arm</p>
+                  <p className="text-xs opacity-70">{t('parameters.SafetyTab.requireGpsFixSafeConditionsTo')}</p>
                 </button>
                 <button
                   onClick={() => setArming(prev => ({ ...prev, navExtraArmingSafety: 'ALLOW_BYPASS' }))}
@@ -937,9 +937,9 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <Zap className="w-5 h-5" />
-                    <span className="font-medium">Allow Bypass</span>
+                    <span className="font-medium">{t('parameters.SafetyTab.allowBypass')}</span>
                   </div>
-                  <p className="text-xs opacity-70">Can bypass with stick commands (SITL/testing)</p>
+                  <p className="text-xs opacity-70">{t('parameters.SafetyTab.canBypassWithStickCommandsSitl')}</p>
                 </button>
               </div>
             </div>
@@ -948,27 +948,26 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
               <div className="flex items-start gap-3 p-3 bg-amber-500/10 border-amber-500/20 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                 <p className="text-sm text-amber-200/80">
-                  <strong>Bypass Mode:</strong> Stick commands can override safety checks. Only use for SITL
-                  testing or indoor flights without GPS.
+                  <strong>{t('parameters.SafetyTab.bypassMode')}</strong> {t('parameters.SafetyTab.stickCommandsCanOverrideSafetyChecks')}
                 </p>
               </div>
             )}
 
             {/* GPS Satellites */}
             <DraggableSlider
-              label="Minimum GPS Satellites"
+              label={t('parameters.SafetyTab.minimumGpsSatellites')}
               value={arming.navGpsMinSats}
               onChange={(v) => setArming(prev => ({ ...prev, navGpsMinSats: v }))}
               min={0}
               max={12}
               color="#A855F7"
-              hint="Required for arming (0 = no GPS needed)"
+              hint={t('parameters.SafetyTab.requiredForArming0NoGps')}
             />
 
             <div className="flex items-start gap-3 p-3 bg-surface border-subtle rounded-lg">
               <Info className="w-4 h-4 text-content-secondary shrink-0 mt-0.5" />
               <p className="text-xs text-content-secondary">
-                Receiver type and protocol settings have moved to the <strong className="text-content">Receiver</strong> tab.
+                {t('parameters.SafetyTab.receiverTypeAndProtocolSettingsHave')} <strong className="text-content">{t('parameters.SafetyTab.receiver')}</strong> {t('parameters.SafetyTab.tab')}
               </p>
             </div>
           </div>
@@ -980,10 +979,10 @@ const SafetyTab = forwardRef<SafetyTabHandle, Props>(function SafetyTab({ isInav
         <div className="flex items-start gap-3 p-4 bg-blue-500/10 border-blue-500/20 rounded-xl">
           <Home className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-medium text-blue-300">Return to Home</h4>
+            <h4 className="font-medium text-blue-300">{t('parameters.SafetyTab.returnToHome2')}</h4>
             <p className="text-sm text-blue-200/70 mt-1">
-              iNav's advanced navigation features (RTH, waypoints, position hold) are configured in the{' '}
-              <strong>Navigation</strong> tab. The failsafe RTH option above uses those settings.
+              {t('parameters.SafetyTab.inavSAdvancedNavigationFeaturesRth')}{' '}
+              <strong>{t('parameters.SafetyTab.navigation')}</strong> {t('parameters.SafetyTab.tabTheFailsafeRthOptionAbove')}
             </p>
           </div>
         </div>

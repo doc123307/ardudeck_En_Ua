@@ -14,6 +14,7 @@ import { useNavigationStore } from '../../stores/navigation-store';
 import type { MissionSummary } from '../../../shared/mission-library-types';
 import type { SurveyDocumentSummary } from '../../../shared/survey-document-types';
 import type { VaultMission, VaultSurveyArea } from '../../../shared/ipc-channels';
+import { t } from '../../i18n';
 
 export interface Project {
   name: string;
@@ -109,10 +110,9 @@ export function ProjectsBrowser({ tabs }: { tabs: React.ReactNode }) {
             <div className="w-16 h-16 rounded-2xl bg-surface border border-subtle flex items-center justify-center mb-4">
               <FolderOpen className="w-7 h-7 text-content-tertiary" />
             </div>
-            <h3 className="text-sm font-medium text-content mb-1">No projects yet</h3>
+            <h3 className="text-sm font-medium text-content mb-1">{t('mission_library.ProjectsBrowser.noProjectsYet')}</h3>
             <p className="text-xs text-content-secondary max-w-sm">
-              A project is just a name for a job or a site. Give one to a mission when you save it, or to a survey
-              area when you back it up, and everything for that job collects here.
+              {t('mission_library.ProjectsBrowser.aProjectIsJustAName')}
             </p>
           </div>
         ) : (
@@ -123,15 +123,15 @@ export function ProjectsBrowser({ tabs }: { tabs: React.ReactNode }) {
                   <FolderOpen className="w-4 h-4 text-purple-400" />
                   <span className="text-sm font-medium text-content">{project.name}</span>
                   <span className="text-[11px] text-content-secondary">
-                    {project.areas.length + project.vaultAreas.length} areas · {project.missions.length + project.vaultMissions.length + project.legacyVaultMissions.length} missions
+                    {project.areas.length + project.vaultAreas.length} {t('mission_library.ProjectsBrowser.areas')} {project.missions.length + project.vaultMissions.length + project.legacyVaultMissions.length} {t('mission_library.ProjectsBrowser.missions')}
                   </span>
                 </div>
 
                 <div className="grid gap-4 p-4 md:grid-cols-2">
                   <div>
-                    <div className="text-[10px] font-medium text-content-secondary uppercase tracking-wider mb-1.5">Survey areas</div>
+                    <div className="text-[10px] font-medium text-content-secondary uppercase tracking-wider mb-1.5">{t('mission_library.ProjectsBrowser.surveyAreas')}</div>
                     {project.areas.length === 0 && project.vaultAreas.length === 0 ? (
-                      <p className="text-xs text-content-tertiary">None yet</p>
+                      <p className="text-xs text-content-tertiary">{t('mission_library.ProjectsBrowser.noneYet')}</p>
                     ) : (
                       <ul className="space-y-1">
                         {project.areas.map((area) => (
@@ -156,7 +156,7 @@ export function ProjectsBrowser({ tabs }: { tabs: React.ReactNode }) {
                               >
                                 <CloudDownload className="w-3.5 h-3.5 shrink-0" />
                                 <span className="truncate">{v.name}</span>
-                                <span className="ml-auto text-[10px]">copy from backup</span>
+                                <span className="ml-auto text-[10px]">{t('mission_library.ProjectsBrowser.copyFromBackup')}</span>
                               </button>
                             </li>
                           ))}
@@ -165,9 +165,9 @@ export function ProjectsBrowser({ tabs }: { tabs: React.ReactNode }) {
                   </div>
 
                   <div>
-                    <div className="text-[10px] font-medium text-content-secondary uppercase tracking-wider mb-1.5">Missions</div>
+                    <div className="text-[10px] font-medium text-content-secondary uppercase tracking-wider mb-1.5">{t('mission_library.ProjectsBrowser.missions2')}</div>
                     {project.missions.length === 0 && project.vaultMissions.length === 0 && project.legacyVaultMissions.length === 0 ? (
-                      <p className="text-xs text-content-tertiary">None yet</p>
+                      <p className="text-xs text-content-tertiary">{t('mission_library.ProjectsBrowser.noneYet')}</p>
                     ) : (
                       <ul className="space-y-1">
                         {project.missions.map((mission) => (
@@ -178,7 +178,7 @@ export function ProjectsBrowser({ tabs }: { tabs: React.ReactNode }) {
                             >
                               <Route className="w-3.5 h-3.5 text-content-secondary shrink-0" />
                               <span className="truncate">{mission.name}</span>
-                              <span className="ml-auto text-[10px] text-content-secondary">{mission.waypointCount} WPs</span>
+                              <span className="ml-auto text-[10px] text-content-secondary">{mission.waypointCount} {t('mission_library.ProjectsBrowser.wps')}</span>
                             </button>
                           </li>
                         ))}
@@ -192,7 +192,7 @@ export function ProjectsBrowser({ tabs }: { tabs: React.ReactNode }) {
                               >
                                 <CloudDownload className="w-3.5 h-3.5 shrink-0" />
                                 <span className="truncate">{v.name}</span>
-                                <span className="ml-auto text-[10px]">copy from backup</span>
+                                <span className="ml-auto text-[10px]">{t('mission_library.ProjectsBrowser.copyFromBackup')}</span>
                               </button>
                             </li>
                           ))}
@@ -200,11 +200,11 @@ export function ProjectsBrowser({ tabs }: { tabs: React.ReactNode }) {
                           <li
                             key={`legacy-${name}`}
                             className="flex items-center gap-2 px-2 py-1.5 text-xs text-content-tertiary"
-                            data-tip="An older waypoints-only save. It can be restored from the Fleet Vault, but it has no groups or surveys to edit."
+                            data-tip={t('mission_library.ProjectsBrowser.anOlderWaypointsOnlySaveIt')}
                           >
                             <Route className="w-3.5 h-3.5 shrink-0" />
                             <span className="truncate">{name}</span>
-                            <span className="ml-auto text-[10px]">waypoints only</span>
+                            <span className="ml-auto text-[10px]">{t('mission_library.ProjectsBrowser.waypointsOnly')}</span>
                           </li>
                         ))}
                       </ul>

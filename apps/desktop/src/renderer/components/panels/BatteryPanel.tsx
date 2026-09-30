@@ -1,6 +1,7 @@
 import { Battery, BatteryLow, BatteryWarning, Zap } from 'lucide-react';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { PanelContainer, formatNumber } from './panel-utils';
+import { t } from '../../i18n';
 
 interface LevelTone {
   text: string;
@@ -64,7 +65,7 @@ function BatteryInstanceRow({ inst, selected, stale, onSelect }: {
   return (
     <button
       onClick={onSelect}
-      data-tip={selected ? 'Primary battery' : 'Show this battery everywhere'}
+      data-tip={selected ? t('panels.BatteryPanel.primaryBattery') : t('panels.BatteryPanel.showThisBatteryEverywhere')}
       className={`w-full flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors border ${
         selected
           ? 'border-[color:var(--border-strong,rgba(148,163,184,0.4))]'
@@ -139,7 +140,7 @@ export function BatteryPanel() {
       <div className="flex items-center justify-between text-xs">
         <span className="inline-flex items-center gap-1.5 text-content-secondary">
           <Zap className="w-3 h-3" />
-          Current
+          {t('panels.BatteryPanel.current')}
         </span>
         <span className="font-mono text-content">
           {formatNumber(Math.abs(battery.current), 1)}

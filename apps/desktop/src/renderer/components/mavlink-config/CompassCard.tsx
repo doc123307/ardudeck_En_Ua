@@ -13,6 +13,7 @@ import { useConnectionStore } from '../../stores/connection-store';
 import { getVehicleClass } from '../../../shared/telemetry-types';
 import { readCompassSlots, summariseCompasses, type CompassSlot } from './compass-inventory';
 import { Px4CompassCard } from './Px4CompassCard';
+import { t } from '../../i18n';
 
 function place(slot: CompassSlot): string {
   if (slot.bus === 'DroneCAN') return `DroneCAN node, external (GPS or CAN module)`;
@@ -79,10 +80,10 @@ function ArduPilotCompassCard(): JSX.Element {
           <Compass className="w-5 h-5 text-cyan-400" />
         </div>
         <div className="flex-1">
-          <h3 className="font-medium text-content">Compasses</h3>
+          <h3 className="font-medium text-content">{t('mavlink_config.CompassCard.compasses')}</h3>
           <p className="text-xs text-content-secondary">
             {summary.present.length === 0
-              ? 'Nothing detected on this board'
+              ? t('mavlink_config.CompassCard.nothingDetectedOnThisBoard')
               : `${summary.present.length} detected${summary.present.some((s) => s.external) ? ', including an external one' : ''}`}
           </p>
         </div>
@@ -93,12 +94,9 @@ function ArduPilotCompassCard(): JSX.Element {
           <div className="flex items-start gap-2">
             <AlertTriangle className="mt-0.5 w-4 h-4 shrink-0 text-amber-400" />
             <div>
-              <p className="text-amber-300">This board has no compass of its own.</p>
+              <p className="text-amber-300">{t('mavlink_config.CompassCard.thisBoardHasNoCompassOf')}</p>
               <p className="mt-1">
-                Most GPS modules carry one. Connect it to an I2C or CAN port, power-cycle the
-                autopilot, and it appears here: ArduPilot only probes for compasses at boot. Until
-                then the vehicle has no heading source, and a rover can still drive in Manual but
-                cannot hold a heading or run a mission.
+                {t('mavlink_config.CompassCard.mostGpsModulesCarryOneConnect')}
               </p>
             </div>
           </div>
@@ -107,7 +105,7 @@ function ArduPilotCompassCard(): JSX.Element {
 
       {summary.allDisabled && !isGround && (
         <div className="mb-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
-          A compass is fitted but every one is switched off, so the vehicle is flying without one.
+          {t('mavlink_config.CompassCard.aCompassIsFittedButEvery')}
         </div>
       )}
 
@@ -115,12 +113,12 @@ function ArduPilotCompassCard(): JSX.Element {
         <div className="mb-4 rounded-lg border border-subtle bg-surface-raised p-3">
           <div className="mb-2 flex items-center gap-2">
             <Navigation className="h-3.5 w-3.5 text-cyan-400" />
-            <span className="text-sm text-content">Where heading comes from</span>
+            <span className="text-sm text-content">{t('mavlink_config.CompassCard.whereHeadingComesFrom')}</span>
           </div>
           <div className="flex gap-2">
             {([
-              { key: 'compass', label: 'Compass' },
-              { key: 'gps', label: 'GPS motion' },
+              { key: 'compass', label: t('mavlink_config.CompassCard.compass') },
+              { key: 'gps', label: t('mavlink_config.CompassCard.gpsMotion') },
             ] as const).map((opt) => {
               const active = opt.key === 'compass' ? usingCompass : !usingCompass;
               return (
@@ -141,15 +139,14 @@ function ArduPilotCompassCard(): JSX.Element {
           </div>
           <p className="mt-2 text-[11px] text-content-tertiary">
             {usingCompass
-              ? 'The magnetometer gives heading standing still, but steel structures, motor magnets and power cables bend it, and a bad reading blocks arming.'
-              : 'Heading comes from which way the vehicle is travelling. It needs a few metres of forward movement to settle, and nothing magnetic can upset it. Normal on ground vehicles.'}
+              ? t('mavlink_config.CompassCard.theMagnetometerGivesHeadingStandingStill')
+              : t('mavlink_config.CompassCard.headingComesFromWhichWayThe')}
           </p>
         </div>
       )}
 
       <div className="mb-3 rounded-lg border border-subtle bg-surface-raised px-3 py-2 text-[11px] text-content-tertiary">
-        Slot numbers are assigned in the order the drivers come up at boot and can move between
-        reboots. The id is the device, so switch one off by its id, not by its number.
+        {t('mavlink_config.CompassCard.slotNumbersAreAssignedInThe')}
       </div>
 
       <div className="space-y-2">
@@ -159,14 +156,14 @@ function ArduPilotCompassCard(): JSX.Element {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-content">
-                    {slot.external ? 'External compass' : 'Onboard compass'}
+                    {slot.external ? t('mavlink_config.CompassCard.externalCompass') : t('mavlink_config.CompassCard.onboardCompass')}
                   </span>
                   <span className="rounded bg-surface-overlay px-1.5 py-0.5 font-mono text-[10px] text-content-tertiary">
                     id {slot.devId}
                   </span>
                   {slot.firstUsable && (
                     <span className="flex items-center gap-1 rounded bg-cyan-500/20 px-1.5 py-0.5 text-[10px] text-cyan-700 dark:text-cyan-300">
-                      <ArrowUp className="w-2.5 h-2.5" /> used for heading
+                      <ArrowUp className="w-2.5 h-2.5" /> {t('mavlink_config.CompassCard.usedForHeading')}
                     </span>
                   )}
                   <span className={`rounded px-1.5 py-0.5 text-[10px] ${
@@ -176,12 +173,12 @@ function ArduPilotCompassCard(): JSX.Element {
                   </span>
                   {!slot.calibrated && (
                     <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">
-                      not calibrated
+                      {t('mavlink_config.CompassCard.notCalibrated')}
                     </span>
                   )}
                 </div>
                 <div className="mt-0.5 text-[11px] text-content-tertiary">
-                  {place(slot)} · slot {slot.index}
+                  {place(slot)} {t('mavlink_config.CompassCard.slot')} {slot.index}
                   {slot.priority !== null && ` · priority ${slot.priority}`}
                 </div>
               </div>
@@ -189,15 +186,15 @@ function ArduPilotCompassCard(): JSX.Element {
                 onClick={() => write(slot.index === 1 ? 'COMPASS_USE' : `COMPASS_USE${slot.index}`, slot.used ? 0 : 1)}
                 disabled={busy}
                 data-tip={slot.used
-                  ? 'Stop using this compass for heading'
-                  : 'Use this compass for heading'}
+                  ? t('mavlink_config.CompassCard.stopUsingThisCompassForHeading')
+                  : t('mavlink_config.CompassCard.useThisCompassForHeading')}
                 className={`shrink-0 rounded-md px-3 py-1.5 text-[11px] transition-colors disabled:opacity-40 ${
                   slot.used
                     ? 'bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30'
                     : 'bg-surface-overlay text-content-secondary hover:text-content'
                 }`}
               >
-                {slot.used ? 'In use' : 'Not used'}
+                {slot.used ? t('mavlink_config.CompassCard.inUse') : t('mavlink_config.CompassCard.notUsed')}
               </button>
             </div>
           </div>
@@ -209,7 +206,7 @@ function ArduPilotCompassCard(): JSX.Element {
           onClick={() => setView('calibration')}
           className="mt-3 text-[11px] text-cyan-400 hover:text-cyan-300"
         >
-          Calibrate the compass →
+          {t('mavlink_config.CompassCard.calibrateTheCompass')}
         </button>
       )}
     </div>

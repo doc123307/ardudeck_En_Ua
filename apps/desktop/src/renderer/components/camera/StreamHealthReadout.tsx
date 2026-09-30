@@ -8,6 +8,7 @@
 
 import type { StreamHealth } from './stream-health';
 import { verdictFor, healthReason } from './stream-health';
+import { t } from '../../i18n';
 
 const TONE: Record<ReturnType<typeof verdictFor>, string> = {
   good: 'text-emerald-300',
@@ -24,14 +25,14 @@ export function StreamHealthReadout({ health }: { health: StreamHealth }) {
       <div className="flex items-center gap-1.5">
         <span className={`h-1.5 w-1.5 rounded-full ${verdict === 'good' ? 'bg-emerald-400' : verdict === 'warn' ? 'bg-amber-400' : 'bg-red-400'}`} />
         <span className="tabular-nums">
-          {health.bitrateKbps} kbps · {health.fps} fps
+          {health.bitrateKbps} {t('camera.StreamHealthReadout.kbps')} {health.fps} fps
           {health.width ? ` · ${health.width}x${health.height}` : ''}
         </span>
       </div>
       <div className="tabular-nums text-white/60">
-        loss {health.lossPct}% · jitter {health.jitterMs} ms
+        {t('camera.StreamHealthReadout.loss')} {health.lossPct}{t('camera.StreamHealthReadout.jitter')} {health.jitterMs} ms
         {health.droppedFrames > 0 ? ` · dropped ${health.droppedFrames}` : ''}
-        {health.keyframeRequests > 0 ? ` · keyframe req ${health.keyframeRequests}` : ''}
+        {health.keyframeRequests > 0 ? t('camera.StreamHealthReadout.keyframeReq', { keyframeRequests: health.keyframeRequests }) : ''}
       </div>
       {reason && <div className={TONE[verdict]}>{reason}</div>}
     </div>

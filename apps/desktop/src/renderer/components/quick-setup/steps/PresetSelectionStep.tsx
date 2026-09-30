@@ -28,6 +28,7 @@ import {
   Download,
   Plane as PlaneIcon,
 } from 'lucide-react';
+import { t } from '../../../i18n';
 
 // iNav-only modes that don't exist in Betaflight
 const INAV_ONLY_MODES = [
@@ -85,7 +86,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
           <p className="text-sm text-content-secondary mt-1">{description}</p>
           <div className="mt-3">
             <span className="px-2.5 py-1 text-xs bg-surface-overlay-subtle rounded-full text-content">
-              {presetCount} presets available
+              {presetCount} {t('quick_setup.PresetSelectionStep.presetsAvailable')}
             </span>
           </div>
         </div>
@@ -136,7 +137,7 @@ const PresetCard: React.FC<PresetCardProps> = ({ preset, onSelect, needsPlatform
             {needsPlatformChange && (
               <span className="flex items-center gap-1 px-2 py-0.5 text-xs bg-amber-500/20 rounded-full text-amber-300">
                 <AlertTriangle className="w-3 h-3" />
-                Platform change
+                {t('quick_setup.PresetSelectionStep.platformChange')}
               </span>
             )}
           </div>
@@ -145,16 +146,16 @@ const PresetCard: React.FC<PresetCardProps> = ({ preset, onSelect, needsPlatform
           {/* What it configures */}
           <div className="flex flex-wrap gap-1.5 mt-3">
             <span className="px-2 py-0.5 text-xs bg-blue-500/20 rounded-full text-blue-300">
-              PIDs
+              {t('quick_setup.PresetSelectionStep.pids')}
             </span>
             <span className="px-2 py-0.5 text-xs bg-purple-500/20 rounded-full text-purple-300">
-              Rates
+              {t('quick_setup.PresetSelectionStep.rates')}
             </span>
             <span className="px-2 py-0.5 text-xs bg-green-500/20 rounded-full text-green-300">
-              {preset.modes.length} Modes
+              {preset.modes.length} {t('quick_setup.PresetSelectionStep.modes')}
             </span>
             <span className="px-2 py-0.5 text-xs bg-orange-500/20 rounded-full text-orange-300">
-              Failsafe
+              {t('quick_setup.PresetSelectionStep.failsafe')}
             </span>
           </div>
         </div>
@@ -288,27 +289,27 @@ export const PresetSelectionStep: React.FC = () => {
           </div>
           <h2 className="text-xl font-semibold text-content">
             {platformChangeState === 'error'
-              ? 'Platform Change Failed'
+              ? t('quick_setup.PresetSelectionStep.platformChangeFailed')
               : platformChangeState === 'disconnected'
-              ? 'Reconnecting...'
+              ? t('quick_setup.PresetSelectionStep.reconnecting')
               : platformChangeState === 'rebooting'
-              ? 'Rebooting Flight Controller...'
+              ? t('quick_setup.PresetSelectionStep.rebootingFlightController')
               : platformChangeState === 'saving'
-              ? 'Saving Configuration...'
+              ? t('quick_setup.PresetSelectionStep.savingConfiguration')
               : platformChangeState === 'changing'
-              ? 'Changing Platform...'
-              : 'Platform Change Required'}
+              ? t('quick_setup.PresetSelectionStep.changingPlatform')
+              : t('quick_setup.PresetSelectionStep.platformChangeRequired')}
           </h2>
           <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
             {platformChangeState === 'error'
-              ? platformChangeError || 'An error occurred while changing the platform.'
+              ? platformChangeError || t('quick_setup.PresetSelectionStep.anErrorOccurredWhileChangingThe')
               : platformChangeState === 'disconnected'
-              ? 'Board is rebooting. Attempting to reconnect automatically...'
+              ? t('quick_setup.PresetSelectionStep.boardIsRebootingAttemptingToReconnect')
               : platformChangeState === 'rebooting'
-              ? 'Waiting for the flight controller to reboot...'
+              ? t('quick_setup.PresetSelectionStep.waitingForTheFlightControllerTo')
               : isPlatformChanging
-              ? 'Please wait while the platform type is being changed...'
-              : `"${selectedPreset?.name}" requires ${platformMismatch.requiredName} platform, but your board is set to ${platformMismatch.currentName}.`}
+              ? t('quick_setup.PresetSelectionStep.pleaseWaitWhileThePlatformType')
+              : t('quick_setup.PresetSelectionStep.requiresPlatformButYourBoardIs', { name: selectedPreset?.name, requiredName: platformMismatch.requiredName, currentName: platformMismatch.currentName })}
           </p>
         </div>
 
@@ -320,7 +321,7 @@ export const PresetSelectionStep: React.FC = () => {
                 <div className="w-12 h-12 rounded-full bg-surface-raised flex items-center justify-center mx-auto mb-2">
                   <Plane className="w-6 h-6 text-content-secondary" />
                 </div>
-                <p className="text-xs text-content-secondary">Current</p>
+                <p className="text-xs text-content-secondary">{t('quick_setup.PresetSelectionStep.current')}</p>
                 <p className="text-sm font-medium text-content">{platformMismatch.currentName}</p>
               </div>
               <div className="text-2xl text-content-tertiary">→</div>
@@ -328,7 +329,7 @@ export const PresetSelectionStep: React.FC = () => {
                 <div className="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mx-auto mb-2">
                   <Plane className="w-6 h-6 text-amber-400" />
                 </div>
-                <p className="text-xs text-content-secondary">Required</p>
+                <p className="text-xs text-content-secondary">{t('quick_setup.PresetSelectionStep.required')}</p>
                 <p className="text-sm font-medium text-amber-300">{platformMismatch.requiredName}</p>
               </div>
             </div>
@@ -341,10 +342,10 @@ export const PresetSelectionStep: React.FC = () => {
             <div className="flex items-center gap-3">
               <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
               <span className="text-sm text-content">
-                {platformChangeState === 'changing' && 'Setting platform type...'}
-                {platformChangeState === 'saving' && 'Saving to EEPROM...'}
-                {platformChangeState === 'rebooting' && 'Rebooting flight controller...'}
-                {platformChangeState === 'disconnected' && 'Waiting for reconnection...'}
+                {platformChangeState === 'changing' && t('quick_setup.PresetSelectionStep.settingPlatformType')}
+                {platformChangeState === 'saving' && t('quick_setup.PresetSelectionStep.savingToEeprom')}
+                {platformChangeState === 'rebooting' && t('quick_setup.PresetSelectionStep.rebootingFlightController2')}
+                {platformChangeState === 'disconnected' && t('quick_setup.PresetSelectionStep.waitingForReconnection')}
               </span>
             </div>
           </div>
@@ -356,7 +357,7 @@ export const PresetSelectionStep: React.FC = () => {
             <div className="flex items-start gap-3">
               <XCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-medium text-red-200 text-sm">Error Details</h4>
+                <h4 className="font-medium text-red-200 text-sm">{t('quick_setup.PresetSelectionStep.errorDetails')}</h4>
                 <p className="text-xs text-red-100/70 mt-1">{platformChangeError}</p>
               </div>
             </div>
@@ -369,12 +370,12 @@ export const PresetSelectionStep: React.FC = () => {
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-medium text-blue-200 text-sm">What happens when you change platform?</h4>
+                <h4 className="font-medium text-blue-200 text-sm">{t('quick_setup.PresetSelectionStep.whatHappensWhenYouChangePlatform')}</h4>
                 <ul className="text-xs text-blue-100/70 mt-1 space-y-1 list-disc list-inside">
-                  <li>The platform type will be changed on your flight controller</li>
-                  <li>Configuration will be saved to EEPROM</li>
-                  <li>The board will reboot automatically</li>
-                  <li>We'll reconnect and continue the setup wizard</li>
+                  <li>{t('quick_setup.PresetSelectionStep.thePlatformTypeWillBeChanged')}</li>
+                  <li>{t('quick_setup.PresetSelectionStep.configurationWillBeSavedToEeprom')}</li>
+                  <li>{t('quick_setup.PresetSelectionStep.theBoardWillRebootAutomatically')}</li>
+                  <li>{t('quick_setup.PresetSelectionStep.weLlReconnectAndContinueThe')}</li>
                 </ul>
               </div>
             </div>
@@ -390,14 +391,14 @@ export const PresetSelectionStep: React.FC = () => {
                 className="flex items-center gap-2 px-4 py-2 text-sm text-content-secondary hover:text-content hover:bg-surface-raised rounded-lg transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Cancel
+                {t('quick_setup.PresetSelectionStep.cancel')}
               </button>
               <button
                 onClick={handleChangePlatform}
                 className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-500 transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
-                Retry
+                {t('quick_setup.PresetSelectionStep.retry')}
               </button>
             </>
           ) : isPlatformChanging ? (
@@ -405,7 +406,7 @@ export const PresetSelectionStep: React.FC = () => {
               <div /> {/* Spacer */}
               <div className="flex items-center gap-2 text-sm text-content-secondary">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Please wait...
+                {t('quick_setup.PresetSelectionStep.pleaseWait')}
               </div>
             </>
           ) : (
@@ -415,14 +416,14 @@ export const PresetSelectionStep: React.FC = () => {
                 className="flex items-center gap-2 px-4 py-2 text-sm text-content-secondary hover:text-content hover:bg-surface-raised rounded-lg transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Choose Different Preset
+                {t('quick_setup.PresetSelectionStep.chooseDifferentPreset')}
               </button>
               <button
                 onClick={handleChangePlatform}
                 className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-500 transition-colors"
               >
                 <Plane className="w-4 h-4" />
-                Change Platform
+                {t('quick_setup.PresetSelectionStep.changePlatform')}
               </button>
             </>
           )}
@@ -443,9 +444,9 @@ export const PresetSelectionStep: React.FC = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 mb-4">
             <Rocket className="w-8 h-8 text-blue-400" />
           </div>
-          <h2 className="text-xl font-semibold text-content">Quick Setup</h2>
+          <h2 className="text-xl font-semibold text-content">{t('quick_setup.PresetSelectionStep.quickSetup')}</h2>
           <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
-            Select your vehicle type to see available presets
+            {t('quick_setup.PresetSelectionStep.selectYourVehicleTypeToSee')}
           </p>
         </div>
 
@@ -457,14 +458,14 @@ export const PresetSelectionStep: React.FC = () => {
                 className={`w-2 h-2 rounded-full ${boardType === 'msp' ? 'bg-green-500' : 'bg-amber-500'}`}
               />
               <span>
-                {boardType === 'msp' ? 'MSP Configuration' : 'CLI Configuration (Legacy)'}
+                {boardType === 'msp' ? t('quick_setup.PresetSelectionStep.mspConfiguration') : t('quick_setup.PresetSelectionStep.cliConfigurationLegacy')}
               </span>
             </div>
           )}
           {currentPlatformName && (
             <div className="flex items-center gap-2 px-2 py-1 bg-surface-inset rounded-full text-content-secondary">
               <Plane className="w-3 h-3" />
-              <span>Current: {currentPlatformName}</span>
+              <span>{t('quick_setup.PresetSelectionStep.current2')} {currentPlatformName}</span>
             </div>
           )}
         </div>
@@ -474,8 +475,8 @@ export const PresetSelectionStep: React.FC = () => {
           <VehicleCard
             type="multirotor"
             icon={<Cpu className="w-12 h-12 text-cyan-400" />}
-            title="Multirotor"
-            description="Quadcopters, hexacopters, and other multi-motor aircraft"
+            title={t('quick_setup.PresetSelectionStep.multirotor')}
+            description={t('quick_setup.PresetSelectionStep.quadcoptersHexacoptersAndOtherMultiMotor')}
             presetCount={multirotorPresets.length}
             gradient="from-cyan-500/10 to-blue-500/10 border-cyan-500/30 hover:border-cyan-400/50"
             onSelect={() => handleSelectVehicle('multirotor')}
@@ -490,29 +491,28 @@ export const PresetSelectionStep: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-xl font-semibold text-content-secondary">Fixed Wing</h3>
+                    <h3 className="text-xl font-semibold text-content-secondary">{t('quick_setup.PresetSelectionStep.fixedWing')}</h3>
                     <span className="px-2 py-0.5 text-xs bg-amber-500/20 rounded-full text-amber-300">
-                      iNav Recommended
+                      {t('quick_setup.PresetSelectionStep.inavRecommended')}
                     </span>
                   </div>
                   <p className="text-sm text-content-secondary mt-1">
-                    Betaflight's fixed-wing support is experimental and lacks navigation features.
+                    {t('quick_setup.PresetSelectionStep.betaflightSFixedWingSupportIs')}
                   </p>
                   <div className="mt-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
                     <div className="flex items-start gap-2">
                       <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                       <div className="flex-1">
                         <p className="text-xs text-amber-200/80">
-                          For airplanes, flying wings, and gliders, we recommend{' '}
-                          <strong className="text-amber-300">iNav firmware</strong> which provides
-                          full navigation, auto-launch, waypoints, and return-to-home.
+                          {t('quick_setup.PresetSelectionStep.forAirplanesFlyingWingsAndGliders')}{' '}
+                          <strong className="text-amber-300">{t('quick_setup.PresetSelectionStep.inavFirmware')}</strong> {t('quick_setup.PresetSelectionStep.whichProvidesFullNavigationAutoLaunch')}
                         </p>
                         <button
                           onClick={handleFlashInav}
                           className="mt-2 px-3 py-1.5 text-xs font-medium bg-amber-600 hover:bg-amber-500 text-white rounded-lg flex items-center gap-1.5 transition-colors"
                         >
                           <Download className="w-3.5 h-3.5" />
-                          Flash iNav Firmware
+                          {t('quick_setup.PresetSelectionStep.flashInavFirmware')}
                         </button>
                       </div>
                     </div>
@@ -524,8 +524,8 @@ export const PresetSelectionStep: React.FC = () => {
             <VehicleCard
               type="fixed_wing"
               icon={<Plane className="w-12 h-12 text-amber-400" />}
-              title="Fixed Wing"
-              description="Airplanes, flying wings, gliders, and other fixed-wing aircraft"
+              title={t('quick_setup.PresetSelectionStep.fixedWing')}
+              description={t('quick_setup.PresetSelectionStep.airplanesFlyingWingsGlidersAndOther')}
               presetCount={fixedWingPresets.length}
               gradient="from-amber-500/10 to-orange-500/10 border-amber-500/30 hover:border-amber-400/50"
               onSelect={() => handleSelectVehicle('fixed_wing')}
@@ -538,15 +538,13 @@ export const PresetSelectionStep: React.FC = () => {
           <div className="flex items-start gap-3">
             <Sparkles className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-medium text-blue-200 text-sm">One-Click Configuration</h4>
+              <h4 className="font-medium text-blue-200 text-sm">{t('quick_setup.PresetSelectionStep.oneClickConfiguration')}</h4>
               <p className="text-xs text-blue-100/70 mt-1">
-                Each preset applies a complete, tested configuration including PIDs, rates, flight
-                modes, and failsafe settings. You can always fine-tune later.
+                {t('quick_setup.PresetSelectionStep.eachPresetAppliesACompleteTested')}
               </p>
               {isBetaflight && (
                 <p className="text-xs text-amber-200/70 mt-2">
-                  <strong>Note:</strong> Navigation presets (GPS position hold, waypoints, RTH) are
-                  only available for iNav. Configure GPS Rescue separately in the GPS Rescue tab.
+                  <strong>{t('quick_setup.PresetSelectionStep.note')}</strong> {t('quick_setup.PresetSelectionStep.navigationPresetsGpsPositionHoldWaypoints')}
                 </p>
               )}
             </div>
@@ -573,15 +571,14 @@ export const PresetSelectionStep: React.FC = () => {
           className="inline-flex items-center gap-1.5 text-sm text-content-secondary hover:text-content mb-4 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Change vehicle type
+          {t('quick_setup.PresetSelectionStep.changeVehicleType')}
         </button>
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 mb-4">
           <VehicleIcon className="w-8 h-8 text-content" />
         </div>
-        <h2 className="text-xl font-semibold text-content">{vehicleTitle} Presets</h2>
+        <h2 className="text-xl font-semibold text-content">{vehicleTitle} {t('quick_setup.PresetSelectionStep.presets')}</h2>
         <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
-          Select a preset to configure <strong>everything at once</strong>: PIDs, rates, flight
-          modes, and failsafe settings.
+          {t('quick_setup.PresetSelectionStep.selectAPresetToConfigure')} <strong>{t('quick_setup.PresetSelectionStep.everythingAtOnce')}</strong>{t('quick_setup.PresetSelectionStep.pidsRatesFlightModesAndFailsafe')}
         </p>
       </div>
 
@@ -593,14 +590,14 @@ export const PresetSelectionStep: React.FC = () => {
               className={`w-2 h-2 rounded-full ${boardType === 'msp' ? 'bg-green-500' : 'bg-amber-500'}`}
             />
             <span>
-              {boardType === 'msp' ? 'MSP Configuration' : 'CLI Configuration (Legacy)'}
+              {boardType === 'msp' ? t('quick_setup.PresetSelectionStep.mspConfiguration') : t('quick_setup.PresetSelectionStep.cliConfigurationLegacy')}
             </span>
           </div>
         )}
         {currentPlatformName && (
           <div className="flex items-center gap-2 px-2 py-1 bg-surface-inset rounded-full text-content-secondary">
             <Plane className="w-3 h-3" />
-            <span>Current: {currentPlatformName}</span>
+            <span>{t('quick_setup.PresetSelectionStep.current2')} {currentPlatformName}</span>
           </div>
         )}
       </div>
@@ -628,10 +625,9 @@ export const PresetSelectionStep: React.FC = () => {
         <div className="flex items-start gap-3">
           <Sparkles className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-medium text-blue-200 text-sm">One-Click Configuration</h4>
+            <h4 className="font-medium text-blue-200 text-sm">{t('quick_setup.PresetSelectionStep.oneClickConfiguration')}</h4>
             <p className="text-xs text-blue-100/70 mt-1">
-              These presets apply a complete, tested configuration. You can always fine-tune
-              individual settings later in the dedicated tabs.
+              {t('quick_setup.PresetSelectionStep.thesePresetsApplyACompleteTested')}
             </p>
           </div>
         </div>
@@ -643,11 +639,10 @@ export const PresetSelectionStep: React.FC = () => {
           <div className="flex items-start gap-3">
             <Info className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-medium text-amber-200 text-sm">GPS Return Home</h4>
+              <h4 className="font-medium text-amber-200 text-sm">{t('quick_setup.PresetSelectionStep.gpsReturnHome')}</h4>
               <p className="text-xs text-amber-100/70 mt-1">
-                Betaflight uses <strong>GPS Rescue</strong> instead of iNav's navigation modes.
-                After applying a preset, configure GPS Rescue in the <strong>GPS Rescue tab</strong>{' '}
-                for emergency return-to-home functionality.
+                {t('quick_setup.PresetSelectionStep.betaflightUses')} <strong>{t('quick_setup.PresetSelectionStep.gpsRescue')}</strong> {t('quick_setup.PresetSelectionStep.insteadOfInavSNavigationModes')} <strong>{t('quick_setup.PresetSelectionStep.gpsRescueTab')}</strong>{' '}
+                {t('quick_setup.PresetSelectionStep.forEmergencyReturnToHomeFunctionality')}
               </p>
             </div>
           </div>

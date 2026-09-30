@@ -12,6 +12,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 import type { RegisteredPanel } from './module-panel-registry';
+import { t } from '../i18n';
 
 interface Bounds {
   x: number;
@@ -113,14 +114,14 @@ export function ModulePanelWindow({ panel, onClose }: { panel: RegisteredPanel; 
         <button
           onClick={() => setMaximized((m) => !m)}
           className="rounded-md p-1 text-content-secondary transition-colors hover:bg-surface-raised hover:text-content"
-          aria-label={maximized ? 'Restore' : 'Maximize'}
+          aria-label={maximized ? t('modules.ModulePanelWindow.restore') : t('modules.ModulePanelWindow.maximize')}
         >
           {maximized ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
         </button>
         <button
           onClick={onClose}
           className="rounded-md p-1 text-content-secondary transition-colors hover:bg-surface-raised hover:text-content"
-          aria-label="Close"
+          aria-label={t('modules.ModulePanelWindow.close')}
         >
           <X className="h-4 w-4" />
         </button>
@@ -135,7 +136,7 @@ export function ModulePanelWindow({ panel, onClose }: { panel: RegisteredPanel; 
           onPointerDown={startGesture('resize')}
           style={{ cursor: 'nwse-resize', touchAction: 'none' }}
           className="absolute bottom-0 right-0 z-10 flex h-5 w-5 items-end justify-end p-1"
-          aria-label="Resize"
+          aria-label={t('modules.ModulePanelWindow.resize')}
         >
           <svg viewBox="0 0 10 10" className="h-3 w-3 text-content-tertiary">
             <path d="M9 1L1 9M9 5L5 9" stroke="currentColor" strokeWidth="1.2" fill="none" />

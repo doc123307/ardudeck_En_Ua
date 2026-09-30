@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigationStore } from '../../stores/navigation-store';
 import type { TrainerStatus } from '../../../shared/trainer-types';
+import { t } from '../../i18n';
 
 /**
  * "Fly it in the Trainer", on the screen where SITL is started.
@@ -43,14 +44,14 @@ export function TrainerQuickAction(): JSX.Element | null {
     <button
       onClick={() => void fly()}
       disabled={busy || !status?.canLaunch}
-      data-tip={status?.reason ?? 'Fly this vehicle in the Trainer, from where it stands'}
+      data-tip={status?.reason ?? t('trainer.TrainerQuickAction.flyThisVehicleInTheTrainer')}
       className="mt-3 w-full py-2 text-sm font-medium text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
     >
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3v18" />
         <path d="M2 10l10-2 10 2-10 3z" />
       </svg>
-      {busy ? 'Starting the Trainer…' : 'Fly in Trainer'}
+      {busy ? t('trainer.TrainerQuickAction.startingTheTrainer') : t('trainer.TrainerQuickAction.flyInTrainer')}
     </button>
   );
 }

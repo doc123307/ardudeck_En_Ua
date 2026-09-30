@@ -20,6 +20,7 @@ import { Move, Lightbulb, Info } from 'lucide-react';
 import type { ParameterWithMeta } from '../../../../shared/parameter-types';
 import type { ParameterMetadataStore } from '../../../../shared/parameter-metadata';
 import { Px4ServoRow } from './Px4ServoRow';
+import { t } from '../../../i18n';
 
 // PX4 PWM outputs are conventionally clamped to 1000..2000 us; widen the slider
 // bounds slightly so MIN/MAX edits outside that band are still representable.
@@ -35,8 +36,8 @@ interface BankDef {
 }
 
 const BANKS: BankDef[] = [
-  { prefix: 'PWM_MAIN', label: 'Main outputs', liveOffset: 0 },
-  { prefix: 'PWM_AUX', label: 'Auxiliary outputs', liveOffset: 8 },
+  { prefix: 'PWM_MAIN', get label() { return t('mavlink_config.Px4ServoOutput.mainOutputs'); }, liveOffset: 0 },
+  { prefix: 'PWM_AUX', get label() { return t('mavlink_config.Px4ServoOutput.auxiliaryOutputs'); }, liveOffset: 8 },
 ];
 
 interface Px4ServoOutputProps {
@@ -94,8 +95,8 @@ const Px4ServoOutput: React.FC<Px4ServoOutputProps> = ({
             <Lightbulb className="w-5 h-5 text-amber-400" />
           </div>
           <div>
-            <p className="text-amber-300 font-medium">Parameters Not Loaded</p>
-            <p className="text-sm text-amber-400/80">Connect to a flight controller to edit actuator outputs.</p>
+            <p className="text-amber-300 font-medium">{t('mavlink_config.Px4ServoOutput.parametersNotLoaded')}</p>
+            <p className="text-sm text-amber-400/80">{t('mavlink_config.Px4ServoOutput.connectToAFlightControllerTo')}</p>
           </div>
         </div>
       )}
@@ -106,8 +107,7 @@ const Px4ServoOutput: React.FC<Px4ServoOutputProps> = ({
             <Info className="w-5 h-5 text-content-secondary" />
           </div>
           <p className="text-sm text-content-secondary">
-            No PWM_MAIN_/PWM_AUX_ output parameters were found on this vehicle. Actuator geometry
-            (control allocation, CA_ parameters) can be edited from the Parameters tab.
+            {t('mavlink_config.Px4ServoOutput.noPwmMainPwmAuxOutput')}
           </p>
         </div>
       )}
@@ -121,9 +121,9 @@ const Px4ServoOutput: React.FC<Px4ServoOutputProps> = ({
             <div>
               <h3 className="text-base font-semibold text-content">{bank.label}</h3>
               <p className="text-sm text-content-secondary">
-                Per-output function, range, and disarmed value
+                {t('mavlink_config.Px4ServoOutput.perOutputFunctionRangeAndDisarmed')}
                 {!hasLiveOutput && hasParameters && (
-                  <span className="ml-2 text-content-tertiary">(no live telemetry)</span>
+                  <span className="ml-2 text-content-tertiary">{t('mavlink_config.Px4ServoOutput.noLiveTelemetry')}</span>
                 )}
               </p>
             </div>
@@ -132,12 +132,12 @@ const Px4ServoOutput: React.FC<Px4ServoOutputProps> = ({
           <div className="rounded-lg border border-subtle overflow-hidden">
             <div className="grid grid-cols-[40px_1fr_80px_minmax(180px,1fr)_70px_70px_70px] gap-2 px-3 py-2 text-[11px] uppercase tracking-wide text-content-tertiary bg-surface-raised/40 border-b border-subtle">
               <div className="text-center">#</div>
-              <div>Position</div>
-              <div className="text-center">Reverse</div>
-              <div>Function</div>
-              <div className="text-center">Min</div>
-              <div className="text-center">Max</div>
-              <div className="text-center">Disarm</div>
+              <div>{t('mavlink_config.Px4ServoOutput.position')}</div>
+              <div className="text-center">{t('mavlink_config.Px4ServoOutput.reverse')}</div>
+              <div>{t('mavlink_config.Px4ServoOutput.function')}</div>
+              <div className="text-center">{t('mavlink_config.Px4ServoOutput.min')}</div>
+              <div className="text-center">{t('mavlink_config.Px4ServoOutput.max')}</div>
+              <div className="text-center">{t('mavlink_config.Px4ServoOutput.disarm')}</div>
             </div>
             <div className="divide-y divide-subtle/60">
               {Array.from({ length: bank.count }, (_, i) => i + 1).map((ch) => (
@@ -165,8 +165,7 @@ const Px4ServoOutput: React.FC<Px4ServoOutputProps> = ({
             <Info className="w-5 h-5 text-content-secondary" />
           </div>
           <p className="text-sm text-content-secondary leading-relaxed">
-            This editor covers per-output PWM assignment. PX4 airframe geometry (control
-            allocation, CA_ parameters) is not configured here; edit those from the Parameters tab.
+            {t('mavlink_config.Px4ServoOutput.thisEditorCoversPerOutputPwm')}
           </p>
         </div>
       )}

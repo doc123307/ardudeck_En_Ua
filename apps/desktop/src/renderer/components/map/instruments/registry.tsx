@@ -47,6 +47,7 @@ import { useInDock } from './dock-context';
 import { LinkInstrument } from './LinkInstrument';
 import { useTelemetryFresh } from './useTelemetryFresh';
 import { RtkInstrument } from './RtkInstrument';
+import { t as tr } from '../../../i18n';
 
 /** An alternative rendering of an instrument, chosen per-instrument and
  * persisted alongside the analog/numeric choice. */
@@ -107,9 +108,9 @@ export function isRoundInMode(def: MapInstrumentDef, mode: string): boolean {
 /** The three compact-readout treatments every wired scalar source offers. */
 function compactVariants(source: ReadoutSource): MapInstrumentVariant[] {
   return [
-    { id: 'strip', label: 'Strip', Component: () => <CompactReadout source={source} treatment="strip" /> },
-    { id: 'cell', label: 'Cell', Component: () => <CompactReadout source={source} treatment="cell" /> },
-    { id: 'inline', label: 'Inline', Component: () => <CompactReadout source={source} treatment="inline" /> },
+    { id: 'strip', label: tr('map.registry.strip'), Component: () => <CompactReadout source={source} treatment="strip" /> },
+    { id: 'cell', label: tr('map.registry.cell'), Component: () => <CompactReadout source={source} treatment="cell" /> },
+    { id: 'inline', label: tr('map.registry.inline'), Component: () => <CompactReadout source={source} treatment="inline" /> },
   ];
 }
 
@@ -165,7 +166,7 @@ function BatteryMonitorBadge({ className }: { className?: string }): JSX.Element
     <button
       type="button"
       onClick={() => setPrimaryBattery(next)}
-      data-tip={`Switch to B${next + 1}. ${tip}`}
+      data-tip={tr('map.registry.switchToB', { v1: next + 1, tip })}
       className={
         'pointer-events-auto text-[9px] font-semibold leading-none px-1.5 py-[3px] rounded border border-[var(--gauge-bezel-edge)] ' +
         'text-[var(--gauge-text-dim)] hover:text-[var(--gauge-text)] hover:border-[var(--gauge-text-dim)] transition-colors ' + (className ?? '')
@@ -579,26 +580,26 @@ function FlightDataInstrument(): JSX.Element {
         <span className="font-mono text-[var(--gauge-text)]">{formatAltitudeFromMeters(msl, altitudeUnit)}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-[var(--gauge-text-dim)]">Rel</span>
+        <span className="text-[var(--gauge-text-dim)]">{tr('map.registry.rel')}</span>
         <span className="font-mono text-[var(--gauge-text)]">{formatAltitudeFromMeters(rel, altitudeUnit)}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-[var(--gauge-text-dim)]">Spd</span>
+        <span className="text-[var(--gauge-text-dim)]">{tr('map.registry.spd')}</span>
         <span className="font-mono text-[var(--gauge-text)]">{formatSpeedFromMetersPerSecond(groundspeed, speedUnit)}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-[var(--gauge-text-dim)]">Hdg</span>
+        <span className="text-[var(--gauge-text-dim)]">{tr('map.registry.hdg')}</span>
         <span className="font-mono text-[var(--gauge-text)]">{heading.toFixed(0)}<span className="text-[var(--gauge-text-dim)] ml-0.5">°</span></span>
       </div>
       {homeStats && (
         <>
           <div className="my-1" style={{ borderTop: `1px solid ${GAUGE_COLORS.bezelEdge}` }} />
           <div className="flex justify-between">
-            <span className="text-[var(--gauge-text-dim)]">Home</span>
+            <span className="text-[var(--gauge-text-dim)]">{tr('map.registry.home')}</span>
             <span className="font-mono text-[var(--gauge-green)]">{formatDistanceFromMeters(homeStats.distance, distanceUnit)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-[var(--gauge-text-dim)]">Brng</span>
+            <span className="text-[var(--gauge-text-dim)]">{tr('map.registry.brng')}</span>
             {/* Bearing to a point you are standing on is undefined: within GPS
                 noise of home (~sub-meter jitter) it swings tens of degrees per
                 sample. Blank it until the distance makes direction meaningful. */}
@@ -763,7 +764,7 @@ function SteerInstrument(): JSX.Element {
 
   return (
     <InstrumentShell
-      label="Steer"
+      label={tr('map.registry.steer')}
       value={steer === null ? '--' : magnitude < 1 ? 'CTR' : `${steer < 0 ? 'L' : 'R'} ${Math.round(magnitude)}`}
       unit={steer === null || magnitude < 1 ? undefined : '%'}
     >
@@ -798,7 +799,7 @@ function XtrackInstrument(): JSX.Element {
 
   return (
     <InstrumentShell
-      label="Xtrack"
+      label={tr('map.registry.xtrack')}
       value={
         xtrack === undefined || magnitude === null
           ? '--'
@@ -807,7 +808,7 @@ function XtrackInstrument(): JSX.Element {
       valueClassName={magnitude !== null && magnitude > 5 ? 'text-amber-400' : undefined}
     >
       <div className="text-[10px] text-content-tertiary">
-        {nav?.wpDist === undefined ? 'No active leg' : `WP ${formatDistanceFromMeters(nav.wpDist, distanceUnit)}`}
+        {nav?.wpDist === undefined ? tr('map.registry.noActiveLeg') : `WP ${formatDistanceFromMeters(nav.wpDist, distanceUnit)}`}
       </div>
     </InstrumentShell>
   );
@@ -1026,7 +1027,7 @@ function FlightModeInstrument(): JSX.Element {
     : GAUGE_COLORS.text;
 
   return (
-    <InstrumentStrip label="Flight mode">
+    <InstrumentStrip label={tr('map.registry.flightMode')}>
       <div className="flex items-center gap-2">
         <span
           className="w-1 self-stretch rounded-full shrink-0"
@@ -1135,7 +1136,7 @@ function AnnunciatorInstrument(): JSX.Element {
   const battFsState: AnnunState = !connected ? 'absent' : remaining >= 0 && remaining <= 15 ? 'red' : 'ok';
 
   return (
-    <InstrumentStrip label="Annunciator" tall>
+    <InstrumentStrip label={tr('map.registry.annunciator')} tall>
       <div className="grid grid-cols-3 gap-1">
         {ANNUN_SENSOR_CELLS.map((c) => (
           <AnnunCell key={c.label} label={c.label} state={sensorState(c.bit, c.bad)} />
@@ -1179,7 +1180,7 @@ function MissionInstrument(): JSX.Element {
 
   return (
     <InstrumentStrip
-      label="Mission"
+      label={tr('map.registry.mission')}
       bar={
         total > 0 ? (
           <div className="h-[3px]" style={{ background: GAUGE_COLORS.bezel }}>
@@ -1193,7 +1194,7 @@ function MissionInstrument(): JSX.Element {
     >
       {total === 0 ? (
         <span className="text-[11px] leading-none" style={{ color: GAUGE_COLORS.tickMinor }}>
-          No mission
+          {tr('map.registry.noMission')}
         </span>
       ) : (
         <div className="flex items-baseline gap-2 whitespace-nowrap w-full">
@@ -1267,9 +1268,9 @@ const BATTERY_INSTANCE_DEFAULT_POS = [
 ];
 
 export const MAP_INSTRUMENTS: MapInstrumentDef[] = [
-  { id: 'attitude', round: true, profiles: ['air'], label: 'Attitude ball', defaultClassName: 'absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000]', defaultVisible: true, Component: AttitudeBallInstrument },
-  { id: 'flight-data', label: 'Flight data', defaultClassName: 'absolute bottom-2 left-2 z-[1000]', defaultVisible: true, Component: FlightDataInstrument },
-  { id: 'battery', round: true, label: 'Battery', defaultClassName: 'absolute left-3 top-16 z-[1000]', defaultVisible: false, Component: BatteryInstrument, NumericComponent: BatteryNumeric, variants: [{ id: 'used', label: 'Battery + used', Component: BatteryUsedInstrument, round: true }, ...compactVariants('battery')] },
+  { id: 'attitude', round: true, profiles: ['air'], get label() { return tr('map.registry.attitudeBall'); }, defaultClassName: 'absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000]', defaultVisible: true, Component: AttitudeBallInstrument },
+  { id: 'flight-data', get label() { return tr('map.registry.flightData'); }, defaultClassName: 'absolute bottom-2 left-2 z-[1000]', defaultVisible: true, Component: FlightDataInstrument },
+  { id: 'battery', round: true, get label() { return tr('map.registry.battery'); }, defaultClassName: 'absolute left-3 top-16 z-[1000]', defaultVisible: false, Component: BatteryInstrument, NumericComponent: BatteryNumeric, variants: [{ id: 'used', get label() { return tr('map.registry.batteryUsed'); }, Component: BatteryUsedInstrument, round: true }, ...compactVariants('battery')] },
   // Fixed-monitor gauges (#126), one per possible ArduPilot instance: show a
   // specific pack regardless of the primary selection. The catalog surfaces
   // only the ones this vehicle actually streams.
@@ -1277,31 +1278,31 @@ export const MAP_INSTRUMENTS: MapInstrumentDef[] = [
     id: `battery${k + 2}`,
     monitorId: k + 1,
     round: true,
-    label: `Battery ${k + 2}`,
+    label: tr('map.registry.battery2', { v1: k + 2 }),
     defaultClassName: cls,
     defaultVisible: false,
     Component: makeBatteryInstanceGauge(k + 1),
     NumericComponent: makeBatteryInstanceNumeric(k + 1),
   })),
   { id: 'gps', round: true, label: 'GPS', defaultClassName: 'absolute left-3 top-[176px] z-[1000]', defaultVisible: false, Component: GpsInstrument, NumericComponent: GpsNumeric, variants: compactVariants('gps') },
-  { id: 'altitude', round: true, profiles: ['air'], label: 'Altitude', defaultClassName: 'absolute left-3 top-[288px] z-[1000]', defaultVisible: false, Component: AltitudeInstrument, NumericComponent: AltitudeNumeric, variants: compactVariants('altitude') },
-  { id: 'speed', round: true, label: 'Speed', defaultClassName: 'absolute left-3 top-[400px] z-[1000]', defaultVisible: false, Component: SpeedInstrument, NumericComponent: SpeedNumeric, variants: compactVariants('speed') },
-  { id: 'tilt', round: true, profiles: ['ground'], label: 'Tilt', defaultClassName: 'absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000]', defaultVisible: false, Component: TiltInstrument },
-  { id: 'steer', profiles: ['ground'], label: 'Steering', defaultClassName: 'absolute left-[124px] top-[344px] z-[1000]', defaultVisible: false, Component: SteerInstrument },
-  { id: 'xtrack', profiles: ['ground'], label: 'Cross-track', defaultClassName: 'absolute left-[124px] top-[420px] z-[1000]', defaultVisible: false, Component: XtrackInstrument },
-  { id: 'heading', round: true, label: 'Compass (HDG)', defaultClassName: 'absolute bottom-3 left-[calc(50%+88px)] z-[1000]', defaultVisible: true, Component: HeadingInstrument, NumericComponent: HeadingNumeric, variants: compactVariants('heading') },
+  { id: 'altitude', round: true, profiles: ['air'], get label() { return tr('map.registry.altitude'); }, defaultClassName: 'absolute left-3 top-[288px] z-[1000]', defaultVisible: false, Component: AltitudeInstrument, NumericComponent: AltitudeNumeric, variants: compactVariants('altitude') },
+  { id: 'speed', round: true, get label() { return tr('map.registry.speed'); }, defaultClassName: 'absolute left-3 top-[400px] z-[1000]', defaultVisible: false, Component: SpeedInstrument, NumericComponent: SpeedNumeric, variants: compactVariants('speed') },
+  { id: 'tilt', round: true, profiles: ['ground'], get label() { return tr('map.registry.tilt'); }, defaultClassName: 'absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000]', defaultVisible: false, Component: TiltInstrument },
+  { id: 'steer', profiles: ['ground'], get label() { return tr('map.registry.steering'); }, defaultClassName: 'absolute left-[124px] top-[344px] z-[1000]', defaultVisible: false, Component: SteerInstrument },
+  { id: 'xtrack', profiles: ['ground'], get label() { return tr('map.registry.crossTrack'); }, defaultClassName: 'absolute left-[124px] top-[420px] z-[1000]', defaultVisible: false, Component: XtrackInstrument },
+  { id: 'heading', round: true, get label() { return tr('map.registry.compassHdg'); }, defaultClassName: 'absolute bottom-3 left-[calc(50%+88px)] z-[1000]', defaultVisible: true, Component: HeadingInstrument, NumericComponent: HeadingNumeric, variants: compactVariants('heading') },
   { id: 'vsi', round: true, profiles: ['air'], label: 'VSI', defaultClassName: 'absolute left-3 top-[512px] z-[1000]', defaultVisible: false, Component: VsiInstrument, NumericComponent: VsiNumeric, variants: compactVariants('vsi') },
-  { id: 'home', round: true, label: 'Home', defaultClassName: 'absolute left-3 top-[624px] z-[1000]', defaultVisible: false, Component: HomeInstrument, NumericComponent: HomeNumeric, variants: compactVariants('home') },
+  { id: 'home', round: true, get label() { return tr('map.registry.home'); }, defaultClassName: 'absolute left-3 top-[624px] z-[1000]', defaultVisible: false, Component: HomeInstrument, NumericComponent: HomeNumeric, variants: compactVariants('home') },
   // Strips stack in a second column beside the left-edge gauges (gauge is
   // 104px wide at left-3, so 124px clears it) under the Instruments button.
-  { id: 'flight-mode', label: 'Flight mode', defaultClassName: 'absolute left-[124px] top-16 z-[1000]', defaultVisible: false, Component: FlightModeInstrument },
-  { id: 'link', label: 'Link', defaultClassName: 'absolute left-[124px] top-[128px] z-[1000]', defaultVisible: false, Component: LinkInstrument, variants: compactVariants('link') },
-  { id: 'mission', label: 'Mission', defaultClassName: 'absolute left-[124px] top-[192px] z-[1000]', defaultVisible: false, Component: MissionInstrument },
-  { id: 'annunciator', label: 'Annunciator', defaultClassName: 'absolute left-[124px] top-[268px] z-[1000]', defaultVisible: false, Component: AnnunciatorInstrument },
+  { id: 'flight-mode', get label() { return tr('map.registry.flightMode'); }, defaultClassName: 'absolute left-[124px] top-16 z-[1000]', defaultVisible: false, Component: FlightModeInstrument },
+  { id: 'link', get label() { return tr('map.registry.link'); }, defaultClassName: 'absolute left-[124px] top-[128px] z-[1000]', defaultVisible: false, Component: LinkInstrument, variants: compactVariants('link') },
+  { id: 'mission', get label() { return tr('map.registry.mission'); }, defaultClassName: 'absolute left-[124px] top-[192px] z-[1000]', defaultVisible: false, Component: MissionInstrument },
+  { id: 'annunciator', get label() { return tr('map.registry.annunciator'); }, defaultClassName: 'absolute left-[124px] top-[268px] z-[1000]', defaultVisible: false, Component: AnnunciatorInstrument },
   { id: 'rtk', label: 'RTK', defaultClassName: 'absolute left-[124px] top-[600px] z-[1000]', defaultVisible: false, Component: RtkInstrument },
-  { id: 'messages', label: 'Messages', defaultClassName: 'absolute right-3 top-28 z-[1000]', defaultVisible: false, Component: MessagesInstrument },
-  { id: 'controls', label: 'Flight control', defaultClassName: 'absolute left-[124px] top-[420px] z-[1000]', defaultVisible: false, Component: FlightControlInstrument, variants: [
-    { id: 'compact', label: 'Compact', Component: () => <FlightControlInstrument variant="compact" /> },
-    { id: 'bar', label: 'Bar', Component: () => <FlightControlInstrument variant="bar" /> },
+  { id: 'messages', get label() { return tr('map.registry.messages'); }, defaultClassName: 'absolute right-3 top-28 z-[1000]', defaultVisible: false, Component: MessagesInstrument },
+  { id: 'controls', get label() { return tr('map.registry.flightControl'); }, defaultClassName: 'absolute left-[124px] top-[420px] z-[1000]', defaultVisible: false, Component: FlightControlInstrument, variants: [
+    { id: 'compact', get label() { return tr('map.registry.compact'); }, Component: () => <FlightControlInstrument variant="compact" /> },
+    { id: 'bar', get label() { return tr('map.registry.bar'); }, Component: () => <FlightControlInstrument variant="bar" /> },
   ] },
 ];

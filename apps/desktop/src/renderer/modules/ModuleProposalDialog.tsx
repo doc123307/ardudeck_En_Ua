@@ -6,6 +6,7 @@ import {
   subscribeProposal,
   type PendingProposal,
 } from './module-proposal-registry';
+import { t } from '../i18n';
 
 function extent(points: { lat: number; lng: number }[]): string {
   if (points.length === 0) return '';
@@ -37,7 +38,7 @@ function Outline({ points }: { points: { lat: number; lng: number }[] }): JSX.El
     })
     .join(' ');
   return (
-    <svg viewBox="0 0 200 100" className="w-full h-[100px]" role="img" aria-label="Proposed fence outline">
+    <svg viewBox="0 0 200 100" className="w-full h-[100px]" role="img" aria-label={t('modules.ModuleProposalDialog.proposedFenceOutline')}>
       <rect x="0" y="0" width="200" height="100" fill="rgba(255,255,255,0.03)" />
       <path d={`${d} Z`} fill="rgba(34,197,94,0.12)" stroke="#22c55e" strokeWidth="1.5" />
     </svg>
@@ -66,7 +67,7 @@ export function ModuleProposalDialog(): JSX.Element | null {
       <div className="w-[420px] max-w-[92vw] rounded-lg border border-subtle bg-surface-solid shadow-xl">
         <div className="px-4 pt-4">
           <div className="text-[11px] uppercase tracking-wide text-content-tertiary">
-            {from} asks to write to the aircraft
+            {from} {t('modules.ModuleProposalDialog.asksToWriteToTheAircraft')}
           </div>
           <div className="mt-1 text-base font-semibold text-content">{proposal.name}</div>
           <p className="mt-1 text-xs text-content-secondary">{proposal.reason}</p>
@@ -75,18 +76,17 @@ export function ModuleProposalDialog(): JSX.Element | null {
         <div className="px-4 pt-3">
           <Outline points={proposal.inclusion} />
           <div className="mt-2 text-xs text-content-secondary tabular-nums">
-            Inclusion fence, {proposal.inclusion.length} points, {extent(proposal.inclusion)}
+            {t('modules.ModuleProposalDialog.inclusionFence')} {proposal.inclusion.length} {t('modules.ModuleProposalDialog.points')} {extent(proposal.inclusion)}
           </div>
           {existing.inclusionShapes > 0 && (
             <div className="mt-2 rounded border border-amber-500/60 px-2 py-1.5 text-xs text-amber-400">
-              This replaces the inclusion fence already held ({existing.inclusionShapes} shape
-              {existing.inclusionShapes === 1 ? '' : 's'}, {existing.inclusionPoints} points). It
-              will no longer apply.
+              {t('modules.ModuleProposalDialog.thisReplacesTheInclusionFenceAlready')}{existing.inclusionShapes} {t('modules.ModuleProposalDialog.shape')}
+              {existing.inclusionShapes === 1 ? '' : 's'}, {existing.inclusionPoints} {t('modules.ModuleProposalDialog.pointsItWillNoLongerApply')}
             </div>
           )}
           {kept.length > 0 && (
             <div className="mt-2 text-xs text-content-tertiary">
-              Kept as they are: {kept.join(' and ')}.
+              {t('modules.ModuleProposalDialog.keptAsTheyAre')} {kept.join(' and ')}.
             </div>
           )}
         </div>
@@ -97,7 +97,7 @@ export function ModuleProposalDialog(): JSX.Element | null {
             className="rounded px-3 py-1.5 text-sm text-content-secondary hover:text-content"
             onClick={() => pending.resolve({ accepted: false })}
           >
-            Cancel
+            {t('modules.ModuleProposalDialog.cancel')}
           </button>
           <button
             type="button"
@@ -108,7 +108,7 @@ export function ModuleProposalDialog(): JSX.Element | null {
               pending.resolve({ accepted: true });
             }}
           >
-            {busy ? 'Writing...' : 'Write to aircraft'}
+            {busy ? t('modules.ModuleProposalDialog.writing') : t('modules.ModuleProposalDialog.writeToAircraft')}
           </button>
         </div>
       </div>

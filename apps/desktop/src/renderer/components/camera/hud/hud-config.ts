@@ -6,6 +6,7 @@
  */
 
 import { READOUT_IDS, type HudReadoutId } from './hud-readouts';
+import { t } from '../../../i18n';
 
 export type HudColor = 'green' | 'amber' | 'cyan' | 'white';
 export type HudUnits = 'metric' | 'imperial';
@@ -80,22 +81,22 @@ export interface HudWidgetMeta {
 }
 
 export const HUD_WIDGETS: HudWidgetMeta[] = [
-  { id: 'groundSpeed', label: 'Ground speed box', movable: false },
-  { id: 'horizon', label: 'Horizon line', movable: false },
-  { id: 'pitchLadder', label: 'Pitch ladder', movable: false },
-  { id: 'fpm', label: 'Flight path marker', movable: false },
-  { id: 'boresight', label: 'Boresight', movable: false },
-  { id: 'bankArc', label: 'Bank scale', movable: false },
-  { id: 'headingTape', label: 'Heading tape', movable: false },
-  { id: 'airspeedTape', label: 'Airspeed tape', movable: false },
-  { id: 'altitudeTape', label: 'Altitude tape', movable: false },
-  { id: 'vsi', label: 'Vertical speed', movable: false },
-  { id: 'waypoints', label: 'Waypoints (3D)', movable: false },
-  { id: 'swarm', label: 'Swarm contacts', movable: false },
-  { id: 'status', label: 'Status (mode/sat/thr)', movable: true },
-  { id: 'battery', label: 'Battery', movable: true },
-  { id: 'home', label: 'Home arrow + distance', movable: true },
-  { id: 'linkGraph', label: 'Link graph', movable: true },
+  { id: 'groundSpeed', get label() { return t('camera.hud_config.groundSpeedBox'); }, movable: false },
+  { id: 'horizon', get label() { return t('camera.hud_config.horizonLine'); }, movable: false },
+  { id: 'pitchLadder', get label() { return t('camera.hud_config.pitchLadder'); }, movable: false },
+  { id: 'fpm', get label() { return t('camera.hud_config.flightPathMarker'); }, movable: false },
+  { id: 'boresight', get label() { return t('camera.hud_config.boresight'); }, movable: false },
+  { id: 'bankArc', get label() { return t('camera.hud_config.bankScale'); }, movable: false },
+  { id: 'headingTape', get label() { return t('camera.hud_config.headingTape'); }, movable: false },
+  { id: 'airspeedTape', get label() { return t('camera.hud_config.airspeedTape'); }, movable: false },
+  { id: 'altitudeTape', get label() { return t('camera.hud_config.altitudeTape'); }, movable: false },
+  { id: 'vsi', get label() { return t('camera.hud_config.verticalSpeed'); }, movable: false },
+  { id: 'waypoints', get label() { return t('camera.hud_config.waypoints3d'); }, movable: false },
+  { id: 'swarm', get label() { return t('camera.hud_config.swarmContacts'); }, movable: false },
+  { id: 'status', get label() { return t('camera.hud_config.statusModeSatThr'); }, movable: true },
+  { id: 'battery', get label() { return t('camera.hud_config.battery'); }, movable: true },
+  { id: 'home', get label() { return t('camera.hud_config.homeArrowDistance'); }, movable: true },
+  { id: 'linkGraph', get label() { return t('camera.hud_config.linkGraph'); }, movable: true },
 ];
 
 export interface Vec2 {

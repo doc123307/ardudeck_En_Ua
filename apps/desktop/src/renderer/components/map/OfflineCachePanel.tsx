@@ -10,6 +10,7 @@ import { MAP_LAYERS, type LayerKey } from '../../../shared/map-layers';
 import type { TileCacheDownloadProgress } from '../../../shared/ipc-channels';
 import { useTileCacheStore } from '../../stores/tile-cache-store';
 import { useTileCacheAreaStore } from '../../stores/tile-cache-area-store';
+import { t } from '../../i18n';
 
 const api = (window as any).electronAPI;
 const BASE_LAYERS: LayerKey[] = ['osm', 'satellite', 'googleSat', 'googleHybrid', 'terrain', 'dark'];
@@ -83,8 +84,8 @@ export function OfflineCachePanel({ activeLayer }: { activeLayer: string }): JSX
   return (
     <div className="absolute top-2 left-1/2 -translate-x-1/2 z-[1100] w-72 bg-surface-overlay backdrop-blur-md border border-subtle rounded-lg shadow-xl p-3 space-y-2.5">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-content">Cache map area</span>
-        <button onClick={() => setActive(false)} className="text-content-tertiary hover:text-content text-sm leading-none" data-tip="Close">×</button>
+        <span className="text-xs font-semibold text-content">{t('map.OfflineCachePanel.cacheMapArea')}</span>
+        <button onClick={() => setActive(false)} className="text-content-tertiary hover:text-content text-sm leading-none" data-tip={t('map.OfflineCachePanel.close')}>×</button>
       </div>
 
       {isDownloading && progress ? (
@@ -96,22 +97,22 @@ export function OfflineCachePanel({ activeLayer }: { activeLayer: string }): JSX
           <div className="w-full h-1.5 bg-surface-inset rounded-full overflow-hidden">
             <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${pct}%` }} />
           </div>
-          <button onClick={handleCancel} className="w-full px-2 py-1 text-xs rounded bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-600/30 transition-colors">Cancel</button>
+          <button onClick={handleCancel} className="w-full px-2 py-1 text-xs rounded bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-600/30 transition-colors">{t('map.OfflineCachePanel.cancel')}</button>
         </div>
       ) : progress?.status === 'complete' ? (
         <div className="space-y-2">
           <div className="text-xs text-emerald-500">
             {progress.skippedTiles === progress.downloadedTiles
-              ? `All ${progress.downloadedTiles.toLocaleString()} tiles already cached`
-              : `Done - ${(progress.downloadedTiles - progress.skippedTiles).toLocaleString()} new tiles saved (${formatBytes(progress.bytesDownloaded)})`}
+              ? t('map.OfflineCachePanel.allTilesAlreadyCached', { v1: progress.downloadedTiles.toLocaleString() })
+              : t('map.OfflineCachePanel.doneNewTilesSaved', { v1: (progress.downloadedTiles - progress.skippedTiles).toLocaleString(), v2: formatBytes(progress.bytesDownloaded) })}
           </div>
-          <button onClick={() => { setProgress(null); setActive(false); }} className="w-full px-2 py-1 text-xs rounded bg-surface-raised text-content hover:bg-surface-raised transition-colors">Done</button>
+          <button onClick={() => { setProgress(null); setActive(false); }} className="w-full px-2 py-1 text-xs rounded bg-surface-raised text-content hover:bg-surface-raised transition-colors">{t('map.OfflineCachePanel.done')}</button>
         </div>
       ) : (
         <>
-          <div className="text-[10px] text-content-secondary">Drag the box on the map to cover the area, then download.</div>
+          <div className="text-[10px] text-content-secondary">{t('map.OfflineCachePanel.dragTheBoxOnTheMap')}</div>
           <div>
-            <div className="text-[10px] text-content-secondary mb-1">Layers</div>
+            <div className="text-[10px] text-content-secondary mb-1">{t('map.OfflineCachePanel.layers')}</div>
             <div className="flex flex-wrap gap-1">
               {BASE_LAYERS.map((key) => (
                 <button
@@ -128,17 +129,17 @@ export function OfflineCachePanel({ activeLayer }: { activeLayer: string }): JSX
           </div>
           <div>
             <div className="flex items-center justify-between text-[10px] text-content-secondary mb-0.5">
-              <span>Detail level (max zoom)</span>
+              <span>{t('map.OfflineCachePanel.detailLevelMaxZoom')}</span>
               <span className="text-content">{maxZoom}</span>
             </div>
             <input type="range" min={12} max={19} value={maxZoom} onChange={(e) => setMaxZoom(parseInt(e.target.value))} className="w-full accent-blue-500" />
           </div>
           {estimate !== null && (
-            <div className="text-[10px] text-content-secondary">~{estimate.toLocaleString()} tiles ({formatBytes(estimate * 15000)})</div>
+            <div className="text-[10px] text-content-secondary">~{estimate.toLocaleString()} {t('map.OfflineCachePanel.tiles')}{formatBytes(estimate * 15000)})</div>
           )}
           <div className="flex gap-1.5">
-            <button onClick={() => startDownload(false)} disabled={!bounds || selectedLayers.size === 0} className="flex-1 px-2 py-1.5 text-xs rounded bg-emerald-600 text-white hover:bg-emerald-500 transition-colors disabled:opacity-50">Download</button>
-            <button onClick={() => startDownload(true)} disabled={!bounds || selectedLayers.size === 0} className="px-2 py-1.5 text-xs rounded bg-blue-600/80 text-white hover:bg-blue-500 transition-colors disabled:opacity-50" data-tip="Re-download all tiles, replacing cached data">Refresh</button>
+            <button onClick={() => startDownload(false)} disabled={!bounds || selectedLayers.size === 0} className="flex-1 px-2 py-1.5 text-xs rounded bg-emerald-600 text-white hover:bg-emerald-500 transition-colors disabled:opacity-50">{t('map.OfflineCachePanel.download')}</button>
+            <button onClick={() => startDownload(true)} disabled={!bounds || selectedLayers.size === 0} className="px-2 py-1.5 text-xs rounded bg-blue-600/80 text-white hover:bg-blue-500 transition-colors disabled:opacity-50" data-tip={t('map.OfflineCachePanel.reDownloadAllTilesReplacingCached')}>{t('map.OfflineCachePanel.refresh')}</button>
           </div>
         </>
       )}

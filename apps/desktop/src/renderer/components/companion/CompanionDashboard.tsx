@@ -28,15 +28,16 @@ import { ContainersPanel } from './panels/ContainersPanel';
 import { ExtensionsPanel } from './panels/ExtensionsPanel';
 import { DroneBridgeStatusPanel } from './panels/DroneBridgeStatusPanel';
 import { DroneBridgeSettingsPanel } from './panels/DroneBridgeSettingsPanel';
+import { t } from '../../i18n';
 
 // ─── Tab types ──────────────────────────────────────────────────────────────
 
 type CompanionTab = 'store' | 'dronebridge' | 'dashboard';
 
 const TAB_ITEMS: Array<{ id: CompanionTab; label: string; icon: string }> = [
-  { id: 'store', label: 'Templates', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' },
+  { id: 'store', get label() { return t('companion.CompanionDashboard.templates'); }, icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' },
   { id: 'dronebridge', label: 'DroneBridge', icon: 'M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.858 15.355-5.858 21.213 0' },
-  { id: 'dashboard', label: 'Dashboard', icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z' },
+  { id: 'dashboard', get label() { return t('companion.CompanionDashboard.dashboard'); }, icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z' },
 ];
 
 // ─── Dockview component registry ────────────────────────────────────────────
@@ -102,10 +103,10 @@ const OVERVIEW_LAYOUT: SerializedDockview = {
     orientation: Orientation.HORIZONTAL,
   },
   panels: {
-    status: { id: 'status', contentComponent: 'CompanionStatusPanel', title: 'Status' },
-    metrics: { id: 'metrics', contentComponent: 'CompanionMetricsPanel', title: 'System Metrics' },
-    network: { id: 'network', contentComponent: 'CompanionNetworkPanel', title: 'Network' },
-    containers: { id: 'containers', contentComponent: 'CompanionContainersPanel', title: 'Containers' },
+    status: { id: 'status', contentComponent: 'CompanionStatusPanel', get title() { return t('companion.CompanionDashboard.status'); } },
+    metrics: { id: 'metrics', contentComponent: 'CompanionMetricsPanel', get title() { return t('companion.CompanionDashboard.systemMetrics'); } },
+    network: { id: 'network', contentComponent: 'CompanionNetworkPanel', get title() { return t('companion.CompanionDashboard.network'); } },
+    containers: { id: 'containers', contentComponent: 'CompanionContainersPanel', get title() { return t('companion.CompanionDashboard.containers'); } },
   },
   activeGroup: '1',
 };
@@ -132,9 +133,9 @@ const DEBUG_LAYOUT: SerializedDockview = {
     orientation: Orientation.HORIZONTAL,
   },
   panels: {
-    terminal: { id: 'terminal', contentComponent: 'CompanionTerminalPanel', title: 'Terminal' },
-    logs: { id: 'logs', contentComponent: 'CompanionLogsPanel', title: 'Logs' },
-    processes: { id: 'processes', contentComponent: 'CompanionProcessesPanel', title: 'Processes' },
+    terminal: { id: 'terminal', contentComponent: 'CompanionTerminalPanel', get title() { return t('companion.CompanionDashboard.terminal'); } },
+    logs: { id: 'logs', contentComponent: 'CompanionLogsPanel', get title() { return t('companion.CompanionDashboard.logs'); } },
+    processes: { id: 'processes', contentComponent: 'CompanionProcessesPanel', get title() { return t('companion.CompanionDashboard.processes'); } },
   },
   activeGroup: '1',
 };
@@ -168,10 +169,10 @@ const MANAGE_LAYOUT: SerializedDockview = {
     orientation: Orientation.HORIZONTAL,
   },
   panels: {
-    containers: { id: 'containers', contentComponent: 'CompanionContainersPanel', title: 'Containers' },
-    services: { id: 'services', contentComponent: 'CompanionServicesPanel', title: 'Services' },
-    fileBrowser: { id: 'fileBrowser', contentComponent: 'CompanionFileBrowserPanel', title: 'File Browser' },
-    extensions: { id: 'extensions', contentComponent: 'CompanionExtensionsPanel', title: 'Extensions' },
+    containers: { id: 'containers', contentComponent: 'CompanionContainersPanel', get title() { return t('companion.CompanionDashboard.containers'); } },
+    services: { id: 'services', contentComponent: 'CompanionServicesPanel', get title() { return t('companion.CompanionDashboard.services'); } },
+    fileBrowser: { id: 'fileBrowser', contentComponent: 'CompanionFileBrowserPanel', get title() { return t('companion.CompanionDashboard.fileBrowser'); } },
+    extensions: { id: 'extensions', contentComponent: 'CompanionExtensionsPanel', get title() { return t('companion.CompanionDashboard.extensions'); } },
   },
   activeGroup: '1',
 };
@@ -250,7 +251,7 @@ function DroneBridgeTab() {
             </svg>
           </div>
           <h3 className="text-sm font-medium text-content">
-            {autoProbing ? 'Scanning for DroneBridge...' : 'No DroneBridge Detected'}
+            {autoProbing ? t('companion.CompanionDashboard.scanningForDronebridge') : t('companion.CompanionDashboard.noDronebridgeDetected')}
           </h3>
           {autoProbing ? (
             <div className="flex items-center justify-center gap-2 text-xs text-content-secondary">
@@ -258,11 +259,11 @@ function DroneBridgeTab() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              Trying 192.168.2.1...
+              {t('companion.CompanionDashboard.trying19216821')}
             </div>
           ) : (
             <p className="text-xs text-content-secondary">
-              Connect to your DroneBridge WiFi network, or read settings directly via USB.
+              {t('companion.CompanionDashboard.connectToYourDronebridgeWifiNetwork')}
             </p>
           )}
           {!autoProbing && (
@@ -270,7 +271,7 @@ function DroneBridgeTab() {
               <DroneBridgeUsbReader />
               <div className="flex items-center gap-3">
                 <div className="flex-1 h-px bg-surface-raised" />
-                <span className="text-[10px] text-content-tertiary">or connect via WiFi</span>
+                <span className="text-[10px] text-content-tertiary">{t('companion.CompanionDashboard.orConnectViaWifi')}</span>
                 <div className="flex-1 h-px bg-surface-raised" />
               </div>
               <DroneBridgeManualProbe />
@@ -357,19 +358,19 @@ function DroneBridgeUsbReader() {
         <div className="bg-surface border border-subtle rounded-xl p-4 space-y-3">
           <div className="flex items-center gap-2">
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-            <span className="text-sm font-medium text-emerald-400">Device Found (USB)</span>
+            <span className="text-sm font-medium text-emerald-400">{t('companion.CompanionDashboard.deviceFoundUsb')}</span>
           </div>
 
           <div className="space-y-1.5">
             {result.ssid && (
               <div className="flex justify-between text-xs">
-                <span className="text-content-secondary">WiFi SSID</span>
+                <span className="text-content-secondary">{t('companion.CompanionDashboard.wifiSsid')}</span>
                 <span className="text-content font-mono">{result.ssid}</span>
               </div>
             )}
             {s['wifi_pass'] != null && (
               <div className="flex justify-between text-xs">
-                <span className="text-content-secondary">Password</span>
+                <span className="text-content-secondary">{t('companion.CompanionDashboard.password')}</span>
                 <span className="text-content font-mono">{String(s['wifi_pass'])}</span>
               </div>
             )}
@@ -381,23 +382,23 @@ function DroneBridgeUsbReader() {
             )}
             {s['esp32_mode'] != null && (
               <div className="flex justify-between text-xs">
-                <span className="text-content-secondary">Mode</span>
+                <span className="text-content-secondary">{t('companion.CompanionDashboard.mode')}</span>
                 <span className="text-content">{
-                  ({ 1: 'Access Point', 2: 'Station', 3: 'Long Range', 4: 'ESP-NOW Air', 5: 'ESP-NOW Ground' } as Record<number, string>)[Number(s['esp32_mode'])] ?? `Mode ${s['esp32_mode']}`
+                  ({ 1: 'Access Point', 2: 'Station', 3: 'Long Range', 4: 'ESP-NOW Air', 5: 'ESP-NOW Ground' } as Record<number, string>)[Number(s['esp32_mode'])] ?? t('companion.CompanionDashboard.mode2', { v1: s['esp32_mode'] })
                 }</span>
               </div>
             )}
             {s['baud'] != null && (
               <div className="flex justify-between text-xs">
-                <span className="text-content-secondary">Baud Rate</span>
+                <span className="text-content-secondary">{t('companion.CompanionDashboard.baudRate')}</span>
                 <span className="text-content font-mono">{String(s['baud'])}</span>
               </div>
             )}
             {s['proto'] != null && (
               <div className="flex justify-between text-xs">
-                <span className="text-content-secondary">Protocol</span>
+                <span className="text-content-secondary">{t('companion.CompanionDashboard.protocol')}</span>
                 <span className="text-content">{
-                  ({ 0: 'MSP / LTM', 1: 'MAVLink', 2: 'Transparent' } as Record<number, string>)[Number(s['proto'])] ?? `Proto ${s['proto']}`
+                  ({ 0: 'MSP / LTM', 1: 'MAVLink', 2: 'Transparent' } as Record<number, string>)[Number(s['proto'])] ?? t('companion.CompanionDashboard.proto', { v1: s['proto'] })
                 }</span>
               </div>
             )}
@@ -406,15 +407,15 @@ function DroneBridgeUsbReader() {
 
         <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 space-y-2">
           <p className="text-[11px] text-blue-300">
-            To manage settings live, connect your computer to the
+            {t('companion.CompanionDashboard.toManageSettingsLiveConnectYour')}
             <span className="font-mono font-medium"> {result.ssid ?? 'DroneBridge'} </span>
-            WiFi network, then click below.
+            {t('companion.CompanionDashboard.wifiNetworkThenClickBelow')}
           </p>
           <button
             onClick={handleGoLive}
             className="w-full py-2 bg-blue-600/80 hover:bg-blue-500/80 text-white text-xs font-medium rounded-lg transition-colors"
           >
-            I'm on the WiFi - Connect
+            {t('companion.CompanionDashboard.iMOnTheWifiConnect')}
           </button>
         </div>
 
@@ -422,7 +423,7 @@ function DroneBridgeUsbReader() {
           onClick={() => setResult(null)}
           className="w-full text-[10px] text-content-tertiary hover:text-content-secondary transition-colors"
         >
-          Back
+          {t('companion.CompanionDashboard.back')}
         </button>
       </div>
     );
@@ -437,7 +438,7 @@ function DroneBridgeUsbReader() {
           disabled={reading}
           className="flex-1 bg-surface-input border border-subtle rounded-lg px-3 py-2 text-xs text-content focus:outline-none focus:ring-1 focus:ring-blue-500/50 disabled:opacity-50"
         >
-          <option value="">Select USB port...</option>
+          <option value="">{t('companion.CompanionDashboard.selectUsbPort')}</option>
           {ports.map((port) => (
             <option key={port} value={port}>{port}</option>
           ))}
@@ -446,7 +447,7 @@ function DroneBridgeUsbReader() {
           onClick={handleRefresh}
           disabled={reading}
           className="px-2 py-2 bg-surface-raised hover:bg-surface-raised disabled:opacity-40 text-content rounded-lg transition-colors"
-          title="Refresh ports"
+          title={t('companion.CompanionDashboard.refreshPorts')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -464,20 +465,20 @@ function DroneBridgeUsbReader() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            Reading from USB...
+            {t('companion.CompanionDashboard.readingFromUsb')}
           </>
         ) : (
           <>
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M6 5h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2z" />
             </svg>
-            Read from USB
+            {t('companion.CompanionDashboard.readFromUsb')}
           </>
         )}
       </button>
       {reading && (
         <p className="text-[10px] text-content-tertiary text-center">
-          Resetting device and reading boot log (~10s)
+          {t('companion.CompanionDashboard.resettingDeviceAndReadingBootLog')}
         </p>
       )}
       {result?.error && (
@@ -527,7 +528,7 @@ function DroneBridgeManualProbe() {
         disabled={!ip.trim() || probing}
         className="px-3 py-2 bg-blue-600/80 hover:bg-blue-500/80 disabled:opacity-40 text-white text-xs rounded-lg transition-colors"
       >
-        {probing ? 'Probing...' : 'Connect'}
+        {probing ? t('companion.CompanionDashboard.probing') : t('companion.CompanionDashboard.connect')}
       </button>
     </div>
   );
@@ -623,16 +624,16 @@ function DashboardTab() {
             </svg>
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">ArduDeck Agent Not Connected</h3>
+            <h3 className="text-sm font-medium text-content">{t('companion.CompanionDashboard.ardudeckAgentNotConnected')}</h3>
             <p className="text-xs text-content-secondary mt-2 max-w-sm mx-auto">
-              Install the ArduDeck Agent on your companion computer to enable real-time metrics, terminal access, and service management.
+              {t('companion.CompanionDashboard.installTheArdudeckAgentOnYour')}
             </p>
           </div>
 
           <div className="bg-surface rounded-xl border border-subtle p-5 text-left space-y-4">
-            <h4 className="text-xs font-medium text-content">Quick Install</h4>
+            <h4 className="text-xs font-medium text-content">{t('companion.CompanionDashboard.quickInstall')}</h4>
             <div className="bg-surface-input rounded-lg px-3 py-2 font-mono text-xs text-content-secondary select-all">
-              curl -fsSL https://ardudeck.com/agent/install.sh | bash
+              {t('companion.CompanionDashboard.curlFsslHttpsArdudeckComAgent')}
             </div>
             <DashboardConnectForm />
           </div>
@@ -678,7 +679,7 @@ function DashboardConnectForm() {
 
   return (
     <div className="space-y-3">
-      <h4 className="text-xs font-medium text-content">Connect to Agent</h4>
+      <h4 className="text-xs font-medium text-content">{t('companion.CompanionDashboard.connectToAgent')}</h4>
       <div className="grid grid-cols-2 gap-2">
         <input
           type="text"
@@ -692,7 +693,7 @@ function DashboardConnectForm() {
           type="password"
           value={token}
           onChange={(e) => setToken(e.target.value)}
-          placeholder="Pairing token"
+          placeholder={t('companion.CompanionDashboard.pairingToken')}
           className="bg-surface-input border border-subtle rounded-lg px-3 py-2 text-xs text-content placeholder-content-tertiary focus:outline-none focus:ring-1 focus:ring-blue-500/50"
           onKeyDown={(e) => { if (e.key === 'Enter') handleConnect(); }}
         />
@@ -702,7 +703,7 @@ function DashboardConnectForm() {
         disabled={connecting || !host.trim() || !token.trim()}
         className="w-full py-2 bg-blue-600/80 hover:bg-blue-500/80 disabled:bg-surface-raised disabled:text-content-tertiary text-white text-xs font-medium rounded-lg transition-colors"
       >
-        {connecting ? 'Connecting...' : 'Connect'}
+        {connecting ? t('companion.CompanionDashboard.connecting') : t('companion.CompanionDashboard.connect')}
       </button>
     </div>
   );
@@ -736,16 +737,16 @@ function CompanionStatusBar() {
           {connectionState.state === 'connected' && connectionState.host
             ? connectionState.host
             : connectionState.state === 'reconnecting'
-              ? `Reconnecting (attempt ${connectionState.reconnectAttempt})...`
+              ? t('companion.CompanionDashboard.reconnectingAttempt', { reconnectAttempt: connectionState.reconnectAttempt })
               : connectionState.state.charAt(0).toUpperCase() + connectionState.state.slice(1)
           }
         </span>
       </div>
       {connectionState.state === 'connected' && connectionState.agentVersion && (
-        <span className="text-content-tertiary">Agent v{connectionState.agentVersion}</span>
+        <span className="text-content-tertiary">{t('companion.CompanionDashboard.agentV')}{connectionState.agentVersion}</span>
       )}
       {connectionState.versionMismatch && (
-        <span className="text-yellow-500">Protocol version mismatch - update your agent</span>
+        <span className="text-yellow-500">{t('companion.CompanionDashboard.protocolVersionMismatchUpdateYourAgent')}</span>
       )}
       {metrics && (
         <>
@@ -788,19 +789,19 @@ function CompanionLayoutToolbar({
 
   return (
     <div className="flex items-center gap-2 px-3 py-1.5 bg-surface border-b border-subtle">
-      <span className="text-xs text-content-secondary">Layout:</span>
+      <span className="text-xs text-content-secondary">{t('companion.CompanionDashboard.layout')}</span>
       <select
         value={activeLayout}
         onChange={(e) => onLoad(e.target.value)}
         className="bg-surface-raised border border rounded px-2 py-1 text-xs text-content focus:outline-none focus:ring-1 focus:ring-blue-500/50"
       >
-        <optgroup label="Presets">
+        <optgroup label={t('companion.CompanionDashboard.presets')}>
           {Object.entries(PRESET_LAYOUTS).map(([key, name]) => (
             <option key={key} value={key}>{name}</option>
           ))}
         </optgroup>
         {layouts.length > 0 && (
-          <optgroup label="Saved">
+          <optgroup label={t('companion.CompanionDashboard.saved')}>
             {layouts.map((name) => (
               <option key={name} value={name}>{name}</option>
             ))}
@@ -814,7 +815,7 @@ function CompanionLayoutToolbar({
             type="text"
             value={layoutName}
             onChange={(e) => setLayoutName(e.target.value)}
-            placeholder="Layout name"
+            placeholder={t('companion.CompanionDashboard.layoutName')}
             className="bg-surface-raised border border rounded px-2 py-1 text-xs text-content w-32 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
             autoFocus
             onKeyDown={(e) => {
@@ -822,13 +823,13 @@ function CompanionLayoutToolbar({
               if (e.key === 'Escape') setShowSaveDialog(false);
             }}
           />
-          <button onClick={handleSave} className="px-2 py-1 bg-blue-600/80 hover:bg-blue-500/80 text-white text-xs rounded transition-colors">Save</button>
-          <button onClick={() => setShowSaveDialog(false)} className="px-2 py-1 bg-surface-raised hover:bg-surface-raised text-content text-xs rounded transition-colors">Cancel</button>
+          <button onClick={handleSave} className="px-2 py-1 bg-blue-600/80 hover:bg-blue-500/80 text-white text-xs rounded transition-colors">{t('companion.CompanionDashboard.save')}</button>
+          <button onClick={() => setShowSaveDialog(false)} className="px-2 py-1 bg-surface-raised hover:bg-surface-raised text-content text-xs rounded transition-colors">{t('companion.CompanionDashboard.cancel')}</button>
         </div>
       ) : (
         <>
-          <button onClick={() => setShowSaveDialog(true)} className="px-2 py-1 bg-surface-raised hover:bg-surface-raised text-content text-xs rounded transition-colors">Save As...</button>
-          <button onClick={onReset} className="px-2 py-1 bg-surface-raised hover:bg-surface-raised text-content text-xs rounded transition-colors">Reset</button>
+          <button onClick={() => setShowSaveDialog(true)} className="px-2 py-1 bg-surface-raised hover:bg-surface-raised text-content text-xs rounded transition-colors">{t('companion.CompanionDashboard.saveAs')}</button>
+          <button onClick={onReset} className="px-2 py-1 bg-surface-raised hover:bg-surface-raised text-content text-xs rounded transition-colors">{t('companion.CompanionDashboard.reset')}</button>
         </>
       )}
 
@@ -853,7 +854,7 @@ function CompanionAddPanelDropdown({ onAddPanel }: { onAddPanel: (id: string, co
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
         </svg>
-        Add Panel
+        {t('companion.CompanionDashboard.addPanel')}
       </button>
 
       {isOpen && (

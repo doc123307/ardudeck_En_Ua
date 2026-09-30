@@ -1,5 +1,6 @@
 import type { VehicleProfile } from '../../stores/settings-store.js';
 import type { ParamSpec } from './types.js';
+import { t } from '../../i18n';
 
 /**
  * Low-voltage cut cell voltage (V/cell). 3.5V is standard for LiPo LOW warning.
@@ -25,22 +26,22 @@ export function batteryParams(p: VehicleProfile): ParamSpec[] {
     {
       name: 'BATT_CAPACITY',
       value: p.batteryCapacity,
-      reason: `Capacity from profile (${p.batteryCapacity} mAh)`,
+      reason: t('lib.param_helpers.capacityFromProfileMah', { batteryCapacity: p.batteryCapacity }),
     },
     {
       name: 'BATT_LOW_VOLT',
       value: round(low, 2),
-      reason: `${p.batteryCells}S × ${LOW_CELL_V[chem]}V (${chem.toUpperCase()} low threshold)`,
+      reason: t('lib.param_helpers.sVLowThreshold', { batteryCells: p.batteryCells, v2: LOW_CELL_V[chem], v3: chem.toUpperCase() }),
     },
     {
       name: 'BATT_CRT_VOLT',
       value: round(crit, 2),
-      reason: `${p.batteryCells}S × ${CRIT_CELL_V[chem]}V (${chem.toUpperCase()} critical threshold)`,
+      reason: t('lib.param_helpers.sVCriticalThreshold', { batteryCells: p.batteryCells, v2: CRIT_CELL_V[chem], v3: chem.toUpperCase() }),
     },
     {
       name: 'BATT_MONITOR',
       value: 4, // Analog voltage + current (most common)
-      reason: 'Analog voltage + current monitoring',
+      reason: t('lib.param_helpers.analogVoltageCurrentMonitoring'),
     },
   ];
 }
@@ -56,22 +57,22 @@ export function airspeedParams(p: VehicleProfile): ParamSpec[] {
     {
       name: 'AIRSPEED_MIN',
       value: round(stall * 1.15, 1),
-      reason: `Stall × 1.15 = ${round(stall * 1.15, 1)} m/s (margin above stall)`,
+      reason: t('lib.param_helpers.stall115MSMargin', { v1: round(stall * 1.15, 1) }),
     },
     {
       name: 'AIRSPEED_CRUISE',
       value: round(stall * 1.5, 1),
-      reason: `Stall × 1.5 = ${round(stall * 1.5, 1)} m/s (efficient cruise)`,
+      reason: t('lib.param_helpers.stall15MSEfficient', { v1: round(stall * 1.5, 1) }),
     },
     {
       name: 'AIRSPEED_MAX',
       value: round(stall * 2.2, 1),
-      reason: `Stall × 2.2 = ${round(stall * 2.2, 1)} m/s (safe upper bound)`,
+      reason: t('lib.param_helpers.stall22MSSafe', { v1: round(stall * 2.2, 1) }),
     },
     {
       name: 'TRIM_ARSPD_CM',
       value: Math.round(stall * 150),  // cm/s (cruise × 100)
-      reason: `Trim airspeed in cm/s = cruise × 100`,
+      reason: t('lib.param_helpers.trimAirspeedInCmSCruise'),
     },
   ];
 }
@@ -82,9 +83,9 @@ export function airspeedParams(p: VehicleProfile): ParamSpec[] {
  */
 export function elevonServoParams(): ParamSpec[] {
   return [
-    { name: 'SERVO1_FUNCTION', value: 77, reason: 'Elevon Left output (delta wing)', requiresReboot: true },
-    { name: 'SERVO2_FUNCTION', value: 78, reason: 'Elevon Right output (delta wing)', requiresReboot: true },
-    { name: 'MIXING_GAIN', value: 0.5, reason: 'Standard elevon mixing gain' },
+    { name: 'SERVO1_FUNCTION', value: 77, reason: t('lib.param_helpers.elevonLeftOutputDeltaWing'), requiresReboot: true },
+    { name: 'SERVO2_FUNCTION', value: 78, reason: t('lib.param_helpers.elevonRightOutputDeltaWing'), requiresReboot: true },
+    { name: 'MIXING_GAIN', value: 0.5, reason: t('lib.param_helpers.standardElevonMixingGain') },
   ];
 }
 
@@ -93,9 +94,9 @@ export function elevonServoParams(): ParamSpec[] {
  */
 export function vtailServoParams(): ParamSpec[] {
   return [
-    { name: 'SERVO1_FUNCTION', value: 79, reason: 'V-tail Left (pitch+yaw mix)', requiresReboot: true },
-    { name: 'SERVO2_FUNCTION', value: 80, reason: 'V-tail Right (pitch+yaw mix)', requiresReboot: true },
-    { name: 'MIXING_GAIN', value: 0.5, reason: 'Standard V-tail mixing gain' },
+    { name: 'SERVO1_FUNCTION', value: 79, reason: t('lib.param_helpers.vTailLeftPitchYawMix'), requiresReboot: true },
+    { name: 'SERVO2_FUNCTION', value: 80, reason: t('lib.param_helpers.vTailRightPitchYawMix'), requiresReboot: true },
+    { name: 'MIXING_GAIN', value: 0.5, reason: t('lib.param_helpers.standardVTailMixingGain') },
   ];
 }
 
@@ -112,23 +113,23 @@ export function simPhysicsParams(p: VehicleProfile): ParamSpec[] {
     const fullVolt = p.batteryCells * 4.20;
     const nominalVolt = p.batteryCells * (nominal[chem] ?? 3.7);
     out.push(
-      { name: 'SIM_BATT_VOLTAGE', value: round(fullVolt, 2), reason: `Simulated full-charge voltage (${p.batteryCells}S × 4.20V)` },
+      { name: 'SIM_BATT_VOLTAGE', value: round(fullVolt, 2), reason: t('lib.param_helpers.simulatedFullChargeVoltageS4', { batteryCells: p.batteryCells }) },
     );
     if (p.batteryCapacity) {
-      out.push({ name: 'SIM_BATT_CAP_AH', value: round(p.batteryCapacity / 1000, 3), reason: `Simulated capacity (${p.batteryCapacity} mAh)` });
+      out.push({ name: 'SIM_BATT_CAP_AH', value: round(p.batteryCapacity / 1000, 3), reason: t('lib.param_helpers.simulatedCapacityMah', { batteryCapacity: p.batteryCapacity }) });
     }
     void nominalVolt; // kept for future extension (discharge curve)
   }
   if (p.thrustToWeight && p.thrustToWeight > 0) {
     // SIM_ENGINE_MUL multiplies the default engine power. Clamp to a reasonable range.
     const mul = Math.min(Math.max(p.thrustToWeight / 2.0, 0.3), 3.0);
-    out.push({ name: 'SIM_ENGINE_MUL', value: round(mul, 3), reason: `Scaled from T/W ${p.thrustToWeight} (engine power multiplier)` });
+    out.push({ name: 'SIM_ENGINE_MUL', value: round(mul, 3), reason: t('lib.param_helpers.scaledFromTWEnginePower', { thrustToWeight: p.thrustToWeight }) });
   }
   if (p.dragCoefficient && p.dragCoefficient > 0) {
-    out.push({ name: 'SIM_DRAG_COEF', value: round(p.dragCoefficient, 3), reason: `Drag coefficient from profile` });
+    out.push({ name: 'SIM_DRAG_COEF', value: round(p.dragCoefficient, 3), reason: t('lib.param_helpers.dragCoefficientFromProfile') });
   }
   if (p.servoSpeed && p.servoSpeed > 0) {
-    out.push({ name: 'SIM_SERVO_SPEED', value: round(1000 / p.servoSpeed, 4), reason: `Servo response time from ${p.servoSpeed}°/s` });
+    out.push({ name: 'SIM_SERVO_SPEED', value: round(1000 / p.servoSpeed, 4), reason: t('lib.param_helpers.servoResponseTimeFromS', { servoSpeed: p.servoSpeed }) });
   }
   return out;
 }
@@ -139,7 +140,7 @@ export function simPhysicsParams(p: VehicleProfile): ParamSpec[] {
  */
 export function commonSafetyParams(): ParamSpec[] {
   return [
-    { name: 'ARMING_CHECK', value: 1, reason: 'Enable all pre-arm checks' },
+    { name: 'ARMING_CHECK', value: 1, reason: t('lib.param_helpers.enableAllPreArmChecks') },
   ];
 }
 

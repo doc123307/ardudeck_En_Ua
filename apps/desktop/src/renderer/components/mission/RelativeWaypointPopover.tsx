@@ -8,6 +8,7 @@ import {
   toMetersFromDistanceUnit,
   UNIT_LABELS,
 } from '../../../shared/user-units.js';
+import { t } from '../../i18n';
 
 export type InsertWhere = 'before' | 'after' | 'end';
 
@@ -195,9 +196,9 @@ export function RelativeWaypointPopover({
               <circle cx="15" cy="18" r="1.2" />
             </svg>
             <div>
-              <div className="text-sm font-medium text-content">Relative waypoint</div>
+              <div className="text-sm font-medium text-content">{t('mission.RelativeWaypointPopover.relativeWaypoint')}</div>
               <div className="text-[11px] text-content-secondary">
-                From WP {refSeq + 1}
+                {t('mission.RelativeWaypointPopover.fromWp')} {refSeq + 1}
               </div>
             </div>
           </div>
@@ -205,7 +206,7 @@ export function RelativeWaypointPopover({
             onClick={onCancel}
             onMouseDown={(e) => e.stopPropagation()}
             className="p-1 rounded hover:bg-surface-raised text-content-secondary"
-            aria-label="Close"
+            aria-label={t('mission.RelativeWaypointPopover.close')}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -216,7 +217,7 @@ export function RelativeWaypointPopover({
         <div className="px-4 py-3 space-y-3">
           {/* Bearing row: compass icon + number input + steppers */}
           <div>
-            <label className="block text-[11px] text-content-secondary mb-1">Bearing</label>
+            <label className="block text-[11px] text-content-secondary mb-1">{t('mission.RelativeWaypointPopover.bearing')}</label>
             <div className="flex items-center gap-2">
               <CompassDial bearing={bearing} />
               <div className="flex-1 h-8 flex items-stretch bg-surface-input border border-default rounded overflow-hidden">
@@ -261,7 +262,7 @@ export function RelativeWaypointPopover({
 
           {/* Distance row */}
           <div>
-            <label className="block text-[11px] text-content-secondary mb-1">Distance</label>
+            <label className="block text-[11px] text-content-secondary mb-1">{t('mission.RelativeWaypointPopover.distance')}</label>
             <div className="h-8 flex items-stretch bg-surface-input border border-default rounded overflow-hidden">
               <button
                 onClick={() => stepDistance(-distanceStep)}
@@ -316,28 +317,28 @@ export function RelativeWaypointPopover({
 
           {/* Insert position */}
           <div>
-            <label className="block text-[11px] text-content-secondary mb-1">Insert</label>
+            <label className="block text-[11px] text-content-secondary mb-1">{t('mission.RelativeWaypointPopover.insert')}</label>
             <div className="flex items-center rounded overflow-hidden border border-subtle">
               <InsertButton
                 active={where === 'before'}
                 disabled={refSeq === 0}
                 onClick={() => setWhere('before')}
               >
-                Before
+                {t('mission.RelativeWaypointPopover.before')}
               </InsertButton>
               <div className="w-px h-5 bg-subtle" />
               <InsertButton
                 active={where === 'after'}
                 onClick={() => setWhere('after')}
               >
-                After
+                {t('mission.RelativeWaypointPopover.after')}
               </InsertButton>
               <div className="w-px h-5 bg-subtle" />
               <InsertButton
                 active={where === 'end'}
                 onClick={() => setWhere('end')}
               >
-                At end
+                {t('mission.RelativeWaypointPopover.atEnd')}
               </InsertButton>
             </div>
           </div>
@@ -353,13 +354,13 @@ export function RelativeWaypointPopover({
             onClick={onCancel}
             className="px-3 py-1.5 text-xs text-content-secondary hover:text-content"
           >
-            Cancel
+            {t('mission.RelativeWaypointPopover.cancel')}
           </button>
           <button
             onClick={handleConfirm}
             className="px-3 py-1.5 text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white rounded-lg"
           >
-            Add waypoint
+            {t('mission.RelativeWaypointPopover.addWaypoint')}
           </button>
         </div>
       </div>

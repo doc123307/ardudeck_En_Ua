@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
 import type { VehicleCommand } from '../../../shared/ipc-channels';
+import { t } from '../../i18n';
 
 type PendingConfirm = { message: string; cmd: VehicleCommand } | null;
 
@@ -38,10 +39,10 @@ export function FleetGroupActions() {
     <div className="border-t border-subtle p-2 flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
         <span className="text-[10px] uppercase tracking-wide text-content-secondary">
-          {selected.length} selected
+          {selected.length} {t('fleet.FleetGroupActions.selected')}
         </span>
         <button onClick={() => setSelected([])} className="text-[10px] text-content-tertiary hover:text-content">
-          Clear
+          {t('fleet.FleetGroupActions.clear')}
         </button>
       </div>
 
@@ -50,17 +51,17 @@ export function FleetGroupActions() {
           <span className="text-[11px] text-content">{pending.message}</span>
           <div className="flex gap-1.5">
             <button disabled={busy} onClick={() => fanOut(pending.cmd)} className={`${btn} bg-red-600/80 hover:bg-red-600 text-white`}>
-              Confirm
+              {t('fleet.FleetGroupActions.confirm')}
             </button>
-            <button disabled={busy} onClick={() => setPending(null)} className={btn}>Cancel</button>
+            <button disabled={busy} onClick={() => setPending(null)} className={btn}>{t('fleet.FleetGroupActions.cancel')}</button>
           </div>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-1.5">
-          <button disabled={busy} className={btn} onClick={() => confirmThen(`Arm ${selected.length} ${noun}?`, { kind: 'arm' })}>Arm</button>
-          <button disabled={busy} className={btn} onClick={() => confirmThen(`Disarm ${selected.length} ${noun}?`, { kind: 'disarm' })}>Disarm</button>
+          <button disabled={busy} className={btn} onClick={() => confirmThen(`Arm ${selected.length} ${noun}?`, { kind: 'arm' })}>{t('fleet.FleetGroupActions.arm')}</button>
+          <button disabled={busy} className={btn} onClick={() => confirmThen(`Disarm ${selected.length} ${noun}?`, { kind: 'disarm' })}>{t('fleet.FleetGroupActions.disarm')}</button>
           <button disabled={busy} className={btn} onClick={() => confirmThen(`Send ${selected.length} ${noun} home (RTL)?`, { kind: 'rtl' })}>RTL</button>
-          <button disabled={busy} className={btn} onClick={() => confirmThen(`Start mission on ${selected.length} ${noun}?`, { kind: 'mission-start' })}>Start</button>
+          <button disabled={busy} className={btn} onClick={() => confirmThen(`Start mission on ${selected.length} ${noun}?`, { kind: 'mission-start' })}>{t('fleet.FleetGroupActions.start')}</button>
         </div>
       )}
     </div>

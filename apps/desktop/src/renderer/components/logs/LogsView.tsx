@@ -6,6 +6,7 @@ import { LogExplorerPanel } from './LogExplorerPanel';
 import { AiAnalysisPanel } from './AiAnalysisPanel';
 import { FleetForensicsPanel } from './FleetForensicsPanel';
 import { ADVISOR_CARGO_SLUG, useCargoEnabled } from '../../modules/capabilities';
+import { t } from '../../i18n';
 
 export function LogsView() {
   const activeTab = useLogStore((s) => s.activeTab);
@@ -17,24 +18,24 @@ export function LogsView() {
   const aiEnabled = advisorEnabled && !!aiProvider;
 
   const tabs = [
-    { id: 'list' as const, label: 'Log List' },
-    { id: 'report' as const, label: 'Health Report', disabled: !currentLog },
-    { id: 'explorer' as const, label: 'Explorer', disabled: !currentLog },
-    ...(aiEnabled ? [{ id: 'ai' as const, label: 'AI Analysis', disabled: !currentLog }] : []),
-    { id: 'fleet' as const, label: 'Fleet Forensics' },
+    { id: 'list' as const, label: t('logs.LogsView.logList') },
+    { id: 'report' as const, label: t('logs.LogsView.healthReport'), disabled: !currentLog },
+    { id: 'explorer' as const, label: t('logs.LogsView.explorer'), disabled: !currentLog },
+    ...(aiEnabled ? [{ id: 'ai' as const, label: t('logs.LogsView.aiAnalysis'), disabled: !currentLog }] : []),
+    { id: 'fleet' as const, label: t('logs.LogsView.fleetForensics') },
   ];
 
   return (
     <div className="flex flex-col h-full">
       {/* Tab bar */}
       <div className="flex items-center gap-1 px-4 pt-3 pb-2 border-b border-subtle">
-        <h2 className="text-lg font-semibold text-content mr-4">Flight Logs</h2>
+        <h2 className="text-lg font-semibold text-content mr-4">{t('logs.LogsView.flightLogs')}</h2>
         {currentLog && (
           <span
             className="text-xs font-medium px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30 mr-4"
             title={currentLog.metadata.firmwareString || undefined}
           >
-            {currentLog.format === 'ulog' ? 'PX4 ULog' : 'ArduPilot'}
+            {currentLog.format === 'ulog' ? t('logs.LogsView.px4Ulog') : 'ArduPilot'}
           </span>
         )}
         {tabs.map((tab) => (
@@ -49,7 +50,7 @@ export function LogsView() {
                   : 'text-content-secondary hover:text-content hover:bg-surface'
             }`}
             disabled={tab.disabled}
-            data-tip={tab.disabled ? 'Open a log first' : undefined}
+            data-tip={tab.disabled ? t('logs.LogsView.openALogFirst') : undefined}
           >
             {tab.label}
             {tab.id === 'ai' && aiMessages.length > 0 && (

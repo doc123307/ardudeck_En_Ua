@@ -10,6 +10,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { useRubyOsdStore, getFontSize, getTransparency } from '../../stores/ruby-osd-store';
 import { buildRubyPreview, type PreviewZone, type RubyPreviewChip } from '../../utils/osd/ruby-osd-preview';
 import { OsdVideoBackdrop } from './OsdVideoBackdrop';
+import { t } from '../../i18n';
 
 /** Measure a container's content box. */
 function useMeasure() {
@@ -146,13 +147,13 @@ export function RubyOsdPreview() {
 
       {empty && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-[11px] text-content-tertiary">No elements enabled on screen {editingScreen + 1}</span>
+          <span className="text-[11px] text-content-tertiary">{t('osd.RubyOsdPreview.noElementsEnabledOnScreen')} {editingScreen + 1}</span>
         </div>
       )}
 
         {/* Fidelity note */}
         <div className="absolute -top-px right-1 -translate-y-full text-[10px] text-content-tertiary font-mono pb-1">
-          RubyFPV OSD · layout preview
+          {t('osd.RubyOsdPreview.rubyfpvOsdLayoutPreview')}
         </div>
       </div>
     </div>

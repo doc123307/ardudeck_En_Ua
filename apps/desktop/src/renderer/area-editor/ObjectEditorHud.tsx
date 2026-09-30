@@ -22,6 +22,7 @@ import { VaultSyncBadge } from '../components/vault/VaultSyncBadge';
 import { formatSurveyAreaHa, formatSurveyDistanceM } from './survey-units';
 import { UNIT_LABELS, type AreaUnit, type DistanceUnit } from '../../shared/user-units.js';
 import type { SurveyConfig, SurveyResult } from '../components/survey/survey-types';
+import { t } from '../i18n';
 
 function runGeneratorSafe(config: SurveyConfig): SurveyResult | null {
   const minPoints = config.pattern === 'corridor' ? 2 : 3;
@@ -53,13 +54,13 @@ function MetricRow({ label, value }: { label: string; value: string | null }): J
 function Metrics({ hud, distanceUnit, areaUnit }: { hud: AreaHud; distanceUnit: DistanceUnit; areaUnit: AreaUnit }): JSX.Element {
   return (
     <>
-      <MetricRow label="Area" value={hud.areaHa !== null ? formatSurveyAreaHa(hud.areaHa, areaUnit) : null} />
-      <MetricRow label="Distance" value={hud.flightDistanceM !== null ? formatSurveyDistanceM(hud.flightDistanceM, distanceUnit) : null} />
-      <MetricRow label="Flight time" value={hud.flightTimeSec !== null ? formatDurationSec(hud.flightTimeSec) : null} />
-      <MetricRow label="Batteries" value={hud.batteryCount !== null ? String(hud.batteryCount) : null} />
+      <MetricRow label={t('area_editor.ObjectEditorHud.area')} value={hud.areaHa !== null ? formatSurveyAreaHa(hud.areaHa, areaUnit) : null} />
+      <MetricRow label={t('area_editor.ObjectEditorHud.distance')} value={hud.flightDistanceM !== null ? formatSurveyDistanceM(hud.flightDistanceM, distanceUnit) : null} />
+      <MetricRow label={t('area_editor.ObjectEditorHud.flightTime')} value={hud.flightTimeSec !== null ? formatDurationSec(hud.flightTimeSec) : null} />
+      <MetricRow label={t('area_editor.ObjectEditorHud.batteries')} value={hud.batteryCount !== null ? String(hud.batteryCount) : null} />
       <MetricRow label="GSD" value={hud.gsdCm !== null && hud.gsdCm > 0 ? `${hud.gsdCm.toFixed(1)} cm/px` : null} />
-      <MetricRow label="Photos" value={hud.photoCount !== null ? hud.photoCount.toLocaleString() : null} />
-      <MetricRow label="Data" value={hud.dataGb !== null ? `${hud.dataGb.toFixed(1)} GB` : null} />
+      <MetricRow label={t('area_editor.ObjectEditorHud.photos')} value={hud.photoCount !== null ? hud.photoCount.toLocaleString() : null} />
+      <MetricRow label={t('area_editor.ObjectEditorHud.data')} value={hud.dataGb !== null ? `${hud.dataGb.toFixed(1)} GB` : null} />
     </>
   );
 }
@@ -122,12 +123,12 @@ export function ObjectEditorHud(): JSX.Element {
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-shrink-0 px-4 py-3 border-b border-subtle">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-xs font-semibold text-content">Flight Briefing</p>
+          <p className="text-xs font-semibold text-content">{t('area_editor.ObjectEditorHud.flightBriefing')}</p>
           <div className="flex items-center gap-1.5">
             <VaultSyncBadge />
             <span
               className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-surface-input text-content-secondary"
-              data-tip={`Area in ${UNIT_LABELS.area[areaUnit]}, distance in ${UNIT_LABELS.distance[distanceUnit]}`}
+              data-tip={t('area_editor.ObjectEditorHud.areaInDistanceIn', { v1: UNIT_LABELS.area[areaUnit], v2: UNIT_LABELS.distance[distanceUnit] })}
             >
               {UNIT_LABELS.area[areaUnit]}
             </span>
@@ -143,7 +144,7 @@ export function ObjectEditorHud(): JSX.Element {
                     (scope === s ? 'bg-blue-600 text-white' : 'text-content-secondary hover:text-content')
                   }
                 >
-                  {s === 'all' ? 'All' : 'Selected'}
+                  {s === 'all' ? t('area_editor.ObjectEditorHud.all') : t('area_editor.ObjectEditorHud.selected')}
                 </button>
               ))}
             </div>
@@ -155,7 +156,7 @@ export function ObjectEditorHud(): JSX.Element {
 
       <div className="flex-1 overflow-y-auto px-4 py-2">
         {perObject.length === 0 ? (
-          <p className="text-xs text-content-tertiary mt-2">Draw an area or corridor to see the briefing.</p>
+          <p className="text-xs text-content-tertiary mt-2">{t('area_editor.ObjectEditorHud.drawAnAreaOrCorridorTo')}</p>
         ) : scope === 'selected' || !showScopeToggle ? (
           // Single object, or explicitly inspecting the selected one.
           selectedEntry || perObject.length === 1 ? (
@@ -167,19 +168,19 @@ export function ObjectEditorHud(): JSX.Element {
               <Metrics hud={(selectedEntry ?? perObject[0]!).hud} distanceUnit={distanceUnit} areaUnit={areaUnit} />
             </>
           ) : (
-            <p className="text-xs text-content-tertiary mt-2">Select an object to see its briefing, or switch to All.</p>
+            <p className="text-xs text-content-tertiary mt-2">{t('area_editor.ObjectEditorHud.selectAnObjectToSeeIts')}</p>
           )
         ) : (
           totals && (
             <>
-              <p className="text-xs text-content-tertiary mb-2">{perObject.length} objects combined</p>
+              <p className="text-xs text-content-tertiary mb-2">{perObject.length} {t('area_editor.ObjectEditorHud.objectsCombined')}</p>
               <Metrics hud={totals} distanceUnit={distanceUnit} areaUnit={areaUnit} />
             </>
           )
         )}
         {!activeVehicle && (
           <p className="text-xs text-content-tertiary mt-3 leading-relaxed">
-            Add a vehicle profile for battery + endurance figures.
+            {t('area_editor.ObjectEditorHud.addAVehicleProfileForBattery')}
           </p>
         )}
       </div>

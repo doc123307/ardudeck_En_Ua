@@ -5,6 +5,7 @@ import { useResolvedTheme } from '../../hooks/useTheme';
 import { SERIES_COLORS } from './log-chart-stats';
 import { computeSpectrum, estimateSampleRate, resampleUniform, peakIndex, type Spectrum } from './log-fft';
 import { numericFieldNames } from '../../utils/log-columns';
+import { t as tr } from '../../i18n';
 
 // Sensible defaults per message type: what a tuner actually wants to see first.
 // Dataflash names first, then the PX4 ULog topics that carry the same signal.
@@ -146,8 +147,8 @@ export function SpectrumPanel() {
       scales: { x: { time: false }, y: { auto: true } },
       legend: { show: true },
       axes: [
-        { label: 'Frequency (Hz)', ...axisTheme },
-        { label: dbScale ? 'Amplitude (dB)' : 'Amplitude', ...axisTheme },
+        { label: tr('logs.SpectrumPanel.frequencyHz'), ...axisTheme },
+        { label: dbScale ? tr('logs.SpectrumPanel.amplitudeDb') : tr('logs.SpectrumPanel.amplitude'), ...axisTheme },
       ],
       series: [
         { label: 'Hz' },
@@ -204,7 +205,7 @@ export function SpectrumPanel() {
   }, [spectra, dbScale, isLight]);
 
   if (!currentLog) {
-    return <div className="h-full flex items-center justify-center text-content-tertiary text-xs">No log loaded</div>;
+    return <div className="h-full flex items-center justify-center text-content-tertiary text-xs">{tr('logs.SpectrumPanel.noLogLoaded')}</div>;
   }
 
   const first = spectra[0];
@@ -229,9 +230,9 @@ export function SpectrumPanel() {
                 ? 'bg-blue-500/15 text-blue-400 border-blue-500/30'
                 : 'bg-surface text-content-tertiary border-subtle hover:text-content-secondary'
           }`}
-          data-tip={syncZoomEnabled ? 'Analyse only the time window the charts are zoomed to' : 'Enable chart sync to follow zoom'}
+          data-tip={syncZoomEnabled ? tr('logs.SpectrumPanel.analyseOnlyTheTimeWindowThe') : tr('logs.SpectrumPanel.enableChartSyncToFollowZoom')}
         >
-          Follow zoom
+          {tr('logs.SpectrumPanel.followZoom')}
         </button>
         <button
           onClick={() => setDbScale(!dbScale)}
@@ -240,19 +241,19 @@ export function SpectrumPanel() {
               ? 'bg-blue-500/15 text-blue-400 border-blue-500/30'
               : 'bg-surface text-content-tertiary border-subtle hover:text-content-secondary'
           }`}
-          data-tip="Logarithmic amplitude (dB)"
+          data-tip={tr('logs.SpectrumPanel.logarithmicAmplitudeDb')}
         >
           dB
         </button>
         {first && (
           <span className="text-[10px] text-content-tertiary ml-auto tabular-nums">
-            {first.rateHz.toFixed(0)} Hz sample rate · Δf {first.spec.resolutionHz.toFixed(2)} Hz · {first.spec.segments} seg
+            {first.rateHz.toFixed(0)} {tr('logs.SpectrumPanel.hzSampleRateF')} {first.spec.resolutionHz.toFixed(2)} {tr('logs.SpectrumPanel.hz')} {first.spec.segments} seg
           </span>
         )}
       </div>
       {spectra.length === 0 ? (
         <div className="flex-1 flex items-center justify-center text-content-tertiary text-xs px-6 text-center">
-          Not enough samples in this window - zoom out or pick a higher-rate message (IMU, ACC, GYR on ArduPilot; sensor_combined or sensor_gyro_fifo on PX4)
+          {tr('logs.SpectrumPanel.notEnoughSamplesInThisWindow')}
         </div>
       ) : (
         <div ref={chartRef} className="flex-1 min-h-0" />

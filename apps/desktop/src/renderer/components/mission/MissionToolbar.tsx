@@ -26,6 +26,7 @@ import { useCargoEnabled, MISSION_LIBRARY_CARGO_SLUG } from '../../modules/capab
 import { useFleetVehicles } from '../../hooks/useFleet';
 import { useVehicleAppearanceStore, resolveVehicleColor } from '../../stores/vehicle-appearance-store';
 import { buildArduPilotWireMission } from '../../../shared/mission-wire';
+import { t as tr } from '../../i18n';
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -74,9 +75,9 @@ function ModeButton({
 
 /** Offline mission-planning targets. One accent colour per flight stack. */
 const MISSION_FIRMWARE_OPTIONS = [
-  { id: 'ardupilot', label: 'ArduPilot', title: 'ArduPilot mission commands' },
-  { id: 'px4', label: 'PX4', title: 'PX4 mission commands' },
-  { id: 'inav', label: 'iNav', title: 'iNav mission commands (8 waypoint types)' },
+  { id: 'ardupilot', label: 'ArduPilot', get title() { return tr('mission.MissionToolbar.ardupilotMissionCommands'); } },
+  { id: 'px4', label: 'PX4', get title() { return tr('mission.MissionToolbar.px4MissionCommands'); } },
+  { id: 'inav', label: 'iNav', get title() { return tr('mission.MissionToolbar.inavMissionCommands8WaypointTypes'); } },
 ] as const satisfies ReadonlyArray<{ id: MissionFirmware; label: string; title: string }>;
 
 const MISSION_FIRMWARE_ACCENT: Record<MissionFirmware, { border: string; divider: string; active: string }> = {
@@ -109,7 +110,7 @@ function MissionModeControls() {
                 ? 'bg-blue-600 text-white'
                 : 'text-content-secondary hover:bg-surface-raised'
             }`}
-            data-tip="Simple mode: friendly waypoint labels (Fly here, Circle here) and common commands only"
+            data-tip={tr('mission.MissionToolbar.simpleModeFriendlyWaypointLabelsFly')}
           >
             {/* Eye icon - simple/readable view */}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -125,7 +126,7 @@ function MissionModeControls() {
                 ? 'bg-blue-600 text-white'
                 : 'text-content-secondary hover:bg-surface-raised'
             }`}
-            data-tip="Advanced mode: standard GCS command names and the full command list"
+            data-tip={tr('mission.MissionToolbar.advancedModeStandardGcsCommandNames')}
           >
             {/* Code/terminal icon - advanced/technical view */}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -208,7 +209,7 @@ function SaveMenu({
         className={`px-2 py-1.5 rounded bg-surface-raised flex items-center gap-1 transition-colors ${
           enabled ? 'text-content hover:brightness-125' : 'text-content-tertiary cursor-not-allowed'
         }`}
-        data-tip={enabled ? 'Save or export the mission' : 'Add waypoints first'}
+        data-tip={enabled ? tr('mission.MissionToolbar.saveOrExportTheMission') : tr('mission.MissionToolbar.addWaypointsFirst')}
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 4h11l3 3v13H5z M9 4v5h6V4 M9 17h6" />
@@ -229,7 +230,7 @@ function SaveMenu({
                 <ExportMenuItem
                   icon={<Library className="w-3.5 h-3.5" />}
                   tint="bg-purple-500/10 text-purple-700 dark:text-purple-300"
-                  title="Save project"
+                  title={tr('mission.MissionToolbar.saveProject')}
                   titleClass="text-purple-700 dark:text-purple-300"
                   detail="The whole plan in ArduDeck: waypoint groups, every survey area and its settings, all editable later"
                   onClick={() => { onLibrary(); setOpen(false); }}
@@ -240,21 +241,21 @@ function SaveMenu({
             <ExportMenuItem
               icon={<ListOrdered className="w-3.5 h-3.5" />}
               tint="bg-sky-500/10 text-sky-700 dark:text-sky-300"
-              title="Waypoints file (.waypoints)"
+              title={tr('mission.MissionToolbar.waypointsFileWaypoints')}
               detail={`QGC WPL · ArduPilot / Mission Planner${multipleGroups ? ' · flattens groups' : ''}`}
               onClick={() => { onExport('waypoints'); setOpen(false); }}
             />
             <ExportMenuItem
               icon={<FileCode className="w-3.5 h-3.5" />}
               tint="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-              title="QGC Plan (.plan)"
+              title={tr('mission.MissionToolbar.qgcPlanPlan')}
               detail={`QGroundControl${multipleGroups ? ' · flattens groups' : ''}`}
               onClick={() => { onExport('plan'); setOpen(false); }}
             />
             <ExportMenuItem
               icon={<Globe className="w-3.5 h-3.5" />}
               tint="bg-amber-500/10 text-amber-700 dark:text-amber-300"
-              title="DJI KMZ (.kmz)"
+              title={tr('mission.MissionToolbar.djiKmzKmz')}
               detail="DJI Fly waypoint mission · plain waypoints only"
               onClick={() => { onExport('kmz'); setOpen(false); }}
             />
@@ -353,7 +354,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
     }));
     const ids = missionStore.distributeGroupAcrossFleet(distributeTarget.id, vehicles);
     if (ids) {
-      showToast?.(`${distributeTarget.name} split across ${ids.length} vehicles - Fleet Ops has the Start missions button`, 'success');
+      showToast?.(tr('mission.MissionToolbar.splitAcrossVehiclesFleetOpsHas', { name: distributeTarget.name, length: ids.length }), 'success');
     }
   };
 
@@ -535,16 +536,16 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
         : missionStore.missionItems;
       const result = await window.electronAPI?.saveMissionToFile(exportItems, format);
       if (result?.success) {
-        showToast?.(`Exported ${missionStore.missionItems.length} waypoints to ${format === 'plan' ? '.plan' : format === 'kmz' ? '.kmz' : '.waypoints'}`, 'success');
+        showToast?.(tr('mission.MissionToolbar.exportedWaypointsTo', { length: missionStore.missionItems.length, v2: format === 'plan' ? '.plan' : format === 'kmz' ? '.kmz' : '.waypoints' }), 'success');
       } else if (result?.error && result.error !== 'Cancelled') {
         showToast?.(result.error, 'error');
       }
     } else if (activeMode === 'geofence') {
       // TODO: Implement fence file save
-      showToast?.('Fence file save not implemented yet', 'info');
+      showToast?.(tr('mission.MissionToolbar.fenceFileSaveNotImplementedYet'), 'info');
     } else {
       // TODO: Implement rally file save
-      showToast?.('Rally file save not implemented yet', 'info');
+      showToast?.(tr('mission.MissionToolbar.rallyFileSaveNotImplementedYet'), 'info');
     }
   };
 
@@ -553,16 +554,16 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
       const result = await window.electronAPI?.loadMissionFromFile();
       if (result?.success && result.items) {
         missionStore.setMissionItemsFromFile(result.items);
-        showToast?.(`Loaded ${result.items.length} waypoints from file`, 'success');
+        showToast?.(tr('mission.MissionToolbar.loadedWaypointsFromFile', { length: result.items.length }), 'success');
       } else if (result?.error && result.error !== 'Cancelled') {
         showToast?.(result.error, 'error');
       }
     } else if (activeMode === 'geofence') {
       // TODO: Implement fence file load
-      showToast?.('Fence file load not implemented yet', 'info');
+      showToast?.(tr('mission.MissionToolbar.fenceFileLoadNotImplementedYet'), 'info');
     } else {
       // TODO: Implement rally file load
-      showToast?.('Rally file load not implemented yet', 'info');
+      showToast?.(tr('mission.MissionToolbar.rallyFileLoadNotImplementedYet'), 'info');
     }
   };
 
@@ -581,7 +582,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
       <div className="flex items-center rounded-lg overflow-hidden border border-subtle shrink-0">
         <ModeButton
           mode="mission"
-          label="Mission"
+          label={tr('mission.MissionToolbar.mission')}
           activeMode={activeMode}
           onClick={() => setActiveMode('mission')}
           color="blue"
@@ -590,7 +591,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
         <div className="w-px h-5 bg-subtle" />
         <ModeButton
           mode="geofence"
-          label="Geofence"
+          label={tr('mission.MissionToolbar.geofence')}
           activeMode={activeMode}
           onClick={() => setActiveMode('geofence')}
           color="green"
@@ -603,7 +604,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
             <div className="w-px h-5 bg-subtle" />
             <ModeButton
               mode="rally"
-              label="Rally"
+              label={tr('mission.MissionToolbar.rally')}
               activeMode={activeMode}
               onClick={() => setActiveMode('rally')}
               color="orange"
@@ -626,7 +627,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
               ? 'bg-blue-600/80 hover:bg-blue-500/80 text-white'
               : 'bg-surface-raised text-content-tertiary cursor-not-allowed'
           }`}
-          data-tip={fcOpsDisabledForMsp ? `${getModeLabel()} not supported on iNav/Betaflight` : isConnected ? `Download ${getModeLabel()} from FC` : 'Connect to download'}
+          data-tip={fcOpsDisabledForMsp ? tr('mission.MissionToolbar.notSupportedOnInavBetaflight', { v1: getModeLabel() }) : isConnected ? tr('mission.MissionToolbar.downloadFromFc', { v1: getModeLabel() }) : tr('mission.MissionToolbar.connectToDownload')}
         >
           {isDownloading ? (
             <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -647,7 +648,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
               ? 'bg-emerald-600/80 hover:bg-emerald-500/80 text-white'
               : 'bg-surface-raised text-content-tertiary cursor-not-allowed'
           }`}
-          data-tip={fcOpsDisabledForMsp ? `${getModeLabel()} not supported on iNav/Betaflight` : multipleGroups ? 'Multiple groups: upload one at a time from each group in the list' : !isConnected ? 'Connect to upload' : !hasItems ? `Add ${getModeLabel()} first` : `Upload ${getModeLabel()} to FC`}
+          data-tip={fcOpsDisabledForMsp ? tr('mission.MissionToolbar.notSupportedOnInavBetaflight', { v1: getModeLabel() }) : multipleGroups ? tr('mission.MissionToolbar.multipleGroupsUploadOneAtA') : !isConnected ? tr('mission.MissionToolbar.connectToUpload') : !hasItems ? tr('mission.MissionToolbar.addFirst', { v1: getModeLabel() }) : tr('mission.MissionToolbar.uploadToFc', { v1: getModeLabel() })}
         >
           {isUploading ? (
             <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -668,7 +669,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
               ? 'bg-red-600/80 hover:bg-red-500/80 text-white'
               : 'bg-surface-raised text-content-tertiary cursor-not-allowed'
           }`}
-          data-tip={fcOpsDisabledForMsp ? `${getModeLabel()} not supported on iNav/Betaflight` : isConnected ? `Clear ${getModeLabel()} from FC` : 'Connect to clear from FC'}
+          data-tip={fcOpsDisabledForMsp ? tr('mission.MissionToolbar.notSupportedOnInavBetaflight', { v1: getModeLabel() }) : isConnected ? tr('mission.MissionToolbar.clearFromFc', { v1: getModeLabel() }) : tr('mission.MissionToolbar.connectToClearFromFc')}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -690,7 +691,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
               className={`p-1.5 rounded bg-surface-raised transition-colors ${
                 canUndo ? 'text-content hover:brightness-125' : 'text-content-tertiary cursor-not-allowed'
               }`}
-              data-tip="Undo (Cmd/Ctrl+Z)"
+              data-tip={tr('mission.MissionToolbar.undoCmdCtrlZ')}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a5 5 0 015 5v1m-15-6l4-4m-4 4l4 4" />
@@ -702,7 +703,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
               className={`p-1.5 rounded bg-surface-raised transition-colors ${
                 canRedo ? 'text-content hover:brightness-125' : 'text-content-tertiary cursor-not-allowed'
               }`}
-              data-tip="Redo (Cmd/Ctrl+Shift+Z)"
+              data-tip={tr('mission.MissionToolbar.redoCmdCtrlShiftZ')}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10H11a5 5 0 00-5 5v1m15-6l-4-4m4 4l-4 4" />
@@ -718,7 +719,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
               ? 'text-content hover:brightness-125'
               : 'text-content-tertiary cursor-not-allowed'
           }`}
-          data-tip={`New - clear current ${getModeLabel()}`}
+          data-tip={tr('mission.MissionToolbar.newClearCurrent', { v1: getModeLabel() })}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -745,7 +746,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
           <button
             onClick={handleLoadFile}
             className="p-1.5 rounded bg-surface-raised text-content hover:brightness-125 transition-colors"
-            data-tip={`Open ${getModeLabel()} file`}
+            data-tip={tr('mission.MissionToolbar.openFile', { v1: getModeLabel() })}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776" />
@@ -763,19 +764,19 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
           missionStore.groups.filter((g) => g.assignedVehicleKey).length >= 2 && (
           <div
             className="px-2.5 py-1.5 rounded flex items-center gap-1.5 text-xs font-medium text-cyan-500 border border-cyan-500/30 bg-cyan-500/10"
-            data-tip="This plan is already split across the fleet - Fleet Ops has the Start missions button. Regenerate or add a survey to distribute again."
+            data-tip={tr('mission.MissionToolbar.thisPlanIsAlreadySplitAcross')}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-            Distributed ({missionStore.groups.filter((g) => g.assignedVehicleKey).length})
+            {tr('mission.MissionToolbar.distributed')}{missionStore.groups.filter((g) => g.assignedVehicleKey).length})
           </div>
         )}
         {activeMode === 'mission' && distributeTarget && (
           <button
             onClick={handleDistribute}
             className="px-2.5 py-1.5 rounded flex items-center gap-1.5 text-xs font-semibold text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-[0_0_10px_rgba(34,211,238,0.35)] transition-all"
-            data-tip={`Split "${distributeTarget.name}" into ${fleetVehiclesLive.length} missions, one per vehicle, coloured by vehicle`}
+            data-tip={tr('mission.MissionToolbar.splitIntoMissionsOnePerVehicle', { name: distributeTarget.name, length: fleetVehiclesLive.length })}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <circle cx="12" cy="5" r="2.2" />
@@ -783,7 +784,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
               <circle cx="19" cy="18" r="2.2" />
               <path strokeLinecap="round" d="M12 7.5v4m0 0l-5 4.5m5-4.5l5 4.5" />
             </svg>
-            Distribute to fleet
+            {tr('mission.MissionToolbar.distributeToFleet')}
             <span className="px-1.5 py-0.5 rounded-full bg-white/20 text-[10px] font-bold">
               {fleetVehiclesLive.length}
             </span>
@@ -793,7 +794,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
           <button
             onClick={() => { window.electronAPI?.openAreaEditor?.().catch(() => undefined); }}
             className="p-1.5 rounded bg-surface-raised text-content hover:brightness-125 transition-colors"
-            data-tip="Open the Area Editor in a separate window"
+            data-tip={tr('mission.MissionToolbar.openTheAreaEditorInA')}
           >
             {/* pencil-ruler glyph - open the area editor */}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -816,12 +817,12 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
         <button
           onClick={() => setShowAltitudeAdjust(true)}
           className="px-2 py-1 rounded text-xs bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 hover:text-red-300 transition-colors flex items-center gap-1.5 shrink-0"
-          data-tip="Flight path dips below terrain + safe buffer. Click to auto-adjust altitudes."
+          data-tip={tr('mission.MissionToolbar.flightPathDipsBelowTerrainSafe')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          Terrain collision
+          {tr('mission.MissionToolbar.terrainCollision')}
         </button>
       )}
 
@@ -850,7 +851,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
                 ? 'bg-indigo-600 text-white'
                 : 'text-content-secondary hover:bg-surface-raised'
             }`}
-            title="3D Terrain View"
+            title={tr('mission.MissionToolbar.n3dTerrainView')}
           >
             3D
           </button>
@@ -861,9 +862,9 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
       <button
         onClick={onResetLayout}
         className="px-2 py-1 bg-surface-raised hover:bg-surface border border-subtle text-content-secondary text-xs rounded transition-colors shrink-0"
-        title="Reset panel layout"
+        title={tr('mission.MissionToolbar.resetPanelLayout')}
       >
-        Reset Layout
+        {tr('mission.MissionToolbar.resetLayout')}
       </button>
 
       {/* Collision warning modal */}
@@ -877,13 +878,12 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-content mb-2">Terrain Collision Warning</h3>
+                <h3 className="text-lg font-semibold text-content mb-2">{tr('mission.MissionToolbar.terrainCollisionWarning')}</h3>
                 <p className="text-content-secondary text-sm mb-4">
-                  The flight path goes below the safe altitude (terrain + {formatAltitudeFromMeters(safeAltitudeBuffer, altitudeUnit)} buffer) at one or more points.
-                  This could result in a collision with terrain.
+                  {tr('mission.MissionToolbar.theFlightPathGoesBelowThe')} {formatAltitudeFromMeters(safeAltitudeBuffer, altitudeUnit)} {tr('mission.MissionToolbar.bufferAtOneOrMorePoints')}
                 </p>
                 <p className="text-amber-400 text-sm mb-4">
-                  Are you sure you want to upload this mission?
+                  {tr('mission.MissionToolbar.areYouSureYouWantTo')}
                 </p>
               </div>
             </div>
@@ -892,19 +892,19 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
                 onClick={() => setShowCollisionWarning(false)}
                 className="px-4 py-2 rounded text-sm font-medium bg-surface-raised hover:bg-surface border border-subtle text-content transition-colors"
               >
-                Cancel
+                {tr('mission.MissionToolbar.cancel')}
               </button>
               <button
                 onClick={() => { setShowCollisionWarning(false); setShowAltitudeAdjust(true); }}
                 className="px-4 py-2 rounded text-sm font-medium bg-purple-600 hover:bg-purple-500 text-white transition-colors"
               >
-                Fix Altitudes
+                {tr('mission.MissionToolbar.fixAltitudes')}
               </button>
               <button
                 onClick={handleConfirmUpload}
                 className="px-4 py-2 rounded text-sm font-medium bg-red-600/80 hover:bg-red-500/80 text-white transition-colors"
               >
-                Upload Anyway
+                {tr('mission.MissionToolbar.uploadAnyway')}
               </button>
             </div>
           </div>
@@ -915,22 +915,22 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
       {showNewConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-surface-raised rounded-lg shadow-xl border border-default p-6 max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-content mb-2">Clear mission?</h3>
+            <h3 className="text-lg font-semibold text-content mb-2">{tr('mission.MissionToolbar.clearMission')}</h3>
             <p className="text-content-secondary text-sm mb-4">
-              This removes all {missionStore.missionItems.length} waypoint{missionStore.missionItems.length === 1 ? '' : 's'} and every group from the working plan. Saved library missions and exported files are not affected.
+              {tr('mission.MissionToolbar.thisRemovesAll')} {missionStore.missionItems.length} {tr('mission.MissionToolbar.waypoint')}{missionStore.missionItems.length === 1 ? '' : 's'} {tr('mission.MissionToolbar.andEveryGroupFromTheWorking')}
             </p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowNewConfirm(false)}
                 className="px-4 py-2 rounded text-sm font-medium bg-surface-raised hover:bg-surface border border-subtle text-content transition-colors"
               >
-                Cancel
+                {tr('mission.MissionToolbar.cancel')}
               </button>
               <button
                 onClick={doClearMission}
                 className="px-4 py-2 rounded text-sm font-medium bg-red-600/80 hover:bg-red-500/80 text-white transition-colors"
               >
-                Clear all
+                {tr('mission.MissionToolbar.clearAll')}
               </button>
             </div>
           </div>
@@ -953,7 +953,7 @@ export function MissionToolbar({ onResetLayout, showToast }: MissionToolbarProps
       {libraryEnabled && showSaveLibraryModal && (
         <SaveMissionModal
           onClose={() => setShowSaveLibraryModal(false)}
-          onSaved={() => showToast?.('Mission saved to library', 'success')}
+          onSaved={() => showToast?.(tr('mission.MissionToolbar.missionSavedToLibrary'), 'success')}
         />
       )}
 
@@ -987,7 +987,7 @@ function ModulePanelButtons(): JSX.Element | null {
           type="button"
           onClick={() => openModuleMissionPanel(p.slug, p.id)}
           className="px-2 py-1 rounded text-xs border border-subtle text-content-secondary hover:text-content hover:bg-surface-hover transition-colors flex items-center gap-1.5"
-          data-tip={`Open the ${p.title} panel`}
+          data-tip={tr('mission.MissionToolbar.openThePanel', { title: p.title })}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />

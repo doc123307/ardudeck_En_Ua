@@ -13,6 +13,7 @@
 
 import type { Node, Edge } from '@xyflow/react';
 import type { GraphNodeData, GraphEdgeData } from '../lua-graph/lua-graph-types';
+import { t } from '../../i18n';
 
 const X = (col: number) => 60 + col * 280;
 const Y = (row: number) => 60 + row * 220;
@@ -26,7 +27,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(0), y: Y(0) },
     data: {
       definitionType: 'timing-run-every',
-      label: 'Run every 1000 ms',
+      get label() { return t('script_installer.ardudeck_commands_graph.runEvery1000Ms'); },
       category: 'timing',
       propertyValues: { interval_ms: 1000 },
     },
@@ -37,7 +38,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(1), y: Y(0) },
     data: {
       definitionType: 'action-publish-named-float',
-      label: 'Publish AD_HB heartbeat',
+      get label() { return t('script_installer.ardudeck_commands_graph.publishAdHbHeartbeat'); },
       category: 'actions',
       propertyValues: { name: 'AD_HB' },
     },
@@ -50,7 +51,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(0), y: Y(1) },
     data: {
       definitionType: 'action-mavlink-on-user-cmd',
-      label: 'On MAV_CMD_USER_1',
+      get label() { return t('script_installer.ardudeck_commands_graph.onMavCmdUser1'); },
       category: 'actions',
       propertyValues: { cmd_id: 31010 },
     },
@@ -61,7 +62,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(1), y: Y(1) },
     data: {
       definitionType: 'var-set',
-      label: 'Save orbit_center',
+      get label() { return t('script_installer.ardudeck_commands_graph.saveOrbitCenter'); },
       category: 'variables',
       propertyValues: { name: 'orbit_center' },
     },
@@ -72,7 +73,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(2), y: Y(1) },
     data: {
       definitionType: 'var-set',
-      label: 'Set active_command = "orbit"',
+      get label() { return t('script_installer.ardudeck_commands_graph.setActiveCommandOrbit'); },
       category: 'variables',
       propertyValues: { name: 'active_command' },
     },
@@ -85,7 +86,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(0), y: Y(2) },
     data: {
       definitionType: 'timing-run-every',
-      label: 'Run every 250 ms',
+      get label() { return t('script_installer.ardudeck_commands_graph.runEvery250Ms'); },
       category: 'timing',
       propertyValues: { interval_ms: 250 },
     },
@@ -96,7 +97,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(1), y: Y(2) },
     data: {
       definitionType: 'logic-if-else',
-      label: 'If active_command == "orbit"',
+      get label() { return t('script_installer.ardudeck_commands_graph.ifActiveCommandOrbit'); },
       category: 'logic',
       propertyValues: {},
     },
@@ -107,7 +108,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(2), y: Y(2) - 100 },
     data: {
       definitionType: 'sensor-ahrs-location',
-      label: 'Read live vehicle position',
+      get label() { return t('script_installer.ardudeck_commands_graph.readLiveVehiclePosition'); },
       category: 'sensors',
       propertyValues: {},
     },
@@ -118,7 +119,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(2), y: Y(2) + 100 },
     data: {
       definitionType: 'var-get',
-      label: 'Get orbit_center',
+      get label() { return t('script_installer.ardudeck_commands_graph.getOrbitCenter'); },
       category: 'variables',
       propertyValues: { name: 'orbit_center' },
     },
@@ -129,7 +130,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(3), y: Y(2) },
     data: {
       definitionType: 'math-location-bearing',
-      label: 'Bearing center → vehicle',
+      get label() { return t('script_installer.ardudeck_commands_graph.bearingCenterVehicle'); },
       category: 'math',
       propertyValues: {},
     },
@@ -140,7 +141,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(4), y: Y(2) },
     data: {
       definitionType: 'math-add',
-      label: 'Step ahead by ±8°',
+      get label() { return t('script_installer.ardudeck_commands_graph.stepAheadBy8'); },
       category: 'math',
       propertyValues: {},
     },
@@ -151,7 +152,7 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(5), y: Y(2) },
     data: {
       definitionType: 'math-location-offset',
-      label: 'Project next target',
+      get label() { return t('script_installer.ardudeck_commands_graph.projectNextTarget'); },
       category: 'math',
       propertyValues: {},
     },
@@ -175,10 +176,10 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(3), y: Y(3) + 60 },
     data: {
       definitionType: 'flow-comment',
-      label: 'Why telemetry-anchored',
+      get label() { return t('script_installer.ardudeck_commands_graph.whyTelemetryAnchored'); },
       category: 'flow',
       propertyValues: {
-        text: 'Each tick we re-read the live vehicle position from AHRS and compute the next bearing fresh. If the link drops the FC just loiters at the last commanded point; when telemetry resumes we pick up from wherever the vehicle actually is - no internal counter to desync.',
+        get text() { return t('script_installer.ardudeck_commands_graph.eachTickWeReReadThe'); },
       },
     },
   },
@@ -188,10 +189,10 @@ export const ARDUDECK_COMMANDS_NODES: Node<GraphNodeData>[] = [
     position: { x: X(0), y: Y(3) + 60 },
     data: {
       definitionType: 'flow-comment',
-      label: 'Safety',
+      get label() { return t('script_installer.ardudeck_commands_graph.safety'); },
       category: 'flow',
       propertyValues: {
-        text: 'Script never:\n  · arms or disarms\n  · changes flight modes\n  · writes parameters\n\nIt only issues GUIDED-mode position targets, which the FC ignores when not in GUIDED.',
+        get text() { return t('script_installer.ardudeck_commands_graph.scriptNeverArmsOrDisarmsChanges'); },
       },
     },
   },

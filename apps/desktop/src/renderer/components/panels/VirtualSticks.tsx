@@ -12,6 +12,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { t } from '../../i18n';
 
 export interface VirtualSticksProps {
   /** Called on every change with [leftX, leftY, rightX, rightY], each -1..1. */
@@ -50,14 +51,14 @@ export function VirtualSticks({ onAxes, disabled }: VirtualSticksProps): JSX.Ele
   return (
     <div className="grid grid-cols-2 gap-3">
       <Pad
-        label="Throttle / Yaw"
+        label={t('panels.VirtualSticks.throttleYaw')}
         value={left}
         disabled={disabled}
         onChange={setLeft}
         onRelease={() => setLeft((prev) => ({ x: 0, y: prev.y }))}
       />
       <Pad
-        label="Pitch / Roll"
+        label={t('panels.VirtualSticks.pitchRoll')}
         value={right}
         disabled={disabled}
         onChange={setRight}

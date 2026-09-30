@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { CloudCheck, CloudOff } from 'lucide-react';
 import { useFleetRepoStore } from '../../stores/fleet-repo-store';
 import { useNavigationStore } from '../../stores/navigation-store';
+import { t } from '../../i18n';
 
 export function BackupTargetDialog({
   title, itemName, kind, sites, initialSite, onCancel, onConfirm,
@@ -40,19 +41,18 @@ export function BackupTargetDialog({
         <div>
           <h2 className="text-base font-semibold text-content">{title}</h2>
           <p className="mt-1 text-xs text-content-secondary">
-            Keeps a copy of this {kind} with your other saves, filed under a project, with every earlier version
-            still there to go back to.
+            {t('mission_library.BackupTargetDialog.keepsACopyOfThis')} {kind} {t('mission_library.BackupTargetDialog.withYourOtherSavesFiledUnder')}
           </p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-content mb-1">Project</label>
+          <label className="block text-xs font-medium text-content mb-1">{t('mission_library.BackupTargetDialog.project')}</label>
           <input
             type="text"
             value={site}
             autoFocus
             onChange={(e) => setSite(e.target.value)}
-            placeholder="North farm"
+            placeholder={t('mission_library.BackupTargetDialog.northFarm')}
             list="backup-project-suggestions"
             className="w-full px-3 py-2 bg-surface-input border border-subtle rounded-lg text-content placeholder-content-tertiary text-sm focus:outline-none focus:border-blue-500/50"
           />
@@ -60,7 +60,7 @@ export function BackupTargetDialog({
             {sites.map((s) => <option key={s} value={s} />)}
           </datalist>
           <p className="mt-1 text-[11px] text-content-tertiary">
-            The job or site this belongs to. Everything filed under the same name opens together.
+            {t('mission_library.BackupTargetDialog.theJobOrSiteThisBelongs')}
           </p>
         </div>
 
@@ -75,18 +75,18 @@ export function BackupTargetDialog({
           <div className="text-[11px] leading-snug">
             {backupOn ? (
               <span className="text-content-secondary">
-                Online backup is on, so this reaches your other computers as well.
+                {t('mission_library.BackupTargetDialog.onlineBackupIsOnSoThis')}
               </span>
             ) : (
               <>
                 <span className="text-content-secondary">
-                  Online backup is off, so this copy stays on this computer.
+                  {t('mission_library.BackupTargetDialog.onlineBackupIsOffSoThis')}
                 </span>
                 <button
                   onClick={() => { setView('vault'); onCancel(); }}
                   className="ml-1 underline text-amber-700 dark:text-amber-300"
                 >
-                  Set up backup
+                  {t('mission_library.BackupTargetDialog.setUpBackup')}
                 </button>
               </>
             )}
@@ -98,7 +98,7 @@ export function BackupTargetDialog({
             onClick={onCancel}
             className="px-3 py-1.5 text-xs font-medium rounded-lg bg-surface-raised text-content hover:brightness-125 transition-colors"
           >
-            Cancel
+            {t('mission_library.BackupTargetDialog.cancel')}
           </button>
           <button
             disabled={!site.trim() || busy}
@@ -109,7 +109,7 @@ export function BackupTargetDialog({
             }}
             className="px-3 py-1.5 text-xs font-medium rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors disabled:opacity-50"
           >
-            {busy ? 'Saving...' : 'Save copy'}
+            {busy ? t('mission_library.BackupTargetDialog.saving') : t('mission_library.BackupTargetDialog.saveCopy')}
           </button>
         </div>
 

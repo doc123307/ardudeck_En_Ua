@@ -27,6 +27,7 @@ import {
 import { GRAPH_TEMPLATES } from './graph-templates';
 import { useLuaGraphStore } from '../../stores/lua-graph-store';
 import { ConfirmDialog } from './ConfirmDialog';
+import { t as tr } from '../../i18n';
 
 // ── Category styling ────────────────────────────────────────────
 
@@ -152,9 +153,9 @@ export function TemplateDialog({ onClose }: TemplateDialogProps) {
                 <Layers className="w-4 h-4 text-blue-400" />
               </div>
               <div>
-                <h2 className="text-sm font-semibold text-content">Graph Templates</h2>
+                <h2 className="text-sm font-semibold text-content">{tr('lua_graph.TemplateDialog.graphTemplates')}</h2>
                 <p className="text-[10px] text-content-secondary mt-0.5">
-                  Pre-built scripts to get you started quickly
+                  {tr('lua_graph.TemplateDialog.preBuiltScriptsToGetYou')}
                 </p>
               </div>
             </div>
@@ -174,7 +175,7 @@ export function TemplateDialog({ onClose }: TemplateDialogProps) {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search templates..."
+                placeholder={tr('lua_graph.TemplateDialog.searchTemplates')}
                 autoFocus
                 className="w-full pl-8 pr-3 py-1.5 text-xs bg-surface-input border border-subtle rounded-md text-content placeholder:text-content-tertiary focus:outline-none focus:border-blue-500/40"
               />
@@ -185,7 +186,7 @@ export function TemplateDialog({ onClose }: TemplateDialogProps) {
           <div className="p-5 max-h-[65vh] overflow-y-auto space-y-6">
             {visibleTemplates.length === 0 && (
               <div className="py-10 text-center text-xs text-content-secondary">
-                No templates match "{query.trim()}"
+                {tr('lua_graph.TemplateDialog.noTemplatesMatch')}{query.trim()}"
               </div>
             )}
             {categories.map((cat) => {
@@ -246,13 +247,13 @@ export function TemplateDialog({ onClose }: TemplateDialogProps) {
                               <div className="flex items-center gap-1 text-[10px] text-content-tertiary">
                                 <GitFork className="w-3 h-3" />
                                 <span>
-                                  {nodeCount} node{nodeCount !== 1 ? 's' : ''}
+                                  {nodeCount} {tr('lua_graph.TemplateDialog.node')}{nodeCount !== 1 ? 's' : ''}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1 text-[10px] text-content-tertiary">
                                 <ArrowRight className="w-3 h-3" />
                                 <span>
-                                  {edgeCount} connection{edgeCount !== 1 ? 's' : ''}
+                                  {edgeCount} {tr('lua_graph.TemplateDialog.connection')}{edgeCount !== 1 ? 's' : ''}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1 text-[10px] text-content-tertiary">
@@ -278,10 +279,10 @@ export function TemplateDialog({ onClose }: TemplateDialogProps) {
 
       {pendingTemplateId && (
         <ConfirmDialog
-          title="Unsaved changes"
-          message="Your current graph has unsaved changes. Loading a template will discard them."
-          confirmLabel="Load template"
-          cancelLabel="Go back"
+          title={tr('lua_graph.TemplateDialog.unsavedChanges')}
+          message={tr('lua_graph.TemplateDialog.yourCurrentGraphHasUnsavedChanges')}
+          confirmLabel={tr('lua_graph.TemplateDialog.loadTemplate')}
+          cancelLabel={tr('lua_graph.TemplateDialog.goBack')}
           onConfirm={() => {
             applyTemplate(pendingTemplateId);
             setPendingTemplateId(null);

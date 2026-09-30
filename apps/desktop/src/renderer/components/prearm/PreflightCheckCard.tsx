@@ -11,6 +11,7 @@ import {
 import { PreArmParamFix } from './PreArmParamFix';
 import { SafetyConfigCard } from './SafetyConfigCard';
 import { PanelContainer } from '../panels/panel-utils';
+import { t } from '../../i18n';
 
 export function PreflightCheckCard() {
   const messages = useMessagesStore((s) => s.messages);
@@ -78,16 +79,16 @@ export function PreflightCheckCard() {
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-subtle shrink-0">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-content">Pre-flight Checks</span>
+          <span className="text-xs font-medium text-content">{t('prearm.PreflightCheckCard.preFlightChecks')}</span>
           {isChecking ? (
-            <span className="text-[10px] text-blue-400 animate-pulse">Checking...</span>
+            <span className="text-[10px] text-blue-400 animate-pulse">{t('prearm.PreflightCheckCard.checking')}</span>
           ) : issueCount > 0 ? (
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400">
-              {issueCount} issue{issueCount !== 1 ? 's' : ''}
+              {issueCount} {t('prearm.PreflightCheckCard.issue')}{issueCount !== 1 ? 's' : ''}
             </span>
           ) : (
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">
-              Ready
+              {t('prearm.PreflightCheckCard.ready')}
             </span>
           )}
         </div>
@@ -96,7 +97,7 @@ export function PreflightCheckCard() {
           disabled={isChecking}
           className="text-[10px] text-content-secondary hover:text-content transition-colors px-1.5 py-0.5 rounded hover:bg-surface-overlay-subtle disabled:opacity-50"
         >
-          Recheck
+          {t('prearm.PreflightCheckCard.recheck')}
         </button>
       </div>
 
@@ -160,7 +161,7 @@ export function PreflightCheckCard() {
           <div className="px-3 py-2 border-t border-subtle">
             <div className="flex items-center gap-2 text-xs text-emerald-400">
               <span>✓</span>
-              <span>Ready to Arm</span>
+              <span>{t('prearm.PreflightCheckCard.readyToArm')}</span>
             </div>
           </div>
         )}

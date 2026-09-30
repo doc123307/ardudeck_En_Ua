@@ -10,6 +10,7 @@ import { NewRegionDialog } from './NewRegionDialog';
 import { TrainerRegionStep } from './TrainerRegionStep';
 import { TrainerConditionsStep } from './TrainerConditionsStep';
 import { TrainerVehicleStep, type CameraChoice } from './TrainerVehicleStep';
+import { t } from '../../i18n';
 
 /**
  * Choosing a flight and starting it, without leaving ArduDeck.
@@ -29,14 +30,14 @@ const LOG_LINES = 200;
 type StepId = 'region' | 'conditions' | 'vehicle';
 
 const STEPS: { id: StepId; label: string; hint: string; icon: JSX.Element }[] = [
-  { id: 'region', label: 'Region', hint: 'Where you fly', icon: <Globe className="h-4 w-4" /> },
+  { id: 'region', get label() { return t('trainer.TrainerView.region'); }, get hint() { return t('trainer.TrainerView.whereYouFly'); }, icon: <Globe className="h-4 w-4" /> },
   {
     id: 'conditions',
-    label: 'Conditions',
-    hint: 'Time, weather and wind',
+    get label() { return t('trainer.TrainerView.conditions'); },
+    get hint() { return t('trainer.TrainerView.timeWeatherAndWind'); },
     icon: <CloudSun className="h-4 w-4" />,
   },
-  { id: 'vehicle', label: 'Vehicle', hint: 'Camera and frame', icon: <Plane className="h-4 w-4" /> },
+  { id: 'vehicle', get label() { return t('trainer.TrainerView.vehicle'); }, get hint() { return t('trainer.TrainerView.cameraAndFrame'); }, icon: <Plane className="h-4 w-4" /> },
 ];
 
 export function TrainerView(): JSX.Element {
@@ -88,7 +89,7 @@ export function TrainerView(): JSX.Element {
       }
     } catch (err) {
       setCatalogueError(
-        `${(err as Error).message}. Restart ArduDeck if the Trainer was just updated.`,
+        t('trainer.TrainerView.restartArdudeckIfTheTrainerWas', { message: (err as Error).message }),
       );
     } finally {
       setRescanning(false);
@@ -136,7 +137,7 @@ export function TrainerView(): JSX.Element {
         fullscreen: true,
       };
       const result = await window.electronAPI.trainerLaunch(input);
-      if (!result.ok) setError(result.error ?? 'The Trainer did not start.');
+      if (!result.ok) setError(result.error ?? t('trainer.TrainerView.theTrainerDidNotStart'));
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -193,7 +194,7 @@ export function TrainerView(): JSX.Element {
               className={`h-2 w-2 shrink-0 rounded-full ${ready ? 'bg-emerald-400' : 'bg-amber-400'}`}
             />
             <span className="text-content-secondary">
-              {ready ? 'Ready to fly' : (status?.reason ?? 'Checking…')}
+              {ready ? t('trainer.TrainerView.readyToFly') : (status?.reason ?? t('trainer.TrainerView.checking'))}
             </span>
           </div>
           <button
@@ -202,7 +203,7 @@ export function TrainerView(): JSX.Element {
             onClick={() => void fly()}
           >
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
-            {busy ? 'Starting…' : 'Fly in Trainer'}
+            {busy ? t('trainer.TrainerView.starting') : t('trainer.TrainerView.flyInTrainer')}
           </button>
           {status?.home && (
             <p className="mt-2 font-mono text-[10px] leading-relaxed text-content-tertiary">

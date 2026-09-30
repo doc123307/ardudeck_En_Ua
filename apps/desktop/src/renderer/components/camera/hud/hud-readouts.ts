@@ -11,6 +11,7 @@
 
 import type { UnitProfile } from './hud-config';
 import { vtolStateLabel, type VtolState } from '../../../../shared/telemetry-types';
+import { t } from '../../../i18n';
 
 export type HudReadoutId =
   | 'voltage'
@@ -84,29 +85,29 @@ export interface ReadoutSource {
 }
 
 export const HUD_READOUTS: HudReadoutMeta[] = [
-  { id: 'voltage', label: 'VOLTS', description: 'Battery voltage', category: 'Power' },
-  { id: 'current', label: 'AMPS', description: 'Current draw', category: 'Power' },
-  { id: 'power', label: 'PWR', description: 'Power (W)', category: 'Power' },
-  { id: 'battPercent', label: 'BATT', description: 'Battery remaining', category: 'Power' },
-  { id: 'altitude', label: 'ALT', description: 'Altitude', category: 'Flight' },
-  { id: 'vario', label: 'VS', description: 'Vertical speed', category: 'Flight' },
-  { id: 'throttle', label: 'THR', description: 'Throttle', category: 'Flight' },
-  { id: 'groundspeed', label: 'GS', description: 'Ground speed', category: 'Speed' },
-  { id: 'airspeed', label: 'AS', description: 'Airspeed', category: 'Speed' },
-  { id: 'heading', label: 'HDG', description: 'Heading', category: 'Navigation' },
-  { id: 'distHome', label: 'HOME', description: 'Distance to home', category: 'Navigation' },
-  { id: 'gpsSats', label: 'SATS', description: 'GPS satellites', category: 'Navigation' },
+  { id: 'voltage', label: 'VOLTS', get description() { return t('camera.hud_readouts.batteryVoltage'); }, category: 'Power' },
+  { id: 'current', label: 'AMPS', get description() { return t('camera.hud_readouts.currentDraw'); }, category: 'Power' },
+  { id: 'power', label: 'PWR', get description() { return t('camera.hud_readouts.powerW'); }, category: 'Power' },
+  { id: 'battPercent', label: 'BATT', get description() { return t('camera.hud_readouts.batteryRemaining'); }, category: 'Power' },
+  { id: 'altitude', label: 'ALT', get description() { return t('camera.hud_readouts.altitude'); }, category: 'Flight' },
+  { id: 'vario', label: 'VS', get description() { return t('camera.hud_readouts.verticalSpeed'); }, category: 'Flight' },
+  { id: 'throttle', label: 'THR', get description() { return t('camera.hud_readouts.throttle'); }, category: 'Flight' },
+  { id: 'groundspeed', label: 'GS', get description() { return t('camera.hud_readouts.groundSpeed'); }, category: 'Speed' },
+  { id: 'airspeed', label: 'AS', get description() { return t('camera.hud_readouts.airspeed'); }, category: 'Speed' },
+  { id: 'heading', label: 'HDG', get description() { return t('camera.hud_readouts.heading'); }, category: 'Navigation' },
+  { id: 'distHome', label: 'HOME', get description() { return t('camera.hud_readouts.distanceToHome'); }, category: 'Navigation' },
+  { id: 'gpsSats', label: 'SATS', get description() { return t('camera.hud_readouts.gpsSatellites'); }, category: 'Navigation' },
   { id: 'hdop', label: 'HDOP', description: 'GPS HDOP', category: 'Navigation' },
-  { id: 'lat', label: 'LAT', description: 'Latitude', category: 'Navigation' },
-  { id: 'lon', label: 'LON', description: 'Longitude', category: 'Navigation' },
-  { id: 'windSpeed', label: 'WIND', description: 'Wind speed', category: 'Environment' },
-  { id: 'mode', label: 'MODE', description: 'Flight mode', category: 'Status' },
-  { id: 'vtolState', label: 'VTOL', description: 'Hover, wingborne, or transitioning', category: 'Status' },
-  { id: 'gforce', label: 'G', description: 'G-force', category: 'Status' },
-  { id: 'steer', label: 'STEER', description: 'Steering output (ground vehicles)', category: 'Status' },
-  { id: 'tilt', label: 'TILT', description: 'Roll/pitch tilt (rollover awareness)', category: 'Status' },
-  { id: 'wpDist', label: 'WP', description: 'Distance to active waypoint', category: 'Navigation' },
-  { id: 'xtrack', label: 'XTK', description: 'Crosstrack error', category: 'Navigation' },
+  { id: 'lat', label: 'LAT', get description() { return t('camera.hud_readouts.latitude'); }, category: 'Navigation' },
+  { id: 'lon', label: 'LON', get description() { return t('camera.hud_readouts.longitude'); }, category: 'Navigation' },
+  { id: 'windSpeed', label: 'WIND', get description() { return t('camera.hud_readouts.windSpeed'); }, category: 'Environment' },
+  { id: 'mode', label: 'MODE', get description() { return t('camera.hud_readouts.flightMode'); }, category: 'Status' },
+  { id: 'vtolState', label: 'VTOL', get description() { return t('camera.hud_readouts.hoverWingborneOrTransitioning'); }, category: 'Status' },
+  { id: 'gforce', label: 'G', get description() { return t('camera.hud_readouts.gForce'); }, category: 'Status' },
+  { id: 'steer', label: 'STEER', get description() { return t('camera.hud_readouts.steeringOutputGroundVehicles'); }, category: 'Status' },
+  { id: 'tilt', label: 'TILT', get description() { return t('camera.hud_readouts.rollPitchTiltRolloverAwareness'); }, category: 'Status' },
+  { id: 'wpDist', label: 'WP', get description() { return t('camera.hud_readouts.distanceToActiveWaypoint'); }, category: 'Navigation' },
+  { id: 'xtrack', label: 'XTK', get description() { return t('camera.hud_readouts.crosstrackError'); }, category: 'Navigation' },
 ];
 
 export const READOUT_IDS: readonly HudReadoutId[] = HUD_READOUTS.map((r) => r.id);

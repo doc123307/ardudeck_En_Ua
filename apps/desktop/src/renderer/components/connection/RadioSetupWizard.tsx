@@ -4,15 +4,16 @@ import { useMessagesStore } from '../../stores/messages-store';
 import { evaluateRadioPreflight, type PreflightCheck } from '../../utils/radio-preflight';
 import type { ElrsModuleInfo, ElrsProgressEvent } from '../../../shared/link-doctor-types';
 import { ELRS_USB_BAUD } from '../../../shared/link-doctor-types';
+import { t } from '../../i18n';
 
 type Step = 'scan' | 'noradio' | 'switch' | 'connect' | 'vehicle' | 'done';
 
 const STEP_LABELS: Array<{ key: Step[]; label: string }> = [
-  { key: ['scan', 'noradio'], label: 'Find radio' },
-  { key: ['switch'], label: 'Radio mode' },
-  { key: ['connect'], label: 'Connect' },
-  { key: ['vehicle'], label: 'Vehicle' },
-  { key: ['done'], label: 'Done' },
+  { key: ['scan', 'noradio'], get label() { return t('connection.RadioSetupWizard.findRadio'); } },
+  { key: ['switch'], get label() { return t('connection.RadioSetupWizard.radioMode'); } },
+  { key: ['connect'], get label() { return t('connection.RadioSetupWizard.connect'); } },
+  { key: ['vehicle'], get label() { return t('connection.RadioSetupWizard.vehicle'); } },
+  { key: ['done'], get label() { return t('connection.RadioSetupWizard.done'); } },
 ];
 
 type FoundRadio =
@@ -96,7 +97,7 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
   }, [connectionState.isConnected, step, restarting]);
 
   const scanForRadio = async () => {
-    setScanStatus('Looking at your USB ports...');
+    setScanStatus(t('connection.RadioSetupWizard.lookingAtYourUsbPorts'));
     const all = await window.electronAPI.listPorts();
     // USB serial devices only - skips Bluetooth and debug consoles.
     const usb = all.filter((p) => p.vendorId);
@@ -106,7 +107,7 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
     for (const port of candidates) {
       if (!openRef.current) return;
       try {
-        setScanStatus(`Checking ${port}...`);
+        setScanStatus(t('connection.RadioSetupWizard.checking', { port }));
         const info = await window.electronAPI.elrsDetect(port);
         if (info) {
           setRadio({ kind: 'serial', port, info });
@@ -128,7 +129,7 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
     // the only path for internal TX modules, which have no USB port at all.
     if (!openRef.current) return;
     try {
-      setScanStatus('Listening for a WiFi radio (TX Backpack)...');
+      setScanStatus(t('connection.RadioSetupWizard.listeningForAWifiRadioTx'));
       const { diagnosis, sender } = await window.electronAPI.linkDoctorProbeUdp(BACKPACK_UDP_PORT);
       if (!openRef.current) return;
       if (diagnosis.protocol === 'mavlink2' || diagnosis.protocol === 'mavlink1') {
@@ -259,8 +260,8 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
       <div className="card w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto">
         <div className="card-body space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold text-content">Radio Setup</h3>
-            <button onClick={close} className="text-content-secondary hover:text-content transition-colors" aria-label="Close">
+            <h3 className="text-base font-semibold text-content">{t('connection.RadioSetupWizard.radioSetup')}</h3>
+            <button onClick={close} className="text-content-secondary hover:text-content transition-colors" aria-label={t('connection.RadioSetupWizard.close')}>
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -302,29 +303,24 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
 
           {step === 'noradio' && (
             <div className="space-y-3">
-              <p className="text-sm text-content">No radio found - two ways to hook one up:</p>
+              <p className="text-sm text-content">{t('connection.RadioSetupWizard.noRadioFoundTwoWaysTo')}</p>
               <div className="p-3 bg-surface-raised rounded-lg space-y-1">
-                <p className="text-xs font-medium text-content">USB cable (external modules)</p>
+                <p className="text-xs font-medium text-content">{t('connection.RadioSetupWizard.usbCableExternalModules')}</p>
                 <p className="text-xs text-content-secondary">
-                  Plug the radio module into this computer with a USB data cable. It can stay in the handset bay -
-                  it just also needs the cable to this computer.
+                  {t('connection.RadioSetupWizard.plugTheRadioModuleIntoThis')}
                   {scannedPorts.length > 0
-                    ? ` Checked: ${scannedPorts.join(', ')}.`
-                    : ' No USB serial devices were present.'}
+                    ? t('connection.RadioSetupWizard.checked', { v1: scannedPorts.join(', ') })
+                    : t('connection.RadioSetupWizard.noUsbSerialDevicesWerePresent')}
                 </p>
               </div>
               <div className="p-3 bg-surface-raised rounded-lg space-y-1">
-                <p className="text-xs font-medium text-content">WiFi (TX Backpack - required for internal modules)</p>
+                <p className="text-xs font-medium text-content">{t('connection.RadioSetupWizard.wifiTxBackpackRequiredForInternal')}</p>
                 <p className="text-xs text-content-secondary">
-                  Radios built into the handset (e.g. TX16S internal) have no USB - they stream over WiFi instead.
-                  Enable Backpack WiFi from the ELRS menu on the handset, then either join this computer to the
-                  "ExpressLRS TX Backpack" network (password: expresslrs) or put the backpack on your home WiFi.
-                  Note: WiFi streaming only works once the radio link is already in MAVLink mode - switching the
-                  mode itself needs USB or the handset menu.
+                  {t('connection.RadioSetupWizard.radiosBuiltIntoTheHandsetE')}
                 </p>
               </div>
               <button onClick={() => { setStep('scan'); void scanForRadio(); }} className="btn btn-primary w-full text-sm">
-                Scan again (USB + WiFi)
+                {t('connection.RadioSetupWizard.scanAgainUsbWifi')}
               </button>
             </div>
           )}
@@ -335,44 +331,41 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
                 <span className="text-content font-medium">{radio.info.name}</span>
                 {radio.info.firmware && <span className="text-content-secondary">v{radio.info.firmware}</span>}
                 <span className="px-2 py-0.5 rounded-full border text-amber-300 border-amber-500/30 bg-amber-500/10">
-                  {radio.info.linkMode?.value ?? 'Normal'} mode
+                  {radio.info.linkMode?.value ?? t('connection.RadioSetupWizard.normal')} {t('connection.RadioSetupWizard.mode')}
                 </span>
               </div>
               {radio.info.firmware?.startsWith('4.0.0') && (
                 <p className="text-xs text-amber-300">
-                  This module runs ELRS 4.0.0, which corrupts stick positions in MAVLink mode. Update it (and the
-                  receiver) to 4.0.1 or newer before operating with sticks.
+                  {t('connection.RadioSetupWizard.thisModuleRunsElrs40')}
                 </p>
               )}
               <p className="text-sm text-content">
-                The radio needs to switch to MAVLink mode to carry telemetry.
+                {t('connection.RadioSetupWizard.theRadioNeedsToSwitchTo')}
               </p>
               <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                <p className="text-xs text-amber-200 font-medium mb-1">First: power the receiver off</p>
+                <p className="text-xs text-amber-200 font-medium mb-1">{t('connection.RadioSetupWizard.firstPowerTheReceiverOff')}</p>
                 <p className="text-xs text-content-secondary">
-                  The radio refuses this change while its receiver is linked. Unpower the vehicle completely -
-                  battery out AND USB cable unplugged. You can also press Start now and unpower the vehicle while
-                  ArduDeck keeps retrying.
+                  {t('connection.RadioSetupWizard.theRadioRefusesThisChangeWhile')}
                 </p>
               </div>
               {switching ? (
                 <div className="p-3 bg-surface-raised rounded-lg space-y-2">
                   <div className="flex items-center gap-2 text-xs text-content">
                     {spinner}
-                    Switching{progress ? ` - attempt ${progress.attempt}` : ''}...
+                    {t('connection.RadioSetupWizard.switching')}{progress ? ` - attempt ${progress.attempt}` : ''}...
                   </div>
                   {progress?.currentMode && progress.currentMode !== 'MAVLink' && (
                     <p className="text-xs text-content-secondary">
-                      Module still reports {progress.currentMode} - waiting for the receiver to go dark.
+                      {t('connection.RadioSetupWizard.moduleStillReports')} {progress.currentMode} {t('connection.RadioSetupWizard.waitingForTheReceiverToGo')}
                     </p>
                   )}
                   <button onClick={() => window.electronAPI.elrsCancel()} className="btn btn-secondary w-full text-xs">
-                    Cancel
+                    {t('connection.RadioSetupWizard.cancel')}
                   </button>
                 </div>
               ) : (
                 <button onClick={startSwitch} className="btn btn-primary w-full text-sm">
-                  Start
+                  {t('connection.RadioSetupWizard.start')}
                 </button>
               )}
             </div>
@@ -381,20 +374,20 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
           {step === 'connect' && (
             <div className="space-y-3">
               <p className="text-sm text-content">
-                The radio on {radioLabel} is ready and speaking MAVLink.
+                {t('connection.RadioSetupWizard.theRadioOn')} {radioLabel} {t('connection.RadioSetupWizard.isReadyAndSpeakingMavlink')}
               </p>
               <p className="text-xs text-content-secondary">
-                Power the vehicle back on and give the link a few seconds to come up, then connect.
+                {t('connection.RadioSetupWizard.powerTheVehicleBackOnAnd')}
               </p>
               {connectionError && <p className="text-xs text-red-300">{connectionError}</p>}
               {isConnecting || connectionState.isWaitingForHeartbeat ? (
                 <div className="flex items-center gap-2 text-xs text-content-secondary">
                   {spinner}
-                  Connecting through the radio...
+                  {t('connection.RadioSetupWizard.connectingThroughTheRadio')}
                 </div>
               ) : (
                 <button onClick={doConnect} className="btn btn-primary w-full text-sm">
-                  Connect through the radio
+                  {t('connection.RadioSetupWizard.connectThroughTheRadio')}
                 </button>
               )}
             </div>
@@ -402,17 +395,17 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
 
           {step === 'vehicle' && (
             <div className="space-y-3">
-              <p className="text-sm text-content">Connected. Checking the vehicle for radio-link readiness...</p>
+              <p className="text-sm text-content">{t('connection.RadioSetupWizard.connectedCheckingTheVehicleForRadio')}</p>
               {busy && (
                 <div className="flex items-center gap-2 text-xs text-content-secondary">
                   {spinner}
-                  Reading vehicle settings over the radio...
+                  {t('connection.RadioSetupWizard.readingVehicleSettingsOverTheRadio')}
                 </div>
               )}
               {restarting && (
                 <div className="flex items-center gap-2 text-xs text-content-secondary">
                   {spinner}
-                  Restarting the vehicle - the link reconnects by itself...
+                  {t('connection.RadioSetupWizard.restartingTheVehicleTheLinkReconnects')}
                 </div>
               )}
               {checks && !busy && (
@@ -431,15 +424,15 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
               {checks && !busy && !restarting && (
                 fixApplied ? (
                   <button onClick={restartVehicle} className="btn btn-primary w-full text-sm">
-                    Restart vehicle to finish
+                    {t('connection.RadioSetupWizard.restartVehicleToFinish')}
                   </button>
                 ) : fixable.length > 0 ? (
                   <button onClick={applyFixes} className="btn btn-primary w-full text-sm">
-                    Fix for me
+                    {t('connection.RadioSetupWizard.fixForMe')}
                   </button>
                 ) : failing.length > 0 ? (
                   <p className="text-xs text-content-secondary">
-                    The remaining item cannot be fixed from here (see above). Telemetry works regardless.
+                    {t('connection.RadioSetupWizard.theRemainingItemCannotBeFixed')}
                   </p>
                 ) : null
               )}
@@ -449,14 +442,13 @@ export function RadioSetupWizard({ open, onClose, connectSerial, connectUdpListe
           {step === 'done' && (
             <div className="space-y-3">
               <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-                <p className="text-sm text-emerald-300 font-medium">Radio link fully set up.</p>
+                <p className="text-sm text-emerald-300 font-medium">{t('connection.RadioSetupWizard.radioLinkFullySetUp')}</p>
                 <p className="text-xs text-content-secondary mt-1">
-                  Telemetry, stick control and signal strength all flow through the radio. The SiK-style modem
-                  workflow applies from here: just connect on {radioLabel} whenever you fly or drive.
+                  {t('connection.RadioSetupWizard.telemetryStickControlAndSignalStrength')} {radioLabel} {t('connection.RadioSetupWizard.wheneverYouFlyOrDrive')}
                 </p>
               </div>
               <button onClick={close} className="btn btn-primary w-full text-sm">
-                Close
+                {t('connection.RadioSetupWizard.close')}
               </button>
             </div>
           )}

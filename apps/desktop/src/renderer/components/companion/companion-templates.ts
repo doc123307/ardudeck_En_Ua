@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * Companion board templates — pre-configured firmware/software for popular boards.
  * Each template includes board info, use case, flash method, and setup instructions.
@@ -32,22 +33,22 @@ export const BOARD_FAMILIES: Record<BoardFamily, {
 }> = {
   'esp32': {
     name: 'ESP32',
-    description: 'Lightweight microcontroller for telemetry bridges and sensor hubs',
+    get description() { return t('companion.companion_templates.lightweightMicrocontrollerForTelemetryBridgesAnd'); },
     icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M3 9h2m-2 6h2m14-6h2m-2 6h2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z',
   },
   'raspberry-pi': {
     name: 'Raspberry Pi',
-    description: 'Full companion computer for video, autonomy, and advanced features',
+    get description() { return t('companion.companion_templates.fullCompanionComputerForVideoAutonomy'); },
     icon: 'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01',
   },
   'jetson': {
     name: 'NVIDIA Jetson',
-    description: 'GPU-accelerated companion for AI, computer vision, and SLAM',
+    get description() { return t('companion.companion_templates.gpuAcceleratedCompanionForAiComputer'); },
     icon: 'M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18',
   },
   'orange-pi': {
     name: 'Orange Pi',
-    description: 'Budget-friendly Pi alternative with similar capabilities',
+    get description() { return t('companion.companion_templates.budgetFriendlyPiAlternativeWithSimilar'); },
     icon: 'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01',
   },
 };
@@ -101,7 +102,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'dronebridge-wifi',
     name: 'DroneBridge WiFi Telemetry',
-    description: 'Replace SiK radio with WiFi telemetry. Connect QGroundControl, Mission Planner, or ArduDeck wirelessly.',
+    get description() { return t('companion.companion_templates.replaceSikRadioWithWifiTelemetry'); },
     board: 'esp32',
     boardVariants: ['ESP32', 'ESP32-S2', 'ESP32-S3', 'ESP32-C3', 'ESP32-C6'],
     category: 'Telemetry',
@@ -114,7 +115,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'dronebridge-espnow',
     name: 'DroneBridge ESP-NOW Long Range',
-    description: 'Connectionless encrypted telemetry up to 1km range. Requires ESP32 on both air and ground side.',
+    get description() { return t('companion.companion_templates.connectionlessEncryptedTelemetryUpTo1km'); },
     board: 'esp32',
     boardVariants: ['ESP32', 'ESP32-S2', 'ESP32-S3', 'ESP32-C3'],
     category: 'Telemetry',
@@ -127,7 +128,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'esp32-mavlink-bridge',
     name: 'MAVLink WiFi Bridge (Minimal)',
-    description: 'Lightweight serial-to-WiFi bridge. Minimal firmware for simple telemetry forwarding over UDP.',
+    get description() { return t('companion.companion_templates.lightweightSerialToWifiBridgeMinimal'); },
     board: 'esp32',
     boardVariants: ['ESP32', 'ESP32-S3', 'ESP32-C3'],
     category: 'Telemetry',
@@ -139,7 +140,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'esp32-xbee-ntrip',
     name: 'RTK Corrections Bridge',
-    description: 'NTRIP server, client and caster on an ESP32. Puts a base receiver on the network, or pulls corrections down on the vehicle, with no laptop in the field.',
+    get description() { return t('companion.companion_templates.ntripServerClientAndCasterOn'); },
     board: 'esp32',
     boardVariants: ['ESP32', 'ESP32-S3'],
     category: 'RTK',
@@ -154,7 +155,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'pi-telemetry-bridge',
     name: 'Telemetry Bridge',
-    description: 'MAVLink router + WiFi AP. Connects ground stations wirelessly without a telemetry radio.',
+    get description() { return t('companion.companion_templates.mavlinkRouterWifiApConnectsGround'); },
     board: 'raspberry-pi',
     boardVariants: ['Pi Zero 2 W', 'Pi 3B+', 'Pi 4', 'Pi 5'],
     category: 'Telemetry',
@@ -167,7 +168,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'pi-video-telemetry',
     name: 'Video + Telemetry',
-    description: 'Camera streaming with GStreamer + MAVLink routing. Low-latency H.264 video over WiFi.',
+    get description() { return t('companion.companion_templates.cameraStreamingWithGstreamerMavlinkRouting'); },
     board: 'raspberry-pi',
     boardVariants: ['Pi 4', 'Pi 5'],
     category: 'Video',
@@ -180,7 +181,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'rpanion-server',
     name: 'Rpanion Server',
-    description: 'Full-featured companion with web UI. Telemetry routing, video streaming, NTRIP, and network management.',
+    get description() { return t('companion.companion_templates.fullFeaturedCompanionWithWebUi'); },
     board: 'raspberry-pi',
     boardVariants: ['Pi 3B+', 'Pi 4', 'Pi 5'],
     category: 'Full Stack',
@@ -194,7 +195,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'blueos',
     name: 'BlueOS',
-    description: 'Docker-based companion OS with extension store. Full vehicle management, video, and third-party extensions.',
+    get description() { return t('companion.companion_templates.dockerBasedCompanionOsWithExtension'); },
     board: 'raspberry-pi',
     boardVariants: ['Pi 3B+', 'Pi 4', 'Pi 5'],
     category: 'Full Stack',
@@ -208,7 +209,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'pi-mavsdk-autonomy',
     name: 'Autonomous Mission Runner',
-    description: 'Python environment with MAVSDK for onboard autonomous missions. Run scripts without a GCS link.',
+    get description() { return t('companion.companion_templates.pythonEnvironmentWithMavsdkForOnboard'); },
     board: 'raspberry-pi',
     boardVariants: ['Pi 4', 'Pi 5'],
     category: 'Autonomy',
@@ -221,7 +222,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'openhd-air',
     name: 'OpenHD Air Unit',
-    description: 'Digital FPV system: HD video + telemetry + RC over WiFi broadcast. Up to 50km range.',
+    get description() { return t('companion.companion_templates.digitalFpvSystemHdVideoTelemetry'); },
     board: 'raspberry-pi',
     boardVariants: ['Pi Zero 2 W', 'Pi 3B+', 'Pi 4'],
     category: 'Video',
@@ -234,7 +235,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'pi-str2str-base',
     name: 'RTK Base Streamer',
-    description: 'Base side: reads RTCM3 off the receiver and pushes it to an NTRIP caster. Headless, reconnects on its own, no GUI anywhere.',
+    get description() { return t('companion.companion_templates.baseSideReadsRtcm3OffThe'); },
     board: 'raspberry-pi',
     boardVariants: ['Pi Zero 2 W', 'Pi 3B+', 'Pi 4', 'Pi 5'],
     category: 'RTK',
@@ -248,7 +249,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'pi-mavproxy-ntrip',
     name: 'RTK Injector',
-    description: 'Vehicle side: pulls corrections from a caster and injects them as GPS_RTCM_DATA straight into the flight controller. Nothing on the ground has to stay connected.',
+    get description() { return t('companion.companion_templates.vehicleSidePullsCorrectionsFromA'); },
     board: 'raspberry-pi',
     boardVariants: ['Pi Zero 2 W', 'Pi 3B+', 'Pi 4', 'Pi 5'],
     category: 'RTK',
@@ -264,7 +265,7 @@ export const COMPANION_TEMPLATES: CompanionTemplate[] = [
   {
     id: 'jetson-cv-companion',
     name: 'Computer Vision Companion',
-    description: 'GPU-accelerated object detection and tracking with YOLO. Real-time obstacle avoidance and target following.',
+    get description() { return t('companion.companion_templates.gpuAcceleratedObjectDetectionAndTracking'); },
     board: 'jetson',
     boardVariants: ['Jetson Nano', 'Orin Nano'],
     category: 'Autonomy',

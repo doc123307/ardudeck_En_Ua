@@ -1,0 +1,51 @@
+{
+  "cli": {
+    "CliTerminal": {
+      "cliMode": "CLI Mode",
+      "mspMode": "MSP Mode",
+      "tabComplete": "Tab: Complete",
+      "upDownHistory": "Up/Down: History",
+      "ctrlCCopyAbort": "Ctrl+C: Copy/Abort",
+      "ctrlVPaste": "Ctrl+V: Paste"
+    },
+    "CliView": {
+      "cliTerminal": "CLI Terminal",
+      "rawCommandLineInterface": "Raw command-line interface",
+      "saveTerminalOutputToFile": "Save terminal output to file",
+      "saving": "Saving...",
+      "saveTxt": "Save TXT",
+      "runDumpCommandAndSaveParameters": "Run dump command and save parameters as JSON",
+      "dumping": "Dumping...",
+      "exportJson": "Export JSON",
+      "clearTerminalOutput": "Clear terminal output",
+      "clear": "Clear",
+      "loadConfigForAutocomplete": "Load config for autocomplete",
+      "loadConfig": "Load Config",
+      "autocompleteActive": "Autocomplete Active",
+      "notConnected": "Not Connected",
+      "connectToAFlightControllerTo": "Connect to a flight controller to use the CLI terminal.",
+      "directCommandLineAccessToYour": "Direct command-line access to your flight controller. MSP telemetry will be paused while in CLI mode.",
+      "rebootOnExit": "Reboot on exit",
+      "leavingTheCliTabSendsAn": "Leaving the CLI tab sends an exit command which causes the flight controller to reboot (2-4 seconds). The app will automatically reconnect.",
+      "enteringCli": "Entering CLI...",
+      "enterCliMode": "Enter CLI Mode",
+      "cliMode": "CLI Mode",
+      "mspTelemetryPausedWhileInCli": "- MSP telemetry paused while in CLI.",
+      "type": "Type",
+      "forCommands": "for commands,",
+      "forFullConfig": "for full config,",
+      "toReturnToMspMode": "to return to MSP mode.",
+      "savingConfiguration": "Saving Configuration",
+      "rebootingBoard": "Rebooting Board",
+      "disconnecting": "Disconnecting",
+      "saveComplete": "Save Complete",
+      "saveFailed": "Save Failed",
+      "dismiss": "Dismiss",
+      "exportParameters": "Export Parameters",
+      "thisWillClearTheCliTerminal": "This will clear the CLI terminal, run the",
+      "commandAndSaveAllParametersAs": "command, and save all parameters as JSON.",
+      "cancel": "Cancel",
+      "export": "Export"
+    }
+  }
+}

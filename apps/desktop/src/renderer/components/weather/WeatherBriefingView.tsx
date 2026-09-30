@@ -38,6 +38,7 @@ import { WindRose } from './WindRose';
 import { MetricTile, type TrackConfig } from './MetricTile';
 import { type TrackZone } from './ThresholdTrack';
 import { useReducedMotion, useCountUp } from './weather-motion';
+import { t as tr } from '../../i18n';
 
 // Re-query on a calm cadence while the panel is open. Conditions move slowly and
 // the fetch is cheap-cached; this just keeps a long-lived briefing from going stale.
@@ -196,17 +197,17 @@ export function WeatherBriefingView() {
             <CloudSun className="w-4 h-4 text-sky-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-base font-semibold text-content">Pre-Flight Weather Briefing</h2>
+            <h2 className="text-base font-semibold text-content">{tr('weather.WeatherBriefingView.preFlightWeatherBriefing')}</h2>
             <LocationPicker />
           </div>
           <button
             onClick={() => { void refresh(); }}
             disabled={loading}
             className="px-2.5 py-1.5 text-xs rounded-md bg-surface border border-subtle text-content-secondary hover:bg-surface-raised hover:text-content transition-colors flex items-center gap-1.5 disabled:opacity-50"
-            data-tip="Refresh forecast"
+            data-tip={tr('weather.WeatherBriefingView.refreshForecast')}
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
+            {tr('weather.WeatherBriefingView.refresh')}
           </button>
         </div>
       </div>
@@ -217,27 +218,27 @@ export function WeatherBriefingView() {
           {!location ? (
             <StateShell>
               <MapPin className="w-10 h-10 mb-3 text-content-tertiary" />
-              <p className="text-sm font-medium mb-1 text-content">No position to brief</p>
+              <p className="text-sm font-medium mb-1 text-content">{tr('weather.WeatherBriefingView.noPositionToBrief')}</p>
               <p className="text-xs text-content-tertiary max-w-xs">
-                Connect a vehicle, set a home position, or open the mission map so the briefing knows where to query the weather.
+                {tr('weather.WeatherBriefingView.connectAVehicleSetAHome')}
               </p>
             </StateShell>
           ) : error && !weather ? (
             <StateShell>
               <CloudOff className="w-10 h-10 mb-3 text-content-tertiary" />
-              <p className="text-sm font-medium mb-1 text-content">Forecast unavailable</p>
+              <p className="text-sm font-medium mb-1 text-content">{tr('weather.WeatherBriefingView.forecastUnavailable')}</p>
               <p className="text-xs text-content-tertiary max-w-xs mb-4">{error}</p>
               <button
                 onClick={() => { void refresh(); }}
                 className="px-3 py-1.5 text-xs rounded-md bg-surface border border-subtle text-content-secondary hover:bg-surface-raised hover:text-content transition-colors"
               >
-                Try again
+                {tr('weather.WeatherBriefingView.tryAgain')}
               </button>
             </StateShell>
           ) : loading && !weather ? (
             <StateShell>
               <RefreshCw className="w-8 h-8 mb-3 text-content-tertiary animate-spin" />
-              <p className="text-sm text-content-secondary">Fetching forecast...</p>
+              <p className="text-sm text-content-secondary">{tr('weather.WeatherBriefingView.fetchingForecast')}</p>
             </StateShell>
           ) : weather && status ? (
             (() => {
@@ -269,7 +270,7 @@ export function WeatherBriefingView() {
                     </div>
                     <div className="text-right shrink-0">
                       <div className="text-[10px] font-semibold uppercase tracking-wider text-content-secondary mb-1">
-                        Flight conditions
+                        {tr('weather.WeatherBriefingView.flightConditions')}
                       </div>
                       <span
                         className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-lg font-bold tracking-wide"
@@ -280,7 +281,7 @@ export function WeatherBriefingView() {
                       </span>
                       <div className="text-[10px] text-content-tertiary mt-1.5 flex items-center justify-end gap-1 tabular-nums">
                         <MapPin className="w-3 h-3" />
-                        {locationLabel(location)} · {formatClock(weather.currentTimeIso)} local
+                        {locationLabel(location)} · {formatClock(weather.currentTimeIso)} {tr('weather.WeatherBriefingView.local')}
                       </div>
                     </div>
                   </div>
@@ -311,19 +312,19 @@ export function WeatherBriefingView() {
                           className="w-3.5 h-3.5 shrink-0"
                           style={{ color, transform: `rotate(${weather.windDirDeg}deg)` }}
                         />
-                        Wind from <span className="font-semibold text-content">{compassPoint(weather.windDirDeg)}</span>
+                        {tr('weather.WeatherBriefingView.windFrom')} <span className="font-semibold text-content">{compassPoint(weather.windDirDeg)}</span>
                         <span className="text-content-tertiary tabular-nums">{Math.round(weather.windDirDeg)}&deg;</span>
                       </div>
                     </div>
 
                     <div>
                       <div className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-2">
-                        Launch gates
+                        {tr('weather.WeatherBriefingView.launchGates')}
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         <MetricTile
                           icon={<Wind className="w-3.5 h-3.5" />}
-                          label="Gusts"
+                          label={tr('weather.WeatherBriefingView.gusts')}
                           value={windVal(weather.windGustMs)}
                           unit={windUnitLabel}
                           valueColor={GRADE_COLOR[gustGrade]}
@@ -332,7 +333,7 @@ export function WeatherBriefingView() {
                         />
                         <MetricTile
                           icon={<Wind className="w-3.5 h-3.5" />}
-                          label="Wind"
+                          label={tr('weather.WeatherBriefingView.wind')}
                           value={windVal(weather.windSpeedMs)}
                           unit={windUnitLabel}
                           valueColor={GRADE_COLOR[speedGrade]}
@@ -341,7 +342,7 @@ export function WeatherBriefingView() {
                         />
                         <MetricTile
                           icon={<CloudRain className="w-3.5 h-3.5" />}
-                          label="Precip"
+                          label={tr('weather.WeatherBriefingView.precip')}
                           value={weather.precipMm.toFixed(1)}
                           unit="mm"
                           valueColor={GRADE_COLOR[grade('precipMm')]}
@@ -351,7 +352,7 @@ export function WeatherBriefingView() {
                         />
                         <MetricTile
                           icon={<Droplets className="w-3.5 h-3.5" />}
-                          label="Precip chance"
+                          label={tr('weather.WeatherBriefingView.precipChance')}
                           value={`${Math.round(weather.precipProbPct)}`}
                           unit="%"
                           valueColor={GRADE_COLOR[grade('precipProbPct')]}
@@ -361,7 +362,7 @@ export function WeatherBriefingView() {
                         />
                         <MetricTile
                           icon={<Eye className="w-3.5 h-3.5" />}
-                          label="Visibility"
+                          label={tr('weather.WeatherBriefingView.visibility')}
                           value={(weather.visibilityM / 1000).toFixed(1)}
                           unit="km"
                           valueColor={GRADE_COLOR[grade('visibilityM')]}
@@ -376,26 +377,26 @@ export function WeatherBriefingView() {
                   {/* Context metrics: shown for awareness, never gate a launch. */}
                   <div className="wx-rise" style={{ animationDelay: '200ms' }}>
                     <div className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-2">
-                      Context
+                      {tr('weather.WeatherBriefingView.context')}
                     </div>
                     <div className="grid grid-cols-3 gap-3">
                       <MetricTile
                         icon={<Thermometer className="w-3.5 h-3.5" />}
-                        label="Temp"
+                        label={tr('weather.WeatherBriefingView.temp')}
                         value={`${Math.round(weather.tempC)}`}
                         unit="degC"
                         animate={animate}
                       />
                       <MetricTile
                         icon={<Cloud className="w-3.5 h-3.5" />}
-                        label="Clouds"
+                        label={tr('weather.WeatherBriefingView.clouds')}
                         value={`${Math.round(weather.cloudCoverPct)}`}
                         unit="%"
                         animate={animate}
                       />
                       <MetricTile
                         icon={<Gauge className="w-3.5 h-3.5" />}
-                        label="Pressure"
+                        label={tr('weather.WeatherBriefingView.pressure')}
                         value={`${Math.round(weather.pressureHpa)}`}
                         unit="hPa"
                         animate={animate}
@@ -445,15 +446,15 @@ export function WeatherBriefingView() {
                     style={{ animationDelay: '320ms' }}
                   >
                     <div className="tabular-nums">
-                      Forecast valid {formatClock(weather.currentTimeIso)} local at site · Open-Meteo
-                      {lastFetchMs && <> · updated {new Date(lastFetchMs).toLocaleTimeString()}</>}
+                      {tr('weather.WeatherBriefingView.forecastValid')} {formatClock(weather.currentTimeIso)} {tr('weather.WeatherBriefingView.localAtSiteOpenMeteo')}
+                      {lastFetchMs && <> {tr('weather.WeatherBriefingView.updated')} {new Date(lastFetchMs).toLocaleTimeString()}</>}
                     </div>
                     <div className="leading-relaxed tabular-nums">
-                      Limits: gusts {WEATHER_THRESHOLDS.windGustMs.caution} / {WEATHER_THRESHOLDS.windGustMs.nogo} m/s,
-                      {' '}wind {WEATHER_THRESHOLDS.windSpeedMs.caution} / {WEATHER_THRESHOLDS.windSpeedMs.nogo} m/s,
-                      {' '}precip chance {WEATHER_THRESHOLDS.precipProbPct.caution} / {WEATHER_THRESHOLDS.precipProbPct.nogo}%,
-                      {' '}precip {WEATHER_THRESHOLDS.precipMm.caution} / {WEATHER_THRESHOLDS.precipMm.nogo} mm,
-                      {' '}visibility below {(WEATHER_THRESHOLDS.visibilityM.caution / 1000).toFixed(1)} / {(WEATHER_THRESHOLDS.visibilityM.nogo / 1000).toFixed(1)} km.
+                      {tr('weather.WeatherBriefingView.limitsGusts')} {WEATHER_THRESHOLDS.windGustMs.caution} / {WEATHER_THRESHOLDS.windGustMs.nogo} m/s,
+                      {' '}{tr('weather.WeatherBriefingView.wind2')} {WEATHER_THRESHOLDS.windSpeedMs.caution} / {WEATHER_THRESHOLDS.windSpeedMs.nogo} m/s,
+                      {' '}{tr('weather.WeatherBriefingView.precipChance2')} {WEATHER_THRESHOLDS.precipProbPct.caution} / {WEATHER_THRESHOLDS.precipProbPct.nogo}%,
+                      {' '}{tr('weather.WeatherBriefingView.precip2')} {WEATHER_THRESHOLDS.precipMm.caution} / {WEATHER_THRESHOLDS.precipMm.nogo} {tr('weather.WeatherBriefingView.mm')}
+                      {' '}{tr('weather.WeatherBriefingView.visibilityBelow')} {(WEATHER_THRESHOLDS.visibilityM.caution / 1000).toFixed(1)} / {(WEATHER_THRESHOLDS.visibilityM.nogo / 1000).toFixed(1)} {tr('weather.WeatherBriefingView.km')}
                     </div>
                   </div>
                 </div>

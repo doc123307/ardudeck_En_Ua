@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { t } from '../../i18n';
 
 // Rate calculation functions for different rate types
 export type RateType = 'betaflight' | 'raceflight' | 'kiss' | 'actual' | 'quick' | 'ardupilot';
@@ -147,9 +148,9 @@ export function RateCurve({
     <div className={`bg-surface-input rounded-lg p-3 border border-subtle ${className}`}>
       {showMaxRate && (
         <div className="flex items-center justify-between text-xs text-content-secondary mb-2">
-          <span>Response Curve</span>
+          <span>{t('ui.RateCurve.responseCurve')}</span>
           <span className="text-content-secondary">
-            Max: <span style={{ color }}>{maxRate}°/s</span>
+            {t('ui.RateCurve.max')} <span style={{ color }}>{maxRate}°/s</span>
           </span>
         </div>
       )}
@@ -161,8 +162,8 @@ export function RateCurve({
         <line x1="50" y1="5" x2="50" y2="95" stroke="#374151" strokeWidth="0.5" strokeDasharray="2,2" />
 
         {/* Axis labels */}
-        <text x="50" y="99" fill="#6B7280" fontSize="4" textAnchor="middle">Stick</text>
-        <text x="2" y="50" fill="#6B7280" fontSize="4" textAnchor="middle" transform="rotate(-90, 2, 50)">Rate</text>
+        <text x="50" y="99" fill="#6B7280" fontSize="4" textAnchor="middle">{t('ui.RateCurve.stick')}</text>
+        <text x="2" y="50" fill="#6B7280" fontSize="4" textAnchor="middle" transform="rotate(-90, 2, 50)">{t('ui.RateCurve.rate')}</text>
 
         {/* Rate curve */}
         <polyline

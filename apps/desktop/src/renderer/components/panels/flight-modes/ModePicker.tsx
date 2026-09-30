@@ -21,6 +21,7 @@ import {
 import { GROUP_ICON, modeIcon } from './mode-icons';
 import { useActiveVehicleStore } from '../../../stores/active-vehicle-store';
 import { useVehicleProfileStore } from '../../../stores/vehicle-profile-store';
+import { t as tr } from '../../../i18n';
 
 export interface ModePickerProps {
   /** The annunciator element the popover anchors under. */
@@ -215,7 +216,7 @@ function ModePickerImpl({
           ref={inputRef}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Filter modes…"
+          placeholder={tr('panels.ModePicker.filterModes')}
           className="flex-1 bg-transparent text-content text-sm outline-none placeholder:text-content-tertiary"
         />
         <span className="text-[9px] font-mono text-content-tertiary border border-subtle rounded px-1 py-px">esc</span>
@@ -225,10 +226,10 @@ function ModePickerImpl({
       {pendingMeta && (
         <div className="m-2 shrink-0 flex items-center gap-2 rounded-lg border border-red-500/40 bg-red-500/10 px-2.5 py-2">
           <span className="flex-1 text-[12px] text-content">
-            Engage <span className="text-red-300 font-semibold">{pendingMeta.name}</span>?
+            {tr('panels.ModePicker.engage')} <span className="text-red-300 font-semibold">{pendingMeta.name}</span>?
           </span>
-          <button onClick={onCancelCommit} className="text-[11px] font-medium px-2.5 py-1 rounded-md border border-subtle text-content-secondary hover:text-content">Cancel</button>
-          <button onClick={onConfirmCommit} className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-red-600 hover:bg-red-500 text-white border border-red-600">Confirm</button>
+          <button onClick={onCancelCommit} className="text-[11px] font-medium px-2.5 py-1 rounded-md border border-subtle text-content-secondary hover:text-content">{tr('panels.ModePicker.cancel')}</button>
+          <button onClick={onConfirmCommit} className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-red-600 hover:bg-red-500 text-white border border-red-600">{tr('panels.ModePicker.confirm')}</button>
         </div>
       )}
 
@@ -236,7 +237,7 @@ function ModePickerImpl({
         {/* recents */}
         {!q && recentMetas.length > 0 && (
           <div className="px-1.5 pt-1 pb-2">
-            <div className="text-[9px] font-mono uppercase tracking-[0.14em] text-content-tertiary mb-1.5">Recent</div>
+            <div className="text-[9px] font-mono uppercase tracking-[0.14em] text-content-tertiary mb-1.5">{tr('panels.ModePicker.recent')}</div>
             <div className="flex flex-wrap gap-1.5">
               {recentMetas.map((meta) => {
                 const reason = modeBlockedReason(meta, ctx);
@@ -275,7 +276,7 @@ function ModePickerImpl({
         ))}
 
         {groups.length === 0 && (
-          <div className="px-3 py-6 text-center text-content-tertiary text-xs">No modes match "{query}"</div>
+          <div className="px-3 py-6 text-center text-content-tertiary text-xs">{tr('panels.ModePicker.noModesMatch')}{query}"</div>
         )}
       </div>
     </div>,

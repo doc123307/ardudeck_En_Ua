@@ -13,6 +13,7 @@ import {
   RotateCw, RotateCcw, Waypoints, Navigation, KeyRound, Turtle, HelpCircle, Radio,
   Baby, Sparkles, Trophy, Video
 } from 'lucide-react';
+import { t } from '../../../i18n';
 
 // iNav permanent box IDs (from fc_msp_box.c)
 export const BOX_ID = {
@@ -93,7 +94,7 @@ export const MODE_INFO: Record<
   [BOX_ID.ARM]: {
     name: 'ARM',
     icon: Power,
-    description: 'Enable motors',
+    get description() { return t('modes.mode_presets.enableMotors'); },
     color: 'bg-red-500',
     beginner:
       'SAFETY SWITCH - Arms/disarms your aircraft. ALWAYS put this on a dedicated switch! When armed, propellers can spin at any moment.',
@@ -102,7 +103,7 @@ export const MODE_INFO: Record<
   [BOX_ID.ANGLE]: {
     name: 'ANGLE',
     icon: Square,
-    description: 'Self-level',
+    get description() { return t('modes.mode_presets.selfLevel'); },
     color: 'bg-blue-500',
     beginner:
       'BEGINNER MODE - Your aircraft will automatically level itself when you release the sticks. Maximum tilt angle is limited. Perfect for learning to fly!',
@@ -111,7 +112,7 @@ export const MODE_INFO: Record<
   [BOX_ID.HORIZON]: {
     name: 'HORIZON',
     icon: Sunrise,
-    description: 'Self-level + acro',
+    get description() { return t('modes.mode_presets.selfLevelAcro'); },
     color: 'bg-purple-500',
     beginner:
       'INTERMEDIATE MODE - Self-levels near center stick like ANGLE, but allows flips and rolls at full stick. A bridge between ANGLE and ACRO.',
@@ -119,7 +120,7 @@ export const MODE_INFO: Record<
   [BOX_ID.AIRMODE]: {
     name: 'AIRMODE',
     icon: Wind,
-    description: 'Full control at zero throttle',
+    get description() { return t('modes.mode_presets.fullControlAtZeroThrottle'); },
     color: 'bg-cyan-500',
     beginner:
       'ADVANCED - Keeps full stick authority even at zero throttle. Essential for freestyle tricks and flips. Usually kept on all the time.',
@@ -127,14 +128,14 @@ export const MODE_INFO: Record<
   [BOX_ID.NAV_ALTHOLD]: {
     name: 'NAV ALTHOLD',
     icon: ArrowUpFromLine,
-    description: 'Hold altitude',
+    get description() { return t('modes.mode_presets.holdAltitude'); },
     color: 'bg-teal-500',
     beginner: 'Holds current altitude using barometer/GPS. Throttle controls climb/descent rate.',
   },
   [BOX_ID.NAV_RTH]: {
     name: 'NAV RTH',
     icon: Home,
-    description: 'Return to home',
+    get description() { return t('modes.mode_presets.returnToHome'); },
     color: 'bg-green-500',
     beginner: 'Return To Home - Aircraft will climb to safe altitude and fly back to launch point. Essential safety feature!',
     essential: true,
@@ -142,14 +143,14 @@ export const MODE_INFO: Record<
   [BOX_ID.NAV_POSHOLD]: {
     name: 'NAV POSHOLD',
     icon: MapPin,
-    description: 'Hold position',
+    get description() { return t('modes.mode_presets.holdPosition'); },
     color: 'bg-cyan-500',
     beginner: 'GPS position hold - Aircraft will stay in place. Great for aerial photography or when you need to stop.',
   },
   [BOX_ID.NAV_WP]: {
     name: 'NAV WP',
     icon: Map,
-    description: 'Waypoint mission',
+    get description() { return t('modes.mode_presets.waypointMission'); },
     color: 'bg-indigo-500',
     beginner: 'Execute uploaded waypoint mission. Aircraft will fly to each waypoint automatically.',
     essential: true,
@@ -157,21 +158,21 @@ export const MODE_INFO: Record<
   [BOX_ID.NAV_COURSE_HOLD]: {
     name: 'NAV COURSE HOLD',
     icon: Compass,
-    description: 'Hold course',
+    get description() { return t('modes.mode_presets.holdCourse'); },
     color: 'bg-violet-500',
     beginner: 'Maintains current heading while allowing altitude control. Good for flying in a straight line.',
   },
   [BOX_ID.NAV_CRUISE]: {
     name: 'NAV CRUISE',
     icon: Plane,
-    description: 'Cruise control',
+    get description() { return t('modes.mode_presets.cruiseControl'); },
     color: 'bg-sky-500',
     beginner: 'Fixed-wing cruise mode - Maintains heading and altitude. Perfect for long-range flights.',
   },
   [BOX_ID.NAV_LAUNCH]: {
     name: 'NAV LAUNCH',
     icon: Rocket,
-    description: 'Auto launch',
+    get description() { return t('modes.mode_presets.autoLaunch'); },
     color: 'bg-orange-500',
     beginner: 'Automatic launch sequence for fixed-wing. Throw the plane and it will climb to safe altitude.',
     configureTab: 'auto-launch',
@@ -179,14 +180,14 @@ export const MODE_INFO: Record<
   [BOX_ID.GCS_NAV]: {
     name: 'GCS NAV',
     icon: Gamepad2,
-    description: 'Ground control',
+    get description() { return t('modes.mode_presets.groundControl'); },
     color: 'bg-purple-500',
     beginner: 'Allow ground control station to send navigation commands (fly-to-here, etc).',
   },
   [BOX_ID.BEEPER]: {
     name: 'BEEPER',
     icon: Volume2,
-    description: 'Find aircraft',
+    get description() { return t('modes.mode_presets.findAircraft'); },
     color: 'bg-yellow-500',
     beginner:
       'FINDER - Makes your aircraft beep loudly to help you find it after a crash. Very useful when it lands in tall grass!',
@@ -194,7 +195,7 @@ export const MODE_INFO: Record<
   [BOX_ID.FAILSAFE]: {
     name: 'FAILSAFE',
     icon: ShieldAlert,
-    description: 'Emergency landing',
+    get description() { return t('modes.mode_presets.emergencyLanding'); },
     color: 'bg-orange-500',
     beginner:
       'EMERGENCY - Triggers failsafe behavior (usually landing or disarm). Normally activated automatically when signal is lost.',
@@ -202,7 +203,7 @@ export const MODE_INFO: Record<
   [BOX_ID.BLACKBOX]: {
     name: 'BLACKBOX',
     icon: Package,
-    description: 'Flight logging',
+    get description() { return t('modes.mode_presets.flightLogging'); },
     color: 'bg-gray-500',
     beginner:
       'LOGGING - Records flight data to the SD card for analysis. Useful for tuning PIDs and reviewing crashes.',
@@ -210,7 +211,7 @@ export const MODE_INFO: Record<
   [BOX_ID.GIMBAL_LEVEL_TILT]: {
     name: 'GIMBAL LEVEL TILT',
     icon: Satellite,
-    description: 'Gimbal tilt leveling',
+    get description() { return t('modes.mode_presets.gimbalTiltLeveling'); },
     color: 'bg-indigo-500',
     beginner:
       'Keeps gimbal tilt axis level regardless of aircraft attitude. Useful for camera stabilization.',
@@ -218,56 +219,56 @@ export const MODE_INFO: Record<
   [BOX_ID.MANUAL]: {
     name: 'MANUAL',
     icon: Joystick,
-    description: 'Direct control',
+    get description() { return t('modes.mode_presets.directControl'); },
     color: 'bg-rose-500',
     beginner: 'Direct servo/motor control without stabilization. For experienced pilots only!',
   },
   [BOX_ID.FLAPERON]: {
     name: 'FLAPERON',
     icon: PlaneTakeoff,
-    description: 'Flaps mode',
+    get description() { return t('modes.mode_presets.flapsMode'); },
     color: 'bg-amber-500',
     beginner: 'Activates flaperons for slower landing approach. Ailerons droop down to act as flaps.',
   },
   [BOX_ID.TURN_ASSIST]: {
     name: 'TURN ASSIST',
     icon: RotateCw,
-    description: 'Coordinated turns',
+    get description() { return t('modes.mode_presets.coordinatedTurns'); },
     color: 'bg-lime-500',
     beginner: 'Auto-coordinates rudder with ailerons for smooth turns. Great for fixed-wing beginners.',
   },
   [BOX_ID.HOME_RESET]: {
     name: 'HOME RESET',
     icon: RotateCcw,
-    description: 'Reset home position',
+    get description() { return t('modes.mode_presets.resetHomePosition'); },
     color: 'bg-red-400',
     beginner: 'Sets current position as new home point. Use when you relocate during a session.',
   },
   [BOX_ID.WP_PLANNER]: {
     name: 'WP PLANNER',
     icon: Waypoints,
-    description: 'Mission planner',
+    get description() { return t('modes.mode_presets.missionPlanner'); },
     color: 'bg-fuchsia-500',
     beginner: 'Enable in-flight waypoint planning via stick commands.',
   },
   [BOX_ID.HEADING_HOLD]: {
     name: 'HEADING HOLD',
     icon: Navigation,
-    description: 'Hold heading',
+    get description() { return t('modes.mode_presets.holdHeading'); },
     color: 'bg-emerald-500',
     beginner: 'Maintains current magnetic heading. Useful for flying straight lines.',
   },
   [BOX_ID.PREARM]: {
     name: 'PREARM',
     icon: KeyRound,
-    description: 'Pre-arm check',
+    get description() { return t('modes.mode_presets.preArmCheck'); },
     color: 'bg-yellow-600',
     beginner: 'Safety switch - must be enabled before arming. Prevents accidental arm.',
   },
   [BOX_ID.TURTLE]: {
     name: 'TURTLE',
     icon: Turtle,
-    description: 'Flip over',
+    get description() { return t('modes.mode_presets.flipOver'); },
     color: 'bg-stone-500',
     beginner: 'Flip crashed aircraft back over using motor spin. For multirotors only.',
   },
@@ -291,8 +292,8 @@ export const PRESETS: Record<string, ModePreset> = {
     id: 'beginner',
     name: 'Beginner',
     icon: 'baby',
-    description: 'Safe & simple - great for learning',
-    tip: 'Your aircraft will always stay level. Perfect for learning to hover and basic movements!',
+    get description() { return t('modes.mode_presets.safeSimpleGreatForLearning'); },
+    get tip() { return t('modes.mode_presets.yourAircraftWillAlwaysStayLevel'); },
     gradient: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
     modes: [
       // ARM on AUX1 high (1800-2100)
@@ -307,8 +308,8 @@ export const PRESETS: Record<string, ModePreset> = {
     id: 'freestyle',
     name: 'Freestyle',
     icon: 'sparkles',
-    description: 'Balanced for tricks & flow',
-    tip: 'Three-position switch on AUX2 gives you ANGLE/HORIZON/ACRO. Flip a switch to change your flying style!',
+    get description() { return t('modes.mode_presets.balancedForTricksFlow'); },
+    get tip() { return t('modes.mode_presets.threePositionSwitchOnAux2Gives'); },
     gradient: 'from-purple-500/20 to-violet-500/10 border-purple-500/30',
     modes: [
       // ARM on AUX1 high
@@ -327,8 +328,8 @@ export const PRESETS: Record<string, ModePreset> = {
     id: 'racing',
     name: 'Racing',
     icon: 'trophy',
-    description: 'Fast & responsive for speed',
-    tip: 'Pure ACRO mode for maximum control. Beeper on AUX3 helps find your aircraft after a crash!',
+    get description() { return t('modes.mode_presets.fastResponsiveForSpeed'); },
+    get tip() { return t('modes.mode_presets.pureAcroModeForMaximumControl'); },
     gradient: 'from-red-500/20 to-orange-500/10 border-red-500/30',
     modes: [
       // ARM on AUX1 high
@@ -345,8 +346,8 @@ export const PRESETS: Record<string, ModePreset> = {
     id: 'cinematic',
     name: 'Cinematic',
     icon: 'video',
-    description: 'Ultra-smooth for filming',
-    tip: 'NAV RTH brings your aircraft home if signal is lost (requires GPS!). Perfect for long-range filming.',
+    get description() { return t('modes.mode_presets.ultraSmoothForFilming'); },
+    get tip() { return t('modes.mode_presets.navRthBringsYourAircraftHome'); },
     gradient: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30',
     modes: [
       // ARM on AUX1 high
@@ -363,8 +364,8 @@ export const PRESETS: Record<string, ModePreset> = {
     id: 'fixedWing',
     name: 'Fixed Wing',
     icon: 'plane',
-    description: 'For airplanes with navigation',
-    tip: 'Complete setup for fixed-wing with launch assist, RTH, and waypoint navigation.',
+    get description() { return t('modes.mode_presets.forAirplanesWithNavigation'); },
+    get tip() { return t('modes.mode_presets.completeSetupForFixedWingWith'); },
     gradient: 'from-sky-500/20 to-blue-500/10 border-sky-500/30',
     modes: [
       // ARM on AUX1 high
@@ -400,18 +401,18 @@ export const ESSENTIAL_MODES = ALL_MODES.filter((m) => m.essential);
 
 // AUX channel names (iNav/Betaflight support up to 12 AUX channels)
 export const AUX_CHANNELS = [
-  { index: 0, name: 'AUX 1', description: 'Usually a 2-position switch' },
-  { index: 1, name: 'AUX 2', description: 'Often a 3-position switch' },
-  { index: 2, name: 'AUX 3', description: 'Additional switch' },
-  { index: 3, name: 'AUX 4', description: 'Additional switch' },
-  { index: 4, name: 'AUX 5', description: 'Additional channel (knob/slider)' },
-  { index: 5, name: 'AUX 6', description: 'Additional channel (knob/slider)' },
-  { index: 6, name: 'AUX 7', description: 'Additional channel' },
-  { index: 7, name: 'AUX 8', description: 'Additional channel' },
-  { index: 8, name: 'AUX 9', description: 'Additional channel' },
-  { index: 9, name: 'AUX 10', description: 'Additional channel' },
-  { index: 10, name: 'AUX 11', description: 'Additional channel' },
-  { index: 11, name: 'AUX 12', description: 'Additional channel' },
+  { index: 0, name: 'AUX 1', get description() { return t('modes.mode_presets.usuallyA2PositionSwitch'); } },
+  { index: 1, name: 'AUX 2', get description() { return t('modes.mode_presets.oftenA3PositionSwitch'); } },
+  { index: 2, name: 'AUX 3', get description() { return t('modes.mode_presets.additionalSwitch'); } },
+  { index: 3, name: 'AUX 4', get description() { return t('modes.mode_presets.additionalSwitch'); } },
+  { index: 4, name: 'AUX 5', get description() { return t('modes.mode_presets.additionalChannelKnobSlider'); } },
+  { index: 5, name: 'AUX 6', get description() { return t('modes.mode_presets.additionalChannelKnobSlider'); } },
+  { index: 6, name: 'AUX 7', get description() { return t('modes.mode_presets.additionalChannel'); } },
+  { index: 7, name: 'AUX 8', get description() { return t('modes.mode_presets.additionalChannel'); } },
+  { index: 8, name: 'AUX 9', get description() { return t('modes.mode_presets.additionalChannel'); } },
+  { index: 9, name: 'AUX 10', get description() { return t('modes.mode_presets.additionalChannel'); } },
+  { index: 10, name: 'AUX 11', get description() { return t('modes.mode_presets.additionalChannel'); } },
+  { index: 11, name: 'AUX 12', get description() { return t('modes.mode_presets.additionalChannel'); } },
 ] as const;
 
 // PWM range constants

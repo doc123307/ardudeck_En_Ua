@@ -10,17 +10,18 @@
 import { Radio, LayoutGrid, SlidersHorizontal, RotateCcw, type LucideIcon } from 'lucide-react';
 import { useRubyOsdStore, getFontSize, getTransparency } from '../../stores/ruby-osd-store';
 import { RUBY_OSD_ELEMENTS, RUBY_OSD_PRESET, isElementEnabled, type RubyOsdCategory } from '../../utils/osd/ruby-osd';
+import { t } from '../../i18n';
 
 const CATEGORY_ORDER: RubyOsdCategory[] = [
   'Flight', 'Power', 'GPS', 'Navigation', 'Link', 'Video', 'System', 'Instruments', 'Grid',
 ];
 
 const PRESET_OPTIONS: { value: number; label: string }[] = [
-  { value: RUBY_OSD_PRESET.NONE, label: 'None' },
-  { value: RUBY_OSD_PRESET.MINIMAL, label: 'Minimal' },
-  { value: RUBY_OSD_PRESET.COMPACT, label: 'Compact' },
-  { value: RUBY_OSD_PRESET.DEFAULT, label: 'Default' },
-  { value: RUBY_OSD_PRESET.CUSTOM, label: 'Custom' },
+  { value: RUBY_OSD_PRESET.NONE, get label() { return t('osd.RubyOsdPanel.none'); } },
+  { value: RUBY_OSD_PRESET.MINIMAL, get label() { return t('osd.RubyOsdPanel.minimal'); } },
+  { value: RUBY_OSD_PRESET.COMPACT, get label() { return t('osd.RubyOsdPanel.compact'); } },
+  { value: RUBY_OSD_PRESET.DEFAULT, get label() { return t('osd.RubyOsdPanel.default'); } },
+  { value: RUBY_OSD_PRESET.CUSTOM, get label() { return t('osd.RubyOsdPanel.custom'); } },
 ];
 
 export function RubyOsdPanel() {
@@ -45,13 +46,13 @@ export function RubyOsdPanel() {
           <Radio className="h-3.5 w-3.5" />
         </span>
         <div className="min-w-0">
-          <div className="text-[11px] font-medium text-content leading-tight">RubyFPV OSD</div>
-          <div className="text-[10px] text-content-tertiary leading-tight">Toggle elements; RubyFPV auto-arranges them</div>
+          <div className="text-[11px] font-medium text-content leading-tight">{t('osd.RubyOsdPanel.rubyfpvOsd')}</div>
+          <div className="text-[10px] text-content-tertiary leading-tight">{t('osd.RubyOsdPanel.toggleElementsRubyfpvAutoArrangesThem')}</div>
         </div>
       </div>
 
       {/* Screen selector */}
-      <Section title="Screen" icon={LayoutGrid}>
+      <Section title={t('osd.RubyOsdPanel.screen')} icon={LayoutGrid}>
         <div className="flex items-center gap-1 px-1">
           {params.screens.map((_, i) => (
             <button
@@ -60,33 +61,33 @@ export function RubyOsdPanel() {
               className={`relative flex-1 h-8 rounded-md text-[11px] font-medium transition-colors ${
                 i === editingScreen ? 'bg-rose-600/80 text-white' : 'text-content-secondary hover:text-content bg-surface-raised'
               }`}
-              data-tip={`Edit screen ${i + 1}`}
+              data-tip={t('osd.RubyOsdPanel.editScreen', { v1: i + 1 })}
             >
               {i + 1}
               {params.currentScreen === i && (
-                <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-green-400" data-tip="Active screen" />
+                <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-green-400" data-tip={t('osd.RubyOsdPanel.activeScreen')} />
               )}
             </button>
           ))}
         </div>
         <div className="flex items-center justify-between px-2 pt-2">
           <span className="text-[10px] text-content-tertiary">
-            {isActive ? 'This screen is active on the goggles' : `Editing screen ${editingScreen + 1}`}
+            {isActive ? t('osd.RubyOsdPanel.thisScreenIsActiveOnThe') : t('osd.RubyOsdPanel.editingScreen', { v1: editingScreen + 1 })}
           </span>
           {!isActive && (
             <button
               onClick={() => setCurrentScreen(editingScreen)}
               className="text-[10px] font-medium px-2 py-1 rounded bg-surface-raised hover:bg-surface text-content"
             >
-              Set active
+              {t('osd.RubyOsdPanel.setActive')}
             </button>
           )}
         </div>
       </Section>
 
       {/* Layout */}
-      <Section title="Layout" icon={SlidersHorizontal}>
-        <Row label="Preset">
+      <Section title={t('osd.RubyOsdPanel.layout')} icon={SlidersHorizontal}>
+        <Row label={t('osd.RubyOsdPanel.preset')}>
           <select
             value={screen.layoutPreset}
             onChange={(e) => setPreset(parseInt(e.target.value))}
@@ -97,18 +98,18 @@ export function RubyOsdPanel() {
             ))}
           </select>
         </Row>
-        <Row label={`Font size ${getFontSize(screen.preferences)}`}>
+        <Row label={t('osd.RubyOsdPanel.fontSize', { v1: getFontSize(screen.preferences) })}>
           <input type="range" min={0} max={6} step={1} value={getFontSize(screen.preferences)}
             onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full accent-rose-500" />
         </Row>
-        <Row label={`Transparency ${getTransparency(screen.preferences)}`}>
+        <Row label={t('osd.RubyOsdPanel.transparency', { v1: getTransparency(screen.preferences) })}>
           <input type="range" min={0} max={4} step={1} value={getTransparency(screen.preferences)}
             onChange={(e) => setTransparency(parseInt(e.target.value))} className="w-full accent-rose-500" />
         </Row>
       </Section>
 
       {/* Elements by category */}
-      <Section title="Elements" icon={Radio}>
+      <Section title={t('osd.RubyOsdPanel.elements')} icon={Radio}>
         {CATEGORY_ORDER.map((cat) => {
           const items = RUBY_OSD_ELEMENTS.filter((e) => e.category === cat);
           if (items.length === 0) return null;
@@ -134,7 +135,7 @@ export function RubyOsdPanel() {
           );
         })}
         <button onClick={reset} className="mt-2 flex w-full items-center gap-2 text-xs px-2 py-1.5 rounded-md hover:bg-surface-raised text-content-secondary">
-          <RotateCcw className="h-3.5 w-3.5" /> Reset all screens
+          <RotateCcw className="h-3.5 w-3.5" /> {t('osd.RubyOsdPanel.resetAllScreens')}
         </button>
       </Section>
     </div>

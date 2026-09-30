@@ -11,6 +11,7 @@ import {
   ArrowDownLeft, ArrowUpRight, MoveVertical, MoveHorizontal,
   ArrowLeft, ArrowRight, ArrowUpLeft, RefreshCw, Settings, type LucideIcon,
 } from 'lucide-react';
+import { t } from '../../../i18n';
 
 // Surface icons for visual flair
 const SURFACE_ICONS: Record<string, LucideIcon> = {
@@ -148,7 +149,7 @@ export default function ServoTuningCard({
           <SurfaceIcon className="w-5 h-5" />
           <div>
             <div className="text-sm font-medium text-content">{info.name}</div>
-            <div className="text-xs text-content-secondary">Servo {assignment.servoIndex}</div>
+            <div className="text-xs text-content-secondary">{t('servo_wizard.ServoTuningCard.servo')} {assignment.servoIndex}</div>
           </div>
         </div>
 
@@ -163,7 +164,7 @@ export default function ServoTuningCard({
               ? 'bg-amber-500/20 text-amber-400 border border-amber-500/50'
               : 'bg-surface-raised text-content-secondary hover:bg-surface-raised border border'
           }`}
-          title={assignment.reversed ? 'Servo reversed' : 'Click to reverse'}
+          title={assignment.reversed ? t('servo_wizard.ServoTuningCard.servoReversed') : t('servo_wizard.ServoTuningCard.clickToReverse')}
         >
           {assignment.reversed ? 'REV' : 'FWD'}
         </button>
@@ -266,7 +267,7 @@ export default function ServoTuningCard({
             }}
             className="flex-1 py-1.5 text-xs bg-surface-raised text-content-secondary rounded hover:bg-surface-raised transition-colors"
           >
-            ← Min
+            {t('servo_wizard.ServoTuningCard.min')}
           </button>
           <button
             onClick={(e) => {
@@ -275,7 +276,7 @@ export default function ServoTuningCard({
             }}
             className="flex-1 py-1.5 text-xs bg-green-500/20 text-green-400 rounded hover:bg-green-500/30 transition-colors"
           >
-            Center
+            {t('servo_wizard.ServoTuningCard.center')}
           </button>
           <button
             onClick={(e) => {
@@ -284,7 +285,7 @@ export default function ServoTuningCard({
             }}
             className="flex-1 py-1.5 text-xs bg-surface-raised text-content-secondary rounded hover:bg-surface-raised transition-colors"
           >
-            Max →
+            {t('servo_wizard.ServoTuningCard.max')}
           </button>
         </div>
       )}

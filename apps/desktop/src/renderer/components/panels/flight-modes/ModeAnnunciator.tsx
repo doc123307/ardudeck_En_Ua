@@ -9,6 +9,7 @@
 
 import { memo, useEffect, useRef, useState } from 'react';
 import type { ModePhase } from '../../../hooks/useModeRequest';
+import { t } from '../../../i18n';
 
 function Countdown({ ms }: { ms: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -78,7 +79,7 @@ function ModeAnnunciatorImpl({
       <button
         onClick={onToggle}
         aria-expanded={open}
-        data-tip="Change flight mode"
+        data-tip={t('panels.ModeAnnunciator.changeFlightMode')}
         style={mounted && justConfirmed ? { boxShadow: `0 0 0 2px var(--status-success)` } : undefined}
         className={`h-full w-full flex items-center gap-2 rounded-lg border ${phase === 'active' ? 'border-subtle' : ''} bg-surface hover:border-default px-3 transition-all`}
       >
@@ -101,7 +102,7 @@ function ModeAnnunciatorImpl({
     <button
       onClick={onToggle}
       aria-expanded={open}
-      data-tip="Change flight mode"
+      data-tip={t('panels.ModeAnnunciator.changeFlightMode')}
       style={mounted && justConfirmed ? { boxShadow: `0 0 0 2px var(--status-success)` } : undefined}
       className={`w-full text-left rounded-lg border ${phase === 'active' ? 'border-subtle' : ''} bg-surface hover:border-default px-3 py-2 transition-all`}
     >
@@ -122,12 +123,12 @@ function ModeAnnunciatorImpl({
       <div className="mt-1 text-[11px] font-mono text-content-secondary min-h-[15px]">
         {phase === 'requesting' ? (
           <>
-            still <span className="text-content font-semibold">{currentName.toUpperCase()}</span>
+            {t('panels.ModeAnnunciator.still')} <span className="text-content font-semibold">{currentName.toUpperCase()}</span>
             <span style={{ color: 'var(--status-warn)' }}> → </span>
             {(requestedName || '').toUpperCase()}
           </>
         ) : phase === 'rejected' ? (
-          <><span className="font-semibold" style={{ color: 'var(--status-danger-fg)' }}>{rejectLabel}</span> · still {currentName.toUpperCase()}</>
+          <><span className="font-semibold" style={{ color: 'var(--status-danger-fg)' }}>{rejectLabel}</span> {t('panels.ModeAnnunciator.still2')} {currentName.toUpperCase()}</>
         ) : (
           currentSubline
         )}

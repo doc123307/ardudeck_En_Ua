@@ -12,6 +12,7 @@
  */
 import type { SurveyConfig, SurveyPattern, CameraPreset } from './survey-types';
 import { MANUAL_CAMERA } from './camera-presets';
+import { t } from '../../i18n';
 
 export interface SurveyPreset {
   /** Stable id used as the dropdown selection key. */
@@ -45,7 +46,7 @@ export const BUILTIN_SURVEY_PRESETS: SurveyPreset[] = [
   {
     id: 'map-ortho',
     name: 'Map / Orthomosaic',
-    description: '2D map. Fast flight, single grid pass.',
+    get description() { return t('survey.survey_presets.n2dMapFastFlightSingleGrid'); },
     tag: 'Flying',
     config: {
       pattern: 'grid',
@@ -60,7 +61,7 @@ export const BUILTIN_SURVEY_PRESETS: SurveyPreset[] = [
   {
     id: 'photogrammetry-3d',
     name: '3D / Photogrammetry',
-    description: 'Buildings, terrain meshes. Crosshatch + high overlap.',
+    get description() { return t('survey.survey_presets.buildingsTerrainMeshesCrosshatchHighOverlap'); },
     tag: 'Flying',
     config: {
       pattern: 'crosshatch',
@@ -75,7 +76,7 @@ export const BUILTIN_SURVEY_PRESETS: SurveyPreset[] = [
   {
     id: 'inspection-detail',
     name: 'Inspection / Detail',
-    description: 'Small areas, low altitude, high GSD.',
+    get description() { return t('survey.survey_presets.smallAreasLowAltitudeHighGsd'); },
     tag: 'Flying',
     config: {
       pattern: 'grid',
@@ -90,7 +91,7 @@ export const BUILTIN_SURVEY_PRESETS: SurveyPreset[] = [
   {
     id: 'corridor-plane',
     name: 'Corridor (Plane)',
-    description: 'Roads, rail, power lines. Fixed-wing strips with racetrack turns.',
+    get description() { return t('survey.survey_presets.roadsRailPowerLinesFixedWing'); },
     tag: 'Flying',
     config: {
       pattern: 'corridor',
@@ -109,7 +110,7 @@ export const BUILTIN_SURVEY_PRESETS: SurveyPreset[] = [
   {
     id: 'corridor-copter',
     name: 'Corridor (Copter)',
-    description: 'Branched corridors. Multirotor turns on the spot.',
+    get description() { return t('survey.survey_presets.branchedCorridorsMultirotorTurnsOnThe'); },
     tag: 'Flying',
     config: {
       pattern: 'corridor',
@@ -127,7 +128,7 @@ export const BUILTIN_SURVEY_PRESETS: SurveyPreset[] = [
   {
     id: 'rover-mower',
     name: 'Rover / Mower',
-    description: 'Ground vehicle. Set corridor width directly.',
+    get description() { return t('survey.survey_presets.groundVehicleSetCorridorWidthDirectly'); },
     tag: 'Ground',
     camera: { ...MANUAL_CAMERA },
     config: {
@@ -151,7 +152,7 @@ export function makeUserPreset(
   return {
     id: `user-${Date.now().toString(36)}`,
     name,
-    description: 'Saved preset',
+    description: t('survey.survey_presets.savedPreset'),
     tag: 'Custom',
     isUserDefined: true,
     config,

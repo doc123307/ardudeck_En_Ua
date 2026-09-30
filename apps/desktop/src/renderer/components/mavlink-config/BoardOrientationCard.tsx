@@ -20,14 +20,15 @@ import {
   type Mat3,
   type MountMove,
 } from './board-mount-pose';
+import { t } from '../../i18n';
 
 const MOVE_BUTTONS: { move: MountMove; label: string; Icon: typeof RotateCw }[] = [
-  { move: 'turnLeft', label: 'Turn 90° left', Icon: RotateCcw },
-  { move: 'turnRight', label: 'Turn 90° right', Icon: RotateCw },
-  { move: 'rollLeft', label: 'Roll 90° left', Icon: ArrowDownLeft },
-  { move: 'rollRight', label: 'Roll 90° right', Icon: ArrowDownRight },
-  { move: 'tipNoseDown', label: 'Pitch 90° down', Icon: ArrowDown },
-  { move: 'tipNoseUp', label: 'Pitch 90° up', Icon: ArrowUp },
+  { move: 'turnLeft', get label() { return t('mavlink_config.BoardOrientationCard.turn90Left'); }, Icon: RotateCcw },
+  { move: 'turnRight', get label() { return t('mavlink_config.BoardOrientationCard.turn90Right'); }, Icon: RotateCw },
+  { move: 'rollLeft', get label() { return t('mavlink_config.BoardOrientationCard.roll90Left'); }, Icon: ArrowDownLeft },
+  { move: 'rollRight', get label() { return t('mavlink_config.BoardOrientationCard.roll90Right'); }, Icon: ArrowDownRight },
+  { move: 'tipNoseDown', get label() { return t('mavlink_config.BoardOrientationCard.pitch90Down'); }, Icon: ArrowDown },
+  { move: 'tipNoseUp', get label() { return t('mavlink_config.BoardOrientationCard.pitch90Up'); }, Icon: ArrowUp },
 ];
 
 export function BoardOrientationCard(): JSX.Element {
@@ -64,8 +65,8 @@ export function BoardOrientationCard(): JSX.Element {
     try {
       const ok = await setParameterImmediate(orientParam, value);
       setStatus(ok
-        ? `Set to ${orientationName(value)}. Run the level calibration next, the accel trims belong to the old mounting.`
-        : `Could not write ${orientParam}.`);
+        ? t('mavlink_config.BoardOrientationCard.setToRunTheLevelCalibration', { v1: orientationName(value) })
+        : t('mavlink_config.BoardOrientationCard.couldNotWrite', { orientParam }));
     } finally {
       setBusy(false);
     }
@@ -84,9 +85,9 @@ export function BoardOrientationCard(): JSX.Element {
           <Compass className="w-5 h-5 text-purple-400" />
         </div>
         <div className="flex-1">
-          <h3 className="font-medium text-content">Board orientation</h3>
+          <h3 className="font-medium text-content">{t('mavlink_config.BoardOrientationCard.boardOrientation')}</h3>
           <p className="text-xs text-content-secondary">
-            Turn the board on the model until it sits like the one in your vehicle. The vehicle's front stays put.
+            {t('mavlink_config.BoardOrientationCard.turnTheBoardOnTheModel')}
           </p>
         </div>
         <div className="text-right">
@@ -100,7 +101,7 @@ export function BoardOrientationCard(): JSX.Element {
       {armed && (
         <div className="mb-3 flex items-center gap-2 rounded-lg bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
           <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-          Disarm before changing the mounting.
+          {t('mavlink_config.BoardOrientationCard.disarmBeforeChangingTheMounting')}
         </div>
       )}
 
@@ -108,7 +109,7 @@ export function BoardOrientationCard(): JSX.Element {
         <div className="shrink-0 rounded-xl border border-subtle bg-surface-raised p-3">
           {noWebGl ? (
             <div className="flex h-[320px] w-[320px] items-center justify-center p-6 text-center text-xs text-content-secondary">
-              3D view unavailable here. Use the full list below.
+              {t('mavlink_config.BoardOrientationCard.n3dViewUnavailableHereUseThe')}
             </div>
           ) : (
             <BoardMountScene
@@ -121,7 +122,7 @@ export function BoardOrientationCard(): JSX.Element {
             />
           )}
           {!noWebGl && (
-            <div className="mt-1 text-center text-[10px] text-content-tertiary">Drag to look around, double-click to reset</div>
+            <div className="mt-1 text-center text-[10px] text-content-tertiary">{t('mavlink_config.BoardOrientationCard.dragToLookAroundDoubleClick')}</div>
           )}
           <div className="mt-2 grid grid-cols-2 gap-1.5">
             {MOVE_BUTTONS.map(({ move, label, Icon }) => (
@@ -137,62 +138,61 @@ export function BoardOrientationCard(): JSX.Element {
             ))}
           </div>
           <div className="mt-2 text-center text-[10px] leading-snug text-content-tertiary">
-            Each button turns the board 90° around the vehicle's own axes:
-            <br />turn around the vertical, roll around nose to tail, pitch around side to side.
+            {t('mavlink_config.BoardOrientationCard.eachButtonTurnsTheBoard90')}
+            <br />{t('mavlink_config.BoardOrientationCard.turnAroundTheVerticalRollAround')}
           </div>
         </div>
 
         <div className="flex-1 space-y-3">
           <div className="rounded-lg border border-subtle bg-surface-raised p-3 text-xs">
-            <div className="text-content-tertiary mb-1">On the model now</div>
+            <div className="text-content-tertiary mb-1">{t('mavlink_config.BoardOrientationCard.onTheModelNow')}</div>
             <div className="text-content">
-              Arrow points {arrowSide === 'front' ? 'forward' : arrowSide}, board {facing}
+              {t('mavlink_config.BoardOrientationCard.arrowPoints')} {arrowSide === 'front' ? 'forward' : arrowSide}{t('mavlink_config.BoardOrientationCard.board')} {facing}
             </div>
             <div className="mt-1 text-[11px] text-content-tertiary">
-              Go by the arrow printed on your flight controller; connector positions differ between boards.
+              {t('mavlink_config.BoardOrientationCard.goByTheArrowPrintedOn')}
             </div>
           </div>
 
           {poseValue === null ? (
             <div className="rounded-lg bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
-              ArduPilot has no preset for this mounting.
+              {t('mavlink_config.BoardOrientationCard.ardupilotHasNoPresetForThis')}
             </div>
           ) : applied ? (
             <div className="rounded-lg bg-emerald-500/10 px-3 py-2 text-xs text-emerald-400">
-              <div>Applied: {orientParam} {poseValue} ({ALL_ORIENTATIONS[poseValue]}).</div>
+              <div>{t('mavlink_config.BoardOrientationCard.applied')} {orientParam} {poseValue} ({ALL_ORIENTATIONS[poseValue]}).</div>
               <div className="mt-1 text-emerald-400/80">
-                The model now follows the vehicle. Tip the real nose down: the model's nose must dip. Lower the right
-                side: the model's right side must drop.
+                {t('mavlink_config.BoardOrientationCard.theModelNowFollowsTheVehicle')}
               </div>
             </div>
           ) : (
             <div className="flex items-center gap-3 rounded-lg bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
               <div className="flex-1">
-                This mounting is {orientParam} {poseValue} ({ALL_ORIENTATIONS[poseValue]}). Not applied yet.
+                {t('mavlink_config.BoardOrientationCard.thisMountingIs')} {orientParam} {poseValue} ({ALL_ORIENTATIONS[poseValue]}{t('mavlink_config.BoardOrientationCard.notAppliedYet')}
               </div>
               <button
                 onClick={() => setPose(appliedPose)}
                 disabled={busy}
                 className="flex items-center gap-1 rounded px-2 py-1 text-content-secondary hover:text-content"
               >
-                <Undo2 className="w-3.5 h-3.5" /> Reset
+                <Undo2 className="w-3.5 h-3.5" /> {t('mavlink_config.BoardOrientationCard.reset')}
               </button>
               <button
                 onClick={() => apply(poseValue)}
                 disabled={armed || busy}
                 className="rounded-lg bg-purple-500/80 px-3 py-1.5 font-medium text-white hover:bg-purple-500 disabled:opacity-40"
               >
-                Apply
+                {t('mavlink_config.BoardOrientationCard.apply')}
               </button>
             </div>
           )}
 
           <div className="text-[11px] text-content-tertiary tabular-nums">
-            roll {attitude.roll.toFixed(0)}° · pitch {attitude.pitch.toFixed(0)}° · yaw {attitude.yaw.toFixed(0)}°
+            {t('mavlink_config.BoardOrientationCard.roll')} {attitude.roll.toFixed(0)}{t('mavlink_config.BoardOrientationCard.pitch')} {attitude.pitch.toFixed(0)}{t('mavlink_config.BoardOrientationCard.yaw')} {attitude.yaw.toFixed(0)}°
             <span className={`ml-2 rounded-full px-2 py-0.5 text-[10px] ${
               check.level ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'
             }`}>
-              {check.level ? 'Reading level' : 'Not level'}
+              {check.level ? t('mavlink_config.BoardOrientationCard.readingLevel') : t('mavlink_config.BoardOrientationCard.notLevel')}
             </span>
           </div>
           <p className="text-[11px] text-content-tertiary">{check.note}</p>
@@ -202,7 +202,7 @@ export function BoardOrientationCard(): JSX.Element {
               onClick={() => setShowAll((v) => !v)}
               className="text-[11px] text-content-tertiary hover:text-content"
             >
-              {showAll ? 'Hide the full list' : 'Every orientation'}
+              {showAll ? t('mavlink_config.BoardOrientationCard.hideTheFullList') : t('mavlink_config.BoardOrientationCard.everyOrientation')}
             </button>
             {showAll && (
               <select

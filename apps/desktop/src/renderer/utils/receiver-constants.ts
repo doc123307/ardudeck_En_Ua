@@ -6,14 +6,15 @@
  */
 
 import { INAV_SERIALRX_PROVIDER_NAMES } from '@ardudeck/msp-ts';
+import { t } from '../i18n';
 
 // =============================================================================
 // iNav
 // =============================================================================
 
 export const INAV_RECEIVER_TYPES = [
-  { value: 'NONE', label: 'None' },
-  { value: 'SERIAL', label: 'Serial' },
+  { value: 'NONE', get label() { return t('utils.receiver_constants.none'); } },
+  { value: 'SERIAL', get label() { return t('utils.receiver_constants.serial'); } },
   { value: 'MSP', label: 'MSP' },
   { value: 'SIM (SITL)', label: 'SITL' },
 ] as const;
@@ -22,7 +23,7 @@ export const INAV_QUICK_SELECT = [
   { value: 'CRSF', label: 'CRSF / ELRS' },
   { value: 'SBUS', label: 'SBUS' },
   { value: 'IBUS', label: 'iBUS' },
-  { value: 'SPEK2048', label: 'Spektrum' },
+  { value: 'SPEK2048', get label() { return t('utils.receiver_constants.spektrum'); } },
 ] as const;
 
 // =============================================================================
@@ -33,8 +34,8 @@ export const BF_QUICK_SELECT = [
   { value: 9, label: 'CRSF / ELRS' },
   { value: 2, label: 'SBUS' },
   { value: 7, label: 'iBUS' },
-  { value: 1, label: 'Spektrum' },
-  { value: 12, label: 'FPort' },
+  { value: 1, get label() { return t('utils.receiver_constants.spektrum'); } },
+  { value: 12, get label() { return t('utils.receiver_constants.fport'); } },
 ] as const;
 
 export const BF_PROVIDERS: ReadonlyArray<{ value: number; label: string }> = [

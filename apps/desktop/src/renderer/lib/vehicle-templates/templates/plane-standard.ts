@@ -1,11 +1,12 @@
 import { Plane } from 'lucide-react';
 import type { VehicleTemplate } from '../types.js';
 import { batteryParams, airspeedParams, commonSafetyParams, simPhysicsParams, matches } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 export const planeStandard: VehicleTemplate = {
   slug: 'plane-standard',
   name: 'Standard Plane',
-  description: 'Traditional fuselage with separate elevator, rudder, ailerons',
+  get description() { return t('lib.plane_standard.traditionalFuselageWithSeparateElevatorRudder'); },
   icon: Plane,
   vehicleType: 'plane',
   category: 'fixed-wing',
@@ -20,10 +21,10 @@ export const planeStandard: VehicleTemplate = {
     batteryCapacity: 5000,
   },
   toParams: (p) => [
-    { name: 'SERVO1_FUNCTION', value: 4,  reason: 'Aileron',  requiresReboot: true },
-    { name: 'SERVO2_FUNCTION', value: 19, reason: 'Elevator', requiresReboot: true },
-    { name: 'SERVO3_FUNCTION', value: 70, reason: 'Throttle', requiresReboot: true },
-    { name: 'SERVO4_FUNCTION', value: 21, reason: 'Rudder',   requiresReboot: true },
+    { name: 'SERVO1_FUNCTION', value: 4,  reason: t('lib.plane_standard.aileron'),  requiresReboot: true },
+    { name: 'SERVO2_FUNCTION', value: 19, reason: t('lib.plane_standard.elevator'), requiresReboot: true },
+    { name: 'SERVO3_FUNCTION', value: 70, reason: t('lib.plane_standard.throttle'), requiresReboot: true },
+    { name: 'SERVO4_FUNCTION', value: 21, reason: t('lib.plane_standard.rudder'),   requiresReboot: true },
     ...airspeedParams(p),
     ...batteryParams(p),
     ...commonSafetyParams(),

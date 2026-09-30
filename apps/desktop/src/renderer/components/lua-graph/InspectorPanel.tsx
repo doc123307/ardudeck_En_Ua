@@ -8,6 +8,7 @@ import { Settings2, Timer } from 'lucide-react';
 import { useLuaGraphStore } from '../../stores/lua-graph-store';
 import { getNodeDefinition, getEffectivePorts } from './node-library';
 import { CATEGORY_COLORS, CATEGORY_LABELS } from './lua-graph-types';
+import { t } from '../../i18n';
 
 export function InspectorPanel() {
   const selectedNodeId = useLuaGraphStore((s) => s.selectedNodeId);
@@ -34,13 +35,13 @@ export function InspectorPanel() {
           <div className="flex items-center gap-2 mb-3">
             <Settings2 className="w-3.5 h-3.5 text-content-secondary" />
             <span className="text-[10px] font-medium uppercase tracking-wider text-content-secondary">
-              Script Settings
+              {t('lua_graph.InspectorPanel.scriptSettings')}
             </span>
           </div>
 
           <div className="flex flex-col gap-2.5">
             <div>
-              <label className="text-[10px] text-content-secondary block mb-0.5">Name</label>
+              <label className="text-[10px] text-content-secondary block mb-0.5">{t('lua_graph.InspectorPanel.name')}</label>
               <input
                 type="text"
                 value={graphName}
@@ -49,13 +50,13 @@ export function InspectorPanel() {
               />
             </div>
             <div>
-              <label className="text-[10px] text-content-secondary block mb-0.5">Description</label>
+              <label className="text-[10px] text-content-secondary block mb-0.5">{t('lua_graph.InspectorPanel.description')}</label>
               <textarea
                 value={graphDescription}
                 onChange={(e) => setGraphDescription(e.target.value)}
                 rows={2}
                 className="w-full text-xs bg-surface-input border border-subtle rounded px-2 py-1 text-content focus:outline-none focus:border-blue-500/40 resize-none"
-                placeholder="What does this script do?"
+                placeholder={t('lua_graph.InspectorPanel.whatDoesThisScriptDo')}
               />
             </div>
           </div>
@@ -65,11 +66,11 @@ export function InspectorPanel() {
           <div className="flex items-center gap-2 mb-3">
             <Timer className="w-3.5 h-3.5 text-amber-500" />
             <span className="text-[10px] font-medium uppercase tracking-wider text-content-secondary">
-              Run Interval
+              {t('lua_graph.InspectorPanel.runInterval')}
             </span>
           </div>
           <p className="text-[10px] text-content-tertiary mb-2">
-            How often the script executes. Lower values give faster response but use more CPU.
+            {t('lua_graph.InspectorPanel.howOftenTheScriptExecutesLower')}
           </p>
           <div className="flex items-center gap-2">
             <DraftNumberInput
@@ -133,7 +134,7 @@ export function InspectorPanel() {
       {def.properties.length > 0 && (
         <div className="px-3 py-3">
           <h4 className="text-[10px] font-medium uppercase tracking-wider text-content-secondary mb-2">
-            Properties
+            {t('lua_graph.InspectorPanel.properties')}
           </h4>
           <div className="flex flex-col gap-2.5">
             {def.properties.map((propDef) => {
@@ -173,7 +174,7 @@ export function InspectorPanel() {
                       className="w-full text-[11px] font-mono leading-snug bg-surface-input border border-subtle rounded px-2 py-1.5 text-content focus:outline-none focus:border-blue-500/40 resize-y whitespace-pre"
                     />
                     <p className="text-[10px] text-content-tertiary mt-1">
-                      Input pins are available as local variables. Finish with <span className="font-mono">return</span> listing the output pins in order.
+                      {t('lua_graph.InspectorPanel.inputPinsAreAvailableAsLocal')} <span className="font-mono">{t('lua_graph.InspectorPanel.return')}</span> {t('lua_graph.InspectorPanel.listingTheOutputPinsInOrder')}
                     </p>
                   </div>
                 );
@@ -230,11 +231,11 @@ export function InspectorPanel() {
       {(ports.inputs.length > 0 || ports.outputs.length > 0) && (
         <div className="px-3 py-3 border-t border-subtle">
           <h4 className="text-[10px] font-medium uppercase tracking-wider text-content-secondary mb-2">
-            Ports
+            {t('lua_graph.InspectorPanel.ports')}
           </h4>
           {ports.inputs.length > 0 && (
             <div className="mb-2">
-              <span className="text-[10px] text-content-tertiary">Inputs</span>
+              <span className="text-[10px] text-content-tertiary">{t('lua_graph.InspectorPanel.inputs')}</span>
               <div className="mt-1 flex flex-col gap-1">
                 {ports.inputs.map((p) => (
                   <div key={p.id} className="flex items-center gap-1.5 text-[10px]">
@@ -257,7 +258,7 @@ export function InspectorPanel() {
           )}
           {ports.outputs.length > 0 && (
             <div>
-              <span className="text-[10px] text-content-tertiary">Outputs</span>
+              <span className="text-[10px] text-content-tertiary">{t('lua_graph.InspectorPanel.outputs')}</span>
               <div className="mt-1 flex flex-col gap-1">
                 {ports.outputs.map((p) => (
                   <div key={p.id} className="flex items-center gap-1.5 text-[10px]">

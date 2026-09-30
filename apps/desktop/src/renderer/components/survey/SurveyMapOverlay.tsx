@@ -13,6 +13,7 @@ import { cullPathForViewport } from './path-culling';
 import { useSurveyStore } from '../../stores/survey-store';
 import { useSettingsStore } from '../../stores/settings-store';
 import type { LatLng } from './survey-types';
+import { t as tr } from '../../i18n';
 
 /** Preview cap: enough to read the coverage, few enough to stay smooth. */
 const MAX_FOOTPRINTS = 500;
@@ -231,7 +232,7 @@ const VertexMarker = memo(function VertexMarker({
       <Tooltip direction="top" offset={[0, -8]} opacity={0.9} pane="vertexTooltipPane">
         <span style={{ fontSize: '10px', fontFamily: 'monospace', whiteSpace: 'pre' }}>
           {`P${index + 1}: ${position.lat.toFixed(6)}, ${position.lng.toFixed(6)}`}
-          {locked ? '\nLocked' : canDelete ? '\nRight-click to delete' : ''}
+          {locked ? tr('survey.SurveyMapOverlay.locked') : canDelete ? tr('survey.SurveyMapOverlay.rightClickToDelete') : ''}
         </span>
       </Tooltip>
     </Marker>
@@ -555,7 +556,7 @@ export function SurveyMapOverlay() {
               >
                 {!geometryLocked && (
                   <Tooltip sticky opacity={0.9} pane="vertexTooltipPane">
-                    <span style={{ fontSize: '10px' }}>Click to add a point</span>
+                    <span style={{ fontSize: '10px' }}>{tr('survey.SurveyMapOverlay.clickToAddAPoint')}</span>
                   </Tooltip>
                 )}
               </Polyline>
@@ -582,7 +583,7 @@ export function SurveyMapOverlay() {
                     >
                       {!geometryLocked && (
                         <Tooltip sticky opacity={0.9} pane="vertexTooltipPane">
-                          <span style={{ fontSize: '10px' }}>Click to add a point</span>
+                          <span style={{ fontSize: '10px' }}>{tr('survey.SurveyMapOverlay.clickToAddAPoint')}</span>
                         </Tooltip>
                       )}
                     </Polyline>
@@ -677,7 +678,7 @@ export function SurveyMapOverlay() {
                     eventHandlers={{ drag: commitArm(arm), dragend: commitArm(arm), contextmenu: resetArm }}
                   >
                     <Tooltip direction="top" offset={[0, -8]} opacity={0.9} pane="vertexTooltipPane">
-                      <span style={{ fontSize: '10px' }}>Drag to shape the curve · right-click to reset</span>
+                      <span style={{ fontSize: '10px' }}>{tr('survey.SurveyMapOverlay.dragToShapeTheCurveRight')}</span>
                     </Tooltip>
                   </Marker>
                 ))}
@@ -709,7 +710,7 @@ export function SurveyMapOverlay() {
                   }}
                 >
                   <Tooltip direction="top" offset={[0, -8]} opacity={0.9} pane="vertexTooltipPane">
-                    <span style={{ fontSize: '10px' }}>Click to add a control point</span>
+                    <span style={{ fontSize: '10px' }}>{tr('survey.SurveyMapOverlay.clickToAddAControlPoint')}</span>
                   </Tooltip>
                 </Marker>
               );

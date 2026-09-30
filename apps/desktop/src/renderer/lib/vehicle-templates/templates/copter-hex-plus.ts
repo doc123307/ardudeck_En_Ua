@@ -1,11 +1,12 @@
 import { Hexagon } from 'lucide-react';
 import type { VehicleTemplate } from '../types.js';
 import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 export const copterHexPlus: VehicleTemplate = {
   slug: 'copter-hex-plus',
   name: 'Hexacopter (+)',
-  description: 'Six motors in +, classic heavy-lift layout',
+  get description() { return t('lib.copter_hex_plus.sixMotorsInClassicHeavyLift'); },
   icon: Hexagon,
   vehicleType: 'copter',
   category: 'multirotor',
@@ -19,7 +20,7 @@ export const copterHexPlus: VehicleTemplate = {
     batteryCapacity: 6000,
   },
   toParams: (p) => [
-    { name: 'FRAME_CLASS', value: 2, reason: 'Hexacopter', requiresReboot: true },
+    { name: 'FRAME_CLASS', value: 2, reason: t('lib.copter_hex_plus.hexacopter'), requiresReboot: true },
     { name: 'FRAME_TYPE',  value: 0, reason: '+ arrangement',    requiresReboot: true },
     ...batteryParams(p),
     ...commonSafetyParams(),

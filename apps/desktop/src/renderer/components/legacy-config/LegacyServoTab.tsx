@@ -9,6 +9,7 @@ import { useLegacyConfigStore, type LegacyServoConfig } from '../../stores/legac
 import { DraftNumberInput } from '../../hooks/useNumericDraft';
 import { CompactSlider } from '../ui/DraggableSlider';
 import { Settings } from 'lucide-react';
+import { t } from '../../i18n';
 
 export default function LegacyServoTab() {
   const { servoConfigs, updateServoConfig } = useLegacyConfigStore();
@@ -25,8 +26,8 @@ export default function LegacyServoTab() {
     return (
       <div className="text-center py-12 text-content-secondary">
         <Settings className="w-10 h-10 text-content-secondary mb-3 mx-auto" />
-        <p>No servo configurations found.</p>
-        <p className="text-sm mt-1">Run the dump command to load configuration.</p>
+        <p>{t('legacy_config.LegacyServoTab.noServoConfigurationsFound')}</p>
+        <p className="text-sm mt-1">{t('legacy_config.LegacyServoTab.runTheDumpCommandToLoad')}</p>
       </div>
     );
   }
@@ -40,10 +41,9 @@ export default function LegacyServoTab() {
         <div className="flex items-start gap-3">
           <Settings className="w-6 h-6 text-amber-400 shrink-0" />
           <div>
-            <p className="text-sm text-amber-300 font-medium">Servo Endpoint Configuration</p>
+            <p className="text-sm text-amber-300 font-medium">{t('legacy_config.LegacyServoTab.servoEndpointConfiguration')}</p>
             <p className="text-xs text-amber-300/70 mt-1">
-              Configure min/max/center positions and rate for each servo.
-              Range: 750-2250μs for legacy F3 boards. Changes are sent immediately.
+              {t('legacy_config.LegacyServoTab.configureMinMaxCenterPositionsAnd')}
             </p>
           </div>
         </div>
@@ -68,13 +68,13 @@ export default function LegacyServoTab() {
                     S{servo.index}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-content">Servo {servo.index}</h3>
-                    <p className="text-xs text-content-secondary">Travel: {travelRange}μs</p>
+                    <h3 className="font-semibold text-content">{t('legacy_config.LegacyServoTab.servo')} {servo.index}</h3>
+                    <p className="text-xs text-content-secondary">{t('legacy_config.LegacyServoTab.travel')} {travelRange}μs</p>
                   </div>
                 </div>
                 {isReversed && (
                   <span className="px-2 py-1 rounded-full bg-orange-500/20 text-orange-400 text-xs font-medium">
-                    Reversed
+                    {t('legacy_config.LegacyServoTab.reversed')}
                   </span>
                 )}
               </div>
@@ -112,7 +112,7 @@ export default function LegacyServoTab() {
                 {/* Sliders */}
                 <div className="grid grid-cols-2 gap-4">
                   <CompactSlider
-                    label="Minimum"
+                    label={t('legacy_config.LegacyServoTab.minimum')}
                     value={servo.min}
                     onChange={(v) => handleChange({ ...servo, min: v })}
                     min={750}
@@ -121,7 +121,7 @@ export default function LegacyServoTab() {
                     color={color}
                   />
                   <CompactSlider
-                    label="Maximum"
+                    label={t('legacy_config.LegacyServoTab.maximum')}
                     value={servo.max}
                     onChange={(v) => handleChange({ ...servo, max: v })}
                     min={750}
@@ -133,7 +133,7 @@ export default function LegacyServoTab() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <CompactSlider
-                    label="Center"
+                    label={t('legacy_config.LegacyServoTab.center')}
                     value={servo.mid}
                     onChange={(v) => handleChange({ ...servo, mid: v })}
                     min={750}
@@ -143,13 +143,13 @@ export default function LegacyServoTab() {
                   />
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-content-secondary">Rate</span>
+                      <span className="text-xs text-content-secondary">{t('legacy_config.LegacyServoTab.rate')}</span>
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => handleChange({ ...servo, rate: -servo.rate })}
                           className="px-2 py-0.5 rounded bg-surface-raised hover:bg-surface-raised text-content-secondary text-xs"
                         >
-                          Reverse
+                          {t('legacy_config.LegacyServoTab.reverse')}
                         </button>
                         <DraftNumberInput
                           min={-125}
@@ -180,19 +180,19 @@ export default function LegacyServoTab() {
                     onClick={() => handleChange({ ...servo, min: 1000, max: 2000, mid: 1500, rate: 100 })}
                     className="flex-1 py-1.5 text-xs text-content-secondary hover:text-content hover:bg-surface-raised rounded transition-colors"
                   >
-                    Reset Default
+                    {t('legacy_config.LegacyServoTab.resetDefault')}
                   </button>
                   <button
                     onClick={() => handleChange({ ...servo, min: 1100, max: 1900, mid: 1500, rate: 100 })}
                     className="flex-1 py-1.5 text-xs text-content-secondary hover:text-content hover:bg-surface-raised rounded transition-colors"
                   >
-                    Safe Range
+                    {t('legacy_config.LegacyServoTab.safeRange')}
                   </button>
                   <button
                     onClick={() => handleChange({ ...servo, min: 750, max: 2250, mid: 1500, rate: 100 })}
                     className="flex-1 py-1.5 text-xs text-content-secondary hover:text-content hover:bg-surface-raised rounded transition-colors"
                   >
-                    Full Range
+                    {t('legacy_config.LegacyServoTab.fullRange')}
                   </button>
                 </div>
               </div>

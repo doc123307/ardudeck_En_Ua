@@ -37,6 +37,7 @@ import { useConnectionStore } from '../../stores/connection-store';
 import { useActiveVehicleIdentity } from '../../hooks/useFleet';
 import { useResolvedTheme } from '../../hooks/useTheme';
 import { FieldGraph } from './FieldGraph';
+import { t } from '../../i18n';
 
 // GraphSpec moved to inspector-store.ts so the store can own the canonical
 // list of plotted graphs (survives view switches). Imported above as a type.
@@ -102,7 +103,7 @@ function GraphHeaderActions(props: IDockviewHeaderActionsProps): JSX.Element | n
     // tabs in main, the user closes them explicitly via the tab's X.
     window.electronAPI.openDetachedWindow({
       componentId: 'inspector-graphs',
-      title: `Inspector: ${specs.length} graph${specs.length === 1 ? '' : 's'}`,
+      title: t('inspector.MavlinkInspectorView.inspectorGraph', { length: specs.length, v2: specs.length === 1 ? '' : 's' }),
       initialBounds: { width: 1000, height: 700 },
       props: { initialGraphs: specs, initialSamples, initialOverlays },
     });
@@ -113,13 +114,13 @@ function GraphHeaderActions(props: IDockviewHeaderActionsProps): JSX.Element | n
       data-tour="inspector-popout"
       onClick={handleClick}
       className="h-7 px-2 mx-0.5 rounded-md inline-flex items-center gap-1.5 text-xs transition-colors text-content-secondary hover:text-content hover:bg-surface-raised"
-      title={`Open all ${props.group.panels.length} tab${props.group.panels.length === 1 ? '' : 's'} in a new window`}
+      title={t('inspector.MavlinkInspectorView.openAllTabInANew', { length: props.group.panels.length, v2: props.group.panels.length === 1 ? '' : 's' })}
     >
       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
           d="M14 3h7m0 0v7m0-7L10 14M5 5h4M5 19h14a0 0 0 010 0v-4" />
       </svg>
-      <span>Pop out</span>
+      <span>{t('inspector.MavlinkInspectorView.popOut')}</span>
     </button>
   );
 }
@@ -135,11 +136,9 @@ function GraphsWatermark(): JSX.Element {
               d="M7 12l3-3 3 3 4-4M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
           </svg>
         </div>
-        <div className="text-sm font-medium text-content mb-1">Graph a field to start plotting</div>
+        <div className="text-sm font-medium text-content mb-1">{t('inspector.MavlinkInspectorView.graphAFieldToStartPlotting')}</div>
         <div className="text-xs text-content-secondary leading-relaxed">
-          Expand a message in the tree on the left, then click the graph icon on any numeric field.
-          Each graph becomes a tab here. Pop them out to separate windows, or drag tabs together
-          to build a multi-graph view.
+          {t('inspector.MavlinkInspectorView.expandAMessageInTheTree')}
         </div>
       </div>
     </div>
@@ -283,18 +282,18 @@ export function MavlinkInspectorView(): JSX.Element {
             </svg>
           </div>
           <div className="flex-1" data-tour="inspector-stats">
-            <h2 className="text-base font-semibold text-content">MAVLink Inspector</h2>
+            <h2 className="text-base font-semibold text-content">{t('inspector.MavlinkInspectorView.mavlinkInspector')}</h2>
             <div className="text-xs text-content-secondary tabular-nums">
               {isConnected ? (
                 <>
-                  {totalMsgs} message {totalMsgs === 1 ? 'type' : 'types'}
+                  {totalMsgs} {t('inspector.MavlinkInspectorView.message')} {totalMsgs === 1 ? 'type' : 'types'}
                   {' · '}
-                  {totalRate.hz.toFixed(1)} Hz total
+                  {totalRate.hz.toFixed(1)} {t('inspector.MavlinkInspectorView.hzTotal')}
                   {' · '}
                   {formatBps(totalRate.bps)}
                 </>
               ) : (
-                'Not connected, waiting for packets'
+                t('inspector.MavlinkInspectorView.notConnectedWaitingForPackets')
               )}
             </div>
           </div>
@@ -307,16 +306,16 @@ export function MavlinkInspectorView(): JSX.Element {
                   ? 'bg-amber-500/15 border-amber-500/40 text-amber-500 hover:bg-amber-500/25'
                   : 'bg-surface border-subtle text-content-secondary hover:bg-surface-raised hover:text-content'
               }`}
-              title={paused ? 'Resume packet capture' : 'Pause packet capture'}
+              title={paused ? t('inspector.MavlinkInspectorView.resumePacketCapture') : t('inspector.MavlinkInspectorView.pausePacketCapture')}
             >
-              {paused ? 'Resume' : 'Pause'}
+              {paused ? t('inspector.MavlinkInspectorView.resume') : t('inspector.MavlinkInspectorView.pause')}
             </button>
             <button
               onClick={reset}
               className="px-2.5 py-1.5 text-xs rounded-md bg-surface border border-subtle text-content-secondary hover:bg-surface-raised hover:text-content transition-colors"
-              title="Clear all captured messages"
+              title={t('inspector.MavlinkInspectorView.clearAllCapturedMessages')}
             >
-              Clear
+              {t('inspector.MavlinkInspectorView.clear')}
             </button>
           </div>
         </div>
@@ -333,7 +332,7 @@ export function MavlinkInspectorView(): JSX.Element {
               type="text"
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
-              placeholder="Search messages…"
+              placeholder={t('inspector.MavlinkInspectorView.searchMessages')}
               className="w-full pl-8 pr-3 py-1.5 text-sm bg-surface-input border border-subtle rounded-md placeholder:text-content-tertiary text-content focus:outline-none focus:border-blue-500/60"
             />
           </div>
@@ -342,11 +341,11 @@ export function MavlinkInspectorView(): JSX.Element {
             value={sysidFilter}
             onChange={(e) => setSysidFilter(Number(e.target.value))}
             className="px-2 py-1.5 text-sm bg-surface-input border border-subtle rounded-md text-content focus:outline-none focus:border-blue-500/60"
-            title="Filter by system ID"
+            title={t('inspector.MavlinkInspectorView.filterBySystemId')}
           >
-            <option value={0}>All sysids</option>
+            <option value={0}>{t('inspector.MavlinkInspectorView.allSysids')}</option>
             {sysids.map((s) => (
-              <option key={s} value={s}>sysid {s}</option>
+              <option key={s} value={s}>{t('inspector.MavlinkInspectorView.sysid')} {s}</option>
             ))}
           </select>
 
@@ -354,11 +353,11 @@ export function MavlinkInspectorView(): JSX.Element {
             value={compidFilter}
             onChange={(e) => setCompidFilter(Number(e.target.value))}
             className="px-2 py-1.5 text-sm bg-surface-input border border-subtle rounded-md text-content focus:outline-none focus:border-blue-500/60"
-            title="Filter by component ID"
+            title={t('inspector.MavlinkInspectorView.filterByComponentId')}
           >
-            <option value={0}>All compids</option>
+            <option value={0}>{t('inspector.MavlinkInspectorView.allCompids')}</option>
             {compids.map((c) => (
-              <option key={c} value={c}>compid {c}</option>
+              <option key={c} value={c}>{t('inspector.MavlinkInspectorView.compid')} {c}</option>
             ))}
           </select>
         </div>
@@ -379,7 +378,7 @@ export function MavlinkInspectorView(): JSX.Element {
               return (
                 <div key={groupKey} className="mb-4">
                   <div className="text-[10px] uppercase tracking-wider text-content-tertiary font-semibold px-2 py-1">
-                    Vehicle {sysid} · Component {compid}
+                    {t('inspector.MavlinkInspectorView.vehicle')} {sysid} {t('inspector.MavlinkInspectorView.component')} {compid}
                   </div>
                   <div className="rounded-lg overflow-hidden border border-subtle bg-surface">
                     {msgs.map((m) => (
@@ -450,7 +449,7 @@ function MessageRow({
         <div className="bg-surface-inset/40 border-t border-subtle px-3 py-2">
           {fields.length === 0 ? (
             <div className="text-xs text-content-tertiary italic px-2 py-1">
-              No decoder registered for msgid {stats.msgid}, raw payload only.
+              {t('inspector.MavlinkInspectorView.noDecoderRegisteredForMsgid')} {stats.msgid}{t('inspector.MavlinkInspectorView.rawPayloadOnly')}
             </div>
           ) : (
             <table className="w-full text-xs font-mono">
@@ -507,7 +506,7 @@ function TreeResizeHandle({ onDrag }: { onDrag: (dx: number) => void }): JSX.Ele
     <div
       onPointerDown={down}
       className="w-1.5 shrink-0 cursor-col-resize border-r border-subtle bg-transparent transition-colors hover:bg-blue-500/40 active:bg-blue-500/60"
-      title="Drag to resize"
+      title={t('inspector.MavlinkInspectorView.dragToResize')}
     />
   );
 }
@@ -576,11 +575,11 @@ function FieldRow({
             title={
               plotted
                 ? isPrimary
-                  ? `Close the ${stats.name} graph`
-                  : 'Remove this trace from the graph'
+                  ? t('inspector.MavlinkInspectorView.closeTheGraph', { name: stats.name })
+                  : t('inspector.MavlinkInspectorView.removeThisTraceFromTheGraph')
                 : owner
-                  ? `Plot on the ${stats.name} graph`
-                  : 'Graph this field'
+                  ? t('inspector.MavlinkInspectorView.plotOnTheGraph', { name: stats.name })
+                  : t('inspector.MavlinkInspectorView.graphThisField')
             }
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -604,7 +603,7 @@ function EmptyState({
   if (hasFilter) {
     return (
       <div className="flex items-center justify-center h-full text-center p-8">
-        <div className="text-content-secondary text-sm">No messages match your filter.</div>
+        <div className="text-content-secondary text-sm">{t('inspector.MavlinkInspectorView.noMessagesMatchYourFilter')}</div>
       </div>
     );
   }
@@ -618,12 +617,12 @@ function EmptyState({
           </svg>
         </div>
         <div className="text-sm font-medium text-content mb-1">
-          {isConnected ? 'Waiting for packets…' : 'Not connected'}
+          {isConnected ? t('inspector.MavlinkInspectorView.waitingForPackets') : t('inspector.MavlinkInspectorView.notConnected')}
         </div>
         <div className="text-xs text-content-secondary">
           {isConnected
-            ? 'Messages will appear here as soon as the FC starts sending.'
-            : 'Connect to a flight controller from the panel on the left.'}
+            ? t('inspector.MavlinkInspectorView.messagesWillAppearHereAsSoon')
+            : t('inspector.MavlinkInspectorView.connectToAFlightControllerFrom')}
         </div>
       </div>
     </div>

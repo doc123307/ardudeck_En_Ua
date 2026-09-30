@@ -5,6 +5,7 @@ import { FlightLogPanel } from './FlightLogPanel';
 import { TagInput } from '../ui/TagInput';
 import type { FlightStatus } from '../../../shared/mission-library-types';
 import { formatDistanceFromMeters } from '../../../shared/user-units.js';
+import { t } from '../../i18n';
 
 const STATUS_COLORS: Record<FlightStatus, string> = {
   planned: 'text-blue-400',
@@ -120,7 +121,7 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
             <button
               onClick={handleStartEdit}
               className="p-1.5 rounded-md hover:bg-surface-raised text-content-secondary hover:text-content transition-colors"
-              title="Edit"
+              title={t('mission_library.MissionDetailPanel.edit')}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -130,7 +131,7 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
           <button
             onClick={clearSelection}
             className="p-1.5 rounded-md hover:bg-surface-raised text-content-secondary hover:text-content transition-colors"
-            title="Close"
+            title={t('mission_library.MissionDetailPanel.close')}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -145,12 +146,12 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
           {/* Description */}
           {isEditing ? (
             <div>
-              <label className="block text-xs font-medium text-content-secondary mb-1">Description</label>
+              <label className="block text-xs font-medium text-content-secondary mb-1">{t('mission_library.MissionDetailPanel.description')}</label>
               <textarea
                 value={editDescription}
                 onChange={e => setEditDescription(e.target.value)}
                 rows={3}
-                placeholder="Optional mission description..."
+                placeholder={t('mission_library.MissionDetailPanel.optionalMissionDescription')}
                 className="w-full px-2.5 py-1.5 bg-surface-input border border rounded-lg text-sm text-content placeholder-content-tertiary focus:outline-none focus:border-blue-500/50 resize-none"
               />
             </div>
@@ -161,19 +162,19 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
           {/* Metadata grid */}
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="bg-surface-raised rounded-lg px-3 py-2">
-              <span className="text-content-secondary block">Waypoints</span>
+              <span className="text-content-secondary block">{t('mission_library.MissionDetailPanel.waypoints')}</span>
               <span className="text-content font-medium">{selectedMission.waypointCount}</span>
             </div>
             <div className="bg-surface-raised rounded-lg px-3 py-2">
-              <span className="text-content-secondary block">Distance</span>
+              <span className="text-content-secondary block">{t('mission_library.MissionDetailPanel.distance')}</span>
               <span className="text-content font-medium">{formatDistanceFromMeters(selectedMission.totalDistanceMeters, distanceUnit)}</span>
             </div>
             <div className="bg-surface-raised rounded-lg px-3 py-2">
-              <span className="text-content-secondary block">Vehicle</span>
-              <span className="text-content font-medium">{vehicle?.name ?? 'None'}</span>
+              <span className="text-content-secondary block">{t('mission_library.MissionDetailPanel.vehicle')}</span>
+              <span className="text-content font-medium">{vehicle?.name ?? t('mission_library.MissionDetailPanel.none')}</span>
             </div>
             <div className="bg-surface-raised rounded-lg px-3 py-2">
-              <span className="text-content-secondary block">Flights</span>
+              <span className="text-content-secondary block">{t('mission_library.MissionDetailPanel.flights')}</span>
               <span className="text-content font-medium">{selectedMission.flightCount}</span>
             </div>
           </div>
@@ -181,7 +182,7 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
           {/* Tags */}
           {isEditing ? (
             <div>
-              <label className="block text-xs font-medium text-content-secondary mb-1">Tags</label>
+              <label className="block text-xs font-medium text-content-secondary mb-1">{t('mission_library.MissionDetailPanel.tags')}</label>
               <TagInput
                 tags={editTags}
                 onChange={setEditTags}
@@ -205,8 +206,8 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
           {/* Dates */}
           {!isEditing && (
             <div className="text-[11px] text-content-secondary space-y-0.5">
-              <div>Created: {new Date(selectedMission.createdAt).toLocaleDateString()}</div>
-              <div>Updated: {new Date(selectedMission.updatedAt).toLocaleDateString()}</div>
+              <div>{t('mission_library.MissionDetailPanel.created')} {new Date(selectedMission.createdAt).toLocaleDateString()}</div>
+              <div>{t('mission_library.MissionDetailPanel.updated')} {new Date(selectedMission.updatedAt).toLocaleDateString()}</div>
             </div>
           )}
 
@@ -223,13 +224,13 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
                       : 'bg-blue-600 hover:bg-blue-500 text-white'
                   }`}
                 >
-                  {saving ? 'Saving...' : 'Save Changes'}
+                  {saving ? t('mission_library.MissionDetailPanel.saving') : t('mission_library.MissionDetailPanel.saveChanges')}
                 </button>
                 <button
                   onClick={handleCancelEdit}
                   className="px-3 py-1.5 text-xs font-medium bg-surface-raised hover:bg-surface-raised text-content rounded-lg transition-colors"
                 >
-                  Cancel
+                  {t('mission_library.MissionDetailPanel.cancel')}
                 </button>
               </>
             ) : (
@@ -241,7 +242,7 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
-                  Load into Editor
+                  {t('mission_library.MissionDetailPanel.loadIntoEditor')}
                 </button>
                 <button
                   onClick={handleStartEdit}
@@ -250,13 +251,13 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Edit
+                  {t('mission_library.MissionDetailPanel.edit')}
                 </button>
                 <button
                   onClick={handleDuplicate}
                   className="px-3 py-1.5 text-xs font-medium bg-surface-raised hover:bg-surface-raised text-content rounded-lg transition-colors"
                 >
-                  Duplicate
+                  {t('mission_library.MissionDetailPanel.duplicate')}
                 </button>
                 <button
                   onClick={handleDelete}
@@ -266,7 +267,7 @@ export function MissionDetailPanel({ onLoadToEditor }: MissionDetailPanelProps) 
                       : 'bg-red-600/20 hover:bg-red-600/30 text-red-400'
                   }`}
                 >
-                  {confirmDelete ? 'Confirm Delete' : 'Delete'}
+                  {confirmDelete ? t('mission_library.MissionDetailPanel.confirmDelete') : t('mission_library.MissionDetailPanel.delete')}
                 </button>
               </>
             )}

@@ -8,6 +8,7 @@
 import React from 'react';
 import { Info, Lightbulb, AlertTriangle, HelpCircle, type LucideIcon } from 'lucide-react';
 import { useSettingsStore } from '../../stores/settings-store';
+import { t } from '../../i18n';
 
 export type InfoCardVariant = 'info' | 'tip' | 'warning' | 'help';
 
@@ -134,7 +135,7 @@ export function Tip({ children, className = '' }: TipProps) {
   return (
     <div className={`bg-surface-raised rounded-lg p-3 ${className}`}>
       <p className="text-xs text-content-secondary">
-        <span className="text-blue-400">Tip:</span> {children}
+        <span className="text-blue-400">{t('ui.InfoCard.tip')}</span> {children}
       </p>
     </div>
   );

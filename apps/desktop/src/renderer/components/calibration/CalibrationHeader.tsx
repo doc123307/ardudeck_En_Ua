@@ -6,12 +6,13 @@
 
 import { useCalibrationStore } from '../../stores/calibration-store';
 import { CALIBRATION_TYPES, type CalibrationStep } from '../../../shared/calibration-types';
+import { t as tr } from '../../i18n';
 
 const STEPS: { id: CalibrationStep; label: string }[] = [
-  { id: 'select', label: 'Select' },
-  { id: 'prepare', label: 'Prepare' },
-  { id: 'calibrating', label: 'Calibrate' },
-  { id: 'complete', label: 'Complete' },
+  { id: 'select', get label() { return tr('calibration.CalibrationHeader.select'); } },
+  { id: 'prepare', get label() { return tr('calibration.CalibrationHeader.prepare'); } },
+  { id: 'calibrating', get label() { return tr('calibration.CalibrationHeader.calibrate'); } },
+  { id: 'complete', get label() { return tr('calibration.CalibrationHeader.complete'); } },
 ];
 
 export function CalibrationHeader() {
@@ -36,7 +37,7 @@ export function CalibrationHeader() {
 
           <div>
             <h2 className="text-lg font-semibold text-content">
-              {calTypeInfo ? calTypeInfo.name : 'Calibration'}
+              {calTypeInfo ? calTypeInfo.name : tr('calibration.CalibrationHeader.calibration')}
             </h2>
             <div className="flex items-center gap-2 mt-0.5">
               {/* FC variant badge - show variant name, or protocol as fallback */}

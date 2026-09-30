@@ -27,6 +27,7 @@ import {
   type CompanionTemplate,
   type BoardFamily,
 } from './companion-templates';
+import { t as tr } from '../../i18n';
 
 // ── Per-template icons ──────────────────────────────────────────
 
@@ -44,9 +45,9 @@ const TEMPLATE_ICON: Record<string, LucideIcon> = {
 };
 
 const FLASH_METHOD_LABEL: Record<string, { label: string; icon: LucideIcon; description: string }> = {
-  serial: { label: 'USB Flash', icon: Usb, description: 'Connect board via USB and flash directly' },
-  image: { label: 'SD Card Image', icon: HardDrive, description: 'Download image and write to SD card' },
-  script: { label: 'Install Script', icon: Terminal, description: 'Run install script on the board' },
+  serial: { get label() { return tr('companion.CompanionStoreDialog.usbFlash'); }, icon: Usb, get description() { return tr('companion.CompanionStoreDialog.connectBoardViaUsbAndFlash'); } },
+  image: { get label() { return tr('companion.CompanionStoreDialog.sdCardImage'); }, icon: HardDrive, get description() { return tr('companion.CompanionStoreDialog.downloadImageAndWriteToSd'); } },
+  script: { get label() { return tr('companion.CompanionStoreDialog.installScript'); }, icon: Terminal, get description() { return tr('companion.CompanionStoreDialog.runInstallScriptOnTheBoard'); } },
 };
 
 // ── Board Selection View ────────────────────────────────────────
@@ -62,7 +63,7 @@ function BoardSelectionView({ onSelectBoard }: { onSelectBoard: (board: BoardFam
   return (
     <div className="p-5 space-y-4">
       <p className="text-xs text-content-secondary">
-        Select your companion board to see available firmware and software templates.
+        {tr('companion.CompanionStoreDialog.selectYourCompanionBoardToSee')}
       </p>
       <div className="grid grid-cols-2 gap-3">
         {boardEntries.map(([key, board]) => (
@@ -90,7 +91,7 @@ function BoardSelectionView({ onSelectBoard }: { onSelectBoard: (board: BoardFam
               </div>
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-subtle">
                 <span className="text-[10px] text-content-tertiary">
-                  {templateCounts[key]} template{templateCounts[key] !== 1 ? 's' : ''}
+                  {templateCounts[key]} {tr('companion.CompanionStoreDialog.template')}{templateCounts[key] !== 1 ? 's' : ''}
                 </span>
                 <ArrowRight className="w-3.5 h-3.5 text-content-tertiary group-hover:text-content-secondary transition-colors" />
               </div>
@@ -124,7 +125,7 @@ function TemplateListView({
         className="flex items-center gap-1.5 text-xs text-content-secondary hover:text-content transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
-        All boards
+        {tr('companion.CompanionStoreDialog.allBoards')}
       </button>
 
       <div className="flex items-center gap-3">
@@ -135,7 +136,7 @@ function TemplateListView({
         </div>
         <div>
           <div className="text-sm font-medium text-content">{boardInfo.name}</div>
-          <div className="text-[10px] text-content-secondary">{templates.length} available templates</div>
+          <div className="text-[10px] text-content-secondary">{templates.length} {tr('companion.CompanionStoreDialog.availableTemplates')}</div>
         </div>
       </div>
 
@@ -184,7 +185,7 @@ function TemplateListView({
                           </div>
                         )}
                         <div className="text-[10px] text-content-tertiary">
-                          {template.boardVariants.length} board{template.boardVariants.length !== 1 ? 's' : ''}
+                          {template.boardVariants.length} {tr('companion.CompanionStoreDialog.board')}{template.boardVariants.length !== 1 ? 's' : ''}
                         </div>
                         <div className="flex-1" />
                         <ArrowRight className="w-3.5 h-3.5 text-content-tertiary group-hover:text-content-secondary transition-colors" />
@@ -257,7 +258,7 @@ function TemplateDetailView({
     if (result) {
       setFlashResult({
         success: result.success,
-        message: result.success ? 'Flash complete!' : (result.error ?? 'Flash failed'),
+        message: result.success ? tr('companion.CompanionStoreDialog.flashComplete') : (result.error ?? tr('companion.CompanionStoreDialog.flashFailed')),
       });
     }
   }, [selectedPort, detectedChip, template.boardVariants]);
@@ -275,7 +276,7 @@ function TemplateDetailView({
         className="flex items-center gap-1.5 text-xs text-content-secondary hover:text-content transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
-        Back to templates
+        {tr('companion.CompanionStoreDialog.backToTemplates')}
       </button>
 
       {/* Header */}
@@ -288,7 +289,7 @@ function TemplateDetailView({
           <p className="text-xs text-content-secondary mt-1">{template.description}</p>
           {template.projectName && (
             <div className="flex items-center gap-1.5 mt-2">
-              <span className="text-[10px] text-content-tertiary">Powered by</span>
+              <span className="text-[10px] text-content-tertiary">{tr('companion.CompanionStoreDialog.poweredBy')}</span>
               {template.projectUrl ? (
                 <a
                   href={template.projectUrl}
@@ -313,7 +314,7 @@ function TemplateDetailView({
 
       {/* Supported boards */}
       <div className="bg-surface rounded-xl border border-subtle p-4">
-        <h4 className="text-xs font-medium text-content mb-2">Supported Boards</h4>
+        <h4 className="text-xs font-medium text-content mb-2">{tr('companion.CompanionStoreDialog.supportedBoards')}</h4>
         <div className="flex flex-wrap gap-1.5">
           {template.boardVariants.map((variant) => (
             <span key={variant} className="px-2 py-0.5 bg-surface-raised rounded text-[11px] text-content-secondary">
@@ -325,7 +326,7 @@ function TemplateDetailView({
 
       {/* Features */}
       <div className="bg-surface rounded-xl border border-subtle p-4">
-        <h4 className="text-xs font-medium text-content mb-2">Features</h4>
+        <h4 className="text-xs font-medium text-content mb-2">{tr('companion.CompanionStoreDialog.features')}</h4>
         <ul className="space-y-1.5">
           {template.features.map((feature) => (
             <li key={feature} className="flex items-start gap-2 text-[11px] text-content-secondary">
@@ -338,7 +339,7 @@ function TemplateDetailView({
 
       {/* Requirements */}
       <div className="bg-surface rounded-xl border border-subtle p-4">
-        <h4 className="text-xs font-medium text-content mb-2">Requirements</h4>
+        <h4 className="text-xs font-medium text-content mb-2">{tr('companion.CompanionStoreDialog.requirements')}</h4>
         <ul className="space-y-1.5">
           {template.requirements.map((req) => (
             <li key={req} className="flex items-start gap-2 text-[11px] text-content-secondary">
@@ -354,7 +355,7 @@ function TemplateDetailView({
         <div className="flex items-center gap-2">
           {flash && <flash.icon className="w-4 h-4 text-content-secondary" />}
           <h4 className="text-xs font-medium text-content">
-            {flash?.label ?? 'Setup'}: {flash?.description ?? ''}
+            {flash?.label ?? tr('companion.CompanionStoreDialog.setup')}: {flash?.description ?? ''}
           </h4>
         </div>
 
@@ -362,9 +363,9 @@ function TemplateDetailView({
           <div className="space-y-3">
             {esptoolAvailable === false && (
               <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-                <p className="text-xs text-red-400 font-medium">esptool not found</p>
+                <p className="text-xs text-red-400 font-medium">{tr('companion.CompanionStoreDialog.esptoolNotFound')}</p>
                 <p className="text-[11px] text-red-400/70 mt-1">
-                  Install it with: <span className="font-mono">pip install esptool</span>
+                  {tr('companion.CompanionStoreDialog.installItWith')} <span className="font-mono">{tr('companion.CompanionStoreDialog.pipInstallEsptool')}</span>
                 </p>
               </div>
             )}
@@ -372,14 +373,14 @@ function TemplateDetailView({
             {esptoolAvailable !== false && (
               <>
                 <div className="space-y-2">
-                  <label className="block text-[11px] text-content-secondary">Serial Port</label>
+                  <label className="block text-[11px] text-content-secondary">{tr('companion.CompanionStoreDialog.serialPort')}</label>
                   <div className="flex gap-2">
                     <select
                       value={selectedPort}
                       onChange={(e) => { setSelectedPort(e.target.value); setDetectedChip(null); }}
                       className="flex-1 bg-surface-input border border-subtle rounded-lg px-3 py-2 text-xs text-content focus:outline-none focus:ring-1 focus:ring-blue-500/50"
                     >
-                      <option value="">Select port...</option>
+                      <option value="">{tr('companion.CompanionStoreDialog.selectPort')}</option>
                       {ports.map((port) => (
                         <option key={port} value={port}>{port}</option>
                       ))}
@@ -389,7 +390,7 @@ function TemplateDetailView({
                       disabled={!selectedPort || detecting}
                       className="px-3 py-2 bg-surface-raised hover:bg-surface-raised disabled:opacity-40 text-content text-xs rounded-lg transition-colors"
                     >
-                      {detecting ? 'Detecting...' : 'Detect'}
+                      {detecting ? tr('companion.CompanionStoreDialog.detecting') : tr('companion.CompanionStoreDialog.detect')}
                     </button>
                   </div>
                 </div>
@@ -397,7 +398,7 @@ function TemplateDetailView({
                 {detectedChip && (
                   <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-2.5">
                     <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-xs text-emerald-400">Detected: {detectedChip}</span>
+                    <span className="text-xs text-emerald-400">{tr('companion.CompanionStoreDialog.detected')} {detectedChip}</span>
                   </div>
                 )}
 
@@ -419,11 +420,11 @@ function TemplateDetailView({
                   className="w-full py-2.5 bg-blue-600/80 hover:bg-blue-500/80 disabled:bg-surface-raised disabled:text-content-tertiary text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <Usb className="w-4 h-4" />
-                  {flashing ? 'Flashing...' : 'Flash Firmware'}
+                  {flashing ? tr('companion.CompanionStoreDialog.flashing') : tr('companion.CompanionStoreDialog.flashFirmware')}
                 </button>
 
                 <p className="text-[10px] text-content-tertiary text-center">
-                  Hold the BOOT button on your ESP32 while clicking Flash if it fails to connect
+                  {tr('companion.CompanionStoreDialog.holdTheBootButtonOnYour')}
                 </p>
               </>
             )}
@@ -433,14 +434,14 @@ function TemplateDetailView({
         {template.flashMethod === 'image' && (
           <div className="space-y-3">
             <div className="space-y-1.5">
-              <p className="text-[11px] text-content-secondary">1. Download the SD card image</p>
-              <p className="text-[11px] text-content-secondary">2. Flash to MicroSD using Raspberry Pi Imager or Balena Etcher</p>
-              <p className="text-[11px] text-content-secondary">3. Insert SD card and power on the board</p>
-              <p className="text-[11px] text-content-secondary">4. Connect to the board's WiFi and open ArduDeck's companion view</p>
+              <p className="text-[11px] text-content-secondary">{tr('companion.CompanionStoreDialog.n1DownloadTheSdCardImage')}</p>
+              <p className="text-[11px] text-content-secondary">{tr('companion.CompanionStoreDialog.n2FlashToMicrosdUsingRaspberry')}</p>
+              <p className="text-[11px] text-content-secondary">{tr('companion.CompanionStoreDialog.n3InsertSdCardAndPower')}</p>
+              <p className="text-[11px] text-content-secondary">{tr('companion.CompanionStoreDialog.n4ConnectToTheBoardS')}</p>
             </div>
             {template.installCommand && (
               <div>
-                <p className="text-[10px] text-content-secondary mb-1">Or install on an existing Pi OS Lite setup:</p>
+                <p className="text-[10px] text-content-secondary mb-1">{tr('companion.CompanionStoreDialog.orInstallOnAnExistingPi')}</p>
                 <div className="relative">
                   <div className="bg-surface-input rounded-lg px-3 py-2 font-mono text-xs text-content-secondary pr-10 select-all overflow-x-auto">
                     {template.installCommand}
@@ -460,9 +461,9 @@ function TemplateDetailView({
         {template.flashMethod === 'script' && template.installCommand && (
           <div className="space-y-3">
             <div className="space-y-1.5">
-              <p className="text-[11px] text-content-secondary">1. SSH into your {BOARD_FAMILIES[template.board].name}</p>
-              <p className="text-[11px] text-content-secondary">2. Run the install command below</p>
-              <p className="text-[11px] text-content-secondary">3. Follow the on-screen prompts</p>
+              <p className="text-[11px] text-content-secondary">{tr('companion.CompanionStoreDialog.n1SshIntoYour')} {BOARD_FAMILIES[template.board].name}</p>
+              <p className="text-[11px] text-content-secondary">{tr('companion.CompanionStoreDialog.n2RunTheInstallCommandBelow')}</p>
+              <p className="text-[11px] text-content-secondary">{tr('companion.CompanionStoreDialog.n3FollowTheOnScreenPrompts')}</p>
             </div>
             <div className="relative">
               <div className="bg-surface-input rounded-lg px-3 py-2 font-mono text-xs text-content-secondary pr-10 select-all overflow-x-auto">
@@ -491,7 +492,7 @@ function TemplateDetailView({
             window.open(template.projectUrl, '_blank');
           }}
         >
-          View project on GitHub
+          {tr('companion.CompanionStoreDialog.viewProjectOnGithub')}
           <ExternalLink className="w-3 h-3" />
         </a>
       )}
@@ -521,9 +522,9 @@ export function CompanionStoreDialog({ onClose }: CompanionStoreDialogProps) {
               </svg>
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-content">Companion Board Store</h2>
+              <h2 className="text-sm font-semibold text-content">{tr('companion.CompanionStoreDialog.companionBoardStore')}</h2>
               <p className="text-[10px] text-content-secondary mt-0.5">
-                Pre-configured firmware and software for companion boards
+                {tr('companion.CompanionStoreDialog.preConfiguredFirmwareAndSoftwareFor')}
               </p>
             </div>
           </div>

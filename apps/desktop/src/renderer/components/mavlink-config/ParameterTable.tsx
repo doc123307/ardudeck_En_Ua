@@ -24,6 +24,7 @@ import ParamHistoryModal from './ParamHistoryModal';
 import { Tooltip } from '../ui/Tooltip';
 import { NON_DEFAULT_COLORS, getNonDefaultColor } from '../parameters/non-default-palette';
 import { useOwnsCompareModal } from '../parameters/compare-modal-host';
+import { t } from '../../i18n';
 
 // Toast notification state
 type ToastType = 'success' | 'error' | 'info';
@@ -282,12 +283,12 @@ const ParameterTable: React.FC = () => {
         }
 
         markAllAsSaved();
-        showToast('Parameters saved to flash successfully', 'success');
+        showToast(t('mavlink_config.ParameterTable.parametersSavedToFlashSuccessfully'), 'success');
       } else {
-        showToast(result?.error ?? 'Failed to write to flash', 'error');
+        showToast(result?.error ?? t('mavlink_config.ParameterTable.failedToWriteToFlash'), 'error');
       }
     } catch {
-      showToast('Failed to write to flash', 'error');
+      showToast(t('mavlink_config.ParameterTable.failedToWriteToFlash'), 'error');
     } finally {
       setIsWritingFlash(false);
     }
@@ -302,15 +303,15 @@ const ParameterTable: React.FC = () => {
         // `rebooting` when no banner param was pending.
         pendingParamRefresh.current = true;
         if (rebootRequiredParams.length === 0) {
-          showToast('Rebooting flight controller...', 'info');
+          showToast(t('mavlink_config.ParameterTable.rebootingFlightController'), 'info');
         }
       } else {
         setRebooting(false);
-        showToast('Failed to send reboot command', 'error');
+        showToast(t('mavlink_config.ParameterTable.failedToSendRebootCommand'), 'error');
       }
     } catch {
       setRebooting(false);
-      showToast('Failed to reboot flight controller', 'error');
+      showToast(t('mavlink_config.ParameterTable.failedToRebootFlightController'), 'error');
     }
   }, [showToast, rebootRequiredParams]);
 
@@ -321,13 +322,13 @@ const ParameterTable: React.FC = () => {
       pendingParamRefresh.current = false;
       setRebooting(false);
       setRebootRequiredParams([]);
-      showToast('Reboot complete', 'success');
+      showToast(t('mavlink_config.ParameterTable.rebootComplete'), 'success');
     } else if (!connectionState.isConnected && !connectionState.isReconnecting) {
       // Auto-reconnect gave up (timed out or was cancelled): stop the spinner
       // so the operator can act; the banner reverts to its Reboot Now state.
       pendingParamRefresh.current = false;
       setRebooting(false);
-      showToast('Reconnect after reboot failed. Check the link and reconnect manually.', 'error');
+      showToast(t('mavlink_config.ParameterTable.reconnectAfterRebootFailedCheckThe'), 'error');
     }
   }, [connectionState.isConnected, connectionState.isReconnecting, showToast]);
 
@@ -337,7 +338,7 @@ const ParameterTable: React.FC = () => {
     if (!cycle.active || cycle.phase !== 'rebooting') return;
     if (connectionState.isConnected && !connectionState.isReconnecting) {
       cycle.phase = 'waiting-params';
-      setCycleStatus('Refreshing parameters...');
+      setCycleStatus(t('mavlink_config.ParameterTable.refreshingParameters'));
       fetchParameters();
     }
   }, [connectionState.isConnected, connectionState.isReconnecting, fetchParameters]);
@@ -351,7 +352,7 @@ const ParameterTable: React.FC = () => {
     const runRetry = async () => {
       cycle.phase = 'retrying';
       const pending = useParameterStore.getState().pendingRetryParams;
-      setCycleStatus(`Applying ${pending.length} pending parameter${pending.length !== 1 ? 's' : ''}...`);
+      setCycleStatus(t('mavlink_config.ParameterTable.applyingPendingParameter', { length: pending.length, v2: pending.length !== 1 ? 's' : '' }));
 
       const result = await retryPendingParams();
       cycle.totalApplied += result.applied;
@@ -360,7 +361,7 @@ const ParameterTable: React.FC = () => {
       // If params were applied, flash write again (PX4 already persisted them)
       if (result.applied > 0) {
         if (connectionState.firmware !== 'px4') {
-          setCycleStatus('Writing new parameters to flash...');
+          setCycleStatus(t('mavlink_config.ParameterTable.writingNewParametersToFlash'));
           await window.electronAPI?.writeParamsToFlash();
         }
         markAllAsSaved();
@@ -371,7 +372,7 @@ const ParameterTable: React.FC = () => {
         cycle.count++;
         setPendingRetryParams(result.stillPending);
         cycle.phase = 'rebooting';
-        setCycleStatus(`Rebooting flight controller (cycle ${cycle.count}/3)...`);
+        setCycleStatus(t('mavlink_config.ParameterTable.rebootingFlightControllerCycle3', { count: cycle.count }));
         await window.electronAPI?.mavlinkReboot();
         return;
       }
@@ -411,21 +412,21 @@ const ParameterTable: React.FC = () => {
 
     // Flash write (PX4 already persisted the batch-applied params)
     if (connectionState.firmware !== 'px4') {
-      setCycleStatus('Writing parameters to flash...');
+      setCycleStatus(t('mavlink_config.ParameterTable.writingParametersToFlash'));
       try {
         const flashResult = await window.electronAPI?.writeParamsToFlash();
         if (!flashResult?.success) {
           cycle.active = false;
           cycle.phase = 'idle';
           setCycleStatus(null);
-          showToast(flashResult?.error ?? 'Failed to write to flash', 'error');
+          showToast(flashResult?.error ?? t('mavlink_config.ParameterTable.failedToWriteToFlash'), 'error');
           return;
         }
       } catch {
         cycle.active = false;
         cycle.phase = 'idle';
         setCycleStatus(null);
-        showToast('Failed to write to flash', 'error');
+        showToast(t('mavlink_config.ParameterTable.failedToWriteToFlash'), 'error');
         return;
       }
     }
@@ -433,20 +434,20 @@ const ParameterTable: React.FC = () => {
 
     // Reboot
     cycle.phase = 'rebooting';
-    setCycleStatus('Rebooting flight controller...');
+    setCycleStatus(t('mavlink_config.ParameterTable.rebootingFlightController'));
     try {
       const success = await window.electronAPI?.mavlinkReboot();
       if (!success) {
         cycle.active = false;
         cycle.phase = 'idle';
         setCycleStatus(null);
-        showToast('Failed to send reboot command', 'error');
+        showToast(t('mavlink_config.ParameterTable.failedToSendRebootCommand'), 'error');
       }
     } catch {
       cycle.active = false;
       cycle.phase = 'idle';
       setCycleStatus(null);
-      showToast('Failed to reboot flight controller', 'error');
+      showToast(t('mavlink_config.ParameterTable.failedToRebootFlightController'), 'error');
     }
   }, [fileApplyResult, setPendingRetryParams, clearFileApplyResult, closeCompareModal, markAllAsSaved, showToast, connectionState.firmware]);
 
@@ -476,14 +477,14 @@ const ParameterTable: React.FC = () => {
       }
 
       if (params.length === 0) {
-        showToast(changedOnly ? 'No changed parameters to save' : 'No parameters to save', 'info');
+        showToast(changedOnly ? t('mavlink_config.ParameterTable.noChangedParametersToSave') : t('mavlink_config.ParameterTable.noParametersToSave'), 'info');
         return;
       }
 
       const vehicleType = connectionState.vehicleType || connectionState.fcVariant;
       const result = await window.electronAPI?.saveParamsToFile(params, vehicleType);
       if (result?.success) {
-        showToast(`Saved ${params.length} parameter${params.length !== 1 ? 's' : ''} to file`, 'success');
+        showToast(t('mavlink_config.ParameterTable.savedParameterToFile', { length: params.length, v2: params.length !== 1 ? 's' : '' }), 'success');
       } else if (result?.error && result.error !== 'Cancelled') {
         showToast(result.error, 'error');
       }
@@ -509,9 +510,9 @@ const ParameterTable: React.FC = () => {
   const handleApplySelectedParams = useCallback(async () => {
     const result = await applySelectedFileParams();
     if (result.applied > 0) {
-      showToast(`Applied ${result.applied} parameter${result.applied !== 1 ? 's' : ''} to vehicle${result.failed > 0 ? ` (${result.failed} failed)` : ''}${result.applied > 0 ? ' — Save All Changes to keep them after a reboot' : ''}`, result.failed > 0 ? 'info' : 'success');
+      showToast(t('mavlink_config.ParameterTable.appliedParameterToVehicle', { applied: result.applied, v2: result.applied !== 1 ? 's' : '', v3: result.failed > 0 ? ` (${result.failed} failed)` : '', v4: result.applied > 0 ? ' — Save All Changes to keep them after a reboot' : '' }), result.failed > 0 ? 'info' : 'success');
     } else if (result.failed > 0) {
-      showToast(`Failed to apply ${result.failed} parameter${result.failed !== 1 ? 's' : ''}`, 'error');
+      showToast(t('mavlink_config.ParameterTable.failedToApplyParameter', { failed: result.failed, v2: result.failed !== 1 ? 's' : '' }), 'error');
     }
   }, [applySelectedFileParams, showToast]);
 
@@ -542,7 +543,7 @@ const ParameterTable: React.FC = () => {
   const handleEditChange = useCallback((paramId: string, value: string) => {
     setEditValue(value);
     if (!isValidNumberString(value)) {
-      setEditError('Invalid number');
+      setEditError(t('mavlink_config.ParameterTable.invalidNumber'));
       setEditWarning(null);
     } else {
       const numValue = Number(value.trim());
@@ -554,13 +555,13 @@ const ParameterTable: React.FC = () => {
 
   const saveEdit = useCallback(async (paramId: string) => {
     if (!isValidNumberString(editValue)) {
-      setEditError('Invalid number');
+      setEditError(t('mavlink_config.ParameterTable.invalidNumber'));
       return;
     }
     const newValue = Number(editValue.trim());
     const result = validateParameter(paramId, newValue);
     if (!result.valid) {
-      setEditError(result.error ?? 'Invalid value');
+      setEditError(result.error ?? t('mavlink_config.ParameterTable.invalidValue'));
       return;
     }
     await setParameter(paramId, newValue);
@@ -613,7 +614,7 @@ const ParameterTable: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={handleSearch}
-              placeholder="Search parameters... (regex supported)"
+              placeholder={t('mavlink_config.ParameterTable.searchParametersRegexSupported')}
               className="w-full px-4 py-2 pl-10 bg-surface-input border border-subtle rounded-lg text-sm text-content placeholder-content-tertiary focus:outline-none focus:border-blue-500/50"
             />
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-content-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -628,18 +629,18 @@ const ParameterTable: React.FC = () => {
                 onClick={() => handleSaveToFile(false)}
                 disabled={isSavingFile || paramCount === 0}
                 className="px-3 py-2 bg-surface-raised hover:bg-surface disabled:bg-surface text-content disabled:text-content-tertiary rounded-l-lg text-sm font-medium transition-colors flex items-center gap-2"
-                title="Save all parameters to file"
+                title={t('mavlink_config.ParameterTable.saveAllParametersToFile')}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                {isSavingFile ? 'Saving...' : 'Save'}
+                {isSavingFile ? t('mavlink_config.ParameterTable.saving') : t('mavlink_config.ParameterTable.save')}
               </button>
               <button
                 onClick={() => setSaveDropdownOpen(prev => !prev)}
                 disabled={isSavingFile || paramCount === 0}
                 className="px-1.5 py-2 bg-surface-raised hover:bg-surface disabled:bg-surface text-content disabled:text-content-tertiary rounded-r-lg border-l border/30 text-sm transition-colors"
-                title="Save options"
+                title={t('mavlink_config.ParameterTable.saveOptions')}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -652,14 +653,14 @@ const ParameterTable: React.FC = () => {
                   onClick={() => handleSaveToFile(false)}
                   className="w-full px-3 py-2 text-left text-sm text-content hover:bg-surface-raised transition-colors"
                 >
-                  Save All Parameters
+                  {t('mavlink_config.ParameterTable.saveAllParameters')}
                 </button>
                 <button
                   onClick={() => handleSaveToFile(true)}
                   disabled={modified === 0}
                   className="w-full px-3 py-2 text-left text-sm text-content hover:bg-surface-raised disabled:text-content-tertiary disabled:hover:bg-transparent transition-colors"
                 >
-                  Save Changed Only
+                  {t('mavlink_config.ParameterTable.saveChangedOnly')}
                   {modified > 0 && <span className="ml-1 text-xs text-yellow-400">({modified})</span>}
                 </button>
               </div>
@@ -670,21 +671,21 @@ const ParameterTable: React.FC = () => {
             onClick={handleLoadFromFile}
             disabled={isLoadingFile}
             className="px-3 py-2 bg-surface-raised hover:bg-surface disabled:bg-surface text-content disabled:text-content-tertiary rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-            title="Load parameters from file"
+            title={t('mavlink_config.ParameterTable.loadParametersFromFile')}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
-            {isLoadingFile ? 'Loading...' : 'Load'}
+            {isLoadingFile ? t('mavlink_config.ParameterTable.loading') : t('mavlink_config.ParameterTable.load')}
           </button>
 
           <button
             onClick={() => setShowHistory(true)}
             className="px-3 py-2 bg-surface-raised hover:bg-surface text-content rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-            title="View parameter change history"
+            title={t('mavlink_config.ParameterTable.viewParameterChangeHistory')}
           >
             <History className="w-4 h-4" />
-            History
+            {t('mavlink_config.ParameterTable.history')}
           </button>
 
           {favouriteCount() > 0 && (
@@ -695,10 +696,10 @@ const ParameterTable: React.FC = () => {
                   ? 'bg-yellow-500/30 text-yellow-300 ring-1 ring-yellow-500/50'
                   : 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
               }`}
-              title={showOnlyFavourites ? 'Show all parameters' : 'Show only favourite parameters'}
+              title={showOnlyFavourites ? t('mavlink_config.ParameterTable.showAllParameters') : t('mavlink_config.ParameterTable.showOnlyFavouriteParameters')}
             >
               <Star className={`w-3 h-3 ${showOnlyFavourites ? 'fill-yellow-300' : ''}`} />
-              {favouriteCount()} favourites
+              {favouriteCount()} {t('mavlink_config.ParameterTable.favourites')}
             </button>
           )}
 
@@ -710,14 +711,14 @@ const ParameterTable: React.FC = () => {
                   ? 'bg-amber-500/30 text-amber-300 ring-1 ring-amber-500/50'
                   : 'bg-amber-500/20 text-amber-400 hover:bg-amber-500/30'
               }`}
-              title={showOnlyModified ? 'Show all parameters' : 'Show only modified parameters'}
+              title={showOnlyModified ? t('mavlink_config.ParameterTable.showAllParameters') : t('mavlink_config.ParameterTable.showOnlyModifiedParameters')}
             >
               {showOnlyModified && (
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                 </svg>
               )}
-              {modified} modified
+              {modified} {t('mavlink_config.ParameterTable.modified')}
             </button>
           )}
 
@@ -732,19 +733,19 @@ const ParameterTable: React.FC = () => {
                       : 'bg-surface-raised hover:bg-surface text-content'
                   }`}
                   title={showOnlyNonDefault
-                    ? 'Show all parameters'
+                    ? t('mavlink_config.ParameterTable.showAllParameters')
                     : (hasDefaults
-                        ? 'Show only parameters that differ from firmware defaults'
-                        : 'Show only parameters changed in this session (firmware defaults unavailable on this connection)')}
+                        ? t('mavlink_config.ParameterTable.showOnlyParametersThatDifferFrom')
+                        : t('mavlink_config.ParameterTable.showOnlyParametersChangedInThis'))}
                 >
                   <span className={`inline-block w-3 h-3 rounded-full ring-1 ring-black/10 ${nonDefaultColor.swatchClass}`} />
-                  Non-default
+                  {t('mavlink_config.ParameterTable.nonDefault')}
                   <span className="text-xs text-content-secondary">({nonDefaultCount})</span>
                 </button>
                 <button
                   onClick={() => setColorPickerOpen((o) => !o)}
                   className="px-1.5 py-2 bg-surface-raised hover:bg-surface text-content rounded-r-lg border-l border-subtle/40 text-sm transition-colors"
-                  title="Pick highlight color"
+                  title={t('mavlink_config.ParameterTable.pickHighlightColor')}
                   aria-haspopup="menu"
                   aria-expanded={colorPickerOpen}
                 >
@@ -759,7 +760,7 @@ const ParameterTable: React.FC = () => {
                   role="menu"
                   className="absolute right-0 top-full mt-1 z-50 w-48 rounded-lg bg-surface-solid border border-subtle shadow-xl p-2"
                 >
-                  <div className="px-1.5 pb-1.5 text-[10px] uppercase tracking-wider text-content-tertiary">Highlight color</div>
+                  <div className="px-1.5 pb-1.5 text-[10px] uppercase tracking-wider text-content-tertiary">{t('mavlink_config.ParameterTable.highlightColor')}</div>
                   <div className="grid grid-cols-4 gap-1">
                     {NON_DEFAULT_COLORS.map((c) => {
                       const active = c.key === nonDefaultColorKey;
@@ -786,7 +787,7 @@ const ParameterTable: React.FC = () => {
         {isLoading && progress && (
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-content-secondary mb-1">
-              <span>Downloading parameters...</span>
+              <span>{t('mavlink_config.ParameterTable.downloadingParameters')}</span>
               <span>{progress.received} / {progress.total} ({progress.percentage}%)</span>
             </div>
             <div className="h-1.5 bg-surface-inset rounded-full overflow-hidden">
@@ -861,18 +862,18 @@ const ParameterTable: React.FC = () => {
             {rebooting ? (
               <span className="text-sm text-blue-300">
                 {connectionState.isReconnecting
-                  ? `Reconnecting to flight controller...`
-                  : 'Rebooting flight controller...'}
+                  ? t('mavlink_config.ParameterTable.reconnectingToFlightController')
+                  : t('mavlink_config.ParameterTable.rebootingFlightController')}
                 {connectionState.isReconnecting && connectionState.reconnectAttempt != null && (
                   <span className="text-blue-400/70 ml-2">
-                    Attempt {connectionState.reconnectAttempt}{connectionState.reconnectMaxAttempts ? ` / ${connectionState.reconnectMaxAttempts}` : ''}
+                    {t('mavlink_config.ParameterTable.attempt')} {connectionState.reconnectAttempt}{connectionState.reconnectMaxAttempts ? ` / ${connectionState.reconnectMaxAttempts}` : ''}
                   </span>
                 )}
               </span>
             ) : (
               <div className="min-w-0 flex-1">
                 <div className="text-sm text-amber-300">
-                  Reboot required for {rebootRequiredParams.length} parameter{rebootRequiredParams.length !== 1 ? 's' : ''} to take effect.
+                  {t('mavlink_config.ParameterTable.rebootRequiredFor')} {rebootRequiredParams.length} {t('mavlink_config.ParameterTable.parameter')}{rebootRequiredParams.length !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.toTakeEffect')}
                 </div>
                 <div className="mt-1 max-h-16 overflow-y-auto pr-1">
                   <span className="font-mono text-xs text-amber-400/70 break-words">
@@ -888,14 +889,14 @@ const ParameterTable: React.FC = () => {
                 onClick={() => setRebootRequiredParams([])}
                 className="px-2.5 py-1 text-xs text-content-secondary hover:text-content transition-colors"
               >
-                Dismiss
+                {t('mavlink_config.ParameterTable.dismiss')}
               </button>
               <button
                 onClick={handleReboot}
                 className="px-2.5 py-1 text-xs font-medium rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/30 transition-colors flex items-center gap-1.5"
               >
                 <RotateCw className="w-3 h-3" />
-                Reboot Now
+                {t('mavlink_config.ParameterTable.rebootNow')}
               </button>
             </div>
           )}
@@ -912,7 +913,7 @@ const ParameterTable: React.FC = () => {
             </span>
             {rebootCycleRef.current.active && rebootCycleRef.current.phase === 'rebooting' && connectionState.isReconnecting && connectionState.reconnectAttempt != null && (
               <span className="text-blue-400/70 text-sm ml-2">
-                Attempt {connectionState.reconnectAttempt}{connectionState.reconnectMaxAttempts ? ` / ${connectionState.reconnectMaxAttempts}` : ''}
+                {t('mavlink_config.ParameterTable.attempt')} {connectionState.reconnectAttempt}{connectionState.reconnectMaxAttempts ? ` / ${connectionState.reconnectMaxAttempts}` : ''}
               </span>
             )}
           </div>
@@ -929,13 +930,13 @@ const ParameterTable: React.FC = () => {
               </svg>
               {connectionState.isConnected ? (
                 <>
-                  <p className="text-lg mb-2">Loading parameters...</p>
-                  <p className="text-sm text-content-tertiary">Parameters will download automatically when connected</p>
+                  <p className="text-lg mb-2">{t('mavlink_config.ParameterTable.loadingParameters')}</p>
+                  <p className="text-sm text-content-tertiary">{t('mavlink_config.ParameterTable.parametersWillDownloadAutomaticallyWhenConnected')}</p>
                 </>
               ) : (
                 <>
-                  <p className="text-lg mb-2">Not connected</p>
-                  <p className="text-sm text-content-tertiary">Connect a vehicle to load parameters.</p>
+                  <p className="text-lg mb-2">{t('mavlink_config.ParameterTable.notConnected')}</p>
+                  <p className="text-sm text-content-tertiary">{t('mavlink_config.ParameterTable.connectAVehicleToLoadParameters')}</p>
                 </>
               )}
             </div>
@@ -952,19 +953,19 @@ const ParameterTable: React.FC = () => {
                   onClick={() => toggleSort('name')}
                   className="group flex items-center hover:text-content transition-colors uppercase"
                 >
-                  Name
+                  {t('mavlink_config.ParameterTable.name')}
                   <SortIndicator column="name" currentColumn={sortColumn} direction={sortDirection} />
                 </button>
               </div>
-              <div className="px-4 py-3 font-medium">Value</div>
-              <div className="px-4 py-3 font-medium">Options</div>
-              <div className="px-4 py-3 font-medium">Description</div>
+              <div className="px-4 py-3 font-medium">{t('mavlink_config.ParameterTable.value')}</div>
+              <div className="px-4 py-3 font-medium">{t('mavlink_config.ParameterTable.options')}</div>
+              <div className="px-4 py-3 font-medium">{t('mavlink_config.ParameterTable.description')}</div>
               <div className="px-4 py-3 font-medium text-right">
                 <button
                   onClick={() => toggleSort('status')}
                   className="group inline-flex items-center hover:text-content transition-colors uppercase"
                 >
-                  Status
+                  {t('mavlink_config.ParameterTable.status')}
                   <SortIndicator column="status" currentColumn={sortColumn} direction={sortDirection} />
                 </button>
               </div>
@@ -1000,21 +1001,21 @@ const ParameterTable: React.FC = () => {
                       <button
                         onClick={(e) => { e.stopPropagation(); toggleFavourite(param.id); }}
                         className="shrink-0 p-0.5 rounded transition-colors hover:bg-surface-raised"
-                        title={isFavourite(param.id) ? 'Remove from favourites' : 'Add to favourites'}
+                        title={isFavourite(param.id) ? t('mavlink_config.ParameterTable.removeFromFavourites') : t('mavlink_config.ParameterTable.addToFavourites')}
                       >
                         <Star className={`w-3.5 h-3.5 ${isFavourite(param.id) ? 'fill-yellow-400 text-yellow-400' : 'text-content-tertiary hover:text-content-secondary'}`} />
                       </button>
                       <span className="font-mono text-sm text-content truncate">{param.id}</span>
                       {isRebootRequired(param.id) && (
-                        <span className="shrink-0 px-1 py-0.5 text-[9px] leading-none bg-amber-500/15 text-amber-500/70 rounded border-amber-500/20" title="Requires reboot to take effect">
-                          Reboot
+                        <span className="shrink-0 px-1 py-0.5 text-[9px] leading-none bg-amber-500/15 text-amber-500/70 rounded border-amber-500/20" title={t('mavlink_config.ParameterTable.requiresRebootToTakeEffect')}>
+                          {t('mavlink_config.ParameterTable.reboot')}
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="px-4 py-2.5 min-w-0">
                     {param.isReadOnly ? (
-                      <span className="font-mono text-sm text-content-secondary tabular-nums" title="Read-only parameter">
+                      <span className="font-mono text-sm text-content-secondary tabular-nums" title={t('mavlink_config.ParameterTable.readOnlyParameter')}>
                         {formatParamValue(param.value)}
                       </span>
                     ) : editingParam === param.id ? (
@@ -1057,13 +1058,13 @@ const ParameterTable: React.FC = () => {
                                   <option key={code} value={code}>{code}: {label}</option>
                                 ))}
                                 {!(String(Math.round(param.value)) in meta!.values!) && (
-                                  <option value={Math.round(param.value)}>{Math.round(param.value)}: Custom</option>
+                                  <option value={Math.round(param.value)}>{Math.round(param.value)}{t('mavlink_config.ParameterTable.custom')}</option>
                                 )}
                               </select>
                               <button
                                 onClick={() => startEdit(param.id, param.value)}
                                 className="shrink-0 p-1 rounded hover:bg-surface-input text-content-secondary hover:text-blue-400 transition-colors"
-                                title="Type a custom value"
+                                title={t('mavlink_config.ParameterTable.typeACustomValue')}
                               >
                                 <Pencil className="w-3.5 h-3.5" />
                               </button>
@@ -1094,9 +1095,9 @@ const ParameterTable: React.FC = () => {
                             <button
                               onClick={() => setBitmaskParam(bitmaskParam === param.id ? null : param.id)}
                               className="shrink-0 px-2 py-0.5 bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 rounded text-xs font-medium transition-colors"
-                              title="Open bitmask editor"
+                              title={t('mavlink_config.ParameterTable.openBitmaskEditor')}
                             >
-                              Bitmask
+                              {t('mavlink_config.ParameterTable.bitmask')}
                             </button>
                           )}
                           {bitmaskParam === param.id && hasBitmask && (
@@ -1133,7 +1134,7 @@ const ParameterTable: React.FC = () => {
                                     ? 'text-blue-400 font-medium'
                                     : 'text-content-tertiary hover:text-content-secondary'
                                 }`}
-                                title={`Set ${param.id} = ${code} (${label})`}
+                                title={t('mavlink_config.ParameterTable.set', { id: param.id, code, label })}
                               >
                                 <span className="font-mono">{code}</span>
                                 <span className="ml-1">{label}</span>
@@ -1172,7 +1173,7 @@ const ParameterTable: React.FC = () => {
                             window.electronAPI?.openExternal(url);
                           }}
                           className="shrink-0 p-1 rounded text-content-tertiary hover:text-blue-400 hover:bg-surface-raised transition-colors"
-                          aria-label={`Open ${isPx4 ? 'PX4' : 'ArduPilot'} docs for ${param.id}`}
+                          aria-label={t('mavlink_config.ParameterTable.openDocsFor', { v1: isPx4 ? 'PX4' : 'ArduPilot', id: param.id })}
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                         </button>
@@ -1182,19 +1183,19 @@ const ParameterTable: React.FC = () => {
                   <div className="px-4 py-2.5 flex items-center justify-end gap-2">
                     {param.isReadOnly ? (
                       <span className="px-2 py-0.5 bg-surface-raised text-content-secondary rounded text-xs">
-                        Read-only
+                        {t('mavlink_config.ParameterTable.readOnly')}
                       </span>
                     ) : param.isModified ? (
                       <>
                         <button
                           onClick={() => revertParameter(param.id)}
                           className="text-xs text-content-secondary hover:text-content"
-                          title={`Revert to ${formatParamValue(param.originalValue as number)}`}
+                          title={t('mavlink_config.ParameterTable.revertTo', { v1: formatParamValue(param.originalValue as number) })}
                         >
-                          revert
+                          {t('mavlink_config.ParameterTable.revert')}
                         </button>
                         <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded text-xs">
-                          Modified
+                          {t('mavlink_config.ParameterTable.modified2')}
                         </span>
                       </>
                     ) : null}
@@ -1209,43 +1210,43 @@ const ParameterTable: React.FC = () => {
 
       {/* Status bar */}
       <div className="shrink-0 px-4 py-2 border-t border-subtle bg-surface text-xs text-content-secondary flex items-center gap-4">
-        <span>{paramCount} parameters</span>
+        <span>{paramCount} {t('mavlink_config.ParameterTable.parameters')}</span>
         {(searchQuery || selectedGroup !== 'all' || showOnlyModified || showOnlyNonDefault || showOnlyFavourites) && displayParams.length !== paramCount && (
           <>
             <span className="text-content-tertiary">|</span>
-            <span>{displayParams.length} shown</span>
+            <span>{displayParams.length} {t('mavlink_config.ParameterTable.shown')}</span>
           </>
         )}
         {showOnlyFavourites && (
           <>
             <span className="text-content-tertiary">|</span>
-            <span className="text-yellow-400">Favourites only</span>
+            <span className="text-yellow-400">{t('mavlink_config.ParameterTable.favouritesOnly')}</span>
           </>
         )}
         {showOnlyModified && (
           <>
             <span className="text-content-tertiary">|</span>
-            <span className="text-amber-400">Modified only</span>
+            <span className="text-amber-400">{t('mavlink_config.ParameterTable.modifiedOnly')}</span>
           </>
         )}
         {showOnlyNonDefault && (
           <>
             <span className="text-content-tertiary">|</span>
-            <span className={nonDefaultColor.textClass}>Non-default only</span>
+            <span className={nonDefaultColor.textClass}>{t('mavlink_config.ParameterTable.nonDefaultOnly')}</span>
           </>
         )}
         {selectedGroup !== 'all' && (
           <>
             <span className="text-content-tertiary">|</span>
-            <span>Group: {PARAMETER_GROUPS.find(g => g.id === selectedGroup)?.name}</span>
+            <span>{t('mavlink_config.ParameterTable.group')} {PARAMETER_GROUPS.find(g => g.id === selectedGroup)?.name}</span>
           </>
         )}
         <span className="text-content-tertiary">|</span>
-        <span>System ID: {connectionState.systemId ?? '-'}</span>
+        <span>{t('mavlink_config.ParameterTable.systemId')} {connectionState.systemId ?? '-'}</span>
         {lastRefresh > 0 && (
           <>
             <span className="text-content-tertiary">|</span>
-            <span>Last refresh: {new Date(lastRefresh).toLocaleTimeString()}</span>
+            <span>{t('mavlink_config.ParameterTable.lastRefresh')} {new Date(lastRefresh).toLocaleTimeString()}</span>
           </>
         )}
       </div>
@@ -1255,14 +1256,14 @@ const ParameterTable: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-surface-solid border rounded-xl shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] flex flex-col">
             <div className="px-6 py-4 border-b border-subtle">
-              <h3 className="text-lg font-semibold text-content">Write Parameters to Flash</h3>
+              <h3 className="text-lg font-semibold text-content">{t('mavlink_config.ParameterTable.writeParametersToFlash')}</h3>
               <p className="text-sm text-content-secondary mt-1">
-                The following {modifiedParameters().length} parameter(s) will be saved permanently to the flight controller.
+                {t('mavlink_config.ParameterTable.theFollowing')} {modifiedParameters().length} {t('mavlink_config.ParameterTable.parameterSWillBeSavedPermanently')}
               </p>
               {modifiedParameters().some(p => isRebootRequired(p.id)) && (
                 <p className="text-sm text-amber-400 mt-1.5 flex items-center gap-1.5">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
-                  Some parameters require a reboot to take effect.
+                  {t('mavlink_config.ParameterTable.someParametersRequireARebootTo')}
                 </p>
               )}
             </div>
@@ -1271,10 +1272,10 @@ const ParameterTable: React.FC = () => {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-xs text-content-secondary uppercase">
-                    <th className="pb-2">Parameter</th>
-                    <th className="pb-2 text-right">Original</th>
+                    <th className="pb-2">{t('mavlink_config.ParameterTable.parameter2')}</th>
+                    <th className="pb-2 text-right">{t('mavlink_config.ParameterTable.original')}</th>
                     <th className="pb-2 text-center px-2">→</th>
-                    <th className="pb-2">New</th>
+                    <th className="pb-2">{t('mavlink_config.ParameterTable.new')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-subtle">
@@ -1284,7 +1285,7 @@ const ParameterTable: React.FC = () => {
                         {param.id}
                         {isRebootRequired(param.id) && (
                           <span className="ml-2 px-1.5 py-0.5 text-[10px] bg-amber-500/20 text-amber-400 rounded">
-                            Reboot
+                            {t('mavlink_config.ParameterTable.reboot')}
                           </span>
                         )}
                       </td>
@@ -1304,13 +1305,13 @@ const ParameterTable: React.FC = () => {
                 onClick={() => setShowWriteConfirm(false)}
                 className="px-4 py-2 text-sm text-content-secondary hover:text-content transition-colors"
               >
-                Cancel
+                {t('mavlink_config.ParameterTable.cancel')}
               </button>
               <button
                 onClick={handleWriteToFlashConfirm}
                 className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm font-medium transition-colors"
               >
-                Write to Flash
+                {t('mavlink_config.ParameterTable.writeToFlash')}
               </button>
             </div>
           </div>
@@ -1336,7 +1337,7 @@ const ParameterTable: React.FC = () => {
               /* Post-apply summary view */
               <>
                 <div className="px-6 py-4 border-b border-subtle">
-                  <h3 className="text-lg font-semibold text-content">Apply Results</h3>
+                  <h3 className="text-lg font-semibold text-content">{t('mavlink_config.ParameterTable.applyResults')}</h3>
                 </div>
 
                 <div className="flex-1 min-h-0 overflow-auto px-6 py-5 space-y-4">
@@ -1344,7 +1345,7 @@ const ParameterTable: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-green-400 shrink-0" />
                     <span className="text-sm text-green-300">
-                      {fileApplyResult.applied} parameter{fileApplyResult.applied !== 1 ? 's' : ''} applied
+                      {fileApplyResult.applied} {t('mavlink_config.ParameterTable.parameter')}{fileApplyResult.applied !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.applied')}
                     </span>
                   </div>
 
@@ -1353,7 +1354,7 @@ const ParameterTable: React.FC = () => {
                     <div className="flex items-center gap-3">
                       <XCircle className="w-5 h-5 text-red-400 shrink-0" />
                       <span className="text-sm text-red-300">
-                        {fileApplyResult.failed} parameter{fileApplyResult.failed !== 1 ? 's' : ''} failed
+                        {fileApplyResult.failed} {t('mavlink_config.ParameterTable.parameter')}{fileApplyResult.failed !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.failed')}
                       </span>
                     </div>
                   )}
@@ -1364,7 +1365,7 @@ const ParameterTable: React.FC = () => {
                       <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                       <div>
                         <span className="text-sm text-amber-300">
-                          {fileApplyResult.rebootRequired.length} require reboot to take effect:
+                          {fileApplyResult.rebootRequired.length} {t('mavlink_config.ParameterTable.requireRebootToTakeEffect')}
                         </span>
                         <p className="font-mono text-xs text-amber-400/70 mt-1 break-words">
                           {fileApplyResult.rebootRequired.join(', ')}
@@ -1379,13 +1380,13 @@ const ParameterTable: React.FC = () => {
                       <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                       <div>
                         <span className="text-sm text-blue-300">
-                          {fileApplyResult.skippedParams.length} not found on this firmware:
+                          {fileApplyResult.skippedParams.length} {t('mavlink_config.ParameterTable.notFoundOnThisFirmware')}
                         </span>
                         <p className="font-mono text-xs text-blue-400/70 mt-1 break-words">
                           {fileApplyResult.skippedParams.map(p => p.id).join(', ')}
                         </p>
                         <p className="text-xs text-content-secondary mt-1">
-                          These may become available after reboot
+                          {t('mavlink_config.ParameterTable.theseMayBecomeAvailableAfterReboot')}
                         </p>
                       </div>
                     </div>
@@ -1397,7 +1398,7 @@ const ParameterTable: React.FC = () => {
                     onClick={handleSummaryClose}
                     className="px-4 py-2 text-sm text-content-secondary hover:text-content transition-colors"
                   >
-                    Close
+                    {t('mavlink_config.ParameterTable.close')}
                   </button>
                   {(fileApplyResult.rebootRequired.length > 0 || fileApplyResult.skippedParams.length > 0) && (
                     <button
@@ -1405,7 +1406,7 @@ const ParameterTable: React.FC = () => {
                       className="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border-amber-500/30"
                     >
                       <RotateCw className="w-3.5 h-3.5" />
-                      Write to Flash & Reboot
+                      {t('mavlink_config.ParameterTable.writeToFlashReboot')}
                     </button>
                   )}
                 </div>
@@ -1414,11 +1415,11 @@ const ParameterTable: React.FC = () => {
               /* Normal compare view */
               <>
                 <div className="px-6 py-4 border-b border-subtle">
-                  <h3 className="text-lg font-semibold text-content">Compare Parameters</h3>
+                  <h3 className="text-lg font-semibold text-content">{t('mavlink_config.ParameterTable.compareParameters')}</h3>
                   <p className="text-sm text-content-secondary mt-1">
                     {fileParamDiffs.length === 0
-                      ? 'No differences found - all file parameters match the vehicle.'
-                      : `${fileParamDiffs.length} parameter${fileParamDiffs.length !== 1 ? 's' : ''} differ between file and vehicle. Select which to apply.`
+                      ? t('mavlink_config.ParameterTable.noDifferencesFoundAllFileParameters')
+                      : t('mavlink_config.ParameterTable.parameterDifferBetweenFileAndVehicle', { length: fileParamDiffs.length, v2: fileParamDiffs.length !== 1 ? 's' : '' })
                     }
                   </p>
                   {(() => {
@@ -1427,14 +1428,14 @@ const ParameterTable: React.FC = () => {
                       <div className="mt-2 flex items-center gap-2 px-3 py-2 bg-amber-500/10 border-amber-500/30 rounded-lg">
                         <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
                         <span className="text-xs text-amber-300">
-                          File was saved from <span className="font-semibold">{fileVehicleType}</span> but vehicle is <span className="font-semibold">{currentVehicle}</span>
+                          {t('mavlink_config.ParameterTable.fileWasSavedFrom')} <span className="font-semibold">{fileVehicleType}</span> {t('mavlink_config.ParameterTable.butVehicleIs')} <span className="font-semibold">{currentVehicle}</span>
                         </span>
                       </div>
                     ) : null;
                   })()}
                   {fileSkippedCount > 0 && (
                     <p className="text-xs text-content-secondary mt-2">
-                      {fileTotalCount} params in file: {fileTotalCount - fileSkippedCount} matched vehicle, {fileSkippedCount} skipped (not found on this firmware)
+                      {fileTotalCount} {t('mavlink_config.ParameterTable.paramsInFile')} {fileTotalCount - fileSkippedCount} {t('mavlink_config.ParameterTable.matchedVehicle')} {fileSkippedCount} {t('mavlink_config.ParameterTable.skippedNotFoundOnThisFirmware')}
                     </p>
                   )}
                   {connectionState.isSitl && sitlUnsafeMap.size > 0 && (
@@ -1443,14 +1444,14 @@ const ParameterTable: React.FC = () => {
                       <div className="flex-1 text-xs">
                         <div className="text-blue-300">
                           {sitlSafeMode
-                            ? `SITL-safe mode hides ${sitlUnsafeMap.size} hardware-identity param${sitlUnsafeMap.size !== 1 ? 's' : ''} that can crash the simulator.`
-                            : `${sitlUnsafeMap.size} param${sitlUnsafeMap.size !== 1 ? 's' : ''} below are flagged as hardware-only and may crash SITL on reboot.`}
+                            ? t('mavlink_config.ParameterTable.sitlSafeModeHidesHardwareIdentity', { size: sitlUnsafeMap.size, v2: sitlUnsafeMap.size !== 1 ? 's' : '' })
+                            : t('mavlink_config.ParameterTable.paramBelowAreFlaggedAsHardware', { size: sitlUnsafeMap.size, v2: sitlUnsafeMap.size !== 1 ? 's' : '' })}
                         </div>
                         <button
                           onClick={() => setSitlSafeMode(v => !v)}
                           className="mt-1 text-blue-400 hover:text-blue-300 underline transition-colors"
                         >
-                          {sitlSafeMode ? 'Show all (override)' : 'Re-enable SITL-safe mode'}
+                          {sitlSafeMode ? t('mavlink_config.ParameterTable.showAllOverride') : t('mavlink_config.ParameterTable.reEnableSitlSafeMode')}
                         </button>
                       </div>
                     </div>
@@ -1471,17 +1472,17 @@ const ParameterTable: React.FC = () => {
                         onClick={selectAllDiffs}
                         className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
                       >
-                        Select all
+                        {t('mavlink_config.ParameterTable.selectAll')}
                       </button>
                       <span className="text-content-tertiary">|</span>
                       <button
                         onClick={deselectAllDiffs}
                         className="text-xs text-content-secondary hover:text-content transition-colors"
                       >
-                        Deselect all
+                        {t('mavlink_config.ParameterTable.deselectAll')}
                       </button>
                       <span className="ml-auto text-xs text-content-secondary">
-                        {visibleSelectedCount} of {visibleDiffs.length} selected{hiddenUnsafeCount > 0 ? ` (${hiddenUnsafeCount} hw-only hidden)` : ''}
+                        {visibleSelectedCount} {t('mavlink_config.ParameterTable.of')} {visibleDiffs.length} {t('mavlink_config.ParameterTable.selected')}{hiddenUnsafeCount > 0 ? t('mavlink_config.ParameterTable.hwOnlyHidden', { hiddenUnsafeCount }) : ''}
                       </span>
                     </div>
 
@@ -1490,10 +1491,10 @@ const ParameterTable: React.FC = () => {
                         <thead>
                           <tr className="text-left text-xs text-content-secondary uppercase">
                             <th className="pb-2 w-8"></th>
-                            <th className="pb-2">Parameter</th>
-                            <th className="pb-2 text-right">Vehicle</th>
+                            <th className="pb-2">{t('mavlink_config.ParameterTable.parameter2')}</th>
+                            <th className="pb-2 text-right">{t('mavlink_config.ParameterTable.vehicle')}</th>
                             <th className="pb-2 text-center w-8"></th>
-                            <th className="pb-2">File</th>
+                            <th className="pb-2">{t('mavlink_config.ParameterTable.file')}</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-subtle">
@@ -1523,7 +1524,7 @@ const ParameterTable: React.FC = () => {
                                   {unsafeReason && (
                                     <span
                                       className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wide font-medium bg-red-500/15 text-red-400 border border-red-500/30"
-                                      title={`SITL-unsafe: ${unsafeReason}. Applying may crash the simulator.`}
+                                      title={t('mavlink_config.ParameterTable.sitlUnsafeApplyingMayCrashThe', { unsafeReason })}
                                     >
                                       hw-only
                                     </span>
@@ -1550,7 +1551,7 @@ const ParameterTable: React.FC = () => {
                 {isApplyingFileParams && applyProgress && (
                   <div className="px-6 py-2 border-t border-subtle">
                     <div className="flex items-center justify-between text-xs text-content-secondary mb-1">
-                      <span>Applying parameters...</span>
+                      <span>{t('mavlink_config.ParameterTable.applyingParameters')}</span>
                       <span>{applyProgress.applied} / {applyProgress.total}</span>
                     </div>
                     <div className="h-1.5 bg-surface-inset rounded-full overflow-hidden">
@@ -1568,7 +1569,7 @@ const ParameterTable: React.FC = () => {
                     disabled={isApplyingFileParams}
                     className="px-4 py-2 text-sm text-content-secondary hover:text-content disabled:text-content-tertiary transition-colors"
                   >
-                    {fileParamDiffs.length === 0 ? 'Close' : 'Cancel'}
+                    {fileParamDiffs.length === 0 ? t('mavlink_config.ParameterTable.close') : t('mavlink_config.ParameterTable.cancel')}
                   </button>
                   {fileParamDiffs.length > 0 && (
                     <button
@@ -1577,8 +1578,8 @@ const ParameterTable: React.FC = () => {
                       className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 disabled:bg-surface-raised text-blue-400 disabled:text-content-tertiary rounded-lg text-sm font-medium transition-colors"
                     >
                       {isApplyingFileParams
-                        ? 'Applying...'
-                        : `Apply ${fileParamDiffs.filter(d => d.selected).length} Parameter${fileParamDiffs.filter(d => d.selected).length !== 1 ? 's' : ''}`
+                        ? t('mavlink_config.ParameterTable.applying')
+                        : t('mavlink_config.ParameterTable.applyParameter', { length: fileParamDiffs.filter(d => d.selected).length, v2: fileParamDiffs.filter(d => d.selected).length !== 1 ? 's' : '' })
                       }
                     </button>
                   )}
@@ -1594,21 +1595,21 @@ const ParameterTable: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-surface-solid border rounded-xl shadow-2xl max-w-lg w-full mx-4 flex flex-col">
             <div className="px-6 py-4 border-b border-subtle">
-              <h3 className="text-lg font-semibold text-content">Reboot Cycle Complete</h3>
+              <h3 className="text-lg font-semibold text-content">{t('mavlink_config.ParameterTable.rebootCycleComplete')}</h3>
             </div>
 
             <div className="px-6 py-5 space-y-4">
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-400 shrink-0" />
                 <span className="text-sm text-green-300">
-                  {cycleResult.totalApplied} parameter{cycleResult.totalApplied !== 1 ? 's' : ''} applied
+                  {cycleResult.totalApplied} {t('mavlink_config.ParameterTable.parameter')}{cycleResult.totalApplied !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.applied')}
                 </span>
               </div>
 
               <div className="flex items-center gap-3">
                 <RotateCw className="w-5 h-5 text-blue-400 shrink-0" />
                 <span className="text-sm text-blue-300">
-                  {cycleResult.totalReboots} reboot{cycleResult.totalReboots !== 1 ? 's' : ''} performed
+                  {cycleResult.totalReboots} {t('mavlink_config.ParameterTable.reboot2')}{cycleResult.totalReboots !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.performed')}
                 </span>
               </div>
 
@@ -1617,13 +1618,13 @@ const ParameterTable: React.FC = () => {
                   <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-sm text-amber-300">
-                      {cycleResult.stillPending.length} parameter{cycleResult.stillPending.length !== 1 ? 's' : ''} could not be set:
+                      {cycleResult.stillPending.length} {t('mavlink_config.ParameterTable.parameter')}{cycleResult.stillPending.length !== 1 ? 's' : ''} {t('mavlink_config.ParameterTable.couldNotBeSet')}
                     </span>
                     <p className="font-mono text-xs text-amber-400/70 mt-1 break-words">
                       {cycleResult.stillPending.map(p => p.id).join(', ')}
                     </p>
                     <p className="text-xs text-content-secondary mt-1">
-                      These parameters may not exist in this firmware version
+                      {t('mavlink_config.ParameterTable.theseParametersMayNotExistIn')}
                     </p>
                   </div>
                 </div>
@@ -1635,7 +1636,7 @@ const ParameterTable: React.FC = () => {
                 onClick={() => setCycleResult(null)}
                 className="px-4 py-2 bg-surface-raised hover:bg-surface text-content rounded-lg text-sm font-medium transition-colors"
               >
-                Close
+                {t('mavlink_config.ParameterTable.close')}
               </button>
             </div>
           </div>

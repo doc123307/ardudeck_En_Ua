@@ -13,6 +13,7 @@ import { Polygon, CircleMarker, Tooltip } from 'react-leaflet';
 import { useFleetVehicles } from '../../../hooks/useFleet';
 import { useCameraStore } from '../../../stores/camera-store';
 import { projectFootprint, projectFrameCenter, type CameraPose } from '../../camera/geolocation';
+import { t } from '../../../i18n';
 
 export function CameraFootprintOverlay() {
   const fleet = useFleetVehicles();
@@ -57,7 +58,7 @@ export function CameraFootprintOverlay() {
                 radius={4}
                 pathOptions={{ color, weight: 2, fillColor: color, fillOpacity: 0.9 }}
               >
-                <Tooltip direction="top" offset={[0, -4]}>{v.label} camera center</Tooltip>
+                <Tooltip direction="top" offset={[0, -4]}>{v.label} {t('map.CameraFootprintOverlay.cameraCenter')}</Tooltip>
               </CircleMarker>
             )}
           </span>

@@ -1,3 +1,4 @@
+import { t as tr } from '../../i18n';
 /**
  * Ported verbatim from the Trainer's launcher, which is where it was designed.
  *
@@ -110,7 +111,7 @@ export function SkyPreview({
       style={{ height }}
       preserveAspectRatio="none"
       role="img"
-      aria-label={`${preset} sky, wind ${windMs.toFixed(0)} metres per second`}
+      aria-label={tr('trainer.SkyPreview.skyWindMetresPerSecond', { preset, v2: windMs.toFixed(0) })}
     >
       <defs>
         <linearGradient id={`sky-${uid}`} x1="0" y1="0" x2="0" y2="1">
@@ -280,7 +281,7 @@ function WindStreaks({
         fontSize="11"
         fill="rgba(255,255,255,0.45)"
       >
-        still air
+        {tr('trainer.SkyPreview.stillAir')}
       </text>
     );
   }

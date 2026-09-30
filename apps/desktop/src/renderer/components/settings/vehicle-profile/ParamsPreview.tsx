@@ -5,6 +5,7 @@ import { getTemplate, defaultTemplateForType } from '../../../lib/vehicle-templa
 import { useConnectionStore } from '../../../stores/connection-store.js';
 import { useParameterStore } from '../../../stores/parameter-store.js';
 import { ApplyProfileButton } from './ApplyProfileButton.js';
+import { t } from '../../../i18n';
 
 interface ParamsPreviewProps {
   vehicle: VehicleProfile;
@@ -71,9 +72,9 @@ export function ParamsPreview({ vehicle, onBeforeApply }: ParamsPreviewProps) {
         className={`w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-dashed text-xs font-medium transition-colors ${buttonStatus.containerClass}`}
       >
         <Eye className="w-3.5 h-3.5" />
-        Generate params preview
+        {t('settings.ParamsPreview.generateParamsPreview')}
         <span className="text-content-tertiary font-normal">
-          ({core.length} core{sim.length > 0 && ` + ${sim.length} SITL`})
+          ({core.length} {t('settings.ParamsPreview.core')}{sim.length > 0 && ` + ${sim.length} SITL`})
         </span>
         {buttonStatus.badge && (
           <span className={`inline-flex items-center gap-1 text-[10px] font-medium ${buttonStatus.badgeClass}`}>
@@ -90,9 +91,9 @@ export function ParamsPreview({ vehicle, onBeforeApply }: ParamsPreviewProps) {
       {/* Header */}
       <div className="flex items-center justify-between gap-2">
         <div className="text-[11px] text-content-secondary leading-tight min-w-0">
-          <span className="text-content font-semibold">{core.length}</span> core
+          <span className="text-content font-semibold">{core.length}</span> {t('settings.ParamsPreview.core')}
           {sim.length > 0 && <> <span className="text-content-tertiary">·</span> <span className="text-content font-semibold">{sim.length}</span> SITL</>}
-          {' '}params from <span className="text-blue-400 font-medium">{template.name}</span>
+          {' '}{t('settings.ParamsPreview.paramsFrom')} <span className="text-blue-400 font-medium">{template.name}</span>
         </div>
         <button
           type="button"
@@ -100,7 +101,7 @@ export function ParamsPreview({ vehicle, onBeforeApply }: ParamsPreviewProps) {
           className="inline-flex items-center gap-1 text-[10px] text-content-tertiary hover:text-content-secondary shrink-0"
         >
           <EyeOff className="w-3 h-3" />
-          Hide
+          {t('settings.ParamsPreview.hide')}
         </button>
       </div>
 
@@ -192,7 +193,7 @@ function StatusBanner({ lastApplied, lastAppliedTo, matchCount, driftCount, offl
     return (
       <div className="mt-2 flex items-center gap-2 text-[11px] text-content-tertiary">
         <Circle className="w-3 h-3" />
-        Never applied · connect to the vehicle to check live state
+        {t('settings.ParamsPreview.neverAppliedConnectToTheVehicle')}
       </div>
     );
   }
@@ -200,10 +201,10 @@ function StatusBanner({ lastApplied, lastAppliedTo, matchCount, driftCount, offl
     return (
       <div className="mt-2 flex items-center gap-2 text-[11px] text-content-tertiary">
         <Circle className="w-3 h-3" />
-        Never applied
+        {t('settings.ParamsPreview.neverApplied')}
         {matchCount > 0 && (
           <span className="text-emerald-400">
-            · {matchCount} already match the live vehicle
+            · {matchCount} {t('settings.ParamsPreview.alreadyMatchTheLiveVehicle')}
           </span>
         )}
       </div>
@@ -215,7 +216,7 @@ function StatusBanner({ lastApplied, lastAppliedTo, matchCount, driftCount, offl
     return (
       <div className="mt-2 flex items-center gap-2 text-[11px] text-amber-400">
         <AlertTriangle className="w-3 h-3" />
-        Applied to {target} {when} · <span className="font-semibold">{driftCount}</span> param{driftCount === 1 ? '' : 's'} drifted from applied state
+        {t('settings.ParamsPreview.appliedTo')} {target} {when} · <span className="font-semibold">{driftCount}</span> {t('settings.ParamsPreview.param')}{driftCount === 1 ? '' : 's'} {t('settings.ParamsPreview.driftedFromAppliedState')}
       </div>
     );
   }
@@ -223,14 +224,14 @@ function StatusBanner({ lastApplied, lastAppliedTo, matchCount, driftCount, offl
     return (
       <div className="mt-2 flex items-center gap-2 text-[11px] text-content-tertiary">
         <Circle className="w-3 h-3" />
-        Last applied to {target} {when} · reconnect to verify live state
+        {t('settings.ParamsPreview.lastAppliedTo')} {target} {when} {t('settings.ParamsPreview.reconnectToVerifyLiveState')}
       </div>
     );
   }
   return (
     <div className="mt-2 flex items-center gap-2 text-[11px] text-emerald-400">
       <CheckCircle2 className="w-3 h-3" />
-      Applied to {target} {when} · all live values match
+      {t('settings.ParamsPreview.appliedTo')} {target} {when} {t('settings.ParamsPreview.allLiveValuesMatch')}
     </div>
   );
 }

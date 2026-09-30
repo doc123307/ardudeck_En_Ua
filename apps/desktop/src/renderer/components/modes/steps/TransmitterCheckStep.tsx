@@ -11,6 +11,7 @@ import { useReceiverStore } from '../../../stores/receiver-store';
 import TransmitterVisualizer from '../shared/TransmitterVisualizer';
 import { Satellite, CheckCircle2, Clock, AlertTriangle, Square, CheckSquare } from 'lucide-react';
 import { reorderChannels } from '../../../utils/rc-channel-constants';
+import { t } from '../../../i18n';
 
 export const TransmitterCheckStep: React.FC = () => {
   const {
@@ -51,10 +52,9 @@ export const TransmitterCheckStep: React.FC = () => {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/20 mb-4">
           <Satellite className="w-8 h-8 text-blue-400" />
         </div>
-        <h2 className="text-xl font-semibold text-content">Check Your Transmitter</h2>
+        <h2 className="text-xl font-semibold text-content">{t('modes.TransmitterCheckStep.checkYourTransmitter')}</h2>
         <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
-          Move your sticks and flip your switches to verify they&apos;re being received.
-          Each channel should light up green when it detects movement.
+          {t('modes.TransmitterCheckStep.moveYourSticksAndFlipYour')}
         </p>
       </div>
 
@@ -80,12 +80,12 @@ export const TransmitterCheckStep: React.FC = () => {
             >
               {hasMinimumChannels
                 ? `${detectedCount} channels detected!`
-                : 'Waiting for channel movement...'}
+                : t('modes.TransmitterCheckStep.waitingForChannelMovement')}
             </h3>
             <p className="text-xs text-content-secondary mt-0.5">
               {hasMinimumChannels
-                ? 'Your transmitter is connected. Move switches to detect AUX channels.'
-                : 'Move all your sticks to their extremes to verify the connection.'}
+                ? t('modes.TransmitterCheckStep.yourTransmitterIsConnectedMoveSwitches')
+                : t('modes.TransmitterCheckStep.moveAllYourSticksToTheir')}
             </p>
           </div>
         </div>
@@ -101,7 +101,7 @@ export const TransmitterCheckStep: React.FC = () => {
 
       {/* Instructions */}
       <div className="p-4 bg-surface rounded-xl border border-subtle">
-        <h4 className="text-sm font-medium text-content mb-3">Quick Check:</h4>
+        <h4 className="text-sm font-medium text-content mb-3">{t('modes.TransmitterCheckStep.quickCheck')}</h4>
         <ul className="space-y-2">
           <li className="flex items-center gap-2 text-sm text-content-secondary">
             {channelsDetected[0] || channelsDetected[1] ? (
@@ -109,7 +109,7 @@ export const TransmitterCheckStep: React.FC = () => {
             ) : (
               <Square className="w-4 h-4 text-content-tertiary" />
             )}
-            <span>Move left stick up/down and left/right</span>
+            <span>{t('modes.TransmitterCheckStep.moveLeftStickUpDownAnd')}</span>
           </li>
           <li className="flex items-center gap-2 text-sm text-content-secondary">
             {channelsDetected[2] || channelsDetected[3] ? (
@@ -117,7 +117,7 @@ export const TransmitterCheckStep: React.FC = () => {
             ) : (
               <Square className="w-4 h-4 text-content-tertiary" />
             )}
-            <span>Move right stick up/down and left/right</span>
+            <span>{t('modes.TransmitterCheckStep.moveRightStickUpDownAnd')}</span>
           </li>
           <li className="flex items-center gap-2 text-sm text-content-secondary">
             {channelsDetected[4] ? (
@@ -125,7 +125,7 @@ export const TransmitterCheckStep: React.FC = () => {
             ) : (
               <Square className="w-4 h-4 text-content-tertiary" />
             )}
-            <span>Flip your ARM switch (usually AUX1)</span>
+            <span>{t('modes.TransmitterCheckStep.flipYourArmSwitchUsuallyAux1')}</span>
           </li>
           <li className="flex items-center gap-2 text-sm text-content-secondary">
             {channelsDetected[5] ? (
@@ -133,7 +133,7 @@ export const TransmitterCheckStep: React.FC = () => {
             ) : (
               <Square className="w-4 h-4 text-content-tertiary" />
             )}
-            <span>Move any other switches you plan to use</span>
+            <span>{t('modes.TransmitterCheckStep.moveAnyOtherSwitchesYouPlan')}</span>
           </li>
         </ul>
       </div>
@@ -147,7 +147,7 @@ export const TransmitterCheckStep: React.FC = () => {
           className="w-5 h-5 rounded border bg-surface-raised text-blue-500 focus:ring-blue-500 focus:ring-offset-zinc-900"
         />
         <span className="text-sm text-content">
-          I can see my sticks and switches responding in the visualizer above
+          {t('modes.TransmitterCheckStep.iCanSeeMySticksAnd')}
         </span>
       </label>
 
@@ -157,14 +157,14 @@ export const TransmitterCheckStep: React.FC = () => {
           onClick={prevStep}
           className="px-4 py-2.5 bg-surface-raised hover:bg-surface-raised text-content rounded-lg transition-colors"
         >
-          Back
+          {t('modes.TransmitterCheckStep.back')}
         </button>
         <button
           onClick={handleConfirmAndContinue}
           disabled={!transmitterConfirmed && !hasMinimumChannels}
           className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-surface-raised disabled:text-content-secondary text-white font-medium rounded-lg transition-colors disabled:cursor-not-allowed"
         >
-          Continue to Mode Configuration
+          {t('modes.TransmitterCheckStep.continueToModeConfiguration')}
         </button>
       </div>
 
@@ -174,12 +174,12 @@ export const TransmitterCheckStep: React.FC = () => {
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-medium text-red-300 text-sm">No channels detected?</h4>
+              <h4 className="font-medium text-red-300 text-sm">{t('modes.TransmitterCheckStep.noChannelsDetected')}</h4>
               <ul className="text-xs text-red-200/70 mt-2 space-y-1 list-disc list-inside">
-                <li>Make sure your transmitter is turned on and bound to your receiver</li>
-                <li>Check that the receiver is connected to your flight controller</li>
-                <li>Verify the correct receiver protocol is set in the configurator</li>
-                <li>Try unplugging and reconnecting your flight controller</li>
+                <li>{t('modes.TransmitterCheckStep.makeSureYourTransmitterIsTurned')}</li>
+                <li>{t('modes.TransmitterCheckStep.checkThatTheReceiverIsConnected')}</li>
+                <li>{t('modes.TransmitterCheckStep.verifyTheCorrectReceiverProtocolIs')}</li>
+                <li>{t('modes.TransmitterCheckStep.tryUnpluggingAndReconnectingYourFlight')}</li>
               </ul>
             </div>
           </div>

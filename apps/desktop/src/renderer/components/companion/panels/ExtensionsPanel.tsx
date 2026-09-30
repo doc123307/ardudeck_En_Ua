@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer } from '../../panels/panel-utils';
+import { t } from '../../../i18n';
 
 export function ExtensionsPanel() {
   const extensions = useCompanionStore((s) => s.extensions);
@@ -46,8 +47,8 @@ export function ExtensionsPanel() {
     return (
       <PanelContainer className="flex items-center justify-center">
         <div className="text-center text-content-tertiary text-xs">
-          <div className="text-content-secondary mb-1">Extensions unavailable</div>
-          <div>Connect to companion agent to manage BlueOS extensions.</div>
+          <div className="text-content-secondary mb-1">{t('companion.ExtensionsPanel.extensionsUnavailable')}</div>
+          <div>{t('companion.ExtensionsPanel.connectToCompanionAgentToManage')}</div>
         </div>
       </PanelContainer>
     );
@@ -57,9 +58,9 @@ export function ExtensionsPanel() {
     return (
       <PanelContainer className="flex items-center justify-center">
         <div className="text-center text-content-tertiary text-xs">
-          <div className="text-content-secondary mb-1">BlueOS not detected</div>
-          <div>BlueOS is not running on the companion computer.</div>
-          <div className="mt-1 text-[10px] text-content-tertiary">Extensions are only available with BlueOS.</div>
+          <div className="text-content-secondary mb-1">{t('companion.ExtensionsPanel.blueosNotDetected')}</div>
+          <div>{t('companion.ExtensionsPanel.blueosIsNotRunningOnThe')}</div>
+          <div className="mt-1 text-[10px] text-content-tertiary">{t('companion.ExtensionsPanel.extensionsAreOnlyAvailableWithBlueos')}</div>
         </div>
       </PanelContainer>
     );
@@ -77,7 +78,7 @@ export function ExtensionsPanel() {
               : 'text-content-secondary hover:text-content'
           }`}
         >
-          Installed ({extensions.length})
+          {t('companion.ExtensionsPanel.installed')}{extensions.length})
         </button>
         <button
           onClick={() => setTab('available')}
@@ -87,13 +88,13 @@ export function ExtensionsPanel() {
               : 'text-content-secondary hover:text-content'
           }`}
         >
-          Available
+          {t('companion.ExtensionsPanel.available')}
         </button>
         <div className="flex-1" />
         <button
           onClick={fetchExtensions}
           className="text-content-secondary hover:text-content transition-colors p-1.5 mr-1"
-          title="Refresh"
+          title={t('companion.ExtensionsPanel.refresh')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -106,7 +107,7 @@ export function ExtensionsPanel() {
         {tab === 'installed' ? (
           extensions.length === 0 ? (
             <div className="flex items-center justify-center h-full text-content-tertiary text-xs">
-              No extensions installed
+              {t('companion.ExtensionsPanel.noExtensionsInstalled')}
             </div>
           ) : (
             <div className="divide-y divide-subtle">
@@ -124,13 +125,13 @@ export function ExtensionsPanel() {
 
                       <div className="shrink-0 ml-2">
                         {isRemoving ? (
-                          <span className="text-[10px] text-yellow-400 animate-pulse px-2">Removing...</span>
+                          <span className="text-[10px] text-yellow-400 animate-pulse px-2">{t('companion.ExtensionsPanel.removing')}</span>
                         ) : (
                           <button
                             onClick={() => handleRemove(ext.identifier)}
                             className="px-1.5 py-0.5 text-[10px] text-red-400 hover:bg-red-500/20 rounded transition-colors"
                           >
-                            Remove
+                            {t('companion.ExtensionsPanel.remove')}
                           </button>
                         )}
                       </div>
@@ -151,9 +152,9 @@ export function ExtensionsPanel() {
         ) : (
           <div className="flex items-center justify-center h-full text-content-tertiary text-xs">
             <div className="text-center">
-              <div className="text-content-secondary mb-1">Available extensions</div>
-              <div className="text-[10px]">Browse and install extensions from the BlueOS marketplace.</div>
-              <div className="text-[10px] mt-1 text-content-tertiary">Coming in a future update.</div>
+              <div className="text-content-secondary mb-1">{t('companion.ExtensionsPanel.availableExtensions')}</div>
+              <div className="text-[10px]">{t('companion.ExtensionsPanel.browseAndInstallExtensionsFromThe')}</div>
+              <div className="text-[10px] mt-1 text-content-tertiary">{t('companion.ExtensionsPanel.comingInAFutureUpdate')}</div>
             </div>
           </div>
         )}

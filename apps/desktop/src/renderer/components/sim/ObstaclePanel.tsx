@@ -13,6 +13,7 @@ import { useSimObstaclesStore } from '../../stores/sim-obstacles-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { localToLatLng } from '../survey/geo-math';
 import { buildFenceItems, type PolygonFence, type CircleFence } from '../../../shared/fence-types';
+import { t } from '../../i18n';
 
 export default function ObstaclePanel() {
   const obstacles = useSimObstaclesStore((s) => s.obstacles);
@@ -96,10 +97,10 @@ export default function ObstaclePanel() {
     return (
       <button
         onClick={() => setOpen(true)}
-        data-tip="Author obstacles and push them to the FC as exclusion fences"
+        data-tip={t('sim.ObstaclePanel.authorObstaclesAndPushThemTo')}
         className="absolute top-14 right-3 z-10 px-3 py-1.5 text-xs font-medium rounded-lg bg-surface-raised border border-subtle text-content-secondary hover:text-content shadow-lg"
       >
-        Obstacles{obstacles.length > 0 ? ` (${obstacles.length})` : ''}
+        {t('sim.ObstaclePanel.obstacles')}{obstacles.length > 0 ? ` (${obstacles.length})` : ''}
       </button>
     );
   }
@@ -107,7 +108,7 @@ export default function ObstaclePanel() {
   return (
     <div className="absolute top-14 right-3 z-10 w-72 bg-surface-overlay backdrop-blur-sm border border-subtle rounded-xl shadow-xl text-content">
       <div className="flex items-center justify-between px-3 py-2 border-b border-subtle">
-        <span className="text-sm font-semibold">Obstacles</span>
+        <span className="text-sm font-semibold">{t('sim.ObstaclePanel.obstacles')}</span>
         <button onClick={() => setOpen(false)} className="text-content-tertiary hover:text-content text-xs">✕</button>
       </div>
 
@@ -118,7 +119,7 @@ export default function ObstaclePanel() {
             placing ? 'bg-sky-600 text-white' : 'bg-surface-raised border border-subtle text-content-secondary hover:text-content'
           }`}
         >
-          {placing ? 'Click the ground to drop…  (cancel)' : 'Place obstacle'}
+          {placing ? t('sim.ObstaclePanel.clickTheGroundToDropCancel') : t('sim.ObstaclePanel.placeObstacle')}
         </button>
 
         <div className="flex items-center gap-2 text-xs">
@@ -127,14 +128,14 @@ export default function ObstaclePanel() {
             onChange={(e) => setDraft({ shape: e.target.value as 'cylinder' | 'box' })}
             className="flex-1 px-2 py-1 rounded-md bg-surface-raised border border-subtle text-content"
           >
-            <option value="cylinder">Cylinder</option>
-            <option value="box">Box</option>
+            <option value="cylinder">{t('sim.ObstaclePanel.cylinder')}</option>
+            <option value="box">{t('sim.ObstaclePanel.box')}</option>
           </select>
-          <label className="flex items-center gap-1 text-content-tertiary" data-tip="Radius / half-width (m)">
+          <label className="flex items-center gap-1 text-content-tertiary" data-tip={t('sim.ObstaclePanel.radiusHalfWidthM')}>
             r<DraftNumberInput min={1} max={500} value={draft.radius}
               onCommit={(v) => setDraft({ radius: v })} className={num} />
           </label>
-          <label className="flex items-center gap-1 text-content-tertiary" data-tip="Height (m)">
+          <label className="flex items-center gap-1 text-content-tertiary" data-tip={t('sim.ObstaclePanel.heightM')}>
             h<DraftNumberInput min={1} max={500} value={draft.height}
               onCommit={(v) => setDraft({ height: v })} className={num} />
           </label>
@@ -142,14 +143,14 @@ export default function ObstaclePanel() {
 
         <div className="max-h-40 overflow-y-auto rounded-md border border-subtle divide-y divide-subtle">
           {obstacles.length === 0 ? (
-            <div className="px-3 py-3 text-xs text-content-tertiary text-center">No obstacles yet</div>
+            <div className="px-3 py-3 text-xs text-content-tertiary text-center">{t('sim.ObstaclePanel.noObstaclesYet')}</div>
           ) : (
             obstacles.map((o, i) => (
               <div key={o.id} className="flex items-center justify-between px-2 py-1.5 text-xs">
                 <span className="text-content-secondary">
                   {o.shape === 'cylinder' ? '◯' : '▢'} #{i + 1} · r{o.radius} h{o.height}
                 </span>
-                <button onClick={() => remove(o.id)} className="text-content-tertiary hover:text-red-400" data-tip="Remove">✕</button>
+                <button onClick={() => remove(o.id)} className="text-content-tertiary hover:text-red-400" data-tip={t('sim.ObstaclePanel.remove')}>✕</button>
               </div>
             ))
           )}
@@ -159,23 +160,23 @@ export default function ObstaclePanel() {
           <button
             onClick={applyToFc}
             disabled={!isConnected || applying || obstacles.length === 0}
-            data-tip="Upload obstacles as exclusion fences and enable avoidance + path planning"
+            data-tip={t('sim.ObstaclePanel.uploadObstaclesAsExclusionFencesAnd')}
             className="flex-1 px-3 py-1.5 text-xs font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {applying ? '…' : 'Apply as fences → FC'}
+            {applying ? '…' : t('sim.ObstaclePanel.applyAsFencesFc')}
           </button>
           <button
             onClick={clearFromFc}
             disabled={!isConnected || applying}
-            data-tip="Clear all fences on the flight controller"
+            data-tip={t('sim.ObstaclePanel.clearAllFencesOnTheFlight')}
             className="px-3 py-1.5 text-xs font-medium rounded-md bg-surface-raised border border-subtle text-content-secondary hover:text-content disabled:opacity-40"
           >
-            Clear FC
+            {t('sim.ObstaclePanel.clearFc')}
           </button>
         </div>
         {obstacles.length > 0 && (
           <button onClick={clear} className="w-full text-[11px] text-content-tertiary hover:text-red-400">
-            Remove all obstacles
+            {t('sim.ObstaclePanel.removeAllObstacles')}
           </button>
         )}
         {status && <div className="text-[11px] text-content-secondary text-center">{status}</div>}

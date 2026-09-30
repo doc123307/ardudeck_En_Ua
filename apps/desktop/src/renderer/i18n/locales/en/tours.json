@@ -1,0 +1,43 @@
+{
+  "tours": {
+    "ActiveTour": {
+      "back": "Back",
+      "next": "Next",
+      "next2": "Next: {{title}}",
+      "nextFeature": "Next feature",
+      "done": "Done"
+    },
+    "TourLaunchGate": {
+      "tourNeedsAVehicle": "Tour needs a vehicle",
+      "cancel": "Cancel",
+      "thisWalkthroughDemonstratesFeaturesThatNeed": "This walkthrough demonstrates features that need a live flight controller. You can spin up a safe",
+      "simulationToTryItOrConnect": "simulation to try it, or connect your own FC.",
+      "ardupilotSitlIsNotSupportedOn": "ArduPilot SITL is not supported on this platform.",
+      "connectYourOwnFcToContinue": "Connect your own FC to continue the tour.",
+      "ardupilotSitlIsnTInstalledYet": "ArduPilot SITL isn't installed yet. Head to the SITL view to download the binary - the tour will pick up automatically once you connect.",
+      "goToSitlToInstall": "Go to SITL to install",
+      "startingSitl": "Starting SITL...",
+      "connecting": "Connecting...",
+      "launch": "Launch {{sitlLabel}}",
+      "iLlConnectMyOwnFc": "I'll connect my own FC",
+      "notNow": "Not now"
+    },
+    "TourPanelsGate": {
+      "layoutAdjustment": "Layout adjustment",
+      "cancel": "Cancel",
+      "thisTourWalksThroughPanelsThat": "This tour walks through panels that aren't in your current layout:",
+      "missing": "Missing:",
+      "switchToThe": "Switch to the",
+      "layoutToSeeTheTourYour": "layout to see the tour? Your current layout stays saved - you can switch back from the layout dropdown at any time.",
+      "switchTo": "Switch to",
+      "skipThisTour": "Skip this tour"
+    },
+    "TourPrompt": {
+      "quickTour": "Quick tour",
+      "remindMeLater": "Remind me later",
+      "noThanks": "No thanks",
+      "showMe": "Show me",
+      "donTOfferToursAgain": "Don't offer tours again"
+    }
+  }
+}

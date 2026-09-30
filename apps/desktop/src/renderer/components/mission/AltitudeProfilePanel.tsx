@@ -19,6 +19,7 @@ import {
   nearestIndexByX,
   shouldShowInteractiveDots,
 } from './altitude-profile-density';
+import { t as tr } from '../../i18n';
 
 // Terrain data point
 interface TerrainPoint {
@@ -761,40 +762,40 @@ export function AltitudeProfilePanel({ readOnly = false }: AltitudeProfilePanelP
     <div ref={containerRef} data-tour="mission-altitude-panel" className="h-full w-full bg-surface overflow-hidden relative">
       {waypoints.length === 0 ? (
         <div className="h-full flex items-center justify-center text-content-secondary text-sm">
-          {readOnly ? 'No mission loaded' : 'No waypoints to display'}
+          {readOnly ? tr('mission.AltitudeProfilePanel.noMissionLoaded') : tr('mission.AltitudeProfilePanel.noWaypointsToDisplay')}
         </div>
       ) : (
         <>
         {/* Legend and status */}
         <div className="absolute top-1 right-2 flex items-center gap-3 text-[10px]">
           {terrainLoading && (
-            <span className="text-blue-400 pointer-events-none">Loading terrain...</span>
+            <span className="text-blue-400 pointer-events-none">{tr('mission.AltitudeProfilePanel.loadingTerrain')}</span>
           )}
           {terrainData.length > 0 && !terrainLoading && (
             <>
               <span className="flex items-center gap-1 pointer-events-none">
                 <span className="w-2 h-2 rounded-sm bg-green-500/60" />
-                <span className="text-content-secondary">Terrain</span>
+                <span className="text-content-secondary">{tr('mission.AltitudeProfilePanel.terrain')}</span>
               </span>
               <span className="flex items-center gap-1 pointer-events-none">
                 <span className="w-3 h-0.5 bg-amber-500" style={{ borderStyle: 'dashed' }} />
-                <span className="text-content-secondary">Safe +{formatAltitudeFromMeters(safeAltitudeBuffer, altitudeUnit)}</span>
+                <span className="text-content-secondary">{tr('mission.AltitudeProfilePanel.safe')}{formatAltitudeFromMeters(safeAltitudeBuffer, altitudeUnit)}</span>
               </span>
             </>
           )}
           {collisionSegments.length > 0 && (
             <span className="flex items-center gap-1 text-red-400 pointer-events-none">
               <span className="w-2 h-2 rounded-full bg-red-500" />
-              Collision!
+              {tr('mission.AltitudeProfilePanel.collision')}
             </span>
           )}
           {!readOnly && terrainData.length > 0 && !terrainLoading && collisionSegments.length > 0 && (
             <button
               onClick={() => setAutoAdjustOpen(true)}
               className="px-2 py-0.5 text-[10px] font-medium text-amber-300 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 rounded transition-colors"
-              title={`Keep flight path ${formatAltitudeFromMeters(safeAltitudeBuffer, altitudeUnit)} above terrain`}
+              title={tr('mission.AltitudeProfilePanel.keepFlightPathAboveTerrain', { v1: formatAltitudeFromMeters(safeAltitudeBuffer, altitudeUnit) })}
             >
-              Auto Adjust...
+              {tr('mission.AltitudeProfilePanel.autoAdjust')}
             </button>
           )}
           {viewRange && (
@@ -802,11 +803,11 @@ export function AltitudeProfilePanel({ readOnly = false }: AltitudeProfilePanelP
               onClick={() => setViewRange(null)}
               className="px-2 py-0.5 text-[10px] text-content-secondary bg-surface-raised hover:text-content rounded transition-colors"
             >
-              Reset zoom
+              {tr('mission.AltitudeProfilePanel.resetZoom')}
             </button>
           )}
-          {!readOnly && showDots && <span className="text-content-secondary pointer-events-none">Drag points to edit, scroll to zoom</span>}
-          {!showDots && <span className="text-content-secondary pointer-events-none">Hover to inspect, click to select, scroll to zoom</span>}
+          {!readOnly && showDots && <span className="text-content-secondary pointer-events-none">{tr('mission.AltitudeProfilePanel.dragPointsToEditScrollTo')}</span>}
+          {!showDots && <span className="text-content-secondary pointer-events-none">{tr('mission.AltitudeProfilePanel.hoverToInspectClickToSelect')}</span>}
         </div>
         <svg
           ref={svgRef}
@@ -1139,7 +1140,7 @@ export function AltitudeProfilePanel({ readOnly = false }: AltitudeProfilePanelP
               fill="var(--text-tertiary)"
               fontSize={10}
             >
-              Distance
+              {tr('mission.AltitudeProfilePanel.distance')}
             </text>
 
             <text
@@ -1150,7 +1151,7 @@ export function AltitudeProfilePanel({ readOnly = false }: AltitudeProfilePanelP
               fontSize={10}
               transform="rotate(-90)"
             >
-              {hasTerrainRef ? 'Alt above home' : 'Altitude'} ({UNIT_LABELS.altitude[altitudeUnit]})
+              {hasTerrainRef ? tr('mission.AltitudeProfilePanel.altAboveHome') : tr('mission.AltitudeProfilePanel.altitude')} ({UNIT_LABELS.altitude[altitudeUnit]})
             </text>
 
             {/* Gradient definitions */}

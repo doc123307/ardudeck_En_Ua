@@ -8,6 +8,7 @@ import {
   UNIT_LABELS,
   type AltitudeUnit,
 } from '../../../shared/user-units.js';
+import { t } from '../../i18n';
 
 function parseNumberDraft(value: string): number | null {
   const trimmed = value.trim();
@@ -83,7 +84,7 @@ function EditableValue({
     <button
       onClick={startEdit}
       className="font-mono text-content text-[10px] leading-none hover:text-blue-400 transition-colors border-b border-dashed border hover:border-blue-400/50"
-      title="Click to edit"
+      title={t('map.ElevationLegend.clickToEdit')}
     >
       {formatAltitudeFromMeters(valueMeters, altitudeUnit)}
     </button>
@@ -137,9 +138,9 @@ export function ElevationLegend({
                     ? 'bg-surface-raised text-content-secondary hover:text-content'
                     : 'bg-surface-raised text-content-tertiary cursor-not-allowed'
               }`}
-              title={hasCraftPosition ? 'Show height relative to craft' : 'No craft position available'}
+              title={hasCraftPosition ? t('map.ElevationLegend.showHeightRelativeToCraft') : t('map.ElevationLegend.noCraftPositionAvailable')}
             >
-              Rel
+              {t('map.ElevationLegend.rel')}
             </button>
           )}
           <button
@@ -150,7 +151,7 @@ export function ElevationLegend({
                 : 'bg-surface-raised text-content-secondary hover:text-content'
             }`}
           >
-            Auto
+            {t('map.ElevationLegend.auto')}
           </button>
         </div>
       </div>

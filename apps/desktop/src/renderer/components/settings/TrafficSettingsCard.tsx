@@ -20,6 +20,7 @@ import {
   type TrafficConfig,
 } from '../../../shared/traffic-types';
 import { useTrafficStore } from '../../stores/traffic-store';
+import { t } from '../../i18n';
 
 const inputCls =
   'px-3 py-1.5 bg-surface-input border border-border rounded-lg text-sm text-content placeholder-content-tertiary focus:outline-none focus:border-blue-500';
@@ -85,8 +86,8 @@ export function TrafficSettingsCard() {
           </svg>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-content">Traffic & Gliders</h3>
-          <p className="text-xs text-content-secondary">ADS-B and OGN sources: toggle a layer on the map to go live</p>
+          <h3 className="text-sm font-medium text-content">{t('settings.TrafficSettingsCard.trafficGliders')}</h3>
+          <p className="text-xs text-content-secondary">{t('settings.TrafficSettingsCard.adsBAndOgnSourcesToggle')}</p>
         </div>
       </div>
 
@@ -94,10 +95,10 @@ export function TrafficSettingsCard() {
         {/* Local ADS-B receiver */}
         <div className="bg-surface-input rounded-lg p-3 space-y-2">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-content font-medium">Local ADS-B receiver</div>
+            <div className="text-sm text-content font-medium">{t('settings.TrafficSettingsCard.localAdsBReceiver')}</div>
             <Toggle on={cfg.localAdsb.enabled} onChange={(v) => patch({ localAdsb: { ...cfg.localAdsb, enabled: v } })} />
           </div>
-          <Field label="aircraft.json URL (dump1090 / readsb / tar1090)">
+          <Field label={t('settings.TrafficSettingsCard.aircraftJsonUrlDump1090ReadsbTar1090')}>
             <input
               className={`${inputCls} w-full`}
               value={cfg.localAdsb.url}
@@ -110,10 +111,10 @@ export function TrafficSettingsCard() {
         {/* Hosted ADS-B API */}
         <div className="bg-surface-input rounded-lg p-3 space-y-2">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-content font-medium">Hosted ADS-B API</div>
+            <div className="text-sm text-content font-medium">{t('settings.TrafficSettingsCard.hostedAdsBApi')}</div>
             <Toggle on={cfg.adsbApi.enabled} onChange={(v) => patch({ adsbApi: { ...cfg.adsbApi, enabled: v } })} />
           </div>
-          <Field label="Provider">
+          <Field label={t('settings.TrafficSettingsCard.provider')}>
             <select
               className={`${inputCls} w-full`}
               value={cfg.adsbApi.preset}
@@ -136,41 +137,41 @@ export function TrafficSettingsCard() {
                   placeholder="https://example.com/api/lat/{lat}/lon/{lon}/dist/{radiusNm}"
                 />
               </Field>
-              <Field label="API key header name (optional)">
+              <Field label={t('settings.TrafficSettingsCard.apiKeyHeaderNameOptional')}>
                 <input
                   className={`${inputCls} w-full`}
                   value={cfg.adsbApi.customKeyHeader}
                   onChange={(e) => patch({ adsbApi: { ...cfg.adsbApi, customKeyHeader: e.target.value } })}
-                  placeholder="X-API-Key"
+                  placeholder={t('settings.TrafficSettingsCard.xApiKey')}
                 />
               </Field>
-              <Field label="API key (optional)">
-                <input type="password" className={`${inputCls} w-full`} value={customKey} onChange={(e) => setCustomKey(e.target.value)} placeholder="Paste key" />
+              <Field label={t('settings.TrafficSettingsCard.apiKeyOptional')}>
+                <input type="password" className={`${inputCls} w-full`} value={customKey} onChange={(e) => setCustomKey(e.target.value)} placeholder={t('settings.TrafficSettingsCard.pasteKey')} />
               </Field>
             </>
           )}
           {cfg.adsbApi.preset === 'adsbexchange' && (
-            <Field label="RapidAPI key">
-              <input type="password" className={`${inputCls} w-full`} value={adsbxKey} onChange={(e) => setAdsbxKey(e.target.value)} placeholder="Paste RapidAPI key" />
+            <Field label={t('settings.TrafficSettingsCard.rapidapiKey')}>
+              <input type="password" className={`${inputCls} w-full`} value={adsbxKey} onChange={(e) => setAdsbxKey(e.target.value)} placeholder={t('settings.TrafficSettingsCard.pasteRapidapiKey')} />
             </Field>
           )}
           {!preset.needsKey && cfg.adsbApi.preset !== 'custom' && (
-            <p className="text-xs text-content-tertiary">No key required.</p>
+            <p className="text-xs text-content-tertiary">{t('settings.TrafficSettingsCard.noKeyRequired')}</p>
           )}
         </div>
 
         {/* OpenSky */}
         <div className="bg-surface-input rounded-lg p-3 space-y-2">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-content font-medium">OpenSky Network</div>
+            <div className="text-sm text-content font-medium">{t('settings.TrafficSettingsCard.openskyNetwork')}</div>
             <Toggle on={cfg.openSky.enabled} onChange={(v) => patch({ openSky: { ...cfg.openSky, enabled: v } })} />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-xs text-content-secondary">Use account (higher rate limit)</span>
+            <span className="text-xs text-content-secondary">{t('settings.TrafficSettingsCard.useAccountHigherRateLimit')}</span>
             <Toggle on={cfg.openSky.useAuth} onChange={(v) => patch({ openSky: { ...cfg.openSky, useAuth: v } })} />
           </div>
           {cfg.openSky.useAuth && (
-            <Field label="Credentials (username:password)">
+            <Field label={t('settings.TrafficSettingsCard.credentialsUsernamePassword')}>
               <input type="password" className={`${inputCls} w-full`} value={openSkyCreds} onChange={(e) => setOpenSkyCreds(e.target.value)} placeholder="user:pass" />
             </Field>
           )}
@@ -179,16 +180,16 @@ export function TrafficSettingsCard() {
         {/* OGN gliders */}
         <div className="bg-surface-input rounded-lg p-3 space-y-2">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-content font-medium">Gliders (OGN / APRS-IS)</div>
+            <div className="text-sm text-content font-medium">{t('settings.TrafficSettingsCard.glidersOgnAprsIs')}</div>
             <Toggle on={cfg.ogn.enabled} onChange={(v) => patch({ ogn: { ...cfg.ogn, enabled: v } })} />
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div className="col-span-2">
-              <Field label="APRS-IS host (public or local receiver)">
+              <Field label={t('settings.TrafficSettingsCard.aprsIsHostPublicOrLocal')}>
                 <input className={`${inputCls} w-full`} value={cfg.ogn.host} onChange={(e) => patch({ ogn: { ...cfg.ogn, host: e.target.value } })} placeholder="aprs.glidernet.org" />
               </Field>
             </div>
-            <Field label="Port">
+            <Field label={t('settings.TrafficSettingsCard.port')}>
               <DraftNumberInput
                 className={`${inputCls} w-full`}
                 value={cfg.ogn.port}
@@ -204,14 +205,13 @@ export function TrafficSettingsCard() {
         {/* Remote ID receiver */}
         <div className="bg-surface-input rounded-lg p-3 space-y-2">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-content font-medium">Remote ID receiver</div>
+            <div className="text-sm text-content font-medium">{t('settings.TrafficSettingsCard.remoteIdReceiver')}</div>
             <Toggle on={cfg.remoteId.enabled} onChange={(v) => patch({ remoteId: { ...cfg.remoteId, enabled: v } })} />
           </div>
           <p className="text-xs text-content-secondary">
-            Ingest broadcast drone Remote ID (FAA RID / ASTM F3411 / EU Direct Remote ID) from a
-            local receiver or gateway exposing decoded messages as JSON over HTTP.
+            {t('settings.TrafficSettingsCard.ingestBroadcastDroneRemoteIdFaa')}
           </p>
-          <Field label="Receiver JSON URL">
+          <Field label={t('settings.TrafficSettingsCard.receiverJsonUrl')}>
             <input
               className={`${inputCls} w-full`}
               value={cfg.remoteId.url}
@@ -220,17 +220,17 @@ export function TrafficSettingsCard() {
             />
           </Field>
           <div className="grid grid-cols-2 gap-2">
-            <Field label="JSON format">
+            <Field label={t('settings.TrafficSettingsCard.jsonFormat')}>
               <select
                 className={`${inputCls} w-full`}
                 value={cfg.remoteId.shape}
                 onChange={(e) => patch({ remoteId: { ...cfg.remoteId, shape: e.target.value as RemoteIdShape } })}
               >
-                <option value="ardudeck">Normalised (ArduDeck)</option>
-                <option value="opendroneid">OpenDroneID receiver</option>
+                <option value="ardudeck">{t('settings.TrafficSettingsCard.normalisedArdudeck')}</option>
+                <option value="opendroneid">{t('settings.TrafficSettingsCard.opendroneidReceiver')}</option>
               </select>
             </Field>
-            <Field label="Poll (ms)">
+            <Field label={t('settings.TrafficSettingsCard.pollMs')}>
               <DraftNumberInput
                 className={`${inputCls} w-full`}
                 value={cfg.remoteId.pollMs}
@@ -250,12 +250,12 @@ export function TrafficSettingsCard() {
 
         {/* Altitude relevance band */}
         <div className="bg-surface-input rounded-lg p-3 space-y-2">
-          <div className="text-sm text-content font-medium">Altitude filter</div>
+          <div className="text-sm text-content font-medium">{t('settings.TrafficSettingsCard.altitudeFilter')}</div>
           <p className="text-xs text-content-secondary">
-            Your operating band (MSL), used as the default on the map. Below the floor is hidden; above the ceiling fades out (or is hidden, below). These are defaults. The on-map control governs the live view.
+            {t('settings.TrafficSettingsCard.yourOperatingBandMslUsedAs')}
           </p>
           <div className="grid grid-cols-2 gap-2">
-            <Field label="Floor (m)">
+            <Field label={t('settings.TrafficSettingsCard.floorM')}>
               <DraftNumberInput
                 className={`${inputCls} w-full`}
                 value={cfg.altitudeFilter.floorMeters}
@@ -263,7 +263,7 @@ export function TrafficSettingsCard() {
                 onCommit={(v) => patch({ altitudeFilter: { ...cfg.altitudeFilter, floorMeters: v } })}
               />
             </Field>
-            <Field label="Ceiling (m)">
+            <Field label={t('settings.TrafficSettingsCard.ceilingM')}>
               <DraftNumberInput
                 className={`${inputCls} w-full`}
                 value={cfg.altitudeFilter.ceilingMeters}
@@ -273,12 +273,12 @@ export function TrafficSettingsCard() {
             </Field>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-xs text-content-secondary">Hide traffic above ceiling (instead of fading)</span>
+            <span className="text-xs text-content-secondary">{t('settings.TrafficSettingsCard.hideTrafficAboveCeilingInsteadOf')}</span>
             <Toggle on={cfg.altitudeFilter.hardCeiling} onChange={(v) => patch({ altitudeFilter: { ...cfg.altitudeFilter, hardCeiling: v } })} />
           </div>
           <div className="pt-1">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-content-secondary">Icon size</span>
+              <span className="text-xs text-content-secondary">{t('settings.TrafficSettingsCard.iconSize')}</span>
               <span className="text-xs text-content tabular-nums">{Math.round(cfg.iconScale * 100)}%</span>
             </div>
             <input
@@ -295,9 +295,9 @@ export function TrafficSettingsCard() {
 
         {/* Proximity thresholds */}
         <div className="bg-surface-input rounded-lg p-3 space-y-2">
-          <div className="text-sm text-content font-medium">Proximity warning</div>
+          <div className="text-sm text-content font-medium">{t('settings.TrafficSettingsCard.proximityWarning')}</div>
           <div className="grid grid-cols-2 gap-2">
-            <Field label="Range (m)">
+            <Field label={t('settings.TrafficSettingsCard.rangeM')}>
               <DraftNumberInput
                 className={`${inputCls} w-full`}
                 value={cfg.proximity.rangeMeters}
@@ -306,7 +306,7 @@ export function TrafficSettingsCard() {
                 onCommit={(v) => patch({ proximity: { ...cfg.proximity, rangeMeters: v } })}
               />
             </Field>
-            <Field label="Vertical separation (m)">
+            <Field label={t('settings.TrafficSettingsCard.verticalSeparationM')}>
               <DraftNumberInput
                 className={`${inputCls} w-full`}
                 value={cfg.proximity.verticalMeters}
@@ -319,7 +319,7 @@ export function TrafficSettingsCard() {
         </div>
 
         <button onClick={() => void save()} className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors">
-          {saved ? 'Saved' : 'Save traffic settings'}
+          {saved ? t('settings.TrafficSettingsCard.saved') : t('settings.TrafficSettingsCard.saveTrafficSettings')}
         </button>
       </div>
     </div>
@@ -355,20 +355,19 @@ function AlertZonesSection({ zones, onChange }: { zones: AlertZone[]; onChange: 
   return (
     <div className="bg-surface-input rounded-lg p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <div className="text-sm text-content font-medium">Perimeter alert zones</div>
+        <div className="text-sm text-content font-medium">{t('settings.TrafficSettingsCard.perimeterAlertZones')}</div>
         <button
           onClick={addZone}
           className="px-2 py-1 text-[11px] bg-amber-600 hover:bg-amber-500 text-white rounded-md transition-colors"
         >
-          Add zone here
+          {t('settings.TrafficSettingsCard.addZoneHere')}
         </button>
       </div>
       <p className="text-xs text-content-secondary">
-        Alert when any contact (ADS-B, glider, or Remote ID) enters a zone. Detect and alert only -
-        ArduDeck never mitigates. New zones centre on the current map view.
+        {t('settings.TrafficSettingsCard.alertWhenAnyContactAdsB')}
       </p>
       {zones.length === 0 ? (
-        <p className="text-[11px] text-content-tertiary">No zones. Pan the map to a site and click "Add zone here".</p>
+        <p className="text-[11px] text-content-tertiary">{t('settings.TrafficSettingsCard.noZonesPanTheMapTo')}</p>
       ) : (
         <div className="space-y-2">
           {zones.map((z) => (
@@ -380,13 +379,13 @@ function AlertZonesSection({ zones, onChange }: { zones: AlertZone[]; onChange: 
                   value={z.name}
                   onChange={(e) => update(z.id, { name: e.target.value })}
                 />
-                <button onClick={() => remove(z.id)} className="text-content-tertiary hover:text-red-400 text-xs px-1" title="Delete zone">
-                  Remove
+                <button onClick={() => remove(z.id)} className="text-content-tertiary hover:text-red-400 text-xs px-1" title={t('settings.TrafficSettingsCard.deleteZone')}>
+                  {t('settings.TrafficSettingsCard.remove')}
                 </button>
               </div>
               {z.shape === 'circle' && (
                 <div className="grid grid-cols-3 gap-2">
-                  <Field label="Lat">
+                  <Field label={t('settings.TrafficSettingsCard.lat')}>
                     <input
                       type="number"
                       className={`${inputCls} w-full !py-1`}
@@ -394,7 +393,7 @@ function AlertZonesSection({ zones, onChange }: { zones: AlertZone[]; onChange: 
                       onChange={(e) => update(z.id, { center: { lat: Number(e.target.value) || 0, lon: z.center?.lon ?? 0 } })}
                     />
                   </Field>
-                  <Field label="Lon">
+                  <Field label={t('settings.TrafficSettingsCard.lon')}>
                     <input
                       type="number"
                       className={`${inputCls} w-full !py-1`}
@@ -402,7 +401,7 @@ function AlertZonesSection({ zones, onChange }: { zones: AlertZone[]; onChange: 
                       onChange={(e) => update(z.id, { center: { lat: z.center?.lat ?? 0, lon: Number(e.target.value) || 0 } })}
                     />
                   </Field>
-                  <Field label="Radius (m)">
+                  <Field label={t('settings.TrafficSettingsCard.radiusM')}>
                     <input
                       type="number"
                       className={`${inputCls} w-full !py-1`}
@@ -413,7 +412,7 @@ function AlertZonesSection({ zones, onChange }: { zones: AlertZone[]; onChange: 
                 </div>
               )}
               <div className="grid grid-cols-2 gap-2">
-                <Field label="Min alt (m, optional)">
+                <Field label={t('settings.TrafficSettingsCard.minAltMOptional')}>
                   <input
                     type="number"
                     className={`${inputCls} w-full !py-1`}
@@ -421,7 +420,7 @@ function AlertZonesSection({ zones, onChange }: { zones: AlertZone[]; onChange: 
                     onChange={(e) => update(z.id, { minAltMeters: e.target.value === '' ? undefined : Number(e.target.value) })}
                   />
                 </Field>
-                <Field label="Max alt (m, optional)">
+                <Field label={t('settings.TrafficSettingsCard.maxAltMOptional')}>
                   <input
                     type="number"
                     className={`${inputCls} w-full !py-1`}

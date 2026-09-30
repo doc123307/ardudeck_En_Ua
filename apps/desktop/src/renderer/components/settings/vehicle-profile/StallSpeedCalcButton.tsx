@@ -7,6 +7,7 @@ import {
   formatSpeedFromMetersPerSecond,
   formatWeightFromGrams,
 } from '../../../../shared/user-units.js';
+import { t } from '../../../i18n';
 
 interface StallSpeedCalcButtonProps {
   vehicle: VehicleProfile;
@@ -37,7 +38,7 @@ export function StallSpeedCalcButton({ vehicle, onCompute }: StallSpeedCalcButto
         className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/25 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
         <Calculator className="w-3 h-3" />
-        Calc
+        {t('settings.StallSpeedCalcButton.calc')}
       </button>
     </Tooltip>
   );
@@ -52,26 +53,26 @@ function StallExplanation({ vehicle, estimate }: { vehicle: VehicleProfile; esti
   return (
     <div className="w-[260px] text-left p-1 space-y-2">
       <div className="flex items-baseline justify-between gap-3 pb-1.5 border-b border-subtle">
-        <span className="text-[11px] text-content-secondary">Estimated stall speed</span>
+        <span className="text-[11px] text-content-secondary">{t('settings.StallSpeedCalcButton.estimatedStallSpeed')}</span>
         <span className="text-sm font-semibold text-content">{formatSpeedFromMetersPerSecond(estimate, speedUnit)}</span>
       </div>
 
       <div className="text-[11px] text-content-secondary leading-snug">
-        From the lift equation at max C<span className="text-[9px] align-baseline">Lmax</span>:
+        {t('settings.StallSpeedCalcButton.fromTheLiftEquationAtMax')}<span className="text-[9px] align-baseline">{t('settings.StallSpeedCalcButton.lmax')}</span>:
       </div>
       <div className="font-mono text-[10px] text-content-secondary bg-surface-overlay-subtle rounded px-2 py-1">
-        V = √(2·m·g / (ρ·S·Cmax))
+        {t('settings.StallSpeedCalcButton.v2MGSCmax')}
       </div>
 
       <div className="text-[11px] space-y-0.5">
         <Row label="AUW"           value={formatWeightFromGrams(vehicle.weight ?? 0, weightUnit)} />
-        <Row label="Wing area (S)" value={formatAreaFromSquareCentimeters(vehicle.wingArea ?? 0, areaUnit)} />
-        <Row label="Air density"   value="1.225 kg/m³" />
-        <Row label="C Lmax"        value={`${clMax} (${wingShapeLabel(vehicle)})`} />
+        <Row label={t('settings.StallSpeedCalcButton.wingAreaS')} value={formatAreaFromSquareCentimeters(vehicle.wingArea ?? 0, areaUnit)} />
+        <Row label={t('settings.StallSpeedCalcButton.airDensity')}   value="1.225 kg/m³" />
+        <Row label={t('settings.StallSpeedCalcButton.cLmax')}        value={`${clMax} (${wingShapeLabel(vehicle)})`} />
       </div>
 
       <div className="text-[10px] text-content-tertiary leading-snug pt-1 border-t border-subtle">
-        Theoretical clean-stall: real-world stall can be lower with flaps, higher in turns or heavier loading.
+        {t('settings.StallSpeedCalcButton.theoreticalCleanStallRealWorldStall')}
       </div>
     </div>
   );
@@ -85,7 +86,7 @@ function MissingInputsHint({ vehicle }: { vehicle: VehicleProfile }) {
   if (!hasArea) missing.push('wing area');
   return (
     <div className="w-[200px] text-[11px] text-content-secondary leading-snug p-1">
-      Set {missing.join(' and ')} to estimate stall speed.
+      {t('settings.StallSpeedCalcButton.set')} {missing.join(' and ')} {t('settings.StallSpeedCalcButton.toEstimateStallSpeed')}
     </div>
   );
 }

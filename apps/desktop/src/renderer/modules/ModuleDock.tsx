@@ -19,6 +19,7 @@ import {
   type RegisteredPanel,
 } from './module-panel-registry';
 import { ModulePanelWindow } from './ModulePanelWindow';
+import { t } from '../i18n';
 
 const keyOf = (p: RegisteredPanel) => `${p.slug}:${p.id}`;
 const POS_KEY = 'ardudeck.moduleDock.pos';
@@ -134,7 +135,7 @@ export function ModuleDock() {
                   <button
                     onClick={() => setOpenKey(null)}
                     className="rounded-md p-1 text-content-secondary transition-colors hover:bg-surface-raised hover:text-content"
-                    aria-label="Back to cargo"
+                    aria-label={t('modules.ModuleDock.backToCargo')}
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -142,7 +143,7 @@ export function ModuleDock() {
                   <button
                     onClick={collapse}
                     className="rounded-md p-1 text-content-secondary transition-colors hover:bg-surface-raised hover:text-content"
-                    aria-label="Close"
+                    aria-label={t('modules.ModuleDock.close')}
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -160,7 +161,7 @@ export function ModuleDock() {
                   <button
                     onClick={() => setMenuOpen(false)}
                     className="-mr-1 rounded-md p-1 text-content-secondary transition-colors hover:bg-surface-raised hover:text-content"
-                    aria-label="Close"
+                    aria-label={t('modules.ModuleDock.close')}
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -196,7 +197,7 @@ export function ModuleDock() {
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           style={{ touchAction: 'none', cursor: 'grab' }}
-          data-tip="Drag to move"
+          data-tip={t('modules.ModuleDock.dragToMove')}
           className={
             'flex items-center gap-1.5 rounded-full border py-2 pl-2 pr-4 text-sm font-medium shadow-lg transition-colors ' +
             (menuOpen

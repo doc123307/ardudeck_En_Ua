@@ -31,6 +31,7 @@ import { useConnectionStore } from './connection-store';
 import { useParameterStore } from './parameter-store';
 import { useArduPilotSitlStore } from './ardupilot-sitl-store';
 import { getVehicleClass } from '../../shared/telemetry-types';
+import { t } from '../i18n';
 
 // MSP Waypoint types (matching msp-ts)
 interface MSPWaypoint {
@@ -755,7 +756,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
           return;
         }
         if (waypoints.length === 0) {
-          set({ isLoading: false, progress: null, lastSuccessMessage: 'No waypoints on FC' });
+          set({ isLoading: false, progress: null, lastSuccessMessage: t('stores.mission_store.noWaypointsOnFc') });
           return;
         }
         // Non-destructive: land MSP-downloaded waypoints in a new
@@ -766,7 +767,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
         const stamp = new Date().toLocaleString();
         const importedGroup = createImportedGroup({
           importedFrom: 'fc',
-          sourceLabel: `Vehicle mission @ ${stamp}`,
+          sourceLabel: t('stores.mission_store.vehicleMission', { stamp }),
           name: `From vehicle @ ${stamp}`,
           color: nextGroupColor(groups),
           order: -1,
@@ -787,7 +788,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
           isLoading: false,
           progress: null,
           error: null,
-          lastSuccessMessage: `Downloaded ${items.length} waypoints from FC into "${importedGroup.name}"`,
+          lastSuccessMessage: t('stores.mission_store.downloadedWaypointsFromFcInto', { length: items.length, name: importedGroup.name }),
         });
         return;
       }
@@ -836,7 +837,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
             isDirty: false,
             progress: null,
             error: null,
-            lastSuccessMessage: `Uploaded ${itemsToUpload.length} waypoints to FC`,
+            lastSuccessMessage: t('stores.mission_store.uploadedWaypointsToFc', { length: itemsToUpload.length }),
           });
           return true;
         } else {
@@ -895,7 +896,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
             isDirty: false,
             progress: null,
             error: null,
-            lastSuccessMessage: `Uploaded ${itemsToUpload.length} waypoints to FC`,
+            lastSuccessMessage: t('stores.mission_store.uploadedWaypointsToFc', { length: itemsToUpload.length }),
           });
           return true;
         }
@@ -935,7 +936,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
           lastUploadedAt: Date.now(),
           lastUploadedGroupIds: [groupId],
           lastUploadedItemCount: itemsToUpload.length,
-          lastSuccessMessage: `Uploaded ${itemsToUpload.length} waypoints to vehicle`,
+          lastSuccessMessage: t('stores.mission_store.uploadedWaypointsToVehicle', { length: itemsToUpload.length }),
         });
         return true;
       }
@@ -956,7 +957,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
     // .waypoints files also treat seq 0 as HOME, so the wire builder applies.
     const result = await window.electronAPI?.saveMissionToFile(buildArduPilotWireMission(items, get().homePosition));
     if (result?.success) {
-      set({ lastSuccessMessage: `Saved ${items.length} waypoints to file` });
+      set({ lastSuccessMessage: t('stores.mission_store.savedWaypointsToFile', { length: items.length }) });
       return true;
     }
     if (result?.error && result.error !== 'Cancelled') {
@@ -981,7 +982,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
             isLoading: false,
             progress: null,
             error: null,
-            lastSuccessMessage: 'Mission cleared from FC',
+            lastSuccessMessage: t('stores.mission_store.missionClearedFromFc'),
             lastUploadedAt: null,
             lastUploadedGroupIds: [],
             lastUploadedItemCount: 0,
@@ -1713,7 +1714,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
     const stamp = now.toLocaleString();
     const importedGroup = createImportedGroup({
       importedFrom: 'fc',
-      sourceLabel: `Vehicle mission @ ${stamp}`,
+      sourceLabel: t('stores.mission_store.vehicleMission', { stamp }),
       name: `From vehicle @ ${stamp}`,
       color: nextGroupColor(keptGroups),
       // Place at order = -1 then renumber so the imported group sits at
@@ -1749,7 +1750,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       // not dirty. When we preserved dirty local edits, they remain unsaved.
       isDirty: wasDirty,
       error: null,
-      lastSuccessMessage: `Downloaded ${stampedNewItems.length} waypoints from flight controller into "${importedGroup.name}"`,
+      lastSuccessMessage: t('stores.mission_store.downloadedWaypointsFromFlightControllerInto', { length: stampedNewItems.length, name: importedGroup.name }),
       loadCounter: get().loadCounter + 1,
     });
   },
@@ -1851,7 +1852,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       isDirty: false,
       progress: null,
       error: null,
-      lastSuccessMessage: `Uploaded ${itemCount} waypoints to flight controller`,
+      lastSuccessMessage: t('stores.mission_store.uploadedWaypointsToFlightController', { itemCount }),
       lastUploadedAt: Date.now(),
       lastUploadedGroupIds: uploadedGroupIds,
       lastUploadedItemCount: itemCount,
@@ -1863,7 +1864,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       isLoading: false,
       progress: null,
       error: null,
-      lastSuccessMessage: 'Mission cleared from flight controller',
+      lastSuccessMessage: t('stores.mission_store.missionClearedFromFlightController'),
       // The plan stays in the planner; only the vehicle was cleared. Drop the
       // upload record so the UI stops claiming the vehicle holds this mission.
       lastUploadedAt: null,
@@ -2080,7 +2081,7 @@ export function restoreMissionAutosave(): boolean {
       missionItems: normalized.items,
       homePosition: parsed.home ?? null,
       isDirty: true,
-      lastSuccessMessage: `Recovered ${normalized.items.length} waypoints from your last session`,
+      lastSuccessMessage: t('stores.mission_store.recoveredWaypointsFromYourLastSession', { length: normalized.items.length }),
     });
     return true;
   } catch {

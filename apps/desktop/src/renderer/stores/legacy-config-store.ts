@@ -15,6 +15,7 @@
  */
 
 import { create } from 'zustand';
+import { t } from '../i18n';
 
 // =============================================================================
 // Types
@@ -451,7 +452,7 @@ export const useLegacyConfigStore = create<LegacyConfigStore>((set, get) => ({
 
     } catch (err) {
       console.error('[LegacyConfigStore] Save failed:', err);
-      setRebootError(err instanceof Error ? err.message : 'Failed to save configuration');
+      setRebootError(err instanceof Error ? err.message : t('stores.legacy_config_store.failedToSaveConfiguration'));
     }
   },
 

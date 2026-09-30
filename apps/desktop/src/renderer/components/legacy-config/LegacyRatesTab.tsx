@@ -9,33 +9,34 @@ import { useState, useMemo } from 'react';
 import { useLegacyConfigStore } from '../../stores/legacy-config-store';
 import { DraggableSlider } from '../ui/DraggableSlider';
 import { Egg, Drama, Gauge, Film } from 'lucide-react';
+import { t } from '../../i18n';
 
 // Rate Presets
 const RATE_PRESETS = {
   beginner: {
     name: 'Beginner',
-    description: 'Slow & predictable - great for learning',
+    get description() { return t('legacy_config.LegacyRatesTab.slowPredictableGreatForLearning'); },
     icon: Egg,
     color: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
     rates: { rcRate: 80, rcExpo: 20, rollRate: 40, pitchRate: 40, yawRate: 40, rcYawExpo: 20 },
   },
   freestyle: {
     name: 'Freestyle',
-    description: 'Balanced for tricks & flow',
+    get description() { return t('legacy_config.LegacyRatesTab.balancedForTricksFlow'); },
     icon: Drama,
     color: 'from-purple-500/20 to-violet-500/10 border-purple-500/30',
     rates: { rcRate: 100, rcExpo: 15, rollRate: 70, pitchRate: 70, yawRate: 65, rcYawExpo: 10 },
   },
   racing: {
     name: 'Racing',
-    description: 'Fast & responsive for speed',
+    get description() { return t('legacy_config.LegacyRatesTab.fastResponsiveForSpeed'); },
     icon: Gauge,
     color: 'from-red-500/20 to-orange-500/10 border-red-500/30',
     rates: { rcRate: 120, rcExpo: 5, rollRate: 80, pitchRate: 80, yawRate: 70, rcYawExpo: 0 },
   },
   cinematic: {
     name: 'Cinematic',
-    description: 'Ultra-smooth for filming',
+    get description() { return t('legacy_config.LegacyRatesTab.ultraSmoothForFilming'); },
     icon: Film,
     color: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30',
     rates: { rcRate: 70, rcExpo: 40, rollRate: 30, pitchRate: 30, yawRate: 25, rcYawExpo: 30 },
@@ -93,8 +94,8 @@ function RateCurve({
   return (
     <div className="bg-surface-input rounded-lg p-3 border border-subtle">
       <div className="flex items-center justify-between text-xs text-content-secondary mb-2">
-        <span>Response Curve</span>
-        <span className="text-content-secondary">Max: <span style={{ color }}>{maxRate}°/s</span></span>
+        <span>{t('legacy_config.LegacyRatesTab.responseCurve')}</span>
+        <span className="text-content-secondary">{t('legacy_config.LegacyRatesTab.max')} <span style={{ color }}>{maxRate}°/s</span></span>
       </div>
       <svg viewBox="0 0 100 100" className="w-full h-24">
         {/* Grid */}
@@ -103,8 +104,8 @@ function RateCurve({
         <line x1="5" y1="5" x2="5" y2="95" stroke="#374151" strokeWidth="0.5" />
         <line x1="50" y1="5" x2="50" y2="95" stroke="#374151" strokeWidth="0.5" strokeDasharray="2,2" />
         {/* Labels */}
-        <text x="50" y="99" fill="#6B7280" fontSize="4" textAnchor="middle">Stick</text>
-        <text x="2" y="50" fill="#6B7280" fontSize="4" textAnchor="middle" transform="rotate(-90, 2, 50)">Rate</text>
+        <text x="50" y="99" fill="#6B7280" fontSize="4" textAnchor="middle">{t('legacy_config.LegacyRatesTab.stick')}</text>
+        <text x="2" y="50" fill="#6B7280" fontSize="4" textAnchor="middle" transform="rotate(-90, 2, 50)">{t('legacy_config.LegacyRatesTab.rate')}</text>
         {/* Curve */}
         <polyline fill="none" stroke={color} strokeWidth="2.5" points={points} strokeLinecap="round" />
       </svg>
@@ -121,7 +122,7 @@ export default function LegacyRatesTab() {
   if (!rates) {
     return (
       <div className="text-center py-8 text-content-secondary">
-        No rates data loaded. Run dump command first.
+        {t('legacy_config.LegacyRatesTab.noRatesDataLoadedRunDump')}
       </div>
     );
   }
@@ -212,20 +213,19 @@ export default function LegacyRatesTab() {
       {/* Info Banner */}
       <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
         <p className="text-sm text-amber-300">
-          <strong>Legacy CLI Mode:</strong> Changes are sent immediately via CLI commands.
-          Click "Save to EEPROM" when done to persist changes.
+          <strong>{t('legacy_config.LegacyRatesTab.legacyCliMode')}</strong> {t('legacy_config.LegacyRatesTab.changesAreSentImmediatelyViaCli')}
         </p>
       </div>
 
       {/* Presets */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium text-content">Quick Presets</h3>
+          <h3 className="text-sm font-medium text-content">{t('legacy_config.LegacyRatesTab.quickPresets')}</h3>
           <button
             onClick={() => setShowSaveDialog(true)}
             className="text-xs text-blue-400 hover:text-blue-300"
           >
-            + Save Current as Profile
+            {t('legacy_config.LegacyRatesTab.saveCurrentAsProfile')}
           </button>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -246,7 +246,7 @@ export default function LegacyRatesTab() {
       {/* Custom Profiles */}
       {Object.keys(customProfiles).length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-content mb-3">Your Profiles</h3>
+          <h3 className="text-sm font-medium text-content mb-3">{t('legacy_config.LegacyRatesTab.yourProfiles')}</h3>
           <div className="flex flex-wrap gap-2">
             {Object.entries(customProfiles).map(([id, profile]) => (
               <div key={id} className="flex items-center gap-1 bg-surface-raised rounded-lg overflow-hidden">
@@ -271,13 +271,13 @@ export default function LegacyRatesTab() {
       {/* Save Profile Dialog */}
       {showSaveDialog && (
         <div className="p-4 bg-surface-raised rounded-lg border border">
-          <h4 className="text-sm font-medium text-content mb-3">Save Current Rates as Profile</h4>
+          <h4 className="text-sm font-medium text-content mb-3">{t('legacy_config.LegacyRatesTab.saveCurrentRatesAsProfile')}</h4>
           <div className="flex gap-2">
             <input
               type="text"
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
-              placeholder="Profile name..."
+              placeholder={t('legacy_config.LegacyRatesTab.profileName')}
               className="flex-1 px-3 py-2 bg-surface-input border border rounded text-content text-sm"
               autoFocus
             />
@@ -285,13 +285,13 @@ export default function LegacyRatesTab() {
               onClick={saveCurrentAsProfile}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded text-sm font-medium"
             >
-              Save
+              {t('legacy_config.LegacyRatesTab.save')}
             </button>
             <button
               onClick={() => setShowSaveDialog(false)}
               className="px-4 py-2 bg-surface-raised hover:bg-surface-raised text-content rounded text-sm"
             >
-              Cancel
+              {t('legacy_config.LegacyRatesTab.cancel')}
             </button>
           </div>
         </div>
@@ -323,16 +323,16 @@ export default function LegacyRatesTab() {
               {/* Sliders */}
               <div className="space-y-4">
                 <DraggableSlider
-                  label="Rate"
-                  hint="Maximum rotation speed"
+                  label={t('legacy_config.LegacyRatesTab.rate')}
+                  hint={t('legacy_config.LegacyRatesTab.maximumRotationSpeed')}
                   value={rates[rateKey]}
                   onChange={(v) => handleChange(rateKey, v, `${axis}_rate`)}
                   color={axisColors[axis]}
                   max={180}
                 />
                 <DraggableSlider
-                  label="Expo"
-                  hint="Center stick sensitivity"
+                  label={t('legacy_config.LegacyRatesTab.expo')}
+                  hint={t('legacy_config.LegacyRatesTab.centerStickSensitivity')}
                   value={rates[expoKey]}
                   onChange={(v) => handleChange(expoKey, v, axis === 'yaw' ? 'rc_yaw_expo' : 'rc_expo')}
                   color={axisColors[axis]}
@@ -346,11 +346,11 @@ export default function LegacyRatesTab() {
 
       {/* Global RC Rate */}
       <div className="bg-surface-input rounded-xl p-5 border border-subtle">
-        <h3 className="text-lg font-semibold text-content mb-4">Global Settings</h3>
+        <h3 className="text-lg font-semibold text-content mb-4">{t('legacy_config.LegacyRatesTab.globalSettings')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <DraggableSlider
-            label="RC Rate"
-            hint="Overall stick sensitivity multiplier"
+            label={t('legacy_config.LegacyRatesTab.rcRate')}
+            hint={t('legacy_config.LegacyRatesTab.overallStickSensitivityMultiplier')}
             value={rates.rcRate}
             onChange={(v) => handleChange('rcRate', v, 'rc_rate')}
             color="#8B5CF6"
@@ -358,16 +358,16 @@ export default function LegacyRatesTab() {
           />
           <div className="grid grid-cols-2 gap-4">
             <DraggableSlider
-              label="Throttle Mid"
-              hint="Hover point"
+              label={t('legacy_config.LegacyRatesTab.throttleMid')}
+              hint={t('legacy_config.LegacyRatesTab.hoverPoint')}
               value={rates.throttleMid}
               onChange={(v) => handleChange('throttleMid', v, 'thr_mid')}
               color="#F59E0B"
               max={100}
             />
             <DraggableSlider
-              label="Throttle Expo"
-              hint="Throttle curve"
+              label={t('legacy_config.LegacyRatesTab.throttleExpo')}
+              hint={t('legacy_config.LegacyRatesTab.throttleCurve')}
               value={rates.throttleExpo}
               onChange={(v) => handleChange('throttleExpo', v, 'thr_expo')}
               color="#F59E0B"
@@ -380,24 +380,24 @@ export default function LegacyRatesTab() {
       {/* TPA */}
       <div className="bg-surface-input rounded-xl p-5 border border-subtle">
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-lg font-semibold text-content">Throttle PID Attenuation</h3>
+          <h3 className="text-lg font-semibold text-content">{t('legacy_config.LegacyRatesTab.throttlePidAttenuation')}</h3>
           <span className="text-xs text-content-secondary bg-surface-raised px-2 py-0.5 rounded">TPA</span>
         </div>
         <p className="text-sm text-content-secondary mb-4">
-          Reduces PID strength at high throttle to prevent oscillations during fast flight.
+          {t('legacy_config.LegacyRatesTab.reducesPidStrengthAtHighThrottle')}
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <DraggableSlider
-            label="TPA Rate"
-            hint="How much to reduce PIDs at full throttle"
+            label={t('legacy_config.LegacyRatesTab.tpaRate')}
+            hint={t('legacy_config.LegacyRatesTab.howMuchToReducePidsAt')}
             value={rates.tpaRate}
             onChange={(v) => handleChange('tpaRate', v, 'tpa_rate')}
             color="#10B981"
             max={100}
           />
           <DraggableSlider
-            label="TPA Breakpoint"
-            hint="Throttle level where TPA starts"
+            label={t('legacy_config.LegacyRatesTab.tpaBreakpoint')}
+            hint={t('legacy_config.LegacyRatesTab.throttleLevelWhereTpaStarts')}
             value={rates.tpaBreakpoint}
             onChange={(v) => handleChange('tpaBreakpoint', v, 'tpa_breakpoint')}
             color="#10B981"

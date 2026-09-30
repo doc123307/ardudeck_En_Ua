@@ -1,3 +1,4 @@
+import { t } from '../../../i18n';
 /**
  * Curated catalog of common PX4 airframes for the airframe picker.
  *
@@ -22,31 +23,31 @@ export interface Px4Airframe {
 }
 
 export const PX4_AIRFRAME_CATEGORIES: Array<{ id: Px4AirframeCategory; label: string }> = [
-  { id: 'multirotor', label: 'Multirotor' },
-  { id: 'fixed-wing', label: 'Fixed Wing' },
+  { id: 'multirotor', get label() { return t('settings.px4_airframes.multirotor'); } },
+  { id: 'fixed-wing', get label() { return t('settings.px4_airframes.fixedWing'); } },
   { id: 'vtol', label: 'VTOL' },
-  { id: 'rover', label: 'Rover' },
+  { id: 'rover', get label() { return t('settings.px4_airframes.rover'); } },
 ];
 
 export const PX4_AIRFRAMES: Px4Airframe[] = [
   // Multirotor (well-known generic ids)
-  { id: 4001, name: 'Generic Quadcopter (X)', category: 'multirotor', description: 'Standard quad in X layout.' },
-  { id: 4002, name: 'Generic Quadcopter (+)', category: 'multirotor', description: 'Standard quad in + layout.' },
-  { id: 4008, name: 'Generic Quadcopter (Wide)', category: 'multirotor', description: 'Quad X with widened arm geometry.' },
-  { id: 6001, name: 'Generic Hexarotor (X)', category: 'multirotor', description: 'Standard hexa in X layout.' },
-  { id: 6002, name: 'Generic Hexarotor (+)', category: 'multirotor', description: 'Standard hexa in + layout.' },
-  { id: 8001, name: 'Generic Octorotor (X)', category: 'multirotor', description: 'Standard octo in X layout.' },
-  { id: 8002, name: 'Generic Octorotor (+)', category: 'multirotor', description: 'Standard octo in + layout.' },
+  { id: 4001, name: 'Generic Quadcopter (X)', category: 'multirotor', get description() { return t('settings.px4_airframes.standardQuadInXLayout'); } },
+  { id: 4002, name: 'Generic Quadcopter (+)', category: 'multirotor', get description() { return t('settings.px4_airframes.standardQuadInLayout'); } },
+  { id: 4008, name: 'Generic Quadcopter (Wide)', category: 'multirotor', get description() { return t('settings.px4_airframes.quadXWithWidenedArmGeometry'); } },
+  { id: 6001, name: 'Generic Hexarotor (X)', category: 'multirotor', get description() { return t('settings.px4_airframes.standardHexaInXLayout'); } },
+  { id: 6002, name: 'Generic Hexarotor (+)', category: 'multirotor', get description() { return t('settings.px4_airframes.standardHexaInLayout'); } },
+  { id: 8001, name: 'Generic Octorotor (X)', category: 'multirotor', get description() { return t('settings.px4_airframes.standardOctoInXLayout'); } },
+  { id: 8002, name: 'Generic Octorotor (+)', category: 'multirotor', get description() { return t('settings.px4_airframes.standardOctoInLayout'); } },
 
   // Fixed wing
-  { id: 2100, name: 'Generic Standard Plane', category: 'fixed-wing', description: 'Conventional fixed-wing aircraft.' },
-  { id: 3000, name: 'Generic Flying Wing', category: 'fixed-wing', description: 'Tailless flying wing / delta.' },
+  { id: 2100, name: 'Generic Standard Plane', category: 'fixed-wing', get description() { return t('settings.px4_airframes.conventionalFixedWingAircraft'); } },
+  { id: 3000, name: 'Generic Flying Wing', category: 'fixed-wing', get description() { return t('settings.px4_airframes.taillessFlyingWingDelta'); } },
 
   // VTOL (use generic ids; confirm against the PX4 reference)
-  { id: 13000, name: 'Generic Standard VTOL', category: 'vtol', description: 'Quad + pusher standard VTOL.' },
-  { id: 13200, name: 'Generic Quad Tailsitter VTOL', category: 'vtol', description: 'Quad-motor tailsitter VTOL.' },
-  { id: 14001, name: 'Generic Tiltrotor VTOL', category: 'vtol', description: 'Tiltrotor VTOL.' },
+  { id: 13000, name: 'Generic Standard VTOL', category: 'vtol', get description() { return t('settings.px4_airframes.quadPusherStandardVtol'); } },
+  { id: 13200, name: 'Generic Quad Tailsitter VTOL', category: 'vtol', get description() { return t('settings.px4_airframes.quadMotorTailsitterVtol'); } },
+  { id: 14001, name: 'Generic Tiltrotor VTOL', category: 'vtol', get description() { return t('settings.px4_airframes.tiltrotorVtol'); } },
 
   // Rover
-  { id: 50000, name: 'Generic Ground Vehicle', category: 'rover', description: 'Differential / Ackermann ground rover.' },
+  { id: 50000, name: 'Generic Ground Vehicle', category: 'rover', get description() { return t('settings.px4_airframes.differentialAckermannGroundRover'); } },
 ];

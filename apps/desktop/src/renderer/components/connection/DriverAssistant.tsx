@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { t } from '../../i18n';
 
 interface DriverInfo {
   name: string;
@@ -12,7 +13,7 @@ const DRIVER_INFO: Record<string, DriverInfo[]> = {
   darwin: [
     {
       name: 'CH340/CH341 Driver (if needed)',
-      description: 'macOS 10.14+ has built-in support. Only install if device not detected.',
+      get description() { return t('connection.DriverAssistant.macos1014HasBuiltIn'); },
       url: 'https://www.wch-ic.com/downloads/CH341SER_MAC_ZIP.html',
       bundledFile: 'CH34xVCPDriver.dmg',
       chips: ['CH340', 'CH341', 'QinHeng', 'WCH'],
@@ -21,14 +22,14 @@ const DRIVER_INFO: Record<string, DriverInfo[]> = {
   win32: [
     {
       name: 'CH340/CH341 Driver',
-      description: 'Required for budget flight controllers and Arduino clones',
+      get description() { return t('connection.DriverAssistant.requiredForBudgetFlightControllersAnd'); },
       url: 'https://www.wch-ic.com/downloads/CH341SER_EXE.html',
       // No bundled file for Windows yet - download required JavaScript
       chips: ['CH340', 'CH341', 'QinHeng', 'WCH'],
     },
     {
       name: 'CP210x Driver',
-      description: 'For Silicon Labs USB-UART bridges (most Pixhawk boards)',
+      get description() { return t('connection.DriverAssistant.forSiliconLabsUsbUartBridges'); },
       url: 'https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers',
       chips: ['CP210x', 'Silicon Labs'],
     },
@@ -96,8 +97,8 @@ export function DriverAssistant() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
         <div className="flex-1 text-left">
-          <p className="text-sm font-medium text-amber-300">Connection failed</p>
-          <p className="text-xs text-content-secondary">You may need to install USB drivers</p>
+          <p className="text-sm font-medium text-amber-300">{t('connection.DriverAssistant.connectionFailed')}</p>
+          <p className="text-xs text-content-secondary">{t('connection.DriverAssistant.youMayNeedToInstallUsb')}</p>
         </div>
         <svg
           className={`w-4 h-4 text-content-secondary transition-transform ${expanded ? 'rotate-180' : ''}`}
@@ -112,7 +113,7 @@ export function DriverAssistant() {
           {drivers.length > 0 ? (
             <div>
               <h4 className="text-xs font-medium text-content-secondary uppercase tracking-wide mb-2">
-                Recommended Drivers for {getOSName()}
+                {t('connection.DriverAssistant.recommendedDriversFor')} {getOSName()}
               </h4>
               <div className="space-y-2">
                 {drivers.map((driver) => (
@@ -128,7 +129,7 @@ export function DriverAssistant() {
                           {driver.name}
                           {driver.bundledFile && (
                             <span className="ml-2 text-xs px-1.5 py-0.5 bg-green-500/20 text-green-400 rounded">
-                              Bundled
+                              {t('connection.DriverAssistant.bundled')}
                             </span>
                           )}
                         </p>
@@ -155,14 +156,13 @@ export function DriverAssistant() {
             </div>
           ) : (
             <p className="text-sm text-content-secondary">
-              Linux includes built-in drivers for most USB-serial chips. If your device isn't detected,
-              check that you have permission to access serial ports (add your user to the <code className="text-amber-400">dialout</code> group).
+              {t('connection.DriverAssistant.linuxIncludesBuiltInDriversFor')} <code className="text-amber-400">dialout</code> {t('connection.DriverAssistant.group')}
             </p>
           )}
 
           <div>
             <h4 className="text-xs font-medium text-content-secondary uppercase tracking-wide mb-2">
-              Troubleshooting
+              {t('connection.DriverAssistant.troubleshooting')}
             </h4>
             <ul className="space-y-1">
               {TROUBLESHOOTING_TIPS.map((tip, i) => (
@@ -174,7 +174,7 @@ export function DriverAssistant() {
               {os === 'darwin' && (
                 <li className="text-xs text-content-secondary flex items-start gap-2">
                   <span className="text-amber-500 mt-0.5">•</span>
-                  After installing, allow the extension in System Settings → Privacy & Security
+                  {t('connection.DriverAssistant.afterInstallingAllowTheExtensionIn')}
                 </li>
               )}
             </ul>

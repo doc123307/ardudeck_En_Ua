@@ -13,6 +13,7 @@ import { useDetachedSubscriptions } from './useDetachedSubscriptions';
 import { initializeSettings } from '../stores/settings-store';
 import { useTheme } from '../hooks/useTheme';
 import { GlobalTooltip } from '../components/GlobalTooltip';
+import { t } from '../i18n';
 
 interface ParsedQuery {
   componentId: string;
@@ -69,9 +70,9 @@ export function DetachedRoot(): JSX.Element {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-surface-base text-content-secondary p-6 text-center">
         <div>
-          <div className="text-lg font-medium text-content mb-2">Unknown component</div>
+          <div className="text-lg font-medium text-content mb-2">{t('detached.DetachedRoot.unknownComponent')}</div>
           <div className="text-sm">
-            componentId <code className="text-amber-500">{query.componentId || '(missing)'}</code> is not registered.
+            componentId <code className="text-amber-500">{query.componentId || t('detached.DetachedRoot.missing')}</code> {t('detached.DetachedRoot.isNotRegistered')}
           </div>
         </div>
       </div>
@@ -142,12 +143,12 @@ function DetachedChrome({ title }: { title: string }): JSX.Element {
         onClick={dockBack}
         className="h-5 px-2 inline-flex items-center gap-1 text-[11px] rounded text-content-secondary hover:text-content hover:bg-surface-raised transition-colors"
         style={{ ['WebkitAppRegion' as never]: 'no-drag' as never }}
-        title={`Close this window and return to ArduDeck`}
+        title={t('detached.DetachedRoot.closeThisWindowAndReturnTo')}
       >
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
-        <span>Dock back</span>
+        <span>{t('detached.DetachedRoot.dockBack')}</span>
       </button>
 
       <div className="flex-1 text-center text-[11px] text-content-tertiary truncate px-2">
@@ -162,8 +163,8 @@ function DetachedChrome({ title }: { title: string }): JSX.Element {
             : 'text-content-tertiary hover:text-content hover:bg-surface-raised'
         }`}
         style={{ ['WebkitAppRegion' as never]: 'no-drag' as never }}
-        title={pinned ? 'Pinned on top, click to unpin' : 'Keep this window on top of ArduDeck'}
-        aria-label="Toggle always on top"
+        title={pinned ? t('detached.DetachedRoot.pinnedOnTopClickToUnpin') : t('detached.DetachedRoot.keepThisWindowOnTopOf')}
+        aria-label={t('detached.DetachedRoot.toggleAlwaysOnTop')}
       >
         {pinned ? (
           <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">

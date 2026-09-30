@@ -8,6 +8,7 @@ import {
   parseFenceItems,
   buildFenceItems,
 } from '../../shared/fence-types';
+import { t } from '../i18n';
 
 // Progress tracking for download/upload
 interface FenceProgress {
@@ -379,7 +380,7 @@ export const useFenceStore = create<FenceStore>((set, get) => ({
       progress: null,
       isDirty: false,
       error: null,
-      lastSuccessMessage: `Downloaded ${items.length} fence items from flight controller`,
+      lastSuccessMessage: t('stores.fence_store.downloadedFenceItemsFromFlightController', { length: items.length }),
     });
   },
 
@@ -423,7 +424,7 @@ export const useFenceStore = create<FenceStore>((set, get) => ({
       isDirty: false,
       progress: null,
       error: null,
-      lastSuccessMessage: `Uploaded ${itemCount} fence items to flight controller`,
+      lastSuccessMessage: t('stores.fence_store.uploadedFenceItemsToFlightController', { itemCount }),
     });
   },
 
@@ -432,7 +433,7 @@ export const useFenceStore = create<FenceStore>((set, get) => ({
       isLoading: false,
       progress: null,
       error: null,
-      lastSuccessMessage: 'Fence cleared from flight controller',
+      lastSuccessMessage: t('stores.fence_store.fenceClearedFromFlightController'),
     });
   },
 

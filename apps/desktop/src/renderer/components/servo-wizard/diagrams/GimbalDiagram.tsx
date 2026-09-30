@@ -5,6 +5,7 @@
  */
 
 import { ControlSurface } from '../presets/servo-presets';
+import { t } from '../../../i18n';
 
 interface Props {
   highlightSurface?: ControlSurface | null;
@@ -59,7 +60,7 @@ export default function GimbalDiagram({
         onClick={handleClick('gimbal_pan')}
       />
       <text x="100" y="155" textAnchor="end" fill="#9CA3AF" fontSize="10" fontWeight="500">
-        Pan Servo
+        {t('servo_wizard.GimbalDiagram.panServo')}
       </text>
       {servoLabels.gimbal_pan && (
         <text x="100" y="167" textAnchor="end" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -90,7 +91,7 @@ export default function GimbalDiagram({
         onClick={handleClick('gimbal_tilt')}
       />
       <text x="200" y="85" textAnchor="start" fill="#9CA3AF" fontSize="10" fontWeight="500">
-        Tilt Servo
+        {t('servo_wizard.GimbalDiagram.tiltServo')}
       </text>
       {servoLabels.gimbal_tilt && (
         <text x="200" y="97" textAnchor="start" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -115,12 +116,12 @@ export default function GimbalDiagram({
 
       {/* Camera label */}
       <text x="150" y="25" textAnchor="middle" fill="#9CA3AF" fontSize="10">
-        Camera
+        {t('servo_wizard.GimbalDiagram.camera')}
       </text>
 
       {/* Info text */}
       <text x="150" y="190" textAnchor="middle" fill="#6B7280" fontSize="9">
-        Pan = horizontal, Tilt = vertical
+        {t('servo_wizard.GimbalDiagram.panHorizontalTiltVertical')}
       </text>
     </svg>
   );

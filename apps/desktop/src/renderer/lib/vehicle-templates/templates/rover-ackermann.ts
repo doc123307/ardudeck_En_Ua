@@ -1,11 +1,12 @@
 import { Car } from 'lucide-react';
 import type { VehicleTemplate } from '../types.js';
 import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 export const roverAckermann: VehicleTemplate = {
   slug: 'rover-ackermann',
   name: 'Ackermann Rover',
-  description: 'Car-style: single throttle, steering servo',
+  get description() { return t('lib.rover_ackermann.carStyleSingleThrottleSteeringServo'); },
   icon: Car,
   vehicleType: 'rover',
   category: 'rover',
@@ -20,12 +21,12 @@ export const roverAckermann: VehicleTemplate = {
     batteryCapacity: 5000,
   },
   toParams: (p) => [
-    { name: 'FRAME_CLASS',     value: 1,  reason: 'Rover frame',       requiresReboot: true },
-    { name: 'FRAME_TYPE',      value: 0,  reason: 'Undefined (Ackermann uses steering)', requiresReboot: true },
-    { name: 'SERVO1_FUNCTION', value: 26, reason: 'Ground steering',   requiresReboot: true },
-    { name: 'SERVO3_FUNCTION', value: 70, reason: 'Throttle',          requiresReboot: true },
-    { name: 'WP_SPEED',        value: p.maxSpeed ?? 5, reason: `Waypoint speed from maxSpeed` },
-    { name: 'CRUISE_SPEED',    value: (p.maxSpeed ?? 5) * 0.6, reason: `Cruise speed = 60% of max` },
+    { name: 'FRAME_CLASS',     value: 1,  reason: t('lib.rover_ackermann.roverFrame'),       requiresReboot: true },
+    { name: 'FRAME_TYPE',      value: 0,  reason: t('lib.rover_ackermann.undefinedAckermannUsesSteering'), requiresReboot: true },
+    { name: 'SERVO1_FUNCTION', value: 26, reason: t('lib.rover_ackermann.groundSteering'),   requiresReboot: true },
+    { name: 'SERVO3_FUNCTION', value: 70, reason: t('lib.rover_ackermann.throttle'),          requiresReboot: true },
+    { name: 'WP_SPEED',        value: p.maxSpeed ?? 5, reason: t('lib.rover_ackermann.waypointSpeedFromMaxspeed') },
+    { name: 'CRUISE_SPEED',    value: (p.maxSpeed ?? 5) * 0.6, reason: t('lib.rover_ackermann.cruiseSpeed60OfMax') },
     ...batteryParams(p),
     ...commonSafetyParams(),
   ],

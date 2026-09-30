@@ -27,6 +27,7 @@ import {
   AP_PROTOCOL_GPS,
   PX4_GPS_PORTS,
 } from './gps-setup';
+import { t } from '../../i18n';
 
 export function GpsSetupCard(): JSX.Element {
   const { parameters, setParameter } = useParameterStore();
@@ -81,8 +82,8 @@ export function GpsSetupCard(): JSX.Element {
         if (parameters.has(w.name) && await setParameter(w.name, w.value)) ok++;
       }
       setNote(ok === writes.length
-        ? `${what}. Save, then reboot: a GPS is only probed at boot.`
-        : `Wrote ${ok} of ${writes.length} parameters. Check the rest by hand.`);
+        ? t('mavlink_config.GpsSetupCard.saveThenRebootAGpsIs', { what })
+        : t('mavlink_config.GpsSetupCard.wroteOfParametersCheckTheRest', { ok, length: writes.length }));
     } finally {
       setBusy(false);
     }
@@ -97,9 +98,9 @@ export function GpsSetupCard(): JSX.Element {
           <Satellite className="w-5 h-5 text-emerald-400" />
         </div>
         <div className="flex-1">
-          <h3 className="font-medium text-content">GPS wiring</h3>
+          <h3 className="font-medium text-content">{t('mavlink_config.GpsSetupCard.gpsWiring')}</h3>
           <p className="text-xs text-content-secondary">
-            Which socket the receiver is plugged into, and whether the firmware is listening
+            {t('mavlink_config.GpsSetupCard.whichSocketTheReceiverIsPlugged')}
           </p>
         </div>
         <div className="text-right">
@@ -108,7 +109,7 @@ export function GpsSetupCard(): JSX.Element {
               ? 'DroneCAN'
               : currentPort !== null
                 ? (isPx4 ? portLabel(PX4_GPS_PORTS, currentPort) : `SERIAL${currentPort}`)
-                : 'Not assigned'}
+                : t('mavlink_config.GpsSetupCard.notAssigned')}
           </div>
           <div className="text-[11px] text-content-tertiary tabular-nums">
             {onCan ? 'CAN1' : `${baud} baud`}
@@ -126,7 +127,7 @@ export function GpsSetupCard(): JSX.Element {
       <div className="flex flex-col gap-4 lg:flex-row">
         {/* The link as it stands right now: receiver, cable, autopilot. */}
         <div className="shrink-0 min-w-[190px] rounded-xl border border-subtle bg-surface-raised p-4 flex flex-col items-center justify-center">
-          <svg width="150" height="76" viewBox="0 0 150 76" role="img" aria-label="GPS link">
+          <svg width="150" height="76" viewBox="0 0 150 76" role="img" aria-label={t('mavlink_config.GpsSetupCard.gpsLink')}>
             <g className={receiving ? 'text-emerald-400' : 'text-content-tertiary'}>
               <rect x="6" y="20" width="34" height="34" rx="6"
                 fill="currentColor" fillOpacity={receiving ? 0.18 : 0.08}
@@ -148,16 +149,16 @@ export function GpsSetupCard(): JSX.Element {
           </svg>
           <div className="mt-2 text-center">
             <div className="text-xs text-content">
-              {receiving ? `${gps.satellites} satellites` : 'No data from a GPS'}
+              {receiving ? `${gps.satellites} satellites` : t('mavlink_config.GpsSetupCard.noDataFromAGps')}
             </div>
             <div className="text-[11px] text-content-tertiary tabular-nums">
-              {receiving ? `HDOP ${gps.hdop.toFixed(1)}` : 'check the socket below'}
+              {receiving ? `HDOP ${gps.hdop.toFixed(1)}` : t('mavlink_config.GpsSetupCard.checkTheSocketBelow')}
             </div>
           </div>
           <div className={`mt-2 rounded-full px-2 py-0.5 text-[10px] ${
             receiving ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'
           }`}>
-            {receiving ? 'Link up' : 'Nothing arriving'}
+            {receiving ? t('mavlink_config.GpsSetupCard.linkUp') : t('mavlink_config.GpsSetupCard.nothingArriving')}
           </div>
         </div>
 
@@ -176,7 +177,7 @@ export function GpsSetupCard(): JSX.Element {
                   disabled={busy}
                   data-tip={isPx4
                     ? `GPS_1_CONFIG ${p.value}`
-                    : `${hint ? `${hint}. ` : ''}Sets SERIAL${p.value}_PROTOCOL to GPS at 230400 baud`}
+                    : t('mavlink_config.GpsSetupCard.setsSerialProtocolToGpsAt', { v1: hint ? `${hint}. ` : '', value: p.value })}
                   className={`relative flex flex-col items-center rounded-lg border px-2 py-2 transition-colors disabled:opacity-40 ${
                     active
                       ? 'border-emerald-500/50 bg-emerald-500/10'
@@ -202,7 +203,7 @@ export function GpsSetupCard(): JSX.Element {
             <button
               onClick={() => write(isPx4 ? px4CanGpsWrites() : apCanGpsWrites(), 'DroneCAN enabled')}
               disabled={busy}
-              data-tip="Here 3, Here 4, or a Here 2 switched to CAN mode"
+              data-tip={t('mavlink_config.GpsSetupCard.here3Here4OrA')}
               className={`relative flex flex-col items-center rounded-lg border px-2 py-2 transition-colors disabled:opacity-40 ${
                 onCan
                   ? 'border-emerald-500/50 bg-emerald-500/10'
@@ -227,8 +228,8 @@ export function GpsSetupCard(): JSX.Element {
           ) : (
             <p className="mt-3 text-[11px] text-content-tertiary">
               {isPx4
-                ? 'PX4 assigns a port to each GPS, with the baud left on auto.'
-                : 'ArduPilot assigns a protocol to each serial port, and which socket a SERIALn is wired to depends on the board: on a Cube the GPS1 socket is SERIAL3. Each tile shows what that port carries today.'}
+                ? t('mavlink_config.GpsSetupCard.px4AssignsAPortToEach')
+                : t('mavlink_config.GpsSetupCard.ardupilotAssignsAProtocolToEach')}
             </p>
           )}
         </div>

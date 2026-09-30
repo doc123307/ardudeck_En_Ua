@@ -34,6 +34,7 @@ import {
   getMavlinkChannelNames,
   reorderChannelsWithRcmap,
 } from '../../utils/rc-channel-constants';
+import { t } from '../../i18n';
 
 // =============================================================================
 // Live channel bars (identical visual language to the ArduPilot ReceiverTab)
@@ -95,20 +96,20 @@ const CompactChannelBar: React.FC<{
 
 /** Function channel-map params: PX4 stores a 1-based physical channel (0 = unassigned). */
 const FUNCTION_MAPS: { id: string; label: string; hint: string }[] = [
-  { id: 'RC_MAP_ROLL', label: 'Roll', hint: 'Physical channel carrying roll (aileron).' },
-  { id: 'RC_MAP_PITCH', label: 'Pitch', hint: 'Physical channel carrying pitch (elevator).' },
-  { id: 'RC_MAP_THROTTLE', label: 'Throttle', hint: 'Physical channel carrying throttle.' },
-  { id: 'RC_MAP_YAW', label: 'Yaw', hint: 'Physical channel carrying yaw (rudder).' },
+  { id: 'RC_MAP_ROLL', get label() { return t('mavlink_config.Px4ReceiverConfig.roll'); }, get hint() { return t('mavlink_config.Px4ReceiverConfig.physicalChannelCarryingRollAileron'); } },
+  { id: 'RC_MAP_PITCH', get label() { return t('mavlink_config.Px4ReceiverConfig.pitch'); }, get hint() { return t('mavlink_config.Px4ReceiverConfig.physicalChannelCarryingPitchElevator'); } },
+  { id: 'RC_MAP_THROTTLE', get label() { return t('mavlink_config.Px4ReceiverConfig.throttle'); }, get hint() { return t('mavlink_config.Px4ReceiverConfig.physicalChannelCarryingThrottle'); } },
+  { id: 'RC_MAP_YAW', get label() { return t('mavlink_config.Px4ReceiverConfig.yaw'); }, get hint() { return t('mavlink_config.Px4ReceiverConfig.physicalChannelCarryingYawRudder'); } },
 ];
 
 /** Switch/aux maps. RC_MAP_FLTMODE is current PX4; RC_MAP_MODE_SW is the legacy name. */
 const SWITCH_MAPS: { id: string; fallbackId?: string; label: string; hint: string }[] = [
-  { id: 'RC_MAP_FLTMODE', fallbackId: 'RC_MAP_MODE_SW', label: 'Flight Mode', hint: 'Channel selecting flight mode.' },
-  { id: 'RC_MAP_RETURN_SW', label: 'Return Switch', hint: 'Channel triggering return-to-launch.' },
-  { id: 'RC_MAP_KILL_SW', label: 'Kill Switch', hint: 'Channel that disarms / cuts motors.' },
-  { id: 'RC_MAP_ARM_SW', label: 'Arm Switch', hint: 'Channel that arms / disarms.' },
-  { id: 'RC_MAP_AUX1', label: 'AUX 1', hint: 'Auxiliary passthrough channel 1.' },
-  { id: 'RC_MAP_AUX2', label: 'AUX 2', hint: 'Auxiliary passthrough channel 2.' },
+  { id: 'RC_MAP_FLTMODE', fallbackId: 'RC_MAP_MODE_SW', get label() { return t('mavlink_config.Px4ReceiverConfig.flightMode'); }, get hint() { return t('mavlink_config.Px4ReceiverConfig.channelSelectingFlightMode'); } },
+  { id: 'RC_MAP_RETURN_SW', get label() { return t('mavlink_config.Px4ReceiverConfig.returnSwitch'); }, get hint() { return t('mavlink_config.Px4ReceiverConfig.channelTriggeringReturnToLaunch'); } },
+  { id: 'RC_MAP_KILL_SW', get label() { return t('mavlink_config.Px4ReceiverConfig.killSwitch'); }, get hint() { return t('mavlink_config.Px4ReceiverConfig.channelThatDisarmsCutsMotors'); } },
+  { id: 'RC_MAP_ARM_SW', get label() { return t('mavlink_config.Px4ReceiverConfig.armSwitch'); }, get hint() { return t('mavlink_config.Px4ReceiverConfig.channelThatArmsDisarms'); } },
+  { id: 'RC_MAP_AUX1', label: 'AUX 1', get hint() { return t('mavlink_config.Px4ReceiverConfig.auxiliaryPassthroughChannel1'); } },
+  { id: 'RC_MAP_AUX2', label: 'AUX 2', get hint() { return t('mavlink_config.Px4ReceiverConfig.auxiliaryPassthroughChannel2'); } },
 ];
 
 const MAX_CHANNEL_MAP = 18;
@@ -142,8 +143,8 @@ const ChannelMapSelect: React.FC<{
   const value = Number(parameters.get(activeId)?.value ?? 0);
 
   const options = useMemo(() => {
-    const opts: { value: number; label: string }[] = [{ value: 0, label: 'Unassigned' }];
-    for (let i = 1; i <= MAX_CHANNEL_MAP; i++) opts.push({ value: i, label: `Channel ${i}` });
+    const opts: { value: number; label: string }[] = [{ value: 0, label: t('mavlink_config.Px4ReceiverConfig.unassigned') }];
+    for (let i = 1; i <= MAX_CHANNEL_MAP; i++) opts.push({ value: i, label: t('mavlink_config.Px4ReceiverConfig.channel', { i }) });
     return opts;
   }, []);
 
@@ -154,7 +155,7 @@ const ChannelMapSelect: React.FC<{
         value={value}
         disabled={!present}
         onChange={(e) => setParameter(activeId, Number(e.target.value))}
-        title={present ? hint : `${hint} (not present on this vehicle)`}
+        title={present ? hint : t('mavlink_config.Px4ReceiverConfig.notPresentOnThisVehicle', { hint })}
         className="w-full bg-surface-raised text-content rounded-lg px-3 py-2 text-sm border focus:border-teal-500 focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {options.map((opt) => (
@@ -201,7 +202,7 @@ const CalCell: React.FC<{
       onKeyDown={(e) => {
         if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
       }}
-      title={present ? undefined : 'Not present on this vehicle'}
+      title={present ? undefined : t('mavlink_config.Px4ReceiverConfig.notPresentOnThisVehicle2')}
       className="w-full bg-surface-raised text-content text-right font-mono rounded px-2 py-1 text-xs border focus:border-blue-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
     />
   );
@@ -260,10 +261,10 @@ const Px4ReceiverConfig: React.FC = () => {
 
   const signalBadge =
     signalStatus === 'active'
-      ? { text: 'Active', color: 'green' }
+      ? { text: t('mavlink_config.Px4ReceiverConfig.active'), color: 'green' }
       : signalStatus === 'stale'
-        ? { text: 'Signal Lost', color: 'amber' }
-        : { text: 'No Signal', color: 'red' };
+        ? { text: t('mavlink_config.Px4ReceiverConfig.signalLost'), color: 'amber' }
+        : { text: t('mavlink_config.Px4ReceiverConfig.noSignal'), color: 'red' };
 
   // --- Input mode (COM_RC_IN_MODE) ---
   const inputModePresent = parameters.has('COM_RC_IN_MODE');
@@ -290,17 +291,15 @@ const Px4ReceiverConfig: React.FC = () => {
             <Radio className="w-5 h-5 text-teal-400" />
           </div>
           <div>
-            <h3 className="font-medium text-content">RC Input Mode</h3>
-            <p className="text-xs text-content-secondary">How PX4 accepts manual control input</p>
+            <h3 className="font-medium text-content">{t('mavlink_config.Px4ReceiverConfig.rcInputMode')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.Px4ReceiverConfig.howPx4AcceptsManualControlInput')}</p>
           </div>
         </div>
-        <InfoCard title="How this works" variant="help">
-          PX4 can take manual control from an RC receiver, a ground-station joystick, or both.
-          Choose the source that matches your setup. Most pilots use RC only. The RC loss timeout
-          (COM_RC_LOSS_T) and failsafe action live in the Safety tab.
+        <InfoCard title={t('mavlink_config.Px4ReceiverConfig.howThisWorks')} variant="help">
+          {t('mavlink_config.Px4ReceiverConfig.px4CanTakeManualControlFrom')}
         </InfoCard>
         <div className="mt-4 max-w-sm">
-          <label className="text-xs text-content-secondary mb-2 block">Input source (COM_RC_IN_MODE)</label>
+          <label className="text-xs text-content-secondary mb-2 block">{t('mavlink_config.Px4ReceiverConfig.inputSourceComRcInMode')}</label>
           <select
             value={inputMode}
             disabled={!inputModePresent}
@@ -328,7 +327,7 @@ const Px4ReceiverConfig: React.FC = () => {
               <SignalZero className="w-5 h-5 text-red-400" />
             )}
           </div>
-          <span className="flex-1 font-medium text-content">Live RC Channels</span>
+          <span className="flex-1 font-medium text-content">{t('mavlink_config.Px4ReceiverConfig.liveRcChannels')}</span>
           <span className={`px-2 py-0.5 text-xs rounded-full bg-${signalBadge.color}-500/20 text-${signalBadge.color}-400`}>
             {signalBadge.text}
           </span>
@@ -337,7 +336,7 @@ const Px4ReceiverConfig: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-3 text-xs text-content-secondary">
               {rcChannels.rssi > 0 && <span>RSSI: {rcChannels.rssi}</span>}
-              <span>{rcChannels.chancount} channels</span>
+              <span>{rcChannels.chancount} {t('mavlink_config.Px4ReceiverConfig.channels')}</span>
             </div>
 
             <div className="grid grid-cols-2 gap-x-6 gap-y-3">
@@ -372,12 +371,12 @@ const Px4ReceiverConfig: React.FC = () => {
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-amber-300">No RC signal detected</p>
-                <p className="text-xs text-content-secondary mt-1">Check that:</p>
+                <p className="text-sm font-medium text-amber-300">{t('mavlink_config.Px4ReceiverConfig.noRcSignalDetected')}</p>
+                <p className="text-xs text-content-secondary mt-1">{t('mavlink_config.Px4ReceiverConfig.checkThat')}</p>
                 <ul className="text-xs text-content-secondary mt-1 space-y-0.5 list-disc list-inside">
-                  <li>Receiver is powered and bound to transmitter</li>
-                  <li>The receiver is wired to a PX4 RC input port</li>
-                  <li>Input mode allows RC (COM_RC_IN_MODE is RC or RC and Joystick)</li>
+                  <li>{t('mavlink_config.Px4ReceiverConfig.receiverIsPoweredAndBoundTo')}</li>
+                  <li>{t('mavlink_config.Px4ReceiverConfig.theReceiverIsWiredToA')}</li>
+                  <li>{t('mavlink_config.Px4ReceiverConfig.inputModeAllowsRcComRc')}</li>
                 </ul>
               </div>
             </div>
@@ -392,17 +391,16 @@ const Px4ReceiverConfig: React.FC = () => {
             <Sliders className="w-5 h-5 text-purple-400" />
           </div>
           <div>
-            <h3 className="font-medium text-content">Channel Mapping</h3>
-            <p className="text-xs text-content-secondary">Which physical channel carries each function</p>
+            <h3 className="font-medium text-content">{t('mavlink_config.Px4ReceiverConfig.channelMapping')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.Px4ReceiverConfig.whichPhysicalChannelCarriesEachFunction')}</p>
           </div>
         </div>
-        <InfoCard title="How this works" variant="help">
-          PX4 reads each control function from a physical receiver channel. Set these to match how
-          your transmitter outputs the sticks and switches. Unassigned (0) disables that function.
+        <InfoCard title={t('mavlink_config.Px4ReceiverConfig.howThisWorks')} variant="help">
+          {t('mavlink_config.Px4ReceiverConfig.px4ReadsEachControlFunctionFrom')}
         </InfoCard>
 
         <div className="mt-4">
-          <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-2">Primary sticks</div>
+          <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-2">{t('mavlink_config.Px4ReceiverConfig.primarySticks')}</div>
           <div className="grid grid-cols-2 gap-4">
             {FUNCTION_MAPS.map((m) => (
               <ChannelMapSelect key={m.id} paramId={m.id} label={m.label} hint={m.hint} />
@@ -411,7 +409,7 @@ const Px4ReceiverConfig: React.FC = () => {
         </div>
 
         <div className="mt-5">
-          <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-2">Switches & auxiliary</div>
+          <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-2">{t('mavlink_config.Px4ReceiverConfig.switchesAuxiliary')}</div>
           <div className="grid grid-cols-3 gap-4">
             {SWITCH_MAPS.map((m) => (
               <ChannelMapSelect key={m.id} paramId={m.id} fallbackId={m.fallbackId} label={m.label} hint={m.hint} />
@@ -427,26 +425,24 @@ const Px4ReceiverConfig: React.FC = () => {
             <Activity className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <h3 className="font-medium text-content">RC Calibration</h3>
-            <p className="text-xs text-content-secondary">Per-channel endpoints, center, deadzone and reverse</p>
+            <h3 className="font-medium text-content">{t('mavlink_config.Px4ReceiverConfig.rcCalibration')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.Px4ReceiverConfig.perChannelEndpointsCenterDeadzoneAnd')}</p>
           </div>
         </div>
-        <InfoCard title="How this works" variant="help">
-          These values define the raw stick range PX4 maps to normalized control. Move each stick to
-          its extremes and read the live values above, then enter Min, Max and Trim (center) here.
-          Deadzone ignores small jitter around center. Reverse flips a channel direction.
+        <InfoCard title={t('mavlink_config.Px4ReceiverConfig.howThisWorks')} variant="help">
+          {t('mavlink_config.Px4ReceiverConfig.theseValuesDefineTheRawStick')}
         </InfoCard>
 
         <div className="mt-4 rounded-lg border-subtle overflow-hidden">
           <table className="w-full text-xs">
             <thead>
               <tr className="bg-surface text-content-secondary">
-                <th className="px-3 py-2 text-left font-medium">Channel</th>
-                <th className="px-3 py-2 text-right font-medium">Min</th>
-                <th className="px-3 py-2 text-right font-medium">Trim</th>
-                <th className="px-3 py-2 text-right font-medium">Max</th>
-                <th className="px-3 py-2 text-right font-medium">Deadzone</th>
-                <th className="px-3 py-2 text-center font-medium">Reverse</th>
+                <th className="px-3 py-2 text-left font-medium">{t('mavlink_config.Px4ReceiverConfig.channel2')}</th>
+                <th className="px-3 py-2 text-right font-medium">{t('mavlink_config.Px4ReceiverConfig.min')}</th>
+                <th className="px-3 py-2 text-right font-medium">{t('mavlink_config.Px4ReceiverConfig.trim')}</th>
+                <th className="px-3 py-2 text-right font-medium">{t('mavlink_config.Px4ReceiverConfig.max')}</th>
+                <th className="px-3 py-2 text-right font-medium">{t('mavlink_config.Px4ReceiverConfig.deadzone')}</th>
+                <th className="px-3 py-2 text-center font-medium">{t('mavlink_config.Px4ReceiverConfig.reverse')}</th>
               </tr>
             </thead>
             <tbody>
@@ -465,14 +461,14 @@ const Px4ReceiverConfig: React.FC = () => {
                       <button
                         disabled={!revPresent}
                         onClick={() => setParameter(`RC${n}_REV`, reversed ? 1 : -1)}
-                        title={revPresent ? 'Toggle channel reverse' : 'Not present on this vehicle'}
+                        title={revPresent ? t('mavlink_config.Px4ReceiverConfig.toggleChannelReverse') : t('mavlink_config.Px4ReceiverConfig.notPresentOnThisVehicle2')}
                         className={`px-2 py-0.5 rounded text-[11px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                           reversed
                             ? 'bg-amber-500/20 text-amber-400'
                             : 'bg-surface-raised text-content-secondary hover:bg-surface-inset'
                         }`}
                       >
-                        {reversed ? 'Reversed' : 'Normal'}
+                        {reversed ? t('mavlink_config.Px4ReceiverConfig.reversed') : t('mavlink_config.Px4ReceiverConfig.normal')}
                       </button>
                     </td>
                   </tr>
@@ -482,8 +478,7 @@ const Px4ReceiverConfig: React.FC = () => {
           </table>
         </div>
         <p className="text-[11px] text-content-tertiary mt-2">
-          Changes are staged until you Save All Changes in the header. ArduPilot-style automatic stick
-          calibration is not available over MAVLink for PX4, so set endpoints manually using the live bars above.
+          {t('mavlink_config.Px4ReceiverConfig.changesAreStagedUntilYouSave')}
         </p>
       </div>
     </div>

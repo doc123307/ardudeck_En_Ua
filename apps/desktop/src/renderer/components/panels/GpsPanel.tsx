@@ -3,6 +3,7 @@ import { useSettingsStore } from '../../stores/settings-store';
 import { GPS_FIX_TYPES, type GpsData } from '../../../shared/telemetry-types';
 import { formatAltitudeFromMeters } from '../../../shared/user-units.js';
 import { PanelContainer, StatRow, formatNumber } from './panel-utils';
+import { t } from '../../i18n';
 
 function GpsReadout({ gps, label }: { gps: GpsData; label?: string }) {
   const fixColor = gps.fixType >= 3 ? 'bg-emerald-400' : gps.fixType >= 2 ? 'bg-yellow-400' : 'bg-red-400';
@@ -12,15 +13,15 @@ function GpsReadout({ gps, label }: { gps: GpsData; label?: string }) {
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <div className={`w-2.5 h-2.5 rounded-full ${fixColor}`} />
-        <span className="text-sm text-content">{GPS_FIX_TYPES[gps.fixType] || 'No GPS'}</span>
+        <span className="text-sm text-content">{GPS_FIX_TYPES[gps.fixType] || t('panels.GpsPanel.noGps')}</span>
         {label && <span className="ml-auto text-[10px] uppercase tracking-wider text-content-tertiary">{label}</span>}
       </div>
 
       <div className="space-y-1">
-        <StatRow label="Satellites" value={gps.satellites} />
+        <StatRow label={t('panels.GpsPanel.satellites')} value={gps.satellites} />
         <StatRow label="HDOP" value={formatNumber(gps.hdop, 1)} />
         <StatRow label="VDOP" value={formatNumber(gps.vdop, 1)} />
-        <StatRow label="Altitude" value={formatAltitudeFromMeters(gps.alt, altitudeUnit)} />
+        <StatRow label={t('panels.GpsPanel.altitude')} value={formatAltitudeFromMeters(gps.alt, altitudeUnit)} />
       </div>
     </div>
   );

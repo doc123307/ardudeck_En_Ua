@@ -1,5 +1,6 @@
 import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer, StatRow } from '../../panels/panel-utils';
+import { t } from '../../../i18n';
 
 function formatUptime(seconds: number): string {
   const d = Math.floor(seconds / 86400);
@@ -69,7 +70,7 @@ export function StatusPanel() {
         {/* Version mismatch warning */}
         {connectionState.versionMismatch && (
           <div className="p-2 bg-yellow-500/10 border border-yellow-500/30 rounded text-xs text-yellow-400">
-            Agent version mismatch. Update your agent for full compatibility.
+            {t('companion.StatusPanel.agentVersionMismatchUpdateYourAgent')}
           </div>
         )}
 
@@ -77,11 +78,11 @@ export function StatusPanel() {
         <div className="space-y-1">
           {systemInfo ? (
             <>
-              <StatRow label="Hostname" value={systemInfo.hostname} />
+              <StatRow label={t('companion.StatusPanel.hostname')} value={systemInfo.hostname} />
               <StatRow label="OS" value={systemInfo.os} />
-              <StatRow label="Architecture" value={systemInfo.arch} />
-              <StatRow label="Uptime" value={formatUptime(systemInfo.uptime)} />
-              <StatRow label="Agent Version" value={systemInfo.agentVersion} />
+              <StatRow label={t('companion.StatusPanel.architecture')} value={systemInfo.arch} />
+              <StatRow label={t('companion.StatusPanel.uptime')} value={formatUptime(systemInfo.uptime)} />
+              <StatRow label={t('companion.StatusPanel.agentVersion')} value={systemInfo.agentVersion} />
               {systemInfo.dockerAvailable && (
                 <StatRow label="Docker" value="Available" />
               )}
@@ -91,18 +92,18 @@ export function StatusPanel() {
             </>
           ) : heartbeatOnline ? (
             <>
-              <StatRow label="Source" value="MAVLink Heartbeat" />
-              {companionType && <StatRow label="Type" value={companionType} />}
+              <StatRow label={t('companion.StatusPanel.source')} value="MAVLink Heartbeat" />
+              {companionType && <StatRow label={t('companion.StatusPanel.type')} value={companionType} />}
               {lastHeartbeat && (
-                <StatRow label="Last Seen" value={formatTimeSince(lastHeartbeat)} />
+                <StatRow label={t('companion.StatusPanel.lastSeen')} value={formatTimeSince(lastHeartbeat)} />
               )}
               <div className="mt-3 p-2 bg-surface-raised rounded text-xs text-content-secondary">
-                Install the ArduDeck Agent on the companion for full monitoring.
+                {t('companion.StatusPanel.installTheArdudeckAgentOnThe')}
               </div>
             </>
           ) : (
             <div className="flex items-center justify-center h-20 text-content-tertiary text-xs">
-              No companion detected
+              {t('companion.StatusPanel.noCompanionDetected')}
             </div>
           )}
         </div>

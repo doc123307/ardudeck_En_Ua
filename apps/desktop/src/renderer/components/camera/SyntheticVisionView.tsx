@@ -42,6 +42,7 @@ import {
   pushSample,
   type Sample,
 } from './svt/svt-pose-buffer';
+import { t as tr } from '../../i18n';
 
 /**
  * Module-level cache of the last loaded terrain grid per vehicle. Grids are plain
@@ -591,7 +592,7 @@ export function SyntheticVisionView({ vehicle, isPrimary, osd, onActivate, strea
       ref={containerRef}
       className="relative h-full w-full overflow-hidden bg-black"
       onClick={onActivate}
-      title={onActivate ? 'Click to make active' : undefined}
+      title={onActivate ? tr('camera.SyntheticVisionView.clickToMakeActive') : undefined}
     >
       <canvas ref={canvasRef} className="block h-full w-full" />
       {streamSlot?.({ canvasRef, containerRef })}
@@ -600,9 +601,9 @@ export function SyntheticVisionView({ vehicle, isPrimary, osd, onActivate, strea
 
       {!position && (
         <Center>
-          <div className="text-sm text-amber-300">No position fix</div>
+          <div className="text-sm text-amber-300">{tr('camera.SyntheticVisionView.noPositionFix')}</div>
           <div className="max-w-[80%] text-[11px] text-white/60">
-            Synthetic vision needs a GPS fix from {vehicle?.label ?? 'the vehicle'}.
+            {tr('camera.SyntheticVisionView.syntheticVisionNeedsAGpsFix')} {vehicle?.label ?? 'the vehicle'}.
           </div>
         </Center>
       )}
@@ -614,19 +615,19 @@ export function SyntheticVisionView({ vehicle, isPrimary, osd, onActivate, strea
             (clearanceM <= 0 ? 'bg-red-600/90 text-white' : 'bg-amber-500/90 text-black')
           }
         >
-          {clearanceM <= 0 ? 'TERRAIN' : `TERRAIN ${Math.round(clearanceM)} m`}
+          {clearanceM <= 0 ? 'TERRAIN' : tr('camera.SyntheticVisionView.terrainM', { v1: Math.round(clearanceM) })}
         </div>
       )}
 
       {position && terrainStatus === 'loading' && (
         <div className="absolute bottom-2 left-2 flex items-center gap-2 rounded bg-black/55 px-2 py-1 text-[11px] text-white/80">
           <div className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
-          Loading terrain…
+          {tr('camera.SyntheticVisionView.loadingTerrain')}
         </div>
       )}
       {position && terrainStatus === 'error' && (
         <div className="absolute bottom-2 left-2 rounded bg-black/55 px-2 py-1 text-[11px] text-amber-300">
-          Terrain data unavailable, check the internet connection.
+          {tr('camera.SyntheticVisionView.terrainDataUnavailableCheckTheInternet')}
         </div>
       )}
     </div>

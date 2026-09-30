@@ -15,6 +15,7 @@ import { useParameterStore } from '../../stores/parameter-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { DraggableSlider } from '../ui/DraggableSlider';
 import { InfoCard } from '../ui/InfoCard';
+import { t as tr } from '../../i18n';
 
 const PRESETS = [
   { name: 'Red', hex: '#ef4444' },
@@ -38,11 +39,11 @@ function hexToRgb(hex: string): { red: number; green: number; blue: number } {
 }
 
 const LED_STATES = [
-  { colour: 'bg-red-500', label: 'Initialising', hint: 'Red and blue alternating at boot' },
-  { colour: 'bg-blue-500', label: 'No GPS lock', hint: 'Disarmed, waiting for a fix' },
-  { colour: 'bg-emerald-500', label: 'GPS lock', hint: 'Disarmed and ready to arm' },
-  { colour: 'bg-emerald-600', label: 'Armed', hint: 'Solid, no blink' },
-  { colour: 'bg-amber-500', label: 'Failsafe', hint: 'Radio or battery' },
+  { colour: 'bg-red-500', get label() { return tr('mavlink_config.NotifyTab.initialising'); }, get hint() { return tr('mavlink_config.NotifyTab.redAndBlueAlternatingAtBoot'); } },
+  { colour: 'bg-blue-500', get label() { return tr('mavlink_config.NotifyTab.noGpsLock'); }, get hint() { return tr('mavlink_config.NotifyTab.disarmedWaitingForAFix'); } },
+  { colour: 'bg-emerald-500', get label() { return tr('mavlink_config.NotifyTab.gpsLock'); }, get hint() { return tr('mavlink_config.NotifyTab.disarmedAndReadyToArm'); } },
+  { colour: 'bg-emerald-600', get label() { return tr('mavlink_config.NotifyTab.armed'); }, get hint() { return tr('mavlink_config.NotifyTab.solidNoBlink'); } },
+  { colour: 'bg-amber-500', get label() { return tr('mavlink_config.NotifyTab.failsafe'); }, get hint() { return tr('mavlink_config.NotifyTab.radioOrBattery'); } },
 ];
 
 /** NTF_LED_TYPES bits, from AP_Notify.cpp. Used when metadata is absent. */
@@ -61,10 +62,10 @@ const BUZZ_TYPE_FALLBACK: Record<number, string> = {
 };
 
 const AP_BRIGHTNESS = [
-  { value: 0, label: 'Off' },
-  { value: 1, label: 'Low' },
-  { value: 2, label: 'Medium' },
-  { value: 3, label: 'High' },
+  { value: 0, get label() { return tr('mavlink_config.NotifyTab.off'); } },
+  { value: 1, get label() { return tr('mavlink_config.NotifyTab.low'); } },
+  { value: 2, get label() { return tr('mavlink_config.NotifyTab.medium'); } },
+  { value: 3, get label() { return tr('mavlink_config.NotifyTab.high'); } },
 ];
 
 /** Serial-LED strips ride a servo output set to one of these functions. */
@@ -107,7 +108,7 @@ export default function NotifyTab(): JSX.Element {
   /** Drive the ring. Turns the override on first, since the FC ignores us otherwise. */
   const applyColour = useCallback(async (hex: string, rate: number) => {
     if (typeof window.electronAPI?.setLedColour !== 'function') {
-      setLedNote('Restart ArduDeck: LED control lives in the main process and is not loaded yet.');
+      setLedNote(tr('mavlink_config.NotifyTab.restartArdudeckLedControlLivesIn'));
       return;
     }
     setBusy(true);
@@ -119,10 +120,10 @@ export default function NotifyTab(): JSX.Element {
       }
       const res = await window.electronAPI.setLedColour({ ...hexToRgb(hex), rateHz: rate });
       setLedNote(res?.success
-        ? (rate > 0 ? `Blinking at ${rate} Hz` : 'Holding that colour')
-        : res?.error ?? 'Could not reach the vehicle');
+        ? (rate > 0 ? tr('mavlink_config.NotifyTab.blinkingAtHz', { rate }) : tr('mavlink_config.NotifyTab.holdingThatColour'))
+        : res?.error ?? tr('mavlink_config.NotifyTab.couldNotReachTheVehicle'));
     } catch (err) {
-      setLedNote(err instanceof Error ? err.message : 'LED command failed');
+      setLedNote(err instanceof Error ? err.message : tr('mavlink_config.NotifyTab.ledCommandFailed'));
     } finally {
       setBusy(false);
     }
@@ -150,8 +151,8 @@ export default function NotifyTab(): JSX.Element {
   if (!supported) {
     return (
       <div className="p-6">
-        <InfoCard title="LEDs and sound" variant="info">
-          This board does not expose the notify parameters.
+        <InfoCard title={tr('mavlink_config.NotifyTab.ledsAndSound')} variant="info">
+          {tr('mavlink_config.NotifyTab.thisBoardDoesNotExposeThe')}
         </InfoCard>
       </div>
     );
@@ -171,9 +172,9 @@ export default function NotifyTab(): JSX.Element {
             <Lightbulb className="w-5 h-5 text-amber-500 dark:text-amber-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-content">Status LED</h3>
+            <h3 className="font-medium text-content">{tr('mavlink_config.NotifyTab.statusLed')}</h3>
             <p className="text-xs text-content-secondary">
-              On most builds the ring is in the GPS puck, not on the autopilot
+              {tr('mavlink_config.NotifyTab.onMostBuildsTheRingIs')}
             </p>
           </div>
         </div>
@@ -181,7 +182,7 @@ export default function NotifyTab(): JSX.Element {
         <div className="flex flex-col gap-4 lg:flex-row">
           <div className="shrink-0 min-w-[190px] rounded-xl border border-subtle bg-surface-raised p-4">
             <div className="mb-2 text-[11px] uppercase tracking-wide text-content-tertiary">
-              What the colours mean
+              {tr('mavlink_config.NotifyTab.whatTheColoursMean')}
             </div>
             <div className="space-y-1.5">
               {LED_STATES.map((s) => (
@@ -190,9 +191,9 @@ export default function NotifyTab(): JSX.Element {
                   <span className="text-[11px] text-content-secondary">{s.label}</span>
                 </div>
               ))}
-              <div className="flex items-center gap-2" data-tip="Outputs inhibited until the button is held">
+              <div className="flex items-center gap-2" data-tip={tr('mavlink_config.NotifyTab.outputsInhibitedUntilTheButtonIs')}>
                 <span className="h-2.5 w-2.5 rounded-full bg-content-tertiary ring-2 ring-inset ring-red-500/60" />
-                <span className="text-[11px] text-content-secondary">Double blink: safety on</span>
+                <span className="text-[11px] text-content-secondary">{tr('mavlink_config.NotifyTab.doubleBlinkSafetyOn')}</span>
               </div>
             </div>
           </div>
@@ -200,7 +201,7 @@ export default function NotifyTab(): JSX.Element {
           <div className="flex-1 space-y-4">
             {!isPx4 && has('NTF_LED_BRIGHT') && (
               <div>
-                <div className="mb-2 text-xs text-content-secondary">Brightness</div>
+                <div className="mb-2 text-xs text-content-secondary">{tr('mavlink_config.NotifyTab.brightness')}</div>
                 <div className="flex gap-2">
                   {AP_BRIGHTNESS.map((b) => {
                     const active = num('NTF_LED_BRIGHT', 3) === b.value;
@@ -225,7 +226,7 @@ export default function NotifyTab(): JSX.Element {
 
             {isPx4 && has('SYS_RGB_MAXBRT') && (
               <DraggableSlider
-                label="Brightness"
+                label={tr('mavlink_config.NotifyTab.brightness')}
                 value={num('SYS_RGB_MAXBRT', 1)}
                 min={0}
                 max={1}
@@ -238,9 +239,9 @@ export default function NotifyTab(): JSX.Element {
             {!isPx4 && has('NTF_LED_OVERRIDE') && (
               <div className="flex items-center gap-3 rounded-lg border border-subtle bg-surface-raised px-3 py-2">
                 <span className="flex-1 text-sm text-content">
-                  Let a script or ground station drive the colour
+                  {tr('mavlink_config.NotifyTab.letAScriptOrGroundStation')}
                   <span className="block text-[11px] text-content-tertiary">
-                    NTF_LED_OVERRIDE. The firmware stops showing flight status on the ring.
+                    {tr('mavlink_config.NotifyTab.ntfLedOverrideTheFirmwareStops')}
                   </span>
                 </span>
                 <button
@@ -252,7 +253,7 @@ export default function NotifyTab(): JSX.Element {
                       : 'bg-content-tertiary/15 text-content-secondary ring-1 ring-inset ring-content-tertiary/30'
                   }`}
                 >
-                  {override ? 'Override on' : 'Firmware drives it'}
+                  {override ? tr('mavlink_config.NotifyTab.overrideOn') : tr('mavlink_config.NotifyTab.firmwareDrivesIt')}
                 </button>
               </div>
             )}
@@ -262,7 +263,7 @@ export default function NotifyTab(): JSX.Element {
         {!isPx4 && (
           <div className="mt-4 border-t border-subtle pt-4">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs text-content-secondary">Drive the colour yourself</span>
+              <span className="text-xs text-content-secondary">{tr('mavlink_config.NotifyTab.driveTheColourYourself')}</span>
               {ledNote && <span className="text-[11px] text-emerald-600 dark:text-emerald-400">{ledNote}</span>}
             </div>
 
@@ -282,7 +283,7 @@ export default function NotifyTab(): JSX.Element {
               ))}
 
               <label className="ml-1 flex items-center gap-2 text-[11px] text-content-secondary">
-                Custom
+                {tr('mavlink_config.NotifyTab.custom')}
                 <input
                   type="color"
                   value={colour}
@@ -294,7 +295,7 @@ export default function NotifyTab(): JSX.Element {
             </div>
 
             <div className="mt-3 flex items-center gap-3">
-              <span className="text-[11px] text-content-secondary whitespace-nowrap">Blink</span>
+              <span className="text-[11px] text-content-secondary whitespace-nowrap">{tr('mavlink_config.NotifyTab.blink')}</span>
               <div className="flex gap-1">
                 {[0, 1, 2, 5, 10].map((r) => (
                   <button
@@ -307,15 +308,14 @@ export default function NotifyTab(): JSX.Element {
                         : 'bg-surface-overlay text-content-secondary hover:text-content'
                     }`}
                   >
-                    {r === 0 ? 'Solid' : `${r} Hz`}
+                    {r === 0 ? tr('mavlink_config.NotifyTab.solid') : `${r} Hz`}
                   </button>
                 ))}
               </div>
             </div>
 
             <p className="mt-2 text-[11px] text-content-tertiary">
-              Picking a colour switches the override on for you, so the ring stops showing flight
-              status. Set it back to "Firmware drives it" above to get the status colours back.
+              {tr('mavlink_config.NotifyTab.pickingAColourSwitchesTheOverride')}
             </p>
           </div>
         )}
@@ -329,11 +329,10 @@ export default function NotifyTab(): JSX.Element {
           >
             <Cpu className="h-4 w-4 shrink-0 text-content-tertiary" />
             <div className="min-w-0 flex-1">
-              <h3 className="font-medium text-content">LED hardware</h3>
+              <h3 className="font-medium text-content">{tr('mavlink_config.NotifyTab.ledHardware')}</h3>
               <p className="text-xs text-content-secondary">
-                {enabledDrivers} of {ledTypes.length} drivers enabled.
-                {' '}The firmware probes them all and uses whichever is fitted, so this normally
-                needs no attention.
+                {enabledDrivers} {tr('mavlink_config.NotifyTab.of')} {ledTypes.length} {tr('mavlink_config.NotifyTab.driversEnabled')}
+                {' '}{tr('mavlink_config.NotifyTab.theFirmwareProbesThemAllAnd')}
               </p>
             </div>
             <ChevronDown className={`h-4 w-4 shrink-0 text-content-tertiary transition-transform ${showDrivers ? 'rotate-180' : ''}`} />
@@ -342,8 +341,7 @@ export default function NotifyTab(): JSX.Element {
           {showDrivers && (
             <div className="mt-4">
               <p className="mb-3 text-xs text-content-secondary">
-                Only worth touching if a fitted LED stays dark, or to silence one you do not want.
-                Enabling a driver for hardware the vehicle does not have costs nothing.
+                {tr('mavlink_config.NotifyTab.onlyWorthTouchingIfAFitted')}
               </p>
               <div className="grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(170px,1fr))]">
                 {ledTypes.map((t) => {
@@ -370,14 +368,14 @@ export default function NotifyTab(): JSX.Element {
 
           {stripOutputs.length > 0 && (
             <div className="mt-4 rounded-lg border border-subtle bg-surface-raised p-3">
-              <div className="text-xs text-content">LED strip</div>
+              <div className="text-xs text-content">{tr('mavlink_config.NotifyTab.ledStrip')}</div>
               <div className="mt-1 text-[11px] text-content-tertiary">
-                Driven from {stripOutputs.map((o) => `SERVO${o.channel} (${o.label})`).join(', ')}
+                {tr('mavlink_config.NotifyTab.drivenFrom')} {stripOutputs.map((o) => `SERVO${o.channel} (${o.label})`).join(', ')}
               </div>
               {has('NTF_LED_LEN') && (
                 <div className="mt-3">
                   <DraggableSlider
-                    label="Pixels per strip"
+                    label={tr('mavlink_config.NotifyTab.pixelsPerStrip')}
                     value={num('NTF_LED_LEN', 1)}
                     min={1}
                     max={32}
@@ -395,7 +393,7 @@ export default function NotifyTab(): JSX.Element {
       <div className="bg-surface rounded-xl border border-subtle p-5 space-y-4">
         <div className="flex items-center gap-3">
           <Volume2 className="h-4 w-4 text-content-tertiary" />
-          <h3 className="font-medium text-content">Buzzer</h3>
+          <h3 className="font-medium text-content">{tr('mavlink_config.NotifyTab.buzzer')}</h3>
         </div>
 
         {!isPx4 && has('NTF_BUZZ_TYPES') && (
@@ -422,7 +420,7 @@ export default function NotifyTab(): JSX.Element {
 
         {!isPx4 && has('NTF_BUZZ_VOLUME') && (
           <DraggableSlider
-            label="Volume"
+            label={tr('mavlink_config.NotifyTab.volume')}
             value={num('NTF_BUZZ_VOLUME', 100)}
             min={0}
             max={100}
@@ -437,9 +435,9 @@ export default function NotifyTab(): JSX.Element {
           <div>
             <div className="flex gap-2">
               {([
-                { value: 0, label: 'All sounds on' },
-                { value: 782090, label: 'Silent startup only' },
-                { value: 782097, label: 'Buzzer off' },
+                { value: 0, label: tr('mavlink_config.NotifyTab.allSoundsOn') },
+                { value: 782090, label: tr('mavlink_config.NotifyTab.silentStartupOnly') },
+                { value: 782097, label: tr('mavlink_config.NotifyTab.buzzerOff') },
               ] as const).map((opt) => (
                 <button
                   key={opt.value}
@@ -456,8 +454,7 @@ export default function NotifyTab(): JSX.Element {
               ))}
             </div>
             <p className="mt-2 text-[11px] text-content-tertiary">
-              PX4 silences the buzzer with a circuit breaker rather than a volume, so these are the
-              only three states it has.
+              {tr('mavlink_config.NotifyTab.px4SilencesTheBuzzerWithA')}
             </p>
           </div>
         )}
@@ -467,7 +464,7 @@ export default function NotifyTab(): JSX.Element {
         <div className="bg-surface rounded-xl border border-subtle p-5">
           <div className="flex items-center gap-3 mb-3">
             <ShieldAlert className="h-4 w-4 text-content-tertiary" />
-            <h3 className="font-medium text-content">Safety button</h3>
+            <h3 className="font-medium text-content">{tr('mavlink_config.NotifyTab.safetyButton')}</h3>
           </div>
           <div className="flex gap-2">
             <button
@@ -479,7 +476,7 @@ export default function NotifyTab(): JSX.Element {
                   : 'bg-surface-overlay text-content-secondary hover:text-content'
               }`}
             >
-              Safety button required
+              {tr('mavlink_config.NotifyTab.safetyButtonRequired')}
             </button>
             <button
               onClick={() => write('CBRK_IO_SAFETY', 22027)}
@@ -490,12 +487,11 @@ export default function NotifyTab(): JSX.Element {
                   : 'bg-surface-overlay text-content-secondary hover:text-content'
               }`}
             >
-              Safety disabled
+              {tr('mavlink_config.NotifyTab.safetyDisabled')}
             </button>
           </div>
           <p className="mt-2 text-[11px] text-content-tertiary">
-            With safety disabled the outputs go live the moment the vehicle arms, with nothing on
-            the airframe left to stop them. Keep the button unless the airframe has no room for one.
+            {tr('mavlink_config.NotifyTab.withSafetyDisabledTheOutputsGo')}
           </p>
         </div>
       )}
@@ -504,7 +500,7 @@ export default function NotifyTab(): JSX.Element {
         <div className="bg-surface rounded-xl border border-subtle p-5">
           <div className="flex items-center gap-3 mb-3">
             <ShieldAlert className="h-4 w-4 text-content-tertiary" />
-            <h3 className="font-medium text-content">Safety button</h3>
+            <h3 className="font-medium text-content">{tr('mavlink_config.NotifyTab.safetyButton')}</h3>
           </div>
           <div className="flex gap-2">
             <button
@@ -516,7 +512,7 @@ export default function NotifyTab(): JSX.Element {
                   : 'bg-surface-overlay text-content-secondary hover:text-content'
               }`}
             >
-              Safety on, press to release
+              {tr('mavlink_config.NotifyTab.safetyOnPressToRelease')}
             </button>
             <button
               onClick={() => write('BRD_SAFETY_DEFLT', 0)}
@@ -527,13 +523,13 @@ export default function NotifyTab(): JSX.Element {
                   : 'bg-surface-overlay text-content-secondary hover:text-content'
               }`}
             >
-              No safety, live at boot
+              {tr('mavlink_config.NotifyTab.noSafetyLiveAtBoot')}
             </button>
           </div>
           <p className="mt-1.5 text-[11px] text-content-tertiary">
             {safetyDeflt === 1
-              ? 'Outputs stay inhibited until the button is held for about two seconds. This is what "PreArm: Hardware safety switch" means.'
-              : 'Outputs are live as soon as the vehicle is armed, with no button press. Only sensible when no button is fitted.'}
+              ? tr('mavlink_config.NotifyTab.outputsStayInhibitedUntilTheButton')
+              : tr('mavlink_config.NotifyTab.outputsAreLiveAsSoonAs')}
           </p>
         </div>
       )}

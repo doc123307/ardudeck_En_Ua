@@ -14,6 +14,7 @@ import {
   getSurveyGeneratorsVersion,
 } from './generator-registry';
 import type { SurveyPattern } from './survey-types';
+import { t as tr } from '../../i18n';
 
 interface SurveyType {
   pattern: SurveyPattern;
@@ -46,20 +47,20 @@ const PANORAMA_ICON = (
 const SURVEY_TYPES: SurveyType[] = [
   {
     pattern: 'grid',
-    label: 'Area survey',
-    desc: 'Draw a polygon, fill it with a lawnmower grid',
+    get label() { return tr('survey.SurveyStartButton.areaSurvey'); },
+    get desc() { return tr('survey.SurveyStartButton.drawAPolygonFillItWith'); },
     icon: AREA_ICON,
   },
   {
     pattern: 'corridor',
-    label: 'Corridor survey',
-    desc: 'Draw a centerline (roads, rail, power lines), strips run parallel',
+    get label() { return tr('survey.SurveyStartButton.corridorSurvey'); },
+    get desc() { return tr('survey.SurveyStartButton.drawACenterlineRoadsRailPower'); },
     icon: CORRIDOR_ICON,
   },
   {
     pattern: 'panorama',
-    label: 'Panorama capture',
-    desc: 'Draw the SUBJECT (shoreline, cliff, frontage); flight path, camera yaw and triggers are computed for you',
+    get label() { return tr('survey.SurveyStartButton.panoramaCapture'); },
+    get desc() { return tr('survey.SurveyStartButton.drawTheSubjectShorelineCliffFrontage'); },
     icon: PANORAMA_ICON,
   },
 ];
@@ -116,12 +117,12 @@ export function SurveyStartButton() {
         data-tour="mission-survey"
         onClick={() => setOpen(!open)}
         className="px-2.5 py-1.5 rounded text-xs font-medium bg-surface-solid border border-purple-400 shadow-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1.5"
-        title="Plan a survey: area (polygon grid) or corridor (centerline strips)"
+        title={tr('survey.SurveyStartButton.planASurveyAreaPolygonGrid')}
       >
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
         </svg>
-        Survey
+        {tr('survey.SurveyStartButton.survey')}
         <svg className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
@@ -157,7 +158,7 @@ export function SurveyStartButton() {
                   <span className="text-xs font-medium text-content">{gen.displayName}</span>
                   {gen.capabilities.isRemote && (
                     <span className="px-1 py-px text-[9px] font-semibold uppercase tracking-wide text-teal-300 bg-teal-500/15 border border-teal-500/30 rounded">
-                      Remote
+                      {tr('survey.SurveyStartButton.remote')}
                     </span>
                   )}
                 </span>
@@ -184,10 +185,10 @@ export function SurveyStartButton() {
             </span>
             <span className="min-w-0">
               <span className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-content">Area Editor</span>
-                <span className="px-1 py-px text-[9px] font-semibold uppercase tracking-wide text-teal-300 bg-teal-500/15 border border-teal-500/30 rounded">New</span>
+                <span className="text-xs font-medium text-content">{tr('survey.SurveyStartButton.areaEditor')}</span>
+                <span className="px-1 py-px text-[9px] font-semibold uppercase tracking-wide text-teal-300 bg-teal-500/15 border border-teal-500/30 rounded">{tr('survey.SurveyStartButton.new')}</span>
               </span>
-              <span className="block text-[10px] text-content-tertiary leading-snug">Full-window editor: multi-area, holes, KML import</span>
+              <span className="block text-[10px] text-content-tertiary leading-snug">{tr('survey.SurveyStartButton.fullWindowEditorMultiAreaHoles')}</span>
             </span>
           </button>
         </div>

@@ -20,6 +20,7 @@ import { useConnectionStore } from '../../../stores/connection-store';
 import { useCalibrationStore } from '../../../stores/calibration-store';
 import { CALIBRATION_TYPES } from '../../../../shared/calibration-types';
 import type { CalibrationRecordIpc } from '../../../../shared/calibration-quality';
+import { t as tr } from '../../../i18n';
 
 type Tone = 'good' | 'warn' | 'danger' | 'neutral';
 
@@ -43,14 +44,14 @@ function assess(record: CalibrationRecordIpc): { tone: Tone; headline: string; d
     return {
       tone: 'danger',
       headline: `${name} calibration did not survive the reboot`,
-      detail: `${record.persistence.summary} Do not fly on this calibration. Run it again.`,
+      detail: tr('calibration.CalibrationHealthBanner.doNotFlyOnThisCalibration', { summary: record.persistence.summary }),
     };
   }
   if (!record.persistence) {
     return {
       tone: 'warn',
       headline: `${name} calibration not yet confirmed`,
-      detail: 'Reboot the flight controller and reconnect. ArduDeck will read the values back and confirm they stuck.',
+      detail: tr('calibration.CalibrationHealthBanner.rebootTheFlightControllerAndReconnect'),
     };
   }
   if (record.verdict === 'bad' || record.verdict === 'marginal') {

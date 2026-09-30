@@ -4,6 +4,7 @@ import type { FileParamDiff } from '../../stores/parameter-store.js';
 import { computeProfileDiff } from './compute-diff.js';
 import { getTemplate, defaultTemplateForType } from './registry.js';
 import { buildSnapshot, storeSnapshot } from './snapshot.js';
+import { t } from '../../i18n';
 
 export type ApplyTargetMode = 'auto' | 'sitl' | 'fc';
 
@@ -42,26 +43,26 @@ export function prepareApply(args: {
   const { profile, connectionState, armed } = args;
 
   if (!connectionState.isConnected) {
-    return { ok: false, code: 'not-connected', reason: 'No vehicle connected' };
+    return { ok: false, code: 'not-connected', reason: t('lib.apply.noVehicleConnected') };
   }
   if (armed) {
-    return { ok: false, code: 'armed', reason: 'Vehicle is armed, disarm before applying' };
+    return { ok: false, code: 'armed', reason: t('lib.apply.vehicleIsArmedDisarmBeforeApplying') };
   }
   if (args.currentParams.size === 0) {
-    return { ok: false, code: 'no-params', reason: 'Parameters not loaded yet, fetch them first' };
+    return { ok: false, code: 'no-params', reason: t('lib.apply.parametersNotLoadedYetFetchThem') };
   }
 
   const isSitl = !!connectionState.isSitl;
   if (args.mode === 'sitl' && !isSitl) {
-    return { ok: false, code: 'not-connected', reason: 'Expected SITL but connection is a real FC' };
+    return { ok: false, code: 'not-connected', reason: t('lib.apply.expectedSitlButConnectionIsA') };
   }
   if (args.mode === 'fc' && isSitl) {
-    return { ok: false, code: 'not-connected', reason: 'Expected a real FC but connection is SITL' };
+    return { ok: false, code: 'not-connected', reason: t('lib.apply.expectedARealFcButConnection') };
   }
 
   const template = getTemplate(profile.templateSlug) ?? defaultTemplateForType(profile.type);
   if (!template) {
-    return { ok: false, code: 'no-template', reason: 'No template resolved for profile' };
+    return { ok: false, code: 'no-template', reason: t('lib.apply.noTemplateResolvedForProfile') };
   }
 
   // Cast: compute-diff wants ParameterWithMeta-compatible values but we only
@@ -73,7 +74,7 @@ export function prepareApply(args: {
   });
 
   if (diff.changes.length === 0) {
-    return { ok: false, code: 'nothing-to-apply', reason: 'Vehicle already matches profile, nothing to change' };
+    return { ok: false, code: 'nothing-to-apply', reason: t('lib.apply.vehicleAlreadyMatchesProfileNothingTo') };
   }
 
   const fileDiffs: FileParamDiff[] = diff.changes.map(c => ({
@@ -103,7 +104,7 @@ export function prepareApply(args: {
     target,
     before,
     applied,
-    reason: `Apply ${template.name}`,
+    reason: t('lib.apply.apply', { name: template.name }),
   });
 
   return { ok: true, template, target, diff, fileDiffs, pendingSnapshot };
@@ -144,7 +145,7 @@ export function buildUndoDiffs(
       fileValue: before,
       type: current.type,
       selected: true,
-      note: `Restore from snapshot ${snapshot.createdAt.split('T')[0]}`,
+      note: t('lib.apply.restoreFromSnapshot', { v1: snapshot.createdAt.split('T')[0] }),
     });
   }
   return diffs;

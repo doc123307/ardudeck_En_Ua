@@ -8,6 +8,7 @@ import { useCallback, useMemo, useRef } from 'react';
 import { useMissionStore } from '../../stores/mission-store';
 import { useFlightPreviewStore } from '../../stores/flight-preview-store';
 import { useFlightPreviewTimeline } from './FlightPreviewOverlay';
+import { t as tr } from '../../i18n';
 
 function fmtTime(ms: number): string {
   const s = Math.floor(ms / 1000);
@@ -74,7 +75,7 @@ export function FlightPreviewPanel() {
   if (timeline.segments.length === 0) {
     return (
       <div className="h-full flex items-center justify-center bg-surface text-xs text-content-tertiary">
-        No flyable waypoints in the mission yet.
+        {tr('mission.FlightPreviewPanel.noFlyableWaypointsInTheMission')}
       </div>
     );
   }
@@ -90,19 +91,19 @@ export function FlightPreviewPanel() {
           value={groupId ?? ''}
           onChange={(e) => setGroupId(e.target.value === '' ? null : e.target.value)}
           className="h-8 px-2 rounded-md bg-surface-input border border-subtle text-xs text-content focus:outline-none focus:border-cyan-500"
-          data-tip="Which waypoint group to preview"
+          data-tip={tr('mission.FlightPreviewPanel.whichWaypointGroupToPreview')}
         >
-          <option value="">Entire mission</option>
+          <option value="">{tr('mission.FlightPreviewPanel.entireMission')}</option>
           {groupOptions.map((g) => (
             <option key={g.id} value={g.id}>
-              {g.name} ({g.count} WPs)
+              {g.name} ({g.count} {tr('mission.FlightPreviewPanel.wps')}
             </option>
           ))}
         </select>
         <button
           onClick={togglePlay}
           className="w-8 h-8 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white flex items-center justify-center transition-colors"
-          data-tip={playing ? 'Pause' : 'Play'}
+          data-tip={playing ? tr('mission.FlightPreviewPanel.pause') : tr('mission.FlightPreviewPanel.play')}
         >
           {playing ? (
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
@@ -127,9 +128,9 @@ export function FlightPreviewPanel() {
           ))}
         </div>
         <div className="ml-auto flex items-center gap-3 text-[10px] text-content-tertiary">
-          <span className="flex items-center gap-1"><span className="w-3 h-1.5 rounded-sm bg-cyan-500/70" /> flight leg</span>
-          <span className="flex items-center gap-1"><span className="w-3 h-1.5 rounded-sm bg-amber-500/80" /> hold</span>
-          <span className="flex items-center gap-1"><span className="w-px h-3 bg-purple-400" /> camera turns</span>
+          <span className="flex items-center gap-1"><span className="w-3 h-1.5 rounded-sm bg-cyan-500/70" /> {tr('mission.FlightPreviewPanel.flightLeg')}</span>
+          <span className="flex items-center gap-1"><span className="w-3 h-1.5 rounded-sm bg-amber-500/80" /> {tr('mission.FlightPreviewPanel.hold')}</span>
+          <span className="flex items-center gap-1"><span className="w-px h-3 bg-purple-400" /> {tr('mission.FlightPreviewPanel.cameraTurns')}</span>
         </div>
       </div>
 
@@ -138,7 +139,7 @@ export function FlightPreviewPanel() {
         ref={trackRef}
         onMouseDown={onTrackMouseDown}
         className="relative flex-1 min-h-[44px] rounded-md bg-surface-inset border border-subtle cursor-pointer overflow-hidden"
-        data-tip="Click or drag to scrub the flight"
+        data-tip={tr('mission.FlightPreviewPanel.clickOrDragToScrubThe')}
       >
         {timeline.segments.map((seg, i) => (
           <div

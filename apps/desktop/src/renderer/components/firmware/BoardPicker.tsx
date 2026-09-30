@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import type { BoardInfo } from '../../stores/firmware-store';
+import { t } from '../../i18n';
 
 interface BoardPickerProps {
   boards: BoardInfo[];
@@ -202,7 +203,7 @@ export function BoardPicker({
       >
         <span className={selectedBoard ? 'text-content' : 'text-content-secondary'}>
           {isLoading
-            ? 'Loading boards...'
+            ? t('firmware.BoardPicker.loadingBoards')
             : selectedBoard
               ? selectedBoard.name
               : placeholder}
@@ -259,7 +260,7 @@ export function BoardPicker({
                   }
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Search boards..."
+                placeholder={t('firmware.BoardPicker.searchBoards')}
                 className="w-full pl-8 pr-3 py-1.5 bg-surface-input border border rounded text-sm text-content placeholder-content-tertiary focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -269,11 +270,11 @@ export function BoardPicker({
           <div className="overflow-y-auto flex-1">
             {boards.length === 0 ? (
               <div className="p-4 text-center text-content-secondary">
-                No boards available
+                {t('firmware.BoardPicker.noBoardsAvailable')}
               </div>
             ) : filteredBoards.length === 0 ? (
               <div className="p-4 text-center text-content-secondary">
-                No boards match "{searchQuery}"
+                {t('firmware.BoardPicker.noBoardsMatch')}{searchQuery}"
               </div>
             ) : (
               <>
@@ -281,7 +282,7 @@ export function BoardPicker({
                 {!searchQuery && !showAllBoards && popularBoards.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-xs font-semibold text-content-secondary uppercase bg-surface-input">
-                      Popular
+                      {t('firmware.BoardPicker.popular')}
                     </div>
                     {popularBoards.map((board, index) => (
                       <button
@@ -326,7 +327,7 @@ export function BoardPicker({
                         d="M19 9l-7 7-7-7"
                       />
                     </svg>
-                    Show all boards ({boards.length})
+                    {t('firmware.BoardPicker.showAllBoards')}{boards.length})
                   </button>
                 )}
 

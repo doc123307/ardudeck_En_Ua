@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Rectangle, Tooltip } from 'react-leaflet';
 import { useTileCacheStore } from '../../stores/tile-cache-store';
+import { t } from '../../i18n';
 
 export function CachedAreaOverlay() {
   const { regions, fetchRegions } = useTileCacheStore();
@@ -29,7 +30,7 @@ export function CachedAreaOverlay() {
           }}
         >
           <Tooltip sticky>
-            Cached: {region.tileCount.toLocaleString()} tiles (z{region.minZoom}-{region.maxZoom})
+            {t('map.CachedAreaOverlay.cached')} {region.tileCount.toLocaleString()} {t('map.CachedAreaOverlay.tilesZ')}{region.minZoom}-{region.maxZoom})
           </Tooltip>
         </Rectangle>
       ))}

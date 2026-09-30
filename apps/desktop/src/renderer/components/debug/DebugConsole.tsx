@@ -4,6 +4,7 @@ import { useMessagesStore } from '../../stores/messages-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { matchPreArmError } from '../../../shared/prearm-checks';
 import { PreArmParamFix } from '../prearm/PreArmParamFix';
+import { t } from '../../i18n';
 
 const LOG_COLORS = {
   info: 'text-blue-400',
@@ -212,7 +213,7 @@ export function DebugConsole() {
         <span
           className="text-xs font-medium text-content-secondary uppercase tracking-wide"
           style={side && !isExpanded ? { writingMode: 'vertical-rl' } : undefined}
-        >Console</span>
+        >{t('debug.DebugConsole.console')}</span>
 
         {/* Last log preview when collapsed */}
         {!isExpanded && !side && lastLog && (
@@ -258,7 +259,7 @@ export function DebugConsole() {
                     : 'text-content-secondary hover:text-content hover:bg-surface'
                 }`}
               >
-                Console
+                {t('debug.DebugConsole.console')}
               </button>
               {isMavlink && (
                 <button
@@ -269,7 +270,7 @@ export function DebugConsole() {
                       : 'text-content-secondary hover:text-content hover:bg-surface'
                   }`}
                 >
-                  Messages
+                  {t('debug.DebugConsole.messages')}
                   {messages.length > 0 && (
                     <span className="text-[9px] bg-yellow-500/20 text-yellow-400 px-1 rounded-full">
                       {messages.length}
@@ -310,7 +311,7 @@ export function DebugConsole() {
               onClick={activeTab === 'console' ? clearLogs : clearMessages}
               className="px-2 py-0.5 text-xs text-content-secondary hover:text-content hover:bg-surface-raised rounded transition-colors"
             >
-              Clear
+              {t('debug.DebugConsole.clear')}
             </button>
 
           </div>
@@ -319,7 +320,7 @@ export function DebugConsole() {
           {activeTab === 'console' && (
             <div ref={scrollRef} onScroll={onConsoleScroll} className="relative flex-1 overflow-y-auto font-mono text-xs p-2 space-y-0.5">
               {filteredLogs.length === 0 ? (
-                <div className="text-content-tertiary text-center py-4">No log entries</div>
+                <div className="text-content-tertiary text-center py-4">{t('debug.DebugConsole.noLogEntries')}</div>
               ) : (
                 filteredLogs.map((log) => (
                   <div key={log.id} className="flex gap-2 hover:bg-surface px-1 py-0.5 rounded">
@@ -348,7 +349,7 @@ export function DebugConsole() {
               onClick={jumpToLatest}
               className="absolute bottom-3 right-4 z-10 rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white shadow-lg hover:bg-blue-500"
             >
-              ↓ Jump to latest (paused)
+              {t('debug.DebugConsole.jumpToLatestPaused')}
             </button>
           )}
 
@@ -356,7 +357,7 @@ export function DebugConsole() {
           {activeTab === 'messages' && (
             <div ref={messagesScrollRef} className="flex-1 overflow-y-auto font-mono text-xs">
               {messages.length === 0 ? (
-                <div className="text-content-tertiary text-center py-4">No messages from autopilot</div>
+                <div className="text-content-tertiary text-center py-4">{t('debug.DebugConsole.noMessagesFromAutopilot')}</div>
               ) : (
                 <div className="divide-y divide-subtle">
                   {messages.map((msg, i) => {
@@ -395,7 +396,7 @@ export function DebugConsole() {
                           {/* Expand indicator for pre-arm messages */}
                           {prearmMatch && (
                             <span className="shrink-0 text-[10px] text-blue-400 mt-0.5">
-                              {isExpanded ? '▾' : 'Fix ›'}
+                              {isExpanded ? '▾' : t('debug.DebugConsole.fix')}
                             </span>
                           )}
 

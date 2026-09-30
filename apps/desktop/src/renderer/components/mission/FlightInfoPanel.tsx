@@ -32,6 +32,7 @@ import {
   windSpeedValueFromMetersPerSecond,
   type WindSpeedUnit,
 } from '../../../shared/user-units.js';
+import { t as tr } from '../../i18n';
 
 // Each section is a subtle raised card so the groups read as distinct blocks
 // instead of one continuous list. Header (small icon + title) over a divider,
@@ -241,9 +242,9 @@ export function FlightInfoPanel() {
     return (
       <div data-tour="flight-info-panel" className="h-full flex flex-col items-center justify-center text-center p-6 text-content-secondary bg-surface">
         <Plane className="w-10 h-10 mb-3 text-content-tertiary" />
-        <p className="text-sm font-medium mb-1 text-content">Aerial vehicles only</p>
+        <p className="text-sm font-medium mb-1 text-content">{tr('mission.FlightInfoPanel.aerialVehiclesOnly')}</p>
         <p className="text-xs text-content-tertiary max-w-[14rem]">
-          The flight briefing (endurance, altitude, daylight) applies to copters, planes and VTOL. Switch the active vehicle to an aerial type to use it.
+          {tr('mission.FlightInfoPanel.theFlightBriefingEnduranceAltitudeDaylight')}
         </p>
       </div>
     );
@@ -253,9 +254,9 @@ export function FlightInfoPanel() {
     return (
       <div data-tour="flight-info-panel" className="h-full flex flex-col items-center justify-center text-center p-6 text-content-secondary bg-surface">
         <Plane className="w-10 h-10 mb-3 text-content-tertiary" />
-        <p className="text-sm font-medium mb-1 text-content">No mission to brief</p>
+        <p className="text-sm font-medium mb-1 text-content">{tr('mission.FlightInfoPanel.noMissionToBrief')}</p>
         <p className="text-xs text-content-tertiary max-w-[14rem]">
-          Plan or load a mission to see flight time, distance, batteries and site weather.
+          {tr('mission.FlightInfoPanel.planOrLoadAMissionTo')}
         </p>
       </div>
     );
@@ -267,20 +268,20 @@ export function FlightInfoPanel() {
   return (
     <div data-tour="flight-info-panel" className="h-full overflow-y-auto bg-surface p-2 space-y-2">
       {/* Endurance - the number a pilot opens this for. */}
-      <Section icon={<Clock className={ICON} />} title="Endurance">
+      <Section icon={<Clock className={ICON} />} title={tr('mission.FlightInfoPanel.endurance')}>
         <Hero
           value={formatDurationSec(briefing.flightTimeSec)}
           unit="flight time"
           sub={`at ~${formatSpeedFromMetersPerSecond(cruiseSpeedMs, speedUnit)} cruise (${vehicleName})`}
         />
         <Stat
-          label="Batteries"
+          label={tr('mission.FlightInfoPanel.batteries')}
           value={briefing.batteryCount > 0 ? `${briefing.batteryCount}` : 'set vehicle'}
           detail={briefing.enduranceSec > 0 ? `~${formatDurationSec(briefing.enduranceSec)} usable each` : undefined}
         />
         {briefing.reservePct !== null && (
           <MeterStat
-            label="Reserve (final pack)"
+            label={tr('mission.FlightInfoPanel.reserveFinalPack')}
             value={`${Math.round(briefing.reservePct)}%`}
             pct={briefing.reservePct}
           />
@@ -288,25 +289,25 @@ export function FlightInfoPanel() {
       </Section>
 
       {/* Route */}
-      <Section icon={<Ruler className={ICON} />} title="Route">
-        <Stat label="Total distance" value={formatDistanceM(briefing.distanceM, distanceUnit)} />
+      <Section icon={<Ruler className={ICON} />} title={tr('mission.FlightInfoPanel.route')}>
+        <Stat label={tr('mission.FlightInfoPanel.totalDistance')} value={formatDistanceM(briefing.distanceM, distanceUnit)} />
         {homePosition && (
-          <Stat label="Max from home" value={formatDistanceM(briefing.maxFromHomeM, distanceUnit)} />
+          <Stat label={tr('mission.FlightInfoPanel.maxFromHome')} value={formatDistanceM(briefing.maxFromHomeM, distanceUnit)} />
         )}
         <MeterStat
-          label="Max altitude"
+          label={tr('mission.FlightInfoPanel.maxAltitude')}
           value={`${formatAltitudeM(briefing.maxAltM, altitudeUnit)} AGL`}
           detail={`ceiling ${formatAltitudeM(briefing.ceilingM, altitudeUnit)}`}
           pct={altPct}
           tone={altPct > 100 ? 'bg-amber-500/80' : 'bg-blue-500/70'}
         />
         <Stat
-          label="Total climb"
+          label={tr('mission.FlightInfoPanel.totalClimb')}
           value={formatAltitudeM(briefing.totalClimbM, altitudeUnit)}
           detail={`from ${formatAltitudeM(briefing.minAltM, altitudeUnit)} lowest`}
         />
         <Stat
-          label="Waypoints"
+          label={tr('mission.FlightInfoPanel.waypoints')}
           value={briefing.waypointCount.toLocaleString()}
           detail={briefing.waypointCount > FC_WAYPOINT_SOFT_LIMIT ? 'very large - split into sorties before upload' : undefined}
         />
@@ -315,13 +316,13 @@ export function FlightInfoPanel() {
       {/* Weather */}
       <Section
         icon={<Wind className={ICON} />}
-        title="Site weather"
+        title={tr('mission.FlightInfoPanel.siteWeather')}
         action={
           weather && (
             <button
               onClick={() => setRefreshTick((t) => t + 1)}
               className="p-1 text-content-secondary hover:text-content transition-colors"
-              title="Refresh forecast"
+              title={tr('mission.FlightInfoPanel.refreshForecast')}
             >
               <RefreshCw className={`w-3.5 h-3.5 ${weatherLoading ? 'animate-spin' : ''}`} />
             </button>
@@ -329,58 +330,58 @@ export function FlightInfoPanel() {
         }
       >
         {weatherLoading && !weather ? (
-          <p className="text-xs text-content-tertiary">Fetching forecast...</p>
+          <p className="text-xs text-content-tertiary">{tr('mission.FlightInfoPanel.fetchingForecast')}</p>
         ) : weather ? (
           <>
             <div className="flex items-center gap-3 py-1">
               <WindRose dirDeg={weather.windDirDeg} speedMs={weather.windSpeedMs} unit={windSpeedUnit} />
               <div className="min-w-0">
                 <div className="text-sm text-content">
-                  Wind from <span className="font-medium">{compassPoint(weather.windDirDeg)}</span>
+                  {tr('mission.FlightInfoPanel.windFrom')} <span className="font-medium">{compassPoint(weather.windDirDeg)}</span>
                   <span className="text-content-secondary"> ({Math.round(weather.windDirDeg)}°)</span>
                 </div>
                 <div className="text-[11px] text-content-tertiary mt-0.5">
-                  gusting to {formatWindSpeedFromMetersPerSecond(weather.windGustMs, windSpeedUnit)}
-                  {cruiseSpeedMs > 0 && <> · {Math.round((weather.windSpeedMs / cruiseSpeedMs) * 100)}% of cruise</>}
+                  {tr('mission.FlightInfoPanel.gustingTo')} {formatWindSpeedFromMetersPerSecond(weather.windGustMs, windSpeedUnit)}
+                  {cruiseSpeedMs > 0 && <> · {Math.round((weather.windSpeedMs / cruiseSpeedMs) * 100)}{tr('mission.FlightInfoPanel.ofCruise')}</>}
                 </div>
               </div>
             </div>
             <div className="border-t border-subtle mt-1.5 pt-1.5">
-              <Stat label="Temperature" value={`${weather.tempC.toFixed(0)}°C`} />
-              <Stat label="Precipitation" value={`${weather.precipMm.toFixed(1)} mm`} />
+              <Stat label={tr('mission.FlightInfoPanel.temperature')} value={`${weather.tempC.toFixed(0)}°C`} />
+              <Stat label={tr('mission.FlightInfoPanel.precipitation')} value={`${weather.precipMm.toFixed(1)} mm`} />
               {briefing.daylight ? (
                 <>
                   <Stat
-                    label="Daylight"
+                    label={tr('mission.FlightInfoPanel.daylight')}
                     value={`${clockFromMin(briefing.daylight.sunriseMin)} - ${clockFromMin(briefing.daylight.sunsetMin)}`}
                   />
                   <DaylightBar d={briefing.daylight} />
                   <div className="text-[10px] text-content-tertiary mt-1">
                     {briefing.daylight.marginMin >= 0
-                      ? `Ends ~${clockFromMin(briefing.daylight.endMin)} if launched now, ${formatDurationSec(briefing.daylight.marginMin * 60)} before sunset`
-                      : `Ends ~${clockFromMin(briefing.daylight.endMin)} if launched now, ${formatDurationSec(-briefing.daylight.marginMin * 60)} after sunset`}
+                      ? tr('mission.FlightInfoPanel.endsIfLaunchedNowBeforeSunset', { v1: clockFromMin(briefing.daylight.endMin), v2: formatDurationSec(briefing.daylight.marginMin * 60) })
+                      : tr('mission.FlightInfoPanel.endsIfLaunchedNowAfterSunset', { v1: clockFromMin(briefing.daylight.endMin), v2: formatDurationSec(-briefing.daylight.marginMin * 60) })}
                   </div>
                 </>
               ) : weather.sunriseIso && weather.sunsetIso ? (
                 <Stat
-                  label="Daylight"
+                  label={tr('mission.FlightInfoPanel.daylight')}
                   value={`${weather.sunriseIso.slice(11, 16)} - ${weather.sunsetIso.slice(11, 16)}`}
                 />
               ) : null}
             </div>
           </>
         ) : (
-          <p className="text-xs text-content-tertiary">Weather unavailable for this site.</p>
+          <p className="text-xs text-content-tertiary">{tr('mission.FlightInfoPanel.weatherUnavailableForThisSite')}</p>
         )}
       </Section>
 
       {/* Survey quality (only when a survey is active) */}
       {survey && (
-        <Section icon={<Camera className={ICON} />} title="Survey">
-          <Stat label="Coverage" value={formatAreaFromSquareMeters(survey.areaM2, areaUnit)} />
+        <Section icon={<Camera className={ICON} />} title={tr('mission.FlightInfoPanel.survey')}>
+          <Stat label={tr('mission.FlightInfoPanel.coverage')} value={formatAreaFromSquareMeters(survey.areaM2, areaUnit)} />
           <Stat label="GSD" value={survey.gsdCm > 0 ? `${survey.gsdCm.toFixed(1)} cm/px` : 'n/a'} />
-          <Stat label="Photos" value={survey.photoCount.toLocaleString()} />
-          <Stat label="Data" value={`~${survey.dataGb.toFixed(1)} GB`} detail="JPEG+RAW estimate" />
+          <Stat label={tr('mission.FlightInfoPanel.photos')} value={survey.photoCount.toLocaleString()} />
+          <Stat label={tr('mission.FlightInfoPanel.data')} value={`~${survey.dataGb.toFixed(1)} GB`} detail="JPEG+RAW estimate" />
         </Section>
       )}
     </div>

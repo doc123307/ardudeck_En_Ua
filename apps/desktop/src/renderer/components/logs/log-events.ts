@@ -4,6 +4,7 @@
 
 import { COPTER_MODE_NAMES, PLANE_MODE_NAMES, ROVER_MODE_NAMES } from '@ardudeck/dataflash-parser';
 import { logRows, type LogColumns } from '../../utils/log-columns';
+import { t } from '../../i18n';
 
 export const COPTER_MODES = COPTER_MODE_NAMES;
 
@@ -137,7 +138,7 @@ export function decodeErr(subsys: number, ecode: number, vehicleType?: string): 
 }
 
 export function decodeEv(id: number): { label: string; severity: LogEventSeverity } {
-  return { label: EV_NAMES[id] ?? `Event ${id}`, severity: EV_WARN_IDS.has(id) ? 'warn' : 'info' };
+  return { label: EV_NAMES[id] ?? t('logs.log_events.event', { id }), severity: EV_WARN_IDS.has(id) ? 'warn' : 'info' };
 }
 
 /**
@@ -181,7 +182,7 @@ export function extractLogEvents(log: { messages: LogMessages; metadata?: { vehi
       timeS: m.timeUs / 1_000_000,
       kind: 'MODE',
       severity: 'info',
-      label: `Mode: ${name}`,
+      label: t('logs.log_events.mode', { name }),
       detail: typeof rsn === 'number' ? `reason: ${MODE_REASONS[rsn] ?? rsn}` : undefined,
     });
   }

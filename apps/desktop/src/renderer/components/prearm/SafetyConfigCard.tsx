@@ -18,6 +18,7 @@ import {
   type SafetySeverity,
 } from '../../../shared/safety-config-checks';
 import type { CalibrationRecordIpc, CalibrationVerdict } from '../../../shared/calibration-quality';
+import { t } from '../../i18n';
 
 const SEVERITY: Record<SafetySeverity, {
   icon: typeof ShieldAlert;
@@ -29,19 +30,19 @@ const SEVERITY: Record<SafetySeverity, {
     icon: ShieldAlert,
     ring: 'border-red-500/40 bg-red-500/[0.07]',
     chip: 'text-red-300 bg-red-500/15 border-red-500/30',
-    label: 'Do not fly',
+    get label() { return t('prearm.SafetyConfigCard.doNotFly'); },
   },
   warning: {
     icon: AlertTriangle,
     ring: 'border-amber-500/40 bg-amber-500/[0.07]',
     chip: 'text-amber-300 bg-amber-500/15 border-amber-500/30',
-    label: 'Check this',
+    get label() { return t('prearm.SafetyConfigCard.checkThis'); },
   },
   advisory: {
     icon: Info,
     ring: 'border-subtle bg-surface-raised',
     chip: 'text-content-secondary bg-surface border-subtle',
-    label: 'Worth knowing',
+    get label() { return t('prearm.SafetyConfigCard.worthKnowing'); },
   },
 };
 
@@ -84,13 +85,13 @@ function FindingRow({ finding }: { finding: SafetyFinding }) {
                 onClick={apply}
                 disabled={applying}
                 className="px-2.5 py-1 rounded-md bg-surface-raised border border-subtle text-xs text-content hover:bg-surface-overlay transition-colors disabled:opacity-50"
-                data-tip={`Sets ${finding.recommend.param} to ${finding.recommend.value}`}
+                data-tip={t('prearm.SafetyConfigCard.setsTo', { param: finding.recommend.param, value: finding.recommend.value })}
               >
-                {applying ? 'Applying…' : finding.recommend.label}
+                {applying ? t('prearm.SafetyConfigCard.applying') : finding.recommend.label}
               </button>
             )}
-            {applied && <span className="text-xs text-green-400">Applied</span>}
-            {failed && <span className="text-xs text-red-400">Could not write, open the parameter instead</span>}
+            {applied && <span className="text-xs text-green-400">{t('prearm.SafetyConfigCard.applied')}</span>}
+            {failed && <span className="text-xs text-red-400">{t('prearm.SafetyConfigCard.couldNotWriteOpenTheParameter')}</span>}
 
             {finding.params.length > 0 && (
               <button
@@ -155,10 +156,10 @@ export function SafetyConfigCard() {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <h4 className="text-xs font-medium text-content-secondary uppercase tracking-wide">
-          Safety configuration
+          {t('prearm.SafetyConfigCard.safetyConfiguration')}
         </h4>
         <span className="text-[11px] text-content-tertiary">
-          {findings.length} item{findings.length === 1 ? '' : 's'}
+          {findings.length} {t('prearm.SafetyConfigCard.item')}{findings.length === 1 ? '' : 's'}
         </span>
       </div>
       {findings.map((finding) => (

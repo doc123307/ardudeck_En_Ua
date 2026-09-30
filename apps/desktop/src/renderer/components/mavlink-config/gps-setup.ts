@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * Where a GPS is wired and whether the firmware is set up to talk to it.
  *
@@ -151,7 +152,7 @@ export function apCanGpsWrites(): Array<{ name: string; value: number }> {
  * instance; the rest are PX4's serial-port ids.
  */
 export const PX4_GPS_PORTS: GpsPortOption[] = [
-  { label: 'Disabled', value: 0 },
+  { get label() { return t('mavlink_config.gps_setup.disabled'); }, value: 0 },
   { label: 'GPS1', value: 201 },
   { label: 'GPS2', value: 202 },
   { label: 'TELEM1', value: 101 },

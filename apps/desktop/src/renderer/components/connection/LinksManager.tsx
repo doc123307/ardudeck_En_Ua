@@ -12,13 +12,14 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { TransportInfoIpc } from '../../../shared/ipc-channels';
 import { OrchestrationPanel } from './OrchestrationPanel';
+import { t as tr } from '../../i18n';
 
 type AddKind = 'udp' | 'tcp' | 'orchestration';
 
 const KINDS: { id: AddKind; label: string }[] = [
   { id: 'udp', label: 'UDP' },
   { id: 'tcp', label: 'TCP' },
-  { id: 'orchestration', label: 'Server' },
+  { id: 'orchestration', get label() { return tr('connection.LinksManager.server'); } },
 ];
 
 export function LinksManager() {
@@ -59,7 +60,7 @@ export function LinksManager() {
       }
       refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to add link');
+      setError(e instanceof Error ? e.message : tr('connection.LinksManager.failedToAddLink'));
     } finally {
       setBusy(false);
     }
@@ -76,7 +77,7 @@ export function LinksManager() {
 
   return (
     <div>
-      <span className="text-[11px] uppercase tracking-wide text-content-secondary">Connection sources</span>
+      <span className="text-[11px] uppercase tracking-wide text-content-secondary">{tr('connection.LinksManager.connectionSources')}</span>
 
       {/* Existing transports */}
       {transports.length > 0 && (
@@ -92,14 +93,14 @@ export function LinksManager() {
               </span>
               {t.isPrimary ? (
                 <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-surface-raised text-content-tertiary shrink-0">
-                  Primary
+                  {tr('connection.LinksManager.primary')}
                 </span>
               ) : (
                 <button
                   onClick={() => remove(t.id)}
                   className="text-[11px] text-red-400 hover:text-red-300 transition-colors shrink-0"
                 >
-                  Remove
+                  {tr('connection.LinksManager.remove')}
                 </button>
               )}
             </div>
@@ -109,7 +110,7 @@ export function LinksManager() {
 
       {/* Add a link */}
       <div className="mt-3 rounded-xl border border-subtle bg-surface p-3 space-y-3">
-        <div className="text-[11px] uppercase tracking-wide text-content-secondary">Add a source</div>
+        <div className="text-[11px] uppercase tracking-wide text-content-secondary">{tr('connection.LinksManager.addASource')}</div>
 
         {/* Kind selector - segmented control matching the single-vehicle protocol toggle */}
         <div className="flex rounded-lg overflow-hidden border border-subtle">
@@ -131,7 +132,7 @@ export function LinksManager() {
         {kind === 'orchestration' ? (
           <>
             <div>
-              <label className="label">Server URL</label>
+              <label className="label">{tr('connection.LinksManager.serverUrl')}</label>
               <input
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -140,11 +141,11 @@ export function LinksManager() {
               />
             </div>
             <div>
-              <label className="label">Token (optional)</label>
+              <label className="label">{tr('connection.LinksManager.tokenOptional')}</label>
               <input
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                placeholder="Access token"
+                placeholder={tr('connection.LinksManager.accessToken')}
                 className="input"
               />
             </div>
@@ -153,7 +154,7 @@ export function LinksManager() {
           <div className="flex gap-2">
             {kind === 'tcp' && (
               <div className="flex-1">
-                <label className="label">Host</label>
+                <label className="label">{tr('connection.LinksManager.host')}</label>
                 <input
                   value={host}
                   onChange={(e) => setHost(e.target.value)}
@@ -163,7 +164,7 @@ export function LinksManager() {
               </div>
             )}
             <div className={kind === 'tcp' ? 'w-24' : 'flex-1'}>
-              <label className="label">Port</label>
+              <label className="label">{tr('connection.LinksManager.port')}</label>
               <input
                 value={port}
                 onChange={(e) => setPort(e.target.value)}
@@ -176,7 +177,7 @@ export function LinksManager() {
         )}
 
         <button onClick={add} disabled={busy} className="btn btn-primary w-full">
-          {busy ? 'Adding...' : 'Add source'}
+          {busy ? tr('connection.LinksManager.adding') : tr('connection.LinksManager.addSource')}
         </button>
 
         {error && <p className="text-[11px] text-red-400">{error}</p>}

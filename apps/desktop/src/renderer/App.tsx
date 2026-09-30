@@ -77,6 +77,7 @@ import { ActivityIndicator } from './components/ui/ActivityIndicator';
 import type { ElectronAPI } from '../main/preload';
 import type { LegacyStreamConsentRequest } from '../shared/ipc-channels';
 import logoImage from './assets/logo.png';
+import { t } from './i18n';
 
 // Welcome-screen quick-link cards. Every entry works WITHOUT a connected
 // vehicle - the welcome screen only shows while disconnected. Add a card by
@@ -106,14 +107,14 @@ interface WelcomeCard {
 }
 
 const WELCOME_CARDS: WelcomeCard[] = [
-  { title: 'Mission Planning', desc: 'Waypoints, surveys & geofences', color: 'orange', view: 'mission', iconPath: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7' },
-  { title: 'Area Editor', desc: 'Draw mission areas on a live map', color: 'teal', run: () => { window.electronAPI?.openAreaEditor?.().catch(() => undefined); }, iconPath: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
-  { title: 'Radio HUD', desc: 'ArduDeck telemetry screen on your EdgeTX radio', color: 'teal', badge: 'New', view: 'radio-hud', iconPath: 'M3 7a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7zm4 12h10M9 21h6M7 9h4v4H7V9zm7 0h3M14 12h3' },
-  { title: 'Firmware Flash', desc: 'Flash firmware over USB or DFU', color: 'amber', view: 'firmware', iconPath: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z' },
-  { title: 'SITL Simulator', desc: 'Test firmware without hardware', color: 'purple', view: 'sitl', iconPath: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
-  { title: '3D Sim World', desc: 'Fly SITL in a persistent 3D world', color: 'emerald', run: () => { window.electronAPI?.openDetachedWindow?.({ componentId: 'sim-world', title: '3D Sim World', initialBounds: { width: 1280, height: 800 } }); }, iconPath: 'M21 12a9 9 0 11-18 0 9 9 0 0118 0zM3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18M12 3a15 15 0 000 18' },
-  { title: 'Flight Log Analysis', desc: 'AI-powered flight log review', color: 'blue', view: 'logs', iconPath: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-  { title: 'Mission Library', desc: 'Browse & manage saved plans', color: 'indigo', view: 'library', iconPath: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
+  { get title() { return t('app.App.missionPlanning'); }, get desc() { return t('app.App.waypointsSurveysGeofences'); }, color: 'orange', view: 'mission', iconPath: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7' },
+  { get title() { return t('app.App.areaEditor'); }, get desc() { return t('app.App.drawMissionAreasOnALive'); }, color: 'teal', run: () => { window.electronAPI?.openAreaEditor?.().catch(() => undefined); }, iconPath: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+  { get title() { return t('app.App.radioHud'); }, get desc() { return t('app.App.ardudeckTelemetryScreenOnYourEdgetx'); }, color: 'teal', badge: 'New', view: 'radio-hud', iconPath: 'M3 7a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7zm4 12h10M9 21h6M7 9h4v4H7V9zm7 0h3M14 12h3' },
+  { get title() { return t('app.App.firmwareFlash'); }, get desc() { return t('app.App.flashFirmwareOverUsbOrDfu'); }, color: 'amber', view: 'firmware', iconPath: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z' },
+  { get title() { return t('app.App.sitlSimulator'); }, get desc() { return t('app.App.testFirmwareWithoutHardware'); }, color: 'purple', view: 'sitl', iconPath: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+  { get title() { return t('app.App.n3dSimWorld'); }, get desc() { return t('app.App.flySitlInAPersistent3d'); }, color: 'emerald', run: () => { window.electronAPI?.openDetachedWindow?.({ componentId: 'sim-world', title: t('app.App.n3dSimWorld'), initialBounds: { width: 1280, height: 800 } }); }, iconPath: 'M21 12a9 9 0 11-18 0 9 9 0 0118 0zM3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18M12 3a15 15 0 000 18' },
+  { get title() { return t('app.App.flightLogAnalysis'); }, get desc() { return t('app.App.aiPoweredFlightLogReview'); }, color: 'blue', view: 'logs', iconPath: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+  { get title() { return t('app.App.missionLibrary'); }, get desc() { return t('app.App.browseManageSavedPlans'); }, color: 'indigo', view: 'library', iconPath: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
 ];
 
 declare global {
@@ -161,18 +162,17 @@ function VehicleMismatchDialog({
             <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <h2 className="text-lg font-semibold text-content">Vehicle Type Mismatch</h2>
+            <h2 className="text-lg font-semibold text-content">{t('app.App.vehicleTypeMismatch')}</h2>
           </div>
         </div>
 
         {/* Content */}
         <div className="px-6 py-5">
           <p className="text-content mb-4">
-            Your vehicle profile is set to <span className="font-semibold text-amber-400">{VEHICLE_TYPE_NAMES[profileType]}</span> but
-            the connected flight controller is a <span className="font-semibold text-blue-400">{VEHICLE_TYPE_NAMES[fcType]}</span>.
+            {t('app.App.yourVehicleProfileIsSetTo')} <span className="font-semibold text-amber-400">{VEHICLE_TYPE_NAMES[profileType]}</span> {t('app.App.butTheConnectedFlightControllerIs')} <span className="font-semibold text-blue-400">{VEHICLE_TYPE_NAMES[fcType]}</span>.
           </p>
           <p className="text-content-secondary text-sm">
-            Performance estimates and settings may not be accurate for your actual vehicle.
+            {t('app.App.performanceEstimatesAndSettingsMayNot')}
           </p>
         </div>
 
@@ -182,20 +182,20 @@ function VehicleMismatchDialog({
             onClick={onUpdateProfile}
             className="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-colors"
           >
-            Update Profile to {VEHICLE_TYPE_NAMES[fcType]}
+            {t('app.App.updateProfileTo')} {VEHICLE_TYPE_NAMES[fcType]}
           </button>
           <div className="flex gap-2">
             <button
               onClick={onIgnore}
               className="flex-1 px-4 py-2 bg-surface-raised hover:bg-surface text-content rounded-lg transition-colors"
             >
-              Ignore Once
+              {t('app.App.ignoreOnce')}
             </button>
             <button
               onClick={onDismissSession}
               className="flex-1 px-4 py-2 bg-surface-raised hover:bg-surface text-content rounded-lg transition-colors"
             >
-              Don't Ask Again
+              {t('app.App.donTAskAgain')}
             </button>
           </div>
         </div>
@@ -227,26 +227,22 @@ function LegacyStreamConsentDialog({
             <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <h2 className="text-lg font-semibold text-content">No telemetry from {request.label}</h2>
+            <h2 className="text-lg font-semibold text-content">{t('app.App.noTelemetryFrom')} {request.label}</h2>
           </div>
         </div>
 
         <div className="px-6 py-5 space-y-3">
           <p className="text-content">
-            {request.label} answered the modern per-message request with nothing.
-            The older request usually works, but on this aircraft ArduPilot
-            <span className="font-semibold text-amber-400"> saves those rates into its SR*_ parameters</span>,
-            where they stay after this flight and in every other ground station.
+            {request.label} {t('app.App.answeredTheModernPerMessageRequest')}
+            <span className="font-semibold text-amber-400"> {t('app.App.savesThoseRatesIntoItsSr')}</span>{t('app.App.whereTheyStayAfterThisFlight')}
           </p>
           <p className="text-content-secondary text-sm">
             {request.isFleetLink
-              ? 'This is a fleet link, so it would happen on every connect.'
-              : 'ArduDeck will not change your vehicle without asking.'}
+              ? t('app.App.thisIsAFleetLinkSo')
+              : t('app.App.ardudeckWillNotChangeYourVehicle')}
           </p>
           <p className="text-content-secondary text-sm">
-            If you allow it, the rates requested are the conservative ones
-            (attitude 10 Hz), not your selected telemetry speed, so a slow
-            radio link stays usable.
+            {t('app.App.ifYouAllowItTheRates')}
           </p>
         </div>
 
@@ -255,17 +251,16 @@ function LegacyStreamConsentDialog({
             onClick={onAllow}
             className="w-full px-4 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-medium transition-colors"
           >
-            Request streams and save to this vehicle
+            {t('app.App.requestStreamsAndSaveToThis')}
           </button>
           <button
             onClick={onDecline}
             className="w-full px-4 py-2 bg-surface-raised hover:bg-surface text-content rounded-lg transition-colors"
           >
-            Leave my vehicle alone
+            {t('app.App.leaveMyVehicleAlone')}
           </button>
           <p className="text-content-tertiary text-xs text-center">
-            Declining keeps whatever rates the vehicle already has. You can raise
-            its SR*_ parameters yourself in Parameters.
+            {t('app.App.decliningKeepsWhateverRatesTheVehicle')}
           </p>
         </div>
       </div>
@@ -288,7 +283,7 @@ function CollapsedSidebar({ onExpand }: { onExpand: () => void }) {
       <button
         onClick={onExpand}
         className="p-2 rounded-lg hover:bg-surface-raised text-content-secondary hover:text-content transition-colors"
-        title="Expand sidebar"
+        title={t('app.App.expandSidebar')}
       >
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
@@ -322,7 +317,7 @@ function CollapsedSidebar({ onExpand }: { onExpand: () => void }) {
         <button
           onClick={handleDisconnect}
           className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-colors"
-          title="Disconnect"
+          title={t('app.App.disconnect')}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
@@ -1099,11 +1094,10 @@ function App() {
             </div>
 
             <h2 className="text-2xl font-semibold text-content mb-3">
-              Welcome to ArduDeck
+              {t('app.App.welcomeToArdudeck')}
             </h2>
             <p className="text-content-secondary mb-8 leading-relaxed max-w-md mx-auto">
-              Connect to your flight controller using the panel on the left,
-              or jump straight into one of the tools below.
+              {t('app.App.connectToYourFlightControllerUsing')}
             </p>
 
             {/* Feature cards - quick links to the most-used tools. Every card
@@ -1217,7 +1211,7 @@ function App() {
               <button
                 onClick={() => setSidebarCollapsed(true)}
                 className="absolute top-3 right-3 p-1.5 rounded-md hover:bg-surface-raised text-content-secondary hover:text-content transition-colors"
-                title="Collapse sidebar"
+                title={t('app.App.collapseSidebar')}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
@@ -1276,17 +1270,17 @@ function App() {
                 <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <h2 className="text-lg font-semibold text-content">Leave CLI Terminal?</h2>
+                <h2 className="text-lg font-semibold text-content">{t('app.App.leaveCliTerminal')}</h2>
               </div>
             </div>
 
             {/* Content */}
             <div className="px-6 py-5">
               <p className="text-content mb-3">
-                Leaving the CLI tab will send an exit command which triggers a flight controller reboot (2-4 seconds).
+                {t('app.App.leavingTheCliTabWillSend')}
               </p>
               <p className="text-content-secondary text-sm">
-                The app will automatically reconnect after the board restarts.
+                {t('app.App.theAppWillAutomaticallyReconnectAfter')}
               </p>
             </div>
 
@@ -1296,13 +1290,13 @@ function App() {
                 onClick={handleCliExitCancel}
                 className="flex-1 px-4 py-2.5 bg-surface-raised hover:bg-surface text-content rounded-lg transition-colors"
               >
-                Stay in CLI
+                {t('app.App.stayInCli')}
               </button>
               <button
                 onClick={handleCliExitConfirm}
                 className="flex-1 px-4 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-medium transition-colors"
               >
-                Leave and Reboot
+                {t('app.App.leaveAndReboot')}
               </button>
             </div>
           </div>

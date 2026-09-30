@@ -19,6 +19,7 @@ import type {
   ArduPilotFrameCatalog,
   ArduPilotFrameInfo,
 } from '../../shared/ipc-channels.js';
+import { t as tr } from '../i18n';
 
 // =============================================================================
 // Types
@@ -201,32 +202,32 @@ export interface ArduPilotSitlStore {
 
 export const ARDUPILOT_MODELS: Record<ArduPilotVehicleType, Array<{ value: string; label: string }>> = {
   copter: [
-    { value: 'quad', label: 'Quad (default)' },
-    { value: '+', label: 'Quad Plus (+)' },
-    { value: 'hexa', label: 'Hexacopter' },
-    { value: 'octa', label: 'Octocopter' },
-    { value: 'tri', label: 'Tricopter' },
-    { value: 'coax', label: 'Coaxial Copter' },
-    { value: 'heli', label: 'Helicopter' },
-    { value: 'singlecopter', label: 'Single Copter' },
+    { value: 'quad', get label() { return tr('stores.ardupilot_sitl_store.quadDefault'); } },
+    { value: '+', get label() { return tr('stores.ardupilot_sitl_store.quadPlus'); } },
+    { value: 'hexa', get label() { return tr('stores.ardupilot_sitl_store.hexacopter'); } },
+    { value: 'octa', get label() { return tr('stores.ardupilot_sitl_store.octocopter'); } },
+    { value: 'tri', get label() { return tr('stores.ardupilot_sitl_store.tricopter'); } },
+    { value: 'coax', get label() { return tr('stores.ardupilot_sitl_store.coaxialCopter'); } },
+    { value: 'heli', get label() { return tr('stores.ardupilot_sitl_store.helicopter'); } },
+    { value: 'singlecopter', get label() { return tr('stores.ardupilot_sitl_store.singleCopter'); } },
   ],
   plane: [
-    { value: 'plane', label: 'Plane (default)' },
+    { value: 'plane', get label() { return tr('stores.ardupilot_sitl_store.planeDefault'); } },
     { value: 'quadplane', label: 'QuadPlane' },
     { value: 'firefly', label: 'FireFly6' },
-    { value: 'plane-vtail', label: 'V-Tail Plane' },
-    { value: 'plane-dspoilers', label: 'Plane w/ Spoilers' },
+    { value: 'plane-vtail', get label() { return tr('stores.ardupilot_sitl_store.vTailPlane'); } },
+    { value: 'plane-dspoilers', get label() { return tr('stores.ardupilot_sitl_store.planeWSpoilers'); } },
   ],
   rover: [
-    { value: 'rover', label: 'Rover (default)' },
-    { value: 'rover-skid', label: 'Skid Steering' },
-    { value: 'boat', label: 'Boat' },
-    { value: 'sailboat', label: 'Sailboat' },
-    { value: 'balancebot', label: 'Balance Bot' },
+    { value: 'rover', get label() { return tr('stores.ardupilot_sitl_store.roverDefault'); } },
+    { value: 'rover-skid', get label() { return tr('stores.ardupilot_sitl_store.skidSteering'); } },
+    { value: 'boat', get label() { return tr('stores.ardupilot_sitl_store.boat'); } },
+    { value: 'sailboat', get label() { return tr('stores.ardupilot_sitl_store.sailboat'); } },
+    { value: 'balancebot', get label() { return tr('stores.ardupilot_sitl_store.balanceBot'); } },
   ],
   sub: [
-    { value: 'vectored', label: 'Vectored (default)' },
-    { value: 'vectored_6dof', label: 'Vectored 6DOF' },
+    { value: 'vectored', get label() { return tr('stores.ardupilot_sitl_store.vectoredDefault'); } },
+    { value: 'vectored_6dof', get label() { return tr('stores.ardupilot_sitl_store.vectored6dof'); } },
   ],
 };
 

@@ -16,6 +16,7 @@ import type { SerialPortInfo } from '../../stores/firmware-store';
 import { LinksManager } from './LinksManager';
 import { HeartbeatDot } from '../fleet/HeartbeatDot';
 import { STATE_COLORS, getModeCategoryVar } from '../map/tactical-icon-pool';
+import { t } from '../../i18n';
 
 /** Friendly label for a source's bearer, used in the vehicle list and source chips. */
 function bearerLabel(bearer: string): string {
@@ -34,7 +35,7 @@ function DiscoveredVehicles({ bearerBySysid }: { bearerBySysid: Map<number, stri
   if (vehicles.length === 0) {
     return (
       <p className="text-xs text-content-tertiary">
-        Listening. Vehicles appear here the moment their heartbeats arrive.
+        {t('connection.MultiVehiclePanel.listeningVehiclesAppearHereTheMoment')}
       </p>
     );
   }
@@ -104,7 +105,7 @@ function AddVehicle({ onAdd, busy }: { onAdd: (s: OrchestratorSource) => void; b
         onClick={() => setOpen(true)}
         className="w-full rounded-lg border border-dashed border-subtle hover:border-cyan-500/40 hover:bg-surface-raised transition-colors px-3 py-2.5 text-sm text-content-secondary"
       >
-        + Add a vehicle <span className="text-content-tertiary">· radio · internet · cellular · 2nd ground station</span>
+        {t('connection.MultiVehiclePanel.addAVehicle')} <span className="text-content-tertiary">{t('connection.MultiVehiclePanel.radioInternetCellular2ndGroundStation')}</span>
       </button>
     );
   }
@@ -129,7 +130,7 @@ function AddVehicle({ onAdd, busy }: { onAdd: (s: OrchestratorSource) => void; b
       {kind === 'serial' && (
         <div className="flex gap-2">
           <select className={field} value={serialPath} onChange={(e) => setSerialPath(e.target.value)}>
-            {ports.length === 0 && <option value="">No radios found</option>}
+            {ports.length === 0 && <option value="">{t('connection.MultiVehiclePanel.noRadiosFound')}</option>}
             {ports.map((p) => <option key={p.path} value={p.path}>{p.friendlyName || p.path}</option>)}
           </select>
           <DraftNumberInput className={`${field} w-24`} value={baud} min={1200} integer onCommit={setBaud} />
@@ -141,7 +142,7 @@ function AddVehicle({ onAdd, busy }: { onAdd: (s: OrchestratorSource) => void; b
             <input className={field} placeholder="address (e.g. 10.0.0.5)" value={host} onChange={(e) => setHost(e.target.value)} />
             <DraftNumberInput className={`${field} w-24`} value={tcpPort} min={1} max={65535} integer onCommit={setTcpPort} />
           </div>
-          <p className="text-[10px] text-content-tertiary">ArduDeck dials the drone&apos;s address. Use this when the drone has a reachable IP.</p>
+          <p className="text-[10px] text-content-tertiary">{t('connection.MultiVehiclePanel.ardudeckDialsTheDroneSAddress')}</p>
         </div>
       )}
       {kind === 'cellular' && (
@@ -159,7 +160,7 @@ function AddVehicle({ onAdd, busy }: { onAdd: (s: OrchestratorSource) => void; b
             <DraftNumberInput className={`${field} w-24`} value={cellPort} min={1} max={65535} integer onCommit={setCellPort} />
           </div>
           <p className="text-[10px] text-content-tertiary">
-            The drone dials in to this machine. Point its telemetry forwarder ({cellProto === 'udp' ? 'mavproxy/mavlink-router udpout' : 'a TCP client'}) at this machine&apos;s reachable address on port {cellPort || '…'}. The link recovers on its own across signal loss and carrier NAT changes.
+            {t('connection.MultiVehiclePanel.theDroneDialsInToThis')}{cellProto === 'udp' ? 'mavproxy/mavlink-router udpout' : t('connection.MultiVehiclePanel.aTcpClient')}{t('connection.MultiVehiclePanel.atThisMachineSReachableAddress')} {cellPort || '…'}{t('connection.MultiVehiclePanel.theLinkRecoversOnItsOwn')}
           </p>
         </div>
       )}
@@ -168,8 +169,8 @@ function AddVehicle({ onAdd, busy }: { onAdd: (s: OrchestratorSource) => void; b
       )}
 
       <div className="flex gap-2">
-        <button onClick={submit} disabled={busy} className="flex-1 rounded-md bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white text-sm py-1.5">Add</button>
-        <button onClick={() => setOpen(false)} className="rounded-md border border-subtle px-3 text-sm text-content-secondary hover:bg-surface-raised">Cancel</button>
+        <button onClick={submit} disabled={busy} className="flex-1 rounded-md bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white text-sm py-1.5">{t('connection.MultiVehiclePanel.add')}</button>
+        <button onClick={() => setOpen(false)} className="rounded-md border border-subtle px-3 text-sm text-content-secondary hover:bg-surface-raised">{t('connection.MultiVehiclePanel.cancel')}</button>
       </div>
     </div>
   );
@@ -203,12 +204,12 @@ export function MultiVehiclePanel() {
           disabled={busy}
           className="w-full rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-60 transition-colors px-4 py-5 text-center text-white shadow-lg shadow-cyan-900/20"
         >
-          <div className="text-base font-semibold">{busy ? 'Starting…' : 'Start multi-vehicle'}</div>
-          <div className="text-xs text-cyan-100/80 mt-1">Finds your vehicles automatically. No setup.</div>
+          <div className="text-base font-semibold">{busy ? t('connection.MultiVehiclePanel.starting') : t('connection.MultiVehiclePanel.startMultiVehicle')}</div>
+          <div className="text-xs text-cyan-100/80 mt-1">{t('connection.MultiVehiclePanel.findsYourVehiclesAutomaticallyNoSetup')}</div>
         </button>
         {error && <p className="text-xs text-red-400">{error}</p>}
         <details className="group">
-          <summary className="cursor-pointer text-xs text-content-tertiary hover:text-content-secondary list-none">▸ Advanced (UDP / TCP / Server sources)</summary>
+          <summary className="cursor-pointer text-xs text-content-tertiary hover:text-content-secondary list-none">{t('connection.MultiVehiclePanel.advancedUdpTcpServerSources')}</summary>
           <div className="mt-3"><LinksManager /></div>
         </details>
       </div>
@@ -225,17 +226,17 @@ export function MultiVehiclePanel() {
           </svg>
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-sm font-semibold text-content">Multi-vehicle is on</div>
-          <div className="text-xs text-content-secondary">{vehicles.length} vehicle{vehicles.length === 1 ? '' : 's'} connected</div>
+          <div className="text-sm font-semibold text-content">{t('connection.MultiVehiclePanel.multiVehicleIsOn')}</div>
+          <div className="text-xs text-content-secondary">{vehicles.length} {t('connection.MultiVehiclePanel.vehicle')}{vehicles.length === 1 ? '' : 's'} {t('connection.MultiVehiclePanel.connected')}</div>
         </div>
-        <button onClick={stop} disabled={busy} className="rounded-md border border-subtle px-3 py-1.5 text-xs text-content-secondary hover:bg-surface-raised disabled:opacity-50">Stop</button>
+        <button onClick={stop} disabled={busy} className="rounded-md border border-subtle px-3 py-1.5 text-xs text-content-secondary hover:bg-surface-raised disabled:opacity-50">{t('connection.MultiVehiclePanel.stop')}</button>
       </div>
 
       {error && <p className="text-xs text-red-400">{error}</p>}
 
       {/* Vehicles */}
       <div>
-        <div className="text-[11px] uppercase tracking-wide text-content-secondary mb-1.5">Vehicles ({vehicles.length})</div>
+        <div className="text-[11px] uppercase tracking-wide text-content-secondary mb-1.5">{t('connection.MultiVehiclePanel.vehicles')}{vehicles.length})</div>
         <DiscoveredVehicles bearerBySysid={bearerBySysid} />
       </div>
 
@@ -251,7 +252,7 @@ export function MultiVehiclePanel() {
                   : s.kind === 'cellular' ? `${s.proto}in :${s.port}`
                   : s.kind === 'peer' ? s.url : ''}
               </span>
-              <button onClick={() => removeSource(i)} disabled={busy} className="text-content-tertiary hover:text-red-400 disabled:opacity-50">Remove</button>
+              <button onClick={() => removeSource(i)} disabled={busy} className="text-content-tertiary hover:text-red-400 disabled:opacity-50">{t('connection.MultiVehiclePanel.remove')}</button>
             </div>
           ))}
         </div>
@@ -261,7 +262,7 @@ export function MultiVehiclePanel() {
 
       {/* Advanced: raw link management for power users */}
       <details className="group">
-        <summary className="cursor-pointer text-xs text-content-tertiary hover:text-content-secondary list-none">▸ Advanced (UDP / TCP / Server sources)</summary>
+        <summary className="cursor-pointer text-xs text-content-tertiary hover:text-content-secondary list-none">{t('connection.MultiVehiclePanel.advancedUdpTcpServerSources')}</summary>
         <div className="mt-3"><LinksManager /></div>
       </details>
     </div>

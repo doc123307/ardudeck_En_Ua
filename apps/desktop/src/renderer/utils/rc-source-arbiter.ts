@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 // RC-source priority: Trainer session > (sliders XOR joystick override) >
 // pseudo-tx SITL stand-in, which gates only on the Trainer.
 
@@ -20,7 +21,7 @@ export function claimRcOverride(owner: RcOverrideOwner): { ok: boolean; reason?:
   if (state.owner !== null && state.owner !== owner) {
     return {
       ok: false,
-      reason: owner === 'sliders' ? 'Joystick control owns the RC link' : 'Virtual RC sliders own the RC link',
+      reason: owner === 'sliders' ? t('utils.rc_source_arbiter.joystickControlOwnsTheRcLink') : t('utils.rc_source_arbiter.virtualRcSlidersOwnTheRc'),
     };
   }
   state.owner = owner;

@@ -15,13 +15,13 @@ import { generateSpiral } from './spiral-generator';
 import { generatePerimeterFill } from './perimeter-fill-generator';
 import { generateCorridor } from './corridor-generator';
 import { generatePanorama } from './panorama-generator';
+import { t } from '../../../i18n';
 
 registerSurveyGenerator({
   id: 'builtin.grid',
   version: '1.0.0',
   displayName: 'Grid',
-  description:
-    'Boustrophedon lawnmower pattern. Parallel scan lines across the polygon with overshoot for turns.',
+  get description() { return t('survey.index.boustrophedonLawnmowerPatternParallelScanLines'); },
   capabilities: {
     supportsHoles: true,
     supportsWorkspace: false,
@@ -36,8 +36,7 @@ registerSurveyGenerator({
   id: 'builtin.crosshatch',
   version: '1.0.0',
   displayName: 'Crosshatch',
-  description:
-    'Two perpendicular grid passes. Higher photo density and improved 3D reconstruction over a single grid.',
+  get description() { return t('survey.index.twoPerpendicularGridPassesHigherPhoto'); },
   capabilities: {
     supportsHoles: true,
     supportsWorkspace: false,
@@ -52,7 +51,7 @@ registerSurveyGenerator({
   id: 'builtin.circular',
   version: '1.0.0',
   displayName: 'Circular',
-  description: 'Orbit a point of interest at fixed radius.',
+  get description() { return t('survey.index.orbitAPointOfInterestAt'); },
   capabilities: {
     supportsHoles: false,
     supportsWorkspace: false,
@@ -67,7 +66,7 @@ registerSurveyGenerator({
   id: 'builtin.spiral',
   version: '1.0.0',
   displayName: 'Spiral',
-  description: 'Inward or outward spiral within the polygon.',
+  get description() { return t('survey.index.inwardOrOutwardSpiralWithinThe'); },
   capabilities: {
     supportsHoles: false,
     supportsWorkspace: false,
@@ -82,8 +81,7 @@ registerSurveyGenerator({
   id: 'builtin.corridor',
   version: '1.0.0',
   displayName: 'Corridor',
-  description:
-    'Linear survey along a centerline (roads, rail, power lines, pipelines). Parallel strips with plane racetrack turns or copter on-the-spot turns.',
+  get description() { return t('survey.index.linearSurveyAlongACenterlineRoads'); },
   capabilities: {
     supportsHoles: false,
     supportsWorkspace: false,
@@ -98,8 +96,7 @@ registerSurveyGenerator({
   id: 'builtin.panorama',
   version: '1.0.0',
   displayName: 'Panorama',
-  description:
-    'Capture a line (shoreline, cliff, frontage): the drawn line is the subject, the flight path is derived to the side, and the camera yaws onto the subject the whole way.',
+  get description() { return t('survey.index.captureALineShorelineCliffFrontage'); },
   capabilities: {
     supportsHoles: false,
     supportsWorkspace: false,
@@ -114,7 +111,7 @@ registerSurveyGenerator({
   id: 'builtin.perimeter-fill',
   version: '1.0.0',
   displayName: 'Perimeter Fill',
-  description: 'N perimeter passes followed by a grid fill of the interior.',
+  get description() { return t('survey.index.nPerimeterPassesFollowedByA'); },
   capabilities: {
     supportsHoles: false,
     supportsWorkspace: false,

@@ -6,17 +6,18 @@ import { useConnectionStore } from '../../../stores/connection-store.js';
 import { useParameterStore } from '../../../stores/parameter-store.js';
 import { inferProfileFromParams } from '../../../lib/vehicle-templates/import.js';
 import { Px4AirframePicker } from './Px4AirframePicker.js';
+import { t as tr } from '../../../i18n';
 
 type CategoryFilter = 'all' | VehicleTemplate['category'];
 
 const CATEGORIES: Array<{ id: CategoryFilter; label: string }> = [
-  { id: 'all',        label: 'All' },
-  { id: 'multirotor', label: 'Multirotor' },
-  { id: 'fixed-wing', label: 'Fixed Wing' },
+  { id: 'all',        get label() { return tr('settings.VehicleTemplatePicker.all'); } },
+  { id: 'multirotor', get label() { return tr('settings.VehicleTemplatePicker.multirotor'); } },
+  { id: 'fixed-wing', get label() { return tr('settings.VehicleTemplatePicker.fixedWing'); } },
   { id: 'vtol',       label: 'VTOL' },
-  { id: 'rover',      label: 'Rover' },
-  { id: 'boat',       label: 'Boat' },
-  { id: 'sub',        label: 'Sub' },
+  { id: 'rover',      get label() { return tr('settings.VehicleTemplatePicker.rover'); } },
+  { id: 'boat',       get label() { return tr('settings.VehicleTemplatePicker.boat'); } },
+  { id: 'sub',        get label() { return tr('settings.VehicleTemplatePicker.sub'); } },
 ];
 
 interface VehicleTemplatePickerProps {
@@ -92,12 +93,12 @@ export function VehicleTemplatePicker({ onSelect, onImportFromConnected, onClose
         <div className="flex items-center justify-between px-5 py-4 border-b border-subtle">
           <div>
             <h2 className="text-base font-semibold text-content">
-              {isPx4 ? 'Choose a PX4 airframe' : 'Choose a vehicle template'}
+              {isPx4 ? tr('settings.VehicleTemplatePicker.chooseAPx4Airframe') : tr('settings.VehicleTemplatePicker.chooseAVehicleTemplate')}
             </h2>
             <p className="text-xs text-content-secondary mt-0.5">
               {isPx4
-                ? 'Pick the airframe that matches your aircraft. This writes SYS_AUTOSTART and needs a reboot.'
-                : 'Pick the configuration that matches your aircraft, you can tweak fields after.'}
+                ? tr('settings.VehicleTemplatePicker.pickTheAirframeThatMatchesYour')
+                : tr('settings.VehicleTemplatePicker.pickTheConfigurationThatMatchesYour')}
             </p>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-surface-overlay-subtle text-content-secondary hover:text-content">
@@ -132,7 +133,7 @@ export function VehicleTemplatePicker({ onSelect, onImportFromConnected, onClose
               autoFocus
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Search templates…"
+              placeholder={tr('settings.VehicleTemplatePicker.searchTemplates')}
               className="bg-transparent text-xs text-content placeholder:text-content-secondary outline-none w-48"
             />
           </div>
@@ -150,9 +151,9 @@ export function VehicleTemplatePicker({ onSelect, onImportFromConnected, onClose
                   <Download className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-content">Import from connected vehicle</div>
+                  <div className="text-sm font-medium text-content">{tr('settings.VehicleTemplatePicker.importFromConnectedVehicle')}</div>
                   <div className="text-xs text-content-secondary mt-0.5">
-                    Read parameters from the currently connected vehicle and infer the matching template.
+                    {tr('settings.VehicleTemplatePicker.readParametersFromTheCurrentlyConnected')}
                   </div>
                 </div>
               </div>
@@ -161,7 +162,7 @@ export function VehicleTemplatePicker({ onSelect, onImportFromConnected, onClose
 
           {filtered.length === 0 ? (
             <div className="text-center py-12 text-content-secondary text-sm">
-              No templates match the current filter.
+              {tr('settings.VehicleTemplatePicker.noTemplatesMatchTheCurrentFilter')}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -181,8 +182,8 @@ export function VehicleTemplatePicker({ onSelect, onImportFromConnected, onClose
         )}
 
         <div className="px-5 py-3 border-t border-subtle text-[10px] text-content-secondary flex items-center justify-between">
-          <span>{isPx4 ? 'PX4 airframe via SYS_AUTOSTART · reboot to apply' : `${filtered.length} template${filtered.length === 1 ? '' : 's'}`}</span>
-          <span>{isPx4 ? 'Esc cancel' : '↑↓←→ navigate · Enter select · Esc cancel'}</span>
+          <span>{isPx4 ? tr('settings.VehicleTemplatePicker.px4AirframeViaSysAutostartReboot') : `${filtered.length} template${filtered.length === 1 ? '' : 's'}`}</span>
+          <span>{isPx4 ? tr('settings.VehicleTemplatePicker.escCancel') : tr('settings.VehicleTemplatePicker.navigateEnterSelectEscCancel')}</span>
         </div>
       </div>
     </div>
@@ -220,7 +221,7 @@ function TemplateCard({ template, focused, onClick, onMouseEnter }: TemplateCard
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 uppercase font-medium tracking-wide">
               {template.vehicleType}
             </span>
-            <span className="text-[10px] text-content-tertiary">{paramCount} params</span>
+            <span className="text-[10px] text-content-tertiary">{paramCount} {tr('settings.VehicleTemplatePicker.params')}</span>
           </div>
         </div>
       </div>

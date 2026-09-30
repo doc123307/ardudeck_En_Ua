@@ -9,6 +9,7 @@ import {
 } from '../../../../shared/user-units.js';
 import type { VehicleProfile } from '../../../stores/settings-store.js';
 import { useSettingsStore } from '../../../stores/settings-store.js';
+import { t } from '../../../i18n';
 
 interface PhysicsAdvancedProps {
   vehicle: VehicleProfile;
@@ -35,62 +36,62 @@ export function PhysicsAdvanced({ vehicle, onUpdate }: PhysicsAdvancedProps) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
         <Cpu className="w-4 h-4" />
-        Physics (SITL fidelity)
+        {t('settings.PhysicsAdvanced.physicsSitlFidelity')}
       </summary>
       <div className="mt-3 grid grid-cols-2 gap-3">
         <NumField
-          label="Thrust/Weight ratio"
+          label={t('settings.PhysicsAdvanced.thrustWeightRatio')}
           value={vehicle.thrustToWeight}
           step={0.1}
           unit=""
           placeholder="2.0"
           onChange={v => onUpdate({ thrustToWeight: v })}
-          hint="Used for SIM_ENGINE_MUL"
+          hint={t('settings.PhysicsAdvanced.usedForSimEngineMul')}
         />
         <NumField
-          label="Prop Diameter"
+          label={t('settings.PhysicsAdvanced.propDiameter')}
           value={toDisplayDimension(vehicle.propDiameter)}
           step={dimensionInputStep(dimensionUnit)}
           unit={dimensionUnitLabel}
           placeholder={dimensionInputValueFromMillimeters(127, dimensionUnit)}
           onChange={v => onUpdate({ propDiameter: toNativeMillimeters(v) })}
-          hint="Prop diameter"
+          hint={t('settings.PhysicsAdvanced.propDiameter2')}
         />
         <NumField
-          label="Drag Coefficient"
+          label={t('settings.PhysicsAdvanced.dragCoefficient')}
           value={vehicle.dragCoefficient}
           step={0.01}
           unit=""
           placeholder="0.3"
           onChange={v => onUpdate({ dragCoefficient: v })}
-          hint="SIM_DRAG_COEF (0.1-1.5 typical)"
+          hint={t('settings.PhysicsAdvanced.simDragCoef011')}
         />
         <NumField
-          label="Servo Speed"
+          label={t('settings.PhysicsAdvanced.servoSpeed')}
           value={vehicle.servoSpeed}
           step={10}
           unit="°/s"
           placeholder="300"
           onChange={v => onUpdate({ servoSpeed: v })}
-          hint="SIM_SERVO_SPEED response"
+          hint={t('settings.PhysicsAdvanced.simServoSpeedResponse')}
         />
         <div className="col-span-2 grid grid-cols-3 gap-2">
           <NumField
-            label="CG Offset X"
+            label={t('settings.PhysicsAdvanced.cgOffsetX')}
             value={toDisplayDimension(vehicle.cogOffset?.x)}
             step={dimensionInputStep(dimensionUnit)}
             unit={dimensionUnitLabel}
             onChange={v => onUpdate({ cogOffset: { ...(vehicle.cogOffset ?? { x: 0, y: 0, z: 0 }), x: toNativeMillimeters(v) } })}
           />
           <NumField
-            label="CG Offset Y"
+            label={t('settings.PhysicsAdvanced.cgOffsetY')}
             value={toDisplayDimension(vehicle.cogOffset?.y)}
             step={dimensionInputStep(dimensionUnit)}
             unit={dimensionUnitLabel}
             onChange={v => onUpdate({ cogOffset: { ...(vehicle.cogOffset ?? { x: 0, y: 0, z: 0 }), y: toNativeMillimeters(v) } })}
           />
           <NumField
-            label="CG Offset Z"
+            label={t('settings.PhysicsAdvanced.cgOffsetZ')}
             value={toDisplayDimension(vehicle.cogOffset?.z)}
             step={dimensionInputStep(dimensionUnit)}
             unit={dimensionUnitLabel}

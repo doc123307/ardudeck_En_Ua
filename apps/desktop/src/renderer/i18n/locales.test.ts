@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import en from './locales/en.json';
-import uk from './locales/uk.json';
-import ru from './locales/ru.json';
+import { loadLocaleTree } from './index';
 
 type Tree = { [key: string]: string | Tree };
 
@@ -19,17 +17,20 @@ function placeholders(text: string): string[] {
   return [...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]!).sort();
 }
 
-const english = flatten(en as Tree);
-const translations = { uk: flatten(uk as Tree), ru: flatten(ru as Tree) };
+const english = flatten(loadLocaleTree('en'));
+const translations = { uk: flatten(loadLocaleTree('uk')), ru: flatten(loadLocaleTree('ru')) };
 
 describe.each(Object.entries(translations))('%s translation', (_lang, strings) => {
   it('has exactly the English keys', () => {
-    expect(Object.keys(strings).sort()).toEqual(Object.keys(english).sort());
+    const missing = Object.keys(english).filter((key) => !(key in strings));
+    const extra = Object.keys(strings).filter((key) => !(key in english));
+    expect({ missing, extra }).toEqual({ missing: [], extra: [] });
   });
 
   it('keeps every {{placeholder}} of the English text', () => {
     for (const [key, text] of Object.entries(english)) {
-      expect(placeholders(strings[key] ?? ''), key).toEqual(placeholders(text));
+      if (!(key in strings)) continue;
+      expect(placeholders(strings[key]!), key).toEqual(placeholders(text));
     }
   });
 

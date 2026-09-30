@@ -20,6 +20,7 @@ import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useEffectiveRc } from '../../stores/pseudo-tx-store';
 import { OsdModeSwitchPanel } from './OsdModeSwitchPanel';
 import { buildLiveRcRows, rssiPercent } from '../../utils/osd/osd-live-rc';
+import { t } from '../../i18n';
 
 export function OsdLivePanel() {
   const connectionState = useConnectionStore((s) => s.connectionState);
@@ -58,15 +59,15 @@ export function OsdLivePanel() {
     <div className="flex flex-col h-full">
       {/* Connection status */}
       <div className="px-3 py-2 border-b border-subtle">
-        <h3 className="text-xs font-medium text-content mb-1">Live Telemetry</h3>
+        <h3 className="text-xs font-medium text-content mb-1">{t('osd.OsdLivePanel.liveTelemetry')}</h3>
         {connectionState.isConnected ? (
           <p className="text-[10px] text-green-400">
-            Connected to {connectionState.fcVariant || (connectionState.firmware || connectionState.autopilot ? firmwareLabel(connectionState) : 'FC')}
+            {t('osd.OsdLivePanel.connectedTo')} {connectionState.fcVariant || (connectionState.firmware || connectionState.autopilot ? firmwareLabel(connectionState) : 'FC')}
             {connectionState.fcVersion && ` ${connectionState.fcVersion}`}
           </p>
         ) : (
           <p className="text-[10px] text-content-secondary">
-            Connect to FC for live OSD data
+            {t('osd.OsdLivePanel.connectToFcForLiveOsd')}
           </p>
         )}
       </div>
@@ -84,7 +85,7 @@ export function OsdLivePanel() {
           <div className="border-b border-subtle px-3 py-2">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[10px] font-medium text-content-secondary uppercase tracking-wider">
-                Live RC Input
+                {t('osd.OsdLivePanel.liveRcInput')}
               </span>
               <span className="text-[9px] font-mono text-content-secondary">
                 RSSI {rssi === null ? '--' : `${rssi}%`}
@@ -92,7 +93,7 @@ export function OsdLivePanel() {
             </div>
             {liveRows.length === 0 ? (
               <p className="text-[10px] text-content-tertiary">
-                Waiting for live RC from the FC…
+                {t('osd.OsdLivePanel.waitingForLiveRcFromThe')}
               </p>
             ) : (
               <div className="space-y-1.5">
@@ -121,9 +122,9 @@ export function OsdLivePanel() {
                 <path d="M9 18l6-6-6-6" />
               </svg>
               <span className="text-[10px] font-medium text-content-secondary uppercase tracking-wider">
-                Send RC Override
+                {t('osd.OsdLivePanel.sendRcOverride')}
               </span>
-              {isOverrideActive && <span className="ml-auto text-[9px] text-amber-400">sending</span>}
+              {isOverrideActive && <span className="ml-auto text-[9px] text-amber-400">{t('osd.OsdLivePanel.sending')}</span>}
             </button>
 
             {rcExpanded && (
@@ -136,21 +137,21 @@ export function OsdLivePanel() {
                       onChange={(e) => handleRcToggle(e.target.checked)}
                       className="rounded-sm bg-surface-raised border w-3 h-3"
                     />
-                    Send override
+                    {t('osd.OsdLivePanel.sendOverride')}
                   </label>
                   <button
                     onClick={handleReset}
                     className="text-[10px] text-blue-400 hover:text-blue-300"
                   >
-                    Reset
+                    {t('osd.OsdLivePanel.reset')}
                   </button>
                 </div>
 
                 <div className="space-y-2">
-                  <RcBar label="Roll" value={channels[0] ?? 1500} onChange={(v) => setChannel(0, v)} />
-                  <RcBar label="Pitch" value={channels[1] ?? 1500} onChange={(v) => setChannel(1, v)} />
-                  <RcBar label="Thr" value={channels[2] ?? 1000} onChange={(v) => setChannel(2, v)} isThrottle />
-                  <RcBar label="Yaw" value={channels[3] ?? 1500} onChange={(v) => setChannel(3, v)} />
+                  <RcBar label={t('osd.OsdLivePanel.roll')} value={channels[0] ?? 1500} onChange={(v) => setChannel(0, v)} />
+                  <RcBar label={t('osd.OsdLivePanel.pitch')} value={channels[1] ?? 1500} onChange={(v) => setChannel(1, v)} />
+                  <RcBar label={t('osd.OsdLivePanel.thr')} value={channels[2] ?? 1000} onChange={(v) => setChannel(2, v)} isThrottle />
+                  <RcBar label={t('osd.OsdLivePanel.yaw')} value={channels[3] ?? 1500} onChange={(v) => setChannel(3, v)} />
                   <div className="border-t border-subtle pt-1.5 mt-1.5">
                     <RcBar label="AUX1" value={channels[4] ?? 1000} onChange={(v) => setChannel(4, v)} />
                     <RcBar label="AUX2" value={channels[5] ?? 1000} onChange={(v) => setChannel(5, v)} />

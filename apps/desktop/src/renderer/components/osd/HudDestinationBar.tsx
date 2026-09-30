@@ -11,6 +11,7 @@
  */
 
 import { MonitorPlay, Video, Layers, Monitor, Cpu, ChevronRight, type LucideIcon } from 'lucide-react';
+import { t } from '../../i18n';
 
 export function HudDestinationBar() {
   return (
@@ -19,16 +20,16 @@ export function HudDestinationBar() {
       <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30">
         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
         <MonitorPlay className="h-3.5 w-3.5 text-indigo-300" />
-        <span className="text-xs font-medium text-content">ArduDeck screen overlay</span>
+        <span className="text-xs font-medium text-content">{t('osd.HudDestinationBar.ardudeckScreenOverlay')}</span>
       </div>
 
       {/* Where it actually renders, drawn as a pipeline */}
       <div className="flex items-center gap-1.5">
-        <FlowNode icon={Video} label="Video feed" />
+        <FlowNode icon={Video} label={t('osd.HudDestinationBar.videoFeed')} />
         <ChevronRight className="h-3.5 w-3.5 text-content-tertiary" aria-hidden />
-        <FlowNode icon={Layers} label="HUD overlay" active />
+        <FlowNode icon={Layers} label={t('osd.HudDestinationBar.hudOverlay')} active />
         <ChevronRight className="h-3.5 w-3.5 text-content-tertiary" aria-hidden />
-        <FlowNode icon={Monitor} label="Your display" />
+        <FlowNode icon={Monitor} label={t('osd.HudDestinationBar.yourDisplay')} />
       </div>
 
       <div className="flex-1" />
@@ -36,7 +37,7 @@ export function HudDestinationBar() {
       {/* The flight controller, shown explicitly bypassed */}
       <div
         className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-dashed border-strong bg-surface-raised/40"
-        data-tip="A HUD is drawn on the ground, over your video. Unlike a text OSD it is not written to the flight controller, so there is nothing to upload."
+        data-tip={t('osd.HudDestinationBar.aHudIsDrawnOnThe')}
       >
         <span className="relative inline-flex items-center justify-center">
           <Cpu className="h-3.5 w-3.5 text-content-tertiary" />
@@ -46,9 +47,9 @@ export function HudDestinationBar() {
           />
         </span>
         <span className="text-[11px] text-content-tertiary line-through decoration-content-tertiary/60">
-          Flight controller
+          {t('osd.HudDestinationBar.flightController')}
         </span>
-        <span className="text-[11px] font-medium text-content-secondary">not uploaded</span>
+        <span className="text-[11px] font-medium text-content-secondary">{t('osd.HudDestinationBar.notUploaded')}</span>
       </div>
     </div>
   );

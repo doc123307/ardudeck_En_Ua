@@ -33,6 +33,7 @@ import {
   upsertLayout,
   type SavedHudLayout,
 } from './hud-layout-library';
+import { t as tr } from '../../i18n';
 
 /**
  * Radio HUD studio: configure the ArduDeck EdgeTX widget, arrange its tiles
@@ -104,12 +105,12 @@ interface ScreenModel {
   bw?: boolean;
 }
 const SCREEN_MODELS: ScreenModel[] = [
-  { variant: 'c480x320', label: 'TX15 (480x320)', w: 480, h: 320 },
-  { variant: 'c480x272', label: 'TX16S / T16 / T18 / X10 (480x272)', w: 480, h: 272 },
-  { variant: 'c800x480', label: 'TX16S mkIII (800x480)', w: 800, h: 480 },
-  { variant: 'c320x480', label: 'NV14 / EL18 (320x480 portrait)', w: 320, h: 480 },
-  { variant: 'bw128x64', label: 'Boxer / Zorro / TX12 / Pocket (128x64 B&W)', w: 128, h: 64, bw: true },
-  { variant: 'bw212x64', label: 'Taranis X9D (212x64 B&W)', w: 212, h: 64, bw: true },
+  { variant: 'c480x320', get label() { return tr('radio_hud.RadioHudView.tx15480x320'); }, w: 480, h: 320 },
+  { variant: 'c480x272', get label() { return tr('radio_hud.RadioHudView.tx16sT16T18X10480x272'); }, w: 480, h: 272 },
+  { variant: 'c800x480', get label() { return tr('radio_hud.RadioHudView.tx16sMkiii800x480'); }, w: 800, h: 480 },
+  { variant: 'c320x480', get label() { return tr('radio_hud.RadioHudView.nv14El18320x480Portrait'); }, w: 320, h: 480 },
+  { variant: 'bw128x64', get label() { return tr('radio_hud.RadioHudView.boxerZorroTx12Pocket128x64B'); }, w: 128, h: 64, bw: true },
+  { variant: 'bw212x64', get label() { return tr('radio_hud.RadioHudView.taranisX9d212x64BW'); }, w: 212, h: 64, bw: true },
 ];
 
 // Active screen geometry; RadioHudView reassigns from the selected radio
@@ -182,23 +183,23 @@ export interface TileDef {
 const DEFAULT_LAYOUT: TileDef[] = gridLayout(REF_SCREEN);
 
 const TILE_META: Record<string, { label: string; minW: number; minH: number; variants?: string[] }> = {
-  batt: { label: 'Battery', minW: 120, minH: 56, variants: ['default', 'icon'] },
-  home: { label: 'Home', minW: 100, minH: 56 },
-  alt: { label: 'Alt / Vspd', minW: 100, minH: 56 },
+  batt: { get label() { return tr('radio_hud.RadioHudView.battery'); }, minW: 120, minH: 56, variants: ['default', 'icon'] },
+  home: { get label() { return tr('radio_hud.RadioHudView.home'); }, minW: 100, minH: 56 },
+  alt: { get label() { return tr('radio_hud.RadioHudView.altVspd'); }, minW: 100, minH: 56 },
   gps: { label: 'GPS', minW: 100, minH: 56 },
-  att: { label: 'Attitude', minW: 100, minH: 80, variants: ['ball', 'line', 'bars'] },
-  compass: { label: 'Compass', minW: 100, minH: 100 },
-  spd: { label: 'Speed', minW: 100, minH: 56 },
-  timer: { label: 'Flight Timer', minW: 100, minH: 56 },
-  wind: { label: 'Wind', minW: 110, minH: 56 },
-  link: { label: 'Signal', minW: 110, minH: 56 },
-  txbat: { label: 'TX Battery', minW: 110, minH: 56 },
-  thr: { label: 'Throttle', minW: 90, minH: 56 },
-  imu: { label: 'IMU Temp', minW: 90, minH: 56 },
-  rng: { label: 'Rangefinder', minW: 90, minH: 56 },
-  pos: { label: 'Position', minW: 140, minH: 64 },
-  map: { label: 'Map', minW: 140, minH: 100 },
-  wp: { label: 'Mission WP', minW: 120, minH: 56 },
+  att: { get label() { return tr('radio_hud.RadioHudView.attitude'); }, minW: 100, minH: 80, variants: ['ball', 'line', 'bars'] },
+  compass: { get label() { return tr('radio_hud.RadioHudView.compass'); }, minW: 100, minH: 100 },
+  spd: { get label() { return tr('radio_hud.RadioHudView.speed'); }, minW: 100, minH: 56 },
+  timer: { get label() { return tr('radio_hud.RadioHudView.flightTimer'); }, minW: 100, minH: 56 },
+  wind: { get label() { return tr('radio_hud.RadioHudView.wind'); }, minW: 110, minH: 56 },
+  link: { get label() { return tr('radio_hud.RadioHudView.signal'); }, minW: 110, minH: 56 },
+  txbat: { get label() { return tr('radio_hud.RadioHudView.txBattery'); }, minW: 110, minH: 56 },
+  thr: { get label() { return tr('radio_hud.RadioHudView.throttle'); }, minW: 90, minH: 56 },
+  imu: { get label() { return tr('radio_hud.RadioHudView.imuTemp'); }, minW: 90, minH: 56 },
+  rng: { get label() { return tr('radio_hud.RadioHudView.rangefinder'); }, minW: 90, minH: 56 },
+  pos: { get label() { return tr('radio_hud.RadioHudView.position'); }, minW: 140, minH: 64 },
+  map: { get label() { return tr('radio_hud.RadioHudView.map'); }, minW: 140, minH: 100 },
+  wp: { get label() { return tr('radio_hud.RadioHudView.missionWp'); }, minW: 120, minH: 56 },
 };
 
 // Sky/ground per the app's AttitudeIndicator (AttitudePanel.tsx gradients);
@@ -346,9 +347,9 @@ const SAMPLE: PreviewData = {
   windMs: 3.4, windDirDeg: 62, flightSecs: 192,
   wpNum: 3, wpDist: 184, wpBearing: 276,
   messages: [
-    { sev: 6, text: 'EKF3 IMU0 is using GPS' },
-    { sev: 4, text: 'Terrain data missing' },
-    { sev: 6, text: 'Flight plan received' },
+    { sev: 6, get text() { return tr('radio_hud.RadioHudView.ekf3Imu0IsUsingGps'); } },
+    { sev: 4, get text() { return tr('radio_hud.RadioHudView.terrainDataMissing'); } },
+    { sev: 6, get text() { return tr('radio_hud.RadioHudView.flightPlanReceived'); } },
   ],
 };
 
@@ -440,7 +441,7 @@ function TileBody({ t, data, cfg }: { t: TileDef; data: PreviewData; cfg: HudCfg
               </div>
               {t.h >= 80 && (
                 <div style={{ position: 'absolute', left: 8, top: t.h - 22, fontSize: 11, color: C.text2, whiteSpace: 'nowrap' }}>
-                  {cellV != null ? `${cellV.toFixed(2)}V/c  ` : ''}{data.currA.toFixed(0)}A  {data.mahUsed}mAh used
+                  {cellV != null ? `${cellV.toFixed(2)}V/c  ` : ''}{data.currA.toFixed(0)}A  {data.mahUsed}{tr('radio_hud.RadioHudView.mahUsed')}
                 </div>
               )}
             </>
@@ -678,8 +679,8 @@ function TileBody({ t, data, cfg }: { t: TileDef; data: PreviewData; cfg: HudCfg
           <NumericBody t={t} value={`${lq}%`} color={lqC} />
           {t.h >= 70 && (
             <div style={{ position: 'absolute', left: 8, top: t.h - 26, fontSize: 12 }}>
-              <span style={{ color: C.success }}>-58 dBm</span>
-              <span style={{ color: C.warnStrong, marginLeft: 10 }}>250mW</span>
+              <span style={{ color: C.success }}>{tr('radio_hud.RadioHudView.n58Dbm')}</span>
+              <span style={{ color: C.warnStrong, marginLeft: 10 }}>{tr('radio_hud.RadioHudView.n250mw')}</span>
             </div>
           )}
           {Array.from({ length: 5 }, (_, i) => {
@@ -751,7 +752,7 @@ function TileBody({ t, data, cfg }: { t: TileDef; data: PreviewData; cfg: HudCfg
               <div style={{ position: 'absolute', left: 8, top: 40, fontSize: 15, color: C.text }}>{data.lon.toFixed(6)}</div>
             </>
           ) : (
-            <div style={{ position: 'absolute', left: 8, top: 20, fontSize: 15, color: C.text3 }}>no position</div>
+            <div style={{ position: 'absolute', left: 8, top: 20, fontSize: 15, color: C.text3 }}>{tr('radio_hud.RadioHudView.noPosition')}</div>
           )}
         </TileFrame>
       );
@@ -786,8 +787,8 @@ function TileBody({ t, data, cfg }: { t: TileDef; data: PreviewData; cfg: HudCfg
               fill={C.danger}
             />
           </svg>
-          <div style={{ position: 'absolute', left: 6, bottom: 2, fontSize: 11, color: C.gaugeTick }}>1000m across</div>
-          <div style={{ position: 'absolute', right: 6, bottom: 2, fontSize: 10, color: C.text3 }}>satellite image on radio</div>
+          <div style={{ position: 'absolute', left: 6, bottom: 2, fontSize: 11, color: C.gaugeTick }}>{tr('radio_hud.RadioHudView.n1000mAcross')}</div>
+          <div style={{ position: 'absolute', right: 6, bottom: 2, fontSize: 10, color: C.text3 }}>{tr('radio_hud.RadioHudView.satelliteImageOnRadio')}</div>
         </TileFrame>
       );
     }
@@ -878,10 +879,10 @@ function HudPreview({
 
   if (!editing && (mode === 'no-link' || mode === 'no-mavlink' || mode === 'streams-off')) {
     const banner = mode === 'no-link'
-      ? { state: 'NO LINK', hint: 'radio link down - check RX power / binding', color: C.danger }
+      ? { state: 'NO LINK', hint: tr('radio_hud.RadioHudView.radioLinkDownCheckRxPower'), color: C.danger }
       : mode === 'no-mavlink'
-        ? { state: 'NO MAVLINK', hint: 'link up, no telemetry frames - ELRS MAVLink mode?', color: C.warn }
-        : { state: 'STREAMS OFF', hint: 'FC not streaming - connect ArduDeck to fix rates', color: C.warn };
+        ? { state: 'NO MAVLINK', hint: tr('radio_hud.RadioHudView.linkUpNoTelemetryFramesElrs'), color: C.warn }
+        : { state: 'STREAMS OFF', hint: tr('radio_hud.RadioHudView.fcNotStreamingConnectArdudeckTo'), color: C.warn };
     return (
       <div style={{ position: 'relative', width: SCREEN_W, height: SCREEN_H, ...gridBg, fontFamily: 'Roboto, system-ui, sans-serif' }}>
         <div style={{ position: 'absolute', top: 84, width: '100%', textAlign: 'center', fontSize: 32, fontWeight: 700, color: banner.color }}>{banner.state}</div>
@@ -1013,33 +1014,33 @@ interface BwBatt { cells: number; pct: number | null }
 /** Data-slot fields for the B&W script. KEEP IDS IN SYNC with FIELDS in
  *  SDBW/.../ArduDk.lua. */
 const BW_FIELDS: Record<string, { label: string; fmt: (d: PreviewData, b: BwBatt) => string }> = {
-  volt: { label: 'Voltage', fmt: (d) => `${d.voltV.toFixed(1)}V` },
-  cellv: { label: 'Cell voltage', fmt: (d, b) => (b.cells > 0 ? `${(d.voltV / b.cells).toFixed(2)}v/c` : '--v/c') },
-  pct: { label: 'Battery %', fmt: (_d, b) => (b.pct != null ? `${Math.round(b.pct)}%` : '--%') },
-  cellpct: { label: 'Cell V + %', fmt: (d, b) => `${b.cells > 0 ? `${(d.voltV / b.cells).toFixed(2)}v/c` : ''}${b.pct != null ? ` ${Math.round(b.pct)}%` : ''}` || '--' },
-  curr: { label: 'Current', fmt: (d) => `${d.currA.toFixed(1)}A` },
+  volt: { get label() { return tr('radio_hud.RadioHudView.voltage'); }, fmt: (d) => `${d.voltV.toFixed(1)}V` },
+  cellv: { get label() { return tr('radio_hud.RadioHudView.cellVoltage'); }, fmt: (d, b) => (b.cells > 0 ? `${(d.voltV / b.cells).toFixed(2)}v/c` : '--v/c') },
+  pct: { get label() { return tr('radio_hud.RadioHudView.battery2'); }, fmt: (_d, b) => (b.pct != null ? `${Math.round(b.pct)}%` : '--%') },
+  cellpct: { get label() { return tr('radio_hud.RadioHudView.cellV'); }, fmt: (d, b) => `${b.cells > 0 ? `${(d.voltV / b.cells).toFixed(2)}v/c` : ''}${b.pct != null ? ` ${Math.round(b.pct)}%` : ''}` || '--' },
+  curr: { get label() { return tr('radio_hud.RadioHudView.current'); }, fmt: (d) => `${d.currA.toFixed(1)}A` },
   mah: { label: 'mAh used', fmt: (d) => `${d.mahUsed}mAh` },
-  alt: { label: 'Altitude', fmt: (d) => `A${Math.round(d.altM)}m` },
-  spd: { label: 'Ground speed', fmt: (d) => `S${d.hspd.toFixed(1)}` },
-  vspd: { label: 'Climb rate', fmt: (d) => `V${d.vspd >= 0 ? '+' : ''}${d.vspd.toFixed(1)}` },
-  sat: { label: 'Sats / fix', fmt: (d) => `${d.sats}s${d.fix >= 3 ? '3D' : d.fix === 2 ? '2D' : '--'}` },
-  home: { label: 'Home distance', fmt: (d) => `H${Math.round(d.homeDist)}m` },
-  wind: { label: 'Wind', fmt: (d) => `w${d.windMs.toFixed(1)}m` },
+  alt: { get label() { return tr('radio_hud.RadioHudView.altitude'); }, fmt: (d) => `A${Math.round(d.altM)}m` },
+  spd: { get label() { return tr('radio_hud.RadioHudView.groundSpeed'); }, fmt: (d) => `S${d.hspd.toFixed(1)}` },
+  vspd: { get label() { return tr('radio_hud.RadioHudView.climbRate'); }, fmt: (d) => `V${d.vspd >= 0 ? '+' : ''}${d.vspd.toFixed(1)}` },
+  sat: { get label() { return tr('radio_hud.RadioHudView.satsFix'); }, fmt: (d) => `${d.sats}s${d.fix >= 3 ? '3D' : d.fix === 2 ? '2D' : '--'}` },
+  home: { get label() { return tr('radio_hud.RadioHudView.homeDistance'); }, fmt: (d) => `H${Math.round(d.homeDist)}m` },
+  wind: { get label() { return tr('radio_hud.RadioHudView.wind'); }, fmt: (d) => `w${d.windMs.toFixed(1)}m` },
   hdop: { label: 'HDOP', fmt: (d) => `hd${d.hdop.toFixed(1)}` },
-  rng: { label: 'Rangefinder', fmt: (d) => `r${d.range.toFixed(1)}m` },
-  imu: { label: 'IMU temp', fmt: (d) => `i${Math.round(d.imuTemp)}C` },
-  wp: { label: 'Waypoint', fmt: (d) => (d.wpNum > 0 ? `wp${d.wpNum} ${Math.round(d.wpDist)}m` : 'wp--') },
-  thr: { label: 'Throttle', fmt: (d) => `t${Math.round(d.throttle)}%` },
-  yaw: { label: 'Heading', fmt: (d) => String(Math.round(d.yaw) % 360).padStart(3, '0') },
-  none: { label: '(empty)', fmt: () => '' },
+  rng: { get label() { return tr('radio_hud.RadioHudView.rangefinder'); }, fmt: (d) => `r${d.range.toFixed(1)}m` },
+  imu: { get label() { return tr('radio_hud.RadioHudView.imuTemp2'); }, fmt: (d) => `i${Math.round(d.imuTemp)}C` },
+  wp: { get label() { return tr('radio_hud.RadioHudView.waypoint'); }, fmt: (d) => (d.wpNum > 0 ? `wp${d.wpNum} ${Math.round(d.wpDist)}m` : 'wp--') },
+  thr: { get label() { return tr('radio_hud.RadioHudView.throttle'); }, fmt: (d) => `t${Math.round(d.throttle)}%` },
+  yaw: { get label() { return tr('radio_hud.RadioHudView.heading'); }, fmt: (d) => String(Math.round(d.yaw) % 360).padStart(3, '0') },
+  none: { get label() { return tr('radio_hud.RadioHudView.empty'); }, fmt: () => '' },
 };
 
 /** Large top-left readout choices (mirrors BIG in ArduDk.lua). */
 const BW_BIG: Record<string, { label: string; fmt: (d: PreviewData, b: BwBatt) => [string, string] }> = {
-  volt: { label: 'Voltage', fmt: (d) => [d.voltV.toFixed(1), 'V'] },
-  pct: { label: 'Battery %', fmt: (_d, b) => [b.pct != null ? String(Math.round(b.pct)) : '--', '%'] },
-  alt: { label: 'Altitude', fmt: (d) => [String(Math.round(d.altM)), 'm'] },
-  spd: { label: 'Ground speed', fmt: (d) => [d.hspd.toFixed(1), 'm/s'] },
+  volt: { get label() { return tr('radio_hud.RadioHudView.voltage'); }, fmt: (d) => [d.voltV.toFixed(1), 'V'] },
+  pct: { get label() { return tr('radio_hud.RadioHudView.battery2'); }, fmt: (_d, b) => [b.pct != null ? String(Math.round(b.pct)) : '--', '%'] },
+  alt: { get label() { return tr('radio_hud.RadioHudView.altitude'); }, fmt: (d) => [String(Math.round(d.altM)), 'm'] },
+  spd: { get label() { return tr('radio_hud.RadioHudView.groundSpeed'); }, fmt: (d) => [d.hspd.toFixed(1), 'm/s'] },
 };
 
 const BW_MONO = 'ui-monospace, SFMono-Regular, monospace';
@@ -1226,7 +1227,7 @@ function BwSlotRows({ s, SML, list, listKey, x, count, i0 = 0, room, editing, da
               }}
             >
               <meta.Icon style={{ width: SML, height: SML, flexShrink: 0 }} />
-              {BW_FIELDS[id]?.label ?? '(empty)'}
+              {BW_FIELDS[id]?.label ?? tr('radio_hud.RadioHudView.empty')}
             </button>
           );
         })}
@@ -1352,7 +1353,7 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
           of the 64-row canvas and clip the bottom strip */}
       <div style={{ display: 'inline-block', padding: 6, background: '#1b1d1a', borderRadius: 8, cursor: 'pointer' }}
         onClick={() => setPage(page === 1 ? 2 : 1)}
-        data-tip="Click to flip pages (rotary / +/- on the radio)"
+        data-tip={tr('radio_hud.RadioHudView.clickToFlipPagesRotaryOn')}
       >
         <div style={{
           position: 'relative', width: screenW * s, height: 64 * s, background: GLASS,
@@ -1382,7 +1383,7 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
                   {editing && (
                     <button
                       onClick={(e) => { e.stopPropagation(); setPicker({ key: 'big', index: 0, x: 0, y: 26 * s }); }}
-                      data-tip="Large readout"
+                      data-tip={tr('radio_hud.RadioHudView.largeReadout')}
                       style={{
                         position: 'absolute', left: 0, top: 9 * s, width: 46 * s, height: 17 * s,
                         background: 'rgba(255,255,255,0.35)', border: `1px dashed ${INK}`,
@@ -1449,7 +1450,7 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
                             background: layout.center === mode ? INK : 'rgba(255,255,255,0.6)',
                             color: layout.center === mode ? GLASS : INK,
                           }}
-                        >{mode === 'horizon' ? 'Horizon' : 'Slots'}</button>
+                        >{mode === 'horizon' ? tr('radio_hud.RadioHudView.horizon') : tr('radio_hud.RadioHudView.slots')}</button>
                       ))}
                     </div>
                   )}
@@ -1467,9 +1468,9 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
                 <>
                   <Txt x={0} y={10} size={SML * 1.2}>{data.lat != null ? data.lat.toFixed(6) : 'no position'}</Txt>
                   <Txt x={0} y={20} size={SML * 1.2}>{data.lon != null ? data.lon.toFixed(6) : ''}</Txt>
-                  <Txt x={0} y={30}>{`home ${Math.round(data.homeDist)}m brg ${Math.round(data.homeBearing)}`}</Txt>
-                  <Txt x={0} y={38}>{data.wpNum > 0 ? `wp ${data.wpNum}  ${Math.round(data.wpDist)}m brg ${Math.round(data.wpBearing)}` : 'no mission wp'}</Txt>
-                  <Txt x={0} y={46}>{`wind ${data.windMs.toFixed(1)}m/s ${Math.round(data.windDirDeg)}  thr ${Math.round(data.throttle)}%`}</Txt>
+                  <Txt x={0} y={30}>{tr('radio_hud.RadioHudView.homeMBrg', { v1: Math.round(data.homeDist), v2: Math.round(data.homeBearing) })}</Txt>
+                  <Txt x={0} y={38}>{data.wpNum > 0 ? tr('radio_hud.RadioHudView.wpMBrg', { wpNum: data.wpNum, v2: Math.round(data.wpDist), v3: Math.round(data.wpBearing) }) : tr('radio_hud.RadioHudView.noMissionWp')}</Txt>
+                  <Txt x={0} y={46}>{tr('radio_hud.RadioHudView.windMSThr', { v1: data.windMs.toFixed(1), v2: Math.round(data.windDirDeg), v3: Math.round(data.throttle) })}</Txt>
                   <Txt x={screenW - 50} y={10}>{`alt ${Math.round(data.altM)}m`}</Txt>
                   <Txt x={screenW - 50} y={18}>{`hdp ${data.hdop.toFixed(1)}`}</Txt>
                   <Txt x={screenW - 50} y={26}>{`vsp ${data.vspd >= 0 ? '+' : ''}${data.vspd.toFixed(1)}`}</Txt>
@@ -1496,8 +1497,8 @@ function BwPreview({ mode, data, cfg, screenW, editing, layout, onLayout }: {
         )}
       </div>
       <p className="mt-1.5 text-[11px] text-content-tertiary" style={{ maxWidth: screenW * s + 12 }}>
-        Page {page}/2, click to flip (rotary or +/- on the radio). Everything between the status strips is an editable slot: the big readout, both side columns, and the center panel (horizon or two more data columns).
-        {editing && ' Click any slot to pick what it shows; set one to (empty) and its neighbour grows into the space.'}
+        {tr('radio_hud.RadioHudView.page')} {page}/2, click to flip (rotary or +/- on the radio). Everything between the status strips is an editable slot: the big readout, both side columns, and the center panel (horizon or two more data columns).
+        {editing && tr('radio_hud.RadioHudView.clickAnySlotToPickWhat')}
       </p>
     </div>
   );
@@ -1883,7 +1884,7 @@ export function RadioHudView() {
       suggested = (await window.electronAPI.edgetxHudConfigSuggest()).cfg;
     }
     if (Object.keys(suggested).length === 0) {
-      setApplyError('No vehicle data yet - connect the vehicle once so its parameters can be read');
+      setApplyError(tr('radio_hud.RadioHudView.noVehicleDataYetConnectThe'));
       return;
     }
     setApplyError(null);
@@ -1912,7 +1913,7 @@ export function RadioHudView() {
     const target = result.cards[0];
     if (!target) {
       setApplyState(null);
-      setApplyError('No radio found. Plug in the transmitter via USB and choose "USB Storage (SD)" on its screen, then apply again.');
+      setApplyError(tr('radio_hud.RadioHudView.noRadioFoundPlugInThe'));
       return;
     }
     // Always refresh the widget files: bundled source, instant, and it
@@ -1922,7 +1923,7 @@ export function RadioHudView() {
     const install = await window.electronAPI.edgetxInstall(target.volumePath, 'ardudeck-hud', variant);
     if (!install.success) {
       setApplyState(null);
-      setApplyError(install.error ?? 'Widget install failed');
+      setApplyError(install.error ?? tr('radio_hud.RadioHudView.widgetInstallFailed'));
       return;
     }
     setApplyState('Writing config…');
@@ -1963,7 +1964,7 @@ export function RadioHudView() {
     );
     if (!write.ok) {
       setApplyState(null);
-      setApplyError(write.error ?? 'Config write failed');
+      setApplyError(write.error ?? tr('radio_hud.RadioHudView.configWriteFailed'));
       return;
     }
     // mission overlay: the planner's route rides along so the radio's map
@@ -1976,7 +1977,7 @@ export function RadioHudView() {
       const mapsResult = await window.electronAPI.edgetxHudMapsWrite(target.volumePath, fieldMaps ?? [], missionWps);
       if (!mapsResult.ok) {
         setApplyState(null);
-        setApplyError(mapsResult.error ?? 'Field maps write failed');
+        setApplyError(mapsResult.error ?? tr('radio_hud.RadioHudView.fieldMapsWriteFailed'));
         return;
       }
     }
@@ -1996,7 +1997,7 @@ export function RadioHudView() {
     setApplyState('Removing widget…');
     const result = await window.electronAPI.edgetxRemove(target.volumePath, 'ardudeck-hud');
     setApplyState(result.success ? 'Widget removed from the radio (config included).' : null);
-    if (!result.success) setApplyError(result.error ?? 'Remove failed');
+    if (!result.success) setApplyError(result.error ?? tr('radio_hud.RadioHudView.removeFailed'));
     await rescan();
   };
 
@@ -2025,7 +2026,7 @@ export function RadioHudView() {
         setApplyState('Ejected. Unplug the radio; the widget reloads its config within seconds.');
         await rescan();
       } else {
-        setApplyError(result.error ?? 'Eject failed');
+        setApplyError(result.error ?? tr('radio_hud.RadioHudView.ejectFailed'));
       }
     } catch (e) {
       setApplyError(e instanceof Error ? e.message : String(e));
@@ -2056,8 +2057,8 @@ export function RadioHudView() {
             <rect x="4" y="7" width="16" height="11" rx="2" strokeWidth={1.5} />
             <path strokeLinecap="round" strokeWidth={1.5} d="M8 4l4 3 4-3M8 11h4M8 14h8" />
           </svg>
-          <h1 className="text-xl font-semibold text-content">Radio HUD</h1>
-          <span className="text-xs text-content-secondary">ArduDeck widget for EdgeTX radios</span>
+          <h1 className="text-xl font-semibold text-content">{tr('radio_hud.RadioHudView.radioHud')}</h1>
+          <span className="text-xs text-content-secondary">{tr('radio_hud.RadioHudView.ardudeckWidgetForEdgetxRadios')}</span>
         </div>
       </div>
 
@@ -2066,19 +2067,19 @@ export function RadioHudView() {
           {/* left column: preview + field maps below it */}
           <div className="space-y-2 w-full lg:w-auto max-w-[512px]">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs text-content-secondary" data-tip="Faithful mirror of layout and colors at the selected radio's resolution; the radio renders its own font">Preview</span>
+              <span className="text-xs text-content-secondary" data-tip={tr('radio_hud.RadioHudView.faithfulMirrorOfLayoutAndColors')}>{tr('radio_hud.RadioHudView.preview')}</span>
               <select
                 value={previewMode}
                 onChange={(e) => setPreviewMode(e.target.value as PreviewMode)}
                 className="px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content"
               >
-                <option value="sample">Sample flight</option>
+                <option value="sample">{tr('radio_hud.RadioHudView.sampleFlight')}</option>
                 <option value="live" disabled={!connectionState.isConnected}>
-                  Live vehicle{connectionState.isConnected ? '' : ' (connect first)'}
+                  {tr('radio_hud.RadioHudView.liveVehicle')}{connectionState.isConnected ? '' : tr('radio_hud.RadioHudView.connectFirst')}
                 </option>
-                <option value="no-link">State: NO LINK</option>
-                <option value="no-mavlink">State: NO MAVLINK</option>
-                <option value="streams-off">State: STREAMS OFF</option>
+                <option value="no-link">{tr('radio_hud.RadioHudView.stateNoLink')}</option>
+                <option value="no-mavlink">{tr('radio_hud.RadioHudView.stateNoMavlink')}</option>
+                <option value="streams-off">{tr('radio_hud.RadioHudView.stateStreamsOff')}</option>
               </select>
               <select
                 value={`${screen.w}x${screen.h}`}
@@ -2087,7 +2088,7 @@ export function RadioHudView() {
                   if (m) changeScreen(m);
                 }}
                 data-tour="hud-model"
-                data-tip="Radio model - layouts rescale to its screen"
+                data-tip={tr('radio_hud.RadioHudView.radioModelLayoutsRescaleToIts')}
                 className="px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content"
               >
                 {SCREEN_MODELS.map((m) => (
@@ -2097,30 +2098,30 @@ export function RadioHudView() {
               {detectedModel && `${detectedModel.w}x${detectedModel.h}` !== `${screen.w}x${screen.h}` && (
                 <button
                   onClick={() => changeScreen(detectedModel)}
-                  data-tip="The plugged-in radio identifies itself in RADIO/radio.yml - apply to the wrong screen class and it installs files the radio cannot use"
+                  data-tip={tr('radio_hud.RadioHudView.thePluggedInRadioIdentifiesItself')}
                   className="px-2 py-1 text-xs rounded border bg-amber-500/10 text-amber-400 border-amber-500/40 hover:bg-amber-500/20 transition-colors"
                 >
-                  {detectedCard?.radioLabel ?? 'Radio'} detected · switch
+                  {detectedCard?.radioLabel ?? tr('radio_hud.RadioHudView.radio')} {tr('radio_hud.RadioHudView.detectedSwitch')}
                 </button>
               )}
               {isBw && (
                 <button
                   onClick={() => setGuideOpen(true)}
-                  data-tip="How the HUD works on a monochrome radio: installing, opening it, reading it"
+                  data-tip={tr('radio_hud.RadioHudView.howTheHudWorksOnA')}
                   className="flex items-center gap-1.5 px-3 py-1 text-xs rounded border bg-surface-input text-content-secondary border-subtle hover:text-content transition-colors"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-teal-400" />
-                  Guide
+                  {tr('radio_hud.RadioHudView.guide')}
                 </button>
               )}
               {isBw && (
                 <button
                   onClick={() => setGuideOpen(true)}
-                  data-tip="How the HUD works on a monochrome radio: installing it, opening it, reading it"
+                  data-tip={tr('radio_hud.RadioHudView.howTheHudWorksOnA2')}
                   className="flex items-center gap-1.5 px-3 py-1 text-xs rounded border bg-surface-input text-content-secondary border-subtle hover:text-content transition-colors"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-teal-400" />
-                  Guide
+                  {tr('radio_hud.RadioHudView.guide')}
                 </button>
               )}
               {!isBw && (
@@ -2135,10 +2136,10 @@ export function RadioHudView() {
                       setLayoutName(saved.name);
                       setPagesFrom(`the layout "${saved.name}"`);
                     }}
-                    data-tip="Layouts live in ArduDeck and save as you edit. The radio only gets the one you apply."
+                    data-tip={tr('radio_hud.RadioHudView.layoutsLiveInArdudeckAndSave')}
                     className="px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content-secondary"
                   >
-                    {layouts.length === 0 && <option value="">Layout</option>}
+                    {layouts.length === 0 && <option value="">{tr('radio_hud.RadioHudView.layout')}</option>}
                     {layouts.map((l) => (
                       <option key={l.name} value={l.name}>{l.name} ({l.pages.length}p)</option>
                     ))}
@@ -2148,8 +2149,8 @@ export function RadioHudView() {
                     onChange={(e) => setNameDraft(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
                     onBlur={() => commitRename()}
-                    placeholder="Layout name"
-                    data-tip="Renames this layout. Saving is automatic."
+                    placeholder={tr('radio_hud.RadioHudView.layoutName')}
+                    data-tip={tr('radio_hud.RadioHudView.renamesThisLayoutSavingIsAutomatic')}
                     className="w-32 px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content placeholder:text-content-tertiary"
                   />
                   <button
@@ -2161,10 +2162,10 @@ export function RadioHudView() {
                       setActivePage(0);
                       setPagesFrom(`the layout "${name}"`);
                     }}
-                    data-tip="Start a new layout in ArduDeck. The current one is already saved."
+                    data-tip={tr('radio_hud.RadioHudView.startANewLayoutInArdudeck')}
                     className="px-3 py-1 text-xs rounded border bg-surface-input text-content-secondary border-subtle hover:text-content transition-colors"
                   >
-                    New
+                    {tr('radio_hud.RadioHudView.new')}
                   </button>
                   {layouts.length > 1 && layouts.some((l) => l.name === layoutName) && (
                     <button
@@ -2178,10 +2179,10 @@ export function RadioHudView() {
                         setPages(fallback.pages.map((p) => p.map((t) => fitTile(t, fallback.screen, screen))));
                         setActivePage(0);
                       }}
-                      data-tip={`Delete "${layoutName}" from ArduDeck. Whatever is already on the radio stays there.`}
+                      data-tip={tr('radio_hud.RadioHudView.deleteFromArdudeckWhateverIsAlready', { layoutName })}
                       className="px-2.5 py-1 text-xs rounded border border-subtle text-red-400 hover:bg-red-500/10 transition-colors"
                     >
-                      Delete
+                      {tr('radio_hud.RadioHudView.delete')}
                     </button>
                   )}
                 </>
@@ -2193,7 +2194,7 @@ export function RadioHudView() {
                   ? 'bg-teal-500/20 text-teal-300 border-teal-500/40'
                   : 'bg-surface-input text-content-secondary border-subtle hover:text-content'}`}
               >
-                {editing ? 'Done editing' : isBw ? 'Edit slots' : 'Edit layout'}
+                {editing ? tr('radio_hud.RadioHudView.doneEditing') : isBw ? tr('radio_hud.RadioHudView.editSlots') : tr('radio_hud.RadioHudView.editLayout')}
               </button>
               {editing && !isBw && (
                 <select
@@ -2208,8 +2209,8 @@ export function RadioHudView() {
                   }}
                   className="px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content-secondary"
                 >
-                  <option value="" disabled>Preset…</option>
-                  <option value="__grid">Auto grid (fill this screen)</option>
+                  <option value="" disabled>{tr('radio_hud.RadioHudView.preset')}</option>
+                  <option value="__grid">{tr('radio_hud.RadioHudView.autoGridFillThisScreen')}</option>
                   {Object.keys(LAYOUT_PRESETS).map((name) => (
                     <option key={name} value={name}>{name}</option>
                   ))}
@@ -2224,7 +2225,7 @@ export function RadioHudView() {
                   <button
                     key={i}
                     onClick={() => setActivePage(i)}
-                    data-tip={`Page ${i + 1} - swipe on the radio to reach it`}
+                    data-tip={tr('radio_hud.RadioHudView.pageSwipeOnTheRadioTo', { v1: i + 1 })}
                     className={`w-7 h-7 text-xs rounded border transition-colors ${i === activePage
                       ? 'bg-teal-500/20 text-teal-300 border-teal-500/40'
                       : 'bg-surface-input text-content-secondary border-subtle hover:text-content'}`}
@@ -2236,31 +2237,31 @@ export function RadioHudView() {
                   <div className="relative">
                     <button
                       onClick={() => setAddPageOpen(!addPageOpen)}
-                      data-tip="Add a layout page (swipe left/right on the radio to switch)"
+                      data-tip={tr('radio_hud.RadioHudView.addALayoutPageSwipeLeft')}
                       className="w-7 h-7 text-xs rounded border border-subtle bg-surface-input text-content-secondary hover:text-content"
                     >
                       +
                     </button>
                     {addPageOpen && (
                       <div className="absolute right-0 top-8 z-20 w-44 bg-surface-raised border border-subtle rounded-lg shadow-lg p-1">
-                        <p className="px-2 py-1 text-[10px] uppercase text-content-tertiary">New page from</p>
+                        <p className="px-2 py-1 text-[10px] uppercase text-content-tertiary">{tr('radio_hud.RadioHudView.newPageFrom')}</p>
                         <button
                           onClick={() => addPage(tiles.map((t) => ({ ...t })))}
                           className="w-full text-left px-2 py-1.5 text-xs text-content hover:bg-surface-input rounded"
                         >
-                          Duplicate current page
+                          {tr('radio_hud.RadioHudView.duplicateCurrentPage')}
                         </button>
                         <button
                           onClick={() => addPage([])}
                           className="w-full text-left px-2 py-1.5 text-xs text-content hover:bg-surface-input rounded"
                         >
-                          Empty page
+                          {tr('radio_hud.RadioHudView.emptyPage')}
                         </button>
                         <button
                           onClick={() => addPage(gridLayout(screen))}
                           className="w-full text-left px-2 py-1.5 text-xs text-content hover:bg-surface-input rounded"
                         >
-                          Auto grid (fill this screen)
+                          {tr('radio_hud.RadioHudView.autoGridFillThisScreen')}
                         </button>
                         <div className="my-1 border-t border-subtle" />
                         {Object.entries(LAYOUT_PRESETS).map(([name, preset]) => (
@@ -2283,7 +2284,7 @@ export function RadioHudView() {
                       setPages(next);
                       setActivePage(Math.max(0, activePage - 1));
                     }}
-                    data-tip="Remove this page"
+                    data-tip={tr('radio_hud.RadioHudView.removeThisPage')}
                     className="w-7 h-7 text-xs rounded border border-subtle bg-surface-input text-red-400 hover:text-red-300"
                   >
                     ×
@@ -2308,7 +2309,7 @@ export function RadioHudView() {
 
             {editing && !isBw && (
               <div className="flex items-center gap-1.5 flex-wrap" style={{ maxWidth: SCREEN_W }}>
-                <span className="text-[11px] text-content-tertiary">Add tile:</span>
+                <span className="text-[11px] text-content-tertiary">{tr('radio_hud.RadioHudView.addTile')}</span>
                 {unplacedTiles.map((id) => (
                   <button
                     key={id}
@@ -2323,7 +2324,7 @@ export function RadioHudView() {
                   </button>
                 ))}
                 <span className="text-[10px] text-content-tertiary w-full">
-                  Drag to move, corner handle to resize (8px snap). Top bar and message ticker are fixed.
+                  {tr('radio_hud.RadioHudView.dragToMoveCornerHandleTo')}
                 </span>
               </div>
             )}
@@ -2334,8 +2335,8 @@ export function RadioHudView() {
             <div data-tour="hud-maps" className="bg-surface-raised border border-subtle rounded-xl p-3 space-y-2" style={{ maxWidth: SCREEN_W }}>
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <h3 className="text-sm font-medium text-content"
-                  data-tip="Offline satellite images for the Map tile. Click your field; the rings show each zoom's coverage">
-                  Field maps
+                  data-tip={tr('radio_hud.RadioHudView.offlineSatelliteImagesForTheMap')}>
+                  {tr('radio_hud.RadioHudView.fieldMaps')}
                 </h3>
                 <div className="flex items-center gap-2">
                   <button
@@ -2345,17 +2346,17 @@ export function RadioHudView() {
                       }
                     }}
                     disabled={!telemetry.gps.lat}
-                    data-tip="Center the field on where the vehicle is right now"
+                    data-tip={tr('radio_hud.RadioHudView.centerTheFieldOnWhereThe')}
                     className="px-2.5 py-1 text-xs whitespace-nowrap text-content-secondary hover:text-content bg-surface-input hover:bg-surface-raised border border-subtle rounded transition-colors disabled:opacity-50"
                   >
-                    Use vehicle position
+                    {tr('radio_hud.RadioHudView.useVehiclePosition')}
                   </button>
                   <button
                     onClick={handleGenerateMaps}
                     disabled={mapCenter.lat === 0}
                     className="px-2.5 py-1 text-xs whitespace-nowrap bg-teal-600/20 text-teal-300 hover:bg-teal-600/30 border border-teal-500/40 rounded transition-colors disabled:opacity-50"
                   >
-                    Generate
+                    {tr('radio_hud.RadioHudView.generate')}
                   </button>
                 </div>
               </div>
@@ -2394,20 +2395,20 @@ export function RadioHudView() {
             <div data-tour="hud-config" className="bg-surface-raised border border-subtle rounded-xl p-3 space-y-2.5">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium text-content"
-                  data-tip="Everything here is an override. Left on auto, the widget configures itself from the vehicle's telemetry - no ArduDeck or FC connection needed">
-                  Widget config
+                  data-tip={tr('radio_hud.RadioHudView.everythingHereIsAnOverrideLeft')}>
+                  {tr('radio_hud.RadioHudView.widgetConfig')}
                 </h3>
                 <button
                   onClick={handleLoadFromVehicle}
-                  data-tip="Fill the fields from the connected vehicle's parameters"
+                  data-tip={tr('radio_hud.RadioHudView.fillTheFieldsFromTheConnected')}
                   className="px-2 py-1 text-[11px] text-content-secondary hover:text-content bg-surface-input hover:bg-surface-raised border border-subtle rounded transition-colors"
                 >
-                  Load from vehicle
+                  {tr('radio_hud.RadioHudView.loadFromVehicle')}
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <label className="block">
-                  <span className="text-xs text-content-secondary">Theme</span>
+                  <span className="text-xs text-content-secondary">{tr('radio_hud.RadioHudView.theme')}</span>
                   <div className="mt-1 flex items-center bg-surface-input border border-subtle rounded p-0.5">
                     {(['dark', 'light'] as const).map((th) => (
                       <button
@@ -2415,13 +2416,13 @@ export function RadioHudView() {
                         onClick={() => setCfg({ ...cfg, theme: th })}
                         className={`flex-1 px-2 py-1 text-xs rounded transition-colors ${cfg.theme === th ? 'bg-surface-raised text-content' : 'text-content-secondary hover:text-content'}`}
                       >
-                        {th === 'dark' ? 'Dark' : 'Light'}
+                        {th === 'dark' ? tr('radio_hud.RadioHudView.dark') : tr('radio_hud.RadioHudView.light')}
                       </button>
                     ))}
                   </div>
                 </label>
                 <label className="block">
-                  <span className="text-xs text-content-secondary">Vehicle name</span>
+                  <span className="text-xs text-content-secondary">{tr('radio_hud.RadioHudView.vehicleName')}</span>
                   <input
                     type="text"
                     value={cfg.name}
@@ -2437,8 +2438,8 @@ export function RadioHudView() {
               {pages.length > 1 && (
                 <label className="flex items-center gap-2 pt-1">
                   <span className="text-xs text-content-secondary"
-                    data-tip="In a normal widget slot EdgeTX gives the widget no keys and no touch, so this is the only way to see every page there. Long-press the widget and choose Full screen to use PAGE and swipe instead.">
-                    Turn pages every
+                    data-tip={tr('radio_hud.RadioHudView.inANormalWidgetSlotEdgetx')}>
+                    {tr('radio_hud.RadioHudView.turnPagesEvery')}
                   </span>
                   <input
                     type="number"
@@ -2449,7 +2450,7 @@ export function RadioHudView() {
                     className="w-16 px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content"
                   />
                   <span className="text-xs text-content-tertiary">
-                    {cfg.pageSecs > 0 ? 'seconds' : 'seconds (0 = only by hand)'}
+                    {cfg.pageSecs > 0 ? 'seconds' : tr('radio_hud.RadioHudView.seconds0OnlyByHand')}
                   </span>
                 </label>
               )}
@@ -2461,8 +2462,8 @@ export function RadioHudView() {
                   className="rounded border bg-surface-input"
                 />
                 <span className="text-xs text-content-secondary"
-                  data-tip="Prints what the radio hands the widget: fullscreen yes/no, the last key event value, the last touch, and which page is showing. For working out why a button does nothing.">
-                  Show input debug on the radio
+                  data-tip={tr('radio_hud.RadioHudView.printsWhatTheRadioHandsThe')}>
+                  {tr('radio_hud.RadioHudView.showInputDebugOnTheRadio')}
                 </span>
               </label>
               <label className="flex items-center gap-2 pt-1 cursor-pointer">
@@ -2473,8 +2474,8 @@ export function RadioHudView() {
                   className="rounded border bg-surface-input"
                 />
                 <span className="text-xs text-content-secondary"
-                  data-tip="The radio animates a scripted flight with voice callouts when nothing is connected, badged DEMO. Also toggled by tapping the NO LINK screen">
-                  Demo mode on the radio
+                  data-tip={tr('radio_hud.RadioHudView.theRadioAnimatesAScriptedFlight')}>
+                  {tr('radio_hud.RadioHudView.demoModeOnTheRadio')}
                 </span>
               </label>
             </div>
@@ -2492,31 +2493,31 @@ export function RadioHudView() {
           ) : card ? (
             <span className="text-content-secondary">
               <span className="text-emerald-400">{card.volumeName}</span>
-              {hudInstalled ? ' - widget installed' : ' - widget will be installed on apply'}
+              {hudInstalled ? tr('radio_hud.RadioHudView.widgetInstalled') : tr('radio_hud.RadioHudView.widgetWillBeInstalledOnApply')}
               {!isBw && models.length > 0 && (
                 <span className="text-content-tertiary">
                   {pagesFrom !== null && pagesFrom !== applyTarget
-                    ? ` - these pages came from ${pagesFrom || 'the shared layout'}${applyTarget ? `, applying puts them on ${applyTarget}` : ''}`
+                    ? tr('radio_hud.RadioHudView.thesePagesCameFrom', { v1: pagesFrom || 'the shared layout', v2: applyTarget ? `, applying puts them on ${applyTarget}` : '' })
                     : applyTarget
-                      ? ` - only "${applyTarget}" uses this layout, the rest keep the shared one`
-                      : ' - every model uses this layout unless it has its own'}
+                      ? tr('radio_hud.RadioHudView.onlyUsesThisLayoutTheRest', { applyTarget })
+                      : tr('radio_hud.RadioHudView.everyModelUsesThisLayoutUnless')}
                 </span>
               )}
             </span>
           ) : (
             <span className="flex items-center gap-2 text-content-secondary">
               <span className="h-3 w-3 shrink-0 animate-spin rounded-full border-2 border-content-tertiary/30 border-t-content-secondary" />
-              Looking for a radio. Plug in via USB and choose USB Storage (SD) on its screen; it takes a few seconds to appear.
+              {tr('radio_hud.RadioHudView.lookingForARadioPlugIn')}
             </span>
           )}
         </div>
         {hudInstalled && (
           <button
             onClick={handleRemoveWidget}
-            data-tip="Delete the ArduDeck widget and its config from the SD card (only files we installed)"
+            data-tip={tr('radio_hud.RadioHudView.deleteTheArdudeckWidgetAndIts')}
             className="px-2.5 py-1.5 text-xs whitespace-nowrap text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-colors"
           >
-            Remove
+            {tr('radio_hud.RadioHudView.remove')}
           </button>
         )}
         <button
@@ -2532,32 +2533,32 @@ export function RadioHudView() {
                   ? `"${applyTarget}" has no layout of its own yet, so this is the shared one.`
                   : 'Loaded the shared layout every model uses.'
               : null);
-            if (!ok) setApplyError('No ArduDeck config found on the card');
+            if (!ok) setApplyError(tr('radio_hud.RadioHudView.noArdudeckConfigFoundOnThe'));
           }}
           disabled={!card}
-          data-tip="Read the config and tile layout currently on the SD card into the editor"
+          data-tip={tr('radio_hud.RadioHudView.readTheConfigAndTileLayout')}
           className="px-3 py-1.5 text-xs whitespace-nowrap text-content-secondary hover:text-content bg-surface-raised hover:bg-surface-raised border border-subtle rounded-lg transition-colors disabled:opacity-50"
         >
-          Load from radio
+          {tr('radio_hud.RadioHudView.loadFromRadio')}
         </button>
         <button
           onClick={() => { void rescan(true); }}
           disabled={busyWithCard}
           className="px-3 py-1.5 text-xs whitespace-nowrap text-content-secondary hover:text-content bg-surface-raised border border-subtle rounded-lg transition-colors disabled:opacity-50"
         >
-          {isScanning ? 'Scanning…' : 'Rescan'}
+          {isScanning ? tr('radio_hud.RadioHudView.scanning') : tr('radio_hud.RadioHudView.rescan')}
         </button>
         <button
           onClick={handleEject}
           disabled={!card || busyWithCard}
-          data-tip="Safely eject the SD volume so the radio can leave USB storage mode"
+          data-tip={tr('radio_hud.RadioHudView.safelyEjectTheSdVolumeSo')}
           className="px-3 py-1.5 text-xs whitespace-nowrap text-content-secondary hover:text-content bg-surface-raised border border-subtle rounded-lg transition-colors disabled:opacity-50"
         >
-          Eject
+          {tr('radio_hud.RadioHudView.eject')}
         </button>
         {!isBw && models.length > 0 && (
           <label className="flex items-center gap-2 text-xs text-content-tertiary">
-            Layout for
+            {tr('radio_hud.RadioHudView.layoutFor')}
             <select
               value={applyTarget}
               onChange={(e) => {
@@ -2565,10 +2566,10 @@ export function RadioHudView() {
                 setConfirmApply(false);
                 setApplyTarget(e.target.value);
               }}
-              data-tip="Which layout Apply writes and Load reads. Models share one layout unless you give a model its own; the radio then uses that one whenever the model is selected."
+              data-tip={tr('radio_hud.RadioHudView.whichLayoutApplyWritesAndLoad')}
               className="px-2 py-1.5 text-xs bg-surface-input border border-subtle rounded-lg text-content-secondary"
             >
-              <option value="">Every model on this radio</option>
+              <option value="">{tr('radio_hud.RadioHudView.everyModelOnThisRadio')}</option>
               {/* The widget looks a layout up by model NAME, so two models
                   sharing one name share one layout: list it once. */}
               {models
@@ -2576,8 +2577,8 @@ export function RadioHudView() {
                 .map((m) => (
                   <option key={m.file} value={m.name}>
                     {m.name}
-                    {models.some((o) => o.name === m.name && o.current) ? ' - on the radio now' : ''}
-                    {m.hasLayout ? ' - has its own layout' : ' - shares the layout'}
+                    {models.some((o) => o.name === m.name && o.current) ? tr('radio_hud.RadioHudView.onTheRadioNow') : ''}
+                    {m.hasLayout ? tr('radio_hud.RadioHudView.hasItsOwnLayout') : tr('radio_hud.RadioHudView.sharesTheLayout')}
                   </option>
                 ))}
             </select>
@@ -2595,12 +2596,12 @@ export function RadioHudView() {
           onBlur={() => setConfirmApply(false)}
           disabled={applyState !== null && applyState.endsWith('…')}
           data-tour="hud-apply"
-          data-tip="Install/refresh the widget and write this layout to the SD card. Afterwards on the radio: App layout, full-screen widget, ArduDeck"
+          data-tip={tr('radio_hud.RadioHudView.installRefreshTheWidgetAndWrite')}
           className={`px-4 py-1.5 text-sm whitespace-nowrap disabled:opacity-60 text-white rounded-lg transition-colors ${
             confirmApply ? 'bg-amber-600 hover:bg-amber-500' : 'bg-blue-600 hover:bg-blue-500'
           }`}
         >
-          {confirmApply ? `Overwrite ${applyTarget || 'every model'}?` : applyLabel}
+          {confirmApply ? tr('radio_hud.RadioHudView.overwrite', { v1: applyTarget || 'every model' }) : applyLabel}
         </button>
       </div>
       {guideOpen && <BwGuide onClose={() => setGuideOpen(false)} />}

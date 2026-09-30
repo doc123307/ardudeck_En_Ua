@@ -33,6 +33,7 @@ import { LogParamsPanel } from './LogParamsPanel';
 import { SpectrumPanel } from './SpectrumPanel';
 import { px4ModeName } from '@ardudeck/ulog-parser';
 import { fieldNames, logCount, logRows } from '../../utils/log-columns';
+import { t as tr } from '../../i18n';
 
 // All chart panels share one uPlot cursor-sync group, keyed by x VALUE (time
 // in seconds), so moving the mouse over any chart draws the crosshair at the
@@ -62,38 +63,38 @@ const EVENT_TYPE_COLORS: Record<string, string> = {
 type ChartPreset = { label: string; desc: string; types: string[]; fields: Record<string, string[]> };
 
 const QUICK_PRESETS: ChartPreset[] = [
-  { label: 'Attitude', desc: 'DesRoll vs Roll, DesPitch vs Pitch', types: ['ATT'], fields: { ATT: ['DesRoll', 'Roll', 'DesPitch', 'Pitch'] } },
-  { label: 'Rate Tuning', desc: 'Desired vs actual body rates', types: ['RATE'], fields: { RATE: ['RDes', 'R', 'PDes', 'P', 'YDes', 'Y'] } },
-  { label: 'Vibration', desc: 'X/Y/Z acceleration variance', types: ['VIBE'], fields: { VIBE: ['VibeX', 'VibeY', 'VibeZ'] } },
-  { label: 'GPS', desc: 'Satellite count & dilution', types: ['GPS'], fields: { GPS: ['NSats', 'HDop'] } },
-  { label: 'Battery', desc: 'Voltage & current draw', types: ['BAT'], fields: { BAT: ['Volt', 'Curr'] } },
-  { label: 'Altitude', desc: 'Desired vs actual altitude', types: ['CTUN'], fields: { CTUN: ['DAlt', 'Alt', 'BAlt'] } },
-  { label: 'Compass', desc: 'Magnetic field X/Y/Z', types: ['MAG'], fields: { MAG: ['MagX', 'MagY', 'MagZ'] } },
-  { label: 'EKF', desc: 'Innovation test ratios', types: ['NKF4'], fields: { NKF4: ['SV', 'SP', 'SH'] } },
-  { label: 'Power', desc: 'Board voltage', types: ['POWR'], fields: { POWR: ['Vcc'] } },
-  { label: 'Motor Outputs', desc: 'PWM out per motor (RCOU)', types: ['RCOU'], fields: { RCOU: ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'] } },
-  { label: 'ESC RPM', desc: 'RPM per motor: split by instance', types: ['ESC'], fields: { ESC: ['RPM'] } },
-  { label: 'ESC Temp', desc: 'Temperature per ESC', types: ['ESC'], fields: { ESC: ['Temp'] } },
-  { label: 'ESC Power', desc: 'Voltage & current per ESC', types: ['ESC'], fields: { ESC: ['Volt', 'Curr'] } },
-  { label: 'Position', desc: 'Desired vs actual XY position', types: ['PSCN', 'PSCE'], fields: { PSCN: ['DPN', 'PN'], PSCE: ['DPE', 'PE'] } },
-  { label: 'Position (legacy)', desc: 'PSC desired vs actual', types: ['PSC'], fields: { PSC: ['TPX', 'PX', 'TPY', 'PY'] } },
-  { label: 'Airspeed', desc: 'Indicated vs true airspeed', types: ['ARSP'], fields: { ARSP: ['Airspeed', 'DiffPress'] } },
-  { label: 'Rangefinder', desc: 'Distance per sensor (RFND)', types: ['RFND'], fields: { RFND: ['Dist'] } },
-  { label: 'Wind Estimate', desc: 'Wind X/Y/Z (NKF2)', types: ['NKF2'], fields: { NKF2: ['VWN', 'VWE'] } },
-  { label: 'Inputs vs Outputs', desc: 'RC in vs motor out', types: ['RCIN', 'RCOU'], fields: { RCIN: ['C1', 'C2', 'C3', 'C4'], RCOU: ['C1', 'C2', 'C3', 'C4'] } },
+  { get label() { return tr('logs.LogExplorerPanel.attitude'); }, get desc() { return tr('logs.LogExplorerPanel.desrollVsRollDespitchVsPitch'); }, types: ['ATT'], fields: { ATT: ['DesRoll', 'Roll', 'DesPitch', 'Pitch'] } },
+  { get label() { return tr('logs.LogExplorerPanel.rateTuning'); }, get desc() { return tr('logs.LogExplorerPanel.desiredVsActualBodyRates'); }, types: ['RATE'], fields: { RATE: ['RDes', 'R', 'PDes', 'P', 'YDes', 'Y'] } },
+  { get label() { return tr('logs.LogExplorerPanel.vibration'); }, get desc() { return tr('logs.LogExplorerPanel.xYZAccelerationVariance'); }, types: ['VIBE'], fields: { VIBE: ['VibeX', 'VibeY', 'VibeZ'] } },
+  { label: 'GPS', get desc() { return tr('logs.LogExplorerPanel.satelliteCountDilution'); }, types: ['GPS'], fields: { GPS: ['NSats', 'HDop'] } },
+  { get label() { return tr('logs.LogExplorerPanel.battery'); }, get desc() { return tr('logs.LogExplorerPanel.voltageCurrentDraw'); }, types: ['BAT'], fields: { BAT: ['Volt', 'Curr'] } },
+  { get label() { return tr('logs.LogExplorerPanel.altitude'); }, get desc() { return tr('logs.LogExplorerPanel.desiredVsActualAltitude'); }, types: ['CTUN'], fields: { CTUN: ['DAlt', 'Alt', 'BAlt'] } },
+  { get label() { return tr('logs.LogExplorerPanel.compass'); }, get desc() { return tr('logs.LogExplorerPanel.magneticFieldXYZ'); }, types: ['MAG'], fields: { MAG: ['MagX', 'MagY', 'MagZ'] } },
+  { label: 'EKF', get desc() { return tr('logs.LogExplorerPanel.innovationTestRatios'); }, types: ['NKF4'], fields: { NKF4: ['SV', 'SP', 'SH'] } },
+  { get label() { return tr('logs.LogExplorerPanel.power'); }, get desc() { return tr('logs.LogExplorerPanel.boardVoltage'); }, types: ['POWR'], fields: { POWR: ['Vcc'] } },
+  { get label() { return tr('logs.LogExplorerPanel.motorOutputs'); }, get desc() { return tr('logs.LogExplorerPanel.pwmOutPerMotorRcou'); }, types: ['RCOU'], fields: { RCOU: ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'] } },
+  { label: 'ESC RPM', get desc() { return tr('logs.LogExplorerPanel.rpmPerMotorSplitByInstance'); }, types: ['ESC'], fields: { ESC: ['RPM'] } },
+  { get label() { return tr('logs.LogExplorerPanel.escTemp'); }, get desc() { return tr('logs.LogExplorerPanel.temperaturePerEsc'); }, types: ['ESC'], fields: { ESC: ['Temp'] } },
+  { get label() { return tr('logs.LogExplorerPanel.escPower'); }, get desc() { return tr('logs.LogExplorerPanel.voltageCurrentPerEsc'); }, types: ['ESC'], fields: { ESC: ['Volt', 'Curr'] } },
+  { get label() { return tr('logs.LogExplorerPanel.position'); }, get desc() { return tr('logs.LogExplorerPanel.desiredVsActualXyPosition'); }, types: ['PSCN', 'PSCE'], fields: { PSCN: ['DPN', 'PN'], PSCE: ['DPE', 'PE'] } },
+  { get label() { return tr('logs.LogExplorerPanel.positionLegacy'); }, get desc() { return tr('logs.LogExplorerPanel.pscDesiredVsActual'); }, types: ['PSC'], fields: { PSC: ['TPX', 'PX', 'TPY', 'PY'] } },
+  { get label() { return tr('logs.LogExplorerPanel.airspeed'); }, get desc() { return tr('logs.LogExplorerPanel.indicatedVsTrueAirspeed'); }, types: ['ARSP'], fields: { ARSP: ['Airspeed', 'DiffPress'] } },
+  { get label() { return tr('logs.LogExplorerPanel.rangefinder'); }, get desc() { return tr('logs.LogExplorerPanel.distancePerSensorRfnd'); }, types: ['RFND'], fields: { RFND: ['Dist'] } },
+  { get label() { return tr('logs.LogExplorerPanel.windEstimate'); }, get desc() { return tr('logs.LogExplorerPanel.windXYZNkf2'); }, types: ['NKF2'], fields: { NKF2: ['VWN', 'VWE'] } },
+  { get label() { return tr('logs.LogExplorerPanel.inputsVsOutputs'); }, get desc() { return tr('logs.LogExplorerPanel.rcInVsMotorOut'); }, types: ['RCIN', 'RCOU'], fields: { RCIN: ['C1', 'C2', 'C3', 'C4'], RCOU: ['C1', 'C2', 'C3', 'C4'] } },
 ];
 
 // PX4 ULog quick presets. Keyed by PX4 topic name with flattened array fields
 // (q[0], gyro_rad[0], ...). Preset-filtering by messageTypes.includes hides any
 // preset whose topic a given log lacks.
 const PX4_PRESETS: ChartPreset[] = [
-  { label: 'Attitude', desc: 'Attitude quaternion', types: ['vehicle_attitude'], fields: { vehicle_attitude: ['q[0]', 'q[1]', 'q[2]', 'q[3]'] } },
-  { label: 'Rates (gyro)', desc: 'Body angular rates', types: ['sensor_combined'], fields: { sensor_combined: ['gyro_rad[0]', 'gyro_rad[1]', 'gyro_rad[2]'] } },
-  { label: 'Vibration', desc: 'Accel & gyro vibration', types: ['vehicle_imu_status'], fields: { vehicle_imu_status: ['accel_vibration_metric', 'gyro_vibration_metric'] } },
-  { label: 'GPS', desc: 'Satellite count & fix type', types: ['vehicle_gps_position'], fields: { vehicle_gps_position: ['satellites_used', 'fix_type'] } },
-  { label: 'Battery', desc: 'Voltage & current draw', types: ['battery_status'], fields: { battery_status: ['voltage_v', 'current_a'] } },
-  { label: 'Local Position', desc: 'Local X/Y/Z position', types: ['vehicle_local_position'], fields: { vehicle_local_position: ['x', 'y', 'z'] } },
-  { label: 'EKF', desc: 'Estimator test ratios', types: ['estimator_status'], fields: { estimator_status: ['mag_test_ratio', 'vel_test_ratio', 'pos_test_ratio'] } },
+  { get label() { return tr('logs.LogExplorerPanel.attitude'); }, get desc() { return tr('logs.LogExplorerPanel.attitudeQuaternion'); }, types: ['vehicle_attitude'], fields: { vehicle_attitude: ['q[0]', 'q[1]', 'q[2]', 'q[3]'] } },
+  { get label() { return tr('logs.LogExplorerPanel.ratesGyro'); }, get desc() { return tr('logs.LogExplorerPanel.bodyAngularRates'); }, types: ['sensor_combined'], fields: { sensor_combined: ['gyro_rad[0]', 'gyro_rad[1]', 'gyro_rad[2]'] } },
+  { get label() { return tr('logs.LogExplorerPanel.vibration'); }, get desc() { return tr('logs.LogExplorerPanel.accelGyroVibration'); }, types: ['vehicle_imu_status'], fields: { vehicle_imu_status: ['accel_vibration_metric', 'gyro_vibration_metric'] } },
+  { label: 'GPS', get desc() { return tr('logs.LogExplorerPanel.satelliteCountFixType'); }, types: ['vehicle_gps_position'], fields: { vehicle_gps_position: ['satellites_used', 'fix_type'] } },
+  { get label() { return tr('logs.LogExplorerPanel.battery'); }, get desc() { return tr('logs.LogExplorerPanel.voltageCurrentDraw'); }, types: ['battery_status'], fields: { battery_status: ['voltage_v', 'current_a'] } },
+  { get label() { return tr('logs.LogExplorerPanel.localPosition'); }, get desc() { return tr('logs.LogExplorerPanel.localXYZPosition'); }, types: ['vehicle_local_position'], fields: { vehicle_local_position: ['x', 'y', 'z'] } },
+  { label: 'EKF', get desc() { return tr('logs.LogExplorerPanel.estimatorTestRatios'); }, types: ['estimator_status'], fields: { estimator_status: ['mag_test_ratio', 'vel_test_ratio', 'pos_test_ratio'] } },
 ];
 
 /**
@@ -415,7 +416,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
       const empty = new Float64Array([NaN, NaN]);
       return {
         data: [time, empty] as uPlot.AlignedData,
-        series: [{ label: '(events only)', data: [NaN, NaN] }],
+        series: [{ label: tr('logs.LogExplorerPanel.eventsOnly'), data: [NaN, NaN] }],
         eventMarkers,
       };
     }
@@ -549,7 +550,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
       ticks: { stroke: isLight ? '#d1d5db' : '#374151', width: 1 },
       font: '11px system-ui',
     };
-    const xAxis: uPlot.Axis = { label: 'Time (s)', ...axisTheme };
+    const xAxis: uPlot.Axis = { label: tr('logs.LogExplorerPanel.timeS'), ...axisTheme };
 
     // One drawn axis per scale, alternating left/right the way Mission Planner
     // stacks its YAxisList / Y2AxisList. Every scale gets a gutter: an axis a
@@ -584,7 +585,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
     });
 
     const seriesOpts: uPlot.Series[] = [
-      { label: 'Time' },
+      { label: tr('logs.LogExplorerPanel.time') },
       ...chartData.series.map((s, i) => ({
         label: s.label,
         stroke: seriesColor(i),
@@ -1107,9 +1108,9 @@ function ChartPanel({ chartId }: { chartId: string }) {
         onMouseDown={() => { if (!isActive) setActiveChartId(chartId); }}
       >
         <div className={`text-[10px] uppercase tracking-wider ${isActive ? 'text-blue-400 font-semibold' : 'text-content-tertiary'}`}>
-          Chart {chartIndex + 1}{chartIds.length > 1 ? (isActive ? ' • picker target' : ' • click to target') : ''}
+          {tr('logs.LogExplorerPanel.chart')} {chartIndex + 1}{chartIds.length > 1 ? (isActive ? tr('logs.LogExplorerPanel.pickerTarget') : tr('logs.LogExplorerPanel.clickToTarget')) : ''}
         </div>
-        <div className="text-content-secondary text-sm">Pick a quick plot or select fields</div>
+        <div className="text-content-secondary text-sm">{tr('logs.LogExplorerPanel.pickAQuickPlotOrSelect')}</div>
         <div className="flex flex-wrap justify-center gap-2">
           {presets.filter((p) => p.types.some((t) => messageTypes.includes(t))).map((preset) => (
             <button
@@ -1122,7 +1123,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-content-tertiary mt-1">Drag = box zoom &middot; Scroll = zoom time &middot; Shift+scroll = zoom Y &middot; Right-drag = pan &middot; Double-click = reset</p>
+        <p className="text-[10px] text-content-tertiary mt-1">{tr('logs.LogExplorerPanel.dragBoxZoomScrollZoomTime')}</p>
       </div>
     );
   }
@@ -1208,10 +1209,10 @@ function ChartPanel({ chartId }: { chartId: string }) {
             {/* Header row — chart label + summary + expand/collapse */}
             <div className="flex items-center gap-2 px-3 py-1 text-[10px] min-h-[22px]">
               <span className={`uppercase tracking-wider shrink-0 ${isActive ? 'text-blue-400 font-semibold' : 'text-content-tertiary'}`}>
-                Chart {chartIndex + 1}{chartIds.length > 1 && isActive ? ' • picker target' : ''}
+                {tr('logs.LogExplorerPanel.chart')} {chartIndex + 1}{chartIds.length > 1 && isActive ? tr('logs.LogExplorerPanel.pickerTarget') : ''}
               </span>
               {seriesCount === 0 ? (
-                <span className="text-content-tertiary italic">no fields selected</span>
+                <span className="text-content-tertiary italic">{tr('logs.LogExplorerPanel.noFieldsSelected')}</span>
               ) : (
                 <>
                   <span className="w-px h-3 bg-subtle shrink-0" />
@@ -1242,7 +1243,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
                     </div>
                   ) : (
                     <span className="text-[9px] text-content-tertiary tabular-nums shrink-0">
-                      {seriesCount} series · {groupCount} {groupCount === 1 ? 'group' : 'groups'}
+                      {seriesCount} {tr('logs.LogExplorerPanel.series')} {groupCount} {groupCount === 1 ? 'group' : 'groups'}
                     </span>
                   )}
                 </>
@@ -1254,9 +1255,9 @@ function ChartPanel({ chartId }: { chartId: string }) {
                   <button
                     onClick={() => setLegendExpanded(!legendExpanded)}
                     className="text-[10px] px-1.5 py-0.5 rounded text-content-secondary hover:text-content hover:bg-surface-raised transition-colors flex items-center gap-1"
-                    data-tip={legendExpanded ? 'Collapse legend' : 'Show all field names'}
+                    data-tip={legendExpanded ? tr('logs.LogExplorerPanel.collapseLegend') : tr('logs.LogExplorerPanel.showAllFieldNames')}
                   >
-                    {legendExpanded ? 'Collapse' : 'Expand'}
+                    {legendExpanded ? tr('logs.LogExplorerPanel.collapse') : tr('logs.LogExplorerPanel.expand')}
                     <svg className={`w-2.5 h-2.5 transition-transform ${legendExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -1265,7 +1266,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
                 <button
                   onClick={exportCsv}
                   className="px-1.5 py-0.5 rounded border bg-surface hover:bg-surface-raised text-content-secondary hover:text-content border-subtle transition-colors"
-                  data-tip="Export the visible window as CSV"
+                  data-tip={tr('logs.LogExplorerPanel.exportTheVisibleWindowAsCsv')}
                 >
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
@@ -1293,7 +1294,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
                         ? 'bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border-blue-500/40'
                         : 'bg-surface hover:bg-surface-raised text-content-secondary hover:text-content border-subtle'
                     }`}
-                    data-tip={syncZoomEnabled ? 'Sync zoom across all charts (on)' : 'Sync zoom across all charts (off)'}
+                    data-tip={syncZoomEnabled ? tr('logs.LogExplorerPanel.syncZoomAcrossAllChartsOn') : tr('logs.LogExplorerPanel.syncZoomAcrossAllChartsOff')}
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       {syncZoomEnabled ? (
@@ -1302,16 +1303,16 @@ function ChartPanel({ chartId }: { chartId: string }) {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101M3 3l18 18" />
                       )}
                     </svg>
-                    <span>{syncZoomEnabled ? 'Synced' : 'Unsynced'}</span>
+                    <span>{syncZoomEnabled ? tr('logs.LogExplorerPanel.synced') : tr('logs.LogExplorerPanel.unsynced')}</span>
                   </button>
                 )}
                 {(isZoomed || yZoomed) && (
                   <button
                     onClick={resetZoom}
                     className="text-[10px] px-1.5 py-0.5 rounded border bg-surface hover:bg-surface-raised text-content border-subtle transition-colors"
-                    data-tip="Reset both axes (or double-click the chart)"
+                    data-tip={tr('logs.LogExplorerPanel.resetBothAxesOrDoubleClick')}
                   >
-                    Reset Zoom
+                    {tr('logs.LogExplorerPanel.resetZoom')}
                   </button>
                 )}
               </div>
@@ -1328,11 +1329,11 @@ function ChartPanel({ chartId }: { chartId: string }) {
                   className="grid items-center text-[9px] uppercase tracking-wider text-content-tertiary pb-0.5 sticky top-0 bg-surface-overlay-subtle"
                   style={{ gridTemplateColumns: legendColumns }}
                 >
-                  <span>{xRange ? 'field · visible window' : 'field · full log'}</span>
+                  <span>{xRange ? tr('logs.LogExplorerPanel.fieldVisibleWindow') : tr('logs.LogExplorerPanel.fieldFullLog')}</span>
                   <span className="text-right">min</span>
                   <span className="text-right">avg</span>
-                  <span className="text-right">max</span>
-                  {yMode !== 'shared' && <span className="text-center">y axis</span>}
+                  <span className="text-right">{tr('logs.LogExplorerPanel.max')}</span>
+                  {yMode !== 'shared' && <span className="text-center">{tr('logs.LogExplorerPanel.yAxis')}</span>}
                 </div>
                 {[...groups.entries()].map(([type, items]) => (
                   <div key={type}>
@@ -1346,8 +1347,8 @@ function ChartPanel({ chartId }: { chartId: string }) {
                         }`}
                         style={{ gridTemplateColumns: legendColumns }}
                         data-tip={activeScaleKey === it.scaleKey
-                          ? 'This axis takes the Y gestures: shift+scroll over the plot zooms it. Click to release.'
-                          : 'Click to aim shift+scroll at this axis alone'}
+                          ? tr('logs.LogExplorerPanel.thisAxisTakesTheYGestures')
+                          : tr('logs.LogExplorerPanel.clickToAimShiftScrollAt')}
                       >
                         <span className="inline-flex items-center gap-1.5 min-w-0">
                           <span className="w-3 h-[3px] rounded-full shrink-0" style={{ backgroundColor: it.color }} />
@@ -1468,7 +1469,7 @@ function AxisRangeEditor({
       onClick={(e) => e.stopPropagation()}
     >
       <input
-        aria-label="Y axis minimum"
+        aria-label={tr('logs.LogExplorerPanel.yAxisMinimum')}
         className={cell}
         value={shown.min}
         onChange={(e) => setDraft({ ...shown, min: e.target.value })}
@@ -1479,7 +1480,7 @@ function AxisRangeEditor({
         }}
       />
       <input
-        aria-label="Y axis maximum"
+        aria-label={tr('logs.LogExplorerPanel.yAxisMaximum')}
         className={cell}
         value={shown.max}
         onChange={(e) => setDraft({ ...shown, max: e.target.value })}
@@ -1497,9 +1498,9 @@ function AxisRangeEditor({
             ? 'text-blue-400 hover:text-blue-300'
             : 'text-content-tertiary opacity-40 cursor-default'
         }`}
-        data-tip={pinned ? 'Back to auto-fit for this field' : 'Auto-fitted to the visible window'}
+        data-tip={pinned ? tr('logs.LogExplorerPanel.backToAutoFitForThis') : tr('logs.LogExplorerPanel.autoFittedToTheVisibleWindow')}
       >
-        auto
+        {tr('logs.LogExplorerPanel.auto')}
       </button>
     </span>
   );
@@ -1722,11 +1723,11 @@ function FlightPathPanel() {
       const last = points[points.length - 1]!;
       new maplibregl.Marker({ color: '#22c55e', scale: 0.7 })
         .setLngLat([first.lon, first.lat])
-        .setPopup(new maplibregl.Popup({ offset: 20 }).setText('Takeoff'))
+        .setPopup(new maplibregl.Popup({ offset: 20 }).setText(tr('logs.LogExplorerPanel.takeoff')))
         .addTo(map);
       new maplibregl.Marker({ color: '#ef4444', scale: 0.7 })
         .setLngLat([last.lon, last.lat])
-        .setPopup(new maplibregl.Popup({ offset: 20 }).setText('Landing'))
+        .setPopup(new maplibregl.Popup({ offset: 20 }).setText(tr('logs.LogExplorerPanel.landing')))
         .addTo(map);
 
       map.once('idle', () => {
@@ -1805,7 +1806,7 @@ function FlightPathPanel() {
   if (points.length < 2) {
     return (
       <div className="h-full flex items-center justify-center text-content-tertiary text-xs">
-        No GPS data available
+        {tr('logs.LogExplorerPanel.noGpsDataAvailable')}
       </div>
     );
   }
@@ -1814,8 +1815,8 @@ function FlightPathPanel() {
     <div className="h-full relative">
       <div ref={mapContainerRef} className="h-full w-full" />
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 px-2 py-1 rounded-md bg-surface-overlay backdrop-blur-sm text-[10px] text-content-secondary whitespace-nowrap">
-        {`Altitude above takeoff · peak ${trackAltitudeRange(points).max.toFixed(1)} m · ${track.source}`}
-        {track.altitudeBasis === 'derived' && <span className="text-content-tertiary"> (ground level inferred)</span>}
+        {tr('logs.LogExplorerPanel.altitudeAboveTakeoffPeakM', { v1: trackAltitudeRange(points).max.toFixed(1), source: track.source })}
+        {track.altitudeBasis === 'derived' && <span className="text-content-tertiary"> {tr('logs.LogExplorerPanel.groundLevelInferred')}</span>}
       </div>
       {/* Controls overlay */}
       <div className="absolute top-2 right-2 z-10 flex flex-col items-stretch gap-1.5">
@@ -1869,7 +1870,7 @@ function FlightPathPanel() {
           );
         }}
         className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full bg-surface-overlay text-content-secondary hover:text-content hover:bg-surface-overlay-light shadow-lg flex items-center justify-center transition-all"
-        title="Center on flight path"
+        title={tr('logs.LogExplorerPanel.centerOnFlightPath')}
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="4" />
@@ -2051,7 +2052,7 @@ function FieldPickerPanel() {
           panel focus, so clicking a chart panel directly does the same. */}
       {chartIds.length > 1 && (
         <div className="flex items-center gap-1 px-2 py-1.5 border-b border-subtle bg-surface-overlay-subtle overflow-x-auto">
-          <span className="text-[10px] uppercase tracking-wider text-content-tertiary mr-1 shrink-0">target:</span>
+          <span className="text-[10px] uppercase tracking-wider text-content-tertiary mr-1 shrink-0">{tr('logs.LogExplorerPanel.target')}</span>
           {chartIds.map((cid, idx) => {
             const isActive = cid === activeChartId;
             const m = selectedFieldsByChart[cid] ?? new Map();
@@ -2066,9 +2067,9 @@ function FieldPickerPanel() {
                     ? 'bg-blue-500/25 text-blue-400 border border-blue-500/40'
                     : 'bg-surface-raised hover:bg-blue-500/10 text-content-secondary border border-transparent'
                 }`}
-                title={isActive ? 'Field picker writes to this chart' : 'Switch picker target to this chart'}
+                title={isActive ? tr('logs.LogExplorerPanel.fieldPickerWritesToThisChart') : tr('logs.LogExplorerPanel.switchPickerTargetToThisChart')}
               >
-                Chart {idx + 1}
+                {tr('logs.LogExplorerPanel.chart')} {idx + 1}
                 {fieldsCount > 0 && (
                   <span className="text-[9px] text-content-tertiary tabular-nums">{fieldsCount}</span>
                 )}
@@ -2087,7 +2088,7 @@ function FieldPickerPanel() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Filter messages..."
+            placeholder={tr('logs.LogExplorerPanel.filterMessages')}
             className="w-full bg-surface-input border border-subtle rounded text-[11px] pl-6 pr-2 py-1 text-content placeholder-content-tertiary focus:outline-none focus:border-blue-500/50"
           />
           {search && (
@@ -2122,7 +2123,7 @@ function FieldPickerPanel() {
               }}
               className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
             >
-              Clear All
+              {tr('logs.LogExplorerPanel.clearAll')}
             </button>
           )}
         </div>
@@ -2144,7 +2145,7 @@ function FieldPickerPanel() {
                 onClick={() => toggleExpanded(type)}
                 className={`flex items-center gap-2 text-xs w-full rounded px-2 py-1.5 transition-colors hover:bg-surface-overlay-subtle`}
                 style={{ backgroundColor: hasSelection ? `${groupColor}${isLightTheme ? '20' : '18'}` : undefined, opacity: hasSelection ? 1 : (isLightTheme ? 0.6 : 0.45) }}
-                title={instanceCount ? `${instanceCount} instances: pick the field for all, or expand to pick a specific instance` : undefined}
+                title={instanceCount ? tr('logs.LogExplorerPanel.instancesPickTheFieldForAll', { instanceCount }) : undefined}
               >
                 <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: groupColor }} />
                 <span className={hasSelection ? 'font-semibold' : 'font-medium'} style={{ color: groupColor }}>{type}</span>
@@ -2191,13 +2192,13 @@ function FieldPickerPanel() {
                             checked={isChecked}
                             onChange={() => handleFieldToggle(type, field)}
                             className="rounded border bg-surface-raised text-blue-500 w-3 h-3 cursor-pointer"
-                            title={isEvent ? 'Event marker, renders as vertical line on chart' : showInstancePicker ? 'Plot all instances on the same chart' : undefined}
+                            title={isEvent ? tr('logs.LogExplorerPanel.eventMarkerRendersAsVerticalLine') : showInstancePicker ? tr('logs.LogExplorerPanel.plotAllInstancesOnTheSame') : undefined}
                           />
                           {isChecked && !isEvent && lineColor && (
                             <span className="w-3 h-[3px] rounded-full flex-shrink-0" style={{ backgroundColor: lineColor }} />
                           )}
                           {isEvent && (
-                            <span className="w-[2px] h-3 flex-shrink-0" style={{ backgroundColor: groupColor }} title="Event marker" />
+                            <span className="w-[2px] h-3 flex-shrink-0" style={{ backgroundColor: groupColor }} title={tr('logs.LogExplorerPanel.eventMarker')} />
                           )}
                           <span
                             className={`${isChecked || pickedInstances.length > 0 ? 'text-content' : 'text-content-secondary'} cursor-pointer flex-1`}
@@ -2210,7 +2211,7 @@ function FieldPickerPanel() {
                             })()}
                           </span>
                           {isEvent && (
-                            <span className="text-[8px] uppercase tracking-wider text-content-tertiary">event</span>
+                            <span className="text-[8px] uppercase tracking-wider text-content-tertiary">{tr('logs.LogExplorerPanel.event')}</span>
                           )}
                           {showInstancePicker && (
                             <button
@@ -2220,7 +2221,7 @@ function FieldPickerPanel() {
                                 return next;
                               })}
                               className="text-[9px] px-1.5 py-0.5 rounded font-medium bg-surface-raised hover:bg-surface-overlay text-content-secondary flex items-center gap-1"
-                              title="Pick specific instances"
+                              title={tr('logs.LogExplorerPanel.pickSpecificInstances')}
                             >
                               {pickedInstances.length > 0 ? `${pickedInstances.length}/${instanceCount}` : `× ${instanceCount}`}
                               <svg className={`w-2.5 h-2.5 transition-transform ${isInstanceExpanded ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
@@ -2241,7 +2242,7 @@ function FieldPickerPanel() {
                                   className={`flex items-center gap-1 text-[10px] cursor-pointer rounded px-1.5 py-0.5 transition-colors ${
                                     instChecked ? 'bg-surface' : 'hover:bg-surface-overlay-subtle'
                                   }`}
-                                  title={`Plot only instance ${inst}`}
+                                  title={tr('logs.LogExplorerPanel.plotOnlyInstance', { inst })}
                                 >
                                   <input
                                     type="checkbox"
@@ -2267,7 +2268,7 @@ function FieldPickerPanel() {
           );
         })}
         {filteredTypes.length === 0 && search && (
-          <p className="text-[11px] text-content-tertiary text-center py-4">No matches for "{search}"</p>
+          <p className="text-[11px] text-content-tertiary text-center py-4">{tr('logs.LogExplorerPanel.noMatchesFor')}{search}"</p>
         )}
       </div>
     </div>
@@ -2318,9 +2319,9 @@ const DEFAULT_LAYOUT: SerializedDockview = {
     orientation: Orientation.HORIZONTAL,
   },
   panels: {
-    map: { id: 'map', contentComponent: 'FlightPathPanel', title: 'Flight Path' },
-    chart: { id: 'chart', contentComponent: 'ChartPanel', title: 'Chart 1', params: { chartId: 'chart' } },
-    fields: { id: 'fields', contentComponent: 'FieldPickerPanel', title: 'Fields' },
+    map: { id: 'map', contentComponent: 'FlightPathPanel', get title() { return tr('logs.LogExplorerPanel.flightPath'); } },
+    chart: { id: 'chart', contentComponent: 'ChartPanel', get title() { return tr('logs.LogExplorerPanel.chart1'); }, params: { chartId: 'chart' } },
+    fields: { id: 'fields', contentComponent: 'FieldPickerPanel', get title() { return tr('logs.LogExplorerPanel.fields'); } },
   },
   activeGroup: '1',
 };
@@ -2330,12 +2331,12 @@ const DEFAULT_LAYOUT: SerializedDockview = {
 // ============================================================================
 
 const PANEL_DEFS = [
-  { id: 'chart', component: 'ChartPanel', title: 'Chart' },
-  { id: 'map', component: 'FlightPathPanel', title: 'Flight Path' },
-  { id: 'fields', component: 'FieldPickerPanel', title: 'Fields' },
-  { id: 'events', component: 'EventsPanel', title: 'Events' },
-  { id: 'params', component: 'LogParamsPanel', title: 'Params' },
-  { id: 'spectrum', component: 'SpectrumPanel', title: 'Spectrum' },
+  { id: 'chart', component: 'ChartPanel', get title() { return tr('logs.LogExplorerPanel.chart'); } },
+  { id: 'map', component: 'FlightPathPanel', get title() { return tr('logs.LogExplorerPanel.flightPath'); } },
+  { id: 'fields', component: 'FieldPickerPanel', get title() { return tr('logs.LogExplorerPanel.fields'); } },
+  { id: 'events', component: 'EventsPanel', get title() { return tr('logs.LogExplorerPanel.events'); } },
+  { id: 'params', component: 'LogParamsPanel', get title() { return tr('logs.LogExplorerPanel.params'); } },
+  { id: 'spectrum', component: 'SpectrumPanel', get title() { return tr('logs.LogExplorerPanel.spectrum'); } },
 ];
 
 // Session-scoped layout memory: leaving the Flight Logs tab unmounts the
@@ -2433,7 +2434,7 @@ export function LogExplorerPanel() {
     apiRef.current.addPanel({
       id: newId,
       component: 'ChartPanel',
-      title: `Chart ${idx + 1}`,
+      title: tr('logs.LogExplorerPanel.chart2', { v1: idx + 1 }),
       params: { chartId: newId },
     });
   }, [addChart]);
@@ -2459,24 +2460,24 @@ export function LogExplorerPanel() {
             className={`text-[10px] px-2 py-1 transition-colors flex items-center gap-1 ${
               explorerTool === 'zoom' ? 'bg-blue-500/20 text-blue-400' : 'bg-surface text-content-secondary hover:text-content'
             }`}
-            data-tip="Drag selects a region to zoom into"
+            data-tip={tr('logs.LogExplorerPanel.dragSelectsARegionToZoom')}
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <circle cx="11" cy="11" r="7" /><path strokeLinecap="round" d="M21 21l-4.35-4.35M8 11h6M11 8v6" />
             </svg>
-            Zoom
+            {tr('logs.LogExplorerPanel.zoom')}
           </button>
           <button
             onClick={() => setExplorerTool('pan')}
             className={`text-[10px] px-2 py-1 transition-colors flex items-center gap-1 border-l border-subtle ${
               explorerTool === 'pan' ? 'bg-blue-500/20 text-blue-400' : 'bg-surface text-content-secondary hover:text-content'
             }`}
-            data-tip="Drag moves the view - best for touchpads"
+            data-tip={tr('logs.LogExplorerPanel.dragMovesTheViewBestFor')}
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 2v20M2 12h20M12 2l-3 3m3-3l3 3M12 22l-3-3m3 3l3-3M2 12l3-3m-3 3l3 3M22 12l-3-3m3 3l-3 3" />
             </svg>
-            Pan
+            {tr('logs.LogExplorerPanel.pan')}
           </button>
         </div>
         <div className="relative">
@@ -2485,28 +2486,28 @@ export function LogExplorerPanel() {
             className={`text-[10px] w-6 h-6 rounded-md border transition-colors ${
               helpOpen ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-surface text-content-secondary hover:text-content border-subtle'
             }`}
-            data-tip="Chart gestures"
+            data-tip={tr('logs.LogExplorerPanel.chartGestures')}
           >
             ?
           </button>
           {helpOpen && (
             <div className="absolute left-0 top-8 z-30 w-72 rounded-lg bg-surface-overlay backdrop-blur-md border border-subtle shadow-xl p-3">
-              <div className="text-[10px] uppercase tracking-wider text-content-tertiary mb-2">Chart gestures</div>
+              <div className="text-[10px] uppercase tracking-wider text-content-tertiary mb-2">{tr('logs.LogExplorerPanel.chartGestures')}</div>
               <div className="grid gap-y-1 text-[11px]" style={{ gridTemplateColumns: 'max-content 1fr', columnGap: '12px' }}>
-                <span className="text-content font-medium">Scroll / pinch</span><span className="text-content-secondary">zoom time, anchored at cursor</span>
-                <span className="text-content font-medium">Two-finger swipe</span><span className="text-content-secondary">pan time (horizontal)</span>
-                <span className="text-content font-medium">Scroll over an axis</span><span className="text-content-secondary">zoom that axis alone</span>
-                <span className="text-content font-medium">Drag an axis</span><span className="text-content-secondary">pan that axis</span>
-                <span className="text-content font-medium">Double-click an axis</span><span className="text-content-secondary">that axis back to auto-fit</span>
-                <span className="text-content font-medium">Shift + scroll</span><span className="text-content-secondary">zoom values (Y) on the selected axis, else all</span>
-                <span className="text-content font-medium">Click a legend row</span><span className="text-content-secondary">aim shift+scroll at that one axis</span>
-                <span className="text-content font-medium">Legend min / max</span><span className="text-content-secondary">type an exact range for that axis</span>
-                <span className="text-content font-medium">Drag</span><span className="text-content-secondary">{explorerTool === 'zoom' ? 'box zoom (Zoom tool)' : 'pan the view (Pan tool)'}</span>
-                <span className="text-content font-medium">Right-drag</span><span className="text-content-secondary">pan (mouse)</span>
-                <span className="text-content font-medium">Double-click</span><span className="text-content-secondary">reset both axes</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.scrollPinch')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.zoomTimeAnchoredAtCursor')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.twoFingerSwipe')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.panTimeHorizontal')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.scrollOverAnAxis')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.zoomThatAxisAlone')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.dragAnAxis')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.panThatAxis')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.doubleClickAnAxis')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.thatAxisBackToAutoFit')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.shiftScroll')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.zoomValuesYOnTheSelected')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.clickALegendRow')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.aimShiftScrollAtThatOne')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.legendMinMax')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.typeAnExactRangeForThat')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.drag')}</span><span className="text-content-secondary">{explorerTool === 'zoom' ? tr('logs.LogExplorerPanel.boxZoomZoomTool') : tr('logs.LogExplorerPanel.panTheViewPanTool')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.rightDrag')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.panMouse')}</span>
+                <span className="text-content font-medium">{tr('logs.LogExplorerPanel.doubleClick')}</span><span className="text-content-secondary">{tr('logs.LogExplorerPanel.resetBothAxes')}</span>
               </div>
               <div className="text-[10px] text-content-tertiary mt-2 pt-2 border-t border-subtle">
-                Hover a chart to see the same instant on every chart and on the flight-path map.
+                {tr('logs.LogExplorerPanel.hoverAChartToSeeThe')}
               </div>
             </div>
           )}
@@ -2515,14 +2516,14 @@ export function LogExplorerPanel() {
         <button
           onClick={handleAddChart}
           className="text-[10px] px-2 py-1 rounded-md bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 transition-colors flex items-center gap-1"
-          data-tip="Add a comparison chart with its own field selection"
+          data-tip={tr('logs.LogExplorerPanel.addAComparisonChartWithIts')}
         >
           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
-          Add Chart
+          {tr('logs.LogExplorerPanel.addChart')}
         </button>
         {closedPanels.length > 0 && (
           <>
-            <span className="text-[10px] text-content-tertiary ml-1">Panels:</span>
+            <span className="text-[10px] text-content-tertiary ml-1">{tr('logs.LogExplorerPanel.panels')}</span>
             {closedPanels.map((def) => (
               <button
                 key={def.id}
@@ -2537,9 +2538,9 @@ export function LogExplorerPanel() {
         <button
           onClick={handleResetLayout}
           className="text-[10px] px-2 py-1 rounded-md bg-surface hover:bg-surface-raised text-content-secondary hover:text-content border border-subtle transition-colors ml-auto"
-          data-tip="Restore the default panel arrangement"
+          data-tip={tr('logs.LogExplorerPanel.restoreTheDefaultPanelArrangement')}
         >
-          Reset Layout
+          {tr('logs.LogExplorerPanel.resetLayout')}
         </button>
       </div>
 

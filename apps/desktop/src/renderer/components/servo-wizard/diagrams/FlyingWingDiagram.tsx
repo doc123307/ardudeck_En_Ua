@@ -5,6 +5,7 @@
  */
 
 import { ControlSurface } from '../presets/servo-presets';
+import { t } from '../../../i18n';
 
 interface Props {
   highlightSurface?: ControlSurface | null;
@@ -77,7 +78,7 @@ export default function FlyingWingDiagram({
       </g>
       {/* Left elevon label */}
       <text x="70" y="108" textAnchor="middle" fill="#9CA3AF" fontSize="10" fontWeight="500">
-        L Elevon
+        {t('servo_wizard.FlyingWingDiagram.lElevon')}
       </text>
       {servoLabels.elevon_left && (
         <text x="85" y="150" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -95,7 +96,7 @@ export default function FlyingWingDiagram({
       </g>
       {/* Right elevon label */}
       <text x="230" y="108" textAnchor="middle" fill="#9CA3AF" fontSize="10" fontWeight="500">
-        R Elevon
+        {t('servo_wizard.FlyingWingDiagram.rElevon')}
       </text>
       {servoLabels.elevon_right && (
         <text x="215" y="150" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -111,7 +112,7 @@ export default function FlyingWingDiagram({
 
       {/* Info text */}
       <text x="150" y="170" textAnchor="middle" fill="#6B7280" fontSize="9">
-        Elevons = Aileron + Elevator combined
+        {t('servo_wizard.FlyingWingDiagram.elevonsAileronElevatorCombined')}
       </text>
     </svg>
   );

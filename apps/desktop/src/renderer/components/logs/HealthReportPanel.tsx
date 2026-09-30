@@ -6,6 +6,7 @@ import { AiWarningDialog } from './AiAnalysisPanel';
 import type { ExplorerPreset, HealthCheckResult } from '@ardudeck/dataflash-parser';
 import { formatAltitudeFromMeters, formatCapacityFromMah, formatSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
 import { ADVISOR_CARGO_SLUG, useCargoEnabled } from '../../modules/capabilities';
+import { t } from '../../i18n';
 
 type ParsedLog = NonNullable<ReturnType<typeof useLogStore.getState>['currentLog']>;
 
@@ -177,17 +178,17 @@ Return 3-6 cards. Most important issues first.`;
         const parsed = JSON.parse(jsonStr) as HealthCheckResult[];
         store.setAiInsightCards(parsed);
       } catch {
-        store.setAiInsightError('Failed to parse AI response');
+        store.setAiInsightError(t('logs.HealthReportPanel.failedToParseAiResponse'));
       }
     } else {
-      store.setAiInsightError(result?.error ?? 'AI analysis failed');
+      store.setAiInsightError(result?.error ?? t('logs.HealthReportPanel.aiAnalysisFailed'));
     }
   }, [aiProvider, altitudeUnit, currentLog, electricCapacityUnit, healthResults, isUlog, speedUnit]);
 
   if (!healthResults || !currentLog) {
     return (
       <div className="h-full flex items-center justify-center text-content-secondary">
-        No log loaded. Download or open a .bin file first.
+        {t('logs.HealthReportPanel.noLogLoadedDownloadOrOpen')}
       </div>
     );
   }
@@ -233,12 +234,12 @@ Return 3-6 cards. Most important issues first.`;
           </div>
           <div>
             <h3 className="text-content font-semibold">
-              {meta.firmwareString || [meta.vehicleType, meta.firmwareVersion].filter(Boolean).join(' ').trim() || 'Flight Log'}
+              {meta.firmwareString || [meta.vehicleType, meta.firmwareVersion].filter(Boolean).join(' ').trim() || t('logs.HealthReportPanel.flightLog')}
             </h3>
             <p className="text-xs text-content-secondary">
-              {currentLogPath?.split('/').pop() ?? 'Unknown file'}
+              {currentLogPath?.split('/').pop() ?? t('logs.HealthReportPanel.unknownFile')}
               {durationMin > 0 && ` \u00b7 ${durationMin.toFixed(1)} min`}
-              {currentLog.messageTypes.length > 0 && ` \u00b7 ${currentLog.messageTypes.length} message types`}
+              {currentLog.messageTypes.length > 0 && t('logs.HealthReportPanel.messageTypes', { length: currentLog.messageTypes.length })}
             </p>
           </div>
         </div>
@@ -247,17 +248,17 @@ Return 3-6 cards. Most important issues first.`;
         <div className="flex items-center gap-3 text-xs">
           {failCount > 0 && (
             <span className="px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30">
-              {failCount} failed
+              {failCount} {t('logs.HealthReportPanel.failed')}
             </span>
           )}
           {warnCount > 0 && (
             <span className="px-2 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
-              {warnCount} warning{warnCount > 1 ? 's' : ''}
+              {warnCount} {t('logs.HealthReportPanel.warning')}{warnCount > 1 ? 's' : ''}
             </span>
           )}
           {passCount > 0 && (
             <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              {passCount} passed
+              {passCount} {t('logs.HealthReportPanel.passed')}
             </span>
           )}
         </div>
@@ -266,15 +267,15 @@ Return 3-6 cards. Most important issues first.`;
         {flightStats && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-subtle">
             <div>
-              <div className="text-xs text-content-secondary">Max Altitude</div>
+              <div className="text-xs text-content-secondary">{t('logs.HealthReportPanel.maxAltitude')}</div>
               <div className="text-sm text-content font-medium">{formatAltitudeFromMeters(flightStats.maxAlt, altitudeUnit)}</div>
             </div>
             <div>
-              <div className="text-xs text-content-secondary">Max Speed</div>
+              <div className="text-xs text-content-secondary">{t('logs.HealthReportPanel.maxSpeed')}</div>
               <div className="text-sm text-content font-medium">{formatSpeedFromMetersPerSecond(flightStats.maxSpd, speedUnit)}</div>
             </div>
             <div>
-              <div className="text-xs text-content-secondary">Distance</div>
+              <div className="text-xs text-content-secondary">{t('logs.HealthReportPanel.distance')}</div>
               <div className="text-sm text-content font-medium">
                 {flightStats.totalDist > 1000
                   ? `${(flightStats.totalDist / 1000).toFixed(2)} km`
@@ -282,7 +283,7 @@ Return 3-6 cards. Most important issues first.`;
               </div>
             </div>
             <div>
-              <div className="text-xs text-content-secondary">Battery Used</div>
+              <div className="text-xs text-content-secondary">{t('logs.HealthReportPanel.batteryUsed')}</div>
               <div className="text-sm text-content font-medium">{formatCapacityFromMah(flightStats.totalMah, electricCapacityUnit)}</div>
             </div>
           </div>
@@ -297,7 +298,7 @@ Return 3-6 cards. Most important issues first.`;
                 disabled={isAiInsightLoading}
                 className="text-xs px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 hover:text-purple-300 border border-purple-500/20 rounded-lg transition-colors disabled:opacity-50"
               >
-                {isAiInsightLoading ? 'Re-analyzing...' : 'Re-analyze with AI'}
+                {isAiInsightLoading ? t('logs.HealthReportPanel.reAnalyzing') : t('logs.HealthReportPanel.reAnalyzeWithAi')}
               </button>
             ) : (
               <button
@@ -308,14 +309,14 @@ Return 3-6 cards. Most important issues first.`;
                 {isAiInsightLoading ? (
                   <>
                     <div className="w-3.5 h-3.5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
-                    <span className="text-sm">Analyzing flight...</span>
+                    <span className="text-sm">{t('logs.HealthReportPanel.analyzingFlight')}</span>
                   </>
                 ) : (
                   <>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                     </svg>
-                    <span className="text-sm">Analyze log with AI</span>
+                    <span className="text-sm">{t('logs.HealthReportPanel.analyzeLogWithAi')}</span>
                   </>
                 )}
               </button>
@@ -334,8 +335,8 @@ Return 3-6 cards. Most important issues first.`;
             <svg className="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
             </svg>
-            <h3 className="text-sm font-semibold text-purple-300">AI Insights</h3>
-            <span className="text-[10px] text-amber-400/60 ml-auto">Experimental - verify before applying</span>
+            <h3 className="text-sm font-semibold text-purple-300">{t('logs.HealthReportPanel.aiInsights')}</h3>
+            <span className="text-[10px] text-amber-400/60 ml-auto">{t('logs.HealthReportPanel.experimentalVerifyBeforeApplying')}</span>
           </div>
           {isAiInsightLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -353,7 +354,7 @@ Return 3-6 cards. Most important issues first.`;
                 <HealthCheckCard
                   key={card.id}
                   result={card}
-                  aiLabel="Ask AI"
+                  aiLabel={t('logs.HealthReportPanel.askAi')}
                   onAskAi={aiEnabled
                     ? () => handleAskAi(`Regarding the "${card.name}" finding: ${card.summary}${card.details ? `\nDetails: ${card.details}` : ''}${card.recommendation ? `\nRecommendation was: ${card.recommendation}` : ''}\n\nCan you explain this further and suggest specific steps to address it?`)
                     : undefined}
@@ -367,7 +368,7 @@ Return 3-6 cards. Most important issues first.`;
       {/* Automated health check cards */}
       {aiEnabled && (aiInsightCards.length > 0 || isAiInsightLoading) && (
         <div className="flex items-center gap-2 mb-0">
-          <h3 className="text-sm font-semibold text-content-secondary">Automated Checks</h3>
+          <h3 className="text-sm font-semibold text-content-secondary">{t('logs.HealthReportPanel.automatedChecks')}</h3>
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -401,7 +402,7 @@ Return 3-6 cards. Most important issues first.`;
       {skipCount > 0 && (
         <details className="text-sm text-content-secondary">
           <summary className="cursor-pointer hover:text-content-secondary">
-            {skipCount} check{skipCount > 1 ? 's' : ''} skipped (no data)
+            {skipCount} {t('logs.HealthReportPanel.check')}{skipCount > 1 ? 's' : ''} {t('logs.HealthReportPanel.skippedNoData')}
           </summary>
           <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
             {healthResults.filter((r) => r.status === 'skip').map((result) => (

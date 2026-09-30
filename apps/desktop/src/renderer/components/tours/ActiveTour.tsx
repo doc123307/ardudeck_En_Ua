@@ -4,6 +4,7 @@ import { ArrowRight, Check, Sparkles } from 'lucide-react';
 import type { FeatureTour } from '../../feature-tours';
 import { FEATURE_TOURS } from '../../feature-tours';
 import { useToursStore, isTourEligible } from '../../stores/tours-store';
+import { t as tr } from '../../i18n';
 
 interface ActiveTourProps {
   tour: FeatureTour;
@@ -69,7 +70,7 @@ export function ActiveTour({ tour, onFinish, onAdvanceToTour }: ActiveTourProps)
               border: '1px solid var(--border-default)',
             }}
           >
-            Back
+            {tr('tours.ActiveTour.back')}
           </button>
         )
       }
@@ -82,7 +83,7 @@ export function ActiveTour({ tour, onFinish, onAdvanceToTour }: ActiveTourProps)
               className="px-3 py-1.5 text-xs font-semibold rounded-md transition-colors inline-flex items-center gap-1 whitespace-nowrap"
               style={{ background: 'rgb(37 99 235)', color: '#fff' }}
             >
-              Next
+              {tr('tours.ActiveTour.next')}
               <ArrowRight className="w-3 h-3" />
             </button>
           );
@@ -96,10 +97,10 @@ export function ActiveTour({ tour, onFinish, onAdvanceToTour }: ActiveTourProps)
               }}
               className="px-3 py-1.5 text-xs font-semibold rounded-md transition-colors inline-flex items-center gap-1 whitespace-nowrap"
               style={{ background: 'rgb(37 99 235)', color: '#fff' }}
-              title={`Next: ${nextEligibleTour.title}`}
+              title={tr('tours.ActiveTour.next2', { title: nextEligibleTour.title })}
             >
               <Sparkles className="w-3 h-3" />
-              Next feature
+              {tr('tours.ActiveTour.nextFeature')}
               <ArrowRight className="w-3 h-3" />
             </button>
           );
@@ -111,7 +112,7 @@ export function ActiveTour({ tour, onFinish, onAdvanceToTour }: ActiveTourProps)
             style={{ background: 'rgb(37 99 235)', color: '#fff' }}
           >
             <Check className="w-3 h-3" />
-            Done
+            {tr('tours.ActiveTour.done')}
           </button>
         );
       }}

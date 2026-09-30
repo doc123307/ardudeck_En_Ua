@@ -3,6 +3,7 @@ import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer, StatRow, SectionTitle } from '../../panels/panel-utils';
 import { formatDbVersion, ESP32_MODE_LABELS } from '../../../../shared/dronebridge-types';
 import type { DroneBridgeStation } from '../../../../shared/dronebridge-types';
+import { t } from '../../../i18n';
 
 /** Map chip model ID to human-readable name */
 function chipModelName(id: number): string {
@@ -101,7 +102,7 @@ export function DroneBridgeStatusPanel() {
 
       if (!cancelled) {
         setReachable(false);
-        setFetchError(`Could not reach DroneBridge at ${droneBridgeIp}`);
+        setFetchError(t('companion.DroneBridgeStatusPanel.couldNotReachDronebridgeAt', { droneBridgeIp }));
       }
     };
 
@@ -150,7 +151,7 @@ export function DroneBridgeStatusPanel() {
     return (
       <PanelContainer>
         <div className="flex items-center justify-center h-full text-xs text-content-tertiary">
-          No DroneBridge IP configured
+          {t('companion.DroneBridgeStatusPanel.noDronebridgeIpConfigured')}
         </div>
       </PanelContainer>
     );
@@ -166,7 +167,7 @@ export function DroneBridgeStatusPanel() {
           <div className={`w-3 h-3 rounded-full shrink-0 ${reachable ? 'bg-emerald-400' : 'bg-red-400'}`} />
           <div>
             <div className={`text-sm font-medium ${reachable ? 'text-emerald-400' : 'text-red-400'}`}>
-              {reachable ? 'Connected' : 'Connecting...'}
+              {reachable ? t('companion.DroneBridgeStatusPanel.connected') : t('companion.DroneBridgeStatusPanel.connecting')}
             </div>
             <div className="text-xs text-content-secondary font-mono">{droneBridgeIp}</div>
             {!reachable && fetchError && (
@@ -178,13 +179,13 @@ export function DroneBridgeStatusPanel() {
         {/* Firmware info */}
         {droneBridgeInfo && (
           <div className="space-y-1">
-            <SectionTitle>Firmware</SectionTitle>
-            <StatRow label="Version" value={formatDbVersion(droneBridgeInfo)} />
-            <StatRow label="Chip" value={chipModelName(droneBridgeInfo.esp_chip_model)} />
+            <SectionTitle>{t('companion.DroneBridgeStatusPanel.firmware')}</SectionTitle>
+            <StatRow label={t('companion.DroneBridgeStatusPanel.version')} value={formatDbVersion(droneBridgeInfo)} />
+            <StatRow label={t('companion.DroneBridgeStatusPanel.chip')} value={chipModelName(droneBridgeInfo.esp_chip_model)} />
             <StatRow label="MAC" value={droneBridgeInfo.esp_mac} />
             <StatRow label="IDF" value={droneBridgeInfo.idf_version} />
             {mode !== null && (
-              <StatRow label="Mode" value={ESP32_MODE_LABELS[mode] ?? `Unknown (${mode})`} />
+              <StatRow label={t('companion.DroneBridgeStatusPanel.mode')} value={ESP32_MODE_LABELS[mode] ?? `Unknown (${mode})`} />
             )}
           </div>
         )}
@@ -192,7 +193,7 @@ export function DroneBridgeStatusPanel() {
         {/* WiFi signal */}
         {droneBridgeStats && droneBridgeStats.esp_rssi !== 0 && (
           <div className="space-y-1">
-            <SectionTitle>WiFi Signal</SectionTitle>
+            <SectionTitle>{t('companion.DroneBridgeStatusPanel.wifiSignal')}</SectionTitle>
             <div className="flex items-center justify-between">
               <span className="text-xs text-content-secondary">RSSI</span>
               <SignalBars rssi={droneBridgeStats.esp_rssi} />
@@ -203,23 +204,23 @@ export function DroneBridgeStatusPanel() {
         {/* Throughput */}
         {droneBridgeStats && (
           <div className="space-y-1">
-            <SectionTitle>Throughput</SectionTitle>
-            <StatRow label="Serial RX" value={formatBytesPerSec(throughput)} />
-            <StatRow label="MAVLink msgs" value={droneBridgeStats.serial_dec_mav_msgs} />
-            <StatRow label="Total bytes read" value={droneBridgeStats.read_bytes.toLocaleString()} />
+            <SectionTitle>{t('companion.DroneBridgeStatusPanel.throughput')}</SectionTitle>
+            <StatRow label={t('companion.DroneBridgeStatusPanel.serialRx')} value={formatBytesPerSec(throughput)} />
+            <StatRow label={t('companion.DroneBridgeStatusPanel.mavlinkMsgs')} value={droneBridgeStats.serial_dec_mav_msgs} />
+            <StatRow label={t('companion.DroneBridgeStatusPanel.totalBytesRead')} value={droneBridgeStats.read_bytes.toLocaleString()} />
           </div>
         )}
 
         {/* Connected clients */}
         {droneBridgeStats && (
           <div className="space-y-1">
-            <SectionTitle>Clients ({totalClients})</SectionTitle>
+            <SectionTitle>{t('companion.DroneBridgeStatusPanel.clients')}{totalClients})</SectionTitle>
             <StatRow label="TCP" value={droneBridgeStats.tcp_connected} />
             <StatRow label="UDP" value={droneBridgeStats.udp_connected} />
 
             {droneBridgeStats.udp_clients.length > 0 && (
               <div className="mt-1.5 p-2 bg-surface-raised rounded-lg">
-                <div className="text-[10px] text-content-tertiary uppercase tracking-wider mb-1">UDP Clients</div>
+                <div className="text-[10px] text-content-tertiary uppercase tracking-wider mb-1">{t('companion.DroneBridgeStatusPanel.udpClients')}</div>
                 {droneBridgeStats.udp_clients.map((client) => (
                   <div key={client} className="text-xs text-content-secondary font-mono py-0.5">{client}</div>
                 ))}
@@ -228,7 +229,7 @@ export function DroneBridgeStatusPanel() {
 
             {droneBridgeStats.connected_sta.length > 0 && (
               <div className="mt-1.5 p-2 bg-surface-raised rounded-lg">
-                <div className="text-[10px] text-content-tertiary uppercase tracking-wider mb-1">Connected Stations</div>
+                <div className="text-[10px] text-content-tertiary uppercase tracking-wider mb-1">{t('companion.DroneBridgeStatusPanel.connectedStations')}</div>
                 {droneBridgeStats.connected_sta.map((sta) => (
                   <StationRow key={sta.sta_mac} station={sta} />
                 ))}

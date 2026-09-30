@@ -16,6 +16,7 @@ import {
   type MarginClass,
   type RadioRates,
 } from './link-radio';
+import { t } from '../../../i18n';
 
 const POPOVER_WIDTH = 232;
 
@@ -44,13 +45,13 @@ function DirectionBlock({ title, tip, rssi, noise }: { title: string; tip: strin
         <span
           className="text-[13px] font-semibold font-mono leading-none"
           style={{ color: cls ? MARGIN_COLOR[cls] : GAUGE_COLORS.textDim }}
-          data-tip="Fade margin: signal above the noise floor. Above 25 dB is comfortable, under 12 dB the link is close to dropping."
+          data-tip={t('map.LinkInstrument.fadeMarginSignalAboveTheNoise')}
         >
           {margin === null ? '--' : `${margin.toFixed(0)} dB`}
         </span>
       </div>
       <Row label="RSSI" value={`${rssi === RADIO_UNKNOWN ? '--' : rssi} · ${formatDbm(rssi)}`} tip="Received signal strength (raw and SiK-calibrated dBm; other modems scale differently)" />
-      <Row label="Noise" value={`${noise === RADIO_UNKNOWN ? '--' : noise} · ${formatDbm(noise)}`} tip="Background noise floor (raw and SiK-calibrated dBm)" />
+      <Row label={t('map.LinkInstrument.noise')} value={`${noise === RADIO_UNKNOWN ? '--' : noise} · ${formatDbm(noise)}`} tip="Background noise floor (raw and SiK-calibrated dBm)" />
     </div>
   );
 }
@@ -116,13 +117,13 @@ export function LinkInstrument(): JSX.Element {
   const r = rates.current;
 
   return (
-    <InstrumentStrip label="Link">
+    <InstrumentStrip label={t('map.LinkInstrument.link')}>
       {/* A button so the drag hook's interactive-child guard leaves the click alone. */}
       <button
         ref={anchorRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
-        data-tip="Telemetry radio link details"
+        data-tip={t('map.LinkInstrument.telemetryRadioLinkDetails')}
         className="flex items-center gap-2 w-full text-left cursor-pointer"
       >
         <span className="w-2 h-2 rounded-full shrink-0" style={{ background: dotColor }} />
@@ -152,32 +153,32 @@ export function LinkInstrument(): JSX.Element {
               {radioStatus ? (
                 <>
                   <DirectionBlock
-                    title="Ground receive"
+                    title={t('map.LinkInstrument.groundReceive')}
                     tip="What the ground-side modem hears from the vehicle"
                     rssi={radioStatus.rssi}
                     noise={radioStatus.noise}
                   />
                   <DirectionBlock
-                    title="Vehicle receive"
+                    title={t('map.LinkInstrument.vehicleReceive')}
                     tip="What the vehicle-side modem hears from the ground (reported back over the link)"
                     rssi={radioStatus.remRssi}
                     noise={radioStatus.remNoise}
                   />
                   <div className="space-y-1">
                     <Row
-                      label="Rx errors"
+                      label={t('map.LinkInstrument.rxErrors')}
                       value={r ? `${radioStatus.rxErrors} (${r.errorsPerSec.toFixed(1)}/s)` : `${radioStatus.rxErrors}`}
                       tip="Packets lost to reception errors since boot (cumulative, with current rate)"
                     />
                     <Row
-                      label="FEC corrected"
+                      label={t('map.LinkInstrument.fecCorrected')}
                       value={r ? `${radioStatus.fixed} (${r.fixedPerSec.toFixed(1)}/s)` : `${radioStatus.fixed}`}
                       tip="Damaged packets repaired by forward error correction; rising counts mean the link is working hard"
                     />
                   </div>
-                  <div data-tip="Free space in the radio's transmit buffer; near 0% the link cannot keep up with outgoing data">
+                  <div data-tip={t('map.LinkInstrument.freeSpaceInTheRadioS')}>
                     <div className="flex justify-between text-[11px]">
-                      <span className="text-content-tertiary">Tx buffer free</span>
+                      <span className="text-content-tertiary">{t('map.LinkInstrument.txBufferFree')}</span>
                       <span className="text-content-secondary font-mono">{radioStatus.txbuf}%</span>
                     </div>
                     <div className="h-1 mt-1 rounded bg-surface-input overflow-hidden">
@@ -200,7 +201,7 @@ export function LinkInstrument(): JSX.Element {
                 </>
               ) : (
                 <div className="text-[11px] text-content-secondary leading-relaxed">
-                  No telemetry modem is reporting on this link. RADIO_STATUS comes from SiK/RFD900-class radios and wfb-ng or ELRS gateways; direct USB and plain network links do not send it.
+                  {t('map.LinkInstrument.noTelemetryModemIsReportingOn')}
                 </div>
               )}
             </div>

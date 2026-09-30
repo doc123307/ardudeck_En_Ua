@@ -60,6 +60,7 @@ import {
   type SpeedUnit,
   type WeightUnit,
 } from '../../../shared/user-units.js';
+import { t as tr } from '../../i18n';
 
 // Display unit conversion helpers - storage stays in each field's native unit.
 function fmtWeight(g: number, unit: WeightUnit): string {
@@ -277,7 +278,7 @@ function checkProfileCompatibility(
     if (supportedTypes && !supportedTypes.includes(profileType)) {
       return {
         compatible: false,
-        message: `Your ${VEHICLE_TYPE_NAMES[profileType]} profile is not compatible with ${FIRMWARE_NAMES[fcVariant] || fcVariant}`,
+        message: tr('settings.SettingsView.yourProfileIsNotCompatibleWith', { v1: VEHICLE_TYPE_NAMES[profileType], v2: FIRMWARE_NAMES[fcVariant] || fcVariant }),
         supportedTypes,
       };
     }
@@ -312,14 +313,13 @@ function ProfileCompatibilityBanner({
 
         {/* Message Content */}
         <div className="flex-1">
-          <h3 className="text-lg font-medium text-amber-300">Profile Compatibility Issue</h3>
+          <h3 className="text-lg font-medium text-amber-300">{tr('settings.SettingsView.profileCompatibilityIssue')}</h3>
           <p className="text-sm text-content mt-1">
-            Your current profile is configured for <span className="font-medium text-amber-400">{VEHICLE_TYPE_NAMES[profileType]}</span>,
-            but you're connected to a <span className="font-medium text-blue-400">{FIRMWARE_NAMES[fcVariant] || fcVariant}</span> board
+            {tr('settings.SettingsView.yourCurrentProfileIsConfiguredFor')} <span className="font-medium text-amber-400">{VEHICLE_TYPE_NAMES[profileType]}</span>{tr('settings.SettingsView.butYouReConnectedToA')} <span className="font-medium text-blue-400">{FIRMWARE_NAMES[fcVariant] || fcVariant}</span> {tr('settings.SettingsView.board')}
             {boardId && <span className="text-content-secondary"> ({boardId})</span>}.
           </p>
           <p className="text-sm text-content-secondary mt-2">
-            {FIRMWARE_NAMES[fcVariant] || fcVariant} only supports: {supportedTypes.map(t => VEHICLE_TYPE_NAMES[t]).join(', ')}.
+            {FIRMWARE_NAMES[fcVariant] || fcVariant} {tr('settings.SettingsView.onlySupports')} {supportedTypes.map(t => VEHICLE_TYPE_NAMES[t]).join(', ')}.
           </p>
 
           {/* Quick Actions */}
@@ -331,7 +331,7 @@ function ProfileCompatibilityBanner({
                 className="flex items-center gap-2 px-3 py-2 bg-amber-600/30 hover:bg-amber-600/50 border border-amber-500/50 rounded-lg text-sm text-amber-200 transition-colors"
               >
                 <div className="w-5 h-5">{VEHICLE_ICONS[type]}</div>
-                Create {VEHICLE_TYPE_NAMES[type]} Profile
+                {tr('settings.SettingsView.create')} {VEHICLE_TYPE_NAMES[type]} {tr('settings.SettingsView.profile')}
               </button>
             ))}
           </div>
@@ -656,15 +656,15 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
           <svg className="w-5 h-5 text-content-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
           </svg>
-          <span className="text-sm font-medium text-content-secondary">Weather</span>
+          <span className="text-sm font-medium text-content-secondary">{tr('settings.SettingsView.weather')}</span>
         </div>
         <div className="text-center py-6">
           <svg className="w-12 h-12 text-content-tertiary mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          <div className="text-content-secondary text-sm">Getting location...</div>
-          <div className="text-content-tertiary text-xs mt-1">Connect vehicle or allow location access</div>
+          <div className="text-content-secondary text-sm">{tr('settings.SettingsView.gettingLocation')}</div>
+          <div className="text-content-tertiary text-xs mt-1">{tr('settings.SettingsView.connectVehicleOrAllowLocationAccess')}</div>
         </div>
       </div>
     );
@@ -677,11 +677,11 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
           <svg className="w-5 h-5 text-content-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
           </svg>
-          <span className="text-sm font-medium text-content-secondary">Weather</span>
+          <span className="text-sm font-medium text-content-secondary">{tr('settings.SettingsView.weather')}</span>
         </div>
         <div className="text-center py-6">
           <div className="animate-spin w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full mx-auto mb-2" />
-          <div className="text-content-secondary text-sm">Loading weather...</div>
+          <div className="text-content-secondary text-sm">{tr('settings.SettingsView.loadingWeather')}</div>
         </div>
       </div>
     );
@@ -694,10 +694,10 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
           <svg className="w-5 h-5 text-content-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
           </svg>
-          <span className="text-sm font-medium text-content-secondary">Weather</span>
+          <span className="text-sm font-medium text-content-secondary">{tr('settings.SettingsView.weather')}</span>
         </div>
         <div className="text-center py-6">
-          <div className="text-content-secondary text-sm">Unavailable</div>
+          <div className="text-content-secondary text-sm">{tr('settings.SettingsView.unavailable')}</div>
         </div>
       </div>
     );
@@ -804,7 +804,7 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
         </div>
         <div className="text-right">
           <span className={`text-xs px-2.5 py-1 rounded-full font-medium border ${getStatusColor()}`}>
-            {isBad ? 'No Go' : isCaution ? 'Caution' : 'Good'}
+            {isBad ? tr('settings.SettingsView.noGo') : isCaution ? tr('settings.SettingsView.caution') : tr('settings.SettingsView.good')}
           </span>
           <div className="text-[10px] text-content-secondary mt-1 flex items-center justify-end gap-1">
             {locationSource === 'device' && (
@@ -817,15 +817,15 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               </svg>
             )}
-            {getVehicleLabel()} conditions
+            {getVehicleLabel()} {tr('settings.SettingsView.conditions')}
           </div>
           {briefingAvailable && (
             <button
               onClick={() => setView('weather')}
               className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-medium text-content-secondary hover:text-content transition-colors"
-              data-tip="Open the full pre-flight weather briefing"
+              data-tip={tr('settings.SettingsView.openTheFullPreFlightWeather')}
             >
-              View in detail
+              {tr('settings.SettingsView.viewInDetail')}
               <ArrowRight className="w-3 h-3" />
             </button>
           )}
@@ -843,12 +843,12 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
               {isMaritime ? (
                 <>
                   <div className="text-lg font-semibold text-content">{kmhToKnots(weather.windSpeed)} <span className="text-sm font-normal text-content-secondary">kts</span></div>
-                  <div className="text-xs text-content-secondary">Wind from {getWindDirection(weather.windDir)}</div>
+                  <div className="text-xs text-content-secondary">{tr('settings.SettingsView.windFrom')} {getWindDirection(weather.windDir)}</div>
                 </>
               ) : (
                 <>
                   <WindSpeedValue kmh={weather.windSpeed} unit={speedUnit} className="text-lg font-semibold text-content" />
-                  <div className="text-xs text-content-secondary">Wind from {getWindDirection(weather.windDir)}</div>
+                  <div className="text-xs text-content-secondary">{tr('settings.SettingsView.windFrom')} {getWindDirection(weather.windDir)}</div>
                 </>
               )}
             </div>
@@ -859,7 +859,7 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
                 <div className={`text-lg font-semibold ${weather.windGusts > weather.windSpeed * 1.3 ? 'text-amber-400' : 'text-content'}`}>
                   {kmhToKnots(weather.windGusts)} <span className="text-sm font-normal text-content-secondary">kts</span>
                 </div>
-                <div className="text-xs text-content-secondary">Gusts</div>
+                <div className="text-xs text-content-secondary">{tr('settings.SettingsView.gusts')}</div>
               </>
             ) : (
               <>
@@ -868,7 +868,7 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
                   unit={speedUnit}
                   className={`text-lg font-semibold ${weather.windGusts > weather.windSpeed * 1.3 ? 'text-amber-400' : 'text-content'}`}
                 />
-                <div className="text-xs text-content-secondary">Gusts</div>
+                <div className="text-xs text-content-secondary">{tr('settings.SettingsView.gusts')}</div>
               </>
             )}
           </div>
@@ -888,7 +888,7 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
                 <div className={`text-lg font-semibold ${(weather.waveHeight || 0) > 1.5 ? 'text-amber-400' : 'text-content'}`}>
                   {weather.waveHeight?.toFixed(1) || '-'} <span className="text-sm font-normal text-content-secondary">m</span>
                 </div>
-                <div className="text-xs text-content-secondary">Wave Height</div>
+                <div className="text-xs text-content-secondary">{tr('settings.SettingsView.waveHeight')}</div>
               </div>
             </div>
             {weather.swellHeight !== undefined && (
@@ -897,7 +897,7 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
                   {weather.swellHeight?.toFixed(1)} <span className="text-sm font-normal text-content-secondary">m</span>
                 </div>
                 <div className="text-xs text-content-secondary">
-                  Swell {weather.swellDirection !== undefined ? getWindDirection(weather.swellDirection) : ''}
+                  {tr('settings.SettingsView.swell')} {weather.swellDirection !== undefined ? getWindDirection(weather.swellDirection) : ''}
                   {weather.swellPeriod ? ` ${weather.swellPeriod.toFixed(0)}s` : ''}
                 </div>
               </div>
@@ -914,7 +914,7 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
               <div className={`text-sm font-semibold ${weather.visibility < 5 ? 'text-amber-400' : 'text-content'}`}>
                 {weather.visibility}km
               </div>
-              <div className="text-[10px] text-content-secondary uppercase">Visibility</div>
+              <div className="text-[10px] text-content-secondary uppercase">{tr('settings.SettingsView.visibility')}</div>
             </div>
             <div className="bg-surface-overlay-subtle rounded-lg py-2 px-1">
               <div className="text-sm font-semibold text-content">{weather.pressure}</div>
@@ -922,7 +922,7 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
             </div>
             <div className="bg-surface-overlay-subtle rounded-lg py-2 px-1">
               <div className="text-sm font-semibold text-content">{weather.temp}°</div>
-              <div className="text-[10px] text-content-secondary uppercase">Air Temp</div>
+              <div className="text-[10px] text-content-secondary uppercase">{tr('settings.SettingsView.airTemp')}</div>
             </div>
           </>
         ) : (
@@ -931,11 +931,11 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
               <div className={`text-sm font-semibold ${weather.visibility < 5 ? 'text-amber-400' : 'text-content'}`}>
                 {weather.visibility}km
               </div>
-              <div className="text-[10px] text-content-secondary uppercase">Visibility</div>
+              <div className="text-[10px] text-content-secondary uppercase">{tr('settings.SettingsView.visibility')}</div>
             </div>
             <div className="bg-surface-overlay-subtle rounded-lg py-2 px-1">
               <div className="text-sm font-semibold text-content">{weather.cloudCover}%</div>
-              <div className="text-[10px] text-content-secondary uppercase">Clouds</div>
+              <div className="text-[10px] text-content-secondary uppercase">{tr('settings.SettingsView.clouds')}</div>
             </div>
             <div className="bg-surface-overlay-subtle rounded-lg py-2 px-1">
               <div className="text-sm font-semibold text-content">{weather.pressure}</div>
@@ -953,18 +953,18 @@ function WeatherWidget({ vehicleType }: { vehicleType?: VehicleType }) {
           </svg>
           <p className={`text-[11px] leading-relaxed ${isBad ? 'text-red-400' : 'text-amber-400'}`}>
             {weather.windGusts >= gustLimit
-              ? `Gusts of ${weather.windGusts} km/h exceed safe limit (${gustLimit} km/h). Risk of loss of control.`
+              ? tr('settings.SettingsView.gustsOfKmHExceedSafe', { windGusts: weather.windGusts, gustLimit })
               : weather.windSpeed >= windLimit
-                ? `Sustained wind of ${weather.windSpeed} km/h exceeds safe limit (${windLimit} km/h).`
+                ? tr('settings.SettingsView.sustainedWindOfKmHExceeds', { windSpeed: weather.windSpeed, windLimit })
                 : weather.condition === 'Thunderstorm'
-                  ? 'Thunderstorm activity detected. Do not fly.'
+                  ? tr('settings.SettingsView.thunderstormActivityDetectedDoNotFly')
                   : weather.condition === 'Rain'
-                    ? 'Rain detected. Electronics at risk.'
+                    ? tr('settings.SettingsView.rainDetectedElectronicsAtRisk')
                     : weather.visibility < visibilityLimit
-                      ? `Low visibility (${weather.visibility} km). Maintain visual line of sight.`
+                      ? tr('settings.SettingsView.lowVisibilityKmMaintainVisualLine', { visibility: weather.visibility })
                       : weather.condition === 'Fog'
-                        ? 'Fog detected. Reduced visibility likely.'
-                        : `Wind approaching limits. Monitor conditions closely.`}
+                        ? tr('settings.SettingsView.fogDetectedReducedVisibilityLikely')
+                        : tr('settings.SettingsView.windApproachingLimitsMonitorConditionsClosely')}
           </p>
         </div>
       )}
@@ -981,24 +981,24 @@ function TipsSection({ vehicle }: { vehicle: VehicleProfile | null }) {
   if (vehicle) {
     // Performance tips
     if ((vehicle._avgPowerDraw ?? 0) > 500) {
-      tips.push({ type: 'info', message: 'High power draw - consider larger battery for longer flights' });
+      tips.push({ type: 'info', message: tr('settings.SettingsView.highPowerDrawConsiderLargerBattery') });
     }
     if ((vehicle._cruiseSpeed ?? 0) > 15 && vehicle.type === 'copter') {
-      tips.push({ type: 'info', message: 'High cruise speed reduces efficiency on multirotors' });
+      tips.push({ type: 'info', message: tr('settings.SettingsView.highCruiseSpeedReducesEfficiencyOn') });
     }
     if (vehicle.batteryCapacity < 3000 && vehicle.weight > 2000) {
-      tips.push({ type: 'warning', message: 'Small battery for vehicle weight - flight time may be limited' });
+      tips.push({ type: 'warning', message: tr('settings.SettingsView.smallBatteryForVehicleWeightFlight') });
     }
   }
 
   // Mission tips
   if (missionDefaults.safeAltitudeBuffer < 20) {
-    tips.push({ type: 'warning', message: 'Low safe altitude buffer - increase for mountainous terrain' });
+    tips.push({ type: 'warning', message: tr('settings.SettingsView.lowSafeAltitudeBufferIncreaseFor') });
   }
 
   // General tips
   if (tips.length === 0) {
-    tips.push({ type: 'success', message: 'Your settings look good! Ready for flight planning.' });
+    tips.push({ type: 'success', message: tr('settings.SettingsView.yourSettingsLookGoodReadyFor') });
   }
 
   const getIcon = (type: string) => {
@@ -1075,30 +1075,30 @@ function ArduPilotFlightStats() {
 
   return (
     <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-4">
-      <h3 className="text-xs font-medium text-content-secondary uppercase tracking-wider mb-3">Flight Statistics (from FC)</h3>
+      <h3 className="text-xs font-medium text-content-secondary uppercase tracking-wider mb-3">{tr('settings.SettingsView.flightStatisticsFromFc')}</h3>
       <div className="grid grid-cols-2 gap-2">
         <StatCard
           icon={<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
           value={formatTime(statFlightTime)}
-          label="Total Flight Time"
+          label={tr('settings.SettingsView.totalFlightTime')}
           color="bg-blue-500/20 text-blue-400"
         />
         <StatCard
           icon={<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>}
           value={formatTime(statRuntime)}
-          label="Total Powered Time"
+          label={tr('settings.SettingsView.totalPoweredTime')}
           color="bg-emerald-500/20 text-emerald-400"
         />
         <StatCard
           icon={<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>}
           value={statBootCount.toString()}
-          label="Boot Count"
+          label={tr('settings.SettingsView.bootCount')}
           color="bg-purple-500/20 text-purple-400"
         />
         <StatCard
           icon={<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>}
           value={statFlightTime > 0 ? `${Math.round((statFlightTime / statRuntime) * 100)}%` : '--'}
-          label="Flight Ratio"
+          label={tr('settings.SettingsView.flightRatio')}
           color="bg-amber-500/20 text-amber-400"
         />
       </div>
@@ -1112,11 +1112,11 @@ function ArduPilotFlightStats() {
 type SettingsCategoryId = 'vehicle' | 'configuration' | 'maps' | 'advanced' | 'about';
 
 const SETTINGS_CATEGORIES: { id: SettingsCategoryId; label: string; icon: LucideIcon }[] = [
-  { id: 'vehicle', label: 'Vehicle', icon: Gauge },
-  { id: 'configuration', label: 'Configuration', icon: SlidersHorizontal },
-  { id: 'maps', label: 'Maps', icon: MapIcon },
-  { id: 'advanced', label: 'Advanced', icon: FlaskConical },
-  { id: 'about', label: 'About', icon: Info },
+  { id: 'vehicle', get label() { return tr('settings.SettingsView.vehicle'); }, icon: Gauge },
+  { id: 'configuration', get label() { return tr('settings.SettingsView.configuration'); }, icon: SlidersHorizontal },
+  { id: 'maps', get label() { return tr('settings.SettingsView.maps'); }, icon: MapIcon },
+  { id: 'advanced', get label() { return tr('settings.SettingsView.advanced'); }, icon: FlaskConical },
+  { id: 'about', get label() { return tr('settings.SettingsView.about'); }, icon: Info },
 ];
 
 // Per-tab colour coding, same convention as the Parameters group tabs: the icon
@@ -1352,9 +1352,9 @@ export function SettingsView() {
       {/* Header */}
       <div className="shrink-0 px-6 pt-6 pb-4">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-2xl font-semibold text-content">Settings</h1>
+          <h1 className="text-2xl font-semibold text-content">{tr('settings.SettingsView.settings')}</h1>
           <p className="text-content-secondary text-sm mt-1">
-            Configure mission defaults and vehicle profiles
+            {tr('settings.SettingsView.configureMissionDefaultsAndVehicleProfiles')}
           </p>
         </div>
       </div>
@@ -1421,7 +1421,7 @@ export function SettingsView() {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-lg font-medium text-content truncate">
-                        {activeVehicle?.name || 'No vehicle'}
+                        {activeVehicle?.name || tr('settings.SettingsView.noVehicle')}
                       </div>
                       <div className="text-sm text-content-secondary flex items-center gap-2">
                         <span>{activeVehicle ? VEHICLE_TYPE_NAMES[activeVehicle.type] : ''}</span>
@@ -1436,7 +1436,7 @@ export function SettingsView() {
                       <button
                         onClick={() => setEditingVehicleId(activeVehicle.id)}
                         className="p-1.5 text-content-secondary hover:text-content hover:bg-surface-raised rounded transition-colors"
-                        title="Edit vehicle in Vehicle Profiles"
+                        title={tr('settings.SettingsView.editVehicleInVehicleProfiles')}
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -1452,36 +1452,36 @@ export function SettingsView() {
                     {/* Type-specific primary spec */}
                     <div className="bg-surface-overlay-subtle rounded-lg p-2">
                       <div className="text-xs text-content-secondary">
-                        {activeVehicle.type === 'copter' && 'Frame'}
-                        {activeVehicle.type === 'plane' && 'Wingspan'}
-                        {activeVehicle.type === 'vtol' && 'Wingspan'}
-                        {activeVehicle.type === 'rover' && 'Drive'}
-                        {activeVehicle.type === 'boat' && 'Hull'}
-                        {activeVehicle.type === 'sub' && 'Depth'}
+                        {activeVehicle.type === 'copter' && tr('settings.SettingsView.frame')}
+                        {activeVehicle.type === 'plane' && tr('settings.SettingsView.wingspan')}
+                        {activeVehicle.type === 'vtol' && tr('settings.SettingsView.wingspan')}
+                        {activeVehicle.type === 'rover' && tr('settings.SettingsView.drive')}
+                        {activeVehicle.type === 'boat' && tr('settings.SettingsView.hull')}
+                        {activeVehicle.type === 'sub' && tr('settings.SettingsView.depth')}
                       </div>
                       <div className="text-sm text-content font-medium">
                         {activeVehicle.type === 'copter' && `${fmtLength(activeVehicle.frameSize || 127, dimensionUnit)} ${activeVehicle.motorCount === 6 ? 'Hex' : activeVehicle.motorCount === 8 ? 'Octo' : 'Quad'}`}
                         {activeVehicle.type === 'plane' && fmtLength(activeVehicle.wingspan || 1200, dimensionUnit)}
                         {activeVehicle.type === 'vtol' && fmtLength(activeVehicle.wingspan || 1500, dimensionUnit)}
-                        {activeVehicle.type === 'rover' && (activeVehicle.driveType === 'ackermann' ? 'Car' : activeVehicle.driveType === 'skid' ? 'Skid' : 'Tank')}
-                        {activeVehicle.type === 'boat' && (activeVehicle.hullType ? `${activeVehicle.hullType.charAt(0).toUpperCase()}${activeVehicle.hullType.slice(1)}` : 'Displacement')}
+                        {activeVehicle.type === 'rover' && (activeVehicle.driveType === 'ackermann' ? tr('settings.SettingsView.car') : activeVehicle.driveType === 'skid' ? tr('settings.SettingsView.skid') : tr('settings.SettingsView.tank'))}
+                        {activeVehicle.type === 'boat' && (activeVehicle.hullType ? `${activeVehicle.hullType.charAt(0).toUpperCase()}${activeVehicle.hullType.slice(1)}` : tr('settings.SettingsView.displacement'))}
                         {activeVehicle.type === 'sub' && formatAltitudeFromMeters(activeVehicle.maxDepth ?? 100, altitudeUnit)}
                       </div>
                     </div>
                     {/* Weight */}
                     <div className="bg-surface-overlay-subtle rounded-lg p-2">
-                      <div className="text-xs text-content-secondary">Weight</div>
+                      <div className="text-xs text-content-secondary">{tr('settings.SettingsView.weight')}</div>
                       <div className="text-sm text-content font-medium">{fmtWeight(activeVehicle.weight, weightUnit)}</div>
                     </div>
                     {/* Battery */}
                     <div className="bg-surface-overlay-subtle rounded-lg p-2">
-                      <div className="text-xs text-content-secondary">Battery</div>
+                      <div className="text-xs text-content-secondary">{tr('settings.SettingsView.battery')}</div>
                       <div className="text-sm text-content font-medium">{activeVehicle.batteryCells}S{activeVehicle.batteryChemistry && activeVehicle.batteryChemistry !== 'lipo' ? ` ${({ lihv: 'LiHV', lion: 'Li-Ion', life: 'LiFe' } as Record<string, string>)[activeVehicle.batteryChemistry] ?? ''}` : ''} {fmtCapacity(activeVehicle.batteryCapacity, electricCapacityUnit)}</div>
                     </div>
                     {/* Type-specific secondary spec */}
                     <div className="bg-surface-overlay-subtle rounded-lg p-2">
                       <div className="text-xs text-content-secondary">
-                        {['copter', 'plane', 'vtol'].includes(activeVehicle.type) ? 'Est. Cruise' : 'Est. Speed'}
+                        {['copter', 'plane', 'vtol'].includes(activeVehicle.type) ? tr('settings.SettingsView.estCruise') : tr('settings.SettingsView.estSpeed')}
                       </div>
                       <div className="text-sm text-cyan-400 font-medium">
                         {formatSpeedFromMetersPerSecond(cruiseSpeed, speedUnit)}
@@ -1491,35 +1491,35 @@ export function SettingsView() {
                   {/* Board Stats (from STAT_* parameters) */}
                   {activeVehicle.boardStats && (activeVehicle.boardStats.totalFlightCount != null || activeVehicle.boardStats.totalFlightTime != null) && (
                     <div className="mt-3 pt-3 border-t border-subtle">
-                      <div className="text-[10px] text-content-secondary uppercase tracking-wider mb-2">Board Stats</div>
+                      <div className="text-[10px] text-content-secondary uppercase tracking-wider mb-2">{tr('settings.SettingsView.boardStats')}</div>
                       <div className="grid grid-cols-3 gap-2">
                         {activeVehicle.boardStats.totalFlightCount != null && (
                           <div className="bg-surface-overlay-subtle rounded-lg p-2">
-                            <div className="text-[10px] text-content-secondary">Flights</div>
+                            <div className="text-[10px] text-content-secondary">{tr('settings.SettingsView.flights')}</div>
                             <div className="text-xs text-content font-medium">{activeVehicle.boardStats.totalFlightCount}</div>
                           </div>
                         )}
                         {activeVehicle.boardStats.totalFlightTime != null && (
                           <div className="bg-surface-overlay-subtle rounded-lg p-2">
-                            <div className="text-[10px] text-content-secondary">Flight Time</div>
+                            <div className="text-[10px] text-content-secondary">{tr('settings.SettingsView.flightTime')}</div>
                             <div className="text-xs text-content font-medium">{formatTime(activeVehicle.boardStats.totalFlightTime)}</div>
                           </div>
                         )}
                         {activeVehicle.boardStats.totalRunTime != null && (
                           <div className="bg-surface-overlay-subtle rounded-lg p-2">
-                            <div className="text-[10px] text-content-secondary">Run Time</div>
+                            <div className="text-[10px] text-content-secondary">{tr('settings.SettingsView.runTime')}</div>
                             <div className="text-xs text-content font-medium">{formatTime(activeVehicle.boardStats.totalRunTime)}</div>
                           </div>
                         )}
                         {activeVehicle.boardStats.totalDistance != null && (
                           <div className="bg-surface-overlay-subtle rounded-lg p-2">
-                            <div className="text-[10px] text-content-secondary">Distance</div>
+                            <div className="text-[10px] text-content-secondary">{tr('settings.SettingsView.distance')}</div>
                             <div className="text-xs text-content font-medium">{formatDistance(activeVehicle.boardStats.totalDistance)}</div>
                           </div>
                         )}
                         {activeVehicle.boardStats.bootCount != null && (
                           <div className="bg-surface-overlay-subtle rounded-lg p-2">
-                            <div className="text-[10px] text-content-secondary">Boots</div>
+                            <div className="text-[10px] text-content-secondary">{tr('settings.SettingsView.boots')}</div>
                             <div className="text-xs text-content font-medium">{activeVehicle.boardStats.bootCount}</div>
                           </div>
                         )}
@@ -1536,7 +1536,7 @@ export function SettingsView() {
                 <CircularGauge
                   value={Math.round(estimatedFlightTime / 60)}
                   max={60}
-                  label="Flight Time"
+                  label={tr('settings.SettingsView.flightTime')}
                   unit="min"
                   color="#3b82f6"
                   size={85}
@@ -1544,7 +1544,7 @@ export function SettingsView() {
                 <CircularGauge
                   value={Math.round(estimatedRange / 1000)}
                   max={50}
-                  label="Range"
+                  label={tr('settings.SettingsView.range')}
                   unit="km"
                   color="#10b981"
                   size={85}
@@ -1553,14 +1553,14 @@ export function SettingsView() {
               {/* Multi-level estimates table */}
               <div className="bg-surface-overlay-subtle rounded-lg overflow-hidden">
                 <div className="grid grid-cols-3 text-[10px] text-content-secondary uppercase tracking-wider px-2 py-1.5 border-b border-subtle">
-                  <span>Usage</span>
-                  <span className="text-center">Time</span>
-                  <span className="text-right">Range</span>
+                  <span>{tr('settings.SettingsView.usage')}</span>
+                  <span className="text-center">{tr('settings.SettingsView.time')}</span>
+                  <span className="text-right">{tr('settings.SettingsView.range')}</span>
                 </div>
                 {[
-                  { pct: 60, label: '60%', color: 'text-green-400', note: 'Safe' },
-                  { pct: 80, label: '80%', color: 'text-blue-400', note: 'Normal' },
-                  { pct: 95, label: '95%', color: 'text-red-400', note: 'Max' },
+                  { pct: 60, label: '60%', color: 'text-green-400', note: tr('settings.SettingsView.safe') },
+                  { pct: 80, label: '80%', color: 'text-blue-400', note: tr('settings.SettingsView.normal') },
+                  { pct: 95, label: '95%', color: 'text-red-400', note: tr('settings.SettingsView.max') },
                 ].map(({ pct, label, color, note }) => {
                   const scaledTime = Math.round(estimatedFlightTime * (pct / 80));
                   const scaledRange = Math.round(estimatedRange * (pct / 80));
@@ -1579,7 +1579,7 @@ export function SettingsView() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[11px] text-content-secondary leading-relaxed">
-                  Rough estimates. Better profile = better predictions.
+                  {tr('settings.SettingsView.roughEstimatesBetterProfileBetterPredictions')}
                 </p>
               </div>
             </section>
@@ -1593,13 +1593,13 @@ export function SettingsView() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {connectionState.firmware !== 'px4' && <ArduPilotFlightStats />}
               <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-4">
-                <h3 className="text-xs font-medium text-content-secondary uppercase tracking-wider mb-3">Tips & Recommendations</h3>
+                <h3 className="text-xs font-medium text-content-secondary uppercase tracking-wider mb-3">{tr('settings.SettingsView.tipsRecommendations')}</h3>
                 <TipsSection vehicle={activeVehicle} />
               </section>
             </div>
           ) : (
             <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-4">
-              <h3 className="text-xs font-medium text-content-secondary uppercase tracking-wider mb-3">Tips & Recommendations</h3>
+              <h3 className="text-xs font-medium text-content-secondary uppercase tracking-wider mb-3">{tr('settings.SettingsView.tipsRecommendations')}</h3>
               <TipsSection vehicle={activeVehicle} />
             </section>
           )}
@@ -1612,7 +1612,7 @@ export function SettingsView() {
                     <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                     </svg>
-                    Vehicle Profiles
+                    {tr('settings.SettingsView.vehicleProfiles')}
                   </h2>
                   <button
                     onClick={() => setShowTemplatePicker(true)}
@@ -1621,7 +1621,7 @@ export function SettingsView() {
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    Add Vehicle
+                    {tr('settings.SettingsView.addVehicle')}
                   </button>
                 </div>
 
@@ -1712,8 +1712,8 @@ export function SettingsView() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 <div>
-                  <div className="text-sm font-medium text-content">Experience Level</div>
-                  <div className="text-[11px] text-content-secondary">Presets control all options below</div>
+                  <div className="text-sm font-medium text-content">{tr('settings.SettingsView.experienceLevel')}</div>
+                  <div className="text-[11px] text-content-secondary">{tr('settings.SettingsView.presetsControlAllOptionsBelow')}</div>
                 </div>
               </div>
               <div className="flex bg-surface-input rounded-lg border border-subtle overflow-hidden">
@@ -1728,7 +1728,7 @@ export function SettingsView() {
                       : 'text-content-secondary hover:text-content'
                   }`}
                 >
-                  Beginner
+                  {tr('settings.SettingsView.beginner')}
                 </button>
                 <button
                   onClick={async () => {
@@ -1741,7 +1741,7 @@ export function SettingsView() {
                       : 'text-content-secondary hover:text-content'
                   }`}
                 >
-                  Advanced
+                  {tr('settings.SettingsView.advanced')}
                 </button>
               </div>
             </div>
@@ -1749,12 +1749,12 @@ export function SettingsView() {
             {/* Granular checkbox grid */}
             <div className="grid grid-cols-2 gap-x-6 gap-y-3">
               {([
-                { key: 'showInfoCards' as const, label: 'Info Cards', desc: '"What are PIDs?" panels' },
-                { key: 'showQuickPresets' as const, label: 'Quick Presets', desc: 'Tuning style selectors' },
-                { key: 'showExplanationCards' as const, label: 'Explanation Cards', desc: '"What is X?" breakdowns' },
-                { key: 'showSectionDescriptions' as const, label: 'Section Descriptions', desc: 'Header subtitle text' },
-                { key: 'showTips' as const, label: 'Inline Tips', desc: 'Compact hint text' },
-                { key: 'defaultAdvancedViews' as const, label: 'Default Advanced Views', desc: 'Start in advanced mode' },
+                { key: 'showInfoCards' as const, label: tr('settings.SettingsView.infoCards'), desc: tr('settings.SettingsView.whatArePidsPanels') },
+                { key: 'showQuickPresets' as const, label: tr('settings.SettingsView.quickPresets'), desc: tr('settings.SettingsView.tuningStyleSelectors') },
+                { key: 'showExplanationCards' as const, label: tr('settings.SettingsView.explanationCards'), desc: tr('settings.SettingsView.whatIsXBreakdowns') },
+                { key: 'showSectionDescriptions' as const, label: tr('settings.SettingsView.sectionDescriptions'), desc: tr('settings.SettingsView.headerSubtitleText') },
+                { key: 'showTips' as const, label: tr('settings.SettingsView.inlineTips'), desc: tr('settings.SettingsView.compactHintText') },
+                { key: 'defaultAdvancedViews' as const, label: tr('settings.SettingsView.defaultAdvancedViews'), desc: tr('settings.SettingsView.startInAdvancedMode') },
               ] as const).map(({ key, label, desc }) => (
                 <label key={key} className="flex items-start gap-2.5 cursor-pointer group">
                   <input
@@ -1783,13 +1783,13 @@ export function SettingsView() {
                 <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
-                Mission Planning Defaults
+                {tr('settings.SettingsView.missionPlanningDefaults')}
               </h2>
 
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                    Safe Alt Buffer
+                    {tr('settings.SettingsView.safeAltBuffer')}
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -1808,13 +1808,13 @@ export function SettingsView() {
                   </div>
                   {missionErrors.safeAltitudeBuffer
                     ? <div className="text-[10px] text-red-400 mt-1">{missionErrors.safeAltitudeBuffer}</div>
-                    : <div className="text-[10px] text-content-tertiary mt-1">Above terrain for warnings</div>
+                    : <div className="text-[10px] text-content-tertiary mt-1">{tr('settings.SettingsView.aboveTerrainForWarnings')}</div>
                   }
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                    Waypoint Alt
+                    {tr('settings.SettingsView.waypointAlt')}
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -1833,13 +1833,13 @@ export function SettingsView() {
                   </div>
                   {missionErrors.defaultWaypointAltitude
                     ? <div className="text-[10px] text-red-400 mt-1">{missionErrors.defaultWaypointAltitude}</div>
-                    : <div className="text-[10px] text-content-tertiary mt-1">Default for new waypoints</div>
+                    : <div className="text-[10px] text-content-tertiary mt-1">{tr('settings.SettingsView.defaultForNewWaypoints')}</div>
                   }
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                    Takeoff Alt
+                    {tr('settings.SettingsView.takeoffAlt')}
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -1858,13 +1858,13 @@ export function SettingsView() {
                   </div>
                   {missionErrors.defaultTakeoffAltitude
                     ? <div className="text-[10px] text-red-400 mt-1">{missionErrors.defaultTakeoffAltitude}</div>
-                    : <div className="text-[10px] text-content-tertiary mt-1">Altitude after launch</div>
+                    : <div className="text-[10px] text-content-tertiary mt-1">{tr('settings.SettingsView.altitudeAfterLaunch')}</div>
                   }
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                    Alt Reference
+                    {tr('settings.SettingsView.altReference')}
                   </label>
                   <select
                     value={missionDefaults.defaultAltitudeReference ?? 'relative'}
@@ -1873,11 +1873,11 @@ export function SettingsView() {
                     })}
                     className="w-full px-2 py-1.5 bg-surface-input border border-border rounded text-content text-sm focus:outline-none focus:border-blue-500"
                   >
-                    <option value="relative">Relative to Home</option>
-                    <option value="terrain">Above Terrain (AGL)</option>
-                    <option value="asl">Above Sea Level</option>
+                    <option value="relative">{tr('settings.SettingsView.relativeToHome')}</option>
+                    <option value="terrain">{tr('settings.SettingsView.aboveTerrainAgl')}</option>
+                    <option value="asl">{tr('settings.SettingsView.aboveSeaLevel')}</option>
                   </select>
-                  <div className="text-[10px] text-content-tertiary mt-1">Default altitude reference</div>
+                  <div className="text-[10px] text-content-tertiary mt-1">{tr('settings.SettingsView.defaultAltitudeReference')}</div>
                 </div>
               </div>
             </section>
@@ -1891,16 +1891,16 @@ export function SettingsView() {
                 <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                 </svg>
-                Survey &amp; Map Performance
+                {tr('settings.SettingsView.surveyMapPerformance')}
               </h2>
               <p className="text-[11px] text-content-tertiary mb-4">
-                Guardrails that keep the map responsive with large imported boundaries and big missions. Applies everywhere.
+                {tr('settings.SettingsView.guardrailsThatKeepTheMapResponsive')}
               </p>
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                    Max editable vertices
+                    {tr('settings.SettingsView.maxEditableVertices')}
                   </label>
                   <DraftNumberInput
                     value={surveyPerformance.maxEditableVertices}
@@ -1910,12 +1910,12 @@ export function SettingsView() {
                     min={0}
                     max={5000}
                   />
-                  <div className="text-[10px] text-content-tertiary mt-1">Above this, drag handles are hidden</div>
+                  <div className="text-[10px] text-content-tertiary mt-1">{tr('settings.SettingsView.aboveThisDragHandlesAreHidden')}</div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                    Max photo markers
+                    {tr('settings.SettingsView.maxPhotoMarkers')}
                   </label>
                   <DraftNumberInput
                     value={surveyPerformance.maxPhotoMarkers}
@@ -1925,12 +1925,12 @@ export function SettingsView() {
                     min={0}
                     max={50000}
                   />
-                  <div className="text-[10px] text-content-tertiary mt-1">Above this, photo dots aren't drawn</div>
+                  <div className="text-[10px] text-content-tertiary mt-1">{tr('settings.SettingsView.aboveThisPhotoDotsArenT')}</div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                    Max waypoint markers
+                    {tr('settings.SettingsView.maxWaypointMarkers')}
                   </label>
                   <DraftNumberInput
                     value={surveyPerformance.maxWaypointMarkers}
@@ -1940,12 +1940,12 @@ export function SettingsView() {
                     min={0}
                     max={50000}
                   />
-                  <div className="text-[10px] text-content-tertiary mt-1">Markers thinned above this (path still drawn)</div>
+                  <div className="text-[10px] text-content-tertiary mt-1">{tr('settings.SettingsView.markersThinnedAboveThisPathStill')}</div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                    Max interactive waypoints
+                    {tr('settings.SettingsView.maxInteractiveWaypoints')}
                   </label>
                   <input
                     type="number"
@@ -1958,7 +1958,7 @@ export function SettingsView() {
                     min="0"
                     max="2000"
                   />
-                  <div className="text-[10px] text-content-tertiary mt-1">Draggable markers appear when this few waypoints are in view</div>
+                  <div className="text-[10px] text-content-tertiary mt-1">{tr('settings.SettingsView.draggableMarkersAppearWhenThisFew')}</div>
                 </div>
               </div>
             </section>
@@ -1998,7 +1998,7 @@ export function SettingsView() {
               </div>
               <div>
                 <h3 className="text-sm font-medium text-content">{t('settings.sections.mapOverlays')}</h3>
-                <p className="text-xs text-content-secondary">API keys for airspace and airport data</p>
+                <p className="text-xs text-content-secondary">{tr('settings.SettingsView.apiKeysForAirspaceAndAirport')}</p>
               </div>
             </div>
 
@@ -2053,10 +2053,10 @@ function OpenAipKeyInput() {
   return (
     <div>
       <label className="block text-xs text-content-secondary mb-1.5">
-        OpenAIP API Key
-        <span className="text-content-tertiary ml-1">- free at</span>{' '}
+        {tr('settings.SettingsView.openaipApiKey')}
+        <span className="text-content-tertiary ml-1">{tr('settings.SettingsView.freeAt')}</span>{' '}
         <a href="https://www.openaip.net" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-          openaip.net
+          {tr('settings.SettingsView.openaipNet')}
         </a>
       </label>
       <div className="flex gap-2">
@@ -2064,18 +2064,18 @@ function OpenAipKeyInput() {
           type="password"
           value={key}
           onChange={(e) => { setKey(e.target.value); setSaved(false); }}
-          placeholder={hasKey ? '••••••••••••••••' : 'Paste your API key'}
+          placeholder={hasKey ? '••••••••••••••••' : tr('settings.SettingsView.pasteYourApiKey')}
           className="flex-1 px-3 py-1.5 bg-surface-input border border-border rounded-lg text-sm text-content placeholder-content-tertiary focus:outline-none focus:border-blue-500"
         />
         <button
           onClick={handleSave}
           className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors"
         >
-          {saved ? 'Saved' : 'Save'}
+          {saved ? tr('settings.SettingsView.saved') : tr('settings.SettingsView.save')}
         </button>
       </div>
       {hasKey && !saved && (
-        <p className="text-xs text-emerald-400 mt-1">Key configured</p>
+        <p className="text-xs text-emerald-400 mt-1">{tr('settings.SettingsView.keyConfigured')}</p>
       )}
     </div>
   );
@@ -2106,17 +2106,13 @@ function MavlinkSettingsSection() {
         <div className="space-y-3">
           <div className="flex items-center justify-between bg-surface-input rounded-lg p-3">
             <div className="flex-1 mr-3">
-              <div className="text-sm text-content font-medium">GCS System ID</div>
+              <div className="text-sm text-content font-medium">{tr('settings.SettingsView.gcsSystemId')}</div>
               <div className="text-xs text-content-secondary mt-0.5">
-                The MAVLink system id this station transmits as (1 to 255, default 255).
-                Give each station on a shared link its own id, or parameter and mission
-                transfers interleave between stations.
+                {tr('settings.SettingsView.theMavlinkSystemIdThisStation')}
               </div>
               {gcsSysid !== 255 && (
                 <div className="text-xs text-amber-500 mt-1">
-                  The vehicle only accepts joystick / RC override from, and runs its GCS
-                  failsafe against, the id in SYSID_MYGCS (MAV_GCS_SYSID on ArduPilot 4.6+).
-                  Keep the station that flies the vehicle matched to that parameter.
+                  {tr('settings.SettingsView.theVehicleOnlyAcceptsJoystickRc')}
                 </div>
               )}
             </div>
@@ -2153,9 +2149,9 @@ function ConsoleSettingsSection() {
         <div className="space-y-3">
           <div className="flex items-center justify-between bg-surface-input rounded-lg p-3">
             <div className="flex-1 mr-3">
-              <div className="text-sm text-content font-medium">Verbose Logging</div>
+              <div className="text-sm text-content font-medium">{tr('settings.SettingsView.verboseLogging')}</div>
               <div className="text-xs text-content-secondary mt-0.5">
-                Show debug and packet-level messages in the console. When off, only info, warnings, and errors are shown.
+                {tr('settings.SettingsView.showDebugAndPacketLevelMessages')}
               </div>
             </div>
             <button
@@ -2233,7 +2229,7 @@ function AiAnalysisSection() {
       <section className="bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-5">
         <div className="space-y-4">
           <p className="text-xs text-content-secondary">
-            Enable AI-powered analysis of your flight logs. Your API key is encrypted and stored locally.
+            {tr('settings.SettingsView.enableAiPoweredAnalysisOfYour')}
           </p>
 
           <div className="flex items-start gap-2 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
@@ -2241,15 +2237,15 @@ function AiAnalysisSection() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <div className="text-[11px] text-amber-300/80 leading-relaxed space-y-1">
-              <p><strong className="text-amber-300">Experimental feature.</strong></p>
-              <p>AI suggestions are not a substitute for your own judgement.</p>
-              <p>Always verify recommendations against ArduPilot documentation and your vehicle's specific configuration before applying changes. Incorrect parameters can cause loss of control.</p>
+              <p><strong className="text-amber-300">{tr('settings.SettingsView.experimentalFeature')}</strong></p>
+              <p>{tr('settings.SettingsView.aiSuggestionsAreNotASubstitute')}</p>
+              <p>{tr('settings.SettingsView.alwaysVerifyRecommendationsAgainstArdupilotDocum')}</p>
             </div>
           </div>
 
           {/* Provider selection */}
           <div>
-            <div className="text-xs text-content-secondary mb-2">Provider</div>
+            <div className="text-xs text-content-secondary mb-2">{tr('settings.SettingsView.provider')}</div>
             <div className="flex gap-2">
               {providers.map((p) => (
                 <button
@@ -2271,18 +2267,18 @@ function AiAnalysisSection() {
           {/* API key input */}
           {aiProvider && (
             <div>
-              <div className="text-xs text-content-secondary mb-2">API Key</div>
+              <div className="text-xs text-content-secondary mb-2">{tr('settings.SettingsView.apiKey')}</div>
               {hasKey ? (
                 <div className="flex items-center gap-2 bg-surface-input rounded-lg p-3">
                   <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
-                  <span className="text-sm text-content flex-1">Key configured and encrypted</span>
+                  <span className="text-sm text-content flex-1">{tr('settings.SettingsView.keyConfiguredAndEncrypted')}</span>
                   <button
                     onClick={handleRemoveKey}
                     className="text-xs text-red-400 hover:text-red-300 transition-colors"
                   >
-                    Remove
+                    {tr('settings.SettingsView.remove')}
                   </button>
                 </div>
               ) : (
@@ -2291,7 +2287,7 @@ function AiAnalysisSection() {
                     type="password"
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
-                    placeholder={`Enter ${providers.find((p) => p.id === aiProvider)?.name} API key...`}
+                    placeholder={tr('settings.SettingsView.enterApiKey', { name: providers.find((p) => p.id === aiProvider)?.name })}
                     className="flex-1 bg-surface-input border border-subtle rounded-lg px-3 py-2 text-sm text-content placeholder-content-tertiary focus:outline-none focus:border-purple-500/50"
                   />
                   <button
@@ -2299,7 +2295,7 @@ function AiAnalysisSection() {
                     disabled={!apiKey.trim() || saving}
                     className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
-                    {saving ? 'Saving...' : 'Save'}
+                    {saving ? tr('settings.SettingsView.saving') : tr('settings.SettingsView.save')}
                   </button>
                 </div>
               )}
@@ -2333,19 +2329,19 @@ function ExperimentalFeaturesSection() {
           <svg className="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
           </svg>
-          Experimental Features
+          {tr('settings.SettingsView.experimentalFeatures')}
         </h2>
         <p className="text-xs text-content-secondary mb-4">
-          These features are under active development and may have rough edges. ArduPilot/MAVLink only.
+          {tr('settings.SettingsView.theseFeaturesAreUnderActiveDevelopment')}
         </p>
 
         <div className="space-y-3">
           {/* Companion Computer */}
           <div className="flex items-center justify-between bg-surface-input rounded-lg p-3">
             <div className="flex-1 mr-3">
-              <div className="text-sm text-content font-medium">Companion Computer</div>
+              <div className="text-sm text-content font-medium">{tr('settings.SettingsView.companionComputer')}</div>
               <div className="text-xs text-content-secondary mt-0.5">
-                Monitor and manage companion boards (Raspberry Pi, ESP32, Jetson) with remote terminal, metrics, and service control
+                {tr('settings.SettingsView.monitorAndManageCompanionBoardsRaspberry')}
               </div>
             </div>
             <button
@@ -2365,18 +2361,15 @@ function ExperimentalFeaturesSection() {
             <div className="flex items-center justify-between">
               <div className="flex-1 mr-3">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <div className="text-sm text-content font-medium">Advanced map commands</div>
+                  <div className="text-sm text-content font-medium">{tr('settings.SettingsView.advancedMapCommands')}</div>
                   <span className="px-1.5 py-0 text-[9px] font-bold tracking-wider rounded bg-rose-600/20 text-rose-400 border border-rose-600/40">
                     RISKY
                   </span>
                 </div>
                 <div className="text-xs text-content-secondary mt-0.5">
-                  Unlocks <strong>Orbit</strong> and <strong>Land at point</strong> in the map command popup
-                  (the popup defaults to <strong>Move</strong> only). Also enables the optional <strong>Lua script
-                  installer</strong> for flight controllers that lack native CIRCLE mode - ArduDeck can write a
-                  small script to the FC's SD card after explicit consent and source-code preview.
+                  {tr('settings.SettingsView.unlocks')} <strong>{tr('settings.SettingsView.orbit')}</strong> {tr('settings.SettingsView.and')} <strong>{tr('settings.SettingsView.landAtPoint')}</strong> {tr('settings.SettingsView.inTheMapCommandPopupThe')} <strong>{tr('settings.SettingsView.move')}</strong> {tr('settings.SettingsView.onlyAlsoEnablesTheOptional')} <strong>{tr('settings.SettingsView.luaScriptInstaller')}</strong> {tr('settings.SettingsView.forFlightControllersThatLackNative')}
                   <span className="block mt-1 text-rose-400">
-                    Triggers flight-mode changes and may modify parameters. Bench-test every command before flight.
+                    {tr('settings.SettingsView.triggersFlightModeChangesAndMay')}
                   </span>
                 </div>
               </div>
@@ -2401,17 +2394,16 @@ function ExperimentalFeaturesSection() {
           <div className="bg-surface-input rounded-lg p-3">
             <div className="flex items-center justify-between gap-3">
               <div className="flex-1">
-                <div className="text-sm text-content font-medium mb-0.5">Default altitude reference</div>
+                <div className="text-sm text-content font-medium mb-0.5">{tr('settings.SettingsView.defaultAltitudeReference')}</div>
                 <div className="text-xs text-content-secondary">
-                  What the altitude you enter in the map command popup is measured against. Terrain needs
-                  terrain data or a rangefinder on the vehicle.
+                  {tr('settings.SettingsView.whatTheAltitudeYouEnterIn')}
                 </div>
               </div>
               <div className="flex items-stretch overflow-hidden rounded-lg border border-subtle flex-shrink-0 h-8">
                 {([
-                  { id: 'relative', label: 'Home' },
-                  { id: 'terrain', label: 'Terrain' },
-                  { id: 'asl', label: 'Sea' },
+                  { id: 'relative', label: tr('settings.SettingsView.home') },
+                  { id: 'terrain', label: tr('settings.SettingsView.terrain') },
+                  { id: 'asl', label: tr('settings.SettingsView.sea') },
                 ] as const).map((o, i) => (
                   <button
                     key={o.id}
@@ -2444,13 +2436,13 @@ function ScriptInstallerActions() {
   return (
     <div className="mt-3 pt-3 border-t border-subtle/50 flex items-center justify-between">
       <span className="text-[11px] text-content-tertiary">
-        Manage and review ArduDeck-installed scripts on the connected vehicle
+        {tr('settings.SettingsView.manageAndReviewArdudeckInstalledScripts')}
       </span>
       <button
         onClick={() => setModalOpen(true)}
         className="px-3 py-1.5 text-xs bg-purple-600/80 hover:bg-purple-600 text-white rounded"
       >
-        Open installer…
+        {tr('settings.SettingsView.openInstaller')}
       </button>
       <ScriptInstallModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
@@ -2490,30 +2482,29 @@ function GraphicsStatus() {
   return (
     <section className="mt-4 bg-gradient-to-br from-surface to-surface-base rounded-xl border border-subtle p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-xs font-medium text-content-secondary uppercase tracking-wider">Graphics</h3>
+        <h3 className="text-xs font-medium text-content-secondary uppercase tracking-wider">{tr('settings.SettingsView.graphics')}</h3>
         <span className={`rounded px-2 py-0.5 text-[10px] ${
           info.softwareRendering
             ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300'
             : 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
         }`}>
-          {info.softwareRendering ? 'Software rendering' : 'Hardware accelerated'}
+          {info.softwareRendering ? tr('settings.SettingsView.softwareRendering') : tr('settings.SettingsView.hardwareAccelerated')}
         </span>
       </div>
 
       {info.softwareRendering && (
         <p className="mb-3 text-xs text-amber-600 dark:text-amber-300">
-          The GPU is not being used, so the map and instruments are being drawn by the CPU. On a
-          laptop or tablet that is the difference between smooth and unusable.
+          {tr('settings.SettingsView.theGpuIsNotBeingUsed')}
         </p>
       )}
 
       <div className="mb-4 rounded-lg border border-subtle bg-surface-raised p-3">
-        <div className="mb-2 text-xs text-content">Hardware acceleration</div>
+        <div className="mb-2 text-xs text-content">{tr('settings.SettingsView.hardwareAcceleration')}</div>
         <div className="flex gap-2">
           {([
-            { value: 'auto' as const, label: 'Force on', tip: 'Override the driver blocklist and use the GPU. The right answer on almost every machine.' },
-            { value: 'safe' as const, label: 'Default', tip: "Whatever Chromium decides on its own." },
-            { value: 'off' as const, label: 'Off', tip: 'Draw everything on the CPU. Only for a driver that crashes.' },
+            { value: 'auto' as const, label: tr('settings.SettingsView.forceOn'), tip: tr('settings.SettingsView.overrideTheDriverBlocklistAndUse') },
+            { value: 'safe' as const, label: tr('settings.SettingsView.default'), tip: tr('settings.SettingsView.whateverChromiumDecidesOnItsOwn') },
+            { value: 'off' as const, label: tr('settings.SettingsView.off'), tip: tr('settings.SettingsView.drawEverythingOnTheCpuOnly') },
           ]).map((opt) => (
             <button
               key={opt.value}
@@ -2535,28 +2526,27 @@ function GraphicsStatus() {
         </div>
         <p className="mt-2 text-[11px] text-content-tertiary">
           {modeChanged
-            ? 'Restart ArduDeck for this to take effect.'
-            : 'Chromium reads this before the first window opens, so a change needs a restart. If a launch never finishes painting, ArduDeck drops back to Default by itself.'}
+            ? tr('settings.SettingsView.restartArdudeckForThisToTake')
+            : tr('settings.SettingsView.chromiumReadsThisBeforeTheFirst')}
         </p>
       </div>
 
       <div className="mb-4 rounded-lg border border-subtle bg-surface-raised p-3">
         <div className="flex items-center justify-between">
-          <span className="text-xs text-content">Screen update rate</span>
+          <span className="text-xs text-content">{tr('settings.SettingsView.screenUpdateRate')}</span>
           <span className="font-mono text-[10px] text-content-tertiary">
-            {Math.round(slowShare * 100)}% slow frames
+            {Math.round(slowShare * 100)}{tr('settings.SettingsView.slowFrames')}
           </span>
         </div>
         <p className="mt-1 mb-2 text-[11px] text-content-tertiary">
-          ArduDeck measures how well this machine keeps up and thins the repaint when it cannot.
-          The link rate and the recorded data never change, only how often the screen is redrawn.
+          {tr('settings.SettingsView.ardudeckMeasuresHowWellThisMachine')}
         </p>
         <div className="flex gap-2">
           {([
-            { value: null, label: 'Automatic' },
-            { value: 'full' as const, label: 'Full' },
-            { value: 'reduced' as const, label: 'Reduced' },
-            { value: 'minimal' as const, label: 'Minimal' },
+            { value: null, label: tr('settings.SettingsView.automatic') },
+            { value: 'full' as const, label: tr('settings.SettingsView.full') },
+            { value: 'reduced' as const, label: tr('settings.SettingsView.reduced') },
+            { value: 'minimal' as const, label: tr('settings.SettingsView.minimal') },
           ]).map((opt) => (
             <button
               key={opt.label}
@@ -2573,7 +2563,7 @@ function GraphicsStatus() {
         </div>
         {pinned === null && (
           <p className="mt-2 text-[11px] text-content-tertiary">
-            Currently running at <span className="text-content">{level}</span>.
+            {tr('settings.SettingsView.currentlyRunningAt')} <span className="text-content">{level}</span>.
           </p>
         )}
       </div>
@@ -2589,7 +2579,7 @@ function GraphicsStatus() {
         ))}
         {info.platform && (
           <div className="flex items-center justify-between text-xs">
-            <span className="text-content-secondary">window system</span>
+            <span className="text-content-secondary">{tr('settings.SettingsView.windowSystem')}</span>
             <span className="font-mono text-content-tertiary">{info.platform}</span>
           </div>
         )}
@@ -2686,7 +2676,7 @@ function AboutSection() {
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Check for Updates
+                {tr('settings.SettingsView.checkForUpdates')}
               </button>
             )}
 
@@ -2696,7 +2686,7 @@ function AboutSection() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                Checking...
+                {tr('settings.SettingsView.checking')}
               </span>
             )}
 
@@ -2705,7 +2695,7 @@ function AboutSection() {
                 onClick={() => downloadUpdate()}
                 className="px-3 py-1.5 bg-blue-600/80 hover:bg-blue-500/80 text-white text-xs font-medium rounded-lg transition-colors"
               >
-                Download v{latestVersion}
+                {tr('settings.SettingsView.downloadV')}{latestVersion}
               </button>
             )}
 
@@ -2714,7 +2704,7 @@ function AboutSection() {
                 onClick={openReleaseUrl}
                 className="px-3 py-1.5 bg-blue-600/80 hover:bg-blue-500/80 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5"
               >
-                View Release v{latestVersion}
+                {tr('settings.SettingsView.viewReleaseV')}{latestVersion}
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
@@ -2726,7 +2716,7 @@ function AboutSection() {
                 onClick={() => installUpdate()}
                 className="px-3 py-1.5 bg-emerald-600/80 hover:bg-emerald-500/80 text-white text-xs font-medium rounded-lg transition-colors"
               >
-                Restart to Update
+                {tr('settings.SettingsView.restartToUpdate')}
               </button>
             )}
           </div>
@@ -2739,7 +2729,7 @@ function AboutSection() {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              You're up to date
+              {tr('settings.SettingsView.youReUpToDate')}
             </div>
           )}
 
@@ -2747,11 +2737,11 @@ function AboutSection() {
             <div className="flex items-center justify-between bg-blue-500/10 rounded-lg p-3">
               <div>
                 <p className="text-sm text-blue-300 font-medium">
-                  v{latestVersion} is available
+                  v{latestVersion} {tr('settings.SettingsView.isAvailable')}
                 </p>
                 {publishedAt && (
                   <p className="text-xs text-content-secondary mt-0.5">
-                    Released {new Date(publishedAt).toLocaleDateString()}
+                    {tr('settings.SettingsView.released')} {new Date(publishedAt).toLocaleDateString()}
                   </p>
                 )}
               </div>
@@ -2761,7 +2751,7 @@ function AboutSection() {
           {status === 'downloading' && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-content-secondary">
-                <span>Downloading v{latestVersion}...</span>
+                <span>{tr('settings.SettingsView.downloadingV')}{latestVersion}...</span>
                 <span className="tabular-nums">
                   {totalBytes > 0
                     ? `${(bytesDownloaded / (1024 * 1024)).toFixed(1)} / ${(totalBytes / (1024 * 1024)).toFixed(1)} MB`
@@ -2782,7 +2772,7 @@ function AboutSection() {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              Update downloaded and ready to install
+              {tr('settings.SettingsView.updateDownloadedAndReadyToInstall')}
             </div>
           )}
 
@@ -2800,30 +2790,30 @@ function AboutSection() {
       <section className="mt-4 bg-surface rounded-xl border border-subtle p-5">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-content">
-            Release notes{notes ? ` · ${notes.name}` : ''}
+            {tr('settings.SettingsView.releaseNotes')}{notes ? ` · ${notes.name}` : ''}
           </h3>
           {notes && (
             <span className="text-xs text-content-tertiary">{new Date(notes.date).toLocaleDateString()}</span>
           )}
         </div>
         {notesState === 'loading' && (
-          <p className="text-sm text-content-tertiary">Loading release notes…</p>
+          <p className="text-sm text-content-tertiary">{tr('settings.SettingsView.loadingReleaseNotes')}</p>
         )}
         {notesState === 'empty' && (
-          <p className="text-sm text-content-tertiary">No published releases yet.</p>
+          <p className="text-sm text-content-tertiary">{tr('settings.SettingsView.noPublishedReleasesYet')}</p>
         )}
         {notesState === 'error' && (
           <p className="text-sm text-content-tertiary">
-            Couldn't reach GitHub for release notes.{' '}
+            {tr('settings.SettingsView.couldnTReachGithubForRelease')}{' '}
             <a href="https://github.com/rubenCodeforges/ardudeck/releases" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400">
-              View on GitHub
+              {tr('settings.SettingsView.viewOnGithub')}
             </a>
           </p>
         )}
         {notesState === 'ready' && notes && (
           notes.body
             ? <div className="max-w-none">{renderMarkdown(notes.body)}</div>
-            : <p className="text-sm text-content-tertiary">This release has no notes.</p>
+            : <p className="text-sm text-content-tertiary">{tr('settings.SettingsView.thisReleaseHasNoNotes')}</p>
         )}
       </section>
       <GraphicsStatus />
@@ -2970,17 +2960,17 @@ function PropSizeInput({
 
   return (
     <div>
-      <label className="block text-xs text-content-secondary mb-1">Propeller</label>
+      <label className="block text-xs text-content-secondary mb-1">{tr('settings.SettingsView.propeller')}</label>
       <select
         value={showCustomInput ? '__custom__' : (value || '')}
         onChange={(e) => handleSelect(e.target.value)}
         className="w-full px-3 py-2 bg-surface-input border border-border rounded-lg text-content text-sm focus:outline-none focus:border-blue-500"
       >
-        <option value="">None</option>
+        <option value="">{tr('settings.SettingsView.none')}</option>
         {presets.map((p) => (
           <option key={p.size} value={p.size}>{p.label || `${p.size}"`}</option>
         ))}
-        <option value="__custom__">Custom size...</option>
+        <option value="__custom__">{tr('settings.SettingsView.customSize')}</option>
       </select>
       {showCustomInput && (
         <input
@@ -2988,7 +2978,7 @@ function PropSizeInput({
           value={customMode ? customValue : (value || '')}
           onChange={(e) => handleCustom(e.target.value)}
           onBlur={handleCustomBlur}
-          placeholder="DxP (e.g. 9.5x4.7)"
+          placeholder={tr('settings.SettingsView.dxpEG95x47')}
           autoFocus={customMode}
           className={`w-full mt-1.5 px-3 py-2 bg-surface-input border rounded-lg text-sm focus:outline-none ${
             error ? 'border-red-500/60 text-content' : 'border-border text-content focus:border-blue-500'
@@ -3808,7 +3798,7 @@ function VehicleEditModal({
             <div className="w-8 h-8 text-blue-400">
               {VEHICLE_ICONS[vehicle.type]}
             </div>
-            <h2 className="text-lg font-semibold text-content">Edit {VEHICLE_TYPE_NAMES[vehicle.type]}</h2>
+            <h2 className="text-lg font-semibold text-content">{tr('settings.SettingsView.edit')} {VEHICLE_TYPE_NAMES[vehicle.type]}</h2>
           </div>
           <button onClick={onClose} className="text-content-secondary hover:text-content">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -3822,13 +3812,13 @@ function VehicleEditModal({
           {/* Basic Info - Common to all */}
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-sm font-medium text-content mb-1.5">Vehicle Name</label>
+              <label className="block text-sm font-medium text-content mb-1.5">{tr('settings.SettingsView.vehicleName')}</label>
               <input
                 type="text"
                 value={nameValue}
                 onChange={(e) => handleChange('name', e.target.value.slice(0, 50), true)}
                 onBlur={() => handleBlur('name', true)}
-                placeholder="My Vehicle"
+                placeholder={tr('settings.SettingsView.myVehicle')}
                 className={`w-full px-3 py-2 bg-surface-input border rounded-lg text-content focus:outline-none ${
                   nameError ? 'border-red-500/60 focus:border-red-500' : 'border-border focus:border-blue-500'
                 }`}
@@ -3836,7 +3826,7 @@ function VehicleEditModal({
               {nameError && <div className="text-[10px] text-red-400 mt-0.5">{nameError}</div>}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-sm font-medium text-content mb-1.5">Vehicle Type</label>
+              <label className="block text-sm font-medium text-content mb-1.5">{tr('settings.SettingsView.vehicleType')}</label>
               <select
                 value={vehicle.type}
                 onChange={(e) => onUpdate({ type: e.target.value as VehicleType })}
@@ -3859,11 +3849,11 @@ function VehicleEditModal({
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                Airframe
+                {tr('settings.SettingsView.airframe')}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <DimensionInputField
-                  label="Frame Size"
+                  label={tr('settings.SettingsView.frameSize')}
                   valueMillimeters={vehicle.frameSize}
                   onCommit={(millimeters) => onUpdate({ frameSize: millimeters })}
                   unit={dimensionUnit}
@@ -3871,18 +3861,18 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.frameSize!}
                 />
                 <VehicleSelectField
-                  label="Motor Count"
+                  label={tr('settings.SettingsView.motorCount')}
                   value={vehicle.motorCount || 4}
                   onChange={(v) => onUpdate({ motorCount: Number(v) })}
                   options={[
-                    { value: 3, label: 'Tricopter (3)' },
-                    { value: 4, label: 'Quadcopter (4)' },
-                    { value: 6, label: 'Hexacopter (6)' },
-                    { value: 8, label: 'Octocopter (8)' },
+                    { value: 3, label: tr('settings.SettingsView.tricopter3') },
+                    { value: 4, label: tr('settings.SettingsView.quadcopter4') },
+                    { value: 6, label: tr('settings.SettingsView.hexacopter6') },
+                    { value: 8, label: tr('settings.SettingsView.octocopter8') },
                   ]}
                 />
                 <WeightInputField
-                  label="All-Up Weight"
+                  label={tr('settings.SettingsView.allUpWeight')}
                   valueGrams={vehicle.weight}
                   onCommit={(grams) => { if (grams !== undefined) onUpdate({ weight: grams }); }}
                   unit={weightUnit}
@@ -3910,11 +3900,11 @@ function VehicleEditModal({
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                Airframe
+                {tr('settings.SettingsView.airframe')}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <DimensionInputField
-                  label="Wingspan"
+                  label={tr('settings.SettingsView.wingspan')}
                   valueMillimeters={vehicle.wingspan}
                   onCommit={(millimeters) => onUpdate({ wingspan: millimeters })}
                   unit={dimensionUnit}
@@ -3922,7 +3912,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.wingspan!}
                 />
                 <WeightInputField
-                  label="All-Up Weight"
+                  label={tr('settings.SettingsView.allUpWeight')}
                   valueGrams={vehicle.weight}
                   onCommit={(grams) => { if (grams !== undefined) onUpdate({ weight: grams }); }}
                   unit={weightUnit}
@@ -3930,7 +3920,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.weight!}
                 />
                 <AreaInputField
-                  label="Wing Area"
+                  label={tr('settings.SettingsView.wingArea')}
                   valueSquareCentimeters={vehicle.wingArea}
                   onCommit={(squareCentimeters) => onUpdate({ wingArea: squareCentimeters })}
                   unit={areaUnit}
@@ -3939,7 +3929,7 @@ function VehicleEditModal({
                 />
                 <div>
                   <div className="flex items-center justify-between mb-1 min-h-[18px]">
-                    <label className="text-xs text-content-secondary">Stall Speed</label>
+                    <label className="text-xs text-content-secondary">{tr('settings.SettingsView.stallSpeed')}</label>
                     <StallSpeedCalcButton
                       vehicle={vehicle}
                       onCompute={(mps) => onUpdate({ stallSpeed: mps })}
@@ -3975,11 +3965,11 @@ function VehicleEditModal({
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                VTOL Airframe
+                {tr('settings.SettingsView.vtolAirframe')}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <DimensionInputField
-                  label="Wingspan"
+                  label={tr('settings.SettingsView.wingspan')}
                   valueMillimeters={vehicle.wingspan}
                   onCommit={(millimeters) => onUpdate({ wingspan: millimeters })}
                   unit={dimensionUnit}
@@ -3987,17 +3977,17 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.wingspan!}
                 />
                 <VehicleSelectField
-                  label="VTOL Motors"
+                  label={tr('settings.SettingsView.vtolMotors')}
                   value={vehicle.vtolMotorCount || 4}
                   onChange={(v) => onUpdate({ vtolMotorCount: Number(v) })}
                   options={[
-                    { value: 2, label: 'Bicopter (2)' },
-                    { value: 4, label: 'Quadplane (4)' },
-                    { value: 6, label: 'Hexaplane (6)' },
+                    { value: 2, label: tr('settings.SettingsView.bicopter2') },
+                    { value: 4, label: tr('settings.SettingsView.quadplane4') },
+                    { value: 6, label: tr('settings.SettingsView.hexaplane6') },
                   ]}
                 />
                 <WeightInputField
-                  label="All-Up Weight"
+                  label={tr('settings.SettingsView.allUpWeight')}
                   valueGrams={vehicle.weight}
                   onCommit={(grams) => { if (grams !== undefined) onUpdate({ weight: grams }); }}
                   unit={weightUnit}
@@ -4005,7 +3995,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.weight!}
                 />
                 <SpeedInputField
-                  label="Transition Speed"
+                  label={tr('settings.SettingsView.transitionSpeed')}
                   valueMps={vehicle.transitionSpeed}
                   onCommit={(mps) => onUpdate({ transitionSpeed: mps })}
                   unit={speedUnit}
@@ -4032,21 +4022,21 @@ function VehicleEditModal({
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                Chassis
+                {tr('settings.SettingsView.chassis')}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <VehicleSelectField
-                  label="Drive Type"
+                  label={tr('settings.SettingsView.driveType')}
                   value={vehicle.driveType || 'differential'}
                   onChange={(v) => onUpdate({ driveType: v as 'differential' | 'ackermann' | 'skid' })}
                   options={[
-                    { value: 'differential', label: 'Differential (tank)' },
-                    { value: 'ackermann', label: 'Ackermann (car)' },
-                    { value: 'skid', label: 'Skid Steer' },
+                    { value: 'differential', label: tr('settings.SettingsView.differentialTank') },
+                    { value: 'ackermann', label: tr('settings.SettingsView.ackermannCar') },
+                    { value: 'skid', label: tr('settings.SettingsView.skidSteer') },
                   ]}
                 />
                 <WeightInputField
-                  label="Total Weight"
+                  label={tr('settings.SettingsView.totalWeight')}
                   valueGrams={vehicle.weight}
                   onCommit={(grams) => { if (grams !== undefined) onUpdate({ weight: grams }); }}
                   unit={weightUnit}
@@ -4054,7 +4044,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.weight!}
                 />
                 <DimensionInputField
-                  label="Wheelbase"
+                  label={tr('settings.SettingsView.wheelbase')}
                   valueMillimeters={vehicle.wheelbase}
                   onCommit={(millimeters) => onUpdate({ wheelbase: millimeters })}
                   unit={dimensionUnit}
@@ -4062,7 +4052,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.wheelbase!}
                 />
                 <DimensionInputField
-                  label="Wheel Diameter"
+                  label={tr('settings.SettingsView.wheelDiameter')}
                   valueMillimeters={vehicle.wheelDiameter}
                   onCommit={(millimeters) => onUpdate({ wheelDiameter: millimeters })}
                   unit={dimensionUnit}
@@ -4070,7 +4060,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.wheelDiameter!}
                 />
                 <SpeedInputField
-                  label="Max Speed"
+                  label={tr('settings.SettingsView.maxSpeed')}
                   valueMps={vehicle.maxSpeed}
                   onCommit={(mps) => onUpdate({ maxSpeed: mps })}
                   unit={speedUnit}
@@ -4088,32 +4078,32 @@ function VehicleEditModal({
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                Hull
+                {tr('settings.SettingsView.hull')}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <VehicleSelectField
-                  label="Hull Type"
+                  label={tr('settings.SettingsView.hullType')}
                   value={vehicle.hullType || 'displacement'}
                   onChange={(v) => onUpdate({ hullType: v as 'displacement' | 'planing' | 'catamaran' | 'pontoon' })}
                   options={[
-                    { value: 'displacement', label: 'Displacement' },
-                    { value: 'planing', label: 'Planing' },
-                    { value: 'catamaran', label: 'Catamaran' },
-                    { value: 'pontoon', label: 'Pontoon' },
+                    { value: 'displacement', label: tr('settings.SettingsView.displacement') },
+                    { value: 'planing', label: tr('settings.SettingsView.planing') },
+                    { value: 'catamaran', label: tr('settings.SettingsView.catamaran') },
+                    { value: 'pontoon', label: tr('settings.SettingsView.pontoon') },
                   ]}
                 />
                 <VehicleSelectField
-                  label="Propulsion"
+                  label={tr('settings.SettingsView.propulsion')}
                   value={vehicle.propellerType || 'prop'}
                   onChange={(v) => onUpdate({ propellerType: v as 'prop' | 'jet' | 'paddle' })}
                   options={[
-                    { value: 'prop', label: 'Propeller' },
-                    { value: 'jet', label: 'Water Jet' },
-                    { value: 'paddle', label: 'Paddle Wheel' },
+                    { value: 'prop', label: tr('settings.SettingsView.propeller') },
+                    { value: 'jet', label: tr('settings.SettingsView.waterJet') },
+                    { value: 'paddle', label: tr('settings.SettingsView.paddleWheel') },
                   ]}
                 />
                 <DimensionInputField
-                  label="Hull Length"
+                  label={tr('settings.SettingsView.hullLength')}
                   valueMillimeters={vehicle.hullLength}
                   onCommit={(millimeters) => onUpdate({ hullLength: millimeters })}
                   unit={dimensionUnit}
@@ -4121,7 +4111,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.hullLength!}
                 />
                 <WeightInputField
-                  label="Total Weight"
+                  label={tr('settings.SettingsView.totalWeight')}
                   valueGrams={vehicle.weight}
                   onCommit={(grams) => { if (grams !== undefined) onUpdate({ weight: grams }); }}
                   unit={weightUnit}
@@ -4129,7 +4119,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.weight!}
                 />
                 <WeightInputField
-                  label="Displacement"
+                  label={tr('settings.SettingsView.displacement')}
                   valueGrams={vehicle.displacement}
                   onCommit={(grams) => onUpdate({ displacement: grams })}
                   unit={weightUnit}
@@ -4137,7 +4127,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.displacement!}
                 />
                 <SpeedInputField
-                  label="Max Speed"
+                  label={tr('settings.SettingsView.maxSpeed')}
                   valueMps={vehicle.maxSpeed}
                   onCommit={(mps) => onUpdate({ maxSpeed: mps })}
                   unit={speedUnit}
@@ -4155,11 +4145,11 @@ function VehicleEditModal({
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                Hull & Thrusters
+                {tr('settings.SettingsView.hullThrusters')}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <DimensionInputField
-                  label="Hull Length"
+                  label={tr('settings.SettingsView.hullLength')}
                   valueMillimeters={vehicle.hullLength}
                   onCommit={(millimeters) => onUpdate({ hullLength: millimeters })}
                   unit={dimensionUnit}
@@ -4167,7 +4157,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.hullLength!}
                 />
                 <VehicleSelectField
-                  label="Thruster Count"
+                  label={tr('settings.SettingsView.thrusterCount')}
                   value={vehicle.thrusterCount || 4}
                   onChange={(v) => onUpdate({ thrusterCount: Number(v) })}
                   options={[
@@ -4178,7 +4168,7 @@ function VehicleEditModal({
                   ]}
                 />
                 <WeightInputField
-                  label="Dry Weight"
+                  label={tr('settings.SettingsView.dryWeight')}
                   valueGrams={vehicle.weight}
                   onCommit={(grams) => { if (grams !== undefined) onUpdate({ weight: grams }); }}
                   unit={weightUnit}
@@ -4186,7 +4176,7 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.weight!}
                 />
                 <AltitudeInputField
-                  label="Max Depth Rating"
+                  label={tr('settings.SettingsView.maxDepthRating')}
                   valueMeters={vehicle.maxDepth}
                   onCommit={(meters) => onUpdate({ maxDepth: meters })}
                   unit={altitudeUnit}
@@ -4194,17 +4184,17 @@ function VehicleEditModal({
                   rules={VEHICLE_FIELD_RULES.maxDepth!}
                 />
                 <VehicleSelectField
-                  label="Buoyancy"
+                  label={tr('settings.SettingsView.buoyancy')}
                   value={vehicle.buoyancy || 'neutral'}
                   onChange={(v) => onUpdate({ buoyancy: v as 'positive' | 'neutral' | 'negative' })}
                   options={[
-                    { value: 'positive', label: 'Positive (floats)' },
-                    { value: 'neutral', label: 'Neutral' },
-                    { value: 'negative', label: 'Negative (sinks)' },
+                    { value: 'positive', label: tr('settings.SettingsView.positiveFloats') },
+                    { value: 'neutral', label: tr('settings.SettingsView.neutral') },
+                    { value: 'negative', label: tr('settings.SettingsView.negativeSinks') },
                   ]}
                 />
                 <SpeedInputField
-                  label="Max Speed"
+                  label={tr('settings.SettingsView.maxSpeed')}
                   valueMps={vehicle.maxSpeed}
                   onCommit={(mps) => onUpdate({ maxSpeed: mps })}
                   unit={speedUnit}
@@ -4221,22 +4211,22 @@ function VehicleEditModal({
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              Battery
+              {tr('settings.SettingsView.battery')}
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <VehicleSelectField
-                label="Chemistry"
+                label={tr('settings.SettingsView.chemistry')}
                 value={vehicle.batteryChemistry || 'lipo'}
                 onChange={(v) => onUpdate({ batteryChemistry: v as VehicleProfile['batteryChemistry'] })}
                 options={[
-                  { value: 'lipo', label: 'LiPo (3.7V)' },
-                  { value: 'lihv', label: 'LiHV (3.8V)' },
-                  { value: 'lion', label: 'Li-Ion (3.6V)' },
-                  { value: 'life', label: 'LiFePO4 (3.3V)' },
+                  { value: 'lipo', label: tr('settings.SettingsView.lipo37v') },
+                  { value: 'lihv', label: tr('settings.SettingsView.lihv38v') },
+                  { value: 'lion', label: tr('settings.SettingsView.liIon36v') },
+                  { value: 'life', label: tr('settings.SettingsView.lifepo433v') },
                 ]}
               />
               <VehicleSelectField
-                label="Cell Count"
+                label={tr('settings.SettingsView.cellCount')}
                 value={vehicle.batteryCells || 4}
                 onChange={(v) => onUpdate({ batteryCells: Number(v) })}
                 options={[
@@ -4253,7 +4243,7 @@ function VehicleEditModal({
                 ]}
               />
               <CapacityInputField
-                label="Capacity"
+                label={tr('settings.SettingsView.capacity')}
                 valueMah={vehicle.batteryCapacity}
                 onCommit={(mah) => onUpdate({ batteryCapacity: mah })}
                 unit={electricCapacityUnit}
@@ -4273,14 +4263,14 @@ function VehicleEditModal({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              Advanced (optional)
+              {tr('settings.SettingsView.advancedOptional')}
             </summary>
             <div className="mt-3 space-y-3">
               {/* Copter Advanced */}
               {isCopter && (
                 <div className="grid grid-cols-2 gap-3">
                   <VehicleInputField
-                    label="Motor KV"
+                    label={tr('settings.SettingsView.motorKv')}
                     value={getDisplayValue('motorKv')}
                     onChange={(v) => handleChange('motorKv', v)}
                     onBlur={() => handleBlur('motorKv')}
@@ -4288,7 +4278,7 @@ function VehicleEditModal({
                     placeholder="2400"
                   />
                   <VehicleInputField
-                    label="ESC Rating"
+                    label={tr('settings.SettingsView.escRating')}
                     value={getDisplayValue('escRating')}
                     onChange={(v) => handleChange('escRating', v)}
                     onBlur={() => handleBlur('escRating')}
@@ -4297,7 +4287,7 @@ function VehicleEditModal({
                     placeholder="30"
                   />
                   <VehicleInputField
-                    label="Battery C-Rating"
+                    label={tr('settings.SettingsView.batteryCRating')}
                     value={getDisplayValue('batteryDischarge')}
                     onChange={(v) => handleChange('batteryDischarge', v)}
                     onBlur={() => handleBlur('batteryDischarge')}
@@ -4312,7 +4302,7 @@ function VehicleEditModal({
               {(isPlane || isVtol) && (
                 <div className="grid grid-cols-2 gap-3">
                   <VehicleInputField
-                    label="Motor KV"
+                    label={tr('settings.SettingsView.motorKv')}
                     value={getDisplayValue('motorKv')}
                     onChange={(v) => handleChange('motorKv', v)}
                     onBlur={() => handleBlur('motorKv')}
@@ -4320,7 +4310,7 @@ function VehicleEditModal({
                     placeholder="1000"
                   />
                   <VehicleInputField
-                    label="ESC Rating"
+                    label={tr('settings.SettingsView.escRating')}
                     value={getDisplayValue('escRating')}
                     onChange={(v) => handleChange('escRating', v)}
                     onBlur={() => handleBlur('escRating')}
@@ -4335,7 +4325,7 @@ function VehicleEditModal({
               {(isRover || isBoat || isSub) && (
                 <div className="grid grid-cols-2 gap-3">
                   <VehicleInputField
-                    label="Motor KV"
+                    label={tr('settings.SettingsView.motorKv')}
                     value={getDisplayValue('motorKv')}
                     onChange={(v) => handleChange('motorKv', v)}
                     onBlur={() => handleBlur('motorKv')}
@@ -4343,7 +4333,7 @@ function VehicleEditModal({
                     placeholder="1200"
                   />
                   <VehicleInputField
-                    label="ESC Rating"
+                    label={tr('settings.SettingsView.escRating')}
                     value={getDisplayValue('escRating')}
                     onChange={(v) => handleChange('escRating', v)}
                     onBlur={() => handleBlur('escRating')}
@@ -4356,11 +4346,11 @@ function VehicleEditModal({
 
               {/* Notes - Common to all */}
               <div>
-                <label className="block text-xs text-content-secondary mb-1">Notes</label>
+                <label className="block text-xs text-content-secondary mb-1">{tr('settings.SettingsView.notes')}</label>
                 <textarea
                   value={vehicle.notes || ''}
                   onChange={(e) => onUpdate({ notes: e.target.value || undefined })}
-                  placeholder="Additional notes about this vehicle..."
+                  placeholder={tr('settings.SettingsView.additionalNotesAboutThisVehicle')}
                   rows={2}
                   className="w-full px-3 py-2 bg-surface-input border border-border rounded-lg text-content text-sm focus:outline-none focus:border-blue-500 resize-none"
                 />
@@ -4383,9 +4373,9 @@ function VehicleEditModal({
               className="mt-1"
             />
             <span>
-              <span className="text-content">Auto-apply to SITL on start</span>
+              <span className="text-content">{tr('settings.SettingsView.autoApplyToSitlOnStart')}</span>
               <span className="block text-xs text-content-tertiary mt-0.5">
-                When you launch SITL, this profile's params are reapplied automatically.
+                {tr('settings.SettingsView.whenYouLaunchSitlThisProfile')}
               </span>
             </span>
           </label>
@@ -4397,7 +4387,7 @@ function VehicleEditModal({
             onClick={onClose}
             className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-colors"
           >
-            Done
+            {tr('settings.SettingsView.done')}
           </button>
         </div>
       </div>
@@ -4518,10 +4508,10 @@ function VehicleCard({
               <div className="flex items-center gap-2 min-w-0">
                 <span className="text-content font-medium text-sm truncate" title={vehicle.name}>{vehicle.name}</span>
                 {isActive && (
-                  <span className="text-[10px] text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded shrink-0">Active</span>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded shrink-0">{tr('settings.SettingsView.active')}</span>
                 )}
                 {vehicle.boardUid && (
-                  <span className="text-[10px] text-blue-400 bg-blue-400/10 px-1.5 py-0.5 rounded shrink-0 max-w-[8rem] truncate" title={`Board UID: ${vehicle.boardUid}`}>
+                  <span className="text-[10px] text-blue-400 bg-blue-400/10 px-1.5 py-0.5 rounded shrink-0 max-w-[8rem] truncate" title={tr('settings.SettingsView.boardUid', { boardUid: vehicle.boardUid })}>
                     {vehicle.boardId || vehicle.boardName || vehicle.boardUid.slice(0, 8)}
                   </span>
                 )}
@@ -4539,11 +4529,11 @@ function VehicleCard({
                 await saveParmToFile(vehicle, tpl, { includeSim: false });
               }}
               className="p-1.5 text-content-secondary hover:text-content transition-colors"
-              title="Export .parm file"
+              title={tr('settings.SettingsView.exportParmFile')}
             >
               <Download className="w-4 h-4" />
             </button>
-            <button onClick={onEdit} className="p-1.5 text-content-secondary hover:text-content transition-colors" title="Edit">
+            <button onClick={onEdit} className="p-1.5 text-content-secondary hover:text-content transition-colors" title={tr('settings.SettingsView.edit')}>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
               </svg>
@@ -4560,10 +4550,10 @@ function VehicleCard({
                 className={confirmDelete
                   ? 'px-2 py-1 rounded text-[11px] font-medium text-red-400 bg-red-500/10 transition-colors'
                   : 'p-1.5 text-content-secondary hover:text-red-400 transition-colors'}
-                title={confirmDelete ? 'Click again to delete' : 'Delete'}
+                title={confirmDelete ? tr('settings.SettingsView.clickAgainToDelete') : tr('settings.SettingsView.delete')}
               >
                 {confirmDelete ? (
-                  'Delete?'
+                  tr('settings.SettingsView.delete2')
                 ) : (
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

@@ -15,6 +15,7 @@ import { useEditModeStore } from '../../stores/edit-mode-store';
 import { MAP_LAYERS, type LayerKey, type MapLayer } from '../../../shared/map-layers';
 import { SmoothWheelZoom } from './SmoothWheelZoom';
 import { searchLocations, type GeocodeResult } from '../../utils/weather-api';
+import { t } from '../../i18n';
 
 const FALLBACK_CENTER: [number, number] = [51.505, -0.09];
 const FALLBACK_ZOOM = 4;
@@ -172,13 +173,13 @@ export function MapPointPickerDialog({
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-semibold text-content">{title}</h3>
             <p className="text-[11px] text-content-tertiary">
-              {subtitle ?? 'Click the map to drop a point, drag the pin to refine, or search a place.'}
+              {subtitle ?? t('map.MapPointPickerDialog.clickTheMapToDropA')}
             </p>
           </div>
           <button
             onClick={onClose}
             className="w-7 h-7 rounded-md flex items-center justify-center text-content-tertiary hover:text-content hover:bg-surface-raised transition-colors"
-            data-tip="Close"
+            data-tip={t('map.MapPointPickerDialog.close')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -194,7 +195,7 @@ export function MapPointPickerDialog({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search a place (city, airfield, landmark)..."
+              placeholder={t('map.MapPointPickerDialog.searchAPlaceCityAirfieldLandmark')}
               autoFocus
               className="w-full pl-9 pr-9 py-2 bg-surface-input border border-border rounded-lg text-sm text-content focus:outline-none focus:border-blue-500"
             />
@@ -255,7 +256,7 @@ export function MapPointPickerDialog({
             </MapContainer>
             {!selected && (
               <div className="pointer-events-none absolute top-2 left-1/2 -translate-x-1/2 z-[500] px-2.5 py-1 rounded-md bg-surface-solid border border-subtle text-[11px] text-content-secondary shadow">
-                Click the map to set the point
+                {t('map.MapPointPickerDialog.clickTheMapToSetThe')}
               </div>
             )}
           </div>
@@ -268,15 +269,15 @@ export function MapPointPickerDialog({
               {selected ? (
                 <span className="tabular-nums truncate">{selected.lat.toFixed(5)}, {selected.lng.toFixed(5)}</span>
               ) : (
-                <span className="text-content-tertiary">No point selected</span>
+                <span className="text-content-tertiary">{t('map.MapPointPickerDialog.noPointSelected')}</span>
               )}
             </div>
             <button
               onClick={() => setShowManual((v) => !v)}
               className="flex items-center gap-1 text-[11px] text-content-tertiary hover:text-content-secondary transition-colors shrink-0"
-              data-tip="Type exact coordinates"
+              data-tip={t('map.MapPointPickerDialog.typeExactCoordinates')}
             >
-              Enter coordinates
+              {t('map.MapPointPickerDialog.enterCoordinates')}
               <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showManual ? 'rotate-180' : ''}`} />
             </button>
           </div>
@@ -287,21 +288,21 @@ export function MapPointPickerDialog({
                 type="number"
                 value={manualLat}
                 onChange={(e) => setManualLat(e.target.value)}
-                placeholder="Lat"
+                placeholder={t('map.MapPointPickerDialog.lat')}
                 className="w-0 flex-1 min-w-0 px-2 py-1.5 bg-surface-input border border-border rounded-md text-xs text-content tabular-nums focus:outline-none focus:border-blue-500"
               />
               <input
                 type="number"
                 value={manualLng}
                 onChange={(e) => setManualLng(e.target.value)}
-                placeholder="Lng"
+                placeholder={t('map.MapPointPickerDialog.lng')}
                 className="w-0 flex-1 min-w-0 px-2 py-1.5 bg-surface-input border border-border rounded-md text-xs text-content tabular-nums focus:outline-none focus:border-blue-500"
               />
               <button
                 onClick={applyManual}
                 className="px-2.5 py-1.5 rounded-md text-xs bg-surface-raised text-content hover:brightness-125 transition-colors shrink-0"
               >
-                Go
+                {t('map.MapPointPickerDialog.go')}
               </button>
             </div>
           )}
@@ -312,7 +313,7 @@ export function MapPointPickerDialog({
             onClick={onClose}
             className="px-3 py-1.5 rounded-lg text-xs text-content-secondary hover:text-content hover:bg-surface-raised transition-colors"
           >
-            Cancel
+            {t('map.MapPointPickerDialog.cancel')}
           </button>
           <button
             onClick={confirm}

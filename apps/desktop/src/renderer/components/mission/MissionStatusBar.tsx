@@ -2,6 +2,7 @@ import { useMissionStore } from '../../stores/mission-store';
 import { useSettingsStore } from '../../stores/settings-store';
 import { calculateMissionDistance, estimateMissionTime } from '../../../shared/mission-types';
 import { formatDistanceFromMeters } from '../../../shared/user-units.js';
+import { t } from '../../i18n';
 
 export function MissionStatusBar() {
   const {
@@ -39,32 +40,32 @@ export function MissionStatusBar() {
         {multiMission ? (
           <>
             <span>
-              <span className="text-content font-medium">{groups.length}</span> missions
+              <span className="text-content font-medium">{groups.length}</span> {t('mission.MissionStatusBar.missions')}
             </span>
             <span className="text-content-tertiary">|</span>
             <span>
-              <span className="text-content font-medium">{waypointCount}</span> WPs total
+              <span className="text-content font-medium">{waypointCount}</span> {t('mission.MissionStatusBar.wpsTotal')}
             </span>
             <span className="text-content-tertiary">|</span>
             <span>
-              <span className="text-content font-medium">{formatDistanceFromMeters(totalDistanceMeters, distanceUnit)}</span> total
+              <span className="text-content font-medium">{formatDistanceFromMeters(totalDistanceMeters, distanceUnit)}</span> {t('mission.MissionStatusBar.total')}
             </span>
             {selectedGroup ? (
               <>
                 <span className="text-content-tertiary">|</span>
                 <span className="truncate max-w-[260px]">
-                  <span className="text-content font-medium">{selectedGroup.name}</span>: {groupItems.length} WPs
+                  <span className="text-content font-medium">{selectedGroup.name}</span>: {groupItems.length} {t('mission.MissionStatusBar.wps')}
                   {' · '}{formatDistanceFromMeters(groupDistanceMeters, distanceUnit)}{' · '}~{groupTimeMin} min
                 </span>
               </>
             ) : (
-              <span className="text-content-tertiary">select a mission for its distance/time</span>
+              <span className="text-content-tertiary">{t('mission.MissionStatusBar.selectAMissionForItsDistance')}</span>
             )}
           </>
         ) : (
           <>
             <span>
-              <span className="text-content font-medium">{waypointCount}</span> waypoints
+              <span className="text-content font-medium">{waypointCount}</span> {t('mission.MissionStatusBar.waypoints')}
             </span>
             {waypointCount > 0 && (
               <>
@@ -74,7 +75,7 @@ export function MissionStatusBar() {
                 </span>
                 <span className="text-content-tertiary">|</span>
                 <span>
-                  Est. <span className="text-content font-medium">~{Math.ceil(estimatedTimeSeconds / 60)}</span> min
+                  {t('mission.MissionStatusBar.est')} <span className="text-content font-medium">~{Math.ceil(estimatedTimeSeconds / 60)}</span> min
                 </span>
               </>
             )}
@@ -94,18 +95,18 @@ export function MissionStatusBar() {
         {/* Loading/progress indicator */}
         {isLoading && progress && (
           <span className="text-blue-400">
-            {progress.operation === 'download' ? 'Downloading' : 'Uploading'}: {progress.transferred}/{progress.total}
+            {progress.operation === 'download' ? t('mission.MissionStatusBar.downloading') : t('mission.MissionStatusBar.uploading')}: {progress.transferred}/{progress.total}
           </span>
         )}
 
         {/* Current waypoint during flight */}
         {!isLoading && currentSeq !== null ? (
           <span className="text-emerald-400">
-            Current: WP {currentSeq + 1} of {waypointCount}
+            {t('mission.MissionStatusBar.currentWp')} {currentSeq + 1} {t('mission.MissionStatusBar.of')} {waypointCount}
           </span>
         ) : !isLoading && (
           <span className="text-content-secondary">
-            {waypointCount > 0 ? 'Ready to upload' : 'No active mission'}
+            {waypointCount > 0 ? t('mission.MissionStatusBar.readyToUpload') : t('mission.MissionStatusBar.noActiveMission')}
           </span>
         )}
       </div>

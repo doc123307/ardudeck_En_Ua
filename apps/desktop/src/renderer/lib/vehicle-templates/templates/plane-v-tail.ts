@@ -4,6 +4,7 @@ import {
   batteryParams, airspeedParams, commonSafetyParams,
   simPhysicsParams, vtailServoParams, matches,
 } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 /**
  * V-tail plane — two surfaces combine pitch+yaw control (VTail mixing).
@@ -11,7 +12,7 @@ import {
 export const planeVTail: VehicleTemplate = {
   slug: 'plane-v-tail',
   name: 'V-Tail Plane',
-  description: 'Two combined pitch/yaw surfaces, cleaner drag profile',
+  get description() { return t('lib.plane_v_tail.twoCombinedPitchYawSurfacesCleaner'); },
   icon: Plane,
   vehicleType: 'plane',
   category: 'fixed-wing',
@@ -26,7 +27,7 @@ export const planeVTail: VehicleTemplate = {
     batteryCapacity: 4000,
   },
   toParams: (p) => [
-    { name: 'SERVO3_FUNCTION', value: 70, reason: 'Throttle', requiresReboot: true },
+    { name: 'SERVO3_FUNCTION', value: 70, reason: t('lib.plane_v_tail.throttle'), requiresReboot: true },
     ...vtailServoParams(),
     ...airspeedParams(p),
     ...batteryParams(p),

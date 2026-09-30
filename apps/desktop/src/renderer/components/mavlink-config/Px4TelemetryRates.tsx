@@ -12,21 +12,22 @@ import { useEffect, useState } from 'react';
 import { Gauge, Radio, Zap } from 'lucide-react';
 import { useParameterStore } from '../../stores/parameter-store';
 import { useInspectorStore, startInspector, getInspectorSnapshot } from '../../stores/inspector-store';
+import { t } from '../../i18n';
 
 /** MAV_n_MODE: which set of streams the instance sends. */
 const MODES: Record<number, { label: string; detail: string }> = {
-  0: { label: 'Normal', detail: 'The standard ground station set. What you want on the telemetry radio you fly with.' },
-  1: { label: 'Custom', detail: 'Nothing is streamed until something asks for it.' },
-  2: { label: 'Onboard', detail: 'High rate, for a companion computer on a wired link.' },
-  3: { label: 'OSD', detail: 'The handful of messages an on-screen display needs.' },
-  4: { label: 'Magic', detail: 'Normal plus a few extras. Rarely what you want.' },
-  5: { label: 'Config', detail: 'Everything, fast. For bench work over USB, not for a radio.' },
-  7: { label: 'Minimal', detail: 'Heartbeat and little else. For a very slow link.' },
-  8: { label: 'External Vision', detail: 'For an external position source.' },
-  10: { label: 'Gimbal', detail: 'Gimbal traffic only.' },
-  11: { label: 'Onboard Low Bandwidth', detail: 'Companion computer on a constrained link.' },
-  12: { label: 'uAvionix', detail: 'For uAvionix ADS-B hardware.' },
-  13: { label: 'Low Bandwidth', detail: 'Trimmed ground station set for a weak radio.' },
+  0: { get label() { return t('mavlink_config.Px4TelemetryRates.normal'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.theStandardGroundStationSetWhat'); } },
+  1: { get label() { return t('mavlink_config.Px4TelemetryRates.custom'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.nothingIsStreamedUntilSomethingAsks'); } },
+  2: { get label() { return t('mavlink_config.Px4TelemetryRates.onboard'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.highRateForACompanionComputer'); } },
+  3: { label: 'OSD', get detail() { return t('mavlink_config.Px4TelemetryRates.theHandfulOfMessagesAnOn'); } },
+  4: { get label() { return t('mavlink_config.Px4TelemetryRates.magic'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.normalPlusAFewExtrasRarely'); } },
+  5: { get label() { return t('mavlink_config.Px4TelemetryRates.config'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.everythingFastForBenchWorkOver'); } },
+  7: { get label() { return t('mavlink_config.Px4TelemetryRates.minimal'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.heartbeatAndLittleElseForA'); } },
+  8: { get label() { return t('mavlink_config.Px4TelemetryRates.externalVision'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.forAnExternalPositionSource'); } },
+  10: { get label() { return t('mavlink_config.Px4TelemetryRates.gimbal'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.gimbalTrafficOnly'); } },
+  11: { get label() { return t('mavlink_config.Px4TelemetryRates.onboardLowBandwidth'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.companionComputerOnAConstrainedLink'); } },
+  12: { label: 'uAvionix', get detail() { return t('mavlink_config.Px4TelemetryRates.forUavionixAdsBHardware'); } },
+  13: { get label() { return t('mavlink_config.Px4TelemetryRates.lowBandwidth'); }, get detail() { return t('mavlink_config.Px4TelemetryRates.trimmedGroundStationSetForA'); } },
 };
 
 const INSTANCES = [0, 1, 2] as const;
@@ -70,7 +71,7 @@ export default function Px4TelemetryRates(): JSX.Element {
   if (present.length === 0) {
     return (
       <div className="rounded-xl border border-subtle bg-surface p-5 text-sm text-content-secondary">
-        No MAVLink instance parameters have been read from this vehicle yet.
+        {t('mavlink_config.Px4TelemetryRates.noMavlinkInstanceParametersHaveBeen')}
       </div>
     );
   }
@@ -83,14 +84,14 @@ export default function Px4TelemetryRates(): JSX.Element {
             <Gauge className="h-5 w-5 text-cyan-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-content">Telemetry rates</h3>
+            <h3 className="font-medium text-content">{t('mavlink_config.Px4TelemetryRates.telemetryRates')}</h3>
             <p className="text-xs text-content-secondary">
-              PX4 sets a message set and a byte budget per link, not a rate per message
+              {t('mavlink_config.Px4TelemetryRates.px4SetsAMessageSetAnd')}
             </p>
           </div>
           <div className="text-right">
             <div className="font-mono text-lg text-content">{totalHz.toFixed(1)}</div>
-            <div className="text-[10px] uppercase tracking-wide text-content-tertiary">msg/s arriving</div>
+            <div className="text-[10px] uppercase tracking-wide text-content-tertiary">{t('mavlink_config.Px4TelemetryRates.msgSArriving')}</div>
           </div>
         </div>
 
@@ -103,13 +104,13 @@ export default function Px4TelemetryRates(): JSX.Element {
               <div key={i} className="rounded-lg border border-subtle bg-surface-raised p-4">
                 <div className="mb-3 flex items-center gap-2">
                   <Radio className="h-3.5 w-3.5 text-cyan-400" />
-                  <span className="text-sm text-content">MAVLink instance {i}</span>
+                  <span className="text-sm text-content">{t('mavlink_config.Px4TelemetryRates.mavlinkInstance')} {i}</span>
                   <span className="rounded bg-surface-overlay px-1.5 py-0.5 text-[10px] text-content-tertiary">
                     {modeLabel(mode)}
                   </span>
                 </div>
 
-                <label className="mb-1 block text-[11px] text-content-secondary">What this link streams</label>
+                <label className="mb-1 block text-[11px] text-content-secondary">{t('mavlink_config.Px4TelemetryRates.whatThisLinkStreams')}</label>
                 <select
                   value={mode ?? ''}
                   disabled={busy === `MAV_${i}_MODE` || mode === undefined}
@@ -125,7 +126,7 @@ export default function Px4TelemetryRates(): JSX.Element {
                 )}
 
                 <label className="mt-3 mb-1 block text-[11px] text-content-secondary">
-                  Budget: {rate === undefined ? 'not set' : rate === 0 ? 'unlimited' : `${rate} B/s`}
+                  {t('mavlink_config.Px4TelemetryRates.budget')} {rate === undefined ? 'not set' : rate === 0 ? 'unlimited' : `${rate} B/s`}
                 </label>
                 <input
                   type="range"
@@ -138,9 +139,7 @@ export default function Px4TelemetryRates(): JSX.Element {
                   className="w-full"
                 />
                 <p className="mt-1 text-[11px] text-content-tertiary">
-                  PX4 thins its streams to stay under this. Set it below what the radio can carry,
-                  not at the serial baud rate: a 57600 baud SiK link moves far less than 5760 B/s
-                  once the radio's own overhead is paid.
+                  {t('mavlink_config.Px4TelemetryRates.px4ThinsItsStreamsToStay')}
                 </p>
 
                 {forward !== undefined && (
@@ -153,7 +152,7 @@ export default function Px4TelemetryRates(): JSX.Element {
                         : 'bg-surface-overlay text-content-secondary hover:text-content'
                     }`}
                   >
-                    {forward ? 'Forwarding messages between links' : 'Not forwarding between links'}
+                    {forward ? t('mavlink_config.Px4TelemetryRates.forwardingMessagesBetweenLinks') : t('mavlink_config.Px4TelemetryRates.notForwardingBetweenLinks')}
                   </button>
                 )}
               </div>
@@ -165,9 +164,7 @@ export default function Px4TelemetryRates(): JSX.Element {
       <div className="flex items-start gap-2 rounded-xl border border-subtle bg-surface-raised p-4 text-[11px] text-content-tertiary">
         <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-400" />
         <span>
-          Changing the mode of the link you are connected through takes effect immediately and can
-          drop messages ArduDeck is using. Config mode over USB is fine; on a radio, Normal or Low
-          Bandwidth is what you want.
+          {t('mavlink_config.Px4TelemetryRates.changingTheModeOfTheLink')}
         </span>
       </div>
     </div>

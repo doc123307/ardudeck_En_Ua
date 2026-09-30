@@ -5,6 +5,7 @@
  */
 
 import { ControlSurface } from '../presets/servo-presets';
+import { t } from '../../../i18n';
 
 interface Props {
   highlightSurface?: ControlSurface | null;
@@ -63,7 +64,7 @@ export default function DeltaDiagram({
         onClick={handleClick('elevon_left')}
       />
       <text x="55" y="138" textAnchor="middle" fill="#9CA3AF" fontSize="9" fontWeight="500">
-        L Elevon
+        {t('servo_wizard.DeltaDiagram.lElevon')}
       </text>
       {servoLabels.elevon_left && (
         <text x="70" y="175" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -78,7 +79,7 @@ export default function DeltaDiagram({
         onClick={handleClick('elevon_right')}
       />
       <text x="245" y="138" textAnchor="middle" fill="#9CA3AF" fontSize="9" fontWeight="500">
-        R Elevon
+        {t('servo_wizard.DeltaDiagram.rElevon')}
       </text>
       {servoLabels.elevon_right && (
         <text x="230" y="175" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -99,7 +100,7 @@ export default function DeltaDiagram({
         onClick={handleClick('rudder')}
       />
       <text x="175" y="160" textAnchor="start" fill="#9CA3AF" fontSize="9" fontWeight="500">
-        Rudder
+        {t('servo_wizard.DeltaDiagram.rudder')}
       </text>
       {servoLabels.rudder && (
         <text x="175" y="172" textAnchor="start" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -115,7 +116,7 @@ export default function DeltaDiagram({
 
       {/* Info text */}
       <text x="150" y="192" textAnchor="middle" fill="#6B7280" fontSize="9">
-        Delta with vertical tail
+        {t('servo_wizard.DeltaDiagram.deltaWithVerticalTail')}
       </text>
     </svg>
   );

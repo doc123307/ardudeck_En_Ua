@@ -16,6 +16,7 @@ import {
 } from '../../modules/module-osd-registry';
 import { OSD_CHAR_WIDTH, OSD_CHAR_HEIGHT, getCharacterDataUrl } from '../../utils/osd/font-renderer';
 import { useGatedOffOsdElements } from '../../modules/capabilities';
+import { t } from '../../i18n';
 
 interface Props {
   selectedElement: OsdElementKey | null;
@@ -134,13 +135,13 @@ export function OsdElementBrowser({ selectedElement, onSelect }: Props) {
       <div className="p-3 border-b border-subtle">
         <input
           type="text"
-          placeholder="Search elements..."
+          placeholder={t('osd.OsdElementBrowser.searchElements')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-surface-raised text-content text-xs rounded px-2.5 py-1.5 border border-subtle focus:border-blue-500 focus:outline-none placeholder-content-tertiary"
         />
         <div className="mt-1.5 text-[10px] text-content-secondary">
-          {totalEnabled} of {allElements.length} enabled
+          {totalEnabled} {t('osd.OsdElementBrowser.of')} {allElements.length} {t('osd.OsdElementBrowser.enabled')}
         </div>
       </div>
 
@@ -254,7 +255,7 @@ function ElementRow({
         ${unsupported ? 'opacity-45' : ''}
       `}
       onClick={() => onSelect(def.id)}
-      data-tip={unsupported ? 'Not available on the connected board' : def.description}
+      data-tip={unsupported ? t('osd.OsdElementBrowser.notAvailableOnTheConnectedBoard') : def.description}
     >
       <input
         type="checkbox"

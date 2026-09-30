@@ -34,6 +34,7 @@ import { useLinkUp } from './useLinkUp';
 import { rssiState } from '../../../utils/rssi-state';
 import { useMapHomeStore } from './registry';
 import { STRIP_HEIGHT } from './stripMetrics';
+import { t } from '../../../i18n';
 
 export type ReadoutSource = 'battery' | 'gps' | 'altitude' | 'speed' | 'heading' | 'vsi' | 'home' | 'link';
 export type ReadoutTreatment = 'strip' | 'cell' | 'inline';
@@ -351,7 +352,7 @@ function LinkReadout({ treatment }: { treatment: ReadoutTreatment }): JSX.Elemen
   const r: Readout = {
     tag: 'LINK',
     value: known ? `${state.pct}%` : '--',
-    detail: known ? (state.fromModem ? 'TLM RSSI' : 'RSSI') : state.kind === 'unconfigured' ? 'not set up' : 'no RSSI',
+    detail: known ? (state.fromModem ? 'TLM RSSI' : 'RSSI') : state.kind === 'unconfigured' ? t('map.CompactReadout.notSetUp') : 'no RSSI',
     fraction: known ? state.pct / 100 : 0,
     known,
     color: known ? bandColor(state.pct) : GAUGE_COLORS.tickMinor,

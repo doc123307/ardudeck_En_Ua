@@ -15,6 +15,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useParameterStore } from '../../../stores/parameter-store';
 import { readCompassSlots, type CompassSlot } from '../../mavlink-config/compass-inventory';
 import { assessCompassFitness } from '../../../../shared/calibration-quality';
+import { t } from '../../../i18n';
 
 interface CompassFitPanelProps {
   /** Per-compass results from MAG_CAL_REPORT, keyed by 0-based instance. */
@@ -83,7 +84,7 @@ export function CompassFitPanel({ results }: CompassFitPanelProps): JSX.Element 
 
   return (
     <div className="space-y-2">
-      <h4 className="text-sm font-medium text-content uppercase tracking-wide">Compass fit</h4>
+      <h4 className="text-sm font-medium text-content uppercase tracking-wide">{t('calibration.CompassFitPanel.compassFit')}</h4>
 
       {ordered.map((slot) => {
         const fitness = fitnessFor(slot);
@@ -97,20 +98,20 @@ export function CompassFitPanel({ results }: CompassFitPanelProps): JSX.Element 
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-content">
-                    {slot.external ? 'External compass' : 'Onboard compass'}
+                    {slot.external ? t('calibration.CompassFitPanel.externalCompass') : t('calibration.CompassFitPanel.onboardCompass')}
                   </span>
                   <span className="rounded bg-surface-overlay px-1.5 py-0.5 font-mono text-[10px] text-content-tertiary">
                     id {slot.devId}
                   </span>
                   {slot.firstUsable && (
                     <span className="rounded bg-cyan-500/20 px-1.5 py-0.5 text-[10px] text-cyan-700 dark:text-cyan-300">
-                      used for heading
+                      {t('calibration.CompassFitPanel.usedForHeading')}
                     </span>
                   )}
                 </div>
                 <div className="mt-0.5 text-[11px] text-content-tertiary">
                   {fitness === null
-                    ? 'Not calibrated in this run, keeping its previous values'
+                    ? t('calibration.CompassFitPanel.notCalibratedInThisRunKeeping')
                     : `fitness ${fitness.toFixed(1)} mGauss`}
                 </div>
               </div>
@@ -120,7 +121,7 @@ export function CompassFitPanel({ results }: CompassFitPanelProps): JSX.Element 
                   <button
                     onClick={() => move(slot, -1)}
                     disabled={busy || slot.priority === 1}
-                    data-tip="Higher priority: the EKF prefers this one"
+                    data-tip={t('calibration.CompassFitPanel.higherPriorityTheEkfPrefersThis')}
                     className="rounded p-1 text-content-tertiary hover:text-content disabled:opacity-30"
                   >
                     <ChevronUp className="h-3.5 w-3.5" />
@@ -128,7 +129,7 @@ export function CompassFitPanel({ results }: CompassFitPanelProps): JSX.Element 
                   <button
                     onClick={() => move(slot, 1)}
                     disabled={busy || slot.priority === ordered.length}
-                    data-tip="Lower priority"
+                    data-tip={t('calibration.CompassFitPanel.lowerPriority')}
                     className="rounded p-1 text-content-tertiary hover:text-content disabled:opacity-30"
                   >
                     <ChevronDown className="h-3.5 w-3.5" />
@@ -142,7 +143,7 @@ export function CompassFitPanel({ results }: CompassFitPanelProps): JSX.Element 
                         : 'bg-content-tertiary/15 text-content-secondary ring-1 ring-inset ring-content-tertiary/30'
                     }`}
                   >
-                    {slot.used ? 'In use' : 'Not used'}
+                    {slot.used ? t('calibration.CompassFitPanel.inUse') : t('calibration.CompassFitPanel.notUsed')}
                   </button>
                 </div>
                 {assessment && (
@@ -170,8 +171,7 @@ export function CompassFitPanel({ results }: CompassFitPanelProps): JSX.Element 
       })}
 
       <p className="text-[11px] text-content-tertiary">
-        Keep the compass in the best position rather than the best score: an onboard one sits in the
-        battery's field, which moves with current draw and no calibration corrects that.
+        {t('calibration.CompassFitPanel.keepTheCompassInTheBest')}
       </p>
     </div>
   );

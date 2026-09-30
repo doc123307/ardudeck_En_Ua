@@ -4,6 +4,7 @@ import { useWorkspaceDialogStore } from '../stores/workspace-dialog-store';
 import { useSurveyMenuStore } from '../stores/survey-menu-store';
 import { useParameterStore } from '../stores/parameter-store';
 import { hasDualVtolControllers } from '../components/mavlink-config/mavlink-pid-schemes';
+import { t as tr } from '../i18n';
 
 // Feature tours are the per-release "what's new" walkthroughs. They are NOT
 // version-gated at runtime (TourManager shows any registry tour the user hasn't
@@ -54,9 +55,8 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'mission-planning-alpha32',
     view: 'mission',
     version: '0.0.32',
-    title: 'Mission planning, leveled up',
-    blurb:
-      'Grouped missions, corridor surveys, GSD-first planning, GIS import, multi-format export, and full undo - all in the planner.',
+    get title() { return tr('feature_tours.registry.missionPlanningLeveledUp'); },
+    get blurb() { return tr('feature_tours.registry.groupedMissionsCorridorSurveysGsdFirst'); },
     cleanup: () => useSurveyMenuStore.getState().setOpen(false),
     steps: [
       {
@@ -65,12 +65,10 @@ export const FEATURE_TOURS: FeatureTour[] = [
         setup: () => useSurveyMenuStore.getState().setOpen(false),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Missions are organized into groups</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.missionsAreOrganizedIntoGroups')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Every waypoint now lives in a named, colored <strong>group</strong>. Click the swatch
-              to recolor, the checkbox to show/hide it on the map, and the per-group button to
-              upload or save just that group. Each header shows the group's
-              {' '}<strong>distance, flight time and GSD</strong> at a glance.
+              {tr('feature_tours.registry.everyWaypointNowLivesInA')} <strong>{tr('feature_tours.registry.group')}</strong>{tr('feature_tours.registry.clickTheSwatchToRecolorThe')}
+              {' '}<strong>{tr('feature_tours.registry.distanceFlightTimeAndGsd')}</strong> {tr('feature_tours.registry.atAGlance')}
             </p>
           </div>
         ),
@@ -83,12 +81,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         mutationObservables: ['[data-tour="mission-survey-menu"]'],
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Corridor surveys</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.corridorSurveys')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Under the <strong>Survey</strong> button, pick <strong>Corridor</strong> for linear
-              jobs - roads, rail, power lines, pipelines. Draw a centerline and ArduDeck lays
-              parallel strips along it. Pick <strong>Plane</strong> (racetrack turns at sharp bends)
-              or <strong>Copter</strong> (turns on the spot), and set width, strip count and overlap.
+              {tr('feature_tours.registry.underThe')} <strong>{tr('feature_tours.registry.survey')}</strong> {tr('feature_tours.registry.buttonPick')} <strong>{tr('feature_tours.registry.corridor')}</strong> {tr('feature_tours.registry.forLinearJobsRoadsRailPower')} <strong>{tr('feature_tours.registry.plane')}</strong> {tr('feature_tours.registry.racetrackTurnsAtSharpBendsOr')} <strong>{tr('feature_tours.registry.copter')}</strong> {tr('feature_tours.registry.turnsOnTheSpotAndSet')}
             </p>
           </div>
         ),
@@ -101,12 +96,11 @@ export const FEATURE_TOURS: FeatureTour[] = [
         mutationObservables: ['[data-tour="mission-survey-menu"]'],
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Smarter area surveys</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.smarterAreaSurveys')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Plan by <strong>GSD</strong> (cm/px) instead of guessing altitude, see live
-              {' '}<strong>battery and data</strong> estimates, and split a big job into
-              {' '}<strong>battery-sized sorties</strong> in one click. Crosshatch can even fly its
-              two passes at <strong>two different heights</strong> for better 3D.
+              {tr('feature_tours.registry.planBy')} <strong>GSD</strong> {tr('feature_tours.registry.cmPxInsteadOfGuessingAltitude')}
+              {' '}<strong>{tr('feature_tours.registry.batteryAndData')}</strong> {tr('feature_tours.registry.estimatesAndSplitABigJob')}
+              {' '}<strong>{tr('feature_tours.registry.batterySizedSorties')}</strong> {tr('feature_tours.registry.inOneClickCrosshatchCanEven')} <strong>{tr('feature_tours.registry.twoDifferentHeights')}</strong> {tr('feature_tours.registry.forBetter3d')}
             </p>
           </div>
         ),
@@ -117,11 +111,10 @@ export const FEATURE_TOURS: FeatureTour[] = [
         setup: () => useSurveyMenuStore.getState().setOpen(false),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Import an area from GIS</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.importAnAreaFromGis')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Bring a survey boundary straight in from <strong>KML</strong>, <strong>KMZ</strong> or
-              {' '}<strong>GeoJSON</strong> - one survey group per polygon, inner rings kept as
-              no-fly holes. No more re-tracing a boundary by hand.
+              {tr('feature_tours.registry.bringASurveyBoundaryStraightIn')} <strong>KML</strong>, <strong>KMZ</strong> {tr('feature_tours.registry.or')}
+              {' '}<strong>GeoJSON</strong> {tr('feature_tours.registry.oneSurveyGroupPerPolygonInner')}
             </p>
           </div>
         ),
@@ -131,11 +124,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="mission-export"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Export in any format</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.exportInAnyFormat')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Save or export the whole mission from here - <strong>.waypoints</strong> (QGC WPL, for
-              ArduPilot / Mission Planner) or <strong>.plan</strong> (QGroundControl). Pick the
-              format up front; no guessing from the file dialog.
+              {tr('feature_tours.registry.saveOrExportTheWholeMission')} <strong>{tr('feature_tours.registry.waypoints')}</strong> {tr('feature_tours.registry.qgcWplForArdupilotMissionPlanner')} <strong>{tr('feature_tours.registry.plan')}</strong> {tr('feature_tours.registry.qgroundcontrolPickTheFormatUpFront')}
             </p>
           </div>
         ),
@@ -145,11 +136,10 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="mission-history"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Undo, redo and crash recovery</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.undoRedoAndCrashRecovery')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Full <strong>undo / redo</strong> (Cmd/Ctrl+Z) across edits, plus automatic
-              {' '}<strong>autosave</strong> - if the app closes mid-plan, your mission is recovered
-              on the next launch.
+              {tr('feature_tours.registry.full')} <strong>{tr('feature_tours.registry.undoRedo')}</strong> {tr('feature_tours.registry.cmdCtrlZAcrossEditsPlus')}
+              {' '}<strong>{tr('feature_tours.registry.autosave')}</strong> {tr('feature_tours.registry.ifTheAppClosesMidPlan')}
             </p>
           </div>
         ),
@@ -160,8 +150,8 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'vtol-dual-controller-tuning-alpha32',
     view: 'parameters',
     version: '0.0.32',
-    title: 'Tune VTOL and fixed-wing separately',
-    blurb: 'QuadPlanes carry two controller sets. The PID tab now lets you switch which one you tune.',
+    get title() { return tr('feature_tours.registry.tuneVtolAndFixedWingSeparately'); },
+    get blurb() { return tr('feature_tours.registry.quadplanesCarryTwoControllerSetsThe'); },
     // Only offer this on a QuadPlane that exposes both control-law sets; on any
     // other vehicle the switch does not exist, so the tour stays hidden.
     predicate: () => hasDualVtolControllers(useParameterStore.getState().parameters),
@@ -171,18 +161,16 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="tuning-vtol-toggle"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Two controllers, one autopilot</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.twoControllersOneAutopilot')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              A QuadPlane runs separate controllers for hover and forward flight. This switch flips
-              the PID tab between the <strong>VTOL</strong> rate controller
-              {' '}(<code className="font-mono text-[11px]">Q_A_RAT_</code>) and the
-              {' '}<strong>fixed-wing</strong> controller
+              {tr('feature_tours.registry.aQuadplaneRunsSeparateControllersFor')} <strong>VTOL</strong> {tr('feature_tours.registry.rateController')}
+              {' '}(<code className="font-mono text-[11px]">Q_A_RAT_</code>{tr('feature_tours.registry.andThe')}
+              {' '}<strong>fixed-wing</strong> {tr('feature_tours.registry.controller')}
               {' '}(<code className="font-mono text-[11px]">RLL_RATE_</code> /
               {' '}<code className="font-mono text-[11px]">RLL2SRV_</code>).
             </p>
             <p className="text-xs leading-relaxed opacity-90">
-              The sliders, presets and profiles all follow your choice, so you can tune each set
-              without leaving the page.
+              {tr('feature_tours.registry.theSlidersPresetsAndProfilesAll')}
             </p>
           </div>
         ),
@@ -193,9 +181,8 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'flight-info-alpha32-5',
     view: 'mission',
     version: '0.0.32.5',
-    title: 'New: the Flight Info briefing',
-    blurb:
-      'A live pre-flight briefing for any mission or survey: endurance and batteries, distance and altitude, site wind and weather, and your daylight window.',
+    get title() { return tr('feature_tours.registry.newTheFlightInfoBriefing'); },
+    get blurb() { return tr('feature_tours.registry.aLivePreFlightBriefingFor'); },
     steps: [
       {
         selector: '[data-tour="flight-info-panel"]',
@@ -205,17 +192,12 @@ export const FEATURE_TOURS: FeatureTour[] = [
         mutationObservables: ['[data-tour="flight-info-panel"]'],
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Brief the flight before you fly it</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.briefTheFlightBeforeYouFly')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              The new <strong>Flight Info</strong> tab turns your mission into the numbers a pilot
-              decides on: <strong>flight time</strong> and how many <strong>batteries</strong> it
-              needs, total <strong>distance</strong> and <strong>altitude</strong> against the
-              ceiling, and live <strong>site weather</strong>.
+              {tr('feature_tours.registry.theNew')} <strong>{tr('feature_tours.registry.flightInfo')}</strong> {tr('feature_tours.registry.tabTurnsYourMissionIntoThe')} <strong>{tr('feature_tours.registry.flightTime')}</strong> {tr('feature_tours.registry.andHowMany')} <strong>{tr('feature_tours.registry.batteries')}</strong> {tr('feature_tours.registry.itNeedsTotal')} <strong>{tr('feature_tours.registry.distance')}</strong> {tr('feature_tours.registry.and')} <strong>{tr('feature_tours.registry.altitude')}</strong> {tr('feature_tours.registry.againstTheCeilingAndLive')} <strong>{tr('feature_tours.registry.siteWeather')}</strong>.
             </p>
             <p className="text-xs leading-relaxed opacity-90">
-              Wind shows as a <strong>compass</strong>, and the <strong>daylight</strong> bar marks
-              when the flight would finish against sunset - so you can see at a glance whether it
-              lands before dark.
+              {tr('feature_tours.registry.windShowsAsA')} <strong>{tr('feature_tours.registry.compass')}</strong>{tr('feature_tours.registry.andThe2')} <strong>{tr('feature_tours.registry.daylight')}</strong> {tr('feature_tours.registry.barMarksWhenTheFlightWould')}
             </p>
           </div>
         ),
@@ -226,9 +208,8 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'quick-launch-033',
     view: 'telemetry',
     version: '0.33',
-    title: 'Quick Launch & the Area Editor',
-    blurb:
-      'Pop tools into their own windows from the header, and jump straight into the new Area Editor for drawing survey areas and corridors.',
+    get title() { return tr('feature_tours.registry.quickLaunchTheAreaEditor'); },
+    get blurb() { return tr('feature_tours.registry.popToolsIntoTheirOwnWindows'); },
     steps: [
       {
         selector: '[data-tour="welcome-cards"]',
@@ -236,13 +217,13 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="welcome-cards"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Jump straight into a tool</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.jumpStraightIntoATool')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              No vehicle connected? These cards open the tools that work offline:
-              {' '}<strong>Mission Planning</strong>, the <strong>Area Editor</strong>,
-              {' '}<strong>SITL</strong>, the <strong>3D Sim World</strong>, the <strong>Radio HUD</strong>,
-              {' '}<strong>Flight Log Analysis</strong>, <strong>Firmware Flash</strong> and your
-              {' '}<strong>Mission Library</strong>.
+              {tr('feature_tours.registry.noVehicleConnectedTheseCardsOpen')}
+              {' '}<strong>{tr('feature_tours.registry.missionPlanning')}</strong>{tr('feature_tours.registry.the')} <strong>{tr('feature_tours.registry.areaEditor')}</strong>,
+              {' '}<strong>SITL</strong>{tr('feature_tours.registry.the')} <strong>{tr('feature_tours.registry.n3dSimWorld')}</strong>{tr('feature_tours.registry.the')} <strong>{tr('feature_tours.registry.radioHud')}</strong>,
+              {' '}<strong>{tr('feature_tours.registry.flightLogAnalysis')}</strong>, <strong>{tr('feature_tours.registry.firmwareFlash')}</strong> {tr('feature_tours.registry.andYour')}
+              {' '}<strong>{tr('feature_tours.registry.missionLibrary')}</strong>.
             </p>
           </div>
         ),
@@ -252,11 +233,11 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="quick-launch"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Quick Launch - tools in their own window</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.quickLaunchToolsInTheirOwn')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Open the <strong>MAVLink Inspector</strong>, the <strong>Telemetry Dashboard</strong> or the
-              {' '}<strong>3D Sim World</strong> in a separate window, ideal for a <strong>second monitor</strong>
-              {' '}while you keep planning or tuning in the main window. Each stays live alongside the rest of the app.
+              {tr('feature_tours.registry.openThe')} <strong>{tr('feature_tours.registry.mavlinkInspector')}</strong>{tr('feature_tours.registry.the')} <strong>{tr('feature_tours.registry.telemetryDashboard')}</strong> {tr('feature_tours.registry.orThe')}
+              {' '}<strong>{tr('feature_tours.registry.n3dSimWorld')}</strong> {tr('feature_tours.registry.inASeparateWindowIdealFor')} <strong>{tr('feature_tours.registry.secondMonitor')}</strong>
+              {' '}{tr('feature_tours.registry.whileYouKeepPlanningOrTuning')}
             </p>
           </div>
         ),
@@ -266,13 +247,12 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="quick-launch"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Meet the Area Editor</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.meetTheAreaEditor')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              The new <strong>Area Editor</strong> opens from here: a full-window map for drawing
-              survey <strong>areas and corridors</strong> - multi-polygon, holes, KML import, a live
-              {' '}<strong>flight briefing</strong> (toggle hectares/acres), and a
-              {' '}<strong>go-to</strong> search to fly to any site. <strong>Send to mission</strong>
-              {' '}drops it straight into the planner.
+              {tr('feature_tours.registry.theNew')} <strong>{tr('feature_tours.registry.areaEditor')}</strong> {tr('feature_tours.registry.opensFromHereAFullWindow')} <strong>{tr('feature_tours.registry.areasAndCorridors')}</strong> {tr('feature_tours.registry.multiPolygonHolesKmlImportA')}
+              {' '}<strong>{tr('feature_tours.registry.flightBriefing')}</strong> {tr('feature_tours.registry.toggleHectaresAcresAndA')}
+              {' '}<strong>go-to</strong> {tr('feature_tours.registry.searchToFlyToAnySite')} <strong>{tr('feature_tours.registry.sendToMission')}</strong>
+              {' '}{tr('feature_tours.registry.dropsItStraightIntoThePlanner')}
             </p>
           </div>
         ),
@@ -283,9 +263,8 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'rtk-ntrip-034',
     view: 'telemetry',
     version: '0.1.0',
-    title: 'RTK corrections over NTRIP',
-    blurb:
-      'Stream centimeter-grade RTK corrections from any NTRIP caster straight to your vehicle, and watch the fix on the map.',
+    get title() { return tr('feature_tours.registry.rtkCorrectionsOverNtrip'); },
+    get blurb() { return tr('feature_tours.registry.streamCentimeterGradeRtkCorrectionsFrom'); },
     cleanup: () => useWorkspaceDialogStore.getState().setOpen(false),
     steps: [
       {
@@ -293,10 +272,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="telemetry-layout-select"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Panels live in the Workspace</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.panelsLiveInTheWorkspace')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              The <strong>Workspace</strong> button holds the layouts and every panel you can add.
-              The RTK panel is one of them.
+              {tr('feature_tours.registry.the2')} <strong>{tr('feature_tours.registry.workspace')}</strong> {tr('feature_tours.registry.buttonHoldsTheLayoutsAndEvery')}
             </p>
           </div>
         ),
@@ -307,12 +285,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         mutationObservables: ['[data-tour="workspace-dialog"]'],
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">RTK / NTRIP panel</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.rtkNtripPanel')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Add the <strong>RTK / NTRIP</strong> panel, point it at an NTRIP caster and pick a
-              mountpoint. ArduDeck forwards the <strong>RTCM corrections</strong> over MAVLink; with an
-              RTK-capable GPS the fix climbs to <strong>RTK Fixed</strong> (1-2 cm). With several
-              vehicles connected, every one of them gets the corrections.
+              {tr('feature_tours.registry.addThe')} <strong>RTK / NTRIP</strong> {tr('feature_tours.registry.panelPointItAtAnNtrip')} <strong>{tr('feature_tours.registry.rtcmCorrections')}</strong> {tr('feature_tours.registry.overMavlinkWithAnRtkCapable')} <strong>{tr('feature_tours.registry.rtkFixed')}</strong> {tr('feature_tours.registry.n12CmWithSeveralVehicles')}
             </p>
           </div>
         ),
@@ -324,10 +299,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="map-instruments"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">RTK on the map</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.rtkOnTheMap')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Under <strong>Instruments</strong> there is also an <strong>RTK</strong> instrument that
-              shows the fix type and correction age right on the map, where you are looking anyway.
+              {tr('feature_tours.registry.under')} <strong>{tr('feature_tours.registry.instruments')}</strong> {tr('feature_tours.registry.thereIsAlsoAn')} <strong>RTK</strong> {tr('feature_tours.registry.instrumentThatShowsTheFixType')}
             </p>
           </div>
         ),
@@ -338,22 +312,17 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'multi-vehicle-beta1',
     view: 'telemetry',
     version: '0.1.0',
-    title: 'New: fly a whole fleet',
-    blurb:
-      'Multi-vehicle is here: one switch starts the engine, vehicles appear as they come online, and ArduDeck commands them individually or together.',
+    get title() { return tr('feature_tours.registry.newFlyAWholeFleet'); },
+    get blurb() { return tr('feature_tours.registry.multiVehicleIsHereOneSwitch'); },
     steps: [
       {
         selector: '[data-tour="connection-multi-tab"]',
         predicate: present('[data-tour="connection-multi-tab"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Multi-vehicle mode</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.multiVehicleMode')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Switch the connection sidebar to <strong>Multi-vehicle</strong> and flip it on:
-              ArduDeck starts its engine in the background and vehicles appear as their
-              heartbeats arrive - no ports, no URLs. <strong>Add a vehicle</strong> covers radio,
-              internet, cellular and second-ground-station links. Click a vehicle in the fleet
-              list and the telemetry, map and commands switch to it.
+              {tr('feature_tours.registry.switchTheConnectionSidebarTo')} <strong>{tr('feature_tours.registry.multiVehicle')}</strong> {tr('feature_tours.registry.andFlipItOnArdudeckStarts')} <strong>{tr('feature_tours.registry.addAVehicle')}</strong> {tr('feature_tours.registry.coversRadioInternetCellularAndSecond')}
             </p>
           </div>
         ),
@@ -364,21 +333,18 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'log-explorer-beta1',
     view: 'logs',
     version: '0.1.0',
-    title: 'Log Explorer, rebuilt',
-    blurb:
-      'Multiple charts with independent y-axes, window-aware stats, events and FFT panels, and a flight path map that follows your cursor.',
+    get title() { return tr('feature_tours.registry.logExplorerRebuilt'); },
+    get blurb() { return tr('feature_tours.registry.multipleChartsWithIndependentYAxes'); },
     steps: [
       {
         selector: '[data-tour="log-field-picker"]',
         predicate: present('[data-tour="log-field-picker"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Pick any recorded field</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.pickAnyRecordedField')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Search every message the log contains and toggle fields onto the
-              {' '}<strong>active chart</strong> - add more charts and the picker targets whichever
-              one you focus. Multi-instance messages (two GPS units, four ESCs) expand per
-              instance, and units come straight from the log.
+              {tr('feature_tours.registry.searchEveryMessageTheLogContains')}
+              {' '}<strong>{tr('feature_tours.registry.activeChart')}</strong> {tr('feature_tours.registry.addMoreChartsAndThePicker')}
             </p>
           </div>
         ),
@@ -388,12 +354,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="log-chart-actions"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Independent axes, live stats, CSV</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.independentAxesLiveStatsCsv')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Toggle between a shared y-axis and <strong>one axis per field</strong> so RPM and
-              attitude can share a chart. The legend's <strong>min / avg / max</strong> recompute
-              over the visible window as you zoom and pan, and the export button saves exactly
-              that window as CSV. Events, Params and <strong>FFT</strong> live in the panels menu.
+              {tr('feature_tours.registry.toggleBetweenASharedYAxis')} <strong>{tr('feature_tours.registry.oneAxisPerField')}</strong> {tr('feature_tours.registry.soRpmAndAttitudeCanShare')} <strong>{tr('feature_tours.registry.minAvgMax')}</strong> {tr('feature_tours.registry.recomputeOverTheVisibleWindowAs')} <strong>FFT</strong> {tr('feature_tours.registry.liveInThePanelsMenu')}
             </p>
           </div>
         ),
@@ -404,22 +367,17 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'osd-tool-beta1',
     view: 'osd',
     version: '0.1.0',
-    title: 'OSD Tool: know where your overlay lives',
-    blurb:
-      'Compose a fully custom ground HUD, edit the FC Text OSD, or author a RubyFPV layout - the destination bar always shows where each one ends up.',
+    get title() { return tr('feature_tours.registry.osdToolKnowWhereYourOverlay'); },
+    get blurb() { return tr('feature_tours.registry.composeAFullyCustomGroundHud'); },
     steps: [
       {
         selector: '[data-tour="osd-destination-bar"]',
         predicate: present('[data-tour="osd-destination-bar"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Three OSDs, three destinations</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.threeOsdsThreeDestinations')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              This bar is the ground truth: the <strong>custom HUD</strong> is drawn by ArduDeck
-              over your screen and video feed and is <strong>never uploaded</strong> to the flight
-              controller; the <strong>Text OSD</strong> editor reads and writes the FC's real
-              OSDn_* layout; the <strong>RubyFPV</strong> designer exports a layout for RubyFPV
-              ground stations. All three preview over your live video feed.
+              {tr('feature_tours.registry.thisBarIsTheGroundTruth')} <strong>{tr('feature_tours.registry.customHud')}</strong> {tr('feature_tours.registry.isDrawnByArdudeckOverYour')} <strong>{tr('feature_tours.registry.neverUploaded')}</strong> {tr('feature_tours.registry.toTheFlightControllerThe')} <strong>{tr('feature_tours.registry.textOsd')}</strong> {tr('feature_tours.registry.editorReadsAndWritesTheFc')} <strong>RubyFPV</strong> {tr('feature_tours.registry.designerExportsALayoutForRubyfpv')}
             </p>
           </div>
         ),
@@ -430,20 +388,17 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'unit-preferences-beta1',
     view: 'settings',
     version: '0.1.0',
-    title: 'Plan in your own units',
-    blurb: 'Feet, mph, knots, acres - pick per-quantity display units and the whole app follows.',
+    get title() { return tr('feature_tours.registry.planInYourOwnUnits'); },
+    get blurb() { return tr('feature_tours.registry.feetMphKnotsAcresPickPer'); },
     steps: [
       {
         selector: '[data-tour="unit-preferences"]',
         predicate: present('[data-tour="unit-preferences"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Display Units</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.displayUnits')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Set distance, altitude, speed, area, weight and more independently - mission
-              planning, telemetry panels, the log explorer and survey estimates all render in
-              your choice. Values sent to the vehicle stay metric under the hood, so nothing
-              about the flight changes.
+              {tr('feature_tours.registry.setDistanceAltitudeSpeedAreaWeight')}
             </p>
           </div>
         ),
@@ -454,24 +409,17 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'altitude-planning-beta1',
     view: 'mission',
     version: '0.1.0',
-    title: 'Altitude profile that understands frames',
-    blurb:
-      'The profile now plots relative, terrain and ASL waypoints correctly against real terrain - with AGL labels, collision warnings you can trust, and zoom.',
+    get title() { return tr('feature_tours.registry.altitudeProfileThatUnderstandsFrames'); },
+    get blurb() { return tr('feature_tours.registry.theProfileNowPlotsRelativeTerrain'); },
     steps: [
       {
         selector: '[data-tour="mission-altitude-panel"]',
         predicate: present('[data-tour="mission-altitude-panel"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Altitude, in the frame you planned it</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.altitudeInTheFrameYouPlanned')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Waypoints plot against terrain in their own altitude frame, so an 80m-relative
-              survey at a mountain site reads <strong>80m (80m AGL)</strong>, not a false
-              collision. The axis shows <strong>height above home</strong> with ASL alongside,
-              terrain-following segments hug the ground, and the dashed line is your safety
-              clearance. <strong>Scroll to zoom, drag to pan</strong>, drag a waypoint dot to
-              change its altitude, and let <strong>Auto Adjust</strong> fix real terrain
-              conflicts.
+              {tr('feature_tours.registry.waypointsPlotAgainstTerrainInTheir')} <strong>{tr('feature_tours.registry.n80m80mAgl')}</strong>{tr('feature_tours.registry.notAFalseCollisionTheAxis')} <strong>{tr('feature_tours.registry.heightAboveHome')}</strong> {tr('feature_tours.registry.withAslAlongsideTerrainFollowingSegments')} <strong>{tr('feature_tours.registry.scrollToZoomDragToPan')}</strong>{tr('feature_tours.registry.dragAWaypointDotToChange')} <strong>{tr('feature_tours.registry.autoAdjust')}</strong> {tr('feature_tours.registry.fixRealTerrainConflicts')}
             </p>
           </div>
         ),
@@ -482,20 +430,17 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'radio-hud-beta1',
     view: 'radio-hud',
     version: '0.1.0',
-    title: 'Your radio becomes a mini GCS',
-    blurb:
-      'Design an ArduDeck telemetry screen for your EdgeTX radio - live preview, drag-and-drop layout, offline field maps, voice alerts - and push it to the SD card in one click.',
+    get title() { return tr('feature_tours.registry.yourRadioBecomesAMiniGcs'); },
+    get blurb() { return tr('feature_tours.registry.designAnArdudeckTelemetryScreenFor'); },
     steps: [
       {
         selector: '[data-tour="hud-model"]',
         predicate: present('[data-tour="hud-model"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Pick your radio</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.pickYourRadio')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Color radios (TX15, TX16S, NV14...) get the full widget - the preview is a faithful
-              mirror of that screen. Monochrome radios (Boxer, Zorro, TX12, X9D) get a dense
-              1-bit telemetry script with the same voice alerts. Layouts rescale when you switch.
+              {tr('feature_tours.registry.colorRadiosTx15Tx16sNv14Get')}
             </p>
           </div>
         ),
@@ -505,11 +450,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="hud-edit"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Make the screen yours</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.makeTheScreenYours')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              On color radios: drag, resize and swap <strong>17 instrument tiles</strong> across
-              up to 8 swipeable pages (or start from a preset). On monochrome: every data slot,
-              the big readout and the center panel (horizon or data wall) are assignable in place.
+              {tr('feature_tours.registry.onColorRadiosDragResizeAnd')} <strong>{tr('feature_tours.registry.n17InstrumentTiles')}</strong> {tr('feature_tours.registry.acrossUpTo8SwipeablePages')}
             </p>
           </div>
         ),
@@ -519,11 +462,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="hud-config"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Zero-config by default</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.zeroConfigByDefault')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Everything here is an <strong>override</strong>. Left on auto, the widget configures
-              itself from the vehicle's own telemetry over ELRS - cell count, capacity, battery %
-              - no ArduDeck connection needed in the field.
+              {tr('feature_tours.registry.everythingHereIsAn')} <strong>{tr('feature_tours.registry.override')}</strong>{tr('feature_tours.registry.leftOnAutoTheWidgetConfigures')}
             </p>
           </div>
         ),
@@ -533,11 +474,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="hud-maps"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Offline maps on the radio</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.offlineMapsOnTheRadio')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Click your flying field and ArduDeck stitches <strong>satellite images at three
-              zoom levels</strong> for the Map tile - vehicle, home, trail and your planned
-              mission drawn on top, fully offline. Tap the tile on the radio to switch zoom.
+              {tr('feature_tours.registry.clickYourFlyingFieldAndArdudeck')} <strong>{tr('feature_tours.registry.satelliteImagesAtThreeZoomLevels')}</strong> {tr('feature_tours.registry.forTheMapTileVehicleHome')}
             </p>
           </div>
         ),
@@ -547,11 +486,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="hud-apply"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">One click to the radio</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.oneClickToTheRadio')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Plug the radio in via USB (choose <strong>USB Storage</strong> on its screen) and
-              hit <strong>Apply</strong> - widget, config, voice pack and maps land on the SD
-              card together. Then on the radio: App layout, full-screen widget, ArduDeck.
+              {tr('feature_tours.registry.plugTheRadioInViaUsb')} <strong>{tr('feature_tours.registry.usbStorage')}</strong> {tr('feature_tours.registry.onItsScreenAndHit')} <strong>{tr('feature_tours.registry.apply')}</strong> {tr('feature_tours.registry.widgetConfigVoicePackAndMaps')}
             </p>
           </div>
         ),
@@ -562,23 +499,21 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'map-instruments-beta1',
     view: 'telemetry',
     version: '0.1.2',
-    title: 'Instruments on the map',
-    blurb: 'Gauges, attitude, messages and RTK float over the map. Drag them, group them and save the arrangement with a layout.',
+    get title() { return tr('feature_tours.registry.instrumentsOnTheMap'); },
+    get blurb() { return tr('feature_tours.registry.gaugesAttitudeMessagesAndRtkFloat'); },
     steps: [
       {
         selector: '[data-tour="map-instruments"]',
         predicate: present('[data-tour="map-instruments"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Pick what floats on the map</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.pickWhatFloatsOnTheMap')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              <strong>Instruments</strong> turns speed, altitude, attitude, heading, battery,
-              {' '}<strong>Messages</strong> and <strong>RTK</strong> on and off, or loads a whole cockpit preset.
-              Drag one onto another to <strong>group</strong> them into a single tray; drag it out to split it.
+              <strong>{tr('feature_tours.registry.instruments')}</strong> {tr('feature_tours.registry.turnsSpeedAltitudeAttitudeHeadingBattery')}
+              {' '}<strong>{tr('feature_tours.registry.messages')}</strong> {tr('feature_tours.registry.and')} <strong>RTK</strong> {tr('feature_tours.registry.onAndOffOrLoadsA')} <strong>{tr('feature_tours.registry.group')}</strong> {tr('feature_tours.registry.themIntoASingleTrayDrag')}
             </p>
             <p className="text-xs leading-relaxed opacity-90">
-              A saved <strong>Workspace</strong> layout remembers the instruments along with the panels.
-              Settings, Guides replays the animated walkthrough.
+              {tr('feature_tours.registry.aSaved')} <strong>{tr('feature_tours.registry.workspace')}</strong> {tr('feature_tours.registry.layoutRemembersTheInstrumentsAlongWith')}
             </p>
           </div>
         ),
@@ -589,10 +524,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="vision-stream"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Stream the synthetic view</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.streamTheSyntheticView')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              <strong>Stream</strong> publishes the Vision view, with or without the HUD, as RTSP, WebRTC and
-              SRT. Open it in VLC, ffmpeg, OpenCV or a browser.
+              <strong>{tr('feature_tours.registry.stream')}</strong> {tr('feature_tours.registry.publishesTheVisionViewWithOr')}
             </p>
           </div>
         ),
@@ -603,8 +537,8 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'vehicle-setup-beta1',
     view: 'parameters',
     version: '0.1.2',
-    title: 'Vehicle setup without the parameter table',
-    blurb: 'Every tab here is a page over the parameters one job needs, in plain words. The raw table is the last resort.',
+    get title() { return tr('feature_tours.registry.vehicleSetupWithoutTheParameterTable'); },
+    get blurb() { return tr('feature_tours.registry.everyTabHereIsAPage'); },
     cleanup: () => useConfigTabMenuStore.getState().setOpenGroupId(null),
     steps: [
       {
@@ -612,64 +546,57 @@ export const FEATURE_TOURS: FeatureTour[] = [
         predicate: present('[data-tour="mavlink-tabs"]'),
         setup: () => useConfigTabMenuStore.getState().setOpenGroupId(null),
         content: (
-          <TourText title="Pages, not parameter names">
-            Each tab sets up one job and writes the right parameters for this firmware, with live data beside
-            the settings so you see the effect. Most tabs sit in a group: the next steps open each one.
+          <TourText title={tr('feature_tours.registry.pagesNotParameterNames')}>
+            {tr('feature_tours.registry.eachTabSetsUpOneJob')}
           </TourText>
         ),
       },
       groupStep('tuning-group', 'Tuning', (
         <>
-          <strong>PID</strong> gains per axis, <strong>Rates</strong> and expo, <strong>Tuning</strong> presets,
-          and <strong>AutoTune</strong> set up without hunting for its parameters. AutoTune refuses edits while armed.
+          <strong>PID</strong> {tr('feature_tours.registry.gainsPerAxis')} <strong>{tr('feature_tours.registry.rates')}</strong> {tr('feature_tours.registry.andExpo')} <strong>{tr('feature_tours.registry.tuning')}</strong> {tr('feature_tours.registry.presetsAnd')} <strong>AutoTune</strong> {tr('feature_tours.registry.setUpWithoutHuntingForIts')}
         </>
       )),
       groupStep('rover-tuning-group', 'Tuning', (
         <>
-          Steering and speed controller gains, <strong>Speed &amp; Steering</strong> limits, and
-          {' '}<strong>Navigation</strong> for waypoint following and loiter.
+          {tr('feature_tours.registry.steeringAndSpeedControllerGains')} <strong>{tr('feature_tours.registry.speedSteering')}</strong> {tr('feature_tours.registry.limitsAnd')}
+          {' '}<strong>{tr('feature_tours.registry.navigation')}</strong> {tr('feature_tours.registry.forWaypointFollowingAndLoiter')}
         </>
       )),
       groupStep('rc-group', 'RC', (
         <>
-          <strong>Receiver</strong> shows the protocol and every channel live. <strong>Modes</strong> maps
-          the switch positions to modes and shows which slot the switch is in right now.
+          <strong>{tr('feature_tours.registry.receiver')}</strong> {tr('feature_tours.registry.showsTheProtocolAndEveryChannel')} <strong>{tr('feature_tours.registry.modes')}</strong> {tr('feature_tours.registry.mapsTheSwitchPositionsToModes')}
         </>
       )),
       groupStep('outputs-group', 'Outputs', (
         <>
-          <strong>Motor Test</strong> spins one motor at a time with live vibration and ESC data (props off, it
-          asks first). <strong>Servo Output</strong> sets each channel's function, reverse and range with a live bar.
+          <strong>{tr('feature_tours.registry.motorTest')}</strong> {tr('feature_tours.registry.spinsOneMotorAtATime')} <strong>{tr('feature_tours.registry.servoOutput')}</strong> {tr('feature_tours.registry.setsEachChannelSFunctionReverse')}
         </>
       )),
       itemStep('servo-output', 'Servo Output', (
-        <>Each output's function, reverse, min, trim and max, with the live position on every row.</>
+        <>{tr('feature_tours.registry.eachOutputSFunctionReverseMin')}</>
       )),
       groupStep('safety-group', 'Safety', (
         <>
-          <strong>Arming</strong> lists the pre-arm checks and what is failing now. <strong>Failsafes &amp; fence</strong>
-          {' '}sets what happens on link loss, low battery and a fence breach. Pre-arm quick fixes open these pages.
+          <strong>{tr('feature_tours.registry.arming')}</strong> {tr('feature_tours.registry.listsThePreArmChecksAnd')} <strong>{tr('feature_tours.registry.failsafesFence')}</strong>
+          {' '}{tr('feature_tours.registry.setsWhatHappensOnLinkLoss')}
         </>
       )),
       itemStep('battery', 'Battery', (
-        <>Monitor type, voltage and current sensing, and the low, critical and arming voltages, suggested from cell count and chemistry.</>
+        <>{tr('feature_tours.registry.monitorTypeVoltageAndCurrentSensing')}</>
       )),
       groupStep('hardware-group', 'Sensors', (
         <>
-          <strong>Health</strong> for every sensor live, <strong>Configuration</strong> for board orientation,
-          compasses and GPS wiring, and <strong>LEDs &amp; Sound</strong> for the LED, buzzer and safety button.
+          <strong>{tr('feature_tours.registry.health')}</strong> {tr('feature_tours.registry.forEverySensorLive')} <strong>{tr('feature_tours.registry.configuration')}</strong> {tr('feature_tours.registry.forBoardOrientationCompassesAndGps')} <strong>{tr('feature_tours.registry.ledsSound')}</strong> {tr('feature_tours.registry.forTheLedBuzzerAndSafety')}
         </>
       )),
       groupStep('links-group', 'Links', (
         <>
-          <strong>Serial Ports</strong> sets what runs on each port. <strong>Telemetry Rates</strong> works out
-          which MAVLink channel a port is and shows what each rate costs on the link.
+          <strong>{tr('feature_tours.registry.serialPorts')}</strong> {tr('feature_tours.registry.setsWhatRunsOnEachPort')} <strong>{tr('feature_tours.registry.telemetryRates')}</strong> {tr('feature_tours.registry.worksOutWhichMavlinkChannelA')}
         </>
       )),
       groupStep('storage-group', 'Storage', (
         <>
-          <strong>Logging</strong> chooses what the card records. <strong>Files</strong> browses the flight
-          controller over MAVLink-FTP. <strong>Parameters</strong> is the full table, for what no page covers yet.
+          <strong>{tr('feature_tours.registry.logging')}</strong> {tr('feature_tours.registry.choosesWhatTheCardRecords')} <strong>{tr('feature_tours.registry.files')}</strong> {tr('feature_tours.registry.browsesTheFlightControllerOverMavlink')} <strong>{tr('feature_tours.registry.parameters')}</strong> {tr('feature_tours.registry.isTheFullTableForWhat')}
         </>
       )),
     ],
@@ -678,8 +605,8 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'calibration-beta1',
     view: 'calibration',
     version: '0.1.2',
-    title: 'Sensor calibration',
-    blurb: 'Accelerometer, compass, level and the rest, each as a guided step with live feedback.',
+    get title() { return tr('feature_tours.registry.sensorCalibration'); },
+    get blurb() { return tr('feature_tours.registry.accelerometerCompassLevelAndTheRest'); },
     steps: [
       {
         selector: '[data-tour="calibration-types"]',
@@ -687,11 +614,9 @@ export const FEATURE_TOURS: FeatureTour[] = [
         mutationObservables: ['[data-tour="calibration-types"]'],
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Pick what to calibrate</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.pickWhatToCalibrate')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Each card is a guided calibration. Cards the vehicle has no sensor for stay greyed out. The
-              compass calibration shows which directions are already covered while you turn the aircraft.
-              A pre-arm fix that needs a calibration opens the right card directly.
+              {tr('feature_tours.registry.eachCardIsAGuidedCalibration')}
             </p>
           </div>
         ),
@@ -702,19 +627,17 @@ export const FEATURE_TOURS: FeatureTour[] = [
     id: 'library-projects-beta1',
     view: 'library',
     version: '0.1.2',
-    title: 'Projects',
-    blurb: 'One site, all of its survey areas and missions, local and from the vault, in one place.',
+    get title() { return tr('feature_tours.registry.projects'); },
+    get blurb() { return tr('feature_tours.registry.oneSiteAllOfItsSurvey'); },
     steps: [
       {
         selector: '[data-tour="library-tabs"]',
         predicate: present('[data-tour="library-tabs"]'),
         content: (
           <div className="space-y-2">
-            <div className="text-sm font-semibold">Missions, areas and projects</div>
+            <div className="text-sm font-semibold">{tr('feature_tours.registry.missionsAreasAndProjects')}</div>
             <p className="text-xs leading-relaxed opacity-90">
-              Give a mission or a survey area a <strong>project</strong> name when you save it and it collects
-              under <strong>Projects</strong> with everything else for that site, including what is in the vault.
-              Open an area or a mission from there and it lands in the planner.
+              {tr('feature_tours.registry.giveAMissionOrASurvey')} <strong>{tr('feature_tours.registry.project')}</strong> {tr('feature_tours.registry.nameWhenYouSaveItAnd')} <strong>{tr('feature_tours.registry.projects')}</strong> {tr('feature_tours.registry.withEverythingElseForThatSite')}
             </p>
           </div>
         ),

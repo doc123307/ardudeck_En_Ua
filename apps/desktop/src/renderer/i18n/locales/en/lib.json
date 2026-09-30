@@ -1,0 +1,266 @@
+{
+  "lib": {
+    "apply": {
+      "noVehicleConnected": "No vehicle connected",
+      "vehicleIsArmedDisarmBeforeApplying": "Vehicle is armed, disarm before applying",
+      "parametersNotLoadedYetFetchThem": "Parameters not loaded yet, fetch them first",
+      "expectedSitlButConnectionIsA": "Expected SITL but connection is a real FC",
+      "expectedARealFcButConnection": "Expected a real FC but connection is SITL",
+      "noTemplateResolvedForProfile": "No template resolved for profile",
+      "vehicleAlreadyMatchesProfileNothingTo": "Vehicle already matches profile, nothing to change",
+      "apply": "Apply {{name}}",
+      "restoreFromSnapshot": "Restore from snapshot {{v1}}"
+    },
+    "boat_catamaran": {
+      "twinHullTwinPropStablePlatform": "Twin-hull, twin-prop, stable platform",
+      "boatRoverFrameClass": "Boat (rover frame class)",
+      "boat": "Boat",
+      "throttleLeftHull": "Throttle Left hull",
+      "throttleRightHull": "Throttle Right hull",
+      "waypointSpeed": "Waypoint speed"
+    },
+    "boat_single_prop": {
+      "rudderOneMotor": "Rudder + one motor",
+      "boatRoverFrameClass": "Boat (rover frame class)",
+      "boat": "Boat",
+      "rudderGroundSteering": "Rudder (ground steering)",
+      "throttle": "Throttle",
+      "waypointSpeed": "Waypoint speed"
+    },
+    "boat_twin_prop": {
+      "twoMotorsDifferentialThrustSteeringNo": "Two motors, differential thrust steering (no rudder)",
+      "boatRoverFrameClass": "Boat (rover frame class)",
+      "boat": "Boat",
+      "throttleLeft": "Throttle Left",
+      "throttleRight": "Throttle Right",
+      "waypointSpeed": "Waypoint speed"
+    },
+    "copter_coaxial": {
+      "eightMotorsIn4CoaxialPairs": "Eight motors in 4 coaxial pairs, industrial workhorse",
+      "octaquadCoaxialX8": "OctaQuad (coaxial X8)",
+      "xArrangement": "X arrangement"
+    },
+    "copter_hex_plus": {
+      "sixMotorsInClassicHeavyLift": "Six motors in +, classic heavy-lift layout",
+      "hexacopter": "Hexacopter"
+    },
+    "copter_hex_x": {
+      "sixMotorsRedundancyHeavyLift": "Six motors: redundancy, heavy lift",
+      "hexacopter": "Hexacopter",
+      "xArrangement": "X arrangement"
+    },
+    "copter_octo_plus": {
+      "eightMotorsInSymmetricalHeavyLift": "Eight motors in +, symmetrical heavy lift",
+      "octocopter": "Octocopter"
+    },
+    "copter_octo_x": {
+      "eightMotorsMaximumRedundancyHeavyCinema": "Eight motors: maximum redundancy, heavy cinema lift",
+      "octocopter": "Octocopter",
+      "xArrangement": "X arrangement"
+    },
+    "copter_quad_h": {
+      "fourMotorsInHPatternRigid": "Four motors in H pattern, rigid for camera platforms",
+      "quadcopter": "Quadcopter",
+      "hArrangement": "H arrangement"
+    },
+    "copter_quad_plus": {
+      "fourMotorsInPatternMotor1": "Four motors in + pattern, motor 1 forward",
+      "quadcopter": "Quadcopter"
+    },
+    "copter_quad_x": {
+      "fourMotorsInAnXPattern": "Four motors in an X pattern, the classic multirotor",
+      "quadcopter": "Quadcopter",
+      "xArrangement": "X arrangement"
+    },
+    "copter_tri": {
+      "threeMotorsYawServoEfficientAnd": "Three motors + yaw servo, efficient and quirky",
+      "tricopter": "Tricopter",
+      "yArrangement": "Y arrangement"
+    },
+    "copter_y6": {
+      "threeArmsTwoMotorsEachCoaxial": "Three arms, two motors each (coaxial), compact redundancy",
+      "octaquadY6": "OctaQuad / Y6",
+      "y6bCoaxial": "Y6B (coaxial)"
+    },
+    "param_helpers": {
+      "capacityFromProfileMah": "Capacity from profile ({{batteryCapacity}} mAh)",
+      "sVLowThreshold": "{{batteryCells}}S × {{v2}}V ({{v3}} low threshold)",
+      "sVCriticalThreshold": "{{batteryCells}}S × {{v2}}V ({{v3}} critical threshold)",
+      "analogVoltageCurrentMonitoring": "Analog voltage + current monitoring",
+      "stall115MSMargin": "Stall × 1.15 = {{v1}} m/s (margin above stall)",
+      "stall15MSEfficient": "Stall × 1.5 = {{v1}} m/s (efficient cruise)",
+      "stall22MSSafe": "Stall × 2.2 = {{v1}} m/s (safe upper bound)",
+      "trimAirspeedInCmSCruise": "Trim airspeed in cm/s = cruise × 100",
+      "elevonLeftOutputDeltaWing": "Elevon Left output (delta wing)",
+      "elevonRightOutputDeltaWing": "Elevon Right output (delta wing)",
+      "standardElevonMixingGain": "Standard elevon mixing gain",
+      "vTailLeftPitchYawMix": "V-tail Left (pitch+yaw mix)",
+      "vTailRightPitchYawMix": "V-tail Right (pitch+yaw mix)",
+      "standardVTailMixingGain": "Standard V-tail mixing gain",
+      "simulatedFullChargeVoltageS4": "Simulated full-charge voltage ({{batteryCells}}S × 4.20V)",
+      "simulatedCapacityMah": "Simulated capacity ({{batteryCapacity}} mAh)",
+      "scaledFromTWEnginePower": "Scaled from T/W {{thrustToWeight}} (engine power multiplier)",
+      "dragCoefficientFromProfile": "Drag coefficient from profile",
+      "servoResponseTimeFromS": "Servo response time from {{servoSpeed}}°/s",
+      "enableAllPreArmChecks": "Enable all pre-arm checks"
+    },
+    "plane_flying_wing": {
+      "noTailElevonsOnTrailingEdge": "No tail, elevons on trailing edge",
+      "throttle": "Throttle"
+    },
+    "plane_standard": {
+      "traditionalFuselageWithSeparateElevatorRudder": "Traditional fuselage with separate elevator, rudder, ailerons",
+      "aileron": "Aileron",
+      "elevator": "Elevator",
+      "throttle": "Throttle",
+      "rudder": "Rudder"
+    },
+    "plane_twin_boom": {
+      "twoTailBoomsGreatForPushers": "Two tail booms, great for pushers and cameras",
+      "aileron": "Aileron",
+      "elevator": "Elevator",
+      "throttleL": "Throttle L",
+      "rudder": "Rudder",
+      "throttleRTwinMotor": "Throttle R (twin motor)"
+    },
+    "plane_v_tail": {
+      "twoCombinedPitchYawSurfacesCleaner": "Two combined pitch/yaw surfaces, cleaner drag profile",
+      "throttle": "Throttle"
+    },
+    "rover_ackermann": {
+      "carStyleSingleThrottleSteeringServo": "Car-style: single throttle, steering servo",
+      "roverFrame": "Rover frame",
+      "undefinedAckermannUsesSteering": "Undefined (Ackermann uses steering)",
+      "groundSteering": "Ground steering",
+      "throttle": "Throttle",
+      "waypointSpeedFromMaxspeed": "Waypoint speed from maxSpeed",
+      "cruiseSpeed60OfMax": "Cruise speed = 60% of max"
+    },
+    "rover_omni": {
+      "omniDirectionalWheelsCanTranslateSideways": "Omni-directional wheels, can translate sideways",
+      "omniRoverFrame": "Omni rover frame",
+      "n4WheelOmniX": "4-wheel omni (X)",
+      "throttleFrontLeft": "Throttle Front-Left",
+      "throttleFrontRight": "Throttle Front-Right",
+      "throttleRearLeft": "Throttle Rear-Left",
+      "throttleRearRight": "Throttle Rear-Right",
+      "waypointSpeedFromMaxspeed": "Waypoint speed from maxSpeed"
+    },
+    "rover_skid": {
+      "differentialDriveTankStyleNoSteering": "Differential drive: tank-style, no steering servo",
+      "roverFrame": "Rover frame",
+      "differential": "Differential",
+      "throttleLeft": "Throttle Left",
+      "throttleRight": "Throttle Right",
+      "waypointSpeedFromMaxspeed": "Waypoint speed from maxSpeed",
+      "cruiseSpeed60OfMax": "Cruise speed = 60% of max"
+    },
+    "sub_vectored_6": {
+      "bluerov2Style4Vectored2Vertical": "BlueROV2-style: 4 vectored + 2 vertical thrusters",
+      "vectored6Frame": "Vectored-6 frame",
+      "motor1ForwardRightVec": "Motor 1 (Forward-Right Vec)",
+      "motor2ForwardLeftVec": "Motor 2 (Forward-Left Vec)",
+      "motor3RearRightVec": "Motor 3 (Rear-Right Vec)",
+      "motor4RearLeftVec": "Motor 4 (Rear-Left Vec)",
+      "motor5VerticalRight": "Motor 5 (Vertical Right)",
+      "motor6VerticalLeft": "Motor 6 (Vertical Left)"
+    },
+    "vtol_quadplane_hex": {
+      "fixedWingPlaneWith6Vertical": "Fixed-wing plane with 6 vertical lift motors, heavy-lift VTOL",
+      "enableVtolQuadplaneHex": "Enable VTOL (quadplane hex)",
+      "hexacopterLiftFrame": "Hexacopter lift frame",
+      "xArrangement": "X arrangement",
+      "notATailsitter": "Not a tailsitter",
+      "notATiltrotor": "Not a tiltrotor",
+      "aileron": "Aileron",
+      "elevator": "Elevator",
+      "forwardThrottle": "Forward throttle",
+      "rudder": "Rudder",
+      "motor1Lift": "Motor 1 (lift)",
+      "motor2Lift": "Motor 2 (lift)",
+      "motor3Lift": "Motor 3 (lift)",
+      "motor4Lift": "Motor 4 (lift)",
+      "motor5Lift": "Motor 5 (lift)",
+      "motor6Lift": "Motor 6 (lift)",
+      "vtolAssistBelowThisSpeed": "VTOL assist below this speed"
+    },
+    "vtol_quadplane_quad": {
+      "fixedWingPlaneWith4Vertical": "Fixed-wing plane with 4 vertical lift motors",
+      "enableVtolQuadplane": "Enable VTOL (quadplane)",
+      "quadcopterLiftFrame": "Quadcopter lift frame",
+      "xArrangement": "X arrangement",
+      "notATailsitter": "Not a tailsitter",
+      "notATiltrotor": "Not a tiltrotor",
+      "aileron": "Aileron",
+      "elevator": "Elevator",
+      "forwardThrottle": "Forward throttle",
+      "rudder": "Rudder",
+      "motor1Lift": "Motor 1 (lift)",
+      "motor2Lift": "Motor 2 (lift)",
+      "motor3Lift": "Motor 3 (lift)",
+      "motor4Lift": "Motor 4 (lift)",
+      "belowThisVtolMotorsAssistFixed": "Below this, VTOL motors assist fixed-wing",
+      "useVtolForRtlLanding": "Use VTOL for RTL landing"
+    },
+    "vtol_tailsitter_conventional": {
+      "sitsOnItsTailTiltsTo": "Sits on its tail, tilts to fly forward, elevons for hover control",
+      "enableVtol": "Enable VTOL",
+      "enableTailsitterMode": "Enable tailsitter mode",
+      "singleCoaxCopterLiftFrame": "Single/coax copter lift frame",
+      "vectoredYawTailsitter": "Vectored yaw tailsitter",
+      "bodyFrameControlInput": "Body-frame control input",
+      "elevonLeft": "Elevon Left",
+      "elevonRight": "Elevon Right",
+      "motor1": "Motor 1",
+      "motor2": "Motor 2"
+    },
+    "vtol_tailsitter_delta_duo": {
+      "n2MotorDeltaWingTailsitterCompact": "2-motor delta-wing tailsitter, compact and efficient",
+      "enableVtol": "Enable VTOL",
+      "tailsitterMode": "Tailsitter mode",
+      "singleCoaxFor2MotorTailsitter": "Single/coax for 2-motor tailsitter",
+      "vectoredYawNoRudder": "Vectored yaw (no rudder)",
+      "bodyFrameStickInput": "Body-frame stick input",
+      "motors12ActiveInHover": "Motors 1+2 active in hover",
+      "vectoredThrustYawGain": "Vectored thrust yaw gain",
+      "vectoredThrustHoverGain": "Vectored thrust hover gain",
+      "elevonLeftDeltaWing": "Elevon Left (delta wing)",
+      "elevonRightDeltaWing": "Elevon Right (delta wing)",
+      "motor1HoverForward": "Motor 1 (hover + forward)",
+      "motor2HoverForward": "Motor 2 (hover + forward)",
+      "elevonMixGain": "Elevon mix gain",
+      "transitionDuration5S": "Transition duration (5 s)",
+      "fixedWingAssistThreshold": "Fixed-wing assist threshold"
+    },
+    "vtol_tiltrotor_dual": {
+      "twoMotorsTiltFromHoverTo": "Two motors tilt from hover to cruise, Osprey-style",
+      "enableVtol": "Enable VTOL",
+      "enableTiltServos": "Enable tilt servos",
+      "motors12Tilt": "Motors 1+2 tilt",
+      "continuousTilt": "Continuous tilt",
+      "bicopter2MotorTiltrotor": "Bicopter (2-motor tiltrotor)",
+      "aileron": "Aileron",
+      "elevator": "Elevator",
+      "motor1Left": "Motor 1 left",
+      "motor2Right": "Motor 2 right",
+      "motor1Tilt": "Motor 1 tilt",
+      "motor2Tilt": "Motor 2 tilt"
+    },
+    "vtol_tiltwing": {
+      "entireWingPivotsFromHoverTo": "Entire wing pivots from hover to cruise",
+      "enableVtol": "Enable VTOL",
+      "enableTiltServos": "Enable tilt servos",
+      "tiltwingWholeWingTilts": "Tiltwing (whole wing tilts)",
+      "all4MotorsTiltWithWing": "All 4 motors tilt with wing",
+      "quadcopterLiftFrame": "Quadcopter lift frame",
+      "xArrangement": "X arrangement",
+      "aileron": "Aileron",
+      "elevator": "Elevator",
+      "motor1": "Motor 1",
+      "motor2": "Motor 2",
+      "motor3": "Motor 3",
+      "motor4": "Motor 4",
+      "tiltServoSharedWingTilt": "Tilt servo (shared wing tilt)"
+    }
+  }
+}

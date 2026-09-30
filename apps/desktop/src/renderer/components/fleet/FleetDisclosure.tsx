@@ -5,6 +5,7 @@
  */
 
 import { useFleetUiStore, isFleetExpanded } from '../../stores/fleet-ui-store';
+import { t } from '../../i18n';
 
 /** A disclosure chevron: right when collapsed, down when open. */
 export function FleetChevron({ open }: { open: boolean }): JSX.Element {
@@ -28,14 +29,14 @@ export function FleetCountHeader({ leaderKeys, className = '' }: { leaderKeys: s
   const anyExpanded = leaderKeys.some((k) => isFleetExpanded(overrides, k, leaderKeys.length));
   return (
     <div className={`flex items-center justify-between gap-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-content-secondary ${className}`}>
-      <span>Fleets <span className="text-content-tertiary">·</span> <span className="font-mono text-content">{leaderKeys.length}</span></span>
+      <span>{t('fleet.FleetDisclosure.fleets')} <span className="text-content-tertiary">·</span> <span className="font-mono text-content">{leaderKeys.length}</span></span>
       <button
         type="button"
         onClick={() => setAll(leaderKeys, !anyExpanded)}
         className="hover:text-content transition-colors normal-case tracking-normal font-medium"
-        data-tip={anyExpanded ? 'Collapse every fleet' : 'Expand every fleet'}
+        data-tip={anyExpanded ? t('fleet.FleetDisclosure.collapseEveryFleet') : t('fleet.FleetDisclosure.expandEveryFleet')}
       >
-        {anyExpanded ? 'Collapse all' : 'Expand all'}
+        {anyExpanded ? t('fleet.FleetDisclosure.collapseAll') : t('fleet.FleetDisclosure.expandAll')}
       </button>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { ShieldCheck, ShieldAlert, FileDown, ChevronDown, ChevronRight, RefreshCw } from 'lucide-react';
 import { useSigningStore } from '../../stores/signing-store';
 import type { SigningAuditEntry, SigningAuditEvent, ChainVerification } from '../../../shared/signing-audit-types';
+import { t as tr } from '../../i18n';
 
 const EVENT_LABELS: Record<SigningAuditEvent, string> = {
   'key-set': 'Key set',
@@ -65,8 +66,8 @@ export function SecureLinkCompliance() {
     setExporting(true);
     try {
       const res = await window.electronAPI?.signingExportEvidence?.();
-      if (res?.success) setMessage('Evidence pack + posture report exported');
-      else if (res && res.error !== 'Cancelled') setMessage(`Export failed: ${res.error}`);
+      if (res?.success) setMessage(tr('settings.SecureLinkCompliance.evidencePackPostureReportExported'));
+      else if (res && res.error !== 'Cancelled') setMessage(tr('settings.SecureLinkCompliance.exportFailed', { error: res.error }));
     } finally {
       setExporting(false);
     }
@@ -84,31 +85,30 @@ export function SecureLinkCompliance() {
           <ShieldAlert className="w-4 h-4 text-red-400 shrink-0" />
         )}
         <div className="min-w-0">
-          <div className="text-xs font-medium text-content">Compliance &amp; audit</div>
+          <div className="text-xs font-medium text-content">{tr('settings.SecureLinkCompliance.complianceAudit')}</div>
           <div className="text-[10px] text-content-secondary">
             {chain
               ? chainOk
-                ? `${chain.count} signing event${chain.count === 1 ? '' : 's'} logged, hash chain verified`
-                : `Hash chain broken at entry ${chain.brokenAtSeq} - log may be tampered`
-              : 'Tamper-evident log of signing state changes'}
+                ? tr('settings.SecureLinkCompliance.signingEventLoggedHashChainVerified', { count: chain.count, v2: chain.count === 1 ? '' : 's' })
+                : tr('settings.SecureLinkCompliance.hashChainBrokenAtEntryLog', { brokenAtSeq: chain.brokenAtSeq })
+              : tr('settings.SecureLinkCompliance.tamperEvidentLogOfSigningState')}
           </div>
         </div>
         <button
           onClick={handleExport}
           disabled={exporting}
           className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-cyan-700/70 hover:bg-cyan-600 disabled:opacity-50 text-white text-[11px] rounded-lg transition-colors shrink-0"
-          title="Export a secure-link evidence pack (JSON) + posture report (Markdown) for procurement review"
+          title={tr('settings.SecureLinkCompliance.exportASecureLinkEvidencePack')}
         >
           <FileDown className="w-3.5 h-3.5" />
-          {exporting ? 'Exporting...' : 'Export evidence'}
+          {exporting ? tr('settings.SecureLinkCompliance.exporting') : tr('settings.SecureLinkCompliance.exportEvidence')}
         </button>
       </div>
 
       {!chainOk && (
         <div className="rounded-md border border-red-500/20 bg-red-500/5 px-2.5 py-2">
           <p className="text-[11px] text-red-400">
-            The audit log failed hash-chain verification. An entry was edited, inserted, or removed
-            outside the app. Treat the log as compromised and export it for review.
+            {tr('settings.SecureLinkCompliance.theAuditLogFailedHashChain')}
           </p>
         </div>
       )}
@@ -120,7 +120,7 @@ export function SecureLinkCompliance() {
           className="flex items-center gap-1.5 text-[11px] text-content-secondary hover:text-content transition-colors"
         >
           {open ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-          {open ? 'Hide' : 'View'} audit log ({entries.length})
+          {open ? tr('settings.SecureLinkCompliance.hide') : tr('settings.SecureLinkCompliance.view')} {tr('settings.SecureLinkCompliance.auditLog')}{entries.length})
           <RefreshCw
             className="w-3 h-3 ml-1 hover:text-content"
             onClick={(e) => { e.stopPropagation(); void refresh(); }}
@@ -131,7 +131,7 @@ export function SecureLinkCompliance() {
           <div className="mt-2 max-h-56 overflow-y-auto rounded-md border border-subtle divide-y divide-subtle">
             {recent.length === 0 ? (
               <div className="px-3 py-4 text-center text-[11px] text-content-tertiary">
-                No signing events recorded yet.
+                {tr('settings.SecureLinkCompliance.noSigningEventsRecordedYet')}
               </div>
             ) : (
               recent.map((e) => (
@@ -155,8 +155,7 @@ export function SecureLinkCompliance() {
       </div>
 
       <p className="text-[10px] text-content-tertiary leading-snug">
-        Attests the MAVLink link and ground station only, not the airframe. Signing is
-        authentication, not encryption, and a USB connection bypasses it.
+        {tr('settings.SecureLinkCompliance.attestsTheMavlinkLinkAndGround')}
       </p>
 
       {message && (

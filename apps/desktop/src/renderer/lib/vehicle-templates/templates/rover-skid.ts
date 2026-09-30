@@ -1,6 +1,7 @@
 import { Car } from 'lucide-react';
 import type { VehicleTemplate } from '../types.js';
 import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 /**
  * Differential / skid-steer rover — tank-style, two independent throttles.
@@ -8,7 +9,7 @@ import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '..
 export const roverSkid: VehicleTemplate = {
   slug: 'rover-skid',
   name: 'Skid-Steer Rover',
-  description: 'Differential drive: tank-style, no steering servo',
+  get description() { return t('lib.rover_skid.differentialDriveTankStyleNoSteering'); },
   icon: Car,
   vehicleType: 'rover',
   category: 'rover',
@@ -23,12 +24,12 @@ export const roverSkid: VehicleTemplate = {
     batteryCapacity: 8000,
   },
   toParams: (p) => [
-    { name: 'FRAME_CLASS',     value: 1,  reason: 'Rover frame',     requiresReboot: true },
-    { name: 'FRAME_TYPE',      value: 0,  reason: 'Differential',    requiresReboot: true },
-    { name: 'SERVO1_FUNCTION', value: 73, reason: 'Throttle Left',   requiresReboot: true },
-    { name: 'SERVO3_FUNCTION', value: 74, reason: 'Throttle Right',  requiresReboot: true },
-    { name: 'WP_SPEED',        value: p.maxSpeed ?? 3, reason: `Waypoint speed from maxSpeed` },
-    { name: 'CRUISE_SPEED',    value: (p.maxSpeed ?? 3) * 0.6, reason: `Cruise speed = 60% of max` },
+    { name: 'FRAME_CLASS',     value: 1,  reason: t('lib.rover_skid.roverFrame'),     requiresReboot: true },
+    { name: 'FRAME_TYPE',      value: 0,  reason: t('lib.rover_skid.differential'),    requiresReboot: true },
+    { name: 'SERVO1_FUNCTION', value: 73, reason: t('lib.rover_skid.throttleLeft'),   requiresReboot: true },
+    { name: 'SERVO3_FUNCTION', value: 74, reason: t('lib.rover_skid.throttleRight'),  requiresReboot: true },
+    { name: 'WP_SPEED',        value: p.maxSpeed ?? 3, reason: t('lib.rover_skid.waypointSpeedFromMaxspeed') },
+    { name: 'CRUISE_SPEED',    value: (p.maxSpeed ?? 3) * 0.6, reason: t('lib.rover_skid.cruiseSpeed60OfMax') },
     ...batteryParams(p),
     ...commonSafetyParams(),
   ],

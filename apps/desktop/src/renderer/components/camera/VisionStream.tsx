@@ -11,6 +11,7 @@ import {
   type CanvasStreamSnapshot,
   type OsdLayers,
 } from '../../../shared/camera-types';
+import { t } from '../../i18n';
 
 const NO_OSD: OsdLayers = {
   cornerTelemetry: false,
@@ -103,10 +104,10 @@ export function VisionStreamControl() {
         className={`flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] hover:bg-surface-raised ${
           live ? 'text-emerald-300' : 'text-content-secondary'
         }`}
-        data-tip="Publish the synthetic view as a video stream for OpenCV, VLC, ffmpeg or a browser"
+        data-tip={t('camera.VisionStream.publishTheSyntheticViewAsA')}
       >
         {live && <span className="h-1.5 w-1.5 rounded-full bg-rose-400" />}
-        Stream
+        {t('camera.VisionStream.stream')}
       </button>
       {open && (
         <StreamPopover

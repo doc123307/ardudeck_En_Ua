@@ -1,0 +1,13 @@
+{
+  "debug": {
+    "DebugConsole": {
+      "console": "Console",
+      "messages": "Messages",
+      "clear": "Clear",
+      "noLogEntries": "No log entries",
+      "jumpToLatestPaused": "↓ Jump to latest (paused)",
+      "noMessagesFromAutopilot": "No messages from autopilot",
+      "fix": "Fix ›"
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import { t } from '../../../i18n';
 /**
  * CountdownTimer - Display countdown for timed calibrations
  */
@@ -61,7 +62,7 @@ export function CountdownTimer({ seconds, total }: CountdownTimerProps) {
         <span className="text-4xl font-bold text-content font-mono">
           {seconds}
         </span>
-        <span className="text-xs text-content-secondary mt-1">seconds</span>
+        <span className="text-xs text-content-secondary mt-1">{t('calibration.CountdownTimer.seconds')}</span>
       </div>
 
       {/* Pulsing ring animation */}

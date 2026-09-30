@@ -24,6 +24,7 @@ import {
 import { useResolvedTheme } from '../../hooks/useTheme';
 import { chartCsv, columnStats, fmtStat, seriesColor } from '../logs/log-chart-stats';
 import { createCursorReadout, type ChartCursorReadout } from '../logs/log-chart-cursor';
+import { t } from '../../i18n';
 
 interface FieldGraphProps {
   sysid: number;
@@ -101,7 +102,7 @@ export function FieldGraph(propsIn: Record<string, unknown>): JSX.Element {
       cursor: { drag: { x: true, y: false }, focus: { prox: 24 } },
       scales: { x: { time: false } },
       axes: [
-        { label: 'Time (s)', ...axisTheme },
+        { label: t('inspector.FieldGraph.timeS'), ...axisTheme },
         { ...axisTheme, size: 60 },
       ],
       series: [
@@ -198,14 +199,14 @@ export function FieldGraph(propsIn: Record<string, unknown>): JSX.Element {
       <div className="px-3 pt-2 pb-1 flex items-center gap-2 text-[11px]">
         <span className="font-mono font-semibold text-content uppercase tracking-wider">{messageName}</span>
         <span className="text-[9px] text-content-tertiary tabular-nums shrink-0">
-          {fields.length} {fields.length === 1 ? 'series' : 'series'} · sysid {sysid} · msgid {msgid} · {sampleCount} samples
+          {fields.length} {fields.length === 1 ? 'series' : 'series'} {t('inspector.FieldGraph.sysid')} {sysid} {t('inspector.FieldGraph.msgid')} {msgid} · {sampleCount} {t('inspector.FieldGraph.samples')}
         </span>
 
         <div className="ml-auto flex items-center gap-1 shrink-0">
           <button
             onClick={handleExport}
             className="px-1.5 py-0.5 rounded border bg-surface hover:bg-surface-raised text-content-secondary hover:text-content border-subtle transition-colors"
-            data-tip="Export the plotted fields as CSV"
+            data-tip={t('inspector.FieldGraph.exportThePlottedFieldsAsCsv')}
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
@@ -214,9 +215,9 @@ export function FieldGraph(propsIn: Record<string, unknown>): JSX.Element {
           <button
             onClick={handleClear}
             className="text-[10px] px-1.5 py-0.5 rounded border bg-surface hover:bg-surface-raised text-content-secondary hover:text-content border-subtle transition-colors"
-            data-tip="Drop the samples collected so far"
+            data-tip={t('inspector.FieldGraph.dropTheSamplesCollectedSoFar')}
           >
-            Clear
+            {t('inspector.FieldGraph.clear')}
           </button>
         </div>
       </div>
@@ -226,10 +227,10 @@ export function FieldGraph(propsIn: Record<string, unknown>): JSX.Element {
           className="grid items-center text-[9px] uppercase tracking-wider text-content-tertiary pb-0.5"
           style={{ gridTemplateColumns: LEGEND_COLUMNS }}
         >
-          <span>field · buffer</span>
+          <span>{t('inspector.FieldGraph.fieldBuffer')}</span>
           <span className="text-right">min</span>
           <span className="text-right">avg</span>
-          <span className="text-right">max</span>
+          <span className="text-right">{t('inspector.FieldGraph.max')}</span>
           <span className="text-right">now</span>
         </div>
         {legend.map((it) => (

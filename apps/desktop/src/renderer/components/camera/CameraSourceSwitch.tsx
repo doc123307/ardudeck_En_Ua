@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useCameraStore } from '../../stores/camera-store';
+import { t } from '../../i18n';
 
 /** One-click switch between a vehicle's feeds (FPV, gimbal, ...). Hidden with fewer than two. */
 export function CameraSourceSwitch({ vehicleKey }: { vehicleKey: string }) {
@@ -19,7 +20,7 @@ export function CameraSourceSwitch({ vehicleKey }: { vehicleKey: string }) {
         <button
           key={s.id}
           onClick={() => setSelectedSource(vehicleKey, s.id)}
-          data-tip={`Show ${s.label}`}
+          data-tip={t('camera.CameraSourceSwitch.show', { label: s.label })}
           className={`min-w-0 truncate px-2 py-0.5 text-[11px] transition-colors ${
             s.id === selectedId ? 'bg-surface-raised text-content' : 'text-content-secondary hover:bg-surface-raised'
           }`}

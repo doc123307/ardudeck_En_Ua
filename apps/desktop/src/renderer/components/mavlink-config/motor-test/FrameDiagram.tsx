@@ -9,6 +9,7 @@
 import React from 'react';
 import type { FrameLayout } from '../../../../shared/motor-test-types';
 import { layoutToSvgPositions, testOrderToLabel, frameTypeDisplayName } from './motor-layout-utils';
+import { t as tr } from '../../../i18n';
 
 // Build a circular rotation arrow (arc + arrowhead) centred on a motor.
 // θ is measured clockwise-on-screen from 12 o'clock: P(θ) = (cx+r·sinθ, cy−r·cosθ),
@@ -67,7 +68,7 @@ export const FrameDiagram: React.FC<FrameDiagramProps> = ({
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="text-center">
-        <div className="text-xs uppercase tracking-wider text-content-secondary">Frame</div>
+        <div className="text-xs uppercase tracking-wider text-content-secondary">{tr('mavlink_config.FrameDiagram.frame')}</div>
         <div className="text-sm text-content">
           {layout.ClassName} <span className="text-content-secondary">·</span> {frameTypeDisplayName(layout.TypeName)}
         </div>
@@ -252,7 +253,7 @@ export const FrameDiagram: React.FC<FrameDiagramProps> = ({
           <div className="w-3 h-3 rounded-full border-2 border-emerald-500" />
           CCW
         </div>
-        <div className="text-content-tertiary">Click a motor to test</div>
+        <div className="text-content-tertiary">{tr('mavlink_config.FrameDiagram.clickAMotorToTest')}</div>
       </div>
     </div>
   );

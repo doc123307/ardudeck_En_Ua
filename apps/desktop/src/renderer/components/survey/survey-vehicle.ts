@@ -20,6 +20,7 @@
 import type { ArduPilotVehicleClass } from '../../../shared/telemetry-types';
 import { MAV_CMD } from '../../../shared/mission-types';
 import type { CorridorMode } from './survey-types';
+import { t } from '../../i18n';
 
 /** Airframe the survey is planned for; 'auto' follows the connected vehicle. */
 export type SurveyAirframe = 'auto' | 'plane' | 'vtol' | 'copter';
@@ -28,16 +29,16 @@ export type SurveyAirframe = 'auto' | 'plane' | 'vtol' | 'copter';
 export type SurveyLaunch = 'auto' | 'vertical' | 'runway';
 
 export const AIRFRAME_OPTIONS: Array<{ id: SurveyAirframe; label: string; description: string }> = [
-  { id: 'auto', label: 'Auto', description: 'Follow whatever vehicle is connected' },
-  { id: 'plane', label: 'Fixed wing', description: 'Needs room to turn: overshoot and racetracks' },
-  { id: 'vtol', label: 'VTOL', description: 'Surveys as a fixed wing; lift motors for takeoff and landing' },
-  { id: 'copter', label: 'Multirotor', description: 'Turns on the spot: no overshoot' },
+  { id: 'auto', get label() { return t('survey.survey_vehicle.auto'); }, get description() { return t('survey.survey_vehicle.followWhateverVehicleIsConnected'); } },
+  { id: 'plane', get label() { return t('survey.survey_vehicle.fixedWing'); }, get description() { return t('survey.survey_vehicle.needsRoomToTurnOvershootAnd'); } },
+  { id: 'vtol', label: 'VTOL', get description() { return t('survey.survey_vehicle.surveysAsAFixedWingLift'); } },
+  { id: 'copter', get label() { return t('survey.survey_vehicle.multirotor'); }, get description() { return t('survey.survey_vehicle.turnsOnTheSpotNoOvershoot'); } },
 ];
 
 export const LAUNCH_OPTIONS: Array<{ id: SurveyLaunch; label: string; description: string }> = [
-  { id: 'auto', label: 'Auto', description: 'Vertical for a VTOL, otherwise a normal takeoff and RTL' },
-  { id: 'vertical', label: 'Vertical', description: 'VTOL takeoff, VTOL land at home' },
-  { id: 'runway', label: 'Runway', description: 'Normal takeoff and return to launch' },
+  { id: 'auto', get label() { return t('survey.survey_vehicle.auto'); }, get description() { return t('survey.survey_vehicle.verticalForAVtolOtherwiseA'); } },
+  { id: 'vertical', get label() { return t('survey.survey_vehicle.vertical'); }, get description() { return t('survey.survey_vehicle.vtolTakeoffVtolLandAtHome'); } },
+  { id: 'runway', get label() { return t('survey.survey_vehicle.runway'); }, get description() { return t('survey.survey_vehicle.normalTakeoffAndReturnToLaunch'); } },
 ];
 
 /** The airframe actually planned for, resolving 'auto' against the vehicle. */
@@ -74,14 +75,14 @@ export type SurveyStart = 'takeoff' | 'none';
 export type SurveyFinish = 'rtl' | 'land' | 'none';
 
 export const START_OPTIONS: Array<{ id: SurveyStart; label: string; description: string }> = [
-  { id: 'takeoff', label: 'Takeoff', description: 'Mission opens with a takeoff to the survey altitude' },
-  { id: 'none', label: 'None', description: 'Launch manually, then switch to Auto. Also what a follow-on survey needs' },
+  { id: 'takeoff', get label() { return t('survey.survey_vehicle.takeoff'); }, get description() { return t('survey.survey_vehicle.missionOpensWithATakeoffTo'); } },
+  { id: 'none', get label() { return t('survey.survey_vehicle.none'); }, get description() { return t('survey.survey_vehicle.launchManuallyThenSwitchToAuto'); } },
 ];
 
 export const FINISH_OPTIONS: Array<{ id: SurveyFinish; label: string; description: string }> = [
-  { id: 'rtl', label: 'RTL', description: 'Return to launch after the last line' },
-  { id: 'land', label: 'Land', description: 'Land where the survey ends' },
-  { id: 'none', label: 'None', description: 'Stop at the last line, so another survey or waypoint can follow' },
+  { id: 'rtl', label: 'RTL', get description() { return t('survey.survey_vehicle.returnToLaunchAfterTheLast'); } },
+  { id: 'land', get label() { return t('survey.survey_vehicle.land'); }, get description() { return t('survey.survey_vehicle.landWhereTheSurveyEnds'); } },
+  { id: 'none', get label() { return t('survey.survey_vehicle.none'); }, get description() { return t('survey.survey_vehicle.stopAtTheLastLineSo'); } },
 ];
 
 /** The command that opens the mission, or null when the pilot launches it. */

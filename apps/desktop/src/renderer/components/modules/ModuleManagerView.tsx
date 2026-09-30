@@ -10,6 +10,7 @@ import type {
   CargoDetail,
   CargoPreviewBlock,
 } from '../../../shared/module-types';
+import { t } from '../../i18n';
 
 // ---------------------------------------------------------------------------
 // Icons
@@ -158,14 +159,14 @@ function UpdatePill({
           ? 'bg-blue-500/10 text-blue-400/60 border-blue-500/20 cursor-wait'
           : 'bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20 hover:text-blue-300'
       }`}
-      data-tip="Download and install the latest version"
+      data-tip={t('modules.ModuleManagerView.downloadAndInstallTheLatestVersion')}
     >
       {isUpdating ? (
         <span className="w-2.5 h-2.5 rounded-full border border-blue-400/30 border-t-blue-400 animate-spin" />
       ) : (
         <ArrowUpIcon className="w-2.5 h-2.5" />
       )}
-      {isUpdating ? 'Updating...' : 'Update'}
+      {isUpdating ? t('modules.ModuleManagerView.updating') : t('modules.ModuleManagerView.update')}
     </button>
   );
 }
@@ -187,7 +188,7 @@ function InstalledControls({
         onClick={() => onToggle(!isEnabled)}
         role="switch"
         aria-checked={isEnabled}
-        data-tip={isEnabled ? 'Turn off (stays on board)' : 'Turn on'}
+        data-tip={isEnabled ? t('modules.ModuleManagerView.turnOffStaysOnBoard') : t('modules.ModuleManagerView.turnOn')}
         className={`relative w-9 h-5 rounded-full transition-colors ${
           isEnabled ? 'bg-emerald-500' : 'bg-surface-inset border border-subtle'
         }`}
@@ -207,20 +208,20 @@ function InstalledControls({
             }}
             className="px-2 py-1 text-xs bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-colors"
           >
-            Confirm
+            {t('modules.ModuleManagerView.confirm')}
           </button>
           <button
             onClick={() => setConfirmRemove(false)}
             className="px-2 py-1 text-xs bg-surface-raised text-content-secondary rounded transition-colors"
           >
-            Cancel
+            {t('modules.ModuleManagerView.cancel')}
           </button>
         </div>
       ) : (
         <button
           onClick={() => setConfirmRemove(true)}
           className="p-1.5 ml-1 rounded-lg text-content-tertiary hover:text-red-400 hover:bg-red-500/10 transition-colors"
-          data-tip="Remove cargo"
+          data-tip={t('modules.ModuleManagerView.removeCargo')}
         >
           <TrashIcon className="w-4 h-4" />
         </button>
@@ -305,17 +306,17 @@ function InstallButton({
       onClick={onInstall}
       disabled={isInstalling}
       className={`btn btn-primary shrink-0 flex items-center gap-1.5 ${className}`}
-      data-tip="Install this cargo"
+      data-tip={t('modules.ModuleManagerView.installThisCargo')}
     >
       {isInstalling ? (
         <>
           <span className="w-3 h-3 rounded-full border border-white/40 border-t-white animate-spin" />
-          Installing…
+          {t('modules.ModuleManagerView.installing')}
         </>
       ) : (
         <>
           <Download className="w-3.5 h-3.5" />
-          Install
+          {t('modules.ModuleManagerView.install')}
         </>
       )}
     </button>
@@ -363,7 +364,7 @@ function BrowseCard({
       }}
       role="button"
       tabIndex={0}
-      data-tip="View details"
+      data-tip={t('modules.ModuleManagerView.viewDetails')}
       className="card flex flex-col overflow-hidden cursor-pointer hover:border-purple-500/30 transition-colors focus:outline-none focus:ring-1 focus:ring-purple-500/40"
     >
       <div className="card-body flex-1 space-y-3">
@@ -374,7 +375,7 @@ function BrowseCard({
               <h3 className="text-sm font-medium text-content truncate">{toDisplayName(cargo.name)}</h3>
               {installed && (
                 <span className="shrink-0 px-2 py-0.5 text-[10px] rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                  Installed
+                  {t('modules.ModuleManagerView.installed')}
                 </span>
               )}
             </div>
@@ -389,7 +390,7 @@ function BrowseCard({
             </span>
           )}
           {version && <span>v{version}</span>}
-          <span className="flex items-center gap-1" data-tip="Total installs">
+          <span className="flex items-center gap-1" data-tip={t('modules.ModuleManagerView.totalInstalls')}>
             <Download className="w-3 h-3" />
             {cargo.downloads.toLocaleString()}
           </span>
@@ -412,7 +413,7 @@ function BrowseCard({
           <>
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-xs text-content-secondary truncate">
-                {isEnabled ? 'Active' : 'Turned off'}
+                {isEnabled ? t('modules.ModuleManagerView.active') : t('modules.ModuleManagerView.turnedOff')}
               </span>
               {hasUpdate && <UpdatePill isUpdating={isUpdating} onUpdate={onUpdate} />}
             </div>
@@ -473,7 +474,7 @@ function ScreenshotGallery({ images }: { images: { url: string; alt?: string }[]
         onClick={() => setZoomed(true)}
         role="button"
         tabIndex={-1}
-        aria-label="View full size"
+        aria-label={t('modules.ModuleManagerView.viewFullSize')}
       >
         {/* Every slide mounted and cross-faded: swapping one src leaves a blank
             frame for the length of the fetch. */}
@@ -523,7 +524,7 @@ function ScreenshotGallery({ images }: { images: { url: string; alt?: string }[]
               key={`${img.url}-${i}`}
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActive(i); }}
-              aria-label={img.alt ?? `Screenshot ${i + 1}`}
+              aria-label={img.alt ?? t('modules.ModuleManagerView.screenshot', { v1: i + 1 })}
               className={`relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border bg-black transition-colors ${
                 i === index ? 'border-blue-500' : 'border-subtle opacity-70 hover:opacity-100'
               }`}
@@ -585,7 +586,7 @@ function Lightbox({
       <button
         type="button"
         onClick={(e) => { e.stopPropagation(); onClose(); }}
-        aria-label="Close"
+        aria-label={t('modules.ModuleManagerView.close')}
         className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white/80 hover:bg-black/75 hover:text-white"
       >
         <X className="h-4 w-4" />
@@ -594,7 +595,7 @@ function Lightbox({
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          aria-label="Previous"
+          aria-label={t('modules.ModuleManagerView.previous')}
           className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white/80 hover:bg-black/75 hover:text-white"
         >
           <ChevronLeft className="h-5 w-5" />
@@ -604,7 +605,7 @@ function Lightbox({
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onNext(); }}
-          aria-label="Next"
+          aria-label={t('modules.ModuleManagerView.next')}
           className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white/80 hover:bg-black/75 hover:text-white"
         >
           <ChevronRight className="h-5 w-5" />
@@ -622,7 +623,7 @@ function GalleryArrow({ side, onClick }: { side: 'left' | 'right'; onClick: () =
     <button
       type="button"
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(); }}
-      aria-label={side === 'left' ? 'Previous' : 'Next'}
+      aria-label={side === 'left' ? t('modules.ModuleManagerView.previous') : t('modules.ModuleManagerView.next')}
       className={`absolute top-1/2 -translate-y-1/2 ${side === 'left' ? 'left-2' : 'right-2'}
         flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-black/50
         text-white/80 opacity-0 transition-all hover:bg-black/75 hover:text-white
@@ -699,7 +700,7 @@ function PreviewBlockView({ block }: { block: CargoPreviewBlock }) {
         <div className="rounded-2xl border border-subtle bg-surface-raised overflow-hidden max-w-xl">
           <div className="flex items-center gap-2 px-4 py-3 border-b border-subtle">
             <span className="w-2.5 h-2.5 rounded-full bg-purple-400" />
-            <span className="text-xs font-semibold text-content">{block.title ?? 'Preview'}</span>
+            <span className="text-xs font-semibold text-content">{block.title ?? t('modules.ModuleManagerView.preview')}</span>
           </div>
           <div className="p-4 space-y-3">
             {block.messages.map((m, i) =>
@@ -799,7 +800,7 @@ function CargoDetailModal({
               <h2 className="text-lg font-semibold text-content truncate">{displayName}</h2>
               {installed && (
                 <span className="shrink-0 px-2 py-0.5 text-[10px] rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                  Installed
+                  {t('modules.ModuleManagerView.installed')}
                 </span>
               )}
             </div>
@@ -818,7 +819,7 @@ function CargoDetailModal({
               )}
               {version && <span>v{version}</span>}
               {downloads !== null && (
-                <span className="flex items-center gap-1" data-tip="Total installs">
+                <span className="flex items-center gap-1" data-tip={t('modules.ModuleManagerView.totalInstalls')}>
                   <Download className="w-3 h-3" />
                   {downloads.toLocaleString()}
                 </span>
@@ -843,7 +844,7 @@ function CargoDetailModal({
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-raised text-content-secondary hover:text-content transition-colors"
-              data-tip="Close"
+              data-tip={t('modules.ModuleManagerView.close')}
             >
               <X className="w-4 h-4" />
             </button>
@@ -860,14 +861,14 @@ function CargoDetailModal({
             <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
               <AlertIcon className="w-5 h-5 text-red-400 shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-red-400">Could not load the details</p>
+                <p className="text-sm text-red-400">{t('modules.ModuleManagerView.couldNotLoadTheDetails')}</p>
                 <p className="text-xs text-content-secondary mt-0.5 break-words">{error}</p>
               </div>
               <button
                 onClick={onRetry}
                 className="px-3 py-1.5 text-xs text-content-secondary hover:text-content bg-surface-raised border border-subtle rounded-lg transition-colors shrink-0"
               >
-                Retry
+                {t('modules.ModuleManagerView.retry')}
               </button>
             </div>
           ) : blocks.length > 0 ? (
@@ -886,7 +887,7 @@ function CargoDetailModal({
               <div className="w-14 h-14 rounded-2xl bg-surface-raised border border-subtle flex items-center justify-center mb-4">
                 <PackageIcon className="w-7 h-7 text-content-tertiary" />
               </div>
-              <p className="text-sm text-content-secondary">No details to show yet.</p>
+              <p className="text-sm text-content-secondary">{t('modules.ModuleManagerView.noDetailsToShowYet')}</p>
             </div>
           )}
         </div>
@@ -952,10 +953,9 @@ function EmptyState() {
       <div className="w-16 h-16 rounded-2xl bg-surface border border-subtle flex items-center justify-center mb-5">
         <PackageIcon className="w-8 h-8 text-content-tertiary" />
       </div>
-      <h3 className="text-lg font-medium text-content mb-2">Nothing on board yet</h3>
+      <h3 className="text-lg font-medium text-content mb-2">{t('modules.ModuleManagerView.nothingOnBoardYet')}</h3>
       <p className="text-sm text-content-secondary max-w-sm leading-relaxed">
-        Head to the Browse tab to add cargo, or use a key from the header for an
-        experimental version or a test candidate.
+        {t('modules.ModuleManagerView.headToTheBrowseTabTo')}
       </p>
     </div>
   );
@@ -968,8 +968,8 @@ function EmptyState() {
 type CargoTabId = 'browse' | 'installed';
 
 const CARGO_TABS: { id: CargoTabId; label: string; icon: LucideIcon }[] = [
-  { id: 'browse', label: 'Browse', icon: Boxes },
-  { id: 'installed', label: 'On board', icon: Package },
+  { id: 'browse', get label() { return t('modules.ModuleManagerView.browse'); }, icon: Boxes },
+  { id: 'installed', get label() { return t('modules.ModuleManagerView.onBoard'); }, icon: Package },
 ];
 
 // Per-tab colour coding, same convention as the Settings and Parameters tabs:
@@ -1005,10 +1005,9 @@ function DevCargoSection() {
     <div className="mt-8 rounded-lg border border-dashed border-amber-500/40 p-4">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-sm font-semibold text-content">Developer</div>
+          <div className="text-sm font-semibold text-content">{t('modules.ModuleManagerView.developer')}</div>
           <p className="mt-0.5 text-xs text-content-secondary">
-            Load a cargo straight from a folder. Rebuild and it reloads itself. Unpackaged
-            builds only, and it cannot unlock built-in features.
+            {t('modules.ModuleManagerView.loadACargoStraightFromA')}
           </p>
         </div>
         <button
@@ -1016,11 +1015,11 @@ function DevCargoSection() {
           className="rounded bg-surface-raised px-3 py-1.5 text-sm text-content hover:bg-surface-hover"
           onClick={async () => {
             const r = await window.electronAPI.moduleDevLoad();
-            setError(r.ok ? '' : (r.error ?? 'Could not load'));
+            setError(r.ok ? '' : (r.error ?? t('modules.ModuleManagerView.couldNotLoad')));
             await refresh();
           }}
         >
-          Load unpacked
+          {t('modules.ModuleManagerView.loadUnpacked')}
         </button>
       </div>
 
@@ -1051,7 +1050,7 @@ function DevCargoSection() {
                     )
                   }
                 >
-                  Reload
+                  {t('modules.ModuleManagerView.reload')}
                 </button>
                 <button
                   type="button"
@@ -1061,13 +1060,13 @@ function DevCargoSection() {
                     await refresh();
                   }}
                 >
-                  Unload
+                  {t('modules.ModuleManagerView.unload')}
                 </button>
               </div>
             </div>
           ))}
           <p className="pt-1 text-[11px] text-content-tertiary">
-            Restart ArduDeck after loading or unloading so the main process picks it up.
+            {t('modules.ModuleManagerView.restartArdudeckAfterLoadingOrUnloading')}
           </p>
         </div>
       )}
@@ -1224,9 +1223,9 @@ export function ModuleManagerView() {
                 <PackageIcon className="w-5 h-5 text-purple-400" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-2xl font-semibold text-content">Cargo Bay</h1>
+                <h1 className="text-2xl font-semibold text-content">{t('modules.ModuleManagerView.cargoBay')}</h1>
                 <p className="text-sm text-content-secondary mt-0.5">
-                  Browse the Hangar and manage what's on board
+                  {t('modules.ModuleManagerView.browseTheHangarAndManageWhat')}
                 </p>
               </div>
             </div>
@@ -1237,10 +1236,10 @@ export function ModuleManagerView() {
                   ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
                   : 'text-content-secondary hover:text-content bg-surface-raised border-subtle'
               }`}
-              data-tip="Add a key for an experimental or test-candidate version"
+              data-tip={t('modules.ModuleManagerView.addAKeyForAnExperimental')}
             >
               <KeyRound className="w-3.5 h-3.5" />
-              Have a key?
+              {t('modules.ModuleManagerView.haveAKey')}
             </button>
           </div>
 
@@ -1251,12 +1250,12 @@ export function ModuleManagerView() {
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-medium text-content flex items-center gap-2">
                     <KeyRound className="w-4 h-4 text-blue-400" />
-                    Add a cargo key
+                    {t('modules.ModuleManagerView.addACargoKey')}
                   </h2>
                   <button
                     onClick={() => setShowKey(false)}
                     className="p-1 rounded text-content-tertiary hover:text-content hover:bg-surface-raised transition-colors"
-                    data-tip="Close"
+                    data-tip={t('modules.ModuleManagerView.close')}
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -1269,7 +1268,7 @@ export function ModuleManagerView() {
                       value={keyInput}
                       onChange={(e) => setKeyInput(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder="ARDUDECK.xxxxxxxx.xxxxxxxx"
+                      placeholder={t('modules.ModuleManagerView.ardudeckXxxxxxxxXxxxxxxx')}
                       disabled={activating}
                       className="w-full px-3 py-2.5 bg-surface-input border border-subtle rounded-lg text-sm text-content placeholder-content-tertiary focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 disabled:opacity-50 font-mono"
                       spellCheck={false}
@@ -1280,7 +1279,7 @@ export function ModuleManagerView() {
                         onClick={handlePaste}
                         className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-content-secondary hover:text-content bg-surface-raised rounded transition-colors"
                       >
-                        Paste
+                        {t('modules.ModuleManagerView.paste')}
                       </button>
                     )}
                   </div>
@@ -1289,12 +1288,11 @@ export function ModuleManagerView() {
                     disabled={!keyInput.trim() || activating}
                     className="btn btn-primary text-sm shrink-0"
                   >
-                    {activating ? 'Adding…' : 'Add'}
+                    {activating ? t('modules.ModuleManagerView.adding') : t('modules.ModuleManagerView.add')}
                   </button>
                 </div>
                 <p className="text-xs text-content-tertiary">
-                  Cargo installs from the Browse tab. A key is only needed for an
-                  experimental version or a test candidate.
+                  {t('modules.ModuleManagerView.cargoInstallsFromTheBrowseTab')}
                 </p>
               </div>
             </div>
@@ -1334,7 +1332,7 @@ export function ModuleManagerView() {
                     className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30"
                     data-tip={`${updates.length} update${updates.length > 1 ? 's' : ''} available`}
                   >
-                    {updates.length} new
+                    {updates.length} {t('modules.ModuleManagerView.new')}
                   </span>
                 )}
               </button>
@@ -1354,7 +1352,7 @@ export function ModuleManagerView() {
                 <button
                   onClick={clearError}
                   className="p-1 rounded text-red-400/70 hover:text-red-400 transition-colors shrink-0"
-                  data-tip="Dismiss"
+                  data-tip={t('modules.ModuleManagerView.dismiss')}
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -1370,22 +1368,22 @@ export function ModuleManagerView() {
                 <div className="card-body flex items-center gap-4 py-3">
                   <AlertIcon className="w-5 h-5 text-amber-500 shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium text-content">Restart required</h3>
+                    <h3 className="text-sm font-medium text-content">{t('modules.ModuleManagerView.restartRequired')}</h3>
                     <p className="text-sm text-content-secondary mt-0.5">
-                      Cargo changed. ArduDeck must restart for it to take effect.
+                      {t('modules.ModuleManagerView.cargoChangedArdudeckMustRestartFor')}
                     </p>
                   </div>
                   <button
                     onClick={() => window.electronAPI.relaunchApp()}
                     className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black text-sm font-medium rounded-lg transition-colors shrink-0"
                   >
-                    Restart now
+                    {t('modules.ModuleManagerView.restartNow')}
                   </button>
                   <button
                     onClick={() => setRestartRequired(false)}
                     className="px-3 py-2 text-sm text-content-secondary hover:text-content transition-colors shrink-0"
                   >
-                    Later
+                    {t('modules.ModuleManagerView.later')}
                   </button>
                 </div>
               </div>
@@ -1403,13 +1401,9 @@ export function ModuleManagerView() {
                 <div className="card-body flex gap-3">
                   <Boxes className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
                   <div className="space-y-1">
-                    <h3 className="text-sm font-medium text-content">What is cargo?</h3>
+                    <h3 className="text-sm font-medium text-content">{t('modules.ModuleManagerView.whatIsCargo')}</h3>
                     <p className="text-xs text-content-secondary leading-relaxed">
-                      Cargo keeps optional features out of the core app, so the base stays small,
-                      fast, and stable. Every pilot flies differently, so instead of one heavy app
-                      that ships everything, you load only the cargo that fits how you fly and leave
-                      the rest on the ground. Add it, remove it, switch it on or off. Your deck,
-                      your way.
+                      {t('modules.ModuleManagerView.cargoKeepsOptionalFeaturesOutOf')}
                     </p>
                   </div>
                 </div>
@@ -1419,7 +1413,7 @@ export function ModuleManagerView() {
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="w-1.5 h-5 bg-purple-500 rounded-full shrink-0" />
-                  <h2 className="text-sm font-medium text-content uppercase tracking-wider">Available cargo</h2>
+                  <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('modules.ModuleManagerView.availableCargo')}</h2>
                   {catalog.length > 0 && (
                     <span className="text-xs text-content-tertiary">{catalog.length}</span>
                   )}
@@ -1430,7 +1424,7 @@ export function ModuleManagerView() {
                   className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-content-secondary hover:text-content bg-surface-raised border border-subtle rounded-lg transition-colors disabled:opacity-60 shrink-0"
                 >
                   <RefreshIcon className={`w-3.5 h-3.5 ${catalogLoading ? 'animate-spin' : ''}`} />
-                  Refresh
+                  {t('modules.ModuleManagerView.refresh')}
                 </button>
               </div>
 
@@ -1444,7 +1438,7 @@ export function ModuleManagerView() {
                         : 'text-content-secondary bg-surface-raised border-subtle hover:text-content'
                     }`}
                   >
-                    All
+                    {t('modules.ModuleManagerView.all')}
                   </button>
                   {categories.map((cat) => (
                     <button
@@ -1470,14 +1464,14 @@ export function ModuleManagerView() {
                 <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
                   <AlertIcon className="w-5 h-5 text-red-400 shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-red-400">Could not reach the Hangar</p>
+                    <p className="text-sm text-red-400">{t('modules.ModuleManagerView.couldNotReachTheHangar')}</p>
                     <p className="text-xs text-content-secondary mt-0.5 break-words">{catalogError}</p>
                   </div>
                   <button
                     onClick={() => fetchCatalog()}
                     className="px-3 py-1.5 text-xs text-content-secondary hover:text-content bg-surface-raised border border-subtle rounded-lg transition-colors shrink-0"
                   >
-                    Retry
+                    {t('modules.ModuleManagerView.retry')}
                   </button>
                 </div>
               ) : catalog.length === 0 ? (
@@ -1486,9 +1480,9 @@ export function ModuleManagerView() {
                     <div className="w-14 h-14 rounded-2xl bg-surface-raised border border-subtle flex items-center justify-center mb-4">
                       <Boxes className="w-7 h-7 text-content-tertiary" />
                     </div>
-                    <h3 className="text-base font-medium text-content mb-1.5">Nothing in the Hangar yet</h3>
+                    <h3 className="text-base font-medium text-content mb-1.5">{t('modules.ModuleManagerView.nothingInTheHangarYet')}</h3>
                     <p className="text-sm text-content-secondary max-w-sm leading-relaxed">
-                      No public cargo is published right now. Check back soon.
+                      {t('modules.ModuleManagerView.noPublicCargoIsPublishedRight')}
                     </p>
                   </div>
                 </div>
@@ -1524,7 +1518,7 @@ export function ModuleManagerView() {
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="w-1.5 h-5 bg-emerald-500 rounded-full shrink-0" />
-                  <h2 className="text-sm font-medium text-content uppercase tracking-wider">On board</h2>
+                  <h2 className="text-sm font-medium text-content uppercase tracking-wider">{t('modules.ModuleManagerView.onBoard')}</h2>
                   {modules.length > 0 && (
                     <span className="text-xs text-content-tertiary">{modules.length}</span>
                   )}
@@ -1533,10 +1527,10 @@ export function ModuleManagerView() {
                   <div className="flex items-center gap-2 shrink-0">
                     {updatesError ? (
                       <span className="text-xs text-red-400" data-tip={updatesError}>
-                        Check failed
+                        {t('modules.ModuleManagerView.checkFailed')}
                       </span>
                     ) : updatesCheckedAt && !checkingUpdates && updates.length === 0 ? (
-                      <span className="text-xs text-content-secondary">Up to date</span>
+                      <span className="text-xs text-content-secondary">{t('modules.ModuleManagerView.upToDate')}</span>
                     ) : null}
                     {updates.length > 0 && (
                       <button
@@ -1547,14 +1541,14 @@ export function ModuleManagerView() {
                             ? 'bg-blue-600/40 text-white/60 cursor-wait'
                             : 'bg-blue-600 hover:bg-blue-500 text-white'
                         }`}
-                        data-tip="Update every cargo with a newer version"
+                        data-tip={t('modules.ModuleManagerView.updateEveryCargoWithANewer')}
                       >
                         <ArrowUpIcon className="w-3.5 h-3.5" />
                         {updating === 'all'
-                          ? 'Updating all…'
+                          ? t('modules.ModuleManagerView.updatingAll')
                           : updates.length > 1
-                            ? `Update all (${updates.length})`
-                            : 'Update'}
+                            ? t('modules.ModuleManagerView.updateAll', { length: updates.length })
+                            : t('modules.ModuleManagerView.update')}
                       </button>
                     )}
                     <button
@@ -1563,7 +1557,7 @@ export function ModuleManagerView() {
                       className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-content-secondary hover:text-content bg-surface-raised border border-subtle rounded-lg transition-colors disabled:opacity-60"
                     >
                       <RefreshIcon className={`w-3.5 h-3.5 ${checkingUpdates ? 'animate-spin' : ''}`} />
-                      {checkingUpdates ? 'Checking…' : 'Check updates'}
+                      {checkingUpdates ? t('modules.ModuleManagerView.checking') : t('modules.ModuleManagerView.checkUpdates')}
                     </button>
                   </div>
                 )}

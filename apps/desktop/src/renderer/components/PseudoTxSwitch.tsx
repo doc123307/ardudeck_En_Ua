@@ -20,6 +20,7 @@ import { usePseudoTxStore } from '../stores/pseudo-tx-store';
 import { useConnectionStore } from '../stores/connection-store';
 import { isTrainerActive, onTrainerActive } from '../utils/rc-source-arbiter';
 import type { ChannelSource } from '../utils/pseudo-tx';
+import { t } from '../i18n';
 
 function useTrainerActive(): boolean {
   return useSyncExternalStore((cb) => onTrainerActive(() => cb()), isTrainerActive);
@@ -59,13 +60,13 @@ function MappingPanel(): JSX.Element {
   return (
     <div className="mt-3 pt-3 border-t border-subtle">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-content">Channel mapping</span>
+        <span className="text-xs font-medium text-content">{t('components.PseudoTxSwitch.channelMapping')}</span>
         <button
           type="button"
           onClick={resetMapping}
           className="text-xs text-content-secondary hover:text-content transition-colors"
         >
-          Reset
+          {t('components.PseudoTxSwitch.reset')}
         </button>
       </div>
 
@@ -99,14 +100,14 @@ function MappingPanel(): JSX.Element {
                 type="button"
                 onClick={() => updateMap(i, { reverse: !m.reverse })}
                 disabled={m.source.kind === 'none'}
-                data-tip={m.reverse ? 'Channel is reversed - click to restore' : 'Reverse this channel'}
+                data-tip={m.reverse ? t('components.PseudoTxSwitch.channelIsReversedClickToRestore') : t('components.PseudoTxSwitch.reverseThisChannel')}
                 className={`shrink-0 px-1.5 py-1 rounded-lg text-xs border transition-colors disabled:opacity-30 ${
                   m.reverse
                     ? 'bg-amber-500/15 text-amber-400 border-amber-500/40'
                     : 'bg-surface-raised text-content-secondary border-subtle hover:text-content'
                 }`}
               >
-                Rev
+                {t('components.PseudoTxSwitch.rev')}
               </button>
 
               <button
@@ -118,14 +119,14 @@ function MappingPanel(): JSX.Element {
                     : 'bg-surface-raised text-content-secondary border border-subtle hover:text-content'
                 }`}
               >
-                {isLearning ? 'move it' : 'Assign'}
+                {isLearning ? 'move it' : t('components.PseudoTxSwitch.assign')}
               </button>
 
               <button
                 type="button"
                 onClick={() => setSource(i, { kind: 'none' })}
                 disabled={m.source.kind === 'none'}
-                title="Unassign"
+                title={t('components.PseudoTxSwitch.unassign')}
                 className="shrink-0 w-5 text-xs text-content-secondary hover:text-content disabled:opacity-0 transition-colors"
               >
                 ×
@@ -136,8 +137,7 @@ function MappingPanel(): JSX.Element {
       </div>
 
       <p className="mt-2 text-xs text-content-secondary">
-        Press <span className="text-content">Assign</span>, then move the stick or flick the
-        switch you want on that channel. Unassigned channels hold 1500.
+        {t('components.PseudoTxSwitch.press')} <span className="text-content">{t('components.PseudoTxSwitch.assign')}</span>{t('components.PseudoTxSwitch.thenMoveTheStickOrFlick')}
       </p>
 
       <DeviceMonitor />
@@ -162,19 +162,16 @@ function DeviceMonitor(): JSX.Element {
   return (
     <div className="mt-3 pt-3 border-t border-subtle">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-content">Device monitor</span>
+        <span className="text-xs font-medium text-content">{t('components.PseudoTxSwitch.deviceMonitor')}</span>
         <span className="text-[10px] text-content-secondary">
-          {raw.axes.length} axes - {raw.buttons.length} buttons
-          {mappingMode ? ` - mapping "${mappingMode}"` : ' - raw HID'}
+          {raw.axes.length} {t('components.PseudoTxSwitch.axes')} {raw.buttons.length} {t('components.PseudoTxSwitch.buttons')}
+          {mappingMode ? t('components.PseudoTxSwitch.mapping', { mappingMode }) : t('components.PseudoTxSwitch.rawHid')}
         </span>
       </div>
 
       {standard && (
         <p className="mb-2 text-xs text-amber-400">
-          The browser has applied its standard gamepad layout to this device, which keeps only
-          four axes and drops the rest - so the switches never arrive. Re-plug with the handset
-          already in USB Joystick mode, or use a model whose USB descriptor is not recognised as
-          a game controller.
+          {t('components.PseudoTxSwitch.theBrowserHasAppliedItsStandard')}
         </p>
       )}
 
@@ -241,11 +238,11 @@ export function PseudoTxSwitch(): JSX.Element {
             }`}
           />
           <div className="min-w-0">
-            <h3 className="text-sm font-medium text-content">Fly with USB transmitter</h3>
+            <h3 className="text-sm font-medium text-content">{t('components.PseudoTxSwitch.flyWithUsbTransmitter')}</h3>
             <p className="text-xs text-content-secondary mt-0.5 truncate" title={detail}>
               {sendError ? <span className="text-amber-400">{sendError}</span> : detail}
               {enabled && connected && !isTransmitter && (
-                <span className="text-amber-400"> - looks like a gamepad, not a handset</span>
+                <span className="text-amber-400"> {t('components.PseudoTxSwitch.looksLikeAGamepadNotA')}</span>
               )}
             </p>
           </div>
@@ -255,7 +252,7 @@ export function PseudoTxSwitch(): JSX.Element {
           type="button"
           role="switch"
           aria-checked={enabled}
-          aria-label="Fly with USB transmitter"
+          aria-label={t('components.PseudoTxSwitch.flyWithUsbTransmitter')}
           onClick={() => (enabled ? disable() : enable())}
           className={`relative w-10 h-5 rounded-full transition-colors shrink-0 ${
             enabled ? 'bg-emerald-500' : 'bg-surface-inset'
@@ -272,7 +269,7 @@ export function PseudoTxSwitch(): JSX.Element {
       {trainerActive && (
         <p className="mt-3 flex items-center gap-2 text-xs text-amber-400">
           <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-          Trainer session active - the Trainer owns the sticks
+          {t('components.PseudoTxSwitch.trainerSessionActiveTheTrainerOwns')}
         </p>
       )}
 
@@ -285,20 +282,20 @@ export function PseudoTxSwitch(): JSX.Element {
             <div className="min-w-0">
               <h3
                 className="text-sm font-medium text-content"
-                data-tip="Sends RC_CHANNELS_OVERRIDE to the connected vehicle. The joystick WILL command the aircraft."
+                data-tip={t('components.PseudoTxSwitch.sendsRcChannelsOverrideToThe')}
               >
-                Joystick controls vehicle
+                {t('components.PseudoTxSwitch.joystickControlsVehicle')}
               </h3>
               <p className="text-xs mt-0.5 truncate">
                 {vehicleControl ? (
                   vehicleSendError ? (
                     <span className="text-red-400">{vehicleSendError}</span>
                   ) : (
-                    <span className="text-amber-400">{vehicleFps} frames/s to vehicle</span>
+                    <span className="text-amber-400">{vehicleFps} {t('components.PseudoTxSwitch.framesSToVehicle')}</span>
                   )
                 ) : (
                   <span className="text-content-secondary">
-                    {vehicleRefusal ?? 'Off - sends nothing to the aircraft'}
+                    {vehicleRefusal ?? t('components.PseudoTxSwitch.offSendsNothingToTheAircraft')}
                   </span>
                 )}
               </p>
@@ -308,7 +305,7 @@ export function PseudoTxSwitch(): JSX.Element {
             type="button"
             role="switch"
             aria-checked={vehicleControl}
-            aria-label="Joystick controls vehicle"
+            aria-label={t('components.PseudoTxSwitch.joystickControlsVehicle')}
             onClick={() => {
               if (vehicleControl) {
                 disableVehicleControl();
@@ -343,7 +340,7 @@ export function PseudoTxSwitch(): JSX.Element {
             ) : (
               <ChevronRight className="w-3.5 h-3.5" />
             )}
-            Channel mapping
+            {t('components.PseudoTxSwitch.channelMapping')}
           </button>
           {showMap && <MappingPanel />}
         </>

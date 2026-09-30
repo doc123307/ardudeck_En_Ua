@@ -6,6 +6,7 @@ import {
   buildRallyItems,
   createRallyPoint,
 } from '../../shared/rally-types';
+import { t } from '../i18n';
 
 // Progress tracking for download/upload
 interface RallyProgress {
@@ -206,7 +207,7 @@ export const useRallyStore = create<RallyStore>((set, get) => ({
       progress: null,
       isDirty: false,
       error: null,
-      lastSuccessMessage: `Downloaded ${points.length} rally points from flight controller`,
+      lastSuccessMessage: t('stores.rally_store.downloadedRallyPointsFromFlightController', { length: points.length }),
     });
   },
 
@@ -246,7 +247,7 @@ export const useRallyStore = create<RallyStore>((set, get) => ({
       isDirty: false,
       progress: null,
       error: null,
-      lastSuccessMessage: `Uploaded ${itemCount} rally points to flight controller`,
+      lastSuccessMessage: t('stores.rally_store.uploadedRallyPointsToFlightController', { itemCount }),
     });
   },
 
@@ -255,7 +256,7 @@ export const useRallyStore = create<RallyStore>((set, get) => ({
       isLoading: false,
       progress: null,
       error: null,
-      lastSuccessMessage: 'Rally points cleared from flight controller',
+      lastSuccessMessage: t('stores.rally_store.rallyPointsClearedFromFlightController'),
     });
   },
 

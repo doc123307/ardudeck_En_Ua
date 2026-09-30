@@ -30,6 +30,7 @@ import {
   PROTOCOL_HINTS,
   BF_PROTOCOL_HINTS,
 } from '../../utils/receiver-constants';
+import { t as tr } from '../../i18n';
 
 // =============================================================================
 // Receiver Protocol Options
@@ -43,9 +44,9 @@ import {
 // RX_MAP only covers the 4 stick channels: A(ileron), E(levator), R(udder), T(hrottle).
 // AUX channels are never remapped — the FC always returns exactly 4 bytes for MSP_RX_MAP.
 const RX_MAP_PRESETS = [
-  { label: 'AETR (Default)', desc: 'FrSky, Futaba, Hitec, ELRS, FlySky', map: [0, 1, 3, 2] },
-  { label: 'TAER', desc: 'Spektrum, JR, Graupner', map: [1, 2, 3, 0] },
-  { label: 'RETA', desc: 'Rare / legacy radios', map: [3, 1, 0, 2] },
+  { get label() { return tr('parameters.ReceiverTab.aetrDefault'); }, get desc() { return tr('parameters.ReceiverTab.frskyFutabaHitecElrsFlysky'); }, map: [0, 1, 3, 2] },
+  { label: 'TAER', get desc() { return tr('parameters.ReceiverTab.spektrumJrGraupner'); }, map: [1, 2, 3, 0] },
+  { label: 'RETA', get desc() { return tr('parameters.ReceiverTab.rareLegacyRadios'); }, map: [3, 1, 0, 2] },
 ];
 
 // =============================================================================
@@ -134,7 +135,7 @@ function InfoBanner({ children, color = 'blue' }: { children: React.ReactNode; c
     <div className={`flex items-start gap-2.5 px-4 py-3 rounded-xl ${s.bg} ${s.border} border`}>
       <HelpCircle className={`w-4 h-4 ${s.icon} shrink-0 mt-0.5`} />
       <p className="text-xs text-content leading-relaxed">
-        <span className={`font-semibold ${s.label}`}>How this works: </span>
+        <span className={`font-semibold ${s.label}`}>{tr('parameters.ReceiverTab.howThisWorks')} </span>
         {children}
       </p>
     </div>
@@ -405,12 +406,12 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
   const getSignalBadge = () => {
     switch (signalStatus) {
       case 'active':
-        return { text: 'Active', color: 'green' };
+        return { text: tr('parameters.ReceiverTab.active'), color: 'green' };
       case 'stale':
-        return { text: 'Signal Lost', color: 'amber' };
+        return { text: tr('parameters.ReceiverTab.signalLost'), color: 'amber' };
       case 'none':
       default:
-        return { text: 'No Signal', color: 'red' };
+        return { text: tr('parameters.ReceiverTab.noSignal'), color: 'red' };
     }
   };
 
@@ -420,25 +421,24 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
     <div className="max-w-full space-y-4">
       {/* Receiver Protocol */}
       <Section
-        title="Receiver Protocol"
+        title={tr('parameters.ReceiverTab.receiverProtocol')}
         icon={<Radio className="w-5 h-5 text-blue-400" />}
         color="blue"
         defaultOpen={true}
       >
         <div className="mt-4 space-y-4">
           <InfoBanner>
-            Your transmitter sends stick commands to a small receiver wired to your flight controller.
-            Select the protocol that matches your receiver. Check the label on your receiver if unsure.
+            {tr('parameters.ReceiverTab.yourTransmitterSendsStickCommandsTo')}
           </InfoBanner>
           {isInav ? (
             <>
               {/* iNav: receiver_type */}
               <div>
-                <label className="text-xs text-content-secondary mb-2 block">Receiver Type</label>
+                <label className="text-xs text-content-secondary mb-2 block">{tr('parameters.ReceiverTab.receiverType')}</label>
                 {receiverType === null && !receiverSettingsLoaded ? (
                   <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-raised border-subtle">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                    <span className="text-xs text-content-secondary">Reading from board...</span>
+                    <span className="text-xs text-content-secondary">{tr('parameters.ReceiverTab.readingFromBoard')}</span>
                   </div>
                 ) : (
                   <div className="flex gap-2 flex-wrap">
@@ -462,11 +462,11 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
               {/* iNav: serialrx_provider quick select */}
               {receiverType === 'SERIAL' && (
                 <div>
-                  <label className="text-xs text-content-secondary mb-2 block">Serial RX Protocol</label>
+                  <label className="text-xs text-content-secondary mb-2 block">{tr('parameters.ReceiverTab.serialRxProtocol')}</label>
                   {inavSerialrxProvider === null && !receiverSettingsLoaded ? (
                     <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-raised border-subtle">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                      <span className="text-xs text-content-secondary">Reading from board...</span>
+                      <span className="text-xs text-content-secondary">{tr('parameters.ReceiverTab.readingFromBoard')}</span>
                     </div>
                   ) : (
                     <div className="flex gap-2 flex-wrap">
@@ -499,12 +499,12 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
               {bfProvider === null && !receiverSettingsLoaded ? (
                 <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-raised border-subtle">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                  <span className="text-xs text-content-secondary">Reading from board...</span>
+                  <span className="text-xs text-content-secondary">{tr('parameters.ReceiverTab.readingFromBoard')}</span>
                 </div>
               ) : (
                 <>
                   <div>
-                    <label className="text-xs text-content-secondary mb-2 block">Quick Select</label>
+                    <label className="text-xs text-content-secondary mb-2 block">{tr('parameters.ReceiverTab.quickSelect')}</label>
                     <div className="flex gap-2 flex-wrap">
                       {BF_QUICK_SELECT.map((p) => (
                         <button
@@ -523,13 +523,13 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
                   </div>
 
                   <div>
-                    <label className="text-xs text-content-secondary mb-2 block">All Protocols</label>
+                    <label className="text-xs text-content-secondary mb-2 block">{tr('parameters.ReceiverTab.allProtocols')}</label>
                     <select
                       value={bfProvider ?? ''}
                       onChange={(e) => setBfProvider(Number(e.target.value))}
                       className="w-full bg-surface-raised text-content rounded-lg px-3 py-2 text-sm border focus:border-blue-500 focus:outline-none"
                     >
-                      {bfProvider === null && <option value="">Select protocol...</option>}
+                      {bfProvider === null && <option value="">{tr('parameters.ReceiverTab.selectProtocol')}</option>}
                       {BF_PROVIDERS.map((p) => (
                         <option key={p.value} value={p.value}>{p.label}</option>
                       ))}
@@ -550,7 +550,7 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
 
       {/* Live RC Channels */}
       <Section
-        title="Live RC Channels"
+        title={tr('parameters.ReceiverTab.liveRcChannels')}
         icon={
           signalStatus === 'active'
             ? <Signal className="w-5 h-5 text-green-400" />
@@ -598,19 +598,19 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
               <div className="flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-amber-300">No RC signal detected</p>
-                  <p className="text-xs text-content-secondary mt-1">Check that:</p>
+                  <p className="text-sm font-medium text-amber-300">{tr('parameters.ReceiverTab.noRcSignalDetected')}</p>
+                  <p className="text-xs text-content-secondary mt-1">{tr('parameters.ReceiverTab.checkThat')}</p>
                   <ul className="text-xs text-content-secondary mt-1 space-y-0.5 list-disc list-inside">
-                    <li>Receiver is powered and bound to transmitter</li>
-                    <li>Correct UART is configured for Serial RX</li>
-                    <li>Receiver protocol matches your hardware</li>
+                    <li>{tr('parameters.ReceiverTab.receiverIsPoweredAndBoundTo')}</li>
+                    <li>{tr('parameters.ReceiverTab.correctUartIsConfiguredForSerial')}</li>
+                    <li>{tr('parameters.ReceiverTab.receiverProtocolMatchesYourHardware')}</li>
                   </ul>
                   {onNavigateToTab && (
                     <button
                       onClick={() => onNavigateToTab('ports')}
                       className="mt-2 text-xs text-blue-400 hover:text-blue-300 underline"
                     >
-                      Open Ports Configuration
+                      {tr('parameters.ReceiverTab.openPortsConfiguration')}
                     </button>
                   )}
                 </div>
@@ -622,25 +622,24 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
 
       {/* Channel Mapping */}
       <Section
-        title="Channel Mapping"
+        title={tr('parameters.ReceiverTab.channelMapping')}
         icon={<Shuffle className="w-5 h-5 text-purple-400" />}
         color="purple"
       >
         <div className="mt-4 space-y-4">
           <InfoBanner color="purple">
-            This controls which stick axis maps to which channel. If moving your throttle stick shows the wrong bar in Live RC above, pick a different preset here.
-            Most receivers use AETR. JR/Spektrum radios use TAER.
+            {tr('parameters.ReceiverTab.thisControlsWhichStickAxisMaps')}
           </InfoBanner>
           <div>
             {/* Current mapping status */}
             <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-surface-raised border-subtle">
               {isLoading ? (
-                <span className="text-xs text-content-secondary">Loading mapping from FC...</span>
+                <span className="text-xs text-content-secondary">{tr('parameters.ReceiverTab.loadingMappingFromFc')}</span>
               ) : (
                 <>
                   <span className={`w-1.5 h-1.5 rounded-full ${configLoaded ? 'bg-green-400' : 'bg-amber-400'}`} />
                   <span className="text-xs text-content-secondary">
-                    {configLoaded ? 'Board mapping:' : 'Default (not loaded):'}
+                    {configLoaded ? tr('parameters.ReceiverTab.boardMapping') : tr('parameters.ReceiverTab.defaultNotLoaded')}
                   </span>
                   <span className="text-xs font-medium text-content">
                     {(() => {
@@ -656,7 +655,7 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
               )}
             </div>
 
-            <label className="text-xs text-content-secondary mb-2 block">Change to preset</label>
+            <label className="text-xs text-content-secondary mb-2 block">{tr('parameters.ReceiverTab.changeToPreset')}</label>
             <div className="flex gap-2 flex-wrap">
               {RX_MAP_PRESETS.map((preset) => {
                 const isSelected = rxMap.length >= 4 &&
@@ -681,7 +680,7 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
           </div>
 
           <div>
-            <label className="text-xs text-content-secondary mb-2 block">Custom Order (drag to reorder)</label>
+            <label className="text-xs text-content-secondary mb-2 block">{tr('parameters.ReceiverTab.customOrderDragToReorder')}</label>
             <ChannelMapDragRow rxMap={rxMap} setRxMap={setRxMap} />
           </div>
         </div>
@@ -689,37 +688,37 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
 
       {/* Deadband */}
       <Section
-        title="Deadband"
+        title={tr('parameters.ReceiverTab.deadband')}
         icon={<CircleDot className="w-5 h-5 text-orange-400" />}
         color="orange"
       >
         <div className="mt-4 space-y-4">
           <InfoBanner color="orange">
-            A small zone around stick center where tiny movements are ignored. Increase if your drone drifts when sticks are centered. Default of 0 is fine for most setups.
+            {tr('parameters.ReceiverTab.aSmallZoneAroundStickCenter')}
           </InfoBanner>
           <DraggableSlider
-            label="Stick Deadband"
+            label={tr('parameters.ReceiverTab.stickDeadband')}
             value={deadband}
             onChange={setDeadband}
             min={0}
             max={100}
           />
           <DraggableSlider
-            label="Yaw Deadband"
+            label={tr('parameters.ReceiverTab.yawDeadband')}
             value={yawDeadband}
             onChange={setYawDeadband}
             min={0}
             max={100}
           />
           <DraggableSlider
-            label="Alt Hold Deadband"
+            label={tr('parameters.ReceiverTab.altHoldDeadband')}
             value={altHoldDeadband}
             onChange={setAltHoldDeadband}
             min={0}
             max={250}
           />
           <DraggableSlider
-            label="Throttle Deadband"
+            label={tr('parameters.ReceiverTab.throttleDeadband')}
             value={deadbandThrottle}
             onChange={setDeadbandThrottle}
             min={0}

@@ -28,6 +28,7 @@ import {
   toggleCheck,
   withCheckDisabled,
 } from './arming-checks';
+import { t } from '../../i18n';
 
 const LOGGING_BIT = 10;
 
@@ -72,7 +73,7 @@ export default function ArmingTab({ onGoTo }: ArmingTabProps): JSX.Element {
     return (
       <div className="p-6">
         <div className="rounded-xl border border-subtle bg-surface p-5 text-sm text-content-secondary">
-          This board does not expose arming checks. Connect the vehicle and load its parameters.
+          {t('mavlink_config.ArmingTab.thisBoardDoesNotExposeArming')}
         </div>
       </div>
     );
@@ -90,9 +91,9 @@ export default function ArmingTab({ onGoTo }: ArmingTabProps): JSX.Element {
       <div className="bg-surface rounded-xl border border-subtle p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="font-medium text-content">Checks before arming</h3>
+            <h3 className="font-medium text-content">{t('mavlink_config.ArmingTab.checksBeforeArming')}</h3>
             <p className="text-xs text-content-secondary">
-              {enabledCount} of {bits.length} running · {model.param}
+              {enabledCount} {t('mavlink_config.ArmingTab.of')} {bits.length} {t('mavlink_config.ArmingTab.running')} {model.param}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -103,17 +104,17 @@ export default function ArmingTab({ onGoTo }: ArmingTabProps): JSX.Element {
                 allOn ? 'bg-emerald-500/15 text-emerald-300' : 'bg-surface-raised text-content-secondary hover:text-content'
               }`}
             >
-              <ShieldCheck className="w-3.5 h-3.5" /> All checks
+              <ShieldCheck className="w-3.5 h-3.5" /> {t('mavlink_config.ArmingTab.allChecks')}
             </button>
             <button
               onClick={() => {
                 setConfirmOff(false);
                 write(withCheckDisabled(model, allChecksValue(model), LOGGING_BIT));
               }}
-              data-tip="Everything except the logging check, for a vehicle with no SD card"
+              data-tip={t('mavlink_config.ArmingTab.everythingExceptTheLoggingCheckFor')}
               className="flex items-center gap-1.5 rounded-lg bg-surface-raised px-3 py-2 text-xs text-content-secondary hover:text-content transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5" /> No card
+              <Sparkles className="w-3.5 h-3.5" /> {t('mavlink_config.ArmingTab.noCard')}
             </button>
             <button
               onClick={() => (confirmOff ? write(noChecksValue(model)) : setConfirmOff(true))}
@@ -126,7 +127,7 @@ export default function ArmingTab({ onGoTo }: ArmingTabProps): JSX.Element {
               }`}
             >
               <ShieldOff className="w-3.5 h-3.5" />
-              {confirmOff ? 'Really skip everything?' : 'Skip all'}
+              {confirmOff ? t('mavlink_config.ArmingTab.reallySkipEverything') : t('mavlink_config.ArmingTab.skipAll')}
             </button>
           </div>
         </div>
@@ -134,8 +135,7 @@ export default function ArmingTab({ onGoTo }: ArmingTabProps): JSX.Element {
         {allOff && (
           <div className="mb-3 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
             <AlertTriangle className="w-4 h-4 shrink-0" />
-            Every non-mandatory check is skipped. The vehicle will arm with a dead compass, no fix
-            and an uncalibrated board.
+            {t('mavlink_config.ArmingTab.everyNonMandatoryCheckIsSkipped')}
           </div>
         )}
 
@@ -167,7 +167,7 @@ export default function ArmingTab({ onGoTo }: ArmingTabProps): JSX.Element {
                     </span>
                     {blocking && (
                       <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-amber-700 dark:text-amber-300">
-                        blocking
+                        {t('mavlink_config.ArmingTab.blocking')}
                       </span>
                     )}
                   </div>
@@ -189,37 +189,37 @@ export default function ArmingTab({ onGoTo }: ArmingTabProps): JSX.Element {
       {/* How arming is asked for */}
       <div className="bg-surface rounded-xl border border-subtle p-5 space-y-4">
         <div>
-          <h3 className="font-medium text-content">How it arms</h3>
-          <p className="text-xs text-content-secondary">Only the settings this firmware exposes are shown</p>
+          <h3 className="font-medium text-content">{t('mavlink_config.ArmingTab.howItArms')}</h3>
+          <p className="text-xs text-content-secondary">{t('mavlink_config.ArmingTab.onlyTheSettingsThisFirmwareExposes')}</p>
         </div>
 
         <ChoiceRow
           param="ARMING_REQUIRE"
-          label="Arming required"
-          hint="A vehicle that does not require arming runs its motors as soon as it boots"
+          label={t('mavlink_config.ArmingTab.armingRequired')}
+          hint={t('mavlink_config.ArmingTab.aVehicleThatDoesNotRequire')}
           options={[
-            { value: 0, label: 'Not required' },
-            { value: 1, label: 'Required' },
-            { value: 3, label: 'Auto-arm once checks pass' },
+            { value: 0, label: t('mavlink_config.ArmingTab.notRequired') },
+            { value: 1, label: t('mavlink_config.ArmingTab.required') },
+            { value: 3, label: t('mavlink_config.ArmingTab.autoArmOnceChecksPass') },
           ]}
         />
         <ChoiceRow
           param="ARMING_RUDDER"
-          label="Arm with the sticks"
-          hint="Holding yaw right to arm, left to disarm"
+          label={t('mavlink_config.ArmingTab.armWithTheSticks')}
+          hint={t('mavlink_config.ArmingTab.holdingYawRightToArmLeft')}
           options={[
-            { value: 0, label: 'Off' },
-            { value: 1, label: 'Arm only' },
-            { value: 2, label: 'Arm and disarm' },
+            { value: 0, label: t('mavlink_config.ArmingTab.off') },
+            { value: 1, label: t('mavlink_config.ArmingTab.armOnly') },
+            { value: 2, label: t('mavlink_config.ArmingTab.armAndDisarm') },
           ]}
         />
         <ChoiceRow
           param="ARMING_NEED_LOC"
-          label="Require a position"
-          hint="Refuse to arm without an absolute position, so it can always return home"
+          label={t('mavlink_config.ArmingTab.requireAPosition')}
+          hint={t('mavlink_config.ArmingTab.refuseToArmWithoutAnAbsolute')}
           options={[
-            { value: 0, label: 'Not needed' },
-            { value: 1, label: 'Required' },
+            { value: 0, label: t('mavlink_config.ArmingTab.notNeeded') },
+            { value: 1, label: t('mavlink_config.ArmingTab.required') },
           ]}
         />
       </div>

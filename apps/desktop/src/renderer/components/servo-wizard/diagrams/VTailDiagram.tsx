@@ -6,6 +6,7 @@
  */
 
 import { ControlSurface } from '../presets/servo-presets';
+import { t } from '../../../i18n';
 
 interface Props {
   highlightSurface?: ControlSurface | null;
@@ -73,7 +74,7 @@ export default function VTailDiagram({
         onClick={handleClick('aileron_left')}
       />
       <text x="50" y="68" textAnchor="middle" fill="#9CA3AF" fontSize="9" fontWeight="500">
-        L Aileron
+        {t('servo_wizard.VTailDiagram.lAileron')}
       </text>
       {servoLabels.aileron_left && (
         <text x="50" y="96" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -88,7 +89,7 @@ export default function VTailDiagram({
         onClick={handleClick('aileron_right')}
       />
       <text x="250" y="68" textAnchor="middle" fill="#9CA3AF" fontSize="9" fontWeight="500">
-        R Aileron
+        {t('servo_wizard.VTailDiagram.rAileron')}
       </text>
       {servoLabels.aileron_right && (
         <text x="250" y="96" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -109,7 +110,7 @@ export default function VTailDiagram({
         onClick={handleClick('vtail_left')}
       />
       <text x="80" y="175" textAnchor="middle" fill="#9CA3AF" fontSize="9" fontWeight="500">
-        L V-Tail
+        {t('servo_wizard.VTailDiagram.lVTail')}
       </text>
       {servoLabels.vtail_left && (
         <text x="97" y="195" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
@@ -130,7 +131,7 @@ export default function VTailDiagram({
         onClick={handleClick('vtail_right')}
       />
       <text x="220" y="175" textAnchor="middle" fill="#9CA3AF" fontSize="9" fontWeight="500">
-        R V-Tail
+        {t('servo_wizard.VTailDiagram.rVTail')}
       </text>
       {servoLabels.vtail_right && (
         <text x="203" y="195" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">

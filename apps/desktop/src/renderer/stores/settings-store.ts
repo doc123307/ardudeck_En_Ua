@@ -8,6 +8,7 @@ import { DEFAULT_NON_DEFAULT_COLOR } from '../components/parameters/non-default-
 import { DEFAULT_USER_UNIT_PREFERENCES, normalizeUserUnitPreferences, type UserUnitPreferences } from '../../shared/user-units.js';
 import type { AltReferenceFrame } from '../../shared/mission-types.js';
 import { applyLanguage, getInitialLanguage, isAppLanguage, type AppLanguage } from '../i18n';
+import { t } from '../i18n';
 
 /**
  * Vehicle type for visualization
@@ -1247,7 +1248,7 @@ export const useSettingsStore = create<SettingsStore>()(
               type: 'udp',
               label: (updates.lastUdpMode ?? mem.lastUdpMode) === 'client'
                 ? `${updates.lastUdpRemoteHost ?? mem.lastUdpRemoteHost}:${updates.lastUdpRemotePort ?? mem.lastUdpRemotePort} (UDP ${(updates.lastUdpProtocol ?? mem.lastUdpProtocol ?? 'mavlink').toUpperCase()})`
-                : `UDP :${updates.lastUdpPort ?? mem.lastUdpPort} listen (${(updates.lastUdpProtocol ?? mem.lastUdpProtocol ?? 'mavlink').toUpperCase()})`,
+                : t('stores.settings_store.udpListen', { v1: updates.lastUdpPort ?? mem.lastUdpPort, v2: (updates.lastUdpProtocol ?? mem.lastUdpProtocol ?? 'mavlink').toUpperCase() }),
               host: (updates.lastUdpMode ?? mem.lastUdpMode) === 'client' ? (updates.lastUdpRemoteHost ?? mem.lastUdpRemoteHost) : undefined,
               port: (updates.lastUdpMode ?? mem.lastUdpMode) === 'client' ? (updates.lastUdpRemotePort ?? mem.lastUdpRemotePort ?? 14550) : (updates.lastUdpPort ?? mem.lastUdpPort ?? 14550),
               protocol: updates.lastUdpProtocol ?? mem.lastUdpProtocol ?? 'mavlink',

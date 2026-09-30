@@ -12,6 +12,7 @@ import AuxChannelPicker from '../shared/AuxChannelPicker';
 import RangeSlider from '../shared/RangeSlider';
 import RcChannelBar from '../shared/RcChannelBar';
 import { CheckCircle2, Lightbulb, HelpCircle } from 'lucide-react';
+import { t } from '../../../i18n';
 
 export const ModeConfigStep: React.FC = () => {
   const {
@@ -35,7 +36,7 @@ export const ModeConfigStep: React.FC = () => {
   if (!currentMode || !modeInfo) {
     return (
       <div className="text-center py-8">
-        <p className="text-content-secondary">No mode to configure</p>
+        <p className="text-content-secondary">{t('modes.ModeConfigStep.noModeToConfigure')}</p>
       </div>
     );
   }
@@ -101,7 +102,7 @@ export const ModeConfigStep: React.FC = () => {
       {/* AUX Channel selection */}
       <div className="space-y-2">
         <label className="block text-sm font-medium text-content">
-          Which switch should activate this mode?
+          {t('modes.ModeConfigStep.whichSwitchShouldActivateThisMode')}
         </label>
         <AuxChannelPicker
           selected={currentMode.auxChannel}
@@ -113,7 +114,7 @@ export const ModeConfigStep: React.FC = () => {
       {/* Range slider */}
       <div className="space-y-2">
         <label className="block text-sm font-medium text-content">
-          When should it activate? (PWM range)
+          {t('modes.ModeConfigStep.whenShouldItActivatePwmRange')}
         </label>
         <div className="p-4 bg-surface rounded-xl border border">
           <RangeSlider
@@ -128,7 +129,7 @@ export const ModeConfigStep: React.FC = () => {
       {/* Live preview */}
       <div className="space-y-2">
         <label className="block text-sm font-medium text-content">
-          Test it! Flip your switch to see if it activates:
+          {t('modes.ModeConfigStep.testItFlipYourSwitchTo')}
         </label>
         <div
           className={`p-4 rounded-xl border transition-all ${
@@ -152,9 +153,9 @@ export const ModeConfigStep: React.FC = () => {
           <div className="flex items-center gap-3">
             <CheckCircle2 className="w-6 h-6 text-green-400 shrink-0" />
             <div>
-              <h4 className="font-medium text-green-300">{modeInfo.name} is ACTIVE!</h4>
+              <h4 className="font-medium text-green-300">{modeInfo.name} {t('modes.ModeConfigStep.isActive')}</h4>
               <p className="text-xs text-green-200/70">
-                Your switch is in the correct position. This mode would be active in flight.
+                {t('modes.ModeConfigStep.yourSwitchIsInTheCorrect')}
               </p>
             </div>
           </div>
@@ -164,11 +165,9 @@ export const ModeConfigStep: React.FC = () => {
           <div className="flex items-center gap-3">
             <Lightbulb className="w-6 h-6 text-amber-400 shrink-0" />
             <div>
-              <h4 className="font-medium text-content">Try it now!</h4>
+              <h4 className="font-medium text-content">{t('modes.ModeConfigStep.tryItNow')}</h4>
               <p className="text-xs text-content-secondary">
-                Move your {AUX_CHANNELS[currentMode.auxChannel]?.name || 'switch'} to
-                the {currentMode.rangeStart >= 1700 ? 'HIGH' : currentMode.rangeEnd <= 1300 ? 'LOW' : 'MID'} position
-                to see {modeInfo.name} activate.
+                {t('modes.ModeConfigStep.moveYour')} {AUX_CHANNELS[currentMode.auxChannel]?.name || 'switch'} {t('modes.ModeConfigStep.toThe')} {currentMode.rangeStart >= 1700 ? 'HIGH' : currentMode.rangeEnd <= 1300 ? 'LOW' : 'MID'} {t('modes.ModeConfigStep.positionToSee')} {modeInfo.name} {t('modes.ModeConfigStep.activate')}
               </p>
             </div>
           </div>
@@ -181,13 +180,13 @@ export const ModeConfigStep: React.FC = () => {
           onClick={prevStep}
           className="px-4 py-2.5 bg-surface-raised hover:bg-surface-raised text-content rounded-lg transition-colors"
         >
-          Back
+          {t('modes.ModeConfigStep.back')}
         </button>
         <button
           onClick={nextStep}
           className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-colors"
         >
-          {isLastMode ? 'Review Configuration' : 'Next Mode'}
+          {isLastMode ? t('modes.ModeConfigStep.reviewConfiguration') : t('modes.ModeConfigStep.nextMode')}
         </button>
       </div>
     </div>

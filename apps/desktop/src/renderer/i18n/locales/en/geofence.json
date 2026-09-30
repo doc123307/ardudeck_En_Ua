@@ -1,0 +1,29 @@
+{
+  "geofence": {
+    "FenceListPanel": {
+      "geofence": "Geofence",
+      "modified": "Modified",
+      "geofencingIsNotSupportedOnInav": "Geofencing is not supported on iNav/Betaflight boards. You can still plan fences and save to file for reference.",
+      "returnPoint": "Return Point",
+      "alt": "Alt:",
+      "remove": "Remove",
+      "noReturnPointSet": "No return point set",
+      "inclusionZones": "Inclusion Zones (",
+      "noInclusionZones": "No inclusion zones",
+      "polygonPts": "Polygon ({{length}} pts)",
+      "circleM": "Circle ({{v1}}m)",
+      "exclusionZones": "Exclusion Zones (",
+      "noExclusionZones": "No exclusion zones",
+      "clickAZoneHereOrOn": "Click a zone (here or on the map) to move, reshape, or delete it.",
+      "polygon": "polygon",
+      "circle": "circle",
+      "breach": "breach"
+    },
+    "FenceMapOverlay": {
+      "clickToEditOrDeleteThis": "Click to edit or delete this zone",
+      "dragToMoveTheWholeZone": "Drag to move the whole zone",
+      "rightClickToDelete": " Right-click to delete",
+      "deleteThisZoneDel": "Delete this zone (Del)"
+    }
+  }
+}

@@ -15,6 +15,7 @@ import { useFormationControl } from '../../hooks/useFormationControl';
 import { selectActiveVehicle, type FleetVehicle } from '../../hooks/useFleet';
 import { SHAPE_OPTIONS, FormationGlyph } from './FormationGlyphs';
 import { TAC_GLASS, tacButton } from './tactical';
+import { t } from '../../i18n';
 
 const MENU_WIDTH = 200;
 
@@ -98,13 +99,13 @@ export function FleetContextMenu(): JSX.Element | null {
         <div className="px-1.5 pb-1 text-[11px] font-mono font-semibold text-content border-b border-subtle">{v.label}</div>
 
         <button type="button" disabled={isActive} onClick={run(() => selectActiveVehicle(v.key, v.transportId))} className={item}>
-          Command this vehicle
+          {t('fleet.FleetContextMenu.commandThisVehicle')}
         </button>
 
         {canFollow && (
           <>
             <button type="button" disabled={busy || isLeader} onClick={run(() => { void createFleet(v.key); })} className={item}>
-              {isLeader ? 'Leads a fleet' : 'Create leader'}
+              {isLeader ? t('fleet.FleetContextMenu.leadsAFleet') : t('fleet.FleetContextMenu.createLeader')}
             </button>
 
             {joinable.length > 0 && (
@@ -114,7 +115,7 @@ export function FleetContextMenu(): JSX.Element | null {
                 onMouseLeave={closeSub}
               >
                 <button type="button" disabled={busy} onClick={() => (subOpen ? setSubOpen(false) : openSub())} className={`${item} flex items-center justify-between`}>
-                  <span>Add to fleet</span>
+                  <span>{t('fleet.FleetContextMenu.addToFleet')}</span>
                   <span className="text-content-tertiary">{subOnLeft ? '◂' : '▸'}</span>
                 </button>
                 {subOpen && (
@@ -125,7 +126,7 @@ export function FleetContextMenu(): JSX.Element | null {
                     <div className={`w-44 py-1.5 px-1.5 rounded-lg flex flex-col gap-1 ${TAC_GLASS}`}>
                       {joinable.map((f) => (
                         <button key={f.key} type="button" disabled={busy} onClick={run(() => { void addToFleet(f.key, v.key); })} className={item}>
-                          Join {f.label}
+                          {t('fleet.FleetContextMenu.join')} {f.label}
                         </button>
                       ))}
                     </div>
@@ -140,7 +141,7 @@ export function FleetContextMenu(): JSX.Element | null {
             {hasWingmen && (
               <>
                 <div className="flex items-center justify-between gap-2 px-1.5 pt-1">
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-content-tertiary">Formation shape</span>
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-content-tertiary">{t('fleet.FleetContextMenu.formationShape')}</span>
                   <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     <NumChip label="gap" value={cfg.spacing} min={2} max={500} onChange={(spacing) => editConfig({ spacing })} />
                     <NumChip label="alt" value={cfg.altStep} min={0} max={100} onChange={(altStep) => editConfig({ altStep })} />
@@ -155,7 +156,7 @@ export function FleetContextMenu(): JSX.Element | null {
                         type="button"
                         disabled={busy || lit}
                         onClick={run(() => { void reshapeFleet(v.key, o.value); })}
-                        data-tip={lit ? `${o.label} (current)` : `Re-form: ${o.label}`}
+                        data-tip={lit ? t('fleet.FleetContextMenu.current', { label: o.label }) : t('fleet.FleetContextMenu.reForm', { label: o.label })}
                         className={`grid place-items-center aspect-square rounded border transition-colors disabled:opacity-60 ${tacButton(lit)}`}
                       >
                         <FormationGlyph shape={o.value} size={20} />
@@ -170,7 +171,7 @@ export function FleetContextMenu(): JSX.Element | null {
                 no ambiguous icon that fires a maneuver on a stray click. */}
             {isLeader && !hasWingmen && freeCount > 0 && (
               <button type="button" disabled={busy} onClick={run(() => { void formUp(undefined, v.key); })} className={item}>
-                Form up {freeCount} free {freeCount === 1 ? 'drone' : 'drones'}
+                {t('fleet.FleetContextMenu.formUp')} {freeCount} {t('fleet.FleetContextMenu.free')} {freeCount === 1 ? 'drone' : 'drones'}
               </button>
             )}
 
@@ -179,10 +180,10 @@ export function FleetContextMenu(): JSX.Element | null {
                 type="button"
                 disabled={busy}
                 onClick={run(() => { void (isLeader ? disbandFleet(v.key) : removeFromFleet(v.key)); })}
-                data-tip={isLeader ? 'Disbands this fleet - its wingmen return to manual control' : `Drop ${v.label} from the fleet - the rest hold formation`}
+                data-tip={isLeader ? t('fleet.FleetContextMenu.disbandsThisFleetItsWingmenReturn') : t('fleet.FleetContextMenu.dropFromTheFleetTheRest', { label: v.label })}
                 className="w-full mt-0.5 px-2 py-1 text-left text-xs rounded text-amber-500 hover:bg-amber-500/15 transition-colors disabled:opacity-40"
               >
-                {isLeader ? 'Disband fleet' : 'Leave fleet'}
+                {isLeader ? t('fleet.FleetContextMenu.disbandFleet') : t('fleet.FleetContextMenu.leaveFleet')}
               </button>
             )}
           </>

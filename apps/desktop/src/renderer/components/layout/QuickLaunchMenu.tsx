@@ -7,6 +7,7 @@
  * the generic detached-window system (they are already registered there).
  */
 import { useEffect, useRef, useState } from 'react';
+import { t } from '../../i18n';
 
 interface LaunchItem {
   id: string;
@@ -21,8 +22,8 @@ interface LaunchItem {
 const ITEMS: LaunchItem[] = [
   {
     id: 'area-editor',
-    label: 'Area Editor',
-    desc: 'Draw mission areas: multi-area, holes, KML',
+    get label() { return t('layout.QuickLaunchMenu.areaEditor'); },
+    get desc() { return t('layout.QuickLaunchMenu.drawMissionAreasMultiAreaHoles'); },
     iconColor: 'text-teal-400',
     badge: 'New',
     icon: (
@@ -36,8 +37,8 @@ const ITEMS: LaunchItem[] = [
   },
   {
     id: 'sim-world',
-    label: '3D Sim World',
-    desc: 'Fly SITL in a persistent 3D world: obstacles, fences, missions',
+    get label() { return t('layout.QuickLaunchMenu.n3dSimWorld'); },
+    get desc() { return t('layout.QuickLaunchMenu.flySitlInAPersistent3d'); },
     iconColor: 'text-emerald-400',
     badge: 'New',
     icon: (
@@ -46,31 +47,31 @@ const ITEMS: LaunchItem[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18M12 3a15 15 0 000 18" />
       </svg>
     ),
-    launch: () => { window.electronAPI?.openDetachedWindow?.({ componentId: 'sim-world', title: '3D Sim World', initialBounds: { width: 1280, height: 800 } }); },
+    launch: () => { window.electronAPI?.openDetachedWindow?.({ componentId: 'sim-world', title: t('layout.QuickLaunchMenu.n3dSimWorld'), initialBounds: { width: 1280, height: 800 } }); },
   },
   {
     id: 'inspector',
-    label: 'MAVLink Inspector',
-    desc: 'Watch live messages and graphs',
+    get label() { return t('layout.QuickLaunchMenu.mavlinkInspector'); },
+    get desc() { return t('layout.QuickLaunchMenu.watchLiveMessagesAndGraphs'); },
     iconColor: 'text-blue-400',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
       </svg>
     ),
-    launch: () => { window.electronAPI?.openDetachedWindow?.({ componentId: 'inspector', title: 'MAVLink Inspector', initialBounds: { width: 1200, height: 800 } }); },
+    launch: () => { window.electronAPI?.openDetachedWindow?.({ componentId: 'inspector', title: t('layout.QuickLaunchMenu.mavlinkInspector'), initialBounds: { width: 1200, height: 800 } }); },
   },
   {
     id: 'telemetry-dashboard',
-    label: 'Telemetry Dashboard',
-    desc: 'Live telemetry on its own screen',
+    get label() { return t('layout.QuickLaunchMenu.telemetryDashboard'); },
+    get desc() { return t('layout.QuickLaunchMenu.liveTelemetryOnItsOwnScreen'); },
     iconColor: 'text-purple-400',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
       </svg>
     ),
-    launch: () => { window.electronAPI?.openDetachedWindow?.({ componentId: 'telemetry-dashboard', title: 'Telemetry Dashboard', initialBounds: { width: 1280, height: 800 } }); },
+    launch: () => { window.electronAPI?.openDetachedWindow?.({ componentId: 'telemetry-dashboard', title: t('layout.QuickLaunchMenu.telemetryDashboard'), initialBounds: { width: 1280, height: 800 } }); },
   },
 ];
 
@@ -93,12 +94,12 @@ export function QuickLaunchMenu() {
         data-tour="quick-launch"
         onClick={() => setOpen((o) => !o)}
         className="group flex items-center gap-1.5 pl-2.5 pr-2 py-1.5 rounded-lg bg-surface border border-subtle hover:border-teal-500/40 hover:bg-surface-raised transition-colors"
-        title="Quick Launch: open tools in their own window"
+        title={t('layout.QuickLaunchMenu.quickLaunchOpenToolsInTheir')}
       >
         <svg className="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h5a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h5a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
         </svg>
-        <span className="text-sm font-medium text-content-secondary group-hover:text-content transition-colors">Quick Launch</span>
+        <span className="text-sm font-medium text-content-secondary group-hover:text-content transition-colors">{t('layout.QuickLaunchMenu.quickLaunch')}</span>
         <svg className={`w-3 h-3 text-content-tertiary transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>

@@ -27,29 +27,29 @@ export { SitlFailureDockPanel } from './SitlFailureDockPanel';
 // Panel registry for dockview
 export const PANEL_COMPONENTS = {
   // Telemetry panels
-  attitude: { component: 'AttitudePanel', title: 'Attitude' },
-  altitude: { component: 'AltitudePanel', title: 'Altitude' },
-  speed: { component: 'SpeedPanel', title: 'Speed' },
-  battery: { component: 'BatteryPanel', title: 'Battery' },
+  attitude: { component: 'AttitudePanel', get title() { return t('panels.index.attitude'); } },
+  altitude: { component: 'AltitudePanel', get title() { return t('panels.index.altitude'); } },
+  speed: { component: 'SpeedPanel', get title() { return t('panels.index.speed'); } },
+  battery: { component: 'BatteryPanel', get title() { return t('panels.index.battery'); } },
   gps: { component: 'GpsPanel', title: 'GPS' },
-  position: { component: 'PositionPanel', title: 'Position' },
-  velocity: { component: 'VelocityPanel', title: 'Velocity' },
-  flightMode: { component: 'FlightModePanel', title: 'Flight Mode' },
-  flightControl: { component: 'FlightControlPanel', title: 'Flight Control' },
-  map: { component: 'MapPanel', title: 'Map' }, // Unified map with mission overlays
-  camera: { component: 'CameraPanel', title: 'Vision' },
-  messages: { component: 'MessagesPanel', title: 'Messages' },
-  safetyMonitor: { component: 'SafetyMonitorPanel', title: 'Safety Monitor' },
-  joystick: { component: 'JoystickPanel', title: 'Joystick' },
+  position: { component: 'PositionPanel', get title() { return t('panels.index.position'); } },
+  velocity: { component: 'VelocityPanel', get title() { return t('panels.index.velocity'); } },
+  flightMode: { component: 'FlightModePanel', get title() { return t('panels.index.flightMode'); } },
+  flightControl: { component: 'FlightControlPanel', get title() { return t('panels.index.flightControl'); } },
+  map: { component: 'MapPanel', get title() { return t('panels.index.map'); } }, // Unified map with mission overlays
+  camera: { component: 'CameraPanel', get title() { return t('panels.index.vision'); } },
+  messages: { component: 'MessagesPanel', get title() { return t('panels.index.messages'); } },
+  safetyMonitor: { component: 'SafetyMonitorPanel', get title() { return t('panels.index.safetyMonitor'); } },
+  joystick: { component: 'JoystickPanel', get title() { return t('panels.index.joystick'); } },
   rtk: { component: 'NtripPanel', title: 'RTK / NTRIP' },
-  preflightCheck: { component: 'PreflightCheckCard', title: 'Pre-flight Checks' },
+  preflightCheck: { component: 'PreflightCheckCard', get title() { return t('panels.index.preFlightChecks'); } },
   // Mission panels (for monitoring during flight)
   // Note: missionMap removed - mission data now integrated into unified MapPanel
-  waypoints: { component: 'WaypointTablePanel', title: 'Waypoints' },
-  altitudeProfile: { component: 'AltitudeProfilePanel', title: 'Altitude Profile' },
+  waypoints: { component: 'WaypointTablePanel', get title() { return t('panels.index.waypoints'); } },
+  altitudeProfile: { component: 'AltitudeProfilePanel', get title() { return t('panels.index.altitudeProfile'); } },
   // SITL simulation panels (only shown when SITL is running)
-  sitlEnvironment: { component: 'SitlEnvironmentDockPanel', title: 'SITL Environment' },
-  sitlFailures: { component: 'SitlFailureDockPanel', title: 'SITL Failures' },
+  sitlEnvironment: { component: 'SitlEnvironmentDockPanel', get title() { return t('panels.index.sitlEnvironment'); } },
+  sitlFailures: { component: 'SitlFailureDockPanel', get title() { return t('panels.index.sitlFailures'); } },
 } as const;
 
 export type PanelId = keyof typeof PANEL_COMPONENTS;
@@ -73,6 +73,7 @@ import { MessagesPanel as MessagesPanelC } from './MessagesPanel';
 import { SafetyMonitorPanel as SafetyMonitorPanelC } from './SafetyMonitorPanel';
 import { NtripPanel as NtripPanelC } from './NtripPanel';
 import { PreflightCheckCard as PreflightCheckCardC } from '../prearm/PreflightCheckCard';
+import { t } from '../../i18n';
 import { CameraPanel as CameraPanelC } from '../camera/CameraPanel';
 import { JoystickPanel as JoystickPanelC } from './JoystickPanel';
 import { WaypointTablePanel as WaypointTablePanelC } from '../mission/WaypointTablePanel';

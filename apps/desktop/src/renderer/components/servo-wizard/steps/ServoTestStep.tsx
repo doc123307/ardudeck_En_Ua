@@ -9,6 +9,7 @@ import { useServoWizardStore } from '../../../stores/servo-wizard-store';
 import { CONTROL_SURFACE_INFO } from '../presets/servo-presets';
 import ServoBar from '../shared/ServoBar';
 import { Check, Lightbulb } from 'lucide-react';
+import { t } from '../../../i18n';
 
 export default function ServoTestStep() {
   const {
@@ -36,11 +37,11 @@ export default function ServoTestStep() {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-xl font-bold text-content">Test Your Servos</h2>
+        <h2 className="text-xl font-bold text-content">{t('servo_wizard.ServoTestStep.testYourServos')}</h2>
         <p className="text-sm text-content-secondary mt-2">
-          Move your transmitter sticks and verify each servo responds correctly.
+          {t('servo_wizard.ServoTestStep.moveYourTransmitterSticksAndVerify')}
           <br />
-          If a servo moves the <strong className="text-content">wrong way</strong>, click <strong className="text-blue-400">Reverse</strong>.
+          {t('servo_wizard.ServoTestStep.ifAServoMovesThe')} <strong className="text-content">{t('servo_wizard.ServoTestStep.wrongWay')}</strong>{t('servo_wizard.ServoTestStep.click')} <strong className="text-blue-400">{t('servo_wizard.ServoTestStep.reverse')}</strong>.
         </p>
       </div>
 
@@ -55,9 +56,9 @@ export default function ServoTestStep() {
           />
           <span className="text-sm text-content-secondary">
             {isPollingServos ? (
-              <span className="text-green-400">● Live servo polling enabled</span>
+              <span className="text-green-400">{t('servo_wizard.ServoTestStep.liveServoPollingEnabled')}</span>
             ) : (
-              'Enable live servo polling'
+              t('servo_wizard.ServoTestStep.enableLiveServoPolling')
             )}
           </span>
         </label>
@@ -84,11 +85,11 @@ export default function ServoTestStep() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-content">{surfaceInfo.name}</span>
                     <span className="text-xs px-2 py-0.5 bg-surface-raised rounded text-content-secondary">
-                      Servo {assignment.servoIndex}
+                      {t('servo_wizard.ServoTestStep.servo')} {assignment.servoIndex}
                     </span>
                     {assignment.reversed && (
                       <span className="text-xs px-2 py-0.5 bg-yellow-500/20 rounded text-yellow-400">
-                        Reversed
+                        {t('servo_wizard.ServoTestStep.reversed')}
                       </span>
                     )}
                   </div>
@@ -104,7 +105,7 @@ export default function ServoTestStep() {
                       : 'bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30'
                   }`}
                 >
-                  {assignment.reversed ? 'Undo Reverse' : 'Reverse'}
+                  {assignment.reversed ? t('servo_wizard.ServoTestStep.undoReverse') : t('servo_wizard.ServoTestStep.reverse')}
                 </button>
               </div>
 
@@ -123,12 +124,12 @@ export default function ServoTestStep() {
                 {moving ? (
                   <>
                     <Check className="w-4 h-4 text-green-400" />
-                    <span className="text-xs text-green-400">Servo is responding</span>
+                    <span className="text-xs text-green-400">{t('servo_wizard.ServoTestStep.servoIsResponding')}</span>
                   </>
                 ) : (
                   <>
                     <span className="text-content-secondary">○</span>
-                    <span className="text-xs text-content-secondary">Move stick to test</span>
+                    <span className="text-xs text-content-secondary">{t('servo_wizard.ServoTestStep.moveStickToTest')}</span>
                   </>
                 )}
               </div>
@@ -141,12 +142,12 @@ export default function ServoTestStep() {
       <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-start gap-3">
         <Lightbulb className="w-5 h-5 text-amber-400 shrink-0" />
         <div>
-          <p className="text-sm text-amber-400 font-medium">How to check direction:</p>
+          <p className="text-sm text-amber-400 font-medium">{t('servo_wizard.ServoTestStep.howToCheckDirection')}</p>
           <ul className="text-xs text-content-secondary mt-1 space-y-1 list-disc list-inside">
-            <li><strong>Ailerons:</strong> Roll stick right → right aileron should go UP, left should go DOWN</li>
-            <li><strong>Elevator:</strong> Pull stick back → trailing edge should go UP</li>
-            <li><strong>Rudder:</strong> Yaw stick right → rudder should move RIGHT</li>
-            <li><strong>Elevons:</strong> Test both roll and pitch movements</li>
+            <li><strong>{t('servo_wizard.ServoTestStep.ailerons')}</strong> {t('servo_wizard.ServoTestStep.rollStickRightRightAileronShould')}</li>
+            <li><strong>{t('servo_wizard.ServoTestStep.elevator')}</strong> {t('servo_wizard.ServoTestStep.pullStickBackTrailingEdgeShould')}</li>
+            <li><strong>{t('servo_wizard.ServoTestStep.rudder')}</strong> {t('servo_wizard.ServoTestStep.yawStickRightRudderShouldMove')}</li>
+            <li><strong>{t('servo_wizard.ServoTestStep.elevons')}</strong> {t('servo_wizard.ServoTestStep.testBothRollAndPitchMovements')}</li>
           </ul>
         </div>
       </div>
@@ -157,13 +158,13 @@ export default function ServoTestStep() {
           onClick={prevStep}
           className="px-6 py-2.5 rounded-lg font-medium bg-surface-raised text-content hover:bg-surface-raised"
         >
-          ← Back
+          {t('servo_wizard.ServoTestStep.back')}
         </button>
         <button
           onClick={nextStep}
           className="px-6 py-2.5 rounded-lg font-medium bg-blue-500 text-white hover:bg-blue-400"
         >
-          Continue: Calibrate →
+          {t('servo_wizard.ServoTestStep.continueCalibrate')}
         </button>
       </div>
     </div>

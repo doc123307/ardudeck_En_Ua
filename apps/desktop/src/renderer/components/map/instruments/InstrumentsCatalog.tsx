@@ -46,6 +46,7 @@ const PRESET_ACCENTS: Record<PresetAccent, { edge: string }> = {
 };
 import { runAutoArrange, restorePreviousLayout } from './arrange-controller';
 import { semanticsOf } from './auto-arrange';
+import { t } from '../../../i18n';
 
 // ---- Roles -----------------------------------------------------------------
 
@@ -103,7 +104,7 @@ const ROLE_TITLE: Record<InstrumentRole, string> = {
   navigation: 'Navigation',
   command: 'Commands',
   status: 'Status',
-  summary: 'Summary',
+  get summary() { return t('map.InstrumentsCatalog.summary'); },
 };
 
 const ROLE_BLURB: Record<InstrumentRole, string> = {
@@ -112,7 +113,7 @@ const ROLE_BLURB: Record<InstrumentRole, string> = {
   navigation: 'Fix quality, mission progress and where home is.',
   command: 'Surfaces that command the vehicle.',
   status: 'Link, mode, warnings and vehicle messages.',
-  summary: 'Wide cards that carry several values at once.',
+  get summary() { return t('map.InstrumentsCatalog.wideCardsThatCarrySeveralValues'); },
 };
 
 // One accent per role, vivid in both themes (same intent as the mobile
@@ -230,8 +231,8 @@ function StepButton({ glyph, onClick, disabled }: { glyph: 'minus' | 'plus'; onC
 // option set the on-map config popover offers, kept in one place.
 function displayOptionsOf(def: MapInstrumentDef): Array<{ id: InstrumentDisplayMode; label: string }> {
   return [
-    { id: 'analog', label: 'Analog' },
-    ...(def.NumericComponent ? [{ id: 'numeric' as InstrumentDisplayMode, label: 'Numeric' }] : []),
+    { id: 'analog', label: t('map.InstrumentsCatalog.analog') },
+    ...(def.NumericComponent ? [{ id: 'numeric' as InstrumentDisplayMode, label: t('map.InstrumentsCatalog.numeric') }] : []),
     ...(def.variants ?? []).map((v) => ({ id: v.id as InstrumentDisplayMode, label: v.label })),
   ];
 }
@@ -335,7 +336,7 @@ function InstrumentCardBody({ def, accent }: { def: MapInstrumentDef; accent: st
         )}
 
         <div className="mt-3 flex items-center gap-2">
-          <span className="text-[10px] uppercase tracking-wide text-content-tertiary flex-1">Size</span>
+          <span className="text-[10px] uppercase tracking-wide text-content-tertiary flex-1">{t('map.InstrumentsCatalog.size')}</span>
           <StepButton glyph="minus" disabled={scale <= INSTRUMENT_SCALE_MIN} onClick={() => setScale(def.id, scale - INSTRUMENT_SCALE_STEP)} />
           <span className="w-11 text-center text-[12px] font-medium tabular-nums text-content-secondary">{Math.round(scale * 100)}%</span>
           <StepButton glyph="plus" disabled={scale >= INSTRUMENT_SCALE_MAX} onClick={() => setScale(def.id, scale + INSTRUMENT_SCALE_STEP)} />
@@ -384,7 +385,7 @@ function SearchPane({ query }: { query: string }): JSX.Element {
   });
 
   if (hits.length === 0) {
-    return <div className="p-8 text-center text-xs text-content-tertiary">Nothing matches "{query}"</div>;
+    return <div className="p-8 text-center text-xs text-content-tertiary">{t('map.InstrumentsCatalog.nothingMatches')}{query}"</div>;
   }
   return (
     <div className="p-4">
@@ -440,7 +441,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
     try {
       parsed = JSON.parse(raw);
     } catch {
-      setImportError('That is not valid JSON.');
+      setImportError(t('map.InstrumentsCatalog.thatIsNotValidJson'));
       return;
     }
     const obj = parsed as { name?: unknown; layout?: unknown };
@@ -454,13 +455,13 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
       setImportText('');
       setImportError(null);
     } else {
-      setImportError('This does not look like an ArduDeck instrument layout.');
+      setImportError(t('map.InstrumentsCatalog.thisDoesNotLookLikeAn'));
     }
   };
 
   const onImportFile = (file: File | undefined) => {
     if (!file) return;
-    file.text().then(doImport).catch(() => setImportError('Could not read that file.'));
+    file.text().then(doImport).catch(() => setImportError(t('map.InstrumentsCatalog.couldNotReadThatFile')));
   };
 
   const applyRow = 'w-full flex items-center gap-2 text-left px-2.5 py-1.5 rounded text-xs text-content-secondary hover:bg-surface-raised hover:text-content transition-colors';
@@ -471,7 +472,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
   return (
     <div className="p-4 space-y-5 max-w-[560px]">
       <div>
-        <SectionHeading label="Arrange" accent="var(--text-secondary)" />
+        <SectionHeading label={t('map.InstrumentsCatalog.arrange')} accent="var(--text-secondary)" />
         <div className="mt-2 flex items-center gap-2">
           <button
             type="button"
@@ -480,35 +481,34 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
               onClose();
               requestAnimationFrame(() => { runAutoArrange(); });
             }}
-            data-tip="Place every visible instrument by cockpit conventions: basic-T at the bottom, status rail on the left, map center kept clear"
+            data-tip={t('map.InstrumentsCatalog.placeEveryVisibleInstrumentByCockpit')}
             className="flex items-center gap-2 rounded-lg border border-blue-500/40 bg-blue-500/10 px-3 py-2.5 text-[13px] text-blue-500 hover:bg-blue-500/20 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h5M4 12h8M4 17h5M15 5l1.2 2.8L19 9l-2.8 1.2L15 13l-1.2-2.8L11 9l2.8-1.2L15 5z" />
             </svg>
-            Auto arrange
+            {t('map.InstrumentsCatalog.autoArrange')}
           </button>
           {arrangeSnapshot && (
             <button
               type="button"
               onClick={() => { restorePreviousLayout(); }}
-              data-tip="Put every instrument back where it was before the last auto arrange"
+              data-tip={t('map.InstrumentsCatalog.putEveryInstrumentBackWhereIt')}
               className="flex items-center gap-2 rounded-lg border border-subtle px-3 py-2.5 text-[13px] text-content-secondary hover:text-content hover:bg-surface-raised transition-colors"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 14l-4-4 4-4M5 10h9a5 5 0 010 10h-3" />
               </svg>
-              Restore previous layout
+              {t('map.InstrumentsCatalog.restorePreviousLayout')}
             </button>
           )}
         </div>
       </div>
 
       <div>
-        <SectionHeading label="Vehicle profile" accent="var(--text-secondary)" />
+        <SectionHeading label={t('map.InstrumentsCatalog.vehicleProfile')} accent="var(--text-secondary)" />
         <p className="mt-1.5 text-[11px] text-content-tertiary">
-          Which instruments this catalog offers. Auto follows what the vehicle reports, the same
-          way the HUD picks its air or ground layout.
+          {t('map.InstrumentsCatalog.whichInstrumentsThisCatalogOffersAuto')}
         </p>
         <div className="mt-2 flex items-center gap-1 rounded-lg border border-subtle p-1 w-fit">
           {([
@@ -533,7 +533,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
       </div>
 
       <div>
-        <SectionHeading label="Presets" accent="var(--text-secondary)" />
+        <SectionHeading label={t('map.InstrumentsCatalog.presets')} accent="var(--text-secondary)" />
         <div className="mt-2 grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
           {PRESET_INSTRUMENT_LAYOUTS.map(({ name, description, accent, layout }) => {
             const a = PRESET_ACCENTS[accent];
@@ -548,7 +548,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
                 <span className="flex items-center gap-2">
                   <span style={{ color: a.edge }}>{layoutIcon}</span>
                   <span className="flex-1 min-w-0 truncate text-[13px] text-content">{name}</span>
-                  <span className="text-[10px] uppercase tracking-wide text-content-tertiary">preset</span>
+                  <span className="text-[10px] uppercase tracking-wide text-content-tertiary">{t('map.InstrumentsCatalog.preset')}</span>
                 </span>
                 <span className="mt-1 block text-[11px] leading-snug text-content-tertiary">{description}</span>
               </button>
@@ -558,10 +558,10 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
       </div>
 
       <div>
-        <SectionHeading label="Saved layouts" accent="var(--text-secondary)" />
+        <SectionHeading label={t('map.InstrumentsCatalog.savedLayouts')} accent="var(--text-secondary)" />
         <div className="mt-2 space-y-0.5">
           {savedNames.length === 0 && savingName === null && (
-            <p className="px-1 py-1 text-[11px] text-content-tertiary">No saved layouts yet.</p>
+            <p className="px-1 py-1 text-[11px] text-content-tertiary">{t('map.InstrumentsCatalog.noSavedLayoutsYet')}</p>
           )}
           {savedNames.map((name) => (
             <div key={name} className="flex items-center gap-0.5">
@@ -574,7 +574,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
               <button
                 type="button"
                 onClick={() => saveLayout(name)}
-                data-tip="Update with current layout"
+                data-tip={t('map.InstrumentsCatalog.updateWithCurrentLayout')}
                 className="shrink-0 p-1.5 rounded text-content-tertiary hover:text-blue-500 hover:bg-surface-raised transition-colors"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -585,7 +585,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
               <button
                 type="button"
                 onClick={() => exportLayout(name)}
-                data-tip="Export layout to share"
+                data-tip={t('map.InstrumentsCatalog.exportLayoutToShare')}
                 className="shrink-0 p-1.5 rounded text-content-tertiary hover:text-content hover:bg-surface-raised transition-colors"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -595,7 +595,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
               <button
                 type="button"
                 onClick={() => deleteLayout(name)}
-                data-tip="Delete layout"
+                data-tip={t('map.InstrumentsCatalog.deleteLayout')}
                 className="shrink-0 p-1.5 rounded text-content-tertiary hover:text-red-500 hover:bg-surface-raised transition-colors"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -609,7 +609,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
               <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" d="M12 5v14M5 12h14" />
               </svg>
-              Save current layout...
+              {t('map.InstrumentsCatalog.saveCurrentLayout')}
             </button>
           ) : (
             <div className="flex items-center gap-1 px-1 py-0.5">
@@ -617,12 +617,12 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
                 autoFocus
                 type="text"
                 value={savingName}
-                placeholder="Layout name"
+                placeholder={t('map.InstrumentsCatalog.layoutName')}
                 onChange={(e) => setSavingName(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') commitSave(); if (e.key === 'Escape') setSavingName(null); }}
                 className="flex-1 min-w-0 px-2 py-1 text-xs rounded bg-surface-input border border-default text-content focus:outline-none focus:border-blue-500"
               />
-              <button type="button" onClick={commitSave} disabled={!savingName.trim()} className="shrink-0 px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 transition-colors">Save</button>
+              <button type="button" onClick={commitSave} disabled={!savingName.trim()} className="shrink-0 px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 transition-colors">{t('map.InstrumentsCatalog.save')}</button>
             </div>
           )}
 
@@ -632,18 +632,18 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
                 autoFocus
                 value={importText}
                 onChange={(e) => { setImportText(e.target.value); setImportError(null); }}
-                placeholder="Paste a shared layout (JSON) here"
+                placeholder={t('map.InstrumentsCatalog.pasteASharedLayoutJsonHere')}
                 rows={3}
                 className="w-full px-2 py-1.5 text-[11px] font-mono rounded bg-surface-input border border-default text-content focus:outline-none focus:border-blue-500 resize-none"
               />
               {importError && <p className="text-[11px] text-red-500">{importError}</p>}
               <div className="flex items-center gap-1.5">
-                <button type="button" onClick={() => doImport(importText)} disabled={!importText.trim()} className="px-2.5 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 transition-colors">Import</button>
+                <button type="button" onClick={() => doImport(importText)} disabled={!importText.trim()} className="px-2.5 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 transition-colors">{t('map.InstrumentsCatalog.import')}</button>
                 <label className="px-2.5 py-1 text-xs rounded border border-subtle text-content-secondary hover:text-content hover:border-default transition-colors cursor-pointer">
-                  From file…
+                  {t('map.InstrumentsCatalog.fromFile')}
                   <input type="file" accept="application/json,.json" className="hidden" onChange={(e) => onImportFile(e.target.files?.[0])} />
                 </label>
-                <button type="button" onClick={() => { setImporting(false); setImportText(''); setImportError(null); }} className="ml-auto px-2.5 py-1 text-xs rounded border border-subtle text-content-secondary hover:text-content transition-colors">Cancel</button>
+                <button type="button" onClick={() => { setImporting(false); setImportText(''); setImportError(null); }} className="ml-auto px-2.5 py-1 text-xs rounded border border-subtle text-content-secondary hover:text-content transition-colors">{t('map.InstrumentsCatalog.cancel')}</button>
               </div>
             </div>
           ) : (
@@ -651,14 +651,14 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
               <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5 5 5M12 5v12" />
               </svg>
-              Import a shared layout...
+              {t('map.InstrumentsCatalog.importASharedLayout')}
             </button>
           )}
         </div>
       </div>
 
       <div>
-        <SectionHeading label="On-map opacity" accent="var(--text-secondary)" />
+        <SectionHeading label={t('map.InstrumentsCatalog.onMapOpacity')} accent="var(--text-secondary)" />
         <div className="mt-2 flex items-center gap-3">
           <input
             type="range"
@@ -670,7 +670,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
           />
           <span className="w-10 text-right text-xs tabular-nums text-content-secondary">{Math.round(opacity * 100)}%</span>
         </div>
-        <p className="mt-1.5 text-[11px] text-content-tertiary">Idle instruments dim to this; hovering one restores it.</p>
+        <p className="mt-1.5 text-[11px] text-content-tertiary">{t('map.InstrumentsCatalog.idleInstrumentsDimToThisHovering')}</p>
       </div>
 
       <button
@@ -681,7 +681,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h5M20 20v-5h-5M20 9A8 8 0 006.34 6.34M4 15a8 8 0 0013.66 2.66" />
         </svg>
-        Reset positions
+        {t('map.InstrumentsCatalog.resetPositions')}
       </button>
     </div>
   );
@@ -758,8 +758,8 @@ export function InstrumentsCatalog({ onClose }: { onClose: () => void }): JSX.El
         >
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-subtle">
-            <span className="text-sm font-semibold text-content">Instruments</span>
-            <span className="text-[11px] text-content-tertiary">{visibleCount} of {MAP_INSTRUMENTS.length} on screen</span>
+            <span className="text-sm font-semibold text-content">{t('map.InstrumentsCatalog.instruments')}</span>
+            <span className="text-[11px] text-content-tertiary">{visibleCount} {t('map.InstrumentsCatalog.of')} {MAP_INSTRUMENTS.length} {t('map.InstrumentsCatalog.onScreen')}</span>
             <div className="ml-auto relative">
               <svg className="w-3.5 h-3.5 absolute left-2 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <circle cx="11" cy="11" r="7" /><path strokeLinecap="round" d="M21 21l-4-4" />
@@ -768,11 +768,11 @@ export function InstrumentsCatalog({ onClose }: { onClose: () => void }): JSX.El
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search instruments"
+                placeholder={t('map.InstrumentsCatalog.searchInstruments')}
                 className="w-52 pl-7 pr-2 py-1.5 text-xs rounded bg-surface-input border border-default text-content placeholder:text-content-tertiary focus:outline-none focus:border-blue-500"
               />
             </div>
-            <button type="button" onClick={onClose} data-tip="Close" className="p-1.5 rounded text-content-secondary hover:text-content hover:bg-surface-raised transition-colors">
+            <button type="button" onClick={onClose} data-tip={t('map.InstrumentsCatalog.close')} className="p-1.5 rounded text-content-secondary hover:text-content hover:bg-surface-raised transition-colors">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
               </svg>
@@ -786,7 +786,7 @@ export function InstrumentsCatalog({ onClose }: { onClose: () => void }): JSX.El
                 active={role === null && query === ''}
                 accent="var(--text-secondary)"
                 icon={layoutIcon}
-                title="Layout and presets"
+                title={t('map.InstrumentsCatalog.layoutAndPresets')}
                 onClick={() => { setRole(null); setQuery(''); }}
               />
               <div className="my-1 border-t border-subtle" />

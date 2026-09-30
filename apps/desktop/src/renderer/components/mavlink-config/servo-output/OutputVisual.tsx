@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTelemetryStore } from '../../../stores/telemetry-store';
 import type { OutputShape } from './output-shape';
+import { t } from '../../../i18n';
 
 interface OutputVisualProps {
   /** Output channel, 1-based. */
@@ -77,9 +78,9 @@ export function OutputVisual({
             style={{ background: on ? accent : 'var(--text-tertiary)', opacity: live ? 1 : 0.35 }}
           />
           <div className="min-w-0">
-            <div className="text-sm text-content">{on ? 'On' : 'Off'}</div>
+            <div className="text-sm text-content">{on ? 'On' : t('mavlink_config.OutputVisual.off')}</div>
             <div className="text-[11px] text-content-tertiary">
-              {label} switches between {min} and {max} µs
+              {label} {t('mavlink_config.OutputVisual.switchesBetween')} {min} {t('mavlink_config.OutputVisual.and')} {max} µs
             </div>
           </div>
         </div>
@@ -128,9 +129,9 @@ export function OutputVisual({
             )}
           </div>
           <div className="mt-1 flex justify-between text-[10px] text-content-tertiary">
-            <span>reverse</span>
-            <span>stop</span>
-            <span>forward</span>
+            <span>{t('mavlink_config.OutputVisual.reverse')}</span>
+            <span>{t('mavlink_config.OutputVisual.stop')}</span>
+            <span>{t('mavlink_config.OutputVisual.forward')}</span>
           </div>
         </div>
         {footer(live === null ? `Servo ${channel}: waiting for output` : `Servo ${channel} at ${live.pwm} µs${live.stale ? ' (stale)' : ''}`)}
@@ -239,7 +240,7 @@ export function OutputVisual({
             : `${Math.round((-lowUs / maxUs) * 100)}/${Math.round((highUs / maxUs) * 100)}%`}
         </text>
         <text x={CX} y={CY - 12} textAnchor="middle" className="fill-content-tertiary" style={{ fontSize: 9 }}>
-          {even ? `±${Math.round(highUs)}` : `${Math.round(lowUs)}/+${Math.round(highUs)}`} µs from {Math.round(trim)}
+          {even ? `±${Math.round(highUs)}` : `${Math.round(lowUs)}/+${Math.round(highUs)}`} {t('mavlink_config.OutputVisual.sFrom')} {Math.round(trim)}
         </text>
       </svg>
 

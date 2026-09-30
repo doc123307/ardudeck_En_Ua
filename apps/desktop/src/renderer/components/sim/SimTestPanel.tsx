@@ -24,17 +24,18 @@ import {
   type SimConditions,
   type SimPatch,
 } from './sim-test-conditions';
+import { t } from '../../i18n';
 
 const MOTOR_COUNT = 8; // covers up to an octocopter; extra bits are ignored by SITL
 
 /** Human labels for the engine's injectable physical faults. */
 const ENGINE_FAULT_KINDS: { id: EngineFaultKind; label: string }[] = [
-  { id: 'motor_out', label: 'Motor out' },
-  { id: 'thrust_loss', label: 'Thrust loss' },
-  { id: 'imbalance', label: 'Vibration' },
-  { id: 'brownout', label: 'ESC brownout' },
-  { id: 'bearing_drag', label: 'Bearing drag' },
-  { id: 'asym_drag', label: 'Asym drag' },
+  { id: 'motor_out', get label() { return t('sim.SimTestPanel.motorOut'); } },
+  { id: 'thrust_loss', get label() { return t('sim.SimTestPanel.thrustLoss'); } },
+  { id: 'imbalance', get label() { return t('sim.SimTestPanel.vibration'); } },
+  { id: 'brownout', get label() { return t('sim.SimTestPanel.escBrownout'); } },
+  { id: 'bearing_drag', get label() { return t('sim.SimTestPanel.bearingDrag'); } },
+  { id: 'asym_drag', get label() { return t('sim.SimTestPanel.asymDrag'); } },
 ];
 
 export default function SimTestPanel() {
@@ -213,10 +214,10 @@ export default function SimTestPanel() {
     return (
       <button
         onClick={() => setOpen(true)}
-        data-tip="Rehearse a flight: inject motor faults, payload, wind, GPS/nav and sensor failures"
+        data-tip={t('sim.SimTestPanel.rehearseAFlightInjectMotorFaults')}
         className="absolute top-14 left-3 z-30 px-3 py-1.5 text-xs font-medium rounded-lg bg-surface-raised border border-subtle text-content-secondary hover:text-content shadow-lg"
       >
-        Test Conditions
+        {t('sim.SimTestPanel.testConditions')}
       </button>
     );
   }
@@ -249,12 +250,12 @@ export default function SimTestPanel() {
         className="sticky top-0 z-10 flex items-center justify-between px-3 py-2 border-b border-subtle bg-surface-solid cursor-move select-none"
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold">Test Conditions</span>
+          <span className="text-sm font-semibold">{t('sim.SimTestPanel.testConditions')}</span>
           <span
             data-tip={
               engineActive
-                ? 'ArduDeck physics engine is driving the sim: motors, wind and payload are set live'
-                : 'Built-in ArduPilot SITL physics: conditions set via SIM_* parameters'
+                ? t('sim.SimTestPanel.ardudeckPhysicsEngineIsDrivingThe')
+                : t('sim.SimTestPanel.builtInArdupilotSitlPhysicsConditions')
             }
             className={`px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide rounded ${
               engineActive
@@ -262,21 +263,21 @@ export default function SimTestPanel() {
                 : 'bg-surface-raised text-content-tertiary border border-subtle'
             }`}
           >
-            {engineActive ? 'Engine' : 'Built-in'}
+            {engineActive ? t('sim.SimTestPanel.engine') : t('sim.SimTestPanel.builtIn')}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={resetAll}
             disabled={!isConnected || !anyFailure}
-            data-tip="Restore all conditions to safe defaults"
+            data-tip={t('sim.SimTestPanel.restoreAllConditionsToSafeDefaults')}
             className={`px-2 py-0.5 text-[11px] font-medium rounded-md border transition-colors ${
               anyFailure && isConnected
                 ? 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-600/30'
                 : 'border-subtle text-content-tertiary'
             }`}
           >
-            Reset all
+            {t('sim.SimTestPanel.resetAll')}
           </button>
           <button onClick={() => setOpen(false)} className="text-content-tertiary hover:text-content text-xs">
             ✕
@@ -285,10 +286,10 @@ export default function SimTestPanel() {
       </div>
 
       <div className="p-3 space-y-3">
-        {!isConnected && <div className="text-[11px] text-amber-400">Connect to SITL to apply.</div>}
+        {!isConnected && <div className="text-[11px] text-amber-400">{t('sim.SimTestPanel.connectToSitlToApply')}</div>}
 
         {/* One-click scenarios */}
-        <Section label="Scenarios" />
+        <Section label={t('sim.SimTestPanel.scenarios')} />
         <div className="grid grid-cols-3 gap-1.5">
           {SIM_PRESETS.map((p) => (
             <button
@@ -304,11 +305,11 @@ export default function SimTestPanel() {
         </div>
 
         {/* Motors: engine schematic when the engine drives the sim, else SIM bits */}
-        <Section label="Motors" />
+        <Section label={t('sim.SimTestPanel.motors')} />
         {engineActive ? (
           <div className="space-y-2">
             <p className="text-[11px] text-content-tertiary">
-              Click an arm to fail that motor. Live faults are echoed from the engine.
+              {t('sim.SimTestPanel.clickAnArmToFailThat')}
             </p>
             <MotorSchematic
               motors={vehicle?.motors}
@@ -317,7 +318,7 @@ export default function SimTestPanel() {
               motorCount={vehicle?.motorThrust?.length ?? MOTOR_COUNT}
             />
             <div className={row}>
-              <span className="w-16 text-content-secondary shrink-0">Fault</span>
+              <span className="w-16 text-content-secondary shrink-0">{t('sim.SimTestPanel.fault')}</span>
               <select
                 value={faultKind}
                 onChange={(e) => setFaultKind(e.target.value as EngineFaultKind)}
@@ -332,7 +333,7 @@ export default function SimTestPanel() {
             </div>
             {faultKind !== 'motor_out' && (
               <div className={row}>
-                <span className="w-24 text-content-secondary">Severity {Math.round(faultSeverity * 100)}%</span>
+                <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.severity')} {Math.round(faultSeverity * 100)}%</span>
                 <input
                   type="range"
                   min={0}
@@ -340,7 +341,7 @@ export default function SimTestPanel() {
                   step={0.05}
                   value={faultSeverity}
                   onChange={(e) => setFaultSeverity(Number(e.target.value))}
-                  data-tip="How bad the next injected fault is (0-100%)"
+                  data-tip={t('sim.SimTestPanel.howBadTheNextInjectedFault')}
                   className={slider}
                 />
               </div>
@@ -350,14 +351,14 @@ export default function SimTestPanel() {
                 onClick={() => clearFaults()}
                 className="w-full px-2 py-1 text-[11px] font-medium rounded-md border border-emerald-500/40 bg-emerald-600/15 text-emerald-300 hover:bg-emerald-600/25"
               >
-                Clear all faults
+                {t('sim.SimTestPanel.clearAllFaults')}
               </button>
             )}
           </div>
         ) : (
           <>
             <div className={row}>
-              <span className="w-16 text-content-secondary shrink-0">Fail</span>
+              <span className="w-16 text-content-secondary shrink-0">{t('sim.SimTestPanel.fail')}</span>
               <div className="flex flex-wrap gap-1">
                 {Array.from({ length: MOTOR_COUNT }, (_, i) => i + 1).map((n) => {
                   const on = cond.failedMotors.includes(n);
@@ -366,7 +367,7 @@ export default function SimTestPanel() {
                       key={n}
                       onClick={() => toggleMotorSim(n)}
                       disabled={!isConnected}
-                      data-tip={`Toggle motor ${n} failure (SIM_ENGINE_FAIL bit ${n - 1})`}
+                      data-tip={t('sim.SimTestPanel.toggleMotorFailureSimEngineFail', { n, v2: n - 1 })}
                       className={`w-6 h-6 text-[11px] font-medium rounded border transition-colors ${
                         on
                           ? 'bg-red-600/25 border-red-500/50 text-red-300'
@@ -381,7 +382,7 @@ export default function SimTestPanel() {
             </div>
             {cond.failedMotors.length > 0 && (
               <div className={row}>
-                <span className="w-24 text-content-secondary">Thrust {Math.round(cond.engineMul * 100)}%</span>
+                <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.thrust')} {Math.round(cond.engineMul * 100)}%</span>
                 <input
                   type="range"
                   min={0}
@@ -390,7 +391,7 @@ export default function SimTestPanel() {
                   value={cond.engineMul}
                   disabled={!isConnected}
                   onChange={(e) => applyPatch({ engineMul: Number(e.target.value) }, 120)}
-                  data-tip="Remaining thrust on failed motors (SIM_ENGINE_MUL): 0% = dead, else partial loss"
+                  data-tip={t('sim.SimTestPanel.remainingThrustOnFailedMotorsSim')}
                   className={slider}
                 />
               </div>
@@ -401,9 +402,9 @@ export default function SimTestPanel() {
         {/* Payload: engine-only, live-attached slung load */}
         {engineActive && (
           <>
-            <Section label="Payload" />
+            <Section label={t('sim.SimTestPanel.payload')} />
             <div className={row}>
-              <span className="w-24 text-content-secondary">Mass {loadMass.toFixed(0)} kg</span>
+              <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.mass')} {loadMass.toFixed(0)} kg</span>
               <input
                 type="range"
                 min={0}
@@ -415,7 +416,7 @@ export default function SimTestPanel() {
               />
             </div>
             <div className={row}>
-              <span className="w-24 text-content-secondary">Cable {cableLength.toFixed(1)} m</span>
+              <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.cable')} {cableLength.toFixed(1)} m</span>
               <input
                 type="range"
                 min={0.5}
@@ -429,41 +430,41 @@ export default function SimTestPanel() {
             <div className="flex gap-1.5">
               <button
                 onClick={() => attachLoad({ loadMass, cableLength })}
-                data-tip="Attach (or update) a slung load on a cable below the aircraft"
+                data-tip={t('sim.SimTestPanel.attachOrUpdateASlungLoad')}
                 className="flex-1 px-2 py-1 text-[11px] font-medium rounded-md border border-sky-500/40 bg-sky-600/15 text-sky-300 hover:bg-sky-600/25"
               >
-                {load?.attached ? 'Update load' : 'Attach load'}
+                {load?.attached ? t('sim.SimTestPanel.updateLoad') : t('sim.SimTestPanel.attachLoad')}
               </button>
               <button
                 onClick={() => releaseLoad()}
                 disabled={!load?.attached}
-                data-tip="Drop the load (ballistic release)"
+                data-tip={t('sim.SimTestPanel.dropTheLoadBallisticRelease')}
                 className="flex-1 px-2 py-1 text-[11px] font-medium rounded-md border border-amber-500/40 bg-amber-600/15 text-amber-300 hover:bg-amber-600/25 disabled:opacity-40"
               >
-                Release
+                {t('sim.SimTestPanel.release')}
               </button>
             </div>
             <div className="flex gap-1.5">
-              <WinchButton label="Lower" onClick={() => setWinch(0.5)} tip="Pay out the winch (lower the load)" />
-              <WinchButton label="Hold" onClick={() => setWinch(0)} tip="Hold the winch" />
-              <WinchButton label="Raise" onClick={() => setWinch(-0.5)} tip="Reel in the winch (raise the load)" />
+              <WinchButton label={t('sim.SimTestPanel.lower')} onClick={() => setWinch(0.5)} tip="Pay out the winch (lower the load)" />
+              <WinchButton label={t('sim.SimTestPanel.hold')} onClick={() => setWinch(0)} tip="Hold the winch" />
+              <WinchButton label={t('sim.SimTestPanel.raise')} onClick={() => setWinch(-0.5)} tip="Reel in the winch (raise the load)" />
             </div>
             {load?.attached ? (
               <div className="text-[11px] text-content-secondary grid grid-cols-3 gap-1 pt-0.5">
-                <span>Cable {load.cableLength.toFixed(1)} m</span>
-                <span>Tension {load.tension.toFixed(0)} N</span>
-                <span>Alt {(-load.position[2]).toFixed(1)} m</span>
+                <span>{t('sim.SimTestPanel.cable')} {load.cableLength.toFixed(1)} m</span>
+                <span>{t('sim.SimTestPanel.tension')} {load.tension.toFixed(0)} N</span>
+                <span>{t('sim.SimTestPanel.alt')} {(-load.position[2]).toFixed(1)} m</span>
               </div>
             ) : (
-              <p className="text-[11px] text-content-tertiary">No load attached.</p>
+              <p className="text-[11px] text-content-tertiary">{t('sim.SimTestPanel.noLoadAttached')}</p>
             )}
           </>
         )}
 
         {/* Power */}
-        <Section label="Power" />
+        <Section label={t('sim.SimTestPanel.power')} />
         <div className={row}>
-          <span className="w-24 text-content-secondary">Batt {(battV ?? battNominal).toFixed(1)} V</span>
+          <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.batt')} {(battV ?? battNominal).toFixed(1)} V</span>
           <input
             type="range"
             min={Math.round(battNominal * 0.5)}
@@ -476,30 +477,30 @@ export default function SimTestPanel() {
               setBattV(v);
               fire('SIM_BATT_VOLTAGE', v, 120);
             }}
-            data-tip="Pack voltage (SIM_BATT_VOLTAGE) - drop toward the failsafe threshold to test low-battery actions"
+            data-tip={t('sim.SimTestPanel.packVoltageSimBattVoltageDrop')}
             className={slider}
           />
         </div>
 
         {/* GPS / navigation (flight-controller level; works in both modes) */}
-        <Section label="GPS / Nav" />
+        <Section label={t('sim.SimTestPanel.gpsNav')} />
         <div className="grid grid-cols-1 gap-1.5">
           <FailToggle
-            label="GPS fix"
+            label={t('sim.SimTestPanel.gpsFix')}
             active={cond.gpsEnable}
             okWhenActive
             onClick={() => applyPatch({ gpsEnable: !cond.gpsEnable })}
             tip="Disable to test the GPS-loss failsafe / EKF fallback (SIM_GPS1_ENABLE)"
           />
           <FailToggle
-            label="GPS jamming"
+            label={t('sim.SimTestPanel.gpsJamming')}
             active={cond.gpsJam}
             onClick={() => applyPatch({ gpsJam: !cond.gpsJam })}
             tip="Simulate GPS jamming (SIM_GPS1_JAM)"
           />
         </div>
         <div className={row}>
-          <span className="w-24 text-content-secondary">Glitch {cond.gpsGlitch} m</span>
+          <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.glitch')} {cond.gpsGlitch} m</span>
           <input
             type="range"
             min={0}
@@ -508,12 +509,12 @@ export default function SimTestPanel() {
             value={cond.gpsGlitch}
             disabled={!isConnected}
             onChange={(e) => applyPatch({ gpsGlitch: Number(e.target.value) }, 120)}
-            data-tip="Inject a horizontal position offset (SIM_GPS1_GLTCH_X/Y) to test glitch rejection / flyaway"
+            data-tip={t('sim.SimTestPanel.injectAHorizontalPositionOffsetSim')}
             className={slider}
           />
         </div>
         <div className={row}>
-          <span className="w-24 text-content-secondary">Sats {cond.gpsSats}</span>
+          <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.sats')} {cond.gpsSats}</span>
           <input
             type="range"
             min={0}
@@ -522,35 +523,35 @@ export default function SimTestPanel() {
             value={cond.gpsSats}
             disabled={!isConnected}
             onChange={(e) => applyPatch({ gpsSats: Number(e.target.value) }, 120)}
-            data-tip="Reported satellite count (SIM_GPS1_NUMSATS); drop below the arming minimum to degrade the fix"
+            data-tip={t('sim.SimTestPanel.reportedSatelliteCountSimGps1Numsats')}
             className={slider}
           />
         </div>
 
         {/* Sensors */}
-        <Section label="Sensors" />
+        <Section label={t('sim.SimTestPanel.sensors')} />
         <div className="grid grid-cols-2 gap-1.5">
           <FailToggle
-            label="Baro"
+            label={t('sim.SimTestPanel.baro')}
             active={cond.baroDisable}
             onClick={() => applyPatch({ baroDisable: !cond.baroDisable })}
             tip="Disable the barometer (SIM_BARO_DISABLE)"
           />
           <FailToggle
-            label="Compass 1"
+            label={t('sim.SimTestPanel.compass1')}
             active={cond.mag1Fail}
             onClick={() => applyPatch({ mag1Fail: !cond.mag1Fail })}
             tip="Fail the primary compass (SIM_MAG1_FAIL)"
           />
           <FailToggle
-            label="Compass 2"
+            label={t('sim.SimTestPanel.compass2')}
             active={cond.mag2Fail}
             onClick={() => applyPatch({ mag2Fail: !cond.mag2Fail })}
             tip="Fail the secondary compass (SIM_MAG2_FAIL)"
           />
         </div>
         <div className={row}>
-          <span className="w-24 text-content-secondary">Vibe {cond.vibe.toFixed(0)}</span>
+          <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.vibe')} {cond.vibe.toFixed(0)}</span>
           <input
             type="range"
             min={0}
@@ -559,24 +560,24 @@ export default function SimTestPanel() {
             value={cond.vibe}
             disabled={!isConnected}
             onChange={(e) => applyPatch({ vibe: Number(e.target.value) }, 120)}
-            data-tip="Motor-driven vibration amplitude (SIM_VIB_MOT_MAX, m/s/s) - high values clip the IMU"
+            data-tip={t('sim.SimTestPanel.motorDrivenVibrationAmplitudeSimVib')}
             className={slider}
           />
         </div>
 
         {/* Comms */}
-        <Section label="RC / Comms" />
+        <Section label={t('sim.SimTestPanel.rcComms')} />
         <FailToggle
-          label="RC loss"
+          label={t('sim.SimTestPanel.rcLoss')}
           active={cond.rcFail}
           onClick={() => applyPatch({ rcFail: !cond.rcFail })}
           tip="Drop RC to trigger the radio failsafe (SIM_RC_FAIL)"
         />
 
         {/* Weather (live to the engine, else SIM_WIND_*) */}
-        <Section label="Weather" />
+        <Section label={t('sim.SimTestPanel.weather')} />
         <div className={row}>
-          <span className="w-24 text-content-secondary">Wind {cond.windSpd} m/s</span>
+          <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.wind')} {cond.windSpd} m/s</span>
           <input
             type="range"
             min={0}
@@ -589,7 +590,7 @@ export default function SimTestPanel() {
           />
         </div>
         <div className={row}>
-          <span className="w-24 text-content-secondary">Dir {cond.windDir}°</span>
+          <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.dir')} {cond.windDir}°</span>
           <input
             type="range"
             min={0}
@@ -602,7 +603,7 @@ export default function SimTestPanel() {
           />
         </div>
         <div className={row}>
-          <span className="w-24 text-content-secondary">Gust {cond.windTurb.toFixed(2)}</span>
+          <span className="w-24 text-content-secondary">{t('sim.SimTestPanel.gust')} {cond.windTurb.toFixed(2)}</span>
           <input
             type="range"
             min={0}
@@ -636,7 +637,7 @@ function MotorSchematic({
   if (!motors || motors.length === 0) {
     return (
       <div className="text-[11px] text-content-tertiary py-3 text-center">
-        Waiting for the motor layout from the engine ({motorCount} motors)...
+        {t('sim.SimTestPanel.waitingForTheMotorLayoutFrom')}{motorCount} {t('sim.SimTestPanel.motors2')}
       </div>
     );
   }
@@ -717,7 +718,7 @@ function MotorSchematic({
             <path d={arrow.d} fill="none" stroke={dead ? DEAD : MUTED} strokeOpacity={dead ? 0.5 : 0.75} strokeWidth="0.7" />
             <polygon points={arrow.head} style={{ fill: dead ? DEAD : MUTED, opacity: dead ? 0.5 : 0.85 }} />
             <g onClick={() => onFail(i)} style={{ cursor: dead ? 'default' : 'pointer' }}>
-              <title>{`Motor ${i + 1} spins ${m.spin.toUpperCase()}${dead ? ' - FAILED' : ' - click to fail'}`}</title>
+              <title>{t('sim.SimTestPanel.motorSpins', { v1: i + 1, v2: m.spin.toUpperCase(), v3: dead ? ' - FAILED' : ' - click to fail' })}</title>
               <circle cx={cx} cy={cy} r={DISC} style={{ fill: dead ? DEAD : LIVE, opacity: dead ? 0.95 : 0.9 }} />
               <text
                 x={cx}

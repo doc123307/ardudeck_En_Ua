@@ -2,6 +2,7 @@ import { useMessagesStore } from '../../../stores/messages-store';
 import { MessageRowBody, formatTime, severityBorder } from '../../messages/MessageRow';
 import { InstrumentStrip } from './InstrumentStrip';
 import { GAUGE_COLORS } from './RoundGauge';
+import { t } from '../../../i18n';
 
 const SHOWN = 3;
 
@@ -11,10 +12,10 @@ export function MessagesInstrument(): JSX.Element {
   const recent = messages.slice(0, SHOWN);
 
   return (
-    <InstrumentStrip label="Messages" tall>
+    <InstrumentStrip label={t('map.MessagesInstrument.messages')} tall>
       {recent.length === 0 ? (
         <span className="text-[11px] leading-none" style={{ color: GAUGE_COLORS.tickMinor }}>
-          No messages
+          {t('map.MessagesInstrument.noMessages')}
         </span>
       ) : (
         <div className="w-full divide-y divide-subtle">

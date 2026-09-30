@@ -34,6 +34,7 @@ import {
   assessCompassFitness,
   type CalibrationAssessment,
 } from '../../shared/calibration-quality';
+import { t as tr } from '../i18n';
 
 // ============================================================================
 // Types — Force-accept calibration from file
@@ -488,7 +489,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
           // via COMMAND_LONG (handleIncomingCommandLong → handleProgressUpdate).
           set({
             positionStatus: newStatus,
-            statusText: 'Waiting for flight controller...',
+            statusText: tr('stores.calibration_store.waitingForFlightController'),
             progress: ((currentPosition + 1) / 6) * 100,
           });
         } else {
@@ -496,7 +497,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
           set({
             currentPosition: (currentPosition + 1) as AccelPosition,
             positionStatus: newStatus,
-            statusText: `Place vehicle ${ACCEL_6POINT_POSITIONS[currentPosition + 1]}`,
+            statusText: tr('stores.calibration_store.placeVehicle', { v1: ACCEL_6POINT_POSITIONS[currentPosition + 1] }),
             progress: ((currentPosition + 1) / 6) * 100,
           });
         }
@@ -507,7 +508,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
             positionStatus: newStatus,
             progress: 100,
             isFinalizing: true,
-            statusText: 'Finalizing calibration on flight controller...',
+            statusText: tr('stores.calibration_store.finalizingCalibrationOnFlightController'),
           });
         } else {
           // MSP: all positions done, complete event comes from main process
@@ -515,7 +516,7 @@ export const useCalibrationStore = create<CalibrationState>((set, get) => ({
             positionStatus: newStatus,
             progress: 100,
             isFinalizing: true,
-            statusText: 'Saving calibration...',
+            statusText: tr('stores.calibration_store.savingCalibration'),
           });
         }
       }
@@ -1020,7 +1021,7 @@ async function recordCalibrationOutcome(
     assessment = fits.length > 0
       ? fits.map((f) => assessCompassFitness(f)).reduce((worst, next) =>
           (VERDICT_RANK[next.verdict] ?? 0) > (VERDICT_RANK[worst.verdict] ?? 0) ? next : worst)
-      : { verdict: 'unknown', summary: 'No compass fitness reported.' };
+      : { verdict: 'unknown', summary: tr('stores.calibration_store.noCompassFitnessReported') };
   } else if (calType === 'accel-6point') {
     const num = (name: string): number | undefined => written[name];
     const offsets = num('INS_ACCOFFS_X') !== undefined
@@ -1031,7 +1032,7 @@ async function recordCalibrationOutcome(
       : undefined;
     assessment = assessAccelCalibration({ offsets, scales });
   } else {
-    assessment = { verdict: 'unknown', summary: 'Recorded.' };
+    assessment = { verdict: 'unknown', summary: tr('stores.calibration_store.recorded') };
   }
 
   await window.electronAPI?.calibrationRecordSave(boardUid, {

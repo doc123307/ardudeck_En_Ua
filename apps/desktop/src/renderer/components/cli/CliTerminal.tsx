@@ -16,6 +16,7 @@ import { WebLinksAddon } from '@xterm/addon-web-links';
 import '@xterm/xterm/css/xterm.css';
 import { useCliStore } from '../../stores/cli-store';
 import { useConnectionStore } from '../../stores/connection-store';
+import { t } from '../../i18n';
 
 interface CliTerminalProps {
   onReady?: () => void;
@@ -411,7 +412,7 @@ export default function CliTerminal({ onReady }: CliTerminalProps) {
         <div className="flex items-center gap-3">
           <span className={`flex items-center gap-1 ${isCliMode ? 'text-green-400' : 'text-content-secondary'}`}>
             <span className={`w-2 h-2 rounded-full ${isCliMode ? 'bg-green-400' : 'bg-zinc-500'}`} />
-            {isCliMode ? 'CLI Mode' : 'MSP Mode'}
+            {isCliMode ? t('cli.CliTerminal.cliMode') : t('cli.CliTerminal.mspMode')}
           </span>
           {connectionState.fcVariant && (
             <span className="text-content-secondary">
@@ -420,13 +421,13 @@ export default function CliTerminal({ onReady }: CliTerminalProps) {
           )}
         </div>
         <div className="flex items-center gap-2 text-content-secondary">
-          <span>Tab: Complete</span>
+          <span>{t('cli.CliTerminal.tabComplete')}</span>
           <span>|</span>
-          <span>Up/Down: History</span>
+          <span>{t('cli.CliTerminal.upDownHistory')}</span>
           <span>|</span>
-          <span>Ctrl+C: Copy/Abort</span>
+          <span>{t('cli.CliTerminal.ctrlCCopyAbort')}</span>
           <span>|</span>
-          <span>Ctrl+V: Paste</span>
+          <span>{t('cli.CliTerminal.ctrlVPaste')}</span>
         </div>
       </div>
     </div>

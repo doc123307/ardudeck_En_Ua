@@ -14,6 +14,7 @@ import { createPortal } from 'react-dom';
 import { tokenizeLua, tokensByLine, TOKEN_CLASS } from './lua-highlight';
 import { ScriptGraphReadonlyView } from './ScriptGraphReadonlyView';
 import { ARDUDECK_COMMANDS_NODES, ARDUDECK_COMMANDS_EDGES } from './ardudeck-commands-graph';
+import { t } from '../../i18n';
 
 type ViewMode = 'graph' | 'source';
 
@@ -48,17 +49,17 @@ export function LuaCodePreview({ source, filename, version, sha256 }: LuaCodePre
             <button
               onClick={handleCopySha}
               className="font-mono hover:text-content transition-colors truncate"
-              title={`Click to copy full SHA256\n${sha256}`}
+              title={t('script_installer.LuaCodePreview.clickToCopyFullSha256', { sha256 })}
             >
-              sha256: {shortSha}…
+              {t('script_installer.LuaCodePreview.sha256')} {shortSha}…
             </button>
           </div>
           <button
             onClick={() => setFullscreen(true)}
             className="px-2 py-1 text-[11px] rounded bg-purple-600/80 hover:bg-purple-500 text-white transition-colors shrink-0"
-            title="Open in a larger reviewer"
+            title={t('script_installer.LuaCodePreview.openInALargerReviewer')}
           >
-            Review fullscreen →
+            {t('script_installer.LuaCodePreview.reviewFullscreen')}
           </button>
         </div>
 
@@ -96,8 +97,8 @@ function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMo
   }`;
   return (
     <div className="flex items-center gap-0.5 mr-1 shrink-0">
-      <button onClick={() => onChange('graph')} className={tabClass(value === 'graph')}>Graph</button>
-      <button onClick={() => onChange('source')} className={tabClass(value === 'source')}>Source</button>
+      <button onClick={() => onChange('graph')} className={tabClass(value === 'graph')}>{t('script_installer.LuaCodePreview.graph')}</button>
+      <button onClick={() => onChange('source')} className={tabClass(value === 'source')}>{t('script_installer.LuaCodePreview.source')}</button>
     </div>
   );
 }
@@ -168,16 +169,16 @@ function FullscreenViewer({ filename, version, sha256, sizeKb, lineGroups, initi
             <button
               onClick={handleCopySha}
               className="font-mono text-xs hover:text-content transition-colors"
-              title={`Click to copy full SHA256\n${sha256}`}
+              title={t('script_installer.LuaCodePreview.clickToCopyFullSha256', { sha256 })}
             >
-              sha256: {sha256.slice(0, 16)}…
+              {t('script_installer.LuaCodePreview.sha256')} {sha256.slice(0, 16)}…
             </button>
           </div>
           <button
             onClick={onClose}
             className="px-3 py-1.5 text-xs font-medium bg-surface-raised hover:bg-surface text-content rounded border border-subtle"
           >
-            Close (Esc)
+            {t('script_installer.LuaCodePreview.closeEsc')}
           </button>
         </div>
         {view === 'graph' ? (
@@ -188,7 +189,7 @@ function FullscreenViewer({ filename, version, sha256, sizeKb, lineGroups, initi
           <CodeBody lineGroups={lineGroups} variant="fullscreen" />
         )}
         <div className="px-4 py-2 border-t border-subtle bg-surface text-[11px] text-content-tertiary">
-          Read-only review. Pan/zoom in graph view. Switch tabs to inspect source line by line.
+          {t('script_installer.LuaCodePreview.readOnlyReviewPanZoomIn')}
         </div>
       </div>
       <EscToClose onClose={onClose} />

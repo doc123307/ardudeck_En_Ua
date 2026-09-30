@@ -8,6 +8,7 @@ import { getSnapshot } from '../../../lib/vehicle-templates/snapshot.js';
 import { buildUndoDiffs } from '../../../lib/vehicle-templates/apply.js';
 import { useProfileApply } from './use-profile-apply.js';
 import { RealFcApplyConfirm } from './RealFcApplyConfirm.js';
+import { t } from '../../../i18n';
 
 /**
  * Mount once at App root. Renders:
@@ -84,7 +85,7 @@ function WritingPill() {
   return (
     <div className="fixed bottom-5 right-5 z-[85] flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 shadow-xl">
       <Loader2 className="w-3.5 h-3.5 text-blue-400 animate-spin" />
-      <span className="text-xs text-content">Writing params to vehicle…</span>
+      <span className="text-xs text-content">{t('settings.ProfileApplyOverlay.writingParamsToVehicle')}</span>
     </div>
   );
 }
@@ -113,7 +114,7 @@ function ToastCard({ toast, onDismiss, onUndo }: ToastCardProps) {
           {!!toast.rebootRequired && (
             <div className="mt-1 flex items-center gap-1 text-[11px] text-amber-300">
               <RotateCw className="w-3 h-3" />
-              {toast.rebootRequired} param{toast.rebootRequired === 1 ? '' : 's'} require reboot to take effect
+              {toast.rebootRequired} {t('settings.ProfileApplyOverlay.param')}{toast.rebootRequired === 1 ? '' : 's'} {t('settings.ProfileApplyOverlay.requireRebootToTakeEffect')}
             </div>
           )}
           {onUndo && (
@@ -122,14 +123,14 @@ function ToastCard({ toast, onDismiss, onUndo }: ToastCardProps) {
               className="inline-flex items-center gap-1 mt-2 text-[11px] text-content-secondary hover:text-content"
             >
               <Undo2 className="w-3 h-3" />
-              Undo
+              {t('settings.ProfileApplyOverlay.undo')}
             </button>
           )}
         </div>
         <button
           onClick={onDismiss}
           className="absolute top-2 right-2 p-1 rounded hover:bg-surface-overlay-subtle text-content-secondary hover:text-content"
-          title="Dismiss"
+          title={t('settings.ProfileApplyOverlay.dismiss')}
         >
           <X className="w-3 h-3" />
         </button>

@@ -8,6 +8,7 @@
 
 import { useFleetVehicles } from '../../hooks/useFleet';
 import { useTelemMissionViewStore } from '../../stores/telem-mission-view-store';
+import { t } from '../../i18n';
 
 function PathIcon() {
   return (
@@ -32,14 +33,14 @@ export function MissionPathsToggle(): JSX.Element | null {
 
   return (
     <>
-      <div className="px-2.5 pt-1 pb-0.5 text-[11px] uppercase tracking-wide text-content-tertiary">Mission paths</div>
-      <button type="button" onClick={() => setMode('all')} data-tip="Draw every vehicle's flight path (selected solid, others dimmed)" className={row(mode === 'all')}>
+      <div className="px-2.5 pt-1 pb-0.5 text-[11px] uppercase tracking-wide text-content-tertiary">{t('fleet.MissionPathsToggle.missionPaths')}</div>
+      <button type="button" onClick={() => setMode('all')} data-tip={t('fleet.MissionPathsToggle.drawEveryVehicleSFlightPath')} className={row(mode === 'all')}>
         <PathIcon />
-        All vehicle paths
+        {t('fleet.MissionPathsToggle.allVehiclePaths')}
       </button>
-      <button type="button" onClick={() => setMode('selected')} data-tip="Draw only the selected vehicle's flight path" className={row(mode === 'selected')}>
+      <button type="button" onClick={() => setMode('selected')} data-tip={t('fleet.MissionPathsToggle.drawOnlyTheSelectedVehicleS')} className={row(mode === 'selected')}>
         <PathIcon />
-        Selected only
+        {t('fleet.MissionPathsToggle.selectedOnly')}
       </button>
     </>
   );

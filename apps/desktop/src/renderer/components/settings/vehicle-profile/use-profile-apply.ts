@@ -9,6 +9,7 @@ import { prepareApply, finalizeApply, type ApplyGateResult } from '../../../lib/
 import { recordSitlApply } from '../../../lib/vehicle-templates/sitl-stickiness.js';
 import { saveParmToFile } from '../../../lib/vehicle-templates/export-parm.js';
 import { getTemplate, defaultTemplateForType } from '../../../lib/vehicle-templates/registry.js';
+import { t } from '../../../i18n';
 
 /**
  * Hook: exposes `start` + `confirmRealFc` + `cancelRealFc` actions that drive
@@ -140,7 +141,7 @@ export function useProfileApply(profile: VehicleProfile) {
       applyStore.getState().clear();
       applyStore.getState().setToast({
         kind: 'info',
-        message: 'Apply cancelled, no parameters were changed',
+        message: t('settings.use_profile_apply.applyCancelledNoParametersWereChanged'),
         createdAt: Date.now(),
       });
       return;
@@ -189,7 +190,7 @@ export function useProfileApply(profile: VehicleProfile) {
     applyStore.getState().setStatus('done', profile.id);
     applyStore.getState().setToast({
       kind: 'success',
-      message: `Applied ${appliedCount} param${appliedCount === 1 ? '' : 's'} to ${gate.target.isSitl ? 'SITL' : 'vehicle'}${flashNote}${failMsg}`,
+      message: t('settings.use_profile_apply.appliedParamTo', { appliedCount, v2: appliedCount === 1 ? '' : 's', v3: gate.target.isSitl ? 'SITL' : 'vehicle', flashNote, failMsg }),
       snapshotId: gate.pendingSnapshot.id,
       profileId: profile.id,
       rebootRequired: rebootRequired.length,
@@ -211,7 +212,7 @@ export function useProfileApply(profile: VehicleProfile) {
         applyStore.getState().clear();
         applyStore.getState().setToast({
           kind: 'error',
-          message: 'Backup failed, apply aborted',
+          message: t('settings.use_profile_apply.backupFailedApplyAborted'),
           createdAt: Date.now(),
         });
         return;
@@ -232,7 +233,7 @@ export function useProfileApply(profile: VehicleProfile) {
     applyStore.getState().clear();
     applyStore.getState().setToast({
       kind: 'info',
-      message: 'Apply cancelled',
+      message: t('settings.use_profile_apply.applyCancelled'),
       createdAt: Date.now(),
     });
   }, [applyStore]);

@@ -9,6 +9,7 @@ import { getNodeDefinition, getEffectivePorts } from './node-library';
 import { CATEGORY_COLORS } from './lua-graph-types';
 import { useLuaGraphStore } from '../../stores/lua-graph-store';
 import { useResolvedTheme } from '../../hooks/useTheme';
+import { t } from '../../i18n';
 
 const PORT_TYPE_COLORS: Record<PortValueType, string> = {
   number: '#3b82f6',   // blue
@@ -31,7 +32,7 @@ function GraphNodeComponent({ id, data, selected }: NodeProps<Node<GraphNodeData
   if (!def) {
     return (
       <div className="bg-red-900/80 border border-red-500/50 rounded-lg px-3 py-2 text-xs text-red-300">
-        Unknown node: {data.definitionType}
+        {t('lua_graph.GraphNodeComponent.unknownNode')} {data.definitionType}
       </div>
     );
   }
@@ -93,7 +94,7 @@ function GraphNodeComponent({ id, data, selected }: NodeProps<Node<GraphNodeData
       {data.definitionType === 'flow-custom-lua' && (
         <div className="px-3 pt-1.5 max-w-[220px]">
           <div className="text-[9px] font-mono text-content-tertiary truncate">
-            {String(data.propertyValues['code'] ?? '').split('\n').find((l) => l.trim() && !l.trim().startsWith('--')) ?? 'edit code in inspector'}
+            {String(data.propertyValues['code'] ?? '').split('\n').find((l) => l.trim() && !l.trim().startsWith('--')) ?? t('lua_graph.GraphNodeComponent.editCodeInInspector')}
           </div>
         </div>
       )}

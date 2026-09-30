@@ -4,6 +4,7 @@
 import type { SurveyStats } from './survey-types';
 import { useSettingsStore } from '../../stores/settings-store';
 import { formatAreaFromSquareMeters, formatDistanceFromMeters } from '../../../shared/user-units.js';
+import { t } from '../../i18n';
 
 interface SurveyStatsPanelProps {
   stats: SurveyStats;
@@ -45,13 +46,13 @@ export function SurveyStatsPanel({ stats, batteries, dataSizeGb }: SurveyStatsPa
   return (
     <div className="grid grid-cols-3 gap-x-3 gap-y-1.5 text-xs">
       {!isManualMode && <StatItem label="GSD" value={`${stats.gsd.toFixed(1)} cm/px`} />}
-      {!isManualMode && <StatItem label="Photos" value={stats.photoCount.toLocaleString()} />}
-      <StatItem label="Lines" value={stats.lineCount.toString()} />
-      <StatItem label="Distance" value={formatDistanceFromMeters(stats.flightDistance, distanceUnit)} />
-      <StatItem label="Time" value={formatTime(stats.flightTime)} />
-      <StatItem label="Area" value={formatAreaFromSquareMeters(stats.areaCovered, areaUnit)} />
+      {!isManualMode && <StatItem label={t('survey.SurveyStatsPanel.photos')} value={stats.photoCount.toLocaleString()} />}
+      <StatItem label={t('survey.SurveyStatsPanel.lines')} value={stats.lineCount.toString()} />
+      <StatItem label={t('survey.SurveyStatsPanel.distance')} value={formatDistanceFromMeters(stats.flightDistance, distanceUnit)} />
+      <StatItem label={t('survey.SurveyStatsPanel.time')} value={formatTime(stats.flightTime)} />
+      <StatItem label={t('survey.SurveyStatsPanel.area')} value={formatAreaFromSquareMeters(stats.areaCovered, areaUnit)} />
       {batteries !== undefined && batteries > 0 && (
-        <StatItem label="Batteries" value={batteries.toString()} />
+        <StatItem label={t('survey.SurveyStatsPanel.batteries')} value={batteries.toString()} />
       )}
       {!isManualMode && dataSizeGb !== undefined && dataSizeGb > 0 && (
         <StatItem label="~Data" value={formatDataSize(dataSizeGb)} />

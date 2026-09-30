@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { RotateCcw, Check } from 'lucide-react';
+import { t } from '../../i18n';
 
 // Storage utilities
 export function loadProfiles<T>(storageKey: string): Record<string, { name: string; data: T }> {
@@ -105,10 +106,10 @@ export function ProfileManager<T>({
             <button
               onClick={onReset}
               className="px-2 py-1 text-xs rounded bg-surface-raised hover:bg-surface-raised text-content-secondary hover:text-content transition-colors flex items-center gap-1"
-              title="Reset to factory defaults"
+              title={t('ui.ProfileManager.resetToFactoryDefaults')}
             >
               <RotateCcw className="w-3 h-3" />
-              Reset
+              {t('ui.ProfileManager.reset')}
             </button>
           )}
         </div>
@@ -138,7 +139,7 @@ export function ProfileManager<T>({
                 type="text"
                 value={profileName}
                 onChange={(e) => setProfileName(e.target.value)}
-                placeholder="Name..."
+                placeholder={t('ui.ProfileManager.name')}
                 className="w-24 px-2 py-1.5 bg-transparent text-content text-sm focus:outline-none"
                 autoFocus
                 onKeyDown={(e) => {
@@ -164,9 +165,9 @@ export function ProfileManager<T>({
             <button
               onClick={() => setShowSaveDialog(true)}
               className="px-3 py-1.5 text-sm rounded-lg bg-surface-raised hover:bg-surface-raised text-content-secondary hover:text-content transition-colors flex items-center gap-1"
-              title="Save current settings as a profile"
+              title={t('ui.ProfileManager.saveCurrentSettingsAsAProfile')}
             >
-              <span>+</span> Save
+              <span>+</span> {t('ui.ProfileManager.save')}
             </button>
           )}
         </div>

@@ -10,6 +10,7 @@ import { useParameterStore } from '../../stores/parameter-store';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { rateCurve, commandedRate, secondsPerTurn, rateAtHalfStick } from './rate-response';
 import { stickPercent } from './throttle-response';
+import { t } from '../../i18n';
 
 interface RateResponsePlotProps {
   /** Rate at full stick, in the scheme's units (deg/s on modern ArduCopter). */
@@ -103,7 +104,7 @@ export function RateResponsePlot({
           </g>
         )}
         <text x={L} y={T - 4} fontSize="7.5" fill="var(--text-tertiary)">{unit}</text>
-        <text x={W - R} y={H - 4} textAnchor="end" fontSize="7.5" fill="var(--text-tertiary)">stick %</text>
+        <text x={W - R} y={H - 4} textAnchor="end" fontSize="7.5" fill="var(--text-tertiary)">{t('mavlink_config.RateResponsePlot.stick')}</text>
       </svg>
 
       <div className="border-t border-subtle px-3 py-2">
@@ -113,19 +114,19 @@ export function RateResponsePlot({
               {Math.round(liveRate)}
             </span>
             <span className="text-[11px] text-content-secondary">
-              {unit} at {Math.round(stick)}% stick
-              {Math.abs(stick) < 2 && ' · move it and the dot follows'}
+              {unit} {t('mavlink_config.RateResponsePlot.at')} {Math.round(stick)}{t('mavlink_config.RateResponsePlot.stick2')}
+              {Math.abs(stick) < 2 && t('mavlink_config.RateResponsePlot.moveItAndTheDotFollows')}
             </span>
           </div>
         ) : (
           <div className="text-[11px] text-content-secondary">
-            Connect the radio and move the stick: it appears on the curve.
+            {t('mavlink_config.RateResponsePlot.connectTheRadioAndMoveThe')}
           </div>
         )}
         <div className="mt-0.5 text-[11px] text-content-tertiary">
           {turn !== null
-            ? `Full stick spins a whole turn in ${turn.toFixed(1)} s. Half stick gives ${Math.round(half)} ${unit}.`
-            : `Half stick gives ${Math.round(half)} ${unit}.`}
+            ? t('mavlink_config.RateResponsePlot.fullStickSpinsAWholeTurn', { v1: turn.toFixed(1), v2: Math.round(half), unit })
+            : t('mavlink_config.RateResponsePlot.halfStickGives', { v1: Math.round(half), unit })}
         </div>
       </div>
     </div>

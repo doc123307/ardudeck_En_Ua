@@ -19,6 +19,7 @@ import {
   Cpu,
   HelpCircle,
 } from 'lucide-react';
+import { t } from '../../i18n';
 
 // =============================================================================
 // Constants
@@ -57,14 +58,14 @@ const BIT = {
 } as const;
 
 const SENSOR_OPTIONS = [
-  { label: 'None', mask: 0 },
+  { get label() { return t('parameters.PortsTab.none'); }, mask: 0 },
   { label: 'GPS', bit: BIT.GPS },
-  { label: 'Rangefinder', bit: BIT.RANGEFINDER },
-  { label: 'Optic Flow', bit: BIT.OPFLOW },
+  { get label() { return t('parameters.PortsTab.rangefinder'); }, bit: BIT.RANGEFINDER },
+  { get label() { return t('parameters.PortsTab.opticFlow'); }, bit: BIT.OPFLOW },
 ];
 
 const TELEMETRY_OPTIONS = [
-  { label: 'None', mask: 0 },
+  { get label() { return t('parameters.PortsTab.none'); }, mask: 0 },
   { label: 'FrSky', bit: BIT.TELEMETRY_FRSKY },
   { label: 'HOTT', bit: BIT.TELEMETRY_HOTT },
   { label: 'SmartPort', bit: BIT.TELEMETRY_SMARTPORT },
@@ -74,19 +75,19 @@ const TELEMETRY_OPTIONS = [
 ];
 
 const PERIPHERAL_OPTIONS = [
-  { label: 'None', mask: 0 },
-  { label: 'Blackbox', bit: BIT.BLACKBOX },
+  { get label() { return t('parameters.PortsTab.none'); }, mask: 0 },
+  { get label() { return t('parameters.PortsTab.blackbox'); }, bit: BIT.BLACKBOX },
   { label: 'RunCam', bit: BIT.RUNCAM_DEVICE_CONTROL },
   { label: 'SmartAudio', bit: BIT.TBS_SMARTAUDIO },
-  { label: 'IRC Tramp', bit: BIT.IRC_TRAMP },
+  { get label() { return t('parameters.PortsTab.ircTramp'); }, bit: BIT.IRC_TRAMP },
   { label: 'DJI FPV', bit: BIT.DJI_FPV },
-  { label: 'MSP Displayport', bit: BIT.MSP_DISPLAYPORT },
+  { get label() { return t('parameters.PortsTab.mspDisplayport'); }, bit: BIT.MSP_DISPLAYPORT },
   { label: 'ESC', bit: BIT.ESC },
   { label: 'VTX FFPV', bit: BIT.VTX_FFPV },
-  { label: 'SBUS Out', bit: BIT.SBUS_OUTPUT },
-  { label: 'SmartPort Master', bit: BIT.SMARTPORT_MASTER },
-  { label: 'Gimbal', bit: BIT.GIMBAL },
-  { label: 'Headtracker', bit: BIT.HEADTRACKER },
+  { get label() { return t('parameters.PortsTab.sbusOut'); }, bit: BIT.SBUS_OUTPUT },
+  { get label() { return t('parameters.PortsTab.smartportMaster'); }, bit: BIT.SMARTPORT_MASTER },
+  { get label() { return t('parameters.PortsTab.gimbal'); }, bit: BIT.GIMBAL },
+  { get label() { return t('parameters.PortsTab.headtracker'); }, bit: BIT.HEADTRACKER },
 ];
 
 // =============================================================================
@@ -337,7 +338,7 @@ export default function PortsTab({ modified, setModified }: PortsTabProps) {
   if (isLoading || !serialConfig) {
     return (
       <div className="flex items-center justify-center h-64 text-content-secondary">
-        Loading port configuration...
+        {t('parameters.PortsTab.loadingPortConfiguration')}
       </div>
     );
   }
@@ -358,8 +359,8 @@ export default function PortsTab({ modified, setModified }: PortsTabProps) {
             <Cable className="w-5 h-5 text-sky-400" />
           </div>
           <div>
-            <h3 className="font-medium text-content">UART Port Configuration</h3>
-            <p className="text-xs text-content-secondary">Configure UART functions. Only one port can have Serial RX enabled. Save + reboot to apply.</p>
+            <h3 className="font-medium text-content">{t('parameters.PortsTab.uartPortConfiguration')}</h3>
+            <p className="text-xs text-content-secondary">{t('parameters.PortsTab.configureUartFunctionsOnlyOnePort')}</p>
           </div>
         </div>
         {/* How this works banner */}
@@ -367,9 +368,8 @@ export default function PortsTab({ modified, setModified }: PortsTabProps) {
           <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-sky-500/5 border-sky-500/20 mb-4">
             <HelpCircle className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
             <p className="text-xs text-content leading-relaxed">
-              <span className="font-semibold text-sky-300">How this works: </span>
-              Each row is a physical UART connector on your board. Enable <span className="text-content">RX</span> on the UART your receiver is wired to.
-              Set <span className="text-content">Sensors</span> for GPS or rangefinder, and <span className="text-content">Peripherals</span> for OSD or VTX control. Save and reboot to apply.
+              <span className="font-semibold text-sky-300">{t('parameters.PortsTab.howThisWorks')} </span>
+              {t('parameters.PortsTab.eachRowIsAPhysicalUart')} <span className="text-content">RX</span> {t('parameters.PortsTab.onTheUartYourReceiverIs')} <span className="text-content">{t('parameters.PortsTab.sensors')}</span> {t('parameters.PortsTab.forGpsOrRangefinderAnd')} <span className="text-content">{t('parameters.PortsTab.peripherals')}</span> {t('parameters.PortsTab.forOsdOrVtxControlSave')}
             </p>
           </div>
         )}
@@ -377,13 +377,13 @@ export default function PortsTab({ modified, setModified }: PortsTabProps) {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-surface text-content-secondary text-xs">
-                <th className="px-3 py-2.5 text-left font-medium w-40">Port</th>
+                <th className="px-3 py-2.5 text-left font-medium w-40">{t('parameters.PortsTab.port')}</th>
                 <th className="px-3 py-2.5 text-center font-medium w-16">MSP</th>
-                <th className="px-2 py-2.5 text-left font-medium w-28">Sensors</th>
-                <th className="px-2 py-2.5 text-left font-medium w-28">Telemetry</th>
+                <th className="px-2 py-2.5 text-left font-medium w-28">{t('parameters.PortsTab.sensors')}</th>
+                <th className="px-2 py-2.5 text-left font-medium w-28">{t('parameters.PortsTab.telemetry')}</th>
                 <th className="px-3 py-2.5 text-center font-medium w-16">RX</th>
-                <th className="px-2 py-2.5 text-left font-medium w-32">Peripherals</th>
-                <th className="px-2 py-2.5 text-left font-medium w-24">Baud</th>
+                <th className="px-2 py-2.5 text-left font-medium w-32">{t('parameters.PortsTab.peripherals')}</th>
+                <th className="px-2 py-2.5 text-left font-medium w-24">{t('parameters.PortsTab.baud')}</th>
               </tr>
             </thead>
             <tbody>
@@ -411,10 +411,10 @@ export default function PortsTab({ modified, setModified }: PortsTabProps) {
       <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-blue-500/5 border-blue-500/20">
         <HelpCircle className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
         <div className="text-xs text-content leading-relaxed space-y-1">
-          <p className="font-semibold text-blue-300">Common setups</p>
-          <p>SBUS receiver: Enable <span className="text-content">RX</span> on the UART with the SBUS pad (usually has a built-in inverter)</p>
-          <p>GPS module: Set <span className="text-content">Sensors → GPS</span> on the UART it's connected to, baud <span className="text-content">115200</span></p>
-          <p>DJI goggles: Set <span className="text-content">Peripherals → MSP Displayport</span> on the DJI UART</p>
+          <p className="font-semibold text-blue-300">{t('parameters.PortsTab.commonSetups')}</p>
+          <p>{t('parameters.PortsTab.sbusReceiverEnable')} <span className="text-content">RX</span> {t('parameters.PortsTab.onTheUartWithTheSbus')}</p>
+          <p>{t('parameters.PortsTab.gpsModuleSet')} <span className="text-content">{t('parameters.PortsTab.sensorsGps')}</span> {t('parameters.PortsTab.onTheUartItSConnected')} <span className="text-content">115200</span></p>
+          <p>{t('parameters.PortsTab.djiGogglesSet')} <span className="text-content">{t('parameters.PortsTab.peripheralsMspDisplayport')}</span> {t('parameters.PortsTab.onTheDjiUart')}</p>
         </div>
       </div>
 
@@ -424,7 +424,7 @@ export default function PortsTab({ modified, setModified }: PortsTabProps) {
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
             <p className="text-xs text-amber-300">
-              Soft serial ports have limited bandwidth and are not suitable for high-speed protocols like CRSF or GPS.
+              {t('parameters.PortsTab.softSerialPortsHaveLimitedBandwidth')}
             </p>
           </div>
         </div>

@@ -9,6 +9,7 @@ import React from 'react';
 import { PRESETS, PRESET_ICONS, MODE_INFO, type ModePreset } from '../presets/mode-presets';
 import { useModesWizardStore } from '../../../stores/modes-wizard-store';
 import { Radio, Settings, Lightbulb, ChevronRight, HelpCircle } from 'lucide-react';
+import { t } from '../../../i18n';
 
 interface PresetCardProps {
   preset: ModePreset;
@@ -41,7 +42,7 @@ const PresetCard: React.FC<PresetCardProps> = ({ preset, onSelect }) => {
                 key={idx}
                 className="px-2 py-0.5 text-xs bg-surface-overlay-subtle rounded-full text-content"
               >
-                {MODE_INFO[boxId]?.name ?? `Mode ${boxId}`}
+                {MODE_INFO[boxId]?.name ?? t('modes.WelcomeStep.mode', { boxId })}
               </span>
             ))}
           </div>
@@ -82,10 +83,9 @@ export const WelcomeStep: React.FC = () => {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-500/20 mb-4">
           <Radio className="w-8 h-8 text-purple-400" />
         </div>
-        <h2 className="text-xl font-semibold text-content">Choose Your Flying Style</h2>
+        <h2 className="text-xl font-semibold text-content">{t('modes.WelcomeStep.chooseYourFlyingStyle')}</h2>
         <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
-          Select a preset to quickly configure the essential flight modes for your style,
-          or set up modes manually for full control.
+          {t('modes.WelcomeStep.selectAPresetToQuicklyConfigure')}
         </p>
       </div>
 
@@ -111,8 +111,8 @@ export const WelcomeStep: React.FC = () => {
               <Settings className="w-5 h-5 text-content-secondary" />
             </div>
             <div>
-              <h3 className="font-medium text-content">Manual Setup</h3>
-              <p className="text-xs text-content-secondary">Configure modes one by one (advanced)</p>
+              <h3 className="font-medium text-content">{t('modes.WelcomeStep.manualSetup')}</h3>
+              <p className="text-xs text-content-secondary">{t('modes.WelcomeStep.configureModesOneByOneAdvanced')}</p>
             </div>
           </div>
           <ChevronRight className="w-5 h-5 text-content-secondary" />
@@ -124,10 +124,9 @@ export const WelcomeStep: React.FC = () => {
         <div className="flex items-start gap-3">
           <Lightbulb className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-medium text-amber-200 text-sm">New to FPV?</h4>
+            <h4 className="font-medium text-amber-200 text-sm">{t('modes.WelcomeStep.newToFpv')}</h4>
             <p className="text-xs text-amber-100/70 mt-1">
-              Start with the <strong>Beginner</strong> preset. It enables ANGLE mode which
-              keeps your aircraft level automatically - perfect for learning!
+              {t('modes.WelcomeStep.startWithThe')} <strong>{t('modes.WelcomeStep.beginner')}</strong> {t('modes.WelcomeStep.presetItEnablesAngleModeWhich')}
             </p>
           </div>
         </div>

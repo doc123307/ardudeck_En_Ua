@@ -1,8 +1,5 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import en from './locales/en.json';
-import uk from './locales/uk.json';
-import ru from './locales/ru.json';
 
 export const SUPPORTED_LANGUAGES = ['en', 'uk', 'ru'] as const;
 export type AppLanguage = (typeof SUPPORTED_LANGUAGES)[number];
@@ -14,16 +11,39 @@ export const LANGUAGE_NATIVE_NAMES: Record<AppLanguage, string> = {
   ru: 'Русский',
 };
 
+type Tree = { [key: string]: string | Tree };
+
+function deepMerge(target: Tree, source: Tree): Tree {
+  for (const [key, value] of Object.entries(source)) {
+    const existing = target[key];
+    if (typeof value === 'object' && typeof existing === 'object') deepMerge(existing, value);
+    else target[key] = value;
+  }
+  return target;
+}
+
+// One file per UI area under locales/<lang>/, merged into a single namespace so keys read
+// as "<area>.<Component>.<string>" no matter which file they live in.
+const localeFiles = import.meta.glob<Tree>('./locales/*/*.json', { eager: true, import: 'default' });
+
+export function loadLocaleTree(language: AppLanguage): Tree {
+  const tree: Tree = {};
+  for (const [path, content] of Object.entries(localeFiles)) {
+    if (path.split('/')[2] === language) deepMerge(tree, content);
+  }
+  return tree;
+}
+
 // The settings store loads asynchronously over IPC, so the last choice is mirrored here
 // to render the very first frame in the right language instead of flashing English.
 const STORAGE_KEY = 'ardudeck.language';
 
+// Store tests import this module under plain Node, where there is no DOM.
+const hasDom = typeof window !== 'undefined' && typeof document !== 'undefined';
+
 export function isAppLanguage(value: unknown): value is AppLanguage {
   return typeof value === 'string' && (SUPPORTED_LANGUAGES as readonly string[]).includes(value);
 }
-
-// Store tests import this module under plain Node, where there is no DOM.
-const hasDom = typeof window !== 'undefined' && typeof document !== 'undefined';
 
 function readStoredLanguage(): AppLanguage | null {
   if (!hasDom) return null;
@@ -50,20 +70,26 @@ export function getInitialLanguage(): AppLanguage {
 }
 
 void i18n.use(initReactI18next).init({
-  resources: {
-    en: { translation: en },
-    uk: { translation: uk },
-    ru: { translation: ru },
-  },
+  resources: Object.fromEntries(
+    SUPPORTED_LANGUAGES.map((lang) => [lang, { translation: loadLocaleTree(lang) }]),
+  ),
   lng: getInitialLanguage(),
   // Anything not translated yet falls back to English rather than showing a raw key.
   fallbackLng: 'en',
   supportedLngs: SUPPORTED_LANGUAGES,
   interpolation: { escapeValue: false }, // React already escapes
   returnNull: false,
+  // Resources are bundled, so finish synchronously: module-level labels call t() at import.
+  initAsync: false,
 });
 
 if (hasDom) document.documentElement.lang = i18n.language;
+
+/**
+ * Translate outside React hooks. Works anywhere (render helpers, stores, module-level
+ * getters); the app root remounts on a language change so rendered text follows.
+ */
+export const t = i18n.t.bind(i18n);
 
 export function applyLanguage(language: AppLanguage): void {
   if (i18n.language !== language) void i18n.changeLanguage(language);

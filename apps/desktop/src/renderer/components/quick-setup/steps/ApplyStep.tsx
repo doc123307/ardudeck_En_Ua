@@ -19,6 +19,7 @@ import {
   RotateCcw,
   Wifi,
 } from 'lucide-react';
+import { t } from '../../../i18n';
 
 // Task status icon component
 const TaskStatusIcon: React.FC<{ status: 'pending' | 'in_progress' | 'completed' | 'error' }> = ({
@@ -74,7 +75,7 @@ export const ApplyStep: React.FC = () => {
   if (!selectedPreset) {
     return (
       <div className="text-center py-8">
-        <p className="text-content-secondary">No preset selected.</p>
+        <p className="text-content-secondary">{t('quick_setup.ApplyStep.noPresetSelected')}</p>
       </div>
     );
   }
@@ -108,27 +109,27 @@ export const ApplyStep: React.FC = () => {
           </div>
           <h2 className="text-xl font-semibold text-content">
             {platformChangeState === 'error'
-              ? 'Platform Change Failed'
+              ? t('quick_setup.ApplyStep.platformChangeFailed')
               : platformChangeState === 'disconnected'
-              ? 'Reconnecting...'
+              ? t('quick_setup.ApplyStep.reconnecting')
               : platformChangeState === 'rebooting'
-              ? 'Rebooting Flight Controller...'
+              ? t('quick_setup.ApplyStep.rebootingFlightController')
               : platformChangeState === 'saving'
-              ? 'Saving Configuration...'
+              ? t('quick_setup.ApplyStep.savingConfiguration')
               : platformChangeState === 'changing'
-              ? 'Changing Platform...'
-              : 'Platform Mismatch'}
+              ? t('quick_setup.ApplyStep.changingPlatform')
+              : t('quick_setup.ApplyStep.platformMismatch')}
           </h2>
           <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
             {platformChangeState === 'error'
-              ? platformChangeError || 'An error occurred while changing the platform.'
+              ? platformChangeError || t('quick_setup.ApplyStep.anErrorOccurredWhileChangingThe')
               : platformChangeState === 'disconnected'
-              ? 'Board is rebooting. Attempting to reconnect automatically...'
+              ? t('quick_setup.ApplyStep.boardIsRebootingAttemptingToReconnect')
               : platformChangeState === 'rebooting'
-              ? 'Waiting for the flight controller to reboot...'
+              ? t('quick_setup.ApplyStep.waitingForTheFlightControllerTo')
               : isPlatformChanging
-              ? 'Please wait while the platform type is being changed...'
-              : `The selected preset requires "${platformMismatch.requiredName}" platform, but your board is currently set to "${platformMismatch.currentName}".`}
+              ? t('quick_setup.ApplyStep.pleaseWaitWhileThePlatformType')
+              : t('quick_setup.ApplyStep.theSelectedPresetRequiresPlatformBut', { requiredName: platformMismatch.requiredName, currentName: platformMismatch.currentName })}
           </p>
         </div>
 
@@ -140,7 +141,7 @@ export const ApplyStep: React.FC = () => {
                 <div className="w-12 h-12 rounded-full bg-surface-raised flex items-center justify-center mx-auto mb-2">
                   <Plane className="w-6 h-6 text-content-secondary" />
                 </div>
-                <p className="text-xs text-content-secondary">Current</p>
+                <p className="text-xs text-content-secondary">{t('quick_setup.ApplyStep.current')}</p>
                 <p className="text-sm font-medium text-content">{platformMismatch.currentName}</p>
               </div>
               <div className="text-2xl text-content-tertiary">→</div>
@@ -148,7 +149,7 @@ export const ApplyStep: React.FC = () => {
                 <div className="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mx-auto mb-2">
                   <Plane className="w-6 h-6 text-amber-400" />
                 </div>
-                <p className="text-xs text-content-secondary">Required</p>
+                <p className="text-xs text-content-secondary">{t('quick_setup.ApplyStep.required')}</p>
                 <p className="text-sm font-medium text-amber-300">{platformMismatch.requiredName}</p>
               </div>
             </div>
@@ -161,10 +162,10 @@ export const ApplyStep: React.FC = () => {
             <div className="flex items-center gap-3">
               <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
               <span className="text-sm text-content">
-                {platformChangeState === 'changing' && 'Setting platform type...'}
-                {platformChangeState === 'saving' && 'Saving to EEPROM...'}
-                {platformChangeState === 'rebooting' && 'Rebooting flight controller...'}
-                {platformChangeState === 'disconnected' && 'Waiting for reconnection...'}
+                {platformChangeState === 'changing' && t('quick_setup.ApplyStep.settingPlatformType')}
+                {platformChangeState === 'saving' && t('quick_setup.ApplyStep.savingToEeprom')}
+                {platformChangeState === 'rebooting' && t('quick_setup.ApplyStep.rebootingFlightController2')}
+                {platformChangeState === 'disconnected' && t('quick_setup.ApplyStep.waitingForReconnection')}
               </span>
             </div>
           </div>
@@ -176,7 +177,7 @@ export const ApplyStep: React.FC = () => {
             <div className="flex items-start gap-3">
               <XCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-medium text-red-200 text-sm">Error Details</h4>
+                <h4 className="font-medium text-red-200 text-sm">{t('quick_setup.ApplyStep.errorDetails')}</h4>
                 <p className="text-xs text-red-100/70 mt-1">{platformChangeError}</p>
               </div>
             </div>
@@ -189,12 +190,12 @@ export const ApplyStep: React.FC = () => {
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-medium text-blue-200 text-sm">What happens when you change platform?</h4>
+                <h4 className="font-medium text-blue-200 text-sm">{t('quick_setup.ApplyStep.whatHappensWhenYouChangePlatform')}</h4>
                 <ul className="text-xs text-blue-100/70 mt-1 space-y-1 list-disc list-inside">
-                  <li>The platform type will be changed on your flight controller</li>
-                  <li>Configuration will be saved to EEPROM</li>
-                  <li>The board will reboot automatically</li>
-                  <li>We'll reconnect and continue applying your preset</li>
+                  <li>{t('quick_setup.ApplyStep.thePlatformTypeWillBeChanged')}</li>
+                  <li>{t('quick_setup.ApplyStep.configurationWillBeSavedToEeprom')}</li>
+                  <li>{t('quick_setup.ApplyStep.theBoardWillRebootAutomatically')}</li>
+                  <li>{t('quick_setup.ApplyStep.weLlReconnectAndContinueApplying')}</li>
                 </ul>
               </div>
             </div>
@@ -210,14 +211,14 @@ export const ApplyStep: React.FC = () => {
                 className="flex items-center gap-2 px-4 py-2 text-sm text-content-secondary hover:text-content hover:bg-surface-raised rounded-lg transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Cancel
+                {t('quick_setup.ApplyStep.cancel')}
               </button>
               <button
                 onClick={changePlatform}
                 className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-500 transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
-                Retry
+                {t('quick_setup.ApplyStep.retry')}
               </button>
             </>
           ) : isPlatformChanging ? (
@@ -225,7 +226,7 @@ export const ApplyStep: React.FC = () => {
               <div /> {/* Spacer */}
               <div className="flex items-center gap-2 text-sm text-content-secondary">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Please wait...
+                {t('quick_setup.ApplyStep.pleaseWait')}
               </div>
             </>
           ) : (
@@ -235,14 +236,14 @@ export const ApplyStep: React.FC = () => {
                 className="flex items-center gap-2 px-4 py-2 text-sm text-content-secondary hover:text-content hover:bg-surface-raised rounded-lg transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Cancel
+                {t('quick_setup.ApplyStep.cancel')}
               </button>
               <button
                 onClick={changePlatform}
                 className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-500 transition-colors"
               >
                 <Plane className="w-4 h-4" />
-                Change Platform
+                {t('quick_setup.ApplyStep.changePlatform')}
               </button>
             </>
           )}
@@ -274,17 +275,17 @@ export const ApplyStep: React.FC = () => {
         </div>
         <h2 className="text-xl font-semibold text-content">
           {applySuccess
-            ? 'Configuration Applied!'
+            ? t('quick_setup.ApplyStep.configurationApplied')
             : applyError
-            ? 'Configuration Failed'
-            : 'Applying Configuration...'}
+            ? t('quick_setup.ApplyStep.configurationFailed')
+            : t('quick_setup.ApplyStep.applyingConfiguration')}
         </h2>
         <p className="text-sm text-content-secondary mt-2 max-w-md mx-auto">
           {applySuccess
-            ? `Your ${selectedPreset.name} preset has been successfully applied to your flight controller.`
+            ? t('quick_setup.ApplyStep.yourPresetHasBeenSuccessfullyApplied', { name: selectedPreset.name })
             : applyError
-            ? 'There was an error applying the configuration. You can try again or go back.'
-            : `Applying ${selectedPreset.name} preset to your flight controller...`}
+            ? t('quick_setup.ApplyStep.thereWasAnErrorApplyingThe')
+            : t('quick_setup.ApplyStep.applyingPresetToYourFlightController', { name: selectedPreset.name })}
         </p>
       </div>
 
@@ -292,7 +293,7 @@ export const ApplyStep: React.FC = () => {
       {!applySuccess && !applyError && (
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-content-secondary">{applyProgress.currentTask || 'Starting...'}</span>
+            <span className="text-content-secondary">{applyProgress.currentTask || t('quick_setup.ApplyStep.starting')}</span>
             <span className="text-content-secondary">{progressPercent}%</span>
           </div>
           <div className="h-2 bg-surface-inset rounded-full overflow-hidden">
@@ -306,7 +307,7 @@ export const ApplyStep: React.FC = () => {
 
       {/* Task list */}
       <div className="p-4 bg-surface rounded-xl">
-        <h3 className="text-sm font-medium text-content mb-3">Configuration Tasks</h3>
+        <h3 className="text-sm font-medium text-content mb-3">{t('quick_setup.ApplyStep.configurationTasks')}</h3>
         <div className="space-y-2">
           {applyProgress.tasks.map((task, index) => (
             <div
@@ -349,7 +350,7 @@ export const ApplyStep: React.FC = () => {
           <div className="flex items-start gap-3">
             <XCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-medium text-red-200 text-sm">Error Details</h4>
+              <h4 className="font-medium text-red-200 text-sm">{t('quick_setup.ApplyStep.errorDetails')}</h4>
               <p className="text-xs text-red-100/70 mt-1">{applyError}</p>
             </div>
           </div>
@@ -363,10 +364,9 @@ export const ApplyStep: React.FC = () => {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-green-400 shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-medium text-green-200 text-sm">Configuration Applied!</h4>
+                <h4 className="font-medium text-green-200 text-sm">{t('quick_setup.ApplyStep.configurationApplied')}</h4>
                 <p className="text-xs text-green-100/70 mt-1">
-                  Your configuration has been saved to EEPROM. You can fine-tune individual
-                  settings in the dedicated tabs, or test your setup now.
+                  {t('quick_setup.ApplyStep.yourConfigurationHasBeenSavedTo')}
                 </p>
               </div>
             </div>
@@ -378,12 +378,12 @@ export const ApplyStep: React.FC = () => {
               <div className="flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-amber-200 text-sm">Verify Your Servo Setup</h4>
+                  <h4 className="font-medium text-amber-200 text-sm">{t('quick_setup.ApplyStep.verifyYourServoSetup')}</h4>
                   <ul className="text-xs text-amber-100/70 mt-1 space-y-1 list-disc list-inside">
-                    <li>Check the <strong>Servo Mixer</strong> tab and verify servos are connected to the correct FC outputs</li>
-                    <li>Test servo directions - control surfaces should move correctly when you move the sticks</li>
-                    <li>Verify motor output is connected and spins in the correct direction</li>
-                    <li>Always test in a safe environment before flying</li>
+                    <li>{t('quick_setup.ApplyStep.checkThe')} <strong>{t('quick_setup.ApplyStep.servoMixer')}</strong> {t('quick_setup.ApplyStep.tabAndVerifyServosAreConnected')}</li>
+                    <li>{t('quick_setup.ApplyStep.testServoDirectionsControlSurfacesShould')}</li>
+                    <li>{t('quick_setup.ApplyStep.verifyMotorOutputIsConnectedAnd')}</li>
+                    <li>{t('quick_setup.ApplyStep.alwaysTestInASafeEnvironment')}</li>
                   </ul>
                 </div>
               </div>
@@ -402,7 +402,7 @@ export const ApplyStep: React.FC = () => {
               className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors"
             >
               <CheckCircle2 className="w-4 h-4" />
-              Done
+              {t('quick_setup.ApplyStep.done')}
             </button>
           </>
         ) : applyError ? (
@@ -412,7 +412,7 @@ export const ApplyStep: React.FC = () => {
               className="flex items-center gap-2 px-4 py-2 text-sm text-content-secondary hover:text-content hover:bg-surface-raised rounded-lg transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back
+              {t('quick_setup.ApplyStep.back')}
             </button>
             <button
               onClick={() => {
@@ -422,7 +422,7 @@ export const ApplyStep: React.FC = () => {
               className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
-              Retry
+              {t('quick_setup.ApplyStep.retry')}
             </button>
           </>
         ) : (
@@ -433,11 +433,11 @@ export const ApplyStep: React.FC = () => {
               className="flex items-center gap-2 px-4 py-2 text-sm text-content-secondary hover:text-content hover:bg-surface-raised rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowLeft className="w-4 h-4" />
-              Cancel
+              {t('quick_setup.ApplyStep.cancel')}
             </button>
             <div className="flex items-center gap-2 text-sm text-content-secondary">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Please wait...
+              {t('quick_setup.ApplyStep.pleaseWait')}
             </div>
           </>
         )}

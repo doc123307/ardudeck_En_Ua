@@ -17,6 +17,7 @@ import {
   type Px4Airframe,
   type Px4AirframeCategory,
 } from './px4-airframes.js';
+import { t } from '../../../i18n';
 
 export function Px4AirframePicker() {
   const setParameter = useParameterStore((s) => s.setParameterImmediate);
@@ -47,7 +48,7 @@ export function Px4AirframePicker() {
     if (ok) {
       setAppliedId(af.id);
     } else {
-      setError(`Failed to write SYS_AUTOSTART (${af.id}). Check the connection and try again.`);
+      setError(t('settings.Px4AirframePicker.failedToWriteSysAutostartCheck', { id: af.id }));
     }
   };
 
@@ -56,8 +57,8 @@ export function Px4AirframePicker() {
       {!canSet && (
         <div className="bg-amber-500/10 rounded-xl border border-amber-500/30 p-4 text-sm text-amber-300">
           {paramSize > 0
-            ? 'SYS_AUTOSTART was not found on this vehicle, so the airframe cannot be set from here.'
-            : 'Connect to a PX4 vehicle and load parameters to select an airframe.'}
+            ? t('settings.Px4AirframePicker.sysAutostartWasNotFoundOn')
+            : t('settings.Px4AirframePicker.connectToAPx4VehicleAnd')}
         </div>
       )}
 
@@ -66,10 +67,10 @@ export function Px4AirframePicker() {
           <AlertTriangle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-medium text-emerald-300">
-              Airframe set (SYS_AUTOSTART = {appliedId}). Reboot required to apply.
+              {t('settings.Px4AirframePicker.airframeSetSysAutostart')} {appliedId}{t('settings.Px4AirframePicker.rebootRequiredToApply')}
             </p>
             <p className="text-xs text-emerald-400/80 mt-0.5">
-              The new airframe takes effect only after the flight controller restarts.
+              {t('settings.Px4AirframePicker.theNewAirframeTakesEffectOnly')}
             </p>
           </div>
         </div>

@@ -1,11 +1,12 @@
 import { Anchor } from 'lucide-react';
 import type { VehicleTemplate } from '../types.js';
 import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 export const boatSingleProp: VehicleTemplate = {
   slug: 'boat-single-prop',
   name: 'Single-Prop Boat',
-  description: 'Rudder + one motor',
+  get description() { return t('lib.boat_single_prop.rudderOneMotor'); },
   icon: Anchor,
   vehicleType: 'boat',
   category: 'boat',
@@ -20,11 +21,11 @@ export const boatSingleProp: VehicleTemplate = {
     batteryCapacity: 15000,
   },
   toParams: (p) => [
-    { name: 'FRAME_CLASS',     value: 1,  reason: 'Boat (rover frame class)', requiresReboot: true },
-    { name: 'FRAME_TYPE',      value: 2,  reason: 'Boat',                     requiresReboot: true },
-    { name: 'SERVO1_FUNCTION', value: 26, reason: 'Rudder (ground steering)', requiresReboot: true },
-    { name: 'SERVO3_FUNCTION', value: 70, reason: 'Throttle',                 requiresReboot: true },
-    { name: 'WP_SPEED',        value: p.maxSpeed ?? 2, reason: 'Waypoint speed' },
+    { name: 'FRAME_CLASS',     value: 1,  reason: t('lib.boat_single_prop.boatRoverFrameClass'), requiresReboot: true },
+    { name: 'FRAME_TYPE',      value: 2,  reason: t('lib.boat_single_prop.boat'),                     requiresReboot: true },
+    { name: 'SERVO1_FUNCTION', value: 26, reason: t('lib.boat_single_prop.rudderGroundSteering'), requiresReboot: true },
+    { name: 'SERVO3_FUNCTION', value: 70, reason: t('lib.boat_single_prop.throttle'),                 requiresReboot: true },
+    { name: 'WP_SPEED',        value: p.maxSpeed ?? 2, reason: t('lib.boat_single_prop.waypointSpeed') },
     ...batteryParams(p),
     ...commonSafetyParams(),
   ],

@@ -6,6 +6,7 @@ import { useTelemetryStore } from '../../../stores/telemetry-store.js';
 import { useActiveVehicleStore } from '../../../stores/active-vehicle-store.js';
 import { useProfileApplyStore } from '../../../stores/profile-apply-store.js';
 import { useProfileApply } from './use-profile-apply.js';
+import { t } from '../../../i18n';
 
 interface ApplyProfileButtonProps {
   profile: VehicleProfile;
@@ -97,25 +98,25 @@ function deriveButtonState(args: {
 } {
   if (args.inFlight) {
     const label = args.applyStatus === 'writing' ? 'Writing…' : 'Reviewing…';
-    return { label, subLabel: 'Apply in progress, review the Parameters tab', variant: 'primary', disabled: true };
+    return { label, subLabel: t('settings.ApplyProfileButton.applyInProgressReviewTheParameters'), variant: 'primary', disabled: true };
   }
   if (args.globallyBusy) {
-    return { label: 'Busy', subLabel: 'Another profile apply is in progress', variant: 'muted', disabled: true };
+    return { label: t('settings.ApplyProfileButton.busy'), subLabel: t('settings.ApplyProfileButton.anotherProfileApplyIsInProgress'), variant: 'muted', disabled: true };
   }
   if (args.fleetOnly) {
-    return { label: 'Direct link to apply', subLabel: 'Vehicle profiles write parameters over a direct connection. Connect to one vehicle directly to apply this profile (not over the fleet link).', variant: 'muted', disabled: true };
+    return { label: t('settings.ApplyProfileButton.directLinkToApply'), subLabel: t('settings.ApplyProfileButton.vehicleProfilesWriteParametersOverA'), variant: 'muted', disabled: true };
   }
   if (!args.isConnected) {
-    return { label: 'Connect first', subLabel: 'Connect to a vehicle to apply this profile', variant: 'muted', disabled: true };
+    return { label: t('settings.ApplyProfileButton.connectFirst'), subLabel: t('settings.ApplyProfileButton.connectToAVehicleToApply'), variant: 'muted', disabled: true };
   }
   if (args.paramCount === 0) {
-    return { label: 'Loading params…', subLabel: 'Waiting for parameter list from vehicle', variant: 'muted', disabled: true };
+    return { label: t('settings.ApplyProfileButton.loadingParams'), subLabel: t('settings.ApplyProfileButton.waitingForParameterListFromVehicle'), variant: 'muted', disabled: true };
   }
   if (args.armed) {
-    return { label: 'Disarm first', subLabel: 'Cannot change parameters while armed', variant: 'danger', disabled: true };
+    return { label: t('settings.ApplyProfileButton.disarmFirst'), subLabel: t('settings.ApplyProfileButton.cannotChangeParametersWhileArmed'), variant: 'danger', disabled: true };
   }
   if (args.isSitl) {
-    return { label: 'Apply to SITL', subLabel: 'Write profile params to the running simulator', variant: 'primary', disabled: false };
+    return { label: t('settings.ApplyProfileButton.applyToSitl'), subLabel: t('settings.ApplyProfileButton.writeProfileParamsToTheRunning'), variant: 'primary', disabled: false };
   }
-  return { label: 'Apply to vehicle', subLabel: 'Write profile params to the connected FC (real hardware)', variant: 'warning', disabled: false };
+  return { label: t('settings.ApplyProfileButton.applyToVehicle'), subLabel: t('settings.ApplyProfileButton.writeProfileParamsToTheConnected'), variant: 'warning', disabled: false };
 }

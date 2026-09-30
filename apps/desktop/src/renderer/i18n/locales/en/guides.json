@@ -1,0 +1,34 @@
+{
+  "guides": {
+    "GuideHost": {
+      "of": "of",
+      "donTShowGuidesAutomaticallyAgain": "Don't show guides automatically again",
+      "skip": "Skip",
+      "next": "Next",
+      "gotIt": "Got it"
+    },
+    "GuidesAndToursList": {
+      "guidesTours": "Guides & tours",
+      "allMarkedUnseen": "All marked unseen",
+      "resetAll": "Reset all",
+      "guides": "Guides",
+      "tours": "Tours",
+      "offerWalkthroughsWhenOpeningAView": "Offer walkthroughs when opening a view for the first time"
+    },
+    "LayoutsDemo": {
+      "workspace": "Workspace ·"
+    },
+    "SplitDemo": {
+      "split": "Split",
+      "synthetic": "Synthetic"
+    },
+    "registry": {
+      "mapAndVisionSideBySide": "Map and vision side by side",
+      "theSplitButtonOnTheMap": "The Split button on the map shares the panel with Vision. Drag the divider to set the size; the Pilot layout starts this way with synthetic vision.",
+      "workspaceLayouts": "Workspace layouts",
+      "theWorkspaceButtonSwitchesBetweenPilot": "The Workspace button switches between Pilot, FPV and Mission, each with its own panels, cockpit instruments and split. Save your own and share them as a file.",
+      "instrumentGrouping": "Instrument grouping",
+      "dragOneMapInstrumentOntoAnother": "Drag one map instrument onto another to dock them into a shared card. Drag a member back out to free it, or scale the whole group at once."
+    }
+  }
+}

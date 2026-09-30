@@ -1,0 +1,7 @@
+{
+  "hooks": {
+    "useFleet": {
+      "fleet": "Fleet ({{fleetCount}})"
+    }
+  }
+}

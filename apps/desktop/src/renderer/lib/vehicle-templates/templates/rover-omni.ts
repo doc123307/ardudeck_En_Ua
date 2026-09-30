@@ -1,6 +1,7 @@
 import { Car } from 'lucide-react';
 import type { VehicleTemplate } from '../types.js';
 import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 /**
  * Omni-directional rover — 3 or 4 omni wheels, can translate in any direction.
@@ -9,7 +10,7 @@ import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '..
 export const roverOmni: VehicleTemplate = {
   slug: 'rover-omni',
   name: 'Omni Rover',
-  description: 'Omni-directional wheels, can translate sideways',
+  get description() { return t('lib.rover_omni.omniDirectionalWheelsCanTranslateSideways'); },
   icon: Car,
   vehicleType: 'rover',
   category: 'rover',
@@ -24,13 +25,13 @@ export const roverOmni: VehicleTemplate = {
     batteryCapacity: 6000,
   },
   toParams: (p) => [
-    { name: 'FRAME_CLASS', value: 2, reason: 'Omni rover frame', requiresReboot: true },
-    { name: 'FRAME_TYPE',  value: 1, reason: '4-wheel omni (X)', requiresReboot: true },
-    { name: 'SERVO1_FUNCTION', value: 73, reason: 'Throttle Front-Left',  requiresReboot: true },
-    { name: 'SERVO2_FUNCTION', value: 74, reason: 'Throttle Front-Right', requiresReboot: true },
-    { name: 'SERVO3_FUNCTION', value: 75, reason: 'Throttle Rear-Left',   requiresReboot: true },
-    { name: 'SERVO4_FUNCTION', value: 76, reason: 'Throttle Rear-Right',  requiresReboot: true },
-    { name: 'WP_SPEED',     value: p.maxSpeed ?? 2, reason: 'Waypoint speed from maxSpeed' },
+    { name: 'FRAME_CLASS', value: 2, reason: t('lib.rover_omni.omniRoverFrame'), requiresReboot: true },
+    { name: 'FRAME_TYPE',  value: 1, reason: t('lib.rover_omni.n4WheelOmniX'), requiresReboot: true },
+    { name: 'SERVO1_FUNCTION', value: 73, reason: t('lib.rover_omni.throttleFrontLeft'),  requiresReboot: true },
+    { name: 'SERVO2_FUNCTION', value: 74, reason: t('lib.rover_omni.throttleFrontRight'), requiresReboot: true },
+    { name: 'SERVO3_FUNCTION', value: 75, reason: t('lib.rover_omni.throttleRearLeft'),   requiresReboot: true },
+    { name: 'SERVO4_FUNCTION', value: 76, reason: t('lib.rover_omni.throttleRearRight'),  requiresReboot: true },
+    { name: 'WP_SPEED',     value: p.maxSpeed ?? 2, reason: t('lib.rover_omni.waypointSpeedFromMaxspeed') },
     ...batteryParams(p),
     ...commonSafetyParams(),
   ],

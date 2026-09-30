@@ -4,6 +4,7 @@ import type { VehicleProfile } from '../../../stores/settings-store.js';
 import { useConnectionStore } from '../../../stores/connection-store.js';
 import { useParameterStore } from '../../../stores/parameter-store.js';
 import { computeDrift } from '../../../lib/vehicle-templates/drift.js';
+import { t } from '../../../i18n';
 
 interface DriftBadgeProps {
   profile: VehicleProfile;
@@ -41,7 +42,7 @@ export function DriftBadge({ profile }: DriftBadgeProps) {
         className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-colors animate-pulse"
       >
         <AlertTriangle className="w-3 h-3" />
-        Drifted · {report.diverged.length}
+        {t('settings.DriftBadge.drifted')} {report.diverged.length}
       </button>
 
       {open && (
@@ -53,7 +54,7 @@ export function DriftBadge({ profile }: DriftBadgeProps) {
             <div className="flex items-center justify-between px-5 py-4 border-b border-subtle">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-amber-400" />
-                <h3 className="text-sm font-semibold text-content">Drift from applied profile</h3>
+                <h3 className="text-sm font-semibold text-content">{t('settings.DriftBadge.driftFromAppliedProfile')}</h3>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 rounded hover:bg-surface-overlay-subtle text-content-secondary">
                 <X className="w-4 h-4" />
@@ -74,7 +75,7 @@ export function DriftBadge({ profile }: DriftBadgeProps) {
               ))}
             </div>
             <div className="px-5 py-3 border-t border-subtle text-[11px] text-content-secondary">
-              Re-apply the profile from its card to restore these values.
+              {t('settings.DriftBadge.reApplyTheProfileFromIts')}
             </div>
           </div>
         </div>

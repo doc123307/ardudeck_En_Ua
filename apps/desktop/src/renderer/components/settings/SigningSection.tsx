@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSigningStore, initSigningListener } from '../../stores/signing-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { SecureLinkCompliance } from './SecureLinkCompliance';
+import { t as tr } from '../../i18n';
 
 export function SigningSection() {
   const { connectionState } = useConnectionStore();
@@ -53,31 +54,31 @@ export function SigningSection() {
 
   const handleSetKey = async () => {
     if (!passphrase.trim()) {
-      setLocalError('Enter a passphrase');
+      setLocalError(tr('settings.SigningSection.enterAPassphrase'));
       return;
     }
     setLocalError(null);
     const ok = await setKey(passphrase.trim());
     if (ok) {
       setPassphrase('');
-      setSuccessMsg('Signing key saved');
+      setSuccessMsg(tr('settings.SigningSection.signingKeySaved'));
     }
   };
 
   const handleSendToFc = async () => {
     setLocalError(null);
     const ok = await sendToFc();
-    if (ok) setSuccessMsg('Key sent to FC and signing enabled');
+    if (ok) setSuccessMsg(tr('settings.SigningSection.keySentToFcAndSigning'));
   };
 
   const handleToggleSigning = async () => {
     setLocalError(null);
     if (enabled) {
       await disable();
-      setSuccessMsg('Signing paused');
+      setSuccessMsg(tr('settings.SigningSection.signingPaused'));
     } else {
       const ok = await enable();
-      if (ok) setSuccessMsg('Signing resumed');
+      if (ok) setSuccessMsg(tr('settings.SigningSection.signingResumed'));
     }
   };
 
@@ -86,7 +87,7 @@ export function SigningSection() {
     setConfirmDisable(false);
     const result = await removeKey();
     setPassphrase('');
-    setSuccessMsg('Signing disabled on FC and key removed');
+    setSuccessMsg(tr('settings.SigningSection.signingDisabledOnFcAndKey'));
   };
 
   const fullyConfigured = hasKey && sentToFc;
@@ -101,31 +102,31 @@ export function SigningSection() {
           </svg>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-content">MAVLink Signing</h3>
+          <h3 className="text-sm font-medium text-content">{tr('settings.SigningSection.mavlinkSigning')}</h3>
           <p className="text-xs text-content-secondary">
-            Prevent unauthorized access to your vehicle
+            {tr('settings.SigningSection.preventUnauthorizedAccessToYourVehicle')}
           </p>
         </div>
         <div className="ml-auto">
           {isV1Only ? (
             <span className="text-[10px] font-medium text-content-secondary bg-content-secondary/10 px-2 py-1 rounded-full">
-              Unavailable
+              {tr('settings.SigningSection.unavailable')}
             </span>
           ) : fullyConfigured && enabled ? (
             <span className="text-[10px] font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full">
-              Active
+              {tr('settings.SigningSection.active')}
             </span>
           ) : fullyConfigured ? (
             <span className="text-[10px] font-medium text-amber-400 bg-amber-400/10 px-2 py-1 rounded-full">
-              Paused
+              {tr('settings.SigningSection.paused')}
             </span>
           ) : hasKey ? (
             <span className="text-[10px] font-medium text-amber-400 bg-amber-400/10 px-2 py-1 rounded-full">
-              Key Set
+              {tr('settings.SigningSection.keySet')}
             </span>
           ) : (
             <span className="text-[10px] font-medium text-content-secondary bg-content-secondary/10 px-2 py-1 rounded-full">
-              Not Configured
+              {tr('settings.SigningSection.notConfigured')}
             </span>
           )}
         </div>
@@ -134,8 +135,7 @@ export function SigningSection() {
       {isV1Only && (
         <div className="rounded-lg border border-subtle bg-surface px-3 py-2.5">
           <p className="text-xs text-content-secondary">
-            This board communicates using MAVLink v1 which does not support packet signing.
-            Signing requires a MAVLink v2 capable flight controller.
+            {tr('settings.SigningSection.thisBoardCommunicatesUsingMavlinkV1')}
           </p>
         </div>
       )}
@@ -143,10 +143,9 @@ export function SigningSection() {
       {/* Key mismatch warning */}
       {!isV1Only && keyMismatch && (
         <div className="rounded-lg border border-red-500/20 bg-red-500/5 px-3 py-2.5">
-          <p className="text-xs text-red-400 font-medium mb-1">Signing key mismatch</p>
+          <p className="text-xs text-red-400 font-medium mb-1">{tr('settings.SigningSection.signingKeyMismatch')}</p>
           <p className="text-xs text-content-secondary">
-            Your signing key doesn't match the vehicle/proxy key. Paste the base64 key the vehicle was
-            set up with, or enter the same passphrase used on the proxy.
+            {tr('settings.SigningSection.yourSigningKeyDoesnTMatch')}
           </p>
         </div>
       )}
@@ -155,9 +154,7 @@ export function SigningSection() {
       {!isV1Only && isConnected && (connectionState.connectionType === 'tcp' || connectionState.connectionType === 'udp') && (
         <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 px-3 py-2.5">
           <p className="text-xs text-content-secondary">
-            Connected over {connectionState.connectionType === 'tcp' ? 'TCP' : 'UDP'}.
-            If using a proxy (UDPProxy/mavproxy), enter the same passphrase or paste its base64 key.
-            All saved keys are tried automatically on connect.
+            {tr('settings.SigningSection.connectedOver')} {connectionState.connectionType === 'tcp' ? 'TCP' : 'UDP'}{tr('settings.SigningSection.ifUsingAProxyUdpproxyMavproxy')}
           </p>
         </div>
       )}
@@ -169,12 +166,12 @@ export function SigningSection() {
         <div className={`rounded-lg border p-3 ${hasKey ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-subtle bg-surface'}`}>
           <div className="flex items-center gap-2.5 mb-2">
             <StepIndicator step={1} done={hasKey} active={!hasKey} />
-            <span className="text-xs font-medium text-content">Set signing passphrase</span>
+            <span className="text-xs font-medium text-content">{tr('settings.SigningSection.setSigningPassphrase')}</span>
           </div>
           <div className="ml-7">
             {hasKey && keyBase64 && (
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] text-content-secondary">Key:</span>
+                <span className="text-[10px] text-content-secondary">{tr('settings.SigningSection.key')}</span>
                 <code className="text-[10px] font-mono text-content-secondary bg-surface-raised px-1.5 py-0.5 rounded max-w-[220px] truncate" title={keyBase64}>
                   {keyBase64}
                 </code>
@@ -186,7 +183,7 @@ export function SigningSection() {
                     setTimeout(() => setKeyCopied(false), 2000);
                   }}
                   className="text-[10px] text-content-secondary hover:text-content transition-colors shrink-0"
-                  title="Copy key (Base64 - same format as Mission Planner)"
+                  title={tr('settings.SigningSection.copyKeyBase64SameFormatAs')}
                 >
                   {keyCopied ? (
                     <svg className="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -202,8 +199,8 @@ export function SigningSection() {
             )}
             <p className="text-xs text-content-secondary mb-2">
               {hasKey
-                ? 'Add another passphrase, base64, or hex key.'
-                : 'Enter a passphrase, or paste a base64/hex key from another GCS.'}
+                ? tr('settings.SigningSection.addAnotherPassphraseBase64OrHex')
+                : tr('settings.SigningSection.enterAPassphraseOrPasteA')}
             </p>
             <div className="flex gap-2">
               <div className="relative flex-1">
@@ -212,7 +209,7 @@ export function SigningSection() {
                   value={passphrase}
                   onChange={(e) => setPassphrase(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleSetKey(); }}
-                  placeholder={hasKey ? 'Passphrase, base64, or hex key...' : 'Passphrase, base64, or hex key...'}
+                  placeholder={hasKey ? tr('settings.SigningSection.passphraseBase64OrHexKey') : tr('settings.SigningSection.passphraseBase64OrHexKey')}
                   className="w-full bg-surface-input border border-border rounded-lg px-3 py-1.5 text-sm text-content placeholder-content-tertiary focus:outline-none focus:border-amber-500/50"
                   disabled={loading}
                 />
@@ -238,7 +235,7 @@ export function SigningSection() {
                 disabled={loading || !passphrase.trim()}
                 className="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 disabled:bg-surface-raised disabled:text-content-secondary text-white text-xs rounded-lg transition-colors"
               >
-                {hasKey ? 'Add Key' : 'Set Key'}
+                {hasKey ? tr('settings.SigningSection.addKey') : tr('settings.SigningSection.setKey')}
               </button>
             </div>
           </div>
@@ -251,7 +248,7 @@ export function SigningSection() {
               <svg className="w-3.5 h-3.5 text-content-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
               </svg>
-              <span className="text-[11px] text-content-secondary">{savedKeys.length} saved keys (auto-tried on connect)</span>
+              <span className="text-[11px] text-content-secondary">{savedKeys.length} {tr('settings.SigningSection.savedKeysAutoTriedOnConnect')}</span>
             </div>
             <div className="space-y-1">
               {savedKeys.map((k) => {
@@ -265,9 +262,9 @@ export function SigningSection() {
                   <div key={k.fingerprint} className="flex items-center gap-2 px-2 py-1 rounded bg-surface-raised">
                     <code className={`text-[10px] font-mono flex-1 ${isActive ? 'text-emerald-400' : 'text-content-secondary'}`}>{b64}</code>
                     {k.systemIds.length > 0 && (
-                      <span className="text-[9px] text-content-tertiary">sysid {k.systemIds.join(',')}</span>
+                      <span className="text-[9px] text-content-tertiary">{tr('settings.SigningSection.sysid')} {k.systemIds.join(',')}</span>
                     )}
-                    {isActive && <span className="text-[9px] text-emerald-500">active</span>}
+                    {isActive && <span className="text-[9px] text-emerald-500">{tr('settings.SigningSection.active2')}</span>}
                   </div>
                 );
               })}
@@ -280,26 +277,26 @@ export function SigningSection() {
         <div className={`rounded-lg border p-3 ${sentToFc ? 'border-emerald-500/20 bg-emerald-500/5' : !hasKey ? 'border-subtle bg-surface opacity-40' : 'border-subtle bg-surface'}`}>
           <div className="flex items-center gap-2.5">
             <StepIndicator step={2} done={sentToFc} active={hasKey && !sentToFc} />
-            <span className="text-xs font-medium text-content">Activate on flight controller</span>
+            <span className="text-xs font-medium text-content">{tr('settings.SigningSection.activateOnFlightController')}</span>
             {hasKey && (
               <button
                 onClick={handleSendToFc}
                 disabled={loading || !hasKey}
                 className="ml-auto px-3 py-1 bg-blue-600 hover:bg-blue-500 disabled:bg-surface-raised disabled:text-content-secondary text-white text-[11px] rounded-lg transition-colors"
               >
-                {sentToFc ? 'Re-send' : 'Send to FC'}
+                {sentToFc ? tr('settings.SigningSection.reSend') : tr('settings.SigningSection.sendToFc')}
               </button>
             )}
           </div>
           <div className="ml-7 mt-1">
             <p className="text-xs text-content-secondary">
               {sentToFc
-                ? 'Both GCS and flight controller share the signing key. Signing is active.'
-                : 'Sends the key to the FC and enables signing. Both sides must share the same key.'}
+                ? tr('settings.SigningSection.bothGcsAndFlightControllerShare')
+                : tr('settings.SigningSection.sendsTheKeyToTheFc')}
             </p>
             {(connectionState.connectionType === 'tcp' || connectionState.connectionType === 'udp') && (
               <p className="text-[10px] text-content-tertiary mt-0.5">
-                Sends your key to the FC/proxy. If the proxy rejects it, paste the proxy's key instead.
+                {tr('settings.SigningSection.sendsYourKeyToTheFc')}
               </p>
             )}
           </div>
@@ -313,9 +310,9 @@ export function SigningSection() {
           {/* Pause/resume toggle */}
           <div className="flex items-center justify-between rounded-lg border border-subtle bg-surface px-3 py-2.5">
             <div>
-              <span className="text-xs font-medium text-content">Packet signing</span>
+              <span className="text-xs font-medium text-content">{tr('settings.SigningSection.packetSigning')}</span>
               <p className="text-[10px] text-content-secondary mt-0.5">
-                {enabled ? 'All outgoing packets are signed with SHA-256' : 'Signing is paused. Outgoing packets are unsigned.'}
+                {enabled ? tr('settings.SigningSection.allOutgoingPacketsAreSignedWith') : tr('settings.SigningSection.signingIsPausedOutgoingPacketsAre')}
               </p>
             </div>
             <button
@@ -332,8 +329,8 @@ export function SigningSection() {
             <div className={`w-2 h-2 rounded-full ${connectionState.fcSigning ? 'bg-emerald-400' : 'bg-surface-raised'}`} />
             <span className="text-[10px] text-content-secondary">
               {connectionState.fcSigning
-                ? 'Vehicle is sending signed packets'
-                : 'Waiting for signed packets from vehicle...'}
+                ? tr('settings.SigningSection.vehicleIsSendingSignedPackets')
+                : tr('settings.SigningSection.waitingForSignedPacketsFromVehicle')}
             </span>
           </div>
 
@@ -341,8 +338,7 @@ export function SigningSection() {
           {confirmDisable ? (
             <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-3">
               <p className="text-xs text-content mb-2">
-                This will disable signing on the flight controller and remove your local key.
-                Any GCS will be able to connect without a key.
+                {tr('settings.SigningSection.thisWillDisableSigningOnThe')}
               </p>
               <div className="flex gap-2">
                 <button
@@ -350,13 +346,13 @@ export function SigningSection() {
                   disabled={loading}
                   className="px-3 py-1.5 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white text-xs rounded-lg transition-colors"
                 >
-                  Confirm Disable
+                  {tr('settings.SigningSection.confirmDisable')}
                 </button>
                 <button
                   onClick={() => setConfirmDisable(false)}
                   className="px-3 py-1.5 bg-surface-raised hover:bg-surface-raised text-content text-xs rounded-lg transition-colors"
                 >
-                  Cancel
+                  {tr('settings.SigningSection.cancel')}
                 </button>
               </div>
             </div>
@@ -366,7 +362,7 @@ export function SigningSection() {
               disabled={loading}
               className="w-full px-3 py-2 rounded-lg border border-subtle bg-surface text-xs text-content-secondary hover:text-red-400 hover:border-red-500/30 transition-colors disabled:opacity-50"
             >
-              Disable signing and remove key
+              {tr('settings.SigningSection.disableSigningAndRemoveKey')}
             </button>
           )}
         </div>

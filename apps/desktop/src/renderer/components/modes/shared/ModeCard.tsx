@@ -13,6 +13,7 @@ import type { MSPModeRange } from '@ardudeck/msp-ts';
 import { MODE_INFO, AUX_CHANNELS } from '../presets/mode-presets';
 import RcChannelBar from './RcChannelBar';
 import { HelpCircle, Pencil, Trash2, Settings2 } from 'lucide-react';
+import { t } from '../../../i18n';
 
 interface ModeCardProps {
   mode: MSPModeRange;
@@ -42,7 +43,7 @@ export const ModeCard: React.FC<ModeCardProps> = ({
   const info = modeInfo || {
     name: `Mode ${mode.boxId}`,
     icon: HelpCircle,
-    description: 'Unknown mode',
+    description: t('modes.ModeCard.unknownMode'),
     color: 'bg-zinc-500',
     beginner: '',
   };
@@ -96,10 +97,10 @@ export const ModeCard: React.FC<ModeCardProps> = ({
             <button
               onClick={() => onConfigure(modeInfo.configureTab!)}
               className="px-2 py-1 text-xs bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 rounded-lg transition-colors flex items-center gap-1"
-              title={`Configure ${displayName} settings`}
+              title={t('modes.ModeCard.configureSettings', { displayName })}
             >
               <Settings2 className="w-3 h-3" />
-              Configure
+              {t('modes.ModeCard.configure')}
             </button>
           )}
 
@@ -109,7 +110,7 @@ export const ModeCard: React.FC<ModeCardProps> = ({
                 <button
                   onClick={onEdit}
                   className="p-2 text-content-secondary hover:text-content hover:bg-surface-raised rounded-lg transition-colors"
-                  title="Edit mode"
+                  title={t('modes.ModeCard.editMode')}
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
@@ -118,7 +119,7 @@ export const ModeCard: React.FC<ModeCardProps> = ({
                 <button
                   onClick={onDelete}
                   className="p-2 text-content-secondary hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                  title="Remove mode"
+                  title={t('modes.ModeCard.removeMode')}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -152,11 +153,11 @@ export const ModeCard: React.FC<ModeCardProps> = ({
       {expanded && (
         <div className="px-4 pb-4 pt-0 flex items-center justify-between text-xs text-content-secondary">
           <span>
-            Range: <span className="font-mono text-content">{mode.rangeStart}</span> -{' '}
+            {t('modes.ModeCard.range')} <span className="font-mono text-content">{mode.rangeStart}</span> -{' '}
             <span className="font-mono text-content">{mode.rangeEnd}</span>
           </span>
           <span>
-            Channel: <span className="text-content">{auxChannel?.name}</span>
+            {t('modes.ModeCard.channel')} <span className="text-content">{auxChannel?.name}</span>
           </span>
         </div>
       )}

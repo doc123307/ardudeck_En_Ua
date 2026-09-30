@@ -1,11 +1,12 @@
 import { Grid2x2 } from 'lucide-react';
 import type { VehicleTemplate } from '../types.js';
 import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 export const copterQuadH: VehicleTemplate = {
   slug: 'copter-quad-h',
   name: 'Quadcopter (H)',
-  description: 'Four motors in H pattern, rigid for camera platforms',
+  get description() { return t('lib.copter_quad_h.fourMotorsInHPatternRigid'); },
   icon: Grid2x2,
   vehicleType: 'copter',
   category: 'multirotor',
@@ -19,8 +20,8 @@ export const copterQuadH: VehicleTemplate = {
     batteryCapacity: 5000,
   },
   toParams: (p) => [
-    { name: 'FRAME_CLASS', value: 1, reason: 'Quadcopter', requiresReboot: true },
-    { name: 'FRAME_TYPE',  value: 3, reason: 'H arrangement',   requiresReboot: true },
+    { name: 'FRAME_CLASS', value: 1, reason: t('lib.copter_quad_h.quadcopter'), requiresReboot: true },
+    { name: 'FRAME_TYPE',  value: 3, reason: t('lib.copter_quad_h.hArrangement'),   requiresReboot: true },
     ...batteryParams(p),
     ...commonSafetyParams(),
   ],

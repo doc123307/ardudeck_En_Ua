@@ -35,6 +35,7 @@ import {
   toMetersFromAltitudeUnit,
   UNIT_LABELS,
 } from '../../../shared/user-units.js';
+import { t as tr } from '../../i18n';
 
 // =============================================================================
 // Visual Components
@@ -347,10 +348,10 @@ function ArmButton({
           {isArmed ? 'ARMED' : 'DISARMED'}
         </div>
         {armSwitchOn && !isArmed && (
-          <div className="text-amber-400 text-xs">Arming...</div>
+          <div className="text-amber-400 text-xs">{tr('panels.FlightControlPanel.arming')}</div>
         )}
         {!canArm && !compact && (
-          <div className="text-content-secondary text-xs">Not configured</div>
+          <div className="text-content-secondary text-xs">{tr('panels.FlightControlPanel.notConfigured')}</div>
         )}
       </div>
     </div>
@@ -402,7 +403,7 @@ function RcStatusIndicator({ isActive }: { isActive: boolean }) {
       isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-surface-raised text-content-secondary'
     }`}>
       <div className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400' : 'bg-content-tertiary'}`} />
-      <span>RC {isActive ? 'Active' : 'Idle'}</span>
+      <span>RC {isActive ? tr('panels.FlightControlPanel.active') : tr('panels.FlightControlPanel.idle')}</span>
     </div>
   );
 }
@@ -544,7 +545,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
   // which holds position without abandoning the mission, same intent as the
   // ArduPilot pause modes. Abort = AUTO_RTL (4,5), PX4's return-to-launch.
   const missionModes = isPx4
-    ? { auto: encodePx4CustomMode(4, 4), pause: encodePx4CustomMode(4, 3), pauseLabel: 'Hold', abort: encodePx4CustomMode(4, 5), abortLabel: 'Return' }
+    ? { auto: encodePx4CustomMode(4, 4), pause: encodePx4CustomMode(4, 3), pauseLabel: tr('panels.FlightControlPanel.hold'), abort: encodePx4CustomMode(4, 5), abortLabel: tr('panels.FlightControlPanel.return') }
     : MISSION_MODES[vehicleClass];
   const isInAuto = flight.modeNum === missionModes.auto;
   const isInPause = flight.modeNum === missionModes.pause;
@@ -627,7 +628,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
       if (isLoading) {
         setIsLoading(false);
         setStatusMsg({
-          text: flight.armed ? 'Armed successfully' : 'Disarmed',
+          text: flight.armed ? tr('panels.FlightControlPanel.armedSuccessfully') : tr('panels.FlightControlPanel.disarmed'),
           type: 'success',
         });
         setTimeout(() => setStatusMsg(null), 3000);
@@ -692,7 +693,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
       }
       if (!ok) {
         setIsLoading(false);
-        setStatusMsg({ text: 'Not connected', type: 'error' });
+        setStatusMsg({ text: tr('panels.FlightControlPanel.notConnected'), type: 'error' });
         setTimeout(() => setStatusMsg(null), 3000);
       }
       // If ok, wait for armed state change or COMMAND_ACK result (handled by effects above)
@@ -700,7 +701,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
       setTimeout(() => {
         setIsLoading((prev) => {
           if (prev) {
-            setStatusMsg({ text: 'No response from vehicle', type: 'error' });
+            setStatusMsg({ text: tr('panels.FlightControlPanel.noResponseFromVehicle'), type: 'error' });
             setTimeout(() => setStatusMsg(null), 5000);
           }
           return false;
@@ -709,7 +710,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
     } catch (err) {
       console.error('[FlightControl] MAVLink arm/disarm failed:', err);
       setIsLoading(false);
-      setStatusMsg({ text: 'Command error', type: 'error' });
+      setStatusMsg({ text: tr('panels.FlightControlPanel.commandError'), type: 'error' });
       setTimeout(() => setStatusMsg(null), 3000);
     }
   };
@@ -763,7 +764,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
         if (wantHold) {
           await window.electronAPI?.rcOverrideSet?.(1500, 1500, 1500, 1500);
           startRcHold();
-          setStatusMsg({ text: 'Holding hover (virtual RC)', type: 'info' });
+          setStatusMsg({ text: tr('panels.FlightControlPanel.holdingHoverVirtualRc'), type: 'info' });
           setTimeout(() => setStatusMsg(null), 3000);
           await new Promise((res) => setTimeout(res, 200)); // let the throttle override register before the mode inits
         } else {
@@ -839,10 +840,10 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
     setStatusMsg(null);
     try {
       const res = await window.electronAPI.setCurrentWaypoint(displayIdx + fcSeqOffset);
-      if (res?.success) setStatusMsg({ text: `Flying to WP ${displayIdx + 1}`, type: 'success' });
-      else setStatusMsg({ text: res?.error ?? 'Jump failed', type: 'error' });
+      if (res?.success) setStatusMsg({ text: tr('panels.FlightControlPanel.flyingToWp', { v1: displayIdx + 1 }), type: 'success' });
+      else setStatusMsg({ text: res?.error ?? tr('panels.FlightControlPanel.jumpFailed'), type: 'error' });
     } catch {
-      setStatusMsg({ text: 'Jump failed', type: 'error' });
+      setStatusMsg({ text: tr('panels.FlightControlPanel.jumpFailed'), type: 'error' });
     }
     setTimeout(() => setStatusMsg(null), 4000);
   }, [fcSeqOffset]);
@@ -854,13 +855,13 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
     try {
       const res = await window.electronAPI.setCurrentWaypoint(fcSeqOffset);
       if (!res?.success) {
-        setStatusMsg({ text: res?.error ?? 'Restart failed', type: 'error' });
+        setStatusMsg({ text: res?.error ?? tr('panels.FlightControlPanel.restartFailed'), type: 'error' });
       } else {
         if (flight.armed && !isInAuto) await sendMode(missionModes.auto);
-        setStatusMsg({ text: 'Mission restarted from WP 1', type: 'success' });
+        setStatusMsg({ text: tr('panels.FlightControlPanel.missionRestartedFromWp1'), type: 'success' });
       }
     } catch {
-      setStatusMsg({ text: 'Restart failed', type: 'error' });
+      setStatusMsg({ text: tr('panels.FlightControlPanel.restartFailed'), type: 'error' });
     }
     setTimeout(() => setStatusMsg(null), 4000);
   }, [fcSeqOffset, flight.armed, isInAuto, sendMode, missionModes.auto]);
@@ -883,7 +884,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
     return (
       <>
         <div className="flex items-center gap-1">
-          <span className="text-[10px] text-content-tertiary shrink-0">Fly&nbsp;to</span>
+          <span className="text-[10px] text-content-tertiary shrink-0">{tr('panels.FlightControlPanel.flyTo')}</span>
           {/* Stepper, not a dropdown: a native <select> over a 100+ waypoint
               mission opened a full-height scroll of context-free numbers. */}
           <div className="flex items-center rounded border border-subtle bg-surface-input overflow-hidden">
@@ -891,8 +892,8 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
               onClick={() => stepTo(target - 1)}
               disabled={target <= 0}
               className="px-1.5 py-1 text-[11px] leading-none text-content-secondary hover:text-content hover:bg-surface-raised disabled:opacity-30 disabled:cursor-not-allowed"
-              title="Back a waypoint (repeat a section)"
-              aria-label="Previous waypoint"
+              title={tr('panels.FlightControlPanel.backAWaypointRepeatASection')}
+              aria-label={tr('panels.FlightControlPanel.previousWaypoint')}
             >◀</button>
             <DraftNumberInput
               min={1}
@@ -901,14 +902,14 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
               value={target + 1}
               onCommit={(v) => stepTo(v - 1)}
               className="w-9 px-1 py-1 text-[11px] font-mono text-center bg-transparent text-content border-x border-subtle outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-              aria-label="Waypoint to fly to"
+              aria-label={tr('panels.FlightControlPanel.waypointToFlyTo')}
             />
             <button
               onClick={() => stepTo(target + 1)}
               disabled={target >= maxIdx}
               className="px-1.5 py-1 text-[11px] leading-none text-content-secondary hover:text-content hover:bg-surface-raised disabled:opacity-30 disabled:cursor-not-allowed"
-              title="Skip a waypoint (skip a section)"
-              aria-label="Next waypoint"
+              title={tr('panels.FlightControlPanel.skipAWaypointSkipASection')}
+              aria-label={tr('panels.FlightControlPanel.nextWaypoint')}
             >▶</button>
           </div>
           <span className="text-[10px] text-content-tertiary shrink-0 font-mono">/&nbsp;{missionItems.length}</span>
@@ -917,8 +918,8 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
             className={`px-2 py-1 text-[11px] font-medium rounded border transition-all ${pendingOp === 'jump'
               ? 'bg-[var(--status-warn-bg)] border-[color:var(--status-warn)] text-[color:var(--status-warn-fg)]'
               : 'bg-surface border-subtle hover:border-default text-content'}`}
-            title={`Fly to waypoint ${target + 1}`}
-          >{pendingOp === 'jump' ? 'Confirm →' : 'Go'}</button>
+            title={tr('panels.FlightControlPanel.flyToWaypoint', { v1: target + 1 })}
+          >{pendingOp === 'jump' ? tr('panels.FlightControlPanel.confirm') : 'Go'}</button>
         </div>
         <button
           onClick={() => { if (pendingOp === 'restart') { void handleRestart(); setPendingOp(null); } else setPendingOp('restart'); }}
@@ -926,14 +927,14 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
           className={`px-2 py-1 text-[11px] font-medium rounded border transition-all disabled:opacity-40 disabled:cursor-not-allowed ${pendingOp === 'restart'
             ? 'bg-[var(--status-warn-bg)] border-[color:var(--status-warn)] text-[color:var(--status-warn-fg)]'
             : 'bg-surface border-subtle hover:border-default text-content'}`}
-          title={flight.armed ? 'Restart mission from the first waypoint' : 'Arm first'}
-        >{pendingOp === 'restart' ? 'Confirm ↺' : 'Restart'}</button>
+          title={flight.armed ? tr('panels.FlightControlPanel.restartMissionFromTheFirstWaypoint') : tr('panels.FlightControlPanel.armFirst')}
+        >{pendingOp === 'restart' ? tr('panels.FlightControlPanel.confirm2') : tr('panels.FlightControlPanel.restart')}</button>
         <button
           onClick={() => { setPendingOp(null); mode.requestMode(missionModes.abort); }}
           disabled={!flight.armed}
           className="px-2 py-1 text-[11px] font-medium rounded border border-subtle bg-[var(--status-danger-bg)] hover:border-[color:var(--status-danger)] disabled:opacity-40 disabled:cursor-not-allowed text-[color:var(--status-danger-fg)] transition-all"
-          title={flight.armed ? `Abort mission (switch to ${missionModes.abortLabel})` : 'Arm first'}
-        >Abort</button>
+          title={flight.armed ? tr('panels.FlightControlPanel.abortMissionSwitchTo', { abortLabel: missionModes.abortLabel }) : tr('panels.FlightControlPanel.armFirst')}
+        >{tr('panels.FlightControlPanel.abort')}</button>
       </>
     );
   };
@@ -1009,7 +1010,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
         vehicleSysids: fleetTakeoffSysids,
         payload: { altitude: takeoffAlt },
       });
-      setStatusMsg({ text: `Taking off to ${takeoffAlt}m...`, type: 'success' });
+      setStatusMsg({ text: tr('panels.FlightControlPanel.takingOffToM', { takeoffAlt }), type: 'success' });
       setTimeout(() => setStatusMsg(null), 3000);
       return;
     }
@@ -1043,7 +1044,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
       waitForState,
     });
     if (result.ok) {
-      setStatusMsg({ text: `Taking off to ${formatAltitudeFromMeters(takeoffAlt, altitudeUnit)}...`, type: 'success' });
+      setStatusMsg({ text: tr('panels.FlightControlPanel.takingOffTo', { v1: formatAltitudeFromMeters(takeoffAlt, altitudeUnit) }), type: 'success' });
     } else {
       setStatusMsg({ text: result.reason, type: 'error' });
     }
@@ -1110,12 +1111,12 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
-                    <span>{flight.armed ? 'Disarming...' : 'Arming...'}</span>
+                    <span>{flight.armed ? tr('panels.FlightControlPanel.disarming') : tr('panels.FlightControlPanel.arming')}</span>
                   </>
                 ) : (
                   <>
                     <div className={`w-2.5 h-2.5 rounded-full ${flight.armed ? 'bg-red-400 animate-pulse' : forceArm ? 'bg-amber-400' : 'bg-content-tertiary'}`} />
-                    <span>{flight.armed ? 'Disarm' : forceArm ? 'Force Arm' : 'Arm'}</span>
+                    <span>{flight.armed ? tr('panels.FlightControlPanel.disarm') : forceArm ? tr('panels.FlightControlPanel.forceArm') : tr('panels.FlightControlPanel.arm')}</span>
                   </>
                 )}
               </button>
@@ -1124,9 +1125,9 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                 onClick={() => setForceArm(!forceArm)}
                 className={`h-full shrink-0 flex flex-col items-center justify-center gap-1 px-2.5 rounded-lg transition-all
                   ${forceArm ? 'bg-[var(--status-warn-bg)] border border-subtle' : 'bg-surface border border-subtle hover:border-default'}`}
-                title="Force ARM bypasses pre-arm safety checks"
+                title={tr('panels.FlightControlPanel.forceArmBypassesPreArmSafety')}
               >
-                <span className={`text-[10px] font-medium ${forceArm ? 'text-[color:var(--status-warn-fg)]' : 'text-content-secondary'}`}>Force</span>
+                <span className={`text-[10px] font-medium ${forceArm ? 'text-[color:var(--status-warn-fg)]' : 'text-content-secondary'}`}>{tr('panels.FlightControlPanel.force')}</span>
                 <div className={`w-7 h-3.5 rounded-full transition-colors relative ${forceArm ? 'bg-[var(--status-warn)]' : 'bg-surface-inset'}`}>
                   <div className={`absolute top-0.5 w-2.5 h-2.5 rounded-full bg-white border border-strong shadow-sm transition-transform ${forceArm ? 'translate-x-3.5' : 'translate-x-0.5'}`} />
                 </div>
@@ -1156,9 +1157,9 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                     ))}
                     <button
                       onClick={clearPreArm}
-                      title="Dismiss these. A check that's still failing reappears when the flight controller re-reports it."
+                      title={tr('panels.FlightControlPanel.dismissTheseACheckThatS')}
                       className="px-2 py-0.5 bg-surface border border-subtle rounded text-content-secondary hover:text-content text-[11px]"
-                    >Clear</button>
+                    >{tr('panels.FlightControlPanel.clear')}</button>
                   </div>
                 )}
               </div>
@@ -1178,15 +1179,15 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                     className="w-14 px-1.5 py-1 text-sm font-mono bg-surface-input border border-subtle rounded text-content"
                   />
                   <span className="text-[11px] text-content-secondary shrink-0">{altitudeLabel}</span>
-                  <button onClick={handleTakeoff} className="px-2.5 py-1 text-[11px] font-medium bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors">Go</button>
-                  <button onClick={() => setShowTakeoffDialog(false)} className="px-1 text-content-secondary hover:text-content text-sm leading-none" title="Cancel" aria-label="Cancel takeoff">✕</button>
+                  <button onClick={handleTakeoff} className="px-2.5 py-1 text-[11px] font-medium bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors">{tr('panels.FlightControlPanel.go')}</button>
+                  <button onClick={() => setShowTakeoffDialog(false)} className="px-1 text-content-secondary hover:text-content text-sm leading-none" title={tr('panels.FlightControlPanel.cancel')} aria-label={tr('panels.FlightControlPanel.cancelTakeoff')}>✕</button>
                 </div>
               ) : capabilities.takeoff.supported && (
                 <button
                   onClick={() => setShowTakeoffDialog(true)}
                   disabled={flight.armed && !fleetTakeoffSysids}
                   className="h-full px-4 text-xs font-medium rounded-lg bg-surface border border-subtle hover:bg-surface-raised hover:border-default disabled:opacity-40 disabled:cursor-not-allowed text-content transition-all"
-                  title={flight.armed && !fleetTakeoffSysids ? 'Already armed - click disarm first' : takeoffPresentation.buttonHint}
+                  title={flight.armed && !fleetTakeoffSysids ? tr('panels.FlightControlPanel.alreadyArmedClickDisarmFirst') : takeoffPresentation.buttonHint}
                 >
                   {takeoffPresentation.buttonLabel}
                 </button>
@@ -1204,30 +1205,30 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                           {currentSeq != null ? `→ ${currentSeq + 1}/${missionItems.length}` : (isInAuto ? 'starting…' : missionDirty ? 'not uploaded' : 'idle')}
                         </span>
                       </>
-                    : <span className="text-content-secondary">No mission</span>}
+                    : <span className="text-content-secondary">{tr('panels.FlightControlPanel.noMission')}</span>}
                 </span>
-                <button onClick={() => { void fetchMission(); }} className="text-content-tertiary hover:text-content shrink-0" title="Reload mission from FC">⟳</button>
+                <button onClick={() => { void fetchMission(); }} className="text-content-tertiary hover:text-content shrink-0" title={tr('panels.FlightControlPanel.reloadMissionFromFc')}>⟳</button>
                 {missionLoaded && (
                   <div className="flex items-center gap-1">
                     <button
                       onClick={handleStartMission}
                       disabled={!flight.armed || isInAuto}
                       className="px-2.5 py-1 text-[11px] font-medium rounded bg-[var(--status-success-bg)] border border-subtle hover:border-[color:var(--status-success)] disabled:opacity-40 disabled:cursor-not-allowed text-[color:var(--status-success-fg)] transition-all"
-                      title={!flight.armed ? 'Arm first' : missionDirty ? 'Mission not uploaded to the vehicle yet' : 'Switch to AUTO'}
-                    >{isInAuto ? 'Running' : 'Start'}</button>
+                      title={!flight.armed ? tr('panels.FlightControlPanel.armFirst') : missionDirty ? tr('panels.FlightControlPanel.missionNotUploadedToTheVehicle') : tr('panels.FlightControlPanel.switchToAuto')}
+                    >{isInAuto ? tr('panels.FlightControlPanel.running') : tr('panels.FlightControlPanel.start')}</button>
                     {isInAuto ? (
                       <button
                         onClick={() => mode.requestMode(missionModes.pause, { skipConfirm: true })}
                         disabled={!flight.armed}
                         className="px-2.5 py-1 text-[11px] font-medium rounded bg-[var(--status-warn-bg)] border border-subtle hover:border-[color:var(--status-warn)] disabled:opacity-40 disabled:cursor-not-allowed text-[color:var(--status-warn-fg)] transition-all"
-                      >Pause</button>
+                      >{tr('panels.FlightControlPanel.pause')}</button>
                     ) : (
                       <button
                         onClick={() => mode.requestMode(missionModes.auto, { skipConfirm: true })}
                         disabled={!flight.armed || !isInPause}
                         className="px-2.5 py-1 text-[11px] font-medium rounded bg-[var(--status-info-bg)] border border-subtle hover:border-[color:var(--status-info)] disabled:opacity-40 disabled:cursor-not-allowed text-[color:var(--status-info-fg)] transition-all"
-                        title={isInPause ? `Resume from ${missionModes.pauseLabel}` : `Pause first`}
-                      >Resume</button>
+                        title={isInPause ? tr('panels.FlightControlPanel.resumeFrom', { pauseLabel: missionModes.pauseLabel }) : tr('panels.FlightControlPanel.pauseFirst')}
+                      >{tr('panels.FlightControlPanel.resume')}</button>
                     )}
                     <div className="w-px self-stretch bg-subtle mx-0.5 my-0.5" />
                     {renderMissionExtras()}
@@ -1274,8 +1275,8 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                 }`}
             >
               {isLoading
-                ? (flight.armed ? 'Disarming…' : 'Arming…')
-                : flight.armed ? 'Disarm' : forceArm ? 'Force Arm' : 'Arm'}
+                ? (flight.armed ? tr('panels.FlightControlPanel.disarming2') : tr('panels.FlightControlPanel.arming2'))
+                : flight.armed ? tr('panels.FlightControlPanel.disarm') : forceArm ? tr('panels.FlightControlPanel.forceArm') : tr('panels.FlightControlPanel.arm')}
             </button>
 
             {statusMsg && (
@@ -1297,7 +1298,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                 onClick={() => setShowTakeoffDialog(true)}
                 disabled={flight.armed && !fleetTakeoffSysids}
                 className="w-full px-2 py-1.5 mb-2 text-xs font-medium rounded-lg bg-surface border border-subtle hover:bg-surface-raised hover:border-default disabled:opacity-40 disabled:cursor-not-allowed text-content transition-all"
-                title={flight.armed && !fleetTakeoffSysids ? 'Already armed - click disarm first' : takeoffPresentation.buttonHint}
+                title={flight.armed && !fleetTakeoffSysids ? tr('panels.FlightControlPanel.alreadyArmedClickDisarmFirst') : takeoffPresentation.buttonHint}
               >
                 {takeoffPresentation.buttonLabel}
               </button>
@@ -1321,12 +1322,12 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                             : (isInAuto ? 'starting…' : 'idle')}
                         </span>
                       </>
-                    : <span className="text-content-secondary">No mission</span>}
+                    : <span className="text-content-secondary">{tr('panels.FlightControlPanel.noMission')}</span>}
                 </span>
                 <button
                   onClick={() => { void fetchMission(); }}
                   className="text-[11px] text-content-tertiary hover:text-content shrink-0"
-                  title="Reload mission from FC"
+                  title={tr('panels.FlightControlPanel.reloadMissionFromFc')}
                 >⟳</button>
               </div>
               {missionLoaded && (
@@ -1335,23 +1336,23 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                     onClick={handleStartMission}
                     disabled={!flight.armed || isInAuto}
                     className="flex-1 px-2 py-1 text-[11px] font-medium rounded bg-[var(--status-success-bg)] border border-subtle hover:border-[color:var(--status-success)] disabled:opacity-40 disabled:cursor-not-allowed text-[color:var(--status-success-fg)] transition-all"
-                    title={!flight.armed ? 'Arm first' : missionDirty ? 'Mission not uploaded to the vehicle yet' : 'Switch to AUTO'}
+                    title={!flight.armed ? tr('panels.FlightControlPanel.armFirst') : missionDirty ? tr('panels.FlightControlPanel.missionNotUploadedToTheVehicle') : tr('panels.FlightControlPanel.switchToAuto')}
                   >
-                    {isInAuto ? 'Running' : 'Start'}
+                    {isInAuto ? tr('panels.FlightControlPanel.running') : tr('panels.FlightControlPanel.start')}
                   </button>
                   {isInAuto ? (
                     <button
                       onClick={() => mode.requestMode(missionModes.pause, { skipConfirm: true })}
                       disabled={!flight.armed}
                       className="flex-1 px-2 py-1 text-[11px] font-medium rounded bg-[var(--status-warn-bg)] border border-subtle hover:border-[color:var(--status-warn)] disabled:opacity-40 disabled:cursor-not-allowed text-[color:var(--status-warn-fg)] transition-all"
-                    >Pause</button>
+                    >{tr('panels.FlightControlPanel.pause')}</button>
                   ) : (
                     <button
                       onClick={() => mode.requestMode(missionModes.auto, { skipConfirm: true })}
                       disabled={!flight.armed || !isInPause}
                       className="flex-1 px-2 py-1 text-[11px] font-medium rounded bg-[var(--status-info-bg)] border border-subtle hover:border-[color:var(--status-info)] disabled:opacity-40 disabled:cursor-not-allowed text-[color:var(--status-info-fg)] transition-all"
-                      title={isInPause ? `Resume from ${missionModes.pauseLabel}` : `Pause first`}
-                    >Resume</button>
+                      title={isInPause ? tr('panels.FlightControlPanel.resumeFrom', { pauseLabel: missionModes.pauseLabel }) : tr('panels.FlightControlPanel.pauseFirst')}
+                    >{tr('panels.FlightControlPanel.resume')}</button>
                   )}
                 </div>
               )}
@@ -1385,13 +1386,13 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                     onClick={handleTakeoff}
                     className="ml-auto px-2.5 py-1 text-[11px] font-medium bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors"
                   >
-                    Go
+                    {tr('panels.FlightControlPanel.go')}
                   </button>
                   <button
                     onClick={() => setShowTakeoffDialog(false)}
                     className="px-1.5 py-1 text-content-secondary hover:text-content transition-colors text-sm leading-none"
-                    title="Cancel"
-                    aria-label="Cancel takeoff"
+                    title={tr('panels.FlightControlPanel.cancel')}
+                    aria-label={tr('panels.FlightControlPanel.cancelTakeoff')}
                   >✕</button>
                 </div>
                 {takeoffPresentation.dialogNote && (
@@ -1405,13 +1406,13 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
             {!flight.armed && preArmReasons.length > 0 && (
               <div className="mb-4 bg-[var(--status-danger-bg)] border border-subtle rounded-lg">
                 <div className="flex items-center justify-between px-2.5 pt-2.5 pb-1.5">
-                  <span className="text-red-400 text-[10px] font-medium uppercase tracking-wider">Pre-arm Checks Failed</span>
+                  <span className="text-red-400 text-[10px] font-medium uppercase tracking-wider">{tr('panels.FlightControlPanel.preArmChecksFailed')}</span>
                   <button
                     onClick={clearPreArm}
-                    title="Dismiss these. A check that's still failing reappears when the flight controller re-reports it."
+                    title={tr('panels.FlightControlPanel.dismissTheseACheckThatS')}
                     className="text-[10px] text-content-secondary hover:text-content px-1.5 py-0.5 -my-0.5 rounded hover:bg-red-500/10 transition-colors"
                   >
-                    Clear
+                    {tr('panels.FlightControlPanel.clear')}
                   </button>
                 </div>
                 <div className="flex flex-col">
@@ -1434,7 +1435,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                           </svg>
                           <span className="flex-1 text-[color:var(--status-danger-fg)] text-[11px] leading-tight">{reason}</span>
                           {hasFixContent && (
-                            <span className="text-[10px] text-blue-400 shrink-0">{isExpanded ? '▾' : 'Fix ›'}</span>
+                            <span className="text-[10px] text-blue-400 shrink-0">{isExpanded ? '▾' : tr('panels.FlightControlPanel.fix')}</span>
                           )}
                         </div>
                         {isExpanded && (
@@ -1449,7 +1450,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
 
             <button
               onClick={() => setForceArm(!forceArm)}
-              title="Bypass pre-arm checks. Use only when the failing check is known-safe."
+              title={tr('panels.FlightControlPanel.bypassPreArmChecksUseOnly')}
               className={`flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg transition-all
                 ${forceArm
                   ? 'bg-[var(--status-warn-bg)] border border-subtle'
@@ -1459,7 +1460,7 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                 <svg className={`w-3.5 h-3.5 ${forceArm ? 'text-amber-400' : 'text-content-secondary'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <span className={`text-[11px] font-medium ${forceArm ? 'text-[color:var(--status-warn-fg)]' : 'text-content'}`}>Force ARM</span>
+                <span className={`text-[11px] font-medium ${forceArm ? 'text-[color:var(--status-warn-fg)]' : 'text-content'}`}>{tr('panels.FlightControlPanel.forceArm2')}</span>
               </div>
               <div className={`w-7 h-3.5 rounded-full transition-colors relative ${forceArm ? 'bg-[var(--status-warn)]' : 'bg-surface-inset'}`}>
                 <div className={`absolute top-0.5 w-2.5 h-2.5 rounded-full bg-white border border-strong shadow-sm transition-transform ${forceArm ? 'translate-x-3.5' : 'translate-x-0.5'}`} />
@@ -1480,11 +1481,10 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                 <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.3 3.86l-8.02 13.89A2 2 0 004 21h16a2 2 0 001.73-3.25L13.7 3.86a2 2 0 00-3.4 0z" />
                 </svg>
-                <span className="text-sm font-semibold text-content">Mission not on vehicle</span>
+                <span className="text-sm font-semibold text-content">{tr('panels.FlightControlPanel.missionNotOnVehicle')}</span>
               </div>
               <p className="text-xs text-content-secondary leading-relaxed mb-3">
-                The planned mission ({missionItems.length} waypoints) has not been uploaded to the
-                flight controller, so starting AUTO now would not fly it.
+                {tr('panels.FlightControlPanel.thePlannedMission')}{missionItems.length} {tr('panels.FlightControlPanel.waypointsHasNotBeenUploadedTo')}
               </p>
               <div className="flex justify-end gap-2">
                 <button
@@ -1492,21 +1492,21 @@ function MavlinkFlightControl({ mavTypeOverride }: { mavTypeOverride?: number })
                   disabled={uploadingMission}
                   className="px-3 py-1.5 text-xs text-content-secondary hover:text-content transition-colors disabled:opacity-40"
                 >
-                  Cancel
+                  {tr('panels.FlightControlPanel.cancel')}
                 </button>
                 <button
                   onClick={() => { setShowMissionUploadGate(false); startMissionAuto(); }}
                   disabled={uploadingMission}
                   className="px-3 py-1.5 text-xs rounded-lg bg-surface-raised hover:bg-surface text-content border border-subtle transition-colors disabled:opacity-40"
                 >
-                  Start anyway
+                  {tr('panels.FlightControlPanel.startAnyway')}
                 </button>
                 <button
                   onClick={() => { void handleUploadAndStart(); }}
                   disabled={uploadingMission}
                   className="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors disabled:opacity-60"
                 >
-                  {uploadingMission ? 'Uploading…' : 'Upload & Start'}
+                  {uploadingMission ? tr('panels.FlightControlPanel.uploading') : tr('panels.FlightControlPanel.uploadStart')}
                 </button>
               </div>
             </div>
@@ -1616,9 +1616,9 @@ export function FlightControlPanel() {
   // Handle SITL configuration
   const handleConfigureSitl = async () => {
     setIsConfiguring(true);
-    setConfigMessage('Configuring...');
+    setConfigMessage(tr('panels.FlightControlPanel.configuring'));
     const success = await configureSitlForTesting();
-    setConfigMessage(success ? 'Saved! Reconnect after reboot.' : 'Failed. Check console.');
+    setConfigMessage(success ? tr('panels.FlightControlPanel.savedReconnectAfterReboot') : tr('panels.FlightControlPanel.failedCheckConsole'));
     setIsConfiguring(false);
   };
 
@@ -1644,7 +1644,7 @@ export function FlightControlPanel() {
         <svg className="w-12 h-12 text-content-tertiary mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
         </svg>
-        <div className="text-content-secondary text-sm">Connect to a device</div>
+        <div className="text-content-secondary text-sm">{tr('panels.FlightControlPanel.connectToADevice')}</div>
       </PanelContainer>
     );
   }
@@ -1661,7 +1661,7 @@ export function FlightControlPanel() {
           {/* Header with status */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="text-content font-medium">{flight.mode || 'Unknown'}</div>
+              <div className="text-content font-medium">{flight.mode || tr('panels.FlightControlPanel.unknown')}</div>
             </div>
             <RcStatusIndicator isActive={isOverrideActive} />
           </div>
@@ -1679,7 +1679,7 @@ export function FlightControlPanel() {
         {/* Arming Blocked Reasons */}
         {!flight.armed && flight.armingDisabledReasons && flight.armingDisabledReasons.length > 0 && (
           <div className="mb-4 p-2 bg-[var(--status-danger-bg)] border border-subtle rounded-lg">
-            <div className="text-red-400 text-[10px] font-medium uppercase tracking-wider mb-1">Arming Blocked</div>
+            <div className="text-red-400 text-[10px] font-medium uppercase tracking-wider mb-1">{tr('panels.FlightControlPanel.armingBlocked')}</div>
             <div className="flex flex-wrap gap-1">
               {flight.armingDisabledReasons.map((reason, i) => (
                 <span key={i} className="px-1.5 py-0.5 bg-[var(--status-danger-bg)] rounded text-[color:var(--status-danger-fg)] text-[10px]">
@@ -1692,7 +1692,7 @@ export function FlightControlPanel() {
 
         {/* Flight Modes - Chip style */}
         <div className="mb-4">
-          <SectionTitle>Flight Modes</SectionTitle>
+          <SectionTitle>{tr('panels.FlightControlPanel.flightModes')}</SectionTitle>
           <div className="flex flex-wrap gap-2">
             {COMMON_MODES.map((mode) => {
               const mapping = modeMappings.find((m) => m.boxId === mode.boxId);
@@ -1737,7 +1737,7 @@ export function FlightControlPanel() {
               setChannel(1, v);
               if (!isOverrideActive) startOverride();
             }}
-            label="Roll / Pitch"
+            label={tr('panels.FlightControlPanel.rollPitch')}
             xLabel="R"
             yLabel="P"
           />
@@ -1748,7 +1748,7 @@ export function FlightControlPanel() {
           onClick={centerSticks}
           className="mt-3 py-1.5 px-3 text-xs text-content-secondary hover:text-content bg-surface hover:bg-surface-raised rounded transition-colors self-center"
         >
-          Center Sticks
+          {tr('panels.FlightControlPanel.centerSticks')}
         </button>
 
         {/* Setup section (collapsed by default) */}
@@ -1761,20 +1761,20 @@ export function FlightControlPanel() {
               <svg className={`w-3 h-3 transition-transform ${showSetup ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-              Setup Required
+              {tr('panels.FlightControlPanel.setupRequired')}
             </button>
 
             {showSetup && (
               <div className="mt-2 p-2 bg-surface-raised rounded-lg">
                 <p className="text-content-secondary text-xs mb-2">
-                  ARM mode not configured. Click below to auto-configure for SITL testing.
+                  {tr('panels.FlightControlPanel.armModeNotConfiguredClickBelow')}
                 </p>
                 <button
                   onClick={handleConfigureSitl}
                   disabled={isConfiguring}
                   className="w-full py-2 px-3 text-xs font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors disabled:opacity-50"
                 >
-                  {isConfiguring ? 'Configuring...' : 'Setup for SITL'}
+                  {isConfiguring ? tr('panels.FlightControlPanel.configuring') : tr('panels.FlightControlPanel.setupForSitl')}
                 </button>
                 {configMessage && (
                   <p className="text-xs text-center text-blue-400 mt-2">{configMessage}</p>
@@ -1787,7 +1787,7 @@ export function FlightControlPanel() {
         {/* Loading state */}
         {!modeMappingsLoaded && (
           <div className="text-center text-content-secondary text-xs py-4">
-            Loading configuration...
+            {tr('panels.FlightControlPanel.loadingConfiguration')}
           </div>
         )}
       </div>

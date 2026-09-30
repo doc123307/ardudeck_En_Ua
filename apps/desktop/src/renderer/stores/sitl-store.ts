@@ -8,6 +8,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { SitlProfile, SitlConfig } from '../../shared/ipc-channels.js';
+import { t } from '../i18n';
 
 // =============================================================================
 // Types
@@ -133,19 +134,19 @@ export interface SitlStore {
 const STANDARD_PROFILES: SitlProfile[] = [
   {
     name: 'Default',
-    description: 'Fresh iNav install with factory defaults. Use for general testing.',
+    get description() { return t('stores.sitl_store.freshInavInstallWithFactoryDefaults'); },
     eepromFileName: 'inav-default.bin',
     isStandard: true,
   },
   {
     name: 'Airplane',
-    description: 'Pre-configured for fixed-wing testing with airplane mixer.',
+    get description() { return t('stores.sitl_store.preConfiguredForFixedWingTesting'); },
     eepromFileName: 'inav-airplane.bin',
     isStandard: true,
   },
   {
     name: 'Quadcopter',
-    description: 'Pre-configured for quad testing with X mixer.',
+    get description() { return t('stores.sitl_store.preConfiguredForQuadTestingWith'); },
     eepromFileName: 'inav-quadcopter.bin',
     isStandard: true,
   },

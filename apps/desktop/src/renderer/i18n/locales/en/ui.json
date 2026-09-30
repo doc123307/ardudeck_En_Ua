@@ -1,0 +1,39 @@
+{
+  "ui": {
+    "Detachable": {
+      "openInNewWindow": "Open {{title}} in new window",
+      "openInSeparateWindow": "Open in separate window",
+      "dockBackHere": "Dock back here"
+    },
+    "ErrorBoundary": {
+      "theHitAnError": "The {{label}} hit an error",
+      "somethingWentWrong": "Something went wrong",
+      "tryAgain": "Try again"
+    },
+    "ExperienceLevelDialog": {
+      "welcomeToArdudeck": "Welcome to ArduDeck",
+      "chooseYourExperienceLevelToTailor": "Choose your experience level to tailor the interface",
+      "beginner": "Beginner",
+      "showTipsExplanationsAndGuidesThroughout": "Show tips, explanations, and guides throughout the interface to help you learn.",
+      "advanced": "Advanced",
+      "cleanInterfaceWithNoHandHolding": "Clean interface with no hand-holding. Hide educational cards and inline tips.",
+      "youCanChangeThisAnytimeIn": "You can change this anytime in Settings"
+    },
+    "InfoCard": {
+      "tip": "Tip:"
+    },
+    "ProfileManager": {
+      "resetToFactoryDefaults": "Reset to factory defaults",
+      "reset": "Reset",
+      "name": "Name...",
+      "saveCurrentSettingsAsAProfile": "Save current settings as a profile",
+      "save": "Save"
+    },
+    "RateCurve": {
+      "responseCurve": "Response Curve",
+      "max": "Max:",
+      "stick": "Stick",
+      "rate": "Rate"
+    }
+  }
+}

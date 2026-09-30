@@ -18,6 +18,7 @@ import {
   Rocket,
   Settings2,
 } from 'lucide-react';
+import { t } from '../../i18n';
 
 // Launch configuration settings
 interface AutoLaunchConfig {
@@ -87,9 +88,9 @@ const LAUNCH_SETTINGS = [
 
 // Wiggle options
 const WIGGLE_OPTIONS = [
-  { value: 'OFF', label: 'Disabled' },
-  { value: '1', label: '1 Wiggle (larger planes)' },
-  { value: '2', label: '2 Wiggles (smaller planes)' },
+  { value: 'OFF', get label() { return t('parameters.AutoLaunchTab.disabled'); } },
+  { value: '1', get label() { return t('parameters.AutoLaunchTab.n1WiggleLargerPlanes'); } },
+  { value: '2', get label() { return t('parameters.AutoLaunchTab.n2WigglesSmallerPlanes'); } },
 ];
 
 interface Props {
@@ -136,11 +137,11 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
         console.log('[AutoLaunch] Loaded settings:', settings);
       } else {
         console.log('[AutoLaunch] No settings returned, using defaults');
-        setError('Auto Launch settings not available on this firmware version');
+        setError(t('parameters.AutoLaunchTab.autoLaunchSettingsNotAvailableOn'));
       }
     } catch (err) {
       console.error('[AutoLaunch] Load error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load launch config');
+      setError(err instanceof Error ? err.message : t('parameters.AutoLaunchTab.failedToLoadLaunchConfig'));
     } finally {
       setLoading(false);
     }
@@ -193,7 +194,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
       console.log('[AutoLaunch] Saving to EEPROM...');
       const eepromSuccess = await window.electronAPI.mspSaveEeprom();
       if (!eepromSuccess) {
-        setError('Config sent but EEPROM save failed - changes may not persist');
+        setError(t('parameters.AutoLaunchTab.configSentButEepromSaveFailed'));
         return;
       }
 
@@ -202,7 +203,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
       setModified(false);
     } catch (err) {
       console.error('[AutoLaunch] Save error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save');
+      setError(err instanceof Error ? err.message : t('parameters.AutoLaunchTab.failedToSave'));
     } finally {
       setSaving(false);
     }
@@ -217,7 +218,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full mb-2 mx-auto" />
-          <p className="text-content-secondary">Loading launch configuration...</p>
+          <p className="text-content-secondary">{t('parameters.AutoLaunchTab.loadingLaunchConfiguration')}</p>
         </div>
       </div>
     );
@@ -229,16 +230,15 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
       <div className="bg-orange-500/10 rounded-xl border-orange-500/30 p-4 flex items-start gap-4">
         <Rocket className="w-8 h-8 text-orange-400 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-orange-400 font-medium">Auto Launch Settings (iNav Fixed-Wing)</p>
+          <p className="text-orange-400 font-medium">{t('parameters.AutoLaunchTab.autoLaunchSettingsInavFixedWing')}</p>
           <p className="text-sm text-content-secondary mt-1">
-            Configure automatic launch detection for <strong className="text-content">throw, bungee, or catapult</strong> launches.
-            When enabled via a switch, the FC detects the launch and automatically climbs to a safe altitude.
+            {t('parameters.AutoLaunchTab.configureAutomaticLaunchDetectionFor')} <strong className="text-content">{t('parameters.AutoLaunchTab.throwBungeeOrCatapult')}</strong> {t('parameters.AutoLaunchTab.launchesWhenEnabledViaASwitch')}
           </p>
           <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-content-secondary">
-            <p><span className="text-orange-400"><Target className="w-3 h-3 inline mr-1" />Detection</span>: Acceleration/angle thresholds to detect launch</p>
-            <p><span className="text-blue-400"><Zap className="w-3 h-3 inline mr-1" />Motor</span>: Idle, delay, and throttle settings</p>
-            <p><span className="text-green-400"><TrendingUp className="w-3 h-3 inline mr-1" />Climb</span>: Pitch angle and target altitude</p>
-            <p><span className="text-purple-400"><Settings2 className="w-3 h-3 inline mr-1" />Exit</span>: Transition to normal flight</p>
+            <p><span className="text-orange-400"><Target className="w-3 h-3 inline mr-1" />{t('parameters.AutoLaunchTab.detection')}</span>{t('parameters.AutoLaunchTab.accelerationAngleThresholdsToDetectLaunch')}</p>
+            <p><span className="text-blue-400"><Zap className="w-3 h-3 inline mr-1" />{t('parameters.AutoLaunchTab.motor')}</span>{t('parameters.AutoLaunchTab.idleDelayAndThrottleSettings')}</p>
+            <p><span className="text-green-400"><TrendingUp className="w-3 h-3 inline mr-1" />{t('parameters.AutoLaunchTab.climb')}</span>{t('parameters.AutoLaunchTab.pitchAngleAndTargetAltitude')}</p>
+            <p><span className="text-purple-400"><Settings2 className="w-3 h-3 inline mr-1" />{t('parameters.AutoLaunchTab.exit')}</span>{t('parameters.AutoLaunchTab.transitionToNormalFlight')}</p>
           </div>
         </div>
       </div>
@@ -272,15 +272,15 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
             <Target className="w-5 h-5 text-orange-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">Launch Detection</h3>
-            <p className="text-xs text-content-secondary">Thresholds to detect when aircraft is thrown/launched</p>
+            <h3 className="text-sm font-medium text-content">{t('parameters.AutoLaunchTab.launchDetection')}</h3>
+            <p className="text-xs text-content-secondary">{t('parameters.AutoLaunchTab.thresholdsToDetectWhenAircraftIs')}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-4">
             <DraggableSlider
-              label="Threshold Acceleration"
+              label={t('parameters.AutoLaunchTab.thresholdAcceleration')}
               value={config.nav_fw_launch_accel}
               onChange={(v) => updateConfig({ nav_fw_launch_accel: v })}
               min={1000}
@@ -288,10 +288,10 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={100}
               unit=""
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">1G = 981. Higher = harder throw needed. Default: 1863</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.n1g981HigherHarderThrowNeeded')}</p>
 
             <DraggableSlider
-              label="Threshold Velocity"
+              label={t('parameters.AutoLaunchTab.thresholdVelocity')}
               value={config.nav_fw_launch_velocity}
               onChange={(v) => updateConfig({ nav_fw_launch_velocity: v })}
               min={100}
@@ -299,12 +299,12 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={50}
               unit=""
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">For swing-launch detection. Default: 300</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.forSwingLaunchDetectionDefault300')}</p>
           </div>
 
           <div className="space-y-4">
             <DraggableSlider
-              label="Detection Time"
+              label={t('parameters.AutoLaunchTab.detectionTime')}
               value={config.nav_fw_launch_detect_time}
               onChange={(v) => updateConfig({ nav_fw_launch_detect_time: v })}
               min={10}
@@ -312,10 +312,10 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={10}
               unit="ms"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Must exceed threshold for this duration. Default: 40ms</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.mustExceedThresholdForThisDuration')}</p>
 
             <DraggableSlider
-              label="Max Throw Angle"
+              label={t('parameters.AutoLaunchTab.maxThrowAngle')}
               value={config.nav_fw_launch_max_angle}
               onChange={(v) => updateConfig({ nav_fw_launch_max_angle: v })}
               min={5}
@@ -323,7 +323,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={5}
               unit="°"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Max pitch/roll to accept launch. 180 = disabled. Default: 45°</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.maxPitchRollToAcceptLaunch')}</p>
           </div>
         </div>
       </div>
@@ -335,15 +335,15 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
             <Zap className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">Idle & Motor Startup</h3>
-            <p className="text-xs text-content-secondary">Motor behavior before and during launch</p>
+            <h3 className="text-sm font-medium text-content">{t('parameters.AutoLaunchTab.idleMotorStartup')}</h3>
+            <p className="text-xs text-content-secondary">{t('parameters.AutoLaunchTab.motorBehaviorBeforeAndDuringLaunch')}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-4">
             <DraggableSlider
-              label="Idle Throttle"
+              label={t('parameters.AutoLaunchTab.idleThrottle')}
               value={config.nav_fw_launch_idle_thr}
               onChange={(v) => updateConfig({ nav_fw_launch_idle_thr: v })}
               min={1000}
@@ -351,10 +351,10 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={10}
               unit="µs"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Motor speed before launch detected. Default: 1000µs (off)</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.motorSpeedBeforeLaunchDetectedDefault')}</p>
 
             <DraggableSlider
-              label="Idle Motor Delay"
+              label={t('parameters.AutoLaunchTab.idleMotorDelay')}
               value={config.nav_fw_launch_idle_motor_delay}
               onChange={(v) => updateConfig({ nav_fw_launch_idle_motor_delay: v })}
               min={0}
@@ -362,10 +362,10 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={500}
               unit="ms"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Delay before idle motors spin. Default: 0ms</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.delayBeforeIdleMotorsSpinDefault')}</p>
 
             <div>
-              <label className="text-xs text-content-secondary block mb-1.5">Wiggle to Wake</label>
+              <label className="text-xs text-content-secondary block mb-1.5">{t('parameters.AutoLaunchTab.wiggleToWake')}</label>
               <select
                 value={config.nav_fw_launch_wiggle_to_wake_idle}
                 onChange={(e) => updateConfig({ nav_fw_launch_wiggle_to_wake_idle: e.target.value })}
@@ -377,13 +377,13 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
                   </option>
                 ))}
               </select>
-              <p className="text-[10px] text-content-tertiary mt-1">Yaw wiggle to start idle motor</p>
+              <p className="text-[10px] text-content-tertiary mt-1">{t('parameters.AutoLaunchTab.yawWiggleToStartIdleMotor')}</p>
             </div>
           </div>
 
           <div className="space-y-4">
             <DraggableSlider
-              label="Motor Delay"
+              label={t('parameters.AutoLaunchTab.motorDelay')}
               value={config.nav_fw_launch_motor_delay}
               onChange={(v) => updateConfig({ nav_fw_launch_motor_delay: v })}
               min={0}
@@ -391,10 +391,10 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={50}
               unit="ms"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Delay after detection before throttle up. Default: 500ms</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.delayAfterDetectionBeforeThrottleUp')}</p>
 
             <DraggableSlider
-              label="Motor Spinup Time"
+              label={t('parameters.AutoLaunchTab.motorSpinupTime')}
               value={config.nav_fw_launch_spinup_time}
               onChange={(v) => updateConfig({ nav_fw_launch_spinup_time: v })}
               min={0}
@@ -402,10 +402,10 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={10}
               unit="ms"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Ramp time from idle to launch throttle. Default: 100ms</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.rampTimeFromIdleToLaunch')}</p>
 
             <DraggableSlider
-              label="Launch Throttle"
+              label={t('parameters.AutoLaunchTab.launchThrottle')}
               value={config.nav_fw_launch_thr}
               onChange={(v) => updateConfig({ nav_fw_launch_thr: v })}
               min={1000}
@@ -413,7 +413,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={10}
               unit="µs"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Throttle during climb. Default: 1700µs (~70%)</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.throttleDuringClimbDefault1700S')}</p>
           </div>
         </div>
       </div>
@@ -425,15 +425,15 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
             <TrendingUp className="w-5 h-5 text-green-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">Climb & Exit</h3>
-            <p className="text-xs text-content-secondary">Climb behavior and transition to normal flight</p>
+            <h3 className="text-sm font-medium text-content">{t('parameters.AutoLaunchTab.climbExit')}</h3>
+            <p className="text-xs text-content-secondary">{t('parameters.AutoLaunchTab.climbBehaviorAndTransitionToNormal')}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-4">
             <DraggableSlider
-              label="Climb Angle"
+              label={t('parameters.AutoLaunchTab.climbAngle')}
               value={config.nav_fw_launch_climb_angle}
               onChange={(v) => updateConfig({ nav_fw_launch_climb_angle: v })}
               min={0}
@@ -441,10 +441,10 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={1}
               unit="°"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Pitch angle during climb. Default: 18°</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.pitchAngleDuringClimbDefault18')}</p>
 
             <div>
-              <label className="text-xs text-content-secondary block mb-1.5">Maximum Altitude (m)</label>
+              <label className="text-xs text-content-secondary block mb-1.5">{t('parameters.AutoLaunchTab.maximumAltitudeM')}</label>
               <DraftNumberInput
                 value={cmToM(config.nav_fw_launch_max_altitude)}
                 onCommit={(v) => updateConfig({ nav_fw_launch_max_altitude: mToCm(v) })}
@@ -453,11 +453,11 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
                 max={600}
                 step={5}
               />
-              <p className="text-[10px] text-content-tertiary mt-1">Exit launch when reached. 0 = use timeout only. Default: 0</p>
+              <p className="text-[10px] text-content-tertiary mt-1">{t('parameters.AutoLaunchTab.exitLaunchWhenReached0Use')}</p>
             </div>
 
             <DraggableSlider
-              label="Minimum Launch Time"
+              label={t('parameters.AutoLaunchTab.minimumLaunchTime')}
               value={config.nav_fw_launch_min_time}
               onChange={(v) => updateConfig({ nav_fw_launch_min_time: v })}
               min={0}
@@ -465,12 +465,12 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={500}
               unit="ms"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Ignore stick inputs during this time. Default: 0ms</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.ignoreStickInputsDuringThisTime')}</p>
           </div>
 
           <div className="space-y-4">
             <DraggableSlider
-              label="Launch Timeout"
+              label={t('parameters.AutoLaunchTab.launchTimeout')}
               value={config.nav_fw_launch_timeout}
               onChange={(v) => updateConfig({ nav_fw_launch_timeout: v })}
               min={0}
@@ -478,10 +478,10 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={500}
               unit="ms"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Max time in launch mode. Default: 5000ms</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.maxTimeInLaunchModeDefault')}</p>
 
             <DraggableSlider
-              label="End Transition Time"
+              label={t('parameters.AutoLaunchTab.endTransitionTime')}
               value={config.nav_fw_launch_end_time}
               onChange={(v) => updateConfig({ nav_fw_launch_end_time: v })}
               min={0}
@@ -489,7 +489,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
               step={100}
               unit="ms"
             />
-            <p className="text-[10px] text-content-tertiary -mt-2">Smooth transition to normal flight. Default: 2000ms</p>
+            <p className="text-[10px] text-content-tertiary -mt-2">{t('parameters.AutoLaunchTab.smoothTransitionToNormalFlightDefault')}</p>
           </div>
         </div>
       </div>
@@ -498,12 +498,12 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
       <div className="bg-amber-500/10 rounded-xl border border-amber-500/30 p-4 flex items-start gap-4">
         <AlertTriangle className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-amber-400 font-medium">Important Safety Notes</p>
+          <p className="text-amber-400 font-medium">{t('parameters.AutoLaunchTab.importantSafetyNotes')}</p>
           <ul className="text-sm text-content-secondary mt-1 space-y-1 list-disc list-inside">
-            <li>Always test auto launch in an open area with plenty of clearance</li>
-            <li>Start with conservative settings and adjust based on your aircraft</li>
-            <li>Ensure NAV LAUNCH mode is assigned to a switch before using</li>
-            <li>Have a way to abort (disarm switch or manual override)</li>
+            <li>{t('parameters.AutoLaunchTab.alwaysTestAutoLaunchInAn')}</li>
+            <li>{t('parameters.AutoLaunchTab.startWithConservativeSettingsAndAdjust')}</li>
+            <li>{t('parameters.AutoLaunchTab.ensureNavLaunchModeIsAssigned')}</li>
+            <li>{t('parameters.AutoLaunchTab.haveAWayToAbortDisarm')}</li>
           </ul>
         </div>
       </div>
@@ -516,7 +516,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
           className="px-4 py-2 text-sm bg-surface-raised text-content rounded-lg hover:bg-surface-raised flex items-center gap-2"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
+          {t('parameters.AutoLaunchTab.refresh')}
         </button>
         <button
           onClick={saveConfig}
@@ -528,7 +528,7 @@ export default function AutoLaunchTab({ modified, setModified }: Props) {
           }`}
         >
           <Save className={`w-4 h-4 ${saving ? 'animate-pulse' : ''}`} />
-          {saving ? 'Saving...' : 'Save Launch Config'}
+          {saving ? t('parameters.AutoLaunchTab.saving') : t('parameters.AutoLaunchTab.saveLaunchConfig')}
         </button>
       </div>
     </div>

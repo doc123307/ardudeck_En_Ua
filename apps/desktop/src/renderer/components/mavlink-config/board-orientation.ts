@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * AHRS_ORIENTATION, in words a person can act on.
  *
@@ -18,19 +19,19 @@ export interface BoardOrientation {
 /** What people actually mount. Order is deliberate: upright, upside down, then
  * the quarter turns, which is roughly how often each one happens. */
 export const COMMON_ORIENTATIONS: BoardOrientation[] = [
-  { value: 0, code: 'None', label: 'Upright, arrow forward', hint: 'Factory default' },
-  { value: 8, code: 'Roll180', label: 'Upside down, arrow forward', hint: 'Board flipped over' },
-  { value: 2, code: 'Yaw90', label: 'Upright, arrow right' },
-  { value: 4, code: 'Yaw180', label: 'Upright, arrow backward' },
-  { value: 6, code: 'Yaw270', label: 'Upright, arrow left' },
-  { value: 10, code: 'Yaw90Roll180', label: 'Upside down, arrow right' },
-  { value: 12, code: 'Pitch180', label: 'Upside down, arrow backward' },
-  { value: 14, code: 'Yaw270Roll180', label: 'Upside down, arrow left' },
-  { value: 16, code: 'Roll90', label: 'On its right edge' },
-  { value: 20, code: 'Roll270', label: 'On its left edge' },
+  { value: 0, code: 'None', get label() { return t('mavlink_config.board_orientation.uprightArrowForward'); }, get hint() { return t('mavlink_config.board_orientation.factoryDefault'); } },
+  { value: 8, code: 'Roll180', get label() { return t('mavlink_config.board_orientation.upsideDownArrowForward'); }, get hint() { return t('mavlink_config.board_orientation.boardFlippedOver'); } },
+  { value: 2, code: 'Yaw90', get label() { return t('mavlink_config.board_orientation.uprightArrowRight'); } },
+  { value: 4, code: 'Yaw180', get label() { return t('mavlink_config.board_orientation.uprightArrowBackward'); } },
+  { value: 6, code: 'Yaw270', get label() { return t('mavlink_config.board_orientation.uprightArrowLeft'); } },
+  { value: 10, code: 'Yaw90Roll180', get label() { return t('mavlink_config.board_orientation.upsideDownArrowRight'); } },
+  { value: 12, code: 'Pitch180', get label() { return t('mavlink_config.board_orientation.upsideDownArrowBackward'); } },
+  { value: 14, code: 'Yaw270Roll180', get label() { return t('mavlink_config.board_orientation.upsideDownArrowLeft'); } },
+  { value: 16, code: 'Roll90', get label() { return t('mavlink_config.board_orientation.onItsRightEdge'); } },
+  { value: 20, code: 'Roll270', get label() { return t('mavlink_config.board_orientation.onItsLeftEdge'); } },
   // Pitch90 turns the arrow up (positive pitch is nose up), Pitch270 down.
-  { value: 24, code: 'Pitch90', label: 'Standing, arrow up' },
-  { value: 25, code: 'Pitch270', label: 'Standing, arrow down' },
+  { value: 24, code: 'Pitch90', get label() { return t('mavlink_config.board_orientation.standingArrowUp'); } },
+  { value: 25, code: 'Pitch270', get label() { return t('mavlink_config.board_orientation.standingArrowDown'); } },
 ];
 
 /** Every value ArduPilot accepts, for the cases the common list does not name. */
@@ -69,8 +70,8 @@ export function orientationCheck(
   return {
     level,
     note: level
-      ? 'Reading level. Tip the nose up: pitch should go positive. Lift the left side: roll should go positive.'
-      : `Reading roll ${Math.round(roll)}°, pitch ${Math.round(pitch)}°. If the vehicle is level, the orientation or the level calibration is wrong.`,
+      ? t('mavlink_config.board_orientation.readingLevelTipTheNoseUp')
+      : t('mavlink_config.board_orientation.readingRollPitchIfTheVehicle', { v1: Math.round(roll), v2: Math.round(pitch) }),
   };
 }
 

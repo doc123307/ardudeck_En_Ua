@@ -11,6 +11,7 @@ import { LuaPreviewPanel } from './LuaPreviewPanel';
 import { GraphToolbar } from './GraphToolbar';
 import { useLuaGraphStore } from '../../stores/lua-graph-store';
 import { compileGraph } from './lua-compiler';
+import { t } from '../../i18n';
 
 export function LuaGraphView() {
   const nodes = useLuaGraphStore((s) => s.nodes);
@@ -55,19 +56,19 @@ export function LuaGraphView() {
 
         {/* Status Bar */}
         <div className="flex items-center gap-4 px-3 py-1 bg-surface border-t border-subtle text-[10px] text-content-secondary">
-          <span>{nodes.length} node{nodes.length !== 1 ? 's' : ''}</span>
+          <span>{nodes.length} {t('lua_graph.LuaGraphView.node')}{nodes.length !== 1 ? 's' : ''}</span>
           <span className="w-px h-3 bg-subtle" />
           <span
             className={compileResult.success ? 'text-emerald-500' : 'text-red-400'}
           >
-            {compileResult.success ? 'Valid' : `${compileResult.errors.length} error(s)`}
+            {compileResult.success ? t('lua_graph.LuaGraphView.valid') : `${compileResult.errors.length} error(s)`}
           </span>
           <span className="w-px h-3 bg-subtle" />
           <span>
-            Est. memory: {(compileResult.estimatedMemoryBytes / 1024).toFixed(1)} KB
+            {t('lua_graph.LuaGraphView.estMemory')} {(compileResult.estimatedMemoryBytes / 1024).toFixed(1)} KB
           </span>
           <div className="flex-1" />
-          <span className="text-content-tertiary">ArduPilot Lua Scripting</span>
+          <span className="text-content-tertiary">{t('lua_graph.LuaGraphView.ardupilotLuaScripting')}</span>
         </div>
       </div>
     </ReactFlowProvider>

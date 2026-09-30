@@ -13,6 +13,7 @@ import ModeConfigStep from './steps/ModeConfigStep';
 import ReviewStep from './steps/ReviewStep';
 import { Radio, Satellite, Settings, Save, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { t } from '../../i18n';
 
 interface ModesWizardProps {
   isOpen: boolean;
@@ -21,10 +22,10 @@ interface ModesWizardProps {
 
 // Step info for progress display
 const STEPS: { id: string; label: string; Icon: LucideIcon }[] = [
-  { id: 'welcome', label: 'Style', Icon: Radio },
-  { id: 'transmitter', label: 'Check', Icon: Satellite },
-  { id: 'mode-config', label: 'Configure', Icon: Settings },
-  { id: 'review', label: 'Save', Icon: Save },
+  { id: 'welcome', get label() { return t('modes.ModesWizard.style'); }, Icon: Radio },
+  { id: 'transmitter', get label() { return t('modes.ModesWizard.check'); }, Icon: Satellite },
+  { id: 'mode-config', get label() { return t('modes.ModesWizard.configure'); }, Icon: Settings },
+  { id: 'review', get label() { return t('modes.ModesWizard.save'); }, Icon: Save },
 ];
 
 export const ModesWizard: React.FC<ModesWizardProps> = ({ isOpen, onClose }) => {
@@ -88,13 +89,13 @@ export const ModesWizard: React.FC<ModesWizardProps> = ({ isOpen, onClose }) => 
               <Radio className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-content">Modes Setup Wizard</h2>
-              <p className="text-xs text-content-secondary">Configure your flight modes</p>
+              <h2 className="text-lg font-semibold text-content">{t('modes.ModesWizard.modesSetupWizard')}</h2>
+              <p className="text-xs text-content-secondary">{t('modes.ModesWizard.configureYourFlightModes')}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {confirmClose && (
-              <span className="text-xs text-amber-400">Press again to discard setup</span>
+              <span className="text-xs text-amber-400">{t('modes.ModesWizard.pressAgainToDiscardSetup')}</span>
             )}
             <button
               onClick={handleClose}

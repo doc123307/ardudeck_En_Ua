@@ -79,6 +79,7 @@ import { useFleetRepoStore } from '../../stores/fleet-repo-store';
 import { emitParamsFlashed } from '../../modules/module-host-renderer';
 import { isCargoEnabled, VAULT_CARGO_SLUG } from '../../modules/capabilities';
 import PlaneTuningTab from './PlaneTuningTab';
+import { t } from '../../i18n';
 
 // Toast notification state
 type ToastType = 'success' | 'error' | 'info';
@@ -134,12 +135,12 @@ const TUNING_GROUP: TabGroup = {
   name: 'Tuning',
   Icon: Sliders,
   color: 'text-emerald-400',
-  description: 'PID gains, rate curves, and performance presets',
+  get description() { return t('mavlink_config.MavlinkConfigView.pidGainsRateCurvesAndPerformance'); },
   children: [
-    { id: 'pid', name: 'PID', Icon: Gauge, color: 'text-blue-400', description: 'Fine-tune PID gains for each axis' },
-    { id: 'rates', name: 'Rates', Icon: Activity, color: 'text-purple-400', description: 'Configure rate curves and expo' },
-    { id: 'tuning', name: 'Tuning', Icon: Sliders, color: 'text-emerald-400', description: 'Performance presets and basic tuning' },
-    { id: 'autotune', name: 'AutoTune', Icon: Wrench, color: 'text-orange-400', description: 'Set up an autotune without parameter hunting' },
+    { id: 'pid', name: 'PID', Icon: Gauge, color: 'text-blue-400', get description() { return t('mavlink_config.MavlinkConfigView.fineTunePidGainsForEach'); } },
+    { id: 'rates', name: 'Rates', Icon: Activity, color: 'text-purple-400', get description() { return t('mavlink_config.MavlinkConfigView.configureRateCurvesAndExpo'); } },
+    { id: 'tuning', name: 'Tuning', Icon: Sliders, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.performancePresetsAndBasicTuning'); } },
+    { id: 'autotune', name: 'AutoTune', Icon: Wrench, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.setUpAnAutotuneWithoutParameter'); } },
   ],
 };
 
@@ -152,10 +153,10 @@ const RC_GROUP: TabGroup = {
   name: 'RC',
   Icon: Radio,
   color: 'text-teal-400',
-  description: 'RC receiver protocol + flight-mode switch mapping',
+  get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolFlightModeSwitch'); },
   children: [
-    { id: 'receiver', name: 'Receiver',     Icon: Radio,    color: 'text-teal-400',  description: 'RC receiver protocol and live channel monitor' },
-    { id: 'modes',    name: 'Flight Modes', Icon: Settings, color: 'text-green-400', description: 'Configure your transmitter switch positions' },
+    { id: 'receiver', name: 'Receiver',     Icon: Radio,    color: 'text-teal-400',  get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolAndLiveChannel'); } },
+    { id: 'modes',    name: 'Flight Modes', Icon: Settings, color: 'text-green-400', get description() { return t('mavlink_config.MavlinkConfigView.configureYourTransmitterSwitchPositions'); } },
   ],
 };
 
@@ -168,10 +169,10 @@ const ROVER_RC_GROUP: TabGroup = {
   name: 'RC',
   Icon: Radio,
   color: 'text-teal-400',
-  description: 'RC receiver protocol + drive-mode switch mapping',
+  get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolDriveModeSwitch'); },
   children: [
-    { id: 'receiver', name: 'Receiver',    Icon: Radio,    color: 'text-teal-400',  description: 'RC receiver protocol and live channel monitor' },
-    { id: 'modes',    name: 'Drive Modes', Icon: Settings, color: 'text-green-400', description: 'Configure your transmitter switch positions' },
+    { id: 'receiver', name: 'Receiver',    Icon: Radio,    color: 'text-teal-400',  get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolAndLiveChannel'); } },
+    { id: 'modes',    name: 'Drive Modes', Icon: Settings, color: 'text-green-400', get description() { return t('mavlink_config.MavlinkConfigView.configureYourTransmitterSwitchPositions'); } },
   ],
 };
 
@@ -184,10 +185,10 @@ const OUTPUTS_GROUP: TabGroup = {
   name: 'Outputs',
   Icon: Fan,
   color: 'text-yellow-400',
-  description: 'Motor test + servo output mapping',
+  get description() { return t('mavlink_config.MavlinkConfigView.motorTestServoOutputMapping'); },
   children: [
-    { id: 'motor-test',   name: 'Motor Test',   Icon: Fan,  color: 'text-yellow-400', description: 'Spin individual motors with live vibration monitoring' },
-    { id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400',   description: 'Per-channel servo function, range, and live output' },
+    { id: 'motor-test',   name: 'Motor Test',   Icon: Fan,  color: 'text-yellow-400', get description() { return t('mavlink_config.MavlinkConfigView.spinIndividualMotorsWithLiveVibration'); } },
+    { id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400',   get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
   ],
 };
 
@@ -200,11 +201,11 @@ const STORAGE_GROUP: TabGroup = {
   name: 'Storage',
   Icon: HardDrive,
   color: 'text-content-secondary',
-  description: 'Raw parameter table + FC filesystem browser',
+  get description() { return t('mavlink_config.MavlinkConfigView.rawParameterTableFcFilesystemBrowser'); },
   children: [
-    { id: 'parameters', name: 'Parameters', Icon: Table,      color: 'text-content-secondary', description: 'Full parameter list for experts' },
-    { id: 'files',      name: 'Files',      Icon: FolderOpen, color: 'text-content-secondary', description: 'Browse and download files from the FC via MAVLink-FTP' },
-    { id: 'logging',    name: 'Logging',    Icon: HardDrive,  color: 'text-sky-400', description: 'What the flight controller records, and whether it records at all' },
+    { id: 'parameters', name: 'Parameters', Icon: Table,      color: 'text-content-secondary', get description() { return t('mavlink_config.MavlinkConfigView.fullParameterListForExperts'); } },
+    { id: 'files',      name: 'Files',      Icon: FolderOpen, color: 'text-content-secondary', get description() { return t('mavlink_config.MavlinkConfigView.browseAndDownloadFilesFromThe'); } },
+    { id: 'logging',    name: 'Logging',    Icon: HardDrive,  color: 'text-sky-400', get description() { return t('mavlink_config.MavlinkConfigView.whatTheFlightControllerRecordsAnd'); } },
   ],
 };
 
@@ -218,10 +219,10 @@ const LINKS_GROUP: TabGroup = {
   name: 'Links',
   Icon: Radio,
   color: 'text-sky-400',
-  description: 'Serial port protocols and what each link carries',
+  get description() { return t('mavlink_config.MavlinkConfigView.serialPortProtocolsAndWhatEach'); },
   children: [
-    { id: 'serial-ports', name: 'Serial Ports', Icon: Cable, color: 'text-sky-400', description: 'Configure serial port protocols and baud rates' },
-    { id: 'telemetry-rates', name: 'Telemetry Rates', Icon: Gauge, color: 'text-teal-400', description: 'How often each kind of data is sent, and what it costs on the link' },
+    { id: 'serial-ports', name: 'Serial Ports', Icon: Cable, color: 'text-sky-400', get description() { return t('mavlink_config.MavlinkConfigView.configureSerialPortProtocolsAndBaud'); } },
+    { id: 'telemetry-rates', name: 'Telemetry Rates', Icon: Gauge, color: 'text-teal-400', get description() { return t('mavlink_config.MavlinkConfigView.howOftenEachKindOfData'); } },
   ],
 };
 
@@ -234,10 +235,10 @@ const SAFETY_GROUP: TabGroup = {
   name: 'Safety',
   Icon: Shield,
   color: 'text-amber-400',
-  description: 'Pre-arm checks, failsafes and geofence',
+  get description() { return t('mavlink_config.MavlinkConfigView.preArmChecksFailsafesAndGeofence'); },
   children: [
-    { id: 'arming', name: 'Arming', Icon: ShieldCheck, color: 'text-emerald-400', description: 'Pre-arm checks, why it will not arm, and how it arms' },
-    { id: 'safety', name: 'Failsafes & fence', Icon: Shield, color: 'text-amber-400', description: 'What happens on link loss, low battery and fence breach' },
+    { id: 'arming', name: 'Arming', Icon: ShieldCheck, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.preArmChecksWhyItWill'); } },
+    { id: 'safety', name: 'Failsafes & fence', Icon: Shield, color: 'text-amber-400', get description() { return t('mavlink_config.MavlinkConfigView.whatHappensOnLinkLossLow'); } },
   ],
 };
 
@@ -253,11 +254,11 @@ const HARDWARE_GROUP: TabGroup = {
   name: 'Sensors',
   Icon: Cpu,
   color: 'text-cyan-400',
-  description: 'Sensor health, orientation, GPS wiring and the indicators',
+  get description() { return t('mavlink_config.MavlinkConfigView.sensorHealthOrientationGpsWiringAnd'); },
   children: [
-    { id: 'sensors', name: 'Health', Icon: Cpu, color: 'text-cyan-400', description: 'Live telemetry and sensor health' },
-    { id: 'sensor-config', name: 'Configuration', Icon: Satellite, color: 'text-emerald-400', description: 'Board orientation, compasses and GPS wiring' },
-    { id: 'notify', name: 'LEDs & Sound', Icon: Lightbulb, color: 'text-amber-400', description: 'Status LED, buzzer and the safety button' },
+    { id: 'sensors', name: 'Health', Icon: Cpu, color: 'text-cyan-400', get description() { return t('mavlink_config.MavlinkConfigView.liveTelemetryAndSensorHealth'); } },
+    { id: 'sensor-config', name: 'Configuration', Icon: Satellite, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.boardOrientationCompassesAndGpsWiring'); } },
+    { id: 'notify', name: 'LEDs & Sound', Icon: Lightbulb, color: 'text-amber-400', get description() { return t('mavlink_config.MavlinkConfigView.statusLedBuzzerAndTheSafety'); } },
   ],
 };
 
@@ -267,7 +268,7 @@ const COPTER_TABS: TabNode[] = [
   RC_GROUP,
   OUTPUTS_GROUP,
   SAFETY_GROUP,
-  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', description: 'Battery monitor configuration' },
+  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
   HARDWARE_GROUP,
   LINKS_GROUP,
   STORAGE_GROUP,
@@ -278,10 +279,10 @@ const COPTER_TABS: TabNode[] = [
 // since control surfaces are fundamental to plane setup.
 const PLANE_TABS: TabNode[] = [
   TUNING_GROUP,
-  { kind: 'item', id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400', description: 'Per-channel servo function, range, and live output' },
+  { kind: 'item', id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400', get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
   RC_GROUP,
   SAFETY_GROUP,
-  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', description: 'Battery monitor configuration' },
+  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
   HARDWARE_GROUP,
   LINKS_GROUP,
   STORAGE_GROUP,
@@ -298,20 +299,20 @@ const ROVER_TUNING_GROUP: TabGroup = {
   name: 'Tuning',
   Icon: Gauge,
   color: 'text-blue-400',
-  description: 'Steering and speed controllers, limits and behaviour',
+  get description() { return t('mavlink_config.MavlinkConfigView.steeringAndSpeedControllersLimitsAnd'); },
   children: [
-    { id: 'pid', name: 'PID', Icon: Activity, color: 'text-blue-400', description: 'Steering rate and speed controller gains' },
-    { id: 'rover-tuning', name: 'Speed & Steering', Icon: Car, color: 'text-blue-400', description: 'Configure speed limits and steering behavior' },
-    { id: 'rover-nav', name: 'Navigation', Icon: Navigation, color: 'text-purple-400', description: 'Waypoint following and loiter settings' },
+    { id: 'pid', name: 'PID', Icon: Activity, color: 'text-blue-400', get description() { return t('mavlink_config.MavlinkConfigView.steeringRateAndSpeedControllerGains'); } },
+    { id: 'rover-tuning', name: 'Speed & Steering', Icon: Car, color: 'text-blue-400', get description() { return t('mavlink_config.MavlinkConfigView.configureSpeedLimitsAndSteeringBehavior'); } },
+    { id: 'rover-nav', name: 'Navigation', Icon: Navigation, color: 'text-purple-400', get description() { return t('mavlink_config.MavlinkConfigView.waypointFollowingAndLoiterSettings'); } },
   ],
 };
 
 const ROVER_TABS: TabNode[] = [
   ROVER_TUNING_GROUP,
   ROVER_RC_GROUP,
-  { kind: 'item', id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400', description: 'Per-channel servo function, range, and live output' },
+  { kind: 'item', id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400', get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
   SAFETY_GROUP,
-  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', description: 'Battery monitor configuration' },
+  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
   HARDWARE_GROUP,
   LINKS_GROUP,
   STORAGE_GROUP,
@@ -497,12 +498,12 @@ export const MavlinkConfigView: React.FC = () => {
         }
 
         markAllAsSaved();
-        showToast('Parameters saved to flash successfully', 'success');
+        showToast(t('mavlink_config.MavlinkConfigView.parametersSavedToFlashSuccessfully'), 'success');
       } else {
-        showToast(result?.error ?? 'Failed to write to flash', 'error');
+        showToast(result?.error ?? t('mavlink_config.MavlinkConfigView.failedToWriteToFlash'), 'error');
       }
     } catch {
-      showToast('Failed to write to flash', 'error');
+      showToast(t('mavlink_config.MavlinkConfigView.failedToWriteToFlash'), 'error');
     } finally {
       setIsWritingFlash(false);
     }
@@ -518,15 +519,15 @@ export const MavlinkConfigView: React.FC = () => {
         // `rebooting`, which is how the header-button path spun forever.
         pendingParamRefresh.current = true;
         if (rebootRequiredParams.length === 0) {
-          showToast('Rebooting flight controller...', 'info');
+          showToast(t('mavlink_config.MavlinkConfigView.rebootingFlightController'), 'info');
         }
       } else {
         setRebooting(false);
-        showToast('Failed to send reboot command', 'error');
+        showToast(t('mavlink_config.MavlinkConfigView.failedToSendRebootCommand'), 'error');
       }
     } catch {
       setRebooting(false);
-      showToast('Failed to reboot flight controller', 'error');
+      showToast(t('mavlink_config.MavlinkConfigView.failedToRebootFlightController'), 'error');
     }
   }, [showToast, rebootRequiredParams]);
 
@@ -541,13 +542,13 @@ export const MavlinkConfigView: React.FC = () => {
       // BATT2_MONITOR/COMPASS/GPS backends allocates their families on boot),
       // so the pre-reboot set is not just stale values but the wrong set.
       fetchParameters({ force: true });
-      showToast('Reboot complete, refreshing parameters...', 'success');
+      showToast(t('mavlink_config.MavlinkConfigView.rebootCompleteRefreshingParameters'), 'success');
     } else if (!connectionState.isConnected && !connectionState.isReconnecting) {
       // Auto-reconnect gave up (timed out or was cancelled): stop the spinner
       // so the operator can act; the banner reverts to its Reboot Now state.
       pendingParamRefresh.current = false;
       setRebooting(false);
-      showToast('Reconnect after reboot failed. Check the link and reconnect manually.', 'error');
+      showToast(t('mavlink_config.MavlinkConfigView.reconnectAfterRebootFailedCheckThe'), 'error');
     }
   }, [connectionState.isConnected, connectionState.isReconnecting, showToast, fetchParameters]);
 
@@ -622,7 +623,7 @@ export const MavlinkConfigView: React.FC = () => {
             </div>
             <div>
               <h2 className="text-xl font-bold text-content">
-                {firmwareLabel(connectionState)} Configuration
+                {firmwareLabel(connectionState)} {t('mavlink_config.MavlinkConfigView.configuration')}
               </h2>
               <div className="flex items-center gap-2 text-sm text-content-secondary">
                 {connectionState.vehicleType && (
@@ -631,7 +632,7 @@ export const MavlinkConfigView: React.FC = () => {
                     <span>•</span>
                   </>
                 )}
-                <span>{paramCount} parameters</span>
+                <span>{paramCount} {t('mavlink_config.MavlinkConfigView.parameters')}</span>
                 {connectionState.systemId != null && (
                   <>
                     <span>•</span>
@@ -647,13 +648,13 @@ export const MavlinkConfigView: React.FC = () => {
             {isLoading && (
               <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border-blue-500/30 rounded-lg">
                 <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
-                <span className="text-sm text-blue-400">Loading...</span>
+                <span className="text-sm text-blue-400">{t('mavlink_config.MavlinkConfigView.loading')}</span>
               </div>
             )}
 
             {modified > 0 && (
               <span className="px-3 py-1 text-sm rounded-lg bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
-                Unsaved
+                {t('mavlink_config.MavlinkConfigView.unsaved')}
               </span>
             )}
 
@@ -662,26 +663,26 @@ export const MavlinkConfigView: React.FC = () => {
               disabled={isLoading}
               className="px-4 py-2 text-sm rounded-lg bg-surface-raised hover:bg-surface text-content border border-subtle"
             >
-              Refresh
+              {t('mavlink_config.MavlinkConfigView.refresh')}
             </button>
 
             <button
               onClick={() => setShowRebootConfirm(true)}
               disabled={rebooting}
               className="px-4 py-2 text-sm rounded-lg flex items-center gap-2 bg-surface-raised hover:bg-surface text-content border border-subtle"
-              title="Reboot flight controller"
+              title={t('mavlink_config.MavlinkConfigView.rebootFlightController')}
             >
               <RotateCw className={`w-4 h-4 ${rebooting ? 'animate-spin' : ''}`} />
-              {rebooting ? 'Rebooting...' : 'Reboot'}
+              {rebooting ? t('mavlink_config.MavlinkConfigView.rebooting') : t('mavlink_config.MavlinkConfigView.reboot')}
             </button>
 
             <button
               onClick={() => setShowHistory(true)}
               className="px-4 py-2 text-sm rounded-lg flex items-center gap-2 bg-surface-raised hover:bg-surface text-content border border-subtle"
-              title="View parameter change history"
+              title={t('mavlink_config.MavlinkConfigView.viewParameterChangeHistory')}
             >
               <History className="w-4 h-4" />
-              History
+              {t('mavlink_config.MavlinkConfigView.history')}
             </button>
 
             <button
@@ -692,10 +693,10 @@ export const MavlinkConfigView: React.FC = () => {
                   ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white'
                   : 'bg-surface-raised text-content-tertiary cursor-not-allowed'
               }`}
-              title="Save parameters to flight controller's permanent storage"
+              title={t('mavlink_config.MavlinkConfigView.saveParametersToFlightControllerS')}
             >
               <Save className={`w-4 h-4 ${isWritingFlash ? 'animate-pulse' : ''}`} />
-              {isWritingFlash ? 'Saving...' : 'Save All Changes'}
+              {isWritingFlash ? t('mavlink_config.MavlinkConfigView.saving') : t('mavlink_config.MavlinkConfigView.saveAllChanges')}
             </button>
           </div>
         </div>
@@ -794,20 +795,20 @@ export const MavlinkConfigView: React.FC = () => {
                 <>
                   <span className="text-sm text-blue-300 font-medium">
                     {connectionState.isReconnecting
-                      ? `Reconnecting to flight controller...`
-                      : 'Rebooting flight controller...'}
+                      ? t('mavlink_config.MavlinkConfigView.reconnectingToFlightController')
+                      : t('mavlink_config.MavlinkConfigView.rebootingFlightController')}
                   </span>
                   {connectionState.isReconnecting && connectionState.reconnectAttempt != null && (
                     <span className="text-sm text-blue-400/70 ml-2">
-                      Attempt {connectionState.reconnectAttempt}{connectionState.reconnectMaxAttempts ? ` / ${connectionState.reconnectMaxAttempts}` : ''}
+                      {t('mavlink_config.MavlinkConfigView.attempt')} {connectionState.reconnectAttempt}{connectionState.reconnectMaxAttempts ? ` / ${connectionState.reconnectMaxAttempts}` : ''}
                     </span>
                   )}
                 </>
               ) : (
                 <>
-                  <span className="text-sm text-amber-300 font-medium">Reboot Required</span>
+                  <span className="text-sm text-amber-300 font-medium">{t('mavlink_config.MavlinkConfigView.rebootRequired')}</span>
                   <span className="text-sm text-amber-400/70 ml-2">
-                    {rebootRequiredParams.length} parameter{rebootRequiredParams.length !== 1 ? 's' : ''} need a reboot to take effect:
+                    {rebootRequiredParams.length} {t('mavlink_config.MavlinkConfigView.parameter')}{rebootRequiredParams.length !== 1 ? 's' : ''} {t('mavlink_config.MavlinkConfigView.needARebootToTakeEffect')}
                     {' '}<span className="font-mono text-xs">{rebootRequiredParams.join(', ')}</span>
                   </span>
                 </>
@@ -821,14 +822,14 @@ export const MavlinkConfigView: React.FC = () => {
                   onClick={() => setRebootRequiredParams([])}
                   className="px-3 py-1.5 text-xs text-content-secondary hover:text-content transition-colors"
                 >
-                  Dismiss
+                  {t('mavlink_config.MavlinkConfigView.dismiss')}
                 </button>
                 <button
                   onClick={handleReboot}
                   className="px-3 py-1.5 text-xs font-medium rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/30 transition-colors flex items-center gap-1.5"
                 >
                   <RotateCw className="w-3.5 h-3.5" />
-                  Reboot Now
+                  {t('mavlink_config.MavlinkConfigView.rebootNow')}
                 </button>
               </>
             )}
@@ -849,10 +850,10 @@ export const MavlinkConfigView: React.FC = () => {
             <div className="px-6 py-4 border-b border-subtle">
               <h3 className="text-lg font-semibold text-content flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
-                Reboot flight controller?
+                {t('mavlink_config.MavlinkConfigView.rebootFlightController2')}
               </h3>
               <p className="text-sm text-content-secondary mt-2">
-                The vehicle must be disarmed. The link will drop and reconnect automatically.
+                {t('mavlink_config.MavlinkConfigView.theVehicleMustBeDisarmedThe')}
               </p>
             </div>
             <div className="px-6 py-4 flex justify-end gap-3">
@@ -860,14 +861,14 @@ export const MavlinkConfigView: React.FC = () => {
                 onClick={() => setShowRebootConfirm(false)}
                 className="px-4 py-2 text-sm text-content-secondary hover:text-content transition-colors"
               >
-                Cancel
+                {t('mavlink_config.MavlinkConfigView.cancel')}
               </button>
               <button
                 onClick={() => { setShowRebootConfirm(false); void handleReboot(); }}
                 className="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
               >
                 <RotateCw className="w-3.5 h-3.5" />
-                Reboot
+                {t('mavlink_config.MavlinkConfigView.reboot')}
               </button>
             </div>
           </div>
@@ -879,14 +880,14 @@ export const MavlinkConfigView: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-surface-solid border rounded-xl shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] flex flex-col">
             <div className="px-6 py-4 border-b border-subtle">
-              <h3 className="text-lg font-semibold text-content">Write Parameters to Flash</h3>
+              <h3 className="text-lg font-semibold text-content">{t('mavlink_config.MavlinkConfigView.writeParametersToFlash')}</h3>
               <p className="text-sm text-content-secondary mt-1">
-                The following {modifiedParameters().length} parameter(s) will be saved permanently to the flight controller.
+                {t('mavlink_config.MavlinkConfigView.theFollowing')} {modifiedParameters().length} {t('mavlink_config.MavlinkConfigView.parameterSWillBeSavedPermanently')}
               </p>
               {modifiedParameters().some(p => isRebootRequired(p.id)) && (
                 <p className="text-sm text-amber-400 mt-1.5 flex items-center gap-1.5">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
-                  Some parameters require a reboot to take effect.
+                  {t('mavlink_config.MavlinkConfigView.someParametersRequireARebootTo')}
                 </p>
               )}
             </div>
@@ -895,10 +896,10 @@ export const MavlinkConfigView: React.FC = () => {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-xs text-content-secondary uppercase">
-                    <th className="pb-2">Parameter</th>
-                    <th className="pb-2 text-right">Original</th>
+                    <th className="pb-2">{t('mavlink_config.MavlinkConfigView.parameter2')}</th>
+                    <th className="pb-2 text-right">{t('mavlink_config.MavlinkConfigView.original')}</th>
                     <th className="pb-2 text-center px-2">→</th>
-                    <th className="pb-2">New</th>
+                    <th className="pb-2">{t('mavlink_config.MavlinkConfigView.new')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-subtle">
@@ -908,7 +909,7 @@ export const MavlinkConfigView: React.FC = () => {
                         {param.id}
                         {isRebootRequired(param.id) && (
                           <span className="ml-2 px-1.5 py-0.5 text-[10px] bg-amber-500/20 text-amber-400 rounded">
-                            Reboot
+                            {t('mavlink_config.MavlinkConfigView.reboot')}
                           </span>
                         )}
                       </td>
@@ -928,13 +929,13 @@ export const MavlinkConfigView: React.FC = () => {
                 onClick={() => setShowWriteConfirm(false)}
                 className="px-4 py-2 text-sm text-content-secondary hover:text-content transition-colors"
               >
-                Cancel
+                {t('mavlink_config.MavlinkConfigView.cancel')}
               </button>
               <button
                 onClick={handleWriteToFlashConfirm}
                 className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm font-medium transition-colors"
               >
-                Write to Flash
+                {t('mavlink_config.MavlinkConfigView.writeToFlash')}
               </button>
             </div>
           </div>

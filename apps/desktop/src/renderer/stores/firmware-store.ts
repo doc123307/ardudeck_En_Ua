@@ -11,6 +11,7 @@ import type {
 import { findMatchingInavBoard } from '../../shared/board-mappings';
 import { useSettingsStore } from './settings-store';
 import { VEHICLE_TO_FIRMWARE } from '../../shared/firmware-types';
+import { t } from '../i18n';
 
 // Request sequence counters: a stale fetchBoards/fetchVersions response can land
 // after the user has switched source/vehicle/board and clobber the newer state
@@ -783,7 +784,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       set({
         flashState: 'downloading',
         flashError: null,
-        flashProgress: { state: 'downloading', progress: 0, message: 'Downloading firmware...' },
+        flashProgress: { state: 'downloading', progress: 0, message: t('stores.firmware_store.downloadingFirmware') },
       });
 
       try {
@@ -807,7 +808,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
 
     set({
       flashState: 'flashing',
-      flashProgress: { state: 'flashing', progress: 0, message: 'Starting flash...' },
+      flashProgress: { state: 'flashing', progress: 0, message: t('stores.firmware_store.startingFlash') },
     });
 
     try {
@@ -862,7 +863,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
     flashError: error,
     flashState: 'error',
     // Reset progress on error so UI shows clean state
-    flashProgress: { state: 'error', progress: 0, message: 'Flash failed' },
+    flashProgress: { state: 'error', progress: 0, message: t('stores.firmware_store.flashFailed') },
   }),
 
   // Post-flash configuration actions
@@ -913,7 +914,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       // USB-serial chips (CH340, CP210x) need significant time after board reboot
       set({
         postFlashState: 'waiting',
-        postFlashMessage: 'Waiting for board to reboot (6s)...',
+        postFlashMessage: t('stores.firmware_store.waitingForBoardToReboot6s'),
         postFlashError: null,
       });
       await new Promise(resolve => setTimeout(resolve, 6000));
@@ -927,7 +928,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
         set({
           postFlashState: 'connecting',
-          postFlashMessage: `Connecting to board (attempt ${attempt}/${MAX_RETRIES})...`,
+          postFlashMessage: t('stores.firmware_store.connectingToBoardAttempt', { attempt, MAX_RETRIES }),
         });
 
         connected = await tryConnect();
@@ -937,7 +938,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
 
         if (attempt < MAX_RETRIES) {
           set({
-            postFlashMessage: `Connection failed, retrying in ${RETRY_DELAY / 1000}s...`,
+            postFlashMessage: t('stores.firmware_store.connectionFailedRetryingInS', { v1: RETRY_DELAY / 1000 }),
           });
           await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
         }
@@ -953,7 +954,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       // Step 3: Check platform type
       set({
         postFlashState: 'configuring',
-        postFlashMessage: 'Checking platform configuration...',
+        postFlashMessage: t('stores.firmware_store.checkingPlatformConfiguration'),
       });
 
       const mixerConfig = await window.electronAPI?.mspGetInavMixerConfig?.();
@@ -967,7 +968,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
         // Already airplane, we're done
         set({
           postFlashState: 'complete',
-          postFlashMessage: 'Board already configured as airplane',
+          postFlashMessage: t('stores.firmware_store.boardAlreadyConfiguredAsAirplane'),
         });
         await window.electronAPI?.disconnect?.();
         return;
@@ -975,7 +976,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
 
       // Step 4: Set platform to AIRPLANE
       set({
-        postFlashMessage: 'Configuring board as airplane...',
+        postFlashMessage: t('stores.firmware_store.configuringBoardAsAirplane'),
       });
 
       const setResult = await window.electronAPI?.mspSetInavPlatformType?.(1); // 1 = AIRPLANE
@@ -989,7 +990,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
       // Step 5: Save to EEPROM
       set({
         postFlashState: 'saving',
-        postFlashMessage: 'Saving to EEPROM...',
+        postFlashMessage: t('stores.firmware_store.savingToEeprom'),
       });
 
       await window.electronAPI?.mspSaveEeprom?.();
@@ -999,7 +1000,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
 
       // Step 6: Reboot
       set({
-        postFlashMessage: 'Rebooting board...',
+        postFlashMessage: t('stores.firmware_store.rebootingBoard'),
       });
 
       await window.electronAPI?.mspReboot?.();
@@ -1012,7 +1013,7 @@ export const useFirmwareStore = create<FirmwareStore>((set, get) => ({
 
       set({
         postFlashState: 'complete',
-        postFlashMessage: 'Board configured as airplane! Reconnect when ready.',
+        postFlashMessage: t('stores.firmware_store.boardConfiguredAsAirplaneReconnectWhen'),
       });
 
     } catch (error) {

@@ -32,6 +32,7 @@ import {
   type GraphSample,
   type GraphSpec,
 } from '../../stores/inspector-store';
+import { t } from '../../i18n';
 
 
 const components: Record<string, React.FC<IDockviewPanelProps>> = {
@@ -42,9 +43,9 @@ function EmptyWatermark(): JSX.Element {
   return (
     <div className="h-full w-full flex items-center justify-center p-6 text-center">
       <div className="max-w-sm">
-        <div className="text-sm font-medium text-content mb-1">No graphs</div>
+        <div className="text-sm font-medium text-content mb-1">{t('inspector.InspectorGraphsView.noGraphs')}</div>
         <div className="text-xs text-content-secondary">
-          All tabs in this window have been closed. Use Dock back to return to the inspector.
+          {t('inspector.InspectorGraphsView.allTabsInThisWindowHave')}
         </div>
       </div>
     </div>
@@ -104,7 +105,7 @@ export function InspectorGraphsView(propsIn: Record<string, unknown>): JSX.Eleme
           paused ? 'bg-amber-500' : isConnected ? 'bg-emerald-500' : 'bg-content-tertiary'
         }`} />
         <div className="text-xs text-content-secondary flex-1">
-          {paused ? 'Paused' : isConnected ? 'Live · streaming from connected FC' : 'Not connected'}
+          {paused ? t('inspector.InspectorGraphsView.paused') : isConnected ? t('inspector.InspectorGraphsView.liveStreamingFromConnectedFc') : t('inspector.InspectorGraphsView.notConnected')}
         </div>
         <button
           onClick={() => setPaused(!paused)}
@@ -113,16 +114,16 @@ export function InspectorGraphsView(propsIn: Record<string, unknown>): JSX.Eleme
               ? 'bg-amber-500/15 border-amber-500/40 text-amber-500 hover:bg-amber-500/25'
               : 'bg-surface border-subtle text-content-secondary hover:bg-surface-raised hover:text-content'
           }`}
-          title={paused ? 'Resume graph sampling' : 'Pause graph sampling: graphs freeze, packets keep arriving'}
+          title={paused ? t('inspector.InspectorGraphsView.resumeGraphSampling') : t('inspector.InspectorGraphsView.pauseGraphSamplingGraphsFreezePackets')}
         >
-          {paused ? 'Resume' : 'Pause'}
+          {paused ? t('inspector.InspectorGraphsView.resume') : t('inspector.InspectorGraphsView.pause')}
         </button>
         <button
           onClick={resetStats}
           className="px-2.5 py-1 text-xs rounded-md bg-surface border border-subtle text-content-secondary hover:bg-surface-raised hover:text-content transition-colors"
-          title="Clear inspector stats: graphs reset their sample buffers on the next packet"
+          title={t('inspector.InspectorGraphsView.clearInspectorStatsGraphsResetTheir')}
         >
-          Clear
+          {t('inspector.InspectorGraphsView.clear')}
         </button>
       </div>
 

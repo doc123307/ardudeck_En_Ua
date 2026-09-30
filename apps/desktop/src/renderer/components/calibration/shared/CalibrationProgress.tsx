@@ -1,3 +1,4 @@
+import { t } from '../../../i18n';
 /**
  * CalibrationProgress - Circular progress indicator
  */
@@ -67,7 +68,7 @@ export function CalibrationProgress({
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-sm font-medium text-content text-center px-4">
-            {label ?? 'Calibrating...'}
+            {label ?? t('calibration.CalibrationProgress.calibrating')}
           </span>
         </div>
       </div>
@@ -121,7 +122,7 @@ export function CalibrationProgress({
           {Math.round(progress)}%
         </span>
         <span className="text-xs text-content-secondary mt-1">
-          {label ?? (progress < 100 ? 'Calibrating...' : 'Complete')}
+          {label ?? (progress < 100 ? t('calibration.CalibrationProgress.calibrating') : t('calibration.CalibrationProgress.complete'))}
         </span>
       </div>
 

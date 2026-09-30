@@ -8,6 +8,7 @@
 import React from 'react';
 import { MoveHorizontal, MoveVertical, ArrowUp, RotateCw, ToggleRight, Radio } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { t } from '../../../i18n';
 
 interface TransmitterVisualizerProps {
   rcChannels: number[];
@@ -17,14 +18,14 @@ interface TransmitterVisualizerProps {
 
 // Channel names in logical RPYT order (after rxMap reordering)
 const CHANNEL_INFO: { name: string; Icon: LucideIcon; description: string }[] = [
-  { name: 'Roll', Icon: MoveHorizontal, description: 'Left stick horizontal' },
-  { name: 'Pitch', Icon: MoveVertical, description: 'Left stick vertical' },
-  { name: 'Yaw', Icon: RotateCw, description: 'Right stick horizontal' },
-  { name: 'Throttle', Icon: ArrowUp, description: 'Right stick vertical' },
-  { name: 'AUX 1', Icon: ToggleRight, description: 'Switch (usually ARM)' },
-  { name: 'AUX 2', Icon: ToggleRight, description: 'Switch or 3-pos' },
-  { name: 'AUX 3', Icon: ToggleRight, description: 'Additional switch' },
-  { name: 'AUX 4', Icon: ToggleRight, description: 'Additional switch' },
+  { name: 'Roll', Icon: MoveHorizontal, get description() { return t('modes.TransmitterVisualizer.leftStickHorizontal'); } },
+  { name: 'Pitch', Icon: MoveVertical, get description() { return t('modes.TransmitterVisualizer.leftStickVertical'); } },
+  { name: 'Yaw', Icon: RotateCw, get description() { return t('modes.TransmitterVisualizer.rightStickHorizontal'); } },
+  { name: 'Throttle', Icon: ArrowUp, get description() { return t('modes.TransmitterVisualizer.rightStickVertical'); } },
+  { name: 'AUX 1', Icon: ToggleRight, get description() { return t('modes.TransmitterVisualizer.switchUsuallyArm'); } },
+  { name: 'AUX 2', Icon: ToggleRight, get description() { return t('modes.TransmitterVisualizer.switchOr3Pos'); } },
+  { name: 'AUX 3', Icon: ToggleRight, get description() { return t('modes.TransmitterVisualizer.additionalSwitch'); } },
+  { name: 'AUX 4', Icon: ToggleRight, get description() { return t('modes.TransmitterVisualizer.additionalSwitch'); } },
 ];
 
 export const TransmitterVisualizer: React.FC<TransmitterVisualizerProps> = ({

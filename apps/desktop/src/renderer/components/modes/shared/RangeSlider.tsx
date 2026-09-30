@@ -11,6 +11,7 @@
 
 import React, { useCallback, useRef, useState } from 'react';
 import { PWM, pwmToStep, stepToPwm } from '../presets/mode-presets';
+import { t } from '../../../i18n';
 
 interface RangeSliderProps {
   rangeStart: number;
@@ -161,8 +162,8 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
       {/* Quick position buttons with labels */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-content-secondary uppercase tracking-wide font-medium">Switch Position</span>
-          <span className="text-[10px] text-content-tertiary">Click to set range</span>
+          <span className="text-[10px] text-content-secondary uppercase tracking-wide font-medium">{t('modes.RangeSlider.switchPosition')}</span>
+          <span className="text-[10px] text-content-tertiary">{t('modes.RangeSlider.clickToSetRange')}</span>
         </div>
         <div className="flex gap-1.5">
           {(['low', 'mid', 'high', 'always'] as const).map((preset) => {
@@ -325,11 +326,11 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
       <div className="space-y-2">
         <div className="flex justify-between items-center px-1">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-content-secondary">Start:</span>
+            <span className="text-xs text-content-secondary">{t('modes.RangeSlider.start')}</span>
             <span className="px-2 py-0.5 bg-surface-raised rounded font-mono text-sm text-content">{rangeStart}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-content-secondary">End:</span>
+            <span className="text-xs text-content-secondary">{t('modes.RangeSlider.end')}</span>
             <span className="px-2 py-0.5 bg-surface-raised rounded font-mono text-sm text-content">{rangeEnd}</span>
           </div>
         </div>
@@ -338,15 +339,15 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
         <div className="flex items-center justify-center gap-4 pt-1 border-t border-subtle">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-gradient-to-b from-zinc-200 to-zinc-300 border border-zinc-400/50" />
-            <span className="text-[10px] text-content-secondary">Drag handles</span>
+            <span className="text-[10px] text-content-secondary">{t('modes.RangeSlider.dragHandles')}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-0.5 h-3 bg-yellow-400 rounded-full" />
-            <span className="text-[10px] text-content-secondary">Your transmitter</span>
+            <span className="text-[10px] text-content-secondary">{t('modes.RangeSlider.yourTransmitter')}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-4 h-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-400" />
-            <span className="text-[10px] text-content-secondary">Active range</span>
+            <span className="text-[10px] text-content-secondary">{t('modes.RangeSlider.activeRange')}</span>
           </div>
         </div>
       </div>

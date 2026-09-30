@@ -1,6 +1,7 @@
 import { Triangle } from 'lucide-react';
 import type { VehicleTemplate } from '../types.js';
 import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '../param-helpers.js';
+import { t } from '../../../i18n';
 
 /**
  * Tricopter — 3 motors + tail-servo yaw. Uncommon but supported.
@@ -8,7 +9,7 @@ import { batteryParams, commonSafetyParams, simPhysicsParams, matches } from '..
 export const copterTri: VehicleTemplate = {
   slug: 'copter-tri',
   name: 'Tricopter',
-  description: 'Three motors + yaw servo, efficient and quirky',
+  get description() { return t('lib.copter_tri.threeMotorsYawServoEfficientAnd'); },
   icon: Triangle,
   vehicleType: 'copter',
   category: 'multirotor',
@@ -22,8 +23,8 @@ export const copterTri: VehicleTemplate = {
     batteryCapacity: 3300,
   },
   toParams: (p) => [
-    { name: 'FRAME_CLASS', value: 7, reason: 'Tricopter', requiresReboot: true },
-    { name: 'FRAME_TYPE',  value: 1, reason: 'Y arrangement',   requiresReboot: true },
+    { name: 'FRAME_CLASS', value: 7, reason: t('lib.copter_tri.tricopter'), requiresReboot: true },
+    { name: 'FRAME_TYPE',  value: 1, reason: t('lib.copter_tri.yArrangement'),   requiresReboot: true },
     ...batteryParams(p),
     ...commonSafetyParams(),
   ],

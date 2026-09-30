@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * Pure config + helpers for the SITL test-condition bench (SimTestPanel).
  *
@@ -82,13 +83,13 @@ export interface SimPreset {
 
 /** One-click failure scenarios. Each is a patch applied over current state. */
 export const SIM_PRESETS: SimPreset[] = [
-  { id: 'motor-out', label: 'Motor out', tip: 'Kill motor 1 (SIM_ENGINE_FAIL bit0, SIM_ENGINE_MUL 0)', patch: { failedMotors: [1], engineMul: 0 } },
-  { id: 'gps-denied', label: 'GPS denied', tip: 'Disable GPS to trigger the GPS-loss failsafe / EKF fallback (SIM_GPS1_ENABLE 0)', patch: { gpsEnable: false } },
-  { id: 'gps-glitch', label: 'GPS glitch', tip: '30 m position jump (SIM_GPS1_GLTCH_X/Y)', patch: { gpsGlitch: 30 } },
-  { id: 'gps-jam', label: 'GPS jam', tip: 'Jam GPS reception (SIM_GPS1_JAM 1)', patch: { gpsJam: true } },
-  { id: 'low-sats', label: 'Sat dropout', tip: 'Degrade to 4 satellites (SIM_GPS1_NUMSATS 4)', patch: { gpsSats: 4 } },
-  { id: 'compass-fail', label: 'Compass fail', tip: 'Fail both compasses (SIM_MAG1_FAIL / SIM_MAG2_FAIL 1)', patch: { mag1Fail: true, mag2Fail: true } },
-  { id: 'baro-fail', label: 'Baro fail', tip: 'Disable the barometer (SIM_BARO_DISABLE 1)', patch: { baroDisable: true } },
-  { id: 'radio-loss', label: 'Radio loss', tip: 'Drop RC to trigger the radio failsafe (SIM_RC_FAIL 1)', patch: { rcFail: true } },
-  { id: 'high-vibe', label: 'High vibe', tip: 'Inject motor vibration (SIM_VIB_MOT_MAX 30)', patch: { vibe: 30 } },
+  { id: 'motor-out', get label() { return t('sim.sim_test_conditions.motorOut'); }, get tip() { return t('sim.sim_test_conditions.killMotor1SimEngineFail'); }, patch: { failedMotors: [1], engineMul: 0 } },
+  { id: 'gps-denied', get label() { return t('sim.sim_test_conditions.gpsDenied'); }, get tip() { return t('sim.sim_test_conditions.disableGpsToTriggerTheGps'); }, patch: { gpsEnable: false } },
+  { id: 'gps-glitch', get label() { return t('sim.sim_test_conditions.gpsGlitch'); }, get tip() { return t('sim.sim_test_conditions.n30MPositionJumpSimGps1'); }, patch: { gpsGlitch: 30 } },
+  { id: 'gps-jam', get label() { return t('sim.sim_test_conditions.gpsJam'); }, get tip() { return t('sim.sim_test_conditions.jamGpsReceptionSimGps1Jam'); }, patch: { gpsJam: true } },
+  { id: 'low-sats', get label() { return t('sim.sim_test_conditions.satDropout'); }, get tip() { return t('sim.sim_test_conditions.degradeTo4SatellitesSimGps1'); }, patch: { gpsSats: 4 } },
+  { id: 'compass-fail', get label() { return t('sim.sim_test_conditions.compassFail'); }, get tip() { return t('sim.sim_test_conditions.failBothCompassesSimMag1Fail'); }, patch: { mag1Fail: true, mag2Fail: true } },
+  { id: 'baro-fail', get label() { return t('sim.sim_test_conditions.baroFail'); }, get tip() { return t('sim.sim_test_conditions.disableTheBarometerSimBaroDisable'); }, patch: { baroDisable: true } },
+  { id: 'radio-loss', get label() { return t('sim.sim_test_conditions.radioLoss'); }, get tip() { return t('sim.sim_test_conditions.dropRcToTriggerTheRadio'); }, patch: { rcFail: true } },
+  { id: 'high-vibe', get label() { return t('sim.sim_test_conditions.highVibe'); }, get tip() { return t('sim.sim_test_conditions.injectMotorVibrationSimVibMot'); }, patch: { vibe: 30 } },
 ];

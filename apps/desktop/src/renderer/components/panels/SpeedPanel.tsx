@@ -2,6 +2,7 @@ import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useSettingsStore } from '../../stores/settings-store';
 import { speedValueFromMetersPerSecond, UNIT_LABELS } from '../../../shared/user-units.js';
 import { PanelContainer, StatRow, formatNumber } from './panel-utils';
+import { t } from '../../i18n';
 
 export function SpeedPanel() {
   const vfrHud = useTelemetryStore((s) => s.vfrHud);
@@ -11,10 +12,10 @@ export function SpeedPanel() {
   return (
     <PanelContainer>
       <div className="space-y-1">
-        <StatRow label="Ground" value={formatNumber(speedValueFromMetersPerSecond(vfrHud.groundspeed, speedUnit), 1)} unit={speedLabel} highlight />
-        <StatRow label="Air" value={formatNumber(speedValueFromMetersPerSecond(vfrHud.airspeed, speedUnit), 1)} unit={speedLabel} />
-        <StatRow label="Heading" value={formatNumber(vfrHud.heading, 0)} unit="°" />
-        <StatRow label="Throttle" value={vfrHud.throttle} unit="%" />
+        <StatRow label={t('panels.SpeedPanel.ground')} value={formatNumber(speedValueFromMetersPerSecond(vfrHud.groundspeed, speedUnit), 1)} unit={speedLabel} highlight />
+        <StatRow label={t('panels.SpeedPanel.air')} value={formatNumber(speedValueFromMetersPerSecond(vfrHud.airspeed, speedUnit), 1)} unit={speedLabel} />
+        <StatRow label={t('panels.SpeedPanel.heading')} value={formatNumber(vfrHud.heading, 0)} unit="°" />
+        <StatRow label={t('panels.SpeedPanel.throttle')} value={vfrHud.throttle} unit="%" />
       </div>
     </PanelContainer>
   );

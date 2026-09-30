@@ -41,10 +41,20 @@ import { SAFETY_PRESETS } from '../presets/mavlink-presets';
  *   BATT_FS_CRT_ACT    - Action on critical battery (0=Disabled, 1=Land, 2=RTL)
  */
 
-const safetyTabSource = readFileSync(
-  join(__dirname, '..', 'SafetyTab.tsx'),
-  'utf-8',
-);
+// UI text now lives in the English locale; inline it back so these checks still read
+// the labels the pilot sees ({t('key')} -> text, t('key') -> 'text').
+const englishStrings = (
+  JSON.parse(readFileSync(join(__dirname, '..', '..', '..', 'i18n', 'locales', 'en', 'mavlink_config.json'), 'utf-8')) as {
+    mavlink_config: Record<string, Record<string, string>>;
+  }
+).mavlink_config;
+const englishText = (key: string): string => {
+  const [, file, name] = key.split('.');
+  return englishStrings[file!]?.[name!] ?? key;
+};
+const safetyTabSource = readFileSync(join(__dirname, '..', 'SafetyTab.tsx'), 'utf-8')
+  .replace(/\{t\('([\w.]+)'\)\}/g, (_, key: string) => englishText(key))
+  .replace(/\bt\('([\w.]+)'\)/g, (_, key: string) => `'${englishText(key)}'`);
 
 const presetsSource = readFileSync(
   join(__dirname, '..', 'presets', 'mavlink-presets.ts'),

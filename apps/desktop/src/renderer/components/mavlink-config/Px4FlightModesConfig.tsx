@@ -26,6 +26,7 @@ import { useParameterStore } from '../../stores/parameter-store';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useRcSignalStatus } from '../../hooks/useRcSignalStatus';
 import { InfoCard } from '../ui/InfoCard';
+import { t } from '../../i18n';
 
 // The mode switch spans the channel from PWM_MIN to PWM_MAX, split into 6 equal
 // ranges (slot 1 = lowest PWM, slot 6 = highest), matching PX4 commander logic.
@@ -108,8 +109,8 @@ const Px4FlightModesConfig: React.FC = () => {
   }, [liveRcValue]);
 
   const channelOptions = useMemo(() => {
-    const opts: { value: number; label: string }[] = [{ value: 0, label: 'Unassigned' }];
-    for (let i = 1; i <= MAX_CHANNEL_MAP; i++) opts.push({ value: i, label: `Channel ${i}` });
+    const opts: { value: number; label: string }[] = [{ value: 0, label: t('mavlink_config.Px4FlightModesConfig.unassigned') }];
+    for (let i = 1; i <= MAX_CHANNEL_MAP; i++) opts.push({ value: i, label: t('mavlink_config.Px4FlightModesConfig.channel', { i }) });
     return opts;
   }, []);
 
@@ -117,10 +118,8 @@ const Px4FlightModesConfig: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <InfoCard title="Flight Mode Configuration" variant="info">
-        Assign a PX4 flight mode to each of the 6 positions of your mode switch. PX4 splits the
-        chosen RC channel into 6 equal ranges (slot 1 lowest, slot 6 highest) and applies the mode
-        whose range the channel lands in. Unassigned slots are skipped.
+      <InfoCard title={t('mavlink_config.Px4FlightModesConfig.flightModeConfiguration')} variant="info">
+        {t('mavlink_config.Px4FlightModesConfig.assignAPx4FlightModeTo')}
       </InfoCard>
 
       {/* Mode Switch Channel */}
@@ -130,8 +129,8 @@ const Px4FlightModesConfig: React.FC = () => {
             <Radio className="w-5 h-5 text-teal-400" />
           </div>
           <div>
-            <h3 className="font-medium text-content">Mode Switch Channel</h3>
-            <p className="text-xs text-content-secondary">Which RC channel selects the flight mode</p>
+            <h3 className="font-medium text-content">{t('mavlink_config.Px4FlightModesConfig.modeSwitchChannel')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.Px4FlightModesConfig.whichRcChannelSelectsTheFlight')}</p>
           </div>
           {signalStatus === 'active' ? (
             <span className="ml-auto flex items-center gap-1.5 px-2 py-0.5 text-[10px] bg-green-500/20 text-green-400 rounded-full">
@@ -139,16 +138,16 @@ const Px4FlightModesConfig: React.FC = () => {
               LIVE
             </span>
           ) : (
-            <span className="ml-auto text-[10px] text-content-tertiary">Connect to see live data</span>
+            <span className="ml-auto text-[10px] text-content-tertiary">{t('mavlink_config.Px4FlightModesConfig.connectToSeeLiveData')}</span>
           )}
         </div>
         <div className="max-w-sm">
-          <label className="text-xs text-content-secondary mb-2 block">Mode channel ({channelParamId})</label>
+          <label className="text-xs text-content-secondary mb-2 block">{t('mavlink_config.Px4FlightModesConfig.modeChannel')}{channelParamId})</label>
           <select
             value={modeChannel}
             disabled={!channelPresent}
             onChange={(e) => setParameter(channelParamId, Number(e.target.value))}
-            title={channelPresent ? undefined : 'Not present on this vehicle'}
+            title={channelPresent ? undefined : t('mavlink_config.Px4FlightModesConfig.notPresentOnThisVehicle')}
             className="w-full bg-surface-raised text-content rounded-lg px-3 py-2 text-sm border focus:border-teal-500 focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {channelOptions.map((opt) => (
@@ -159,13 +158,13 @@ const Px4FlightModesConfig: React.FC = () => {
           </select>
           {modeChannel > 0 && liveRcValue !== null && (
             <p className="text-[11px] text-content-tertiary mt-2 font-mono">
-              Channel {modeChannel}: {liveRcValue} us
+              {t('mavlink_config.Px4FlightModesConfig.channel2')} {modeChannel}: {liveRcValue} us
               {activeSlot !== null && ` -> slot ${activeSlot}`}
             </p>
           )}
           {modeChannel <= 0 && (
             <p className="text-[11px] text-amber-400/80 mt-2">
-              No channel assigned. Select the channel wired to your mode switch.
+              {t('mavlink_config.Px4FlightModesConfig.noChannelAssignedSelectTheChannel')}
             </p>
           )}
         </div>
@@ -173,7 +172,7 @@ const Px4FlightModesConfig: React.FC = () => {
 
       {/* Mode Slots */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium text-content">Flight Mode Slots (All 6)</h3>
+        <h3 className="text-sm font-medium text-content">{t('mavlink_config.Px4FlightModesConfig.flightModeSlotsAll6')}</h3>
         <div className="grid grid-cols-2 gap-4">
           {MODE_SLOTS.map((slotDef) => {
             const present = parameters.has(slotDef.paramId);
@@ -203,7 +202,7 @@ const Px4FlightModesConfig: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <span className="text-sm font-medium text-content">Slot {slotDef.slot}</span>
+                      <span className="text-sm font-medium text-content">{t('mavlink_config.Px4FlightModesConfig.slot')} {slotDef.slot}</span>
                       <div className="text-[10px] text-content-secondary font-mono">
                         {slotDef.min}-{slotDef.max}
                       </div>
@@ -232,7 +231,7 @@ const Px4FlightModesConfig: React.FC = () => {
                   value={value}
                   disabled={!present}
                   onChange={(e) => setParameter(slotDef.paramId, Number(e.target.value))}
-                  title={present ? undefined : 'Not present on this vehicle'}
+                  title={present ? undefined : t('mavlink_config.Px4FlightModesConfig.notPresentOnThisVehicle')}
                   className="w-full px-3 py-2.5 bg-surface-input border border-subtle rounded-lg text-sm text-content focus:outline-none focus:border-teal-500 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {modeOptions.map((opt) => (
@@ -244,7 +243,7 @@ const Px4FlightModesConfig: React.FC = () => {
 
                 {isActive && liveRcValue !== null && (
                   <p className="text-[11px] font-mono text-cyan-400/70">
-                    Active now ({labelForMode(value)})
+                    {t('mavlink_config.Px4FlightModesConfig.activeNow')}{labelForMode(value)})
                   </p>
                 )}
               </div>
@@ -259,7 +258,7 @@ const Px4FlightModesConfig: React.FC = () => {
           <div className="flex items-start gap-3">
             <Activity className="w-5 h-5 text-content-tertiary shrink-0 mt-0.5" />
             <p className="text-xs text-content-secondary">
-              Connect to the vehicle and move your mode switch to see the active slot highlighted live.
+              {t('mavlink_config.Px4FlightModesConfig.connectToTheVehicleAndMove')}
             </p>
           </div>
         </div>
@@ -270,7 +269,7 @@ const Px4FlightModesConfig: React.FC = () => {
         <div className="bg-amber-500/10 rounded-xl border-amber-500/30 p-4 flex items-center gap-3">
           <AlertTriangle className="w-5 h-5 text-amber-400" />
           <p className="text-sm text-amber-400">
-            You have unsaved changes. Click <span className="font-medium">"Write to Flash"</span> in the header to save.
+            {t('mavlink_config.Px4FlightModesConfig.youHaveUnsavedChangesClick')} <span className="font-medium">{t('mavlink_config.Px4FlightModesConfig.writeToFlash')}</span> {t('mavlink_config.Px4FlightModesConfig.inTheHeaderToSave')}
           </p>
         </div>
       )}

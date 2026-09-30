@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * Formation shape glyphs - tiny tactical pictograms (dots arranged like the real
  * formation, leader dot emphasised) used by the rail glyph bar and the right-click
@@ -20,14 +21,14 @@ export interface ShapeDef {
 }
 
 export const SHAPE_OPTIONS: ShapeDef[] = [
-  { value: 'vee', label: 'Vee (delta)', leader: 0, dots: [[12, 5], [7, 11], [17, 11], [3, 18], [21, 18]] },
-  { value: 'line', label: 'Line abreast (wall)', dots: [[3, 12], [9.5, 12], [14.5, 12], [21, 12]] },
-  { value: 'column', label: 'Column (trail)', leader: 0, dots: [[12, 3], [12, 9.5], [12, 16], [12, 21]] },
-  { value: 'echelonRight', label: 'Echelon right', leader: 0, dots: [[4, 4], [10, 10], [16, 16], [21, 21]] },
-  { value: 'echelonLeft', label: 'Echelon left', leader: 0, dots: [[20, 4], [14, 10], [8, 16], [3, 21]] },
-  { value: 'diamond', label: 'Diamond', leader: 0, dots: [[12, 3], [4, 12], [20, 12], [12, 21]] },
-  { value: 'box', label: 'Box (grid)', dots: [[8, 8], [16, 8], [8, 16], [16, 16]] },
-  { value: 'survey', label: 'Survey sweep (wide)', spacing: 40, dots: [[3, 9], [10, 9], [17, 9], [22, 9]] },
+  { value: 'vee', get label() { return t('fleet.FormationGlyphs.veeDelta'); }, leader: 0, dots: [[12, 5], [7, 11], [17, 11], [3, 18], [21, 18]] },
+  { value: 'line', get label() { return t('fleet.FormationGlyphs.lineAbreastWall'); }, dots: [[3, 12], [9.5, 12], [14.5, 12], [21, 12]] },
+  { value: 'column', get label() { return t('fleet.FormationGlyphs.columnTrail'); }, leader: 0, dots: [[12, 3], [12, 9.5], [12, 16], [12, 21]] },
+  { value: 'echelonRight', get label() { return t('fleet.FormationGlyphs.echelonRight'); }, leader: 0, dots: [[4, 4], [10, 10], [16, 16], [21, 21]] },
+  { value: 'echelonLeft', get label() { return t('fleet.FormationGlyphs.echelonLeft'); }, leader: 0, dots: [[20, 4], [14, 10], [8, 16], [3, 21]] },
+  { value: 'diamond', get label() { return t('fleet.FormationGlyphs.diamond'); }, leader: 0, dots: [[12, 3], [4, 12], [20, 12], [12, 21]] },
+  { value: 'box', get label() { return t('fleet.FormationGlyphs.boxGrid'); }, dots: [[8, 8], [16, 8], [8, 16], [16, 16]] },
+  { value: 'survey', get label() { return t('fleet.FormationGlyphs.surveySweepWide'); }, spacing: 40, dots: [[3, 9], [10, 9], [17, 9], [22, 9]] },
 ];
 
 export const SHAPE_BY_VALUE = new Map(SHAPE_OPTIONS.map((o) => [o.value, o]));

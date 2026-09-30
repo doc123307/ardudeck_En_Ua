@@ -15,6 +15,7 @@ import { useConnectionStore } from '../../stores/connection-store';
 import Px4LoggingConfig from './Px4LoggingConfig';
 import { DraggableSlider } from '../ui/DraggableSlider';
 import { InfoCard } from '../ui/InfoCard';
+import { t } from '../../i18n';
 
 /** LOG_BACKEND_TYPE bits. */
 const BACKEND_FILE = 1;
@@ -25,10 +26,10 @@ const BACKEND_BLOCK = 4;
 const ARMING_CHECK_LOGGING = 1024;
 
 const DISARMED_OPTIONS = [
-  { value: 0, label: 'Only while armed', hint: 'Normal: a log per flight' },
-  { value: 1, label: 'Always', hint: 'Fills the card on the bench' },
-  { value: 2, label: 'Always, except on USB', hint: 'Bench work stays quiet' },
-  { value: 3, label: 'Always, discard if never armed', hint: 'Keeps only real flights' },
+  { value: 0, get label() { return t('mavlink_config.LoggingTab.onlyWhileArmed'); }, get hint() { return t('mavlink_config.LoggingTab.normalALogPerFlight'); } },
+  { value: 1, get label() { return t('mavlink_config.LoggingTab.always'); }, get hint() { return t('mavlink_config.LoggingTab.fillsTheCardOnTheBench'); } },
+  { value: 2, get label() { return t('mavlink_config.LoggingTab.alwaysExceptOnUsb'); }, get hint() { return t('mavlink_config.LoggingTab.benchWorkStaysQuiet'); } },
+  { value: 3, get label() { return t('mavlink_config.LoggingTab.alwaysDiscardIfNeverArmed'); }, get hint() { return t('mavlink_config.LoggingTab.keepsOnlyRealFlights'); } },
 ];
 
 export default function LoggingTab(): JSX.Element {
@@ -79,8 +80,8 @@ export default function LoggingTab(): JSX.Element {
   if (!hasLogging) {
     return (
       <div className="p-6">
-        <InfoCard title="Logging" variant="info">
-          This board does not expose the logging parameters.
+        <InfoCard title={t('mavlink_config.LoggingTab.logging')} variant="info">
+          {t('mavlink_config.LoggingTab.thisBoardDoesNotExposeThe')}
         </InfoCard>
       </div>
     );
@@ -95,9 +96,9 @@ export default function LoggingTab(): JSX.Element {
             <HardDrive className="w-5 h-5 text-sky-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-content">Where logs are written</h3>
+            <h3 className="font-medium text-content">{t('mavlink_config.LoggingTab.whereLogsAreWritten')}</h3>
             <p className="text-xs text-content-secondary">
-              Turn the card off entirely when the vehicle has none
+              {t('mavlink_config.LoggingTab.turnTheCardOffEntirelyWhen')}
             </p>
           </div>
         </div>
@@ -112,7 +113,7 @@ export default function LoggingTab(): JSX.Element {
               !loggingOff ? 'bg-sky-500/20 text-sky-300' : 'text-content-secondary hover:text-content'
             }`}
           >
-            Logging on
+            {t('mavlink_config.LoggingTab.loggingOn')}
           </button>
           <button
             onClick={() => write('LOG_BACKEND_TYPE', 0)}
@@ -121,21 +122,21 @@ export default function LoggingTab(): JSX.Element {
               loggingOff ? 'bg-amber-500/20 text-amber-300' : 'text-content-secondary hover:text-content'
             }`}
           >
-            No logging
+            {t('mavlink_config.LoggingTab.noLogging')}
           </button>
         </div>
 
         {loggingOff ? (
           <p className="text-xs text-content-secondary">
-            Nothing is recorded. Pick a destination below to turn it back on.
+            {t('mavlink_config.LoggingTab.nothingIsRecordedPickADestination')}
           </p>
         ) : null}
 
         <div className={`grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))] ${loggingOff ? 'opacity-50' : ''}`}>
           {[
-            { bit: BACKEND_FILE, name: 'SD card', hint: 'The normal dataflash log' },
-            { bit: BACKEND_MAVLINK, name: 'Over MAVLink', hint: 'Streamed to the GCS, no card needed' },
-            { bit: BACKEND_BLOCK, name: 'Onboard flash', hint: 'Boards with built-in storage' },
+            { bit: BACKEND_FILE, name: 'SD card', hint: t('mavlink_config.LoggingTab.theNormalDataflashLog') },
+            { bit: BACKEND_MAVLINK, name: 'Over MAVLink', hint: t('mavlink_config.LoggingTab.streamedToTheGcsNoCard') },
+            { bit: BACKEND_BLOCK, name: 'Onboard flash', hint: t('mavlink_config.LoggingTab.boardsWithBuiltInStorage') },
           ].map((b) => {
             const on = (backend & b.bit) !== 0;
             return (
@@ -161,8 +162,7 @@ export default function LoggingTab(): JSX.Element {
           <div className="mt-3 flex items-center gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2">
             <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
             <span className="flex-1 text-xs text-amber-300">
-              Logging is off but the arming check still requires it, so the vehicle will refuse to arm
-              with "PreArm: Logging failed".
+              {t('mavlink_config.LoggingTab.loggingIsOffButTheArming')}
             </span>
             <button
               onClick={() => {
@@ -174,7 +174,7 @@ export default function LoggingTab(): JSX.Element {
               disabled={busy}
               className="shrink-0 rounded-md bg-amber-500/20 px-3 py-1.5 text-xs text-amber-200 hover:bg-amber-500/30 disabled:opacity-40"
             >
-              Drop the logging check
+              {t('mavlink_config.LoggingTab.dropTheLoggingCheck')}
             </button>
           </div>
         )}
@@ -182,7 +182,7 @@ export default function LoggingTab(): JSX.Element {
 
       {/* When it writes */}
       <div className="bg-surface rounded-xl border border-subtle p-5 space-y-4">
-        <h3 className="font-medium text-content">When it writes</h3>
+        <h3 className="font-medium text-content">{t('mavlink_config.LoggingTab.whenItWrites')}</h3>
         <div className="grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
           {DISARMED_OPTIONS.map((o) => (
             <button
@@ -207,19 +207,19 @@ export default function LoggingTab(): JSX.Element {
             className="rounded border bg-surface-input"
           />
           <span className="text-xs text-content-secondary">
-            Start a new log file each time it disarms
+            {t('mavlink_config.LoggingTab.startANewLogFileEach')}
           </span>
         </label>
 
         <DraggableSlider
-          label="Keep free on the card"
+          label={t('mavlink_config.LoggingTab.keepFreeOnTheCard')}
           value={mbFree}
           onChange={(v) => write('LOG_FILE_MB_FREE', v)}
           min={0}
           max={1000}
           step={10}
           color="#0EA5E9"
-          hint="Old logs are deleted to hold this much free space (MB). Set higher than the card can offer and logging never starts."
+          hint={t('mavlink_config.LoggingTab.oldLogsAreDeletedToHold')}
         />
       </div>
 
@@ -227,16 +227,16 @@ export default function LoggingTab(): JSX.Element {
       <div className="bg-surface rounded-xl border border-subtle p-5">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h3 className="font-medium text-content">What it writes</h3>
+            <h3 className="font-medium text-content">{t('mavlink_config.LoggingTab.whatItWrites')}</h3>
             <p className="text-xs text-content-secondary">
-              Fewer categories means smaller logs and less card traffic
+              {t('mavlink_config.LoggingTab.fewerCategoriesMeansSmallerLogsAnd')}
             </p>
           </div>
           <div className="text-[11px] text-content-tertiary tabular-nums">LOG_BITMASK {bitmask}</div>
         </div>
         {categories.length === 0 ? (
           <p className="text-xs text-content-tertiary">
-            The board has not sent its logging categories yet. Refresh the parameters.
+            {t('mavlink_config.LoggingTab.theBoardHasNotSentIts')}
           </p>
         ) : (
           <div className="grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(170px,1fr))]">

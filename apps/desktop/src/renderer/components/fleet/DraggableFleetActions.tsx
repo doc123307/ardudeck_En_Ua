@@ -13,6 +13,7 @@ import { useFormationControl } from '../../hooks/useFormationControl';
 import { FleetCoordination } from './FleetCoordination';
 import { FleetGroupActions } from './FleetGroupActions';
 import { FleetRadar } from './FleetMinimap';
+import { t } from '../../i18n';
 
 export function DraggableFleetActions(): JSX.Element | null {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -70,19 +71,19 @@ export function DraggableFleetActions(): JSX.Element | null {
       <div
         className="flex items-center gap-1.5 px-2 py-1 bg-surface-solid border-b border-subtle cursor-move shrink-0"
         onPointerDown={onHandlePointerDown}
-        data-tip="Drag to move - magnets to panel & window edges"
+        data-tip={t('fleet.DraggableFleetActions.dragToMoveMagnetsToPanel')}
       >
         <svg width="9" height="11" viewBox="0 0 9 11" className="text-content-tertiary" aria-hidden="true">
           {[2, 5.5, 9].map((cy) => [2, 7].map((cx) => <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="1" fill="currentColor" />))}
         </svg>
-        <span className="text-[10px] font-medium text-content-tertiary uppercase tracking-wide">Fleet Ops</span>
+        <span className="text-[10px] font-medium text-content-tertiary uppercase tracking-wide">{t('fleet.DraggableFleetActions.fleetOps')}</span>
         <button
           type="button"
           onPointerDown={(e) => e.stopPropagation()}
           onClick={toggleCollapsed}
           className="ml-auto -mr-0.5 flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:text-content hover:bg-surface-raised transition-colors"
-          data-tip={collapsed ? 'Expand' : 'Collapse'}
-          aria-label={collapsed ? 'Expand fleet ops panel' : 'Collapse fleet ops panel'}
+          data-tip={collapsed ? t('fleet.DraggableFleetActions.expand') : t('fleet.DraggableFleetActions.collapse')}
+          aria-label={collapsed ? t('fleet.DraggableFleetActions.expandFleetOpsPanel') : t('fleet.DraggableFleetActions.collapseFleetOpsPanel')}
         >
           <svg
             width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"

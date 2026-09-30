@@ -17,6 +17,7 @@ import {
   blipPeak,
   stickPercent,
 } from './throttle-response';
+import { t } from '../../i18n';
 
 interface ThrottleResponsePlotProps {
   expo: number;
@@ -99,7 +100,7 @@ export function ThrottleResponsePlot({ expo, thrMax, slew }: ThrottleResponsePlo
             <line x1={L} y1={y(thrMax)} x2={W - R} y2={y(thrMax)}
               stroke={ACCENT} strokeWidth="1" strokeDasharray="4 3" opacity="0.7" />
             <text x={W - R - 2} y={y(thrMax) - 3} textAnchor="end" fontSize="7.5" fill={ACCENT} opacity="0.9">
-              limit {Math.round(thrMax)}%
+              {t('mavlink_config.ThrottleResponsePlot.limit')} {Math.round(thrMax)}%
             </text>
           </g>
         )}
@@ -126,8 +127,8 @@ export function ThrottleResponsePlot({ expo, thrMax, slew }: ThrottleResponsePlo
             <text x={W - R - 28} y={T - 3} fontSize="7.5" fill="#34D399" letterSpacing="0.5">LIVE</text>
           </g>
         )}
-        <text x={L} y={T - 4} fontSize="7.5" fill="var(--text-tertiary)">motor %</text>
-        <text x={W - R} y={H - 4} textAnchor="end" fontSize="7.5" fill="var(--text-tertiary)">stick %</text>
+        <text x={L} y={T - 4} fontSize="7.5" fill="var(--text-tertiary)">{t('mavlink_config.ThrottleResponsePlot.motor')}</text>
+        <text x={W - R} y={H - 4} textAnchor="end" fontSize="7.5" fill="var(--text-tertiary)">{t('mavlink_config.ThrottleResponsePlot.stick')}</text>
       </svg>
 
       <div className="border-t border-subtle px-3 py-2">
@@ -137,19 +138,19 @@ export function ThrottleResponsePlot({ expo, thrMax, slew }: ThrottleResponsePlo
               {Math.round(liveOut)}%
             </span>
             <span className="text-[11px] text-content-secondary">
-              power at {Math.round(stick)}% stick
-              {Math.abs(stick) < 2 && ' · move it and the dot follows'}
+              {t('mavlink_config.ThrottleResponsePlot.powerAt')} {Math.round(stick)}{t('mavlink_config.ThrottleResponsePlot.stick2')}
+              {Math.abs(stick) < 2 && t('mavlink_config.ThrottleResponsePlot.moveItAndTheDotFollows')}
             </span>
           </div>
         ) : (
           <div className="text-[11px] text-content-secondary">
-            Connect the radio and move the throttle stick: it appears on the curve.
+            {t('mavlink_config.ThrottleResponsePlot.connectTheRadioAndMoveThe')}
           </div>
         )}
         <div className="mt-0.5 text-[11px] text-content-tertiary">
           {travel === null
-            ? 'No ramp: the motors follow the stick instantly.'
-            : `A one second stab reaches ${Math.round(blip)}% (full travel takes ${travel.toFixed(1)} s).`}
+            ? t('mavlink_config.ThrottleResponsePlot.noRampTheMotorsFollowThe')
+            : t('mavlink_config.ThrottleResponsePlot.aOneSecondStabReachesFull', { v1: Math.round(blip), v2: travel.toFixed(1) })}
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import { MAP_LAYERS, type LayerKey } from '../../../shared/map-layers';
 import type { TileCacheDownloadProgress } from '../../../shared/ipc-channels';
 import { useNetworkStore } from '../../stores/network-store';
 import { useTileCacheStore } from '../../stores/tile-cache-store';
+import { t } from '../../i18n';
 
 const api = (window as any).electronAPI;
 
@@ -125,13 +126,13 @@ export function OfflineAreaDownload({ bounds, activeLayer }: OfflineAreaDownload
             ? 'bg-emerald-600 text-white'
             : 'bg-surface-solid text-content hover:bg-surface-raised border border-subtle'
         }`}
-        title="Save this area for offline use"
+        title={t('map.OfflineAreaDownload.saveThisAreaForOfflineUse')}
       >
         <span className={`absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-red-400'}`} />
         <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
         </svg>
-        {isDownloading ? `${pct}%` : 'Offline'}
+        {isDownloading ? `${pct}%` : t('map.OfflineAreaDownload.offline')}
       </button>
 
       {/* Popover */}
@@ -139,10 +140,10 @@ export function OfflineAreaDownload({ bounds, activeLayer }: OfflineAreaDownload
         <>
           <div className="fixed inset-0 z-[998]" onClick={() => !isDownloading && setOpen(false)} />
           <div className="absolute right-0 bottom-full mb-1 w-64 bg-surface-raised border border-subtle rounded-lg shadow-xl z-[999] p-3 space-y-2.5">
-            <div className="text-xs font-medium text-content">Save Area Offline</div>
+            <div className="text-xs font-medium text-content">{t('map.OfflineAreaDownload.saveAreaOffline')}</div>
 
             {!bounds ? (
-              <div className="text-xs text-content-secondary">Move the map to the area you want to save.</div>
+              <div className="text-xs text-content-secondary">{t('map.OfflineAreaDownload.moveTheMapToTheArea')}</div>
             ) : isDownloading && progress ? (
               /* Download in progress */
               <div className="space-y-2">
@@ -160,7 +161,7 @@ export function OfflineAreaDownload({ bounds, activeLayer }: OfflineAreaDownload
                   onClick={handleCancel}
                   className="w-full px-2 py-1 text-xs rounded bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-600/30 transition-colors"
                 >
-                  Cancel
+                  {t('map.OfflineAreaDownload.cancel')}
                 </button>
               </div>
             ) : progress?.status === 'complete' ? (
@@ -168,17 +169,17 @@ export function OfflineAreaDownload({ bounds, activeLayer }: OfflineAreaDownload
               <div className="space-y-2">
                 <div className="text-xs text-emerald-400">
                   {progress.skippedTiles === progress.downloadedTiles
-                    ? `All ${progress.downloadedTiles.toLocaleString()} tiles already cached (${formatBytes(progress.bytesDownloaded)})`
+                    ? t('map.OfflineAreaDownload.allTilesAlreadyCached', { v1: progress.downloadedTiles.toLocaleString(), v2: formatBytes(progress.bytesDownloaded) })
                     : progress.skippedTiles > 0
-                      ? `Done: ${(progress.downloadedTiles - progress.skippedTiles).toLocaleString()} new + ${progress.skippedTiles.toLocaleString()} cached tiles (${formatBytes(progress.bytesDownloaded)})`
-                      : `Done: ${progress.downloadedTiles.toLocaleString()} tiles saved (${formatBytes(progress.bytesDownloaded)})`
+                      ? t('map.OfflineAreaDownload.doneNewCachedTiles', { v1: (progress.downloadedTiles - progress.skippedTiles).toLocaleString(), v2: progress.skippedTiles.toLocaleString(), v3: formatBytes(progress.bytesDownloaded) })
+                      : t('map.OfflineAreaDownload.doneTilesSaved', { v1: progress.downloadedTiles.toLocaleString(), v2: formatBytes(progress.bytesDownloaded) })
                   }
                 </div>
                 <button
                   onClick={() => { setProgress(null); setOpen(false); }}
                   className="w-full px-2 py-1 text-xs rounded bg-surface-raised text-content hover:bg-surface-raised transition-colors"
                 >
-                  Close
+                  {t('map.OfflineAreaDownload.close')}
                 </button>
               </div>
             ) : (
@@ -186,7 +187,7 @@ export function OfflineAreaDownload({ bounds, activeLayer }: OfflineAreaDownload
               <>
                 {/* Layer chips */}
                 <div>
-                  <div className="text-[10px] text-content-secondary mb-1">Layers</div>
+                  <div className="text-[10px] text-content-secondary mb-1">{t('map.OfflineAreaDownload.layers')}</div>
                   <div className="flex flex-wrap gap-1">
                     {BASE_LAYERS.map((key) => (
                       <button
@@ -207,7 +208,7 @@ export function OfflineAreaDownload({ bounds, activeLayer }: OfflineAreaDownload
                 {/* Max zoom */}
                 <div>
                   <div className="flex items-center justify-between text-[10px] text-content-secondary mb-0.5">
-                    <span>Detail level (max zoom)</span>
+                    <span>{t('map.OfflineAreaDownload.detailLevelMaxZoom')}</span>
                     <span className="text-content">{maxZoom}</span>
                   </div>
                   <input
@@ -223,7 +224,7 @@ export function OfflineAreaDownload({ bounds, activeLayer }: OfflineAreaDownload
                 {/* Estimate + Download */}
                 {estimate !== null && (
                   <div className="text-[10px] text-content-secondary">
-                    ~{estimate.toLocaleString()} tiles ({formatBytes(estimate * 15000)})
+                    ~{estimate.toLocaleString()} {t('map.OfflineAreaDownload.tiles')}{formatBytes(estimate * 15000)})
                   </div>
                 )}
 
@@ -233,15 +234,15 @@ export function OfflineAreaDownload({ bounds, activeLayer }: OfflineAreaDownload
                     disabled={selectedLayers.size === 0}
                     className="flex-1 px-2 py-1.5 text-xs rounded bg-emerald-600 text-white hover:bg-emerald-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Download
+                    {t('map.OfflineAreaDownload.download')}
                   </button>
                   <button
                     onClick={() => startDownload(true)}
                     disabled={selectedLayers.size === 0}
                     className="px-2 py-1.5 text-xs rounded bg-blue-600/80 text-white hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Re-download all tiles, replacing cached data with fresh versions"
+                    title={t('map.OfflineAreaDownload.reDownloadAllTilesReplacingCached')}
                   >
-                    Refresh
+                    {t('map.OfflineAreaDownload.refresh')}
                   </button>
                 </div>
               </>

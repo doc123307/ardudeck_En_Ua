@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 /**
  * Tactical icon pool - SVG path registry for vehicle types on the strategic map.
  * Each icon is designed for a 28x28 viewBox, pointing north (up) at 0 degrees.
@@ -47,13 +48,13 @@ export const TACTICAL_ICON_POOL: Record<TacticalVehicleClass, TacticalIconDef> =
       'M14 14m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0',
     ].join(''),
     strokeOnly: true,
-    label: 'Multirotor',
+    get label() { return t('map.tactical_icon_pool.multirotor'); },
     defaultDesignation: 'QUAD',
   },
   plane: {
     // Delta/chevron with swept wings - classic fixed-wing strategic icon
     svgPath: 'M14 3L4 23L14 17L24 23Z',
-    label: 'Fixed Wing',
+    get label() { return t('map.tactical_icon_pool.fixedWing'); },
     defaultDesignation: 'FW',
   },
   vtol: {
@@ -69,31 +70,31 @@ export const TACTICAL_ICON_POOL: Record<TacticalVehicleClass, TacticalIconDef> =
   rover: {
     // Rounded rectangle with forward arrow notch - ground unit
     svgPath: 'M8 5L14 2L20 5L20 25L8 25Z',
-    label: 'Ground Rover',
+    get label() { return t('map.tactical_icon_pool.groundRover'); },
     defaultDesignation: 'ROV',
   },
   boat: {
     // Pointed hull shape - naval surface vessel
     svgPath: 'M14 3L6 14L8 25L20 25L22 14Z',
-    label: 'Surface Boat',
+    get label() { return t('map.tactical_icon_pool.surfaceBoat'); },
     defaultDesignation: 'BOAT',
   },
   sub: {
     // Oval hull with periscope tick at top
     svgPath: 'M14 2L14 6M9 7Q4 14 9 23L19 23Q24 14 19 7Z',
-    label: 'Submarine',
+    get label() { return t('map.tactical_icon_pool.submarine'); },
     defaultDesignation: 'SUB',
   },
   antenna: {
     // Diamond - static, no heading rotation
     svgPath: 'M14 3L25 14L14 25L3 14Z',
-    label: 'Antenna Tracker',
+    get label() { return t('map.tactical_icon_pool.antennaTracker'); },
     defaultDesignation: 'ANT',
   },
   unknown: {
     // Circle
     svgPath: 'M14 14m-10 0a10 10 0 1 0 20 0a10 10 0 1 0-20 0',
-    label: 'Unknown',
+    get label() { return t('map.tactical_icon_pool.unknown'); },
     defaultDesignation: '???',
   },
 };

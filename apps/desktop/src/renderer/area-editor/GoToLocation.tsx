@@ -7,6 +7,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { GeocodeResult } from '../../shared/overlay-types';
+import { t as tr } from '../i18n';
 
 interface Props {
   map: maplibregl.Map | null;
@@ -60,9 +61,9 @@ export function GoToLocation({ map }: Props): JSX.Element {
         .then((hits) => {
           if (cancelled) return;
           setResults(hits);
-          setMsg(hits.length === 0 ? 'No match found' : null);
+          setMsg(hits.length === 0 ? tr('area_editor.GoToLocation.noMatchFound') : null);
         })
-        .catch(() => { if (!cancelled) setMsg('Search failed'); })
+        .catch(() => { if (!cancelled) setMsg(tr('area_editor.GoToLocation.searchFailed')); })
         .finally(() => { if (!cancelled) setBusy(false); });
     }, 400);
     return () => { cancelled = true; clearTimeout(t); };
@@ -79,10 +80,10 @@ export function GoToLocation({ map }: Props): JSX.Element {
     setBusy(true);
     try {
       const hits = await window.electronAPI.geocodeSearch(query);
-      if (hits.length === 0) { setMsg('No match found'); return; }
+      if (hits.length === 0) { setMsg(tr('area_editor.GoToLocation.noMatchFound')); return; }
       pick(hits[0]!);
     } catch {
-      setMsg('Search failed');
+      setMsg(tr('area_editor.GoToLocation.searchFailed'));
     } finally {
       setBusy(false);
     }
@@ -99,8 +100,8 @@ export function GoToLocation({ map }: Props): JSX.Element {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') void submit(); else if (e.key === 'Escape') closeResults(); }}
-          placeholder="Go to place or lat, lon"
-          aria-label="Go to location"
+          placeholder={tr('area_editor.GoToLocation.goToPlaceOrLatLon')}
+          aria-label={tr('area_editor.GoToLocation.goToLocation')}
           className="flex-1 min-w-0 bg-transparent text-xs text-content placeholder:text-content-tertiary focus:outline-none"
         />
         {busy && (

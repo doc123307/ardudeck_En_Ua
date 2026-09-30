@@ -1,0 +1,25 @@
+{
+  "layout": {
+    "QuickLaunchMenu": {
+      "areaEditor": "Area Editor",
+      "drawMissionAreasMultiAreaHoles": "Draw mission areas: multi-area, holes, KML",
+      "n3dSimWorld": "3D Sim World",
+      "flySitlInAPersistent3d": "Fly SITL in a persistent 3D world: obstacles, fences, missions",
+      "mavlinkInspector": "MAVLink Inspector",
+      "watchLiveMessagesAndGraphs": "Watch live messages and graphs",
+      "telemetryDashboard": "Telemetry Dashboard",
+      "liveTelemetryOnItsOwnScreen": "Live telemetry on its own screen",
+      "quickLaunchOpenToolsInTheir": "Quick Launch: open tools in their own window",
+      "quickLaunch": "Quick Launch"
+    },
+    "UpdateBanner": {
+      "isAvailable": "is available",
+      "download": "Download",
+      "viewRelease": "View Release",
+      "dismiss": "Dismiss",
+      "downloading": "Downloading",
+      "isReadyToInstall": "is ready to install",
+      "restartToUpdate": "Restart to Update"
+    }
+  }
+}

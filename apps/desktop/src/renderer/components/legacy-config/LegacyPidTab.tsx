@@ -9,12 +9,13 @@ import { useState } from 'react';
 import { useLegacyConfigStore } from '../../stores/legacy-config-store';
 import { DraggableSlider } from '../ui/DraggableSlider';
 import { Egg, Drama, Gauge, Film, type LucideIcon } from 'lucide-react';
+import { t } from '../../i18n';
 
 // PID Presets - same as modern boards
 const PID_PRESETS = {
   beginner: {
     name: 'Beginner',
-    description: 'Smooth & forgiving - great for learning',
+    get description() { return t('legacy_config.LegacyPidTab.smoothForgivingGreatForLearning'); },
     icon: Egg,
     color: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
     pids: {
@@ -25,7 +26,7 @@ const PID_PRESETS = {
   },
   freestyle: {
     name: 'Freestyle',
-    description: 'Responsive & smooth for tricks',
+    get description() { return t('legacy_config.LegacyPidTab.responsiveSmoothForTricks'); },
     icon: Drama,
     color: 'from-purple-500/20 to-violet-500/10 border-purple-500/30',
     pids: {
@@ -36,7 +37,7 @@ const PID_PRESETS = {
   },
   racing: {
     name: 'Racing',
-    description: 'Snappy & precise for speed',
+    get description() { return t('legacy_config.LegacyPidTab.snappyPreciseForSpeed'); },
     icon: Gauge,
     color: 'from-red-500/20 to-orange-500/10 border-red-500/30',
     pids: {
@@ -47,7 +48,7 @@ const PID_PRESETS = {
   },
   cinematic: {
     name: 'Cinematic',
-    description: 'Ultra-smooth for video',
+    get description() { return t('legacy_config.LegacyPidTab.ultraSmoothForVideo'); },
     icon: Film,
     color: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30',
     pids: {
@@ -90,7 +91,7 @@ export default function LegacyPidTab() {
   if (!pid) {
     return (
       <div className="text-center py-8 text-content-secondary">
-        No PID data loaded. Run dump command first.
+        {t('legacy_config.LegacyPidTab.noPidDataLoadedRunDump')}
       </div>
     );
   }
@@ -185,20 +186,19 @@ export default function LegacyPidTab() {
       {/* Info Banner */}
       <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
         <p className="text-sm text-amber-300">
-          <strong>Legacy CLI Mode ({isAirplane ? 'Fixed-Wing' : 'Multirotor'}):</strong> Changes are sent immediately via CLI commands.
-          Click "Save to EEPROM" when done to persist changes.
+          <strong>{t('legacy_config.LegacyPidTab.legacyCliMode')}{isAirplane ? t('legacy_config.LegacyPidTab.fixedWing') : t('legacy_config.LegacyPidTab.multirotor')}):</strong> {t('legacy_config.LegacyPidTab.changesAreSentImmediatelyViaCli')}
         </p>
       </div>
 
       {/* Presets */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium text-content">Quick Presets</h3>
+          <h3 className="text-sm font-medium text-content">{t('legacy_config.LegacyPidTab.quickPresets')}</h3>
           <button
             onClick={() => setShowSaveDialog(true)}
             className="text-xs text-blue-400 hover:text-blue-300"
           >
-            + Save Current as Profile
+            {t('legacy_config.LegacyPidTab.saveCurrentAsProfile')}
           </button>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -219,7 +219,7 @@ export default function LegacyPidTab() {
       {/* Custom Profiles */}
       {Object.keys(customProfiles).length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-content mb-3">Your Profiles</h3>
+          <h3 className="text-sm font-medium text-content mb-3">{t('legacy_config.LegacyPidTab.yourProfiles')}</h3>
           <div className="flex flex-wrap gap-2">
             {Object.entries(customProfiles).map(([id, profile]) => (
               <div key={id} className="flex items-center gap-1 bg-surface-raised rounded-lg overflow-hidden">
@@ -244,13 +244,13 @@ export default function LegacyPidTab() {
       {/* Save Profile Dialog */}
       {showSaveDialog && (
         <div className="p-4 bg-surface-raised rounded-lg border border">
-          <h4 className="text-sm font-medium text-content mb-3">Save Current PIDs as Profile</h4>
+          <h4 className="text-sm font-medium text-content mb-3">{t('legacy_config.LegacyPidTab.saveCurrentPidsAsProfile')}</h4>
           <div className="flex gap-2">
             <input
               type="text"
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
-              placeholder="Profile name..."
+              placeholder={t('legacy_config.LegacyPidTab.profileName')}
               className="flex-1 px-3 py-2 bg-surface-input border border rounded text-content text-sm"
               autoFocus
             />
@@ -258,13 +258,13 @@ export default function LegacyPidTab() {
               onClick={saveCurrentAsProfile}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded text-sm font-medium"
             >
-              Save
+              {t('legacy_config.LegacyPidTab.save')}
             </button>
             <button
               onClick={() => setShowSaveDialog(false)}
               className="px-4 py-2 bg-surface-raised hover:bg-surface-raised text-content rounded text-sm"
             >
-              Cancel
+              {t('legacy_config.LegacyPidTab.cancel')}
             </button>
           </div>
         </div>
@@ -283,24 +283,24 @@ export default function LegacyPidTab() {
             </div>
             <div className="space-y-5">
               <DraggableSlider
-                label="P - Proportional"
-                hint="Responsiveness to stick input"
+                label={t('legacy_config.LegacyPidTab.pProportional')}
+                hint={t('legacy_config.LegacyPidTab.responsivenessToStickInput')}
                 value={pid[axis].p}
                 onChange={(v) => handleChange(axis, 'p', v)}
                 color={axisColors[axis]}
                 max={200}
               />
               <DraggableSlider
-                label="I - Integral"
-                hint="Corrects drift over time"
+                label={t('legacy_config.LegacyPidTab.iIntegral')}
+                hint={t('legacy_config.LegacyPidTab.correctsDriftOverTime')}
                 value={pid[axis].i}
                 onChange={(v) => handleChange(axis, 'i', v)}
                 color={axisColors[axis]}
                 max={200}
               />
               <DraggableSlider
-                label={isAirplane ? "FF - Feed Forward" : "D - Derivative"}
-                hint={isAirplane ? "Anticipates stick movement" : "Dampens overshoots"}
+                label={isAirplane ? t('legacy_config.LegacyPidTab.ffFeedForward') : t('legacy_config.LegacyPidTab.dDerivative')}
+                hint={isAirplane ? t('legacy_config.LegacyPidTab.anticipatesStickMovement') : t('legacy_config.LegacyPidTab.dampensOvershoots')}
                 value={pid[axis].d}
                 onChange={(v) => handleChange(axis, 'd', v)}
                 color={axisColors[axis]}
@@ -309,8 +309,8 @@ export default function LegacyPidTab() {
               {/* Only show separate FF slider for multirotors */}
               {!isAirplane && axis !== 'yaw' && (
                 <DraggableSlider
-                  label="FF - Feed Forward"
-                  hint="Anticipates stick movement"
+                  label={t('legacy_config.LegacyPidTab.ffFeedForward')}
+                  hint={t('legacy_config.LegacyPidTab.anticipatesStickMovement')}
                   value={pid[axis].ff || 0}
                   onChange={(v) => handleChange(axis, 'ff', v)}
                   color={axisColors[axis]}
@@ -327,12 +327,12 @@ export default function LegacyPidTab() {
         <div className="bg-surface-input rounded-xl p-5 border border-subtle">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-3 h-3 rounded-full bg-purple-500" />
-            <h3 className="text-lg font-semibold text-content">Level (Angle Mode)</h3>
+            <h3 className="text-lg font-semibold text-content">{t('legacy_config.LegacyPidTab.levelAngleMode')}</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <DraggableSlider
-              label="P - Strength"
-              hint="How hard it self-levels"
+              label={t('legacy_config.LegacyPidTab.pStrength')}
+              hint={t('legacy_config.LegacyPidTab.howHardItSelfLevels')}
               value={pid.level.p || 0}
               onChange={(v) => {
                 const updated = { ...pid, level: { ...pid.level!, p: v } };
@@ -343,8 +343,8 @@ export default function LegacyPidTab() {
               max={200}
             />
             <DraggableSlider
-              label="I - Integral"
-              hint="Holds level over time"
+              label={t('legacy_config.LegacyPidTab.iIntegral')}
+              hint={t('legacy_config.LegacyPidTab.holdsLevelOverTime')}
               value={pid.level.i || 0}
               onChange={(v) => {
                 const updated = { ...pid, level: { ...pid.level!, i: v } };
@@ -355,8 +355,8 @@ export default function LegacyPidTab() {
               max={200}
             />
             <DraggableSlider
-              label="D - Damping"
-              hint="Reduces oscillation"
+              label={t('legacy_config.LegacyPidTab.dDamping')}
+              hint={t('legacy_config.LegacyPidTab.reducesOscillation')}
               value={pid.level.d || 0}
               onChange={(v) => {
                 const updated = { ...pid, level: { ...pid.level!, d: v } };

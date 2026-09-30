@@ -20,6 +20,7 @@ import { useCameraStore, osdBackdropSource } from '../../stores/camera-store';
 import { useCameraStream } from '../camera/useCameraStream';
 import { CameraSourceMenu } from '../camera/CameraSourceMenu';
 import { FPV_SCENE_BG } from '../../utils/osd/osd-scene';
+import { t } from '../../i18n';
 
 interface OsdVideoBackdropProps {
   /** OSD-store background value; `rgba…` = default/unset, anything else = picked colour. */
@@ -55,10 +56,10 @@ export function OsdVideoBackdrop({ backgroundColor, className = '' }: OsdVideoBa
         <button
           onClick={() => setShowConfig(true)}
           className="pointer-events-auto flex items-center gap-1.5 rounded-md border border-white/25 bg-black/40 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm transition-colors hover:bg-black/60"
-          data-tip="Show your live video behind the OSD. Shared with the telemetry Vision panel."
+          data-tip={t('osd.OsdVideoBackdrop.showYourLiveVideoBehindThe')}
         >
           <Video className="h-3.5 w-3.5" />
-          Configure video feed
+          {t('osd.OsdVideoBackdrop.configureVideoFeed')}
         </button>
       </div>
       {showConfig && <CameraSourceMenu vehicleKey={targetKey} onClose={() => setShowConfig(false)} />}
@@ -78,9 +79,9 @@ function OsdFeedVideo({ source }: { source: CameraSourceConfig }) {
           {status === 'starting' ? (
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
           ) : status === 'stalled' ? (
-            <div className="max-w-[80%] text-[11px] text-amber-300">Video stalled, reconnecting…</div>
+            <div className="max-w-[80%] text-[11px] text-amber-300">{t('osd.OsdVideoBackdrop.videoStalledReconnecting')}</div>
           ) : (
-            <div className="max-w-[80%] text-[11px] text-red-300">No video · {error}</div>
+            <div className="max-w-[80%] text-[11px] text-red-300">{t('osd.OsdVideoBackdrop.noVideo')} {error}</div>
           )}
         </div>
       )}

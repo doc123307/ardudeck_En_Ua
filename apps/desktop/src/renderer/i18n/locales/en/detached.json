@@ -1,0 +1,14 @@
+{
+  "detached": {
+    "DetachedRoot": {
+      "unknownComponent": "Unknown component",
+      "missing": "(missing)",
+      "isNotRegistered": "is not registered.",
+      "closeThisWindowAndReturnTo": "Close this window and return to ArduDeck",
+      "dockBack": "Dock back",
+      "pinnedOnTopClickToUnpin": "Pinned on top, click to unpin",
+      "keepThisWindowOnTopOf": "Keep this window on top of ArduDeck",
+      "toggleAlwaysOnTop": "Toggle always on top"
+    }
+  }
+}

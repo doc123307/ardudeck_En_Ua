@@ -11,6 +11,7 @@ import { PRIMARY_CHANNEL_COUNT, getChannelName, reorderChannels } from '../../ut
 import { useReceiverStore } from '../../stores/receiver-store';
 import { useSettingsStore } from '../../stores/settings-store';
 import { formatAltitudeFromMeters, formatCapacityFromMah, formatVerticalSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
+import { t } from '../../i18n';
 
 interface SerialPortInfo {
   path: string;
@@ -81,7 +82,7 @@ export function BetaflightDashboard() {
         baudRate,
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Connection failed');
+      setError(e instanceof Error ? e.message : t('betaflight.BetaflightDashboard.connectionFailed'));
     } finally {
       setConnecting(false);
     }
@@ -119,12 +120,12 @@ export function BetaflightDashboard() {
   const handleCalibrateAcc = async () => {
     const result = await window.electronAPI.mspCalibrateAcc();
     if (result) {
-      alert('Accelerometer calibration started. Keep the board still!');
+      alert(t('betaflight.BetaflightDashboard.accelerometerCalibrationStartedKeepTheBoard'));
     }
   };
 
   const handleReboot = async () => {
-    if (confirm('Reboot the flight controller?')) {
+    if (confirm(t('betaflight.BetaflightDashboard.rebootTheFlightController'))) {
       await window.electronAPI.mspReboot();
     }
   };
@@ -135,9 +136,9 @@ export function BetaflightDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-content">Betaflight / MSP</h1>
+            <h1 className="text-2xl font-bold text-content">{t('betaflight.BetaflightDashboard.betaflightMsp')}</h1>
             <p className="text-content-secondary text-sm mt-1">
-              Connect to Betaflight, iNav, or Cleanflight boards
+              {t('betaflight.BetaflightDashboard.connectToBetaflightInavOrCleanflight')}
             </p>
           </div>
         </div>
@@ -146,10 +147,10 @@ export function BetaflightDashboard() {
         <div className="bg-surface rounded-xl border border-subtle p-5">
           <div className="flex items-center gap-3 mb-4">
             <div className={`w-3 h-3 rounded-full ${connection.isConnected ? 'bg-emerald-400' : 'bg-gray-500'}`} />
-            <h2 className="text-lg font-semibold text-content">Connection</h2>
+            <h2 className="text-lg font-semibold text-content">{t('betaflight.BetaflightDashboard.connection')}</h2>
             {connection.isConnected && (
               <span className="text-sm text-content-secondary">
-                {connection.fcVariant} {connection.fcVersion} on {connection.boardId}
+                {connection.fcVariant} {connection.fcVersion} {t('betaflight.BetaflightDashboard.on')} {connection.boardId}
               </span>
             )}
           </div>
@@ -158,7 +159,7 @@ export function BetaflightDashboard() {
             <div className="flex items-center gap-4">
               {/* Port select */}
               <div className="flex-1">
-                <label className="block text-xs text-content-secondary mb-1">Port</label>
+                <label className="block text-xs text-content-secondary mb-1">{t('betaflight.BetaflightDashboard.port')}</label>
                 <div className="flex gap-2">
                   <select
                     value={selectedPort}
@@ -174,7 +175,7 @@ export function BetaflightDashboard() {
                   <button
                     onClick={refreshPorts}
                     className="px-3 py-2 bg-surface-raised hover:bg-surface-raised rounded-lg text-content transition-colors"
-                    title="Refresh ports"
+                    title={t('betaflight.BetaflightDashboard.refreshPorts')}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -185,7 +186,7 @@ export function BetaflightDashboard() {
 
               {/* Baud rate */}
               <div>
-                <label className="block text-xs text-content-secondary mb-1">Baud Rate</label>
+                <label className="block text-xs text-content-secondary mb-1">{t('betaflight.BetaflightDashboard.baudRate')}</label>
                 <select
                   value={baudRate}
                   onChange={(e) => setBaudRate(Number(e.target.value))}
@@ -201,13 +202,13 @@ export function BetaflightDashboard() {
 
               {/* Connect button */}
               <div>
-                <label className="block text-xs text-transparent mb-1">Action</label>
+                <label className="block text-xs text-transparent mb-1">{t('betaflight.BetaflightDashboard.action')}</label>
                 <button
                   onClick={handleConnect}
                   disabled={connecting || !selectedPort}
                   className="px-6 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-surface-raised text-white rounded-lg font-medium transition-colors"
                 >
-                  {connecting ? 'Connecting...' : 'Connect'}
+                  {connecting ? t('betaflight.BetaflightDashboard.connecting') : t('betaflight.BetaflightDashboard.connect')}
                 </button>
               </div>
             </div>
@@ -221,21 +222,21 @@ export function BetaflightDashboard() {
                     : 'bg-emerald-600 hover:bg-emerald-500 text-white'
                 }`}
               >
-                {telemetryRunning ? 'Stop Telemetry' : 'Start Telemetry'}
+                {telemetryRunning ? t('betaflight.BetaflightDashboard.stopTelemetry') : t('betaflight.BetaflightDashboard.startTelemetry')}
               </button>
 
               <button
                 onClick={handleCalibrateAcc}
                 className="px-4 py-2 bg-surface-raised hover:bg-surface-raised text-content rounded-lg transition-colors"
               >
-                Calibrate ACC
+                {t('betaflight.BetaflightDashboard.calibrateAcc')}
               </button>
 
               <button
                 onClick={handleReboot}
                 className="px-4 py-2 bg-surface-raised hover:bg-surface-raised text-content rounded-lg transition-colors"
               >
-                Reboot
+                {t('betaflight.BetaflightDashboard.reboot')}
               </button>
 
               <div className="flex-1" />
@@ -244,7 +245,7 @@ export function BetaflightDashboard() {
                 onClick={handleDisconnect}
                 className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg font-medium transition-colors"
               >
-                Disconnect
+                {t('betaflight.BetaflightDashboard.disconnect')}
               </button>
             </div>
           )}
@@ -261,18 +262,18 @@ export function BetaflightDashboard() {
           <div className="grid grid-cols-4 gap-4">
             {/* Attitude */}
             <div className="bg-surface rounded-xl border border-subtle p-4">
-              <h3 className="text-sm font-medium text-content-secondary mb-3">Attitude</h3>
+              <h3 className="text-sm font-medium text-content-secondary mb-3">{t('betaflight.BetaflightDashboard.attitude')}</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Roll</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.roll')}</span>
                   <span className="text-content font-mono">{attitude.roll.toFixed(1)}°</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Pitch</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.pitch')}</span>
                   <span className="text-content font-mono">{attitude.pitch.toFixed(1)}°</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Yaw</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.yaw')}</span>
                   <span className="text-content font-mono">{attitude.yaw.toFixed(1)}°</span>
                 </div>
               </div>
@@ -280,18 +281,18 @@ export function BetaflightDashboard() {
 
             {/* Battery/Analog */}
             <div className="bg-surface rounded-xl border border-subtle p-4">
-              <h3 className="text-sm font-medium text-content-secondary mb-3">Battery</h3>
+              <h3 className="text-sm font-medium text-content-secondary mb-3">{t('betaflight.BetaflightDashboard.battery')}</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Voltage</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.voltage')}</span>
                   <span className="text-content font-mono">{(analog.voltage / 10).toFixed(1)}V</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Current</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.current')}</span>
                   <span className="text-content font-mono">{(analog.current / 100).toFixed(1)}A</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Used</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.used')}</span>
                   <span className="text-content font-mono">{formatCapacityFromMah(analog.mAhDrawn, electricCapacityUnit)}</span>
                 </div>
                 <div className="flex justify-between">
@@ -303,10 +304,10 @@ export function BetaflightDashboard() {
 
             {/* Status */}
             <div className="bg-surface rounded-xl border border-subtle p-4">
-              <h3 className="text-sm font-medium text-content-secondary mb-3">Status</h3>
+              <h3 className="text-sm font-medium text-content-secondary mb-3">{t('betaflight.BetaflightDashboard.status')}</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-content-secondary">Armed</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.armed')}</span>
                   <span className={`px-2 py-0.5 rounded text-xs font-medium ${
                     status.isArmed ? 'bg-red-500/20 text-red-400' : 'bg-surface-raised text-content-secondary'
                   }`}>
@@ -314,11 +315,11 @@ export function BetaflightDashboard() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">CPU Load</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.cpuLoad')}</span>
                   <span className="text-content font-mono">{status.cpuLoad}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Cycle Time</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.cycleTime')}</span>
                   <span className="text-content font-mono">{status.cycleTime}µs</span>
                 </div>
               </div>
@@ -329,19 +330,19 @@ export function BetaflightDashboard() {
               <h3 className="text-sm font-medium text-content-secondary mb-3">GPS</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Fix</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.fix')}</span>
                   <span className="text-content font-mono">{gps.fixType}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Satellites</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.satellites')}</span>
                   <span className="text-content font-mono">{gps.satellites}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Lat</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.lat')}</span>
                   <span className="text-content font-mono">{gps.lat.toFixed(6)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Lon</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.lon')}</span>
                   <span className="text-content font-mono">{gps.lon.toFixed(6)}</span>
                 </div>
               </div>
@@ -349,14 +350,14 @@ export function BetaflightDashboard() {
 
             {/* Altitude */}
             <div className="bg-surface rounded-xl border border-subtle p-4">
-              <h3 className="text-sm font-medium text-content-secondary mb-3">Altitude</h3>
+              <h3 className="text-sm font-medium text-content-secondary mb-3">{t('betaflight.BetaflightDashboard.altitude')}</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Altitude</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.altitude')}</span>
                   <span className="text-content font-mono">{formatAltitudeFromMeters(altitude.altitude, altitudeUnit)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-content-secondary">Vario</span>
+                  <span className="text-content-secondary">{t('betaflight.BetaflightDashboard.vario')}</span>
                   <span className="text-content font-mono">{formatVerticalSpeedFromMetersPerSecond(altitude.vario, verticalSpeedUnit)}</span>
                 </div>
               </div>
@@ -364,7 +365,7 @@ export function BetaflightDashboard() {
 
             {/* RC Channels */}
             <div className="bg-surface rounded-xl border border-subtle p-4 col-span-2">
-              <h3 className="text-sm font-medium text-content-secondary mb-3">RC Channels</h3>
+              <h3 className="text-sm font-medium text-content-secondary mb-3">{t('betaflight.BetaflightDashboard.rcChannels')}</h3>
               {/* Primary sticks */}
               <div className="grid grid-cols-4 gap-2">
                 {displayRcChannels.slice(0, PRIMARY_CHANNEL_COUNT).map((value, i) => (
@@ -408,7 +409,7 @@ export function BetaflightDashboard() {
 
             {/* Motors */}
             <div className="bg-surface rounded-xl border border-subtle p-4">
-              <h3 className="text-sm font-medium text-content-secondary mb-3">Motors</h3>
+              <h3 className="text-sm font-medium text-content-secondary mb-3">{t('betaflight.BetaflightDashboard.motors')}</h3>
               <div className="grid grid-cols-2 gap-2">
                 {motors.values.slice(0, 4).map((value, i) => (
                   <div key={i} className="space-y-1">
@@ -432,7 +433,7 @@ export function BetaflightDashboard() {
         {/* Last update */}
         {connection.isConnected && lastUpdate > 0 && (
           <div className="text-center text-xs text-content-secondary">
-            Last update: {new Date(lastUpdate).toLocaleTimeString()}
+            {t('betaflight.BetaflightDashboard.lastUpdate')} {new Date(lastUpdate).toLocaleTimeString()}
           </div>
         )}
       </div>

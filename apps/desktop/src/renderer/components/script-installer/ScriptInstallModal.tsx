@@ -18,6 +18,7 @@ import { LuaCodePreview } from './LuaCodePreview';
 import { PreflightChecksList } from './PreflightChecksList';
 import { useConnectionStore } from '../../stores/connection-store';
 import type { PreflightCheck, PreflightFix, ScriptManifest } from '../../../shared/script-installer-types';
+import { t } from '../../i18n';
 
 type Stage = 'explainer' | 'preview' | 'progress' | 'success' | 'error' | 'manual';
 
@@ -151,11 +152,10 @@ function ExplainerStage({ onContinue, onCancel }: { onContinue: () => void; onCa
           <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider rounded bg-rose-600/20 text-rose-400 border border-rose-600/40">
             EXPERIMENTAL
           </span>
-          <h2 className="text-lg font-semibold text-content">Install ArduDeck commands on this vehicle</h2>
+          <h2 className="text-lg font-semibold text-content">{t('script_installer.ScriptInstallModal.installArdudeckCommandsOnThisVehicle')}</h2>
         </div>
         <p className="text-sm text-content-secondary leading-relaxed">
-          Some commands aren't supported natively by every flight controller build.
-          ArduDeck can install a small Lua script on this vehicle's SD card to add them.
+          {t('script_installer.ScriptInstallModal.someCommandsArenTSupportedNatively')}
         </p>
       </div>
 
@@ -166,41 +166,41 @@ function ExplainerStage({ onContinue, onCancel }: { onContinue: () => void; onCa
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <div>
-              <div className="font-semibold text-rose-300 mb-0.5">No flight controller connected</div>
+              <div className="font-semibold text-rose-300 mb-0.5">{t('script_installer.ScriptInstallModal.noFlightControllerConnected')}</div>
               <div className="text-rose-200/90 leading-snug">{blockReason}</div>
             </div>
           </div>
         )}
 
-        <InfoCard variant="info" title="What gets installed">
+        <InfoCard variant="info" title={t('script_installer.ScriptInstallModal.whatGetsInstalled')}>
           <ul className="list-disc list-inside space-y-1 text-content-secondary">
-            <li>One Lua script (~3-15 KB) under <code className="font-mono text-content">/APM/scripts/</code></li>
-            <li>Possibly a parameter change (e.g. <code className="font-mono text-content">SCR_ENABLE = 1</code>) and a reboot if scripting isn't already enabled</li>
-            <li>A registry entry on this computer tracking what was installed</li>
+            <li>{t('script_installer.ScriptInstallModal.oneLuaScript315Kb')} <code className="font-mono text-content">/APM/scripts/</code></li>
+            <li>{t('script_installer.ScriptInstallModal.possiblyAParameterChangeEG')} <code className="font-mono text-content">SCR_ENABLE = 1</code>{t('script_installer.ScriptInstallModal.andARebootIfScriptingIsn')}</li>
+            <li>{t('script_installer.ScriptInstallModal.aRegistryEntryOnThisComputer')}</li>
           </ul>
         </InfoCard>
 
-        <InfoCard variant="success" title="Why it's safe">
+        <InfoCard variant="success" title={t('script_installer.ScriptInstallModal.whyItSSafe')}>
           <ul className="list-disc list-inside space-y-1 text-content-secondary">
-            <li>Runs on the vehicle, not the GCS - survives link loss</li>
-            <li>Sandboxed - cannot affect stabilization, arming, or mode switching</li>
-            <li>You'll see the full source code and SHA256 before consenting</li>
-            <li>Removable any time from settings</li>
+            <li>{t('script_installer.ScriptInstallModal.runsOnTheVehicleNotThe')}</li>
+            <li>{t('script_installer.ScriptInstallModal.sandboxedCannotAffectStabilizationArmingOr')}</li>
+            <li>{t('script_installer.ScriptInstallModal.youLlSeeTheFullSource')}</li>
+            <li>{t('script_installer.ScriptInstallModal.removableAnyTimeFromSettings')}</li>
           </ul>
         </InfoCard>
 
-        <InfoCard variant="warn" title="What can go wrong">
+        <InfoCard variant="warn" title={t('script_installer.ScriptInstallModal.whatCanGoWrong')}>
           <ul className="list-disc list-inside space-y-1 text-content-secondary">
-            <li>This feature is <strong className="text-amber-400">experimental</strong>. The script could fail to load, crash mid-flight, or behave unexpectedly</li>
-            <li>If <code className="font-mono text-content">SCR_ENABLE</code> needs to change, the FC will reboot - this is refused while armed</li>
-            <li>Bench-test the installed command before trusting it in flight</li>
+            <li>{t('script_installer.ScriptInstallModal.thisFeatureIs')} <strong className="text-amber-400">{t('script_installer.ScriptInstallModal.experimental')}</strong>{t('script_installer.ScriptInstallModal.theScriptCouldFailToLoad')}</li>
+            <li>{t('script_installer.ScriptInstallModal.if')} <code className="font-mono text-content">SCR_ENABLE</code> {t('script_installer.ScriptInstallModal.needsToChangeTheFcWill')}</li>
+            <li>{t('script_installer.ScriptInstallModal.benchTestTheInstalledCommandBefore')}</li>
           </ul>
         </InfoCard>
       </div>
 
       <div className="px-6 py-4 border-t border-subtle flex justify-between items-center">
         <button onClick={onCancel} className="px-4 py-2 text-sm text-content-secondary hover:text-content">
-          Cancel
+          {t('script_installer.ScriptInstallModal.cancel')}
         </button>
         <div className="flex items-center gap-3">
           {blocked && (
@@ -216,7 +216,7 @@ function ExplainerStage({ onContinue, onCancel }: { onContinue: () => void; onCa
             }`}
             title={blocked ? blockReason ?? '' : undefined}
           >
-            Continue →
+            {t('script_installer.ScriptInstallModal.continue')}
           </button>
         </div>
       </div>
@@ -246,10 +246,10 @@ function PreviewStage({
           <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider rounded bg-rose-600/20 text-rose-400 border border-rose-600/40">
             EXPERIMENTAL
           </span>
-          <h2 className="text-base font-semibold text-content">Review &amp; install</h2>
+          <h2 className="text-base font-semibold text-content">{t('script_installer.ScriptInstallModal.reviewInstall')}</h2>
         </div>
         <p className="text-xs text-content-secondary">
-          Verify the source matches the SHA256 displayed below. Resolve any blocking issues before continuing.
+          {t('script_installer.ScriptInstallModal.verifyTheSourceMatchesTheSha256')}
         </p>
       </div>
 
@@ -267,7 +267,7 @@ function PreviewStage({
         {/* Right: manifest summary + checks */}
         <div className="p-4 border-l border-subtle overflow-y-auto space-y-4 bg-surface">
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-secondary mb-2">Commands provided</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-secondary mb-2">{t('script_installer.ScriptInstallModal.commandsProvided')}</h3>
             <div className="space-y-2">
               {manifest.commands.map(cmd => (
                 <div key={cmd.name} className="rounded border border-subtle p-2 bg-surface-raised text-xs">
@@ -280,23 +280,23 @@ function PreviewStage({
           </section>
 
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-secondary mb-2">Vehicle prerequisites</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-secondary mb-2">{t('script_installer.ScriptInstallModal.vehiclePrerequisites')}</h3>
             <PreflightChecksList checks={checks} busyFix={busyFix} onApplyFix={onApplyFix} />
           </section>
 
           <section className="text-[11px] text-content-tertiary">
-            Heartbeat: <span className="font-mono text-content-secondary">{manifest.heartbeat.name}</span> every {manifest.heartbeat.intervalSec}s
+            {t('script_installer.ScriptInstallModal.heartbeat')} <span className="font-mono text-content-secondary">{manifest.heartbeat.name}</span> {t('script_installer.ScriptInstallModal.every')} {manifest.heartbeat.intervalSec}s
           </section>
         </div>
       </div>
 
       <div className="px-6 py-3 border-t border-subtle flex items-center justify-between bg-surface">
         <button onClick={onCancel} className="px-4 py-2 text-sm text-content-secondary hover:text-content">
-          Cancel
+          {t('script_installer.ScriptInstallModal.cancel')}
         </button>
         <div className="flex items-center gap-3">
           {blocked && (
-            <span className="text-xs text-rose-400">Resolve blocking checks first</span>
+            <span className="text-xs text-rose-400">{t('script_installer.ScriptInstallModal.resolveBlockingChecksFirst')}</span>
           )}
           <button
             onClick={onGrantConsent}
@@ -307,7 +307,7 @@ function PreviewStage({
                 : 'bg-emerald-600 hover:bg-emerald-500 text-white'
             }`}
           >
-            I've reviewed - install
+            {t('script_installer.ScriptInstallModal.iVeReviewedInstall')}
           </button>
         </div>
       </div>
@@ -333,18 +333,18 @@ function ProgressStage({ phase, onCancel }: { phase: NonNullable<ReturnType<type
   return (
     <>
       <div className="px-6 py-5 border-b border-subtle">
-        <h2 className="text-base font-semibold text-content">Installing ArduDeck commands…</h2>
+        <h2 className="text-base font-semibold text-content">{t('script_installer.ScriptInstallModal.installingArdudeckCommands')}</h2>
       </div>
 
       <div className="px-6 py-6 space-y-3 flex-1 min-h-0 overflow-y-auto">
-        <ProgressRow done label="Verifying prerequisites" />
+        <ProgressRow done label={t('script_installer.ScriptInstallModal.verifyingPrerequisites')} />
         <ProgressRow
           done={isPast('configuring_params')}
           active={isCurrent('configuring_params')}
           label={
             phase.phase === 'configuring_params'
               ? `Setting ${phase.param} = ${phase.after}` + (phase.rebootRequired ? ' (reboot will follow)' : '')
-              : 'Configure parameters'
+              : t('script_installer.ScriptInstallModal.configureParameters')
           }
         />
         <ProgressRow
@@ -352,8 +352,8 @@ function ProgressStage({ phase, onCancel }: { phase: NonNullable<ReturnType<type
           active={isCurrent('rebooting')}
           label={
             phase.phase === 'rebooting'
-              ? `Rebooting flight controller… ${phase.secondsWaited}s / ~${phase.estimatedTotalSec}s`
-              : 'Reboot if required'
+              ? t('script_installer.ScriptInstallModal.rebootingFlightControllerSS', { secondsWaited: phase.secondsWaited, estimatedTotalSec: phase.estimatedTotalSec })
+              : t('script_installer.ScriptInstallModal.rebootIfRequired')
           }
         >
           {phase.phase === 'rebooting' && (
@@ -370,8 +370,8 @@ function ProgressStage({ phase, onCancel }: { phase: NonNullable<ReturnType<type
           active={isCurrent('probing_capability')}
           label={
             phase.phase === 'probing_capability'
-              ? 'Probing FC for write capability…'
-              : 'Probe FC writability'
+              ? t('script_installer.ScriptInstallModal.probingFcForWriteCapability')
+              : t('script_installer.ScriptInstallModal.probeFcWritability')
           }
         />
         <ProgressRow
@@ -379,8 +379,8 @@ function ProgressStage({ phase, onCancel }: { phase: NonNullable<ReturnType<type
           active={isCurrent('uploading')}
           label={
             phase.phase === 'uploading'
-              ? `Uploading ${phase.filename} ${Math.round((phase.bytesWritten / Math.max(1, phase.bytesTotal)) * 100)}% (${phase.bytesWritten}/${phase.bytesTotal} B)`
-              : 'Upload script'
+              ? t('script_installer.ScriptInstallModal.uploadingB', { filename: phase.filename, v2: Math.round((phase.bytesWritten / Math.max(1, phase.bytesTotal)) * 100), bytesWritten: phase.bytesWritten, bytesTotal: phase.bytesTotal })
+              : t('script_installer.ScriptInstallModal.uploadScript')
           }
         >
           {phase.phase === 'uploading' && (
@@ -397,20 +397,20 @@ function ProgressStage({ phase, onCancel }: { phase: NonNullable<ReturnType<type
           active={isCurrent('awaiting_heartbeat')}
           label={
             phase.phase === 'awaiting_heartbeat'
-              ? `Waiting for script heartbeat (${phase.timeoutSec}s timeout)…`
-              : 'Wait for script heartbeat'
+              ? t('script_installer.ScriptInstallModal.waitingForScriptHeartbeatSTimeout', { timeoutSec: phase.timeoutSec })
+              : t('script_installer.ScriptInstallModal.waitForScriptHeartbeat')
           }
         />
         <ProgressRow
           done={isPast('verifying')}
           active={isCurrent('verifying')}
-          label="Verifying registered version"
+          label={t('script_installer.ScriptInstallModal.verifyingRegisteredVersion')}
         />
       </div>
 
       <div className="px-6 py-4 border-t border-subtle flex justify-end">
         <button onClick={onCancel} className="px-4 py-2 text-sm text-content-secondary hover:text-content">
-          Cancel
+          {t('script_installer.ScriptInstallModal.cancel')}
         </button>
       </div>
     </>
@@ -437,14 +437,14 @@ function SuccessStage({ onClose }: { onClose: () => void }) {
   return (
     <>
       <div className="px-6 py-5 border-b border-subtle">
-        <h2 className="text-base font-semibold text-emerald-400">✓ Installed</h2>
+        <h2 className="text-base font-semibold text-emerald-400">{t('script_installer.ScriptInstallModal.installed')}</h2>
       </div>
       <div className="px-6 py-6 text-sm text-content-secondary">
-        ArduDeck commands are now available on this vehicle. The script publishes a heartbeat every second to confirm it's running.
+        {t('script_installer.ScriptInstallModal.ardudeckCommandsAreNowAvailableOn')}
       </div>
       <div className="px-6 py-4 border-t border-subtle flex justify-end">
         <button onClick={onClose} className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white rounded">
-          Done
+          {t('script_installer.ScriptInstallModal.done')}
         </button>
       </div>
     </>
@@ -486,20 +486,18 @@ function ManualInstallStage({ manifest, ftpError, targetPath, onClose, onRetry }
           <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider rounded bg-amber-600/20 text-amber-400 border border-amber-600/40">
             MANUAL STEP REQUIRED
           </span>
-          <h2 className="text-base font-semibold text-content">Automatic install not available</h2>
+          <h2 className="text-base font-semibold text-content">{t('script_installer.ScriptInstallModal.automaticInstallNotAvailable')}</h2>
         </div>
         <p className="text-xs text-content-secondary leading-relaxed">
-          Your flight controller's MAVLink-FTP server refused the script write. This happens on
-          some ArduPilot builds. You can still install the script - it just takes one extra step.
+          {t('script_installer.ScriptInstallModal.yourFlightControllerSMavlinkFtp')}
         </p>
       </div>
 
       <div className="px-6 py-5 space-y-4 overflow-y-auto flex-1 min-h-0 text-sm">
         {/* Step 1: download */}
-        <ManualStep number={1} title="Download the script">
+        <ManualStep number={1} title={t('script_installer.ScriptInstallModal.downloadTheScript')}>
           <p className="text-content-secondary mb-2">
-            Save <code className="font-mono text-content">{manifest.filename}</code> to your computer.
-            The file is byte-identical to what ArduDeck would have installed automatically.
+            {t('script_installer.ScriptInstallModal.save')} <code className="font-mono text-content">{manifest.filename}</code> {t('script_installer.ScriptInstallModal.toYourComputerTheFileIs')}
           </p>
           <div className="flex items-center gap-2">
             <button
@@ -507,66 +505,63 @@ function ManualInstallStage({ manifest, ftpError, targetPath, onClose, onRetry }
               disabled={saving}
               className="px-3 py-1.5 text-xs font-medium bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded"
             >
-              {saving ? 'Saving…' : savedPath ? 'Save again' : 'Download .lua'}
+              {saving ? t('script_installer.ScriptInstallModal.saving') : savedPath ? t('script_installer.ScriptInstallModal.saveAgain') : t('script_installer.ScriptInstallModal.downloadLua')}
             </button>
             {savedPath && (
               <span className="text-[11px] text-emerald-400 font-mono truncate" title={savedPath}>
-                ✓ saved to {savedPath}
+                {t('script_installer.ScriptInstallModal.savedTo')} {savedPath}
               </span>
             )}
           </div>
           {saveError && <div className="mt-1 text-[11px] text-rose-400">{saveError}</div>}
           <div className="mt-2 text-[11px] text-content-tertiary font-mono">
-            sha256: {manifest.sha256}
+            {t('script_installer.ScriptInstallModal.sha256')} {manifest.sha256}
           </div>
         </ManualStep>
 
         {/* Step 2: copy to FC */}
-        <ManualStep number={2} title="Copy it to the flight controller">
+        <ManualStep number={2} title={t('script_installer.ScriptInstallModal.copyItToTheFlightController')}>
           <p className="text-content-secondary mb-2">
-            Copy the file to <code className="font-mono text-content">{targetPath.replace(`/${manifest.filename}`, '/')}</code>
-            {' '}on the FC's SD card. How you do this depends on your setup:
+            {t('script_installer.ScriptInstallModal.copyTheFileTo')} <code className="font-mono text-content">{targetPath.replace(`/${manifest.filename}`, '/')}</code>
+            {' '}{t('script_installer.ScriptInstallModal.onTheFcSSdCard')}
           </p>
           <ul className="list-disc list-inside space-y-1 text-content-secondary text-xs">
-            <li>Pull the SD card and copy via card reader (most reliable)</li>
-            <li>Use Mission Planner: Config → MAVFTP → navigate to <code className="font-mono">/APM/scripts/</code> → Upload File</li>
-            <li>If <code className="font-mono">/APM/scripts/</code> doesn't exist on your SD card, create it first</li>
+            <li>{t('script_installer.ScriptInstallModal.pullTheSdCardAndCopy')}</li>
+            <li>{t('script_installer.ScriptInstallModal.useMissionPlannerConfigMavftpNavigate')} <code className="font-mono">/APM/scripts/</code> {t('script_installer.ScriptInstallModal.uploadFile')}</li>
+            <li>{t('script_installer.ScriptInstallModal.if')} <code className="font-mono">/APM/scripts/</code> {t('script_installer.ScriptInstallModal.doesnTExistOnYourSd')}</li>
           </ul>
         </ManualStep>
 
         {/* Step 3: reboot */}
-        <ManualStep number={3} title="Reboot the flight controller">
+        <ManualStep number={3} title={t('script_installer.ScriptInstallModal.rebootTheFlightController')}>
           <p className="text-content-secondary">
-            ArduPilot loads scripts on boot. After putting the file in place, power-cycle the FC
-            or send a reboot command from your GCS.
+            {t('script_installer.ScriptInstallModal.ardupilotLoadsScriptsOnBootAfter')}
           </p>
         </ManualStep>
 
         {/* Step 4: come back */}
-        <ManualStep number={4} title="Come back to ArduDeck - it'll auto-detect">
+        <ManualStep number={4} title={t('script_installer.ScriptInstallModal.comeBackToArdudeckItLl')}>
           <p className="text-content-secondary">
-            Once the script starts running it publishes a heartbeat (<code className="font-mono text-content">{manifest.heartbeat.name}</code>).
-            ArduDeck listens for this and will mark Orbit as ready automatically. You don't need
-            to reopen this dialog.
+            {t('script_installer.ScriptInstallModal.onceTheScriptStartsRunningIt')}<code className="font-mono text-content">{manifest.heartbeat.name}</code>{t('script_installer.ScriptInstallModal.ardudeckListensForThisAndWill')}
           </p>
         </ManualStep>
 
         {/* Technical detail */}
         <div className="rounded-lg border border-subtle bg-surface-input px-3 py-2 text-[11px] text-content-tertiary">
-          <span className="font-semibold text-content-secondary">Technical reason: </span>
+          <span className="font-semibold text-content-secondary">{t('script_installer.ScriptInstallModal.technicalReason')} </span>
           <span className="font-mono">{ftpError}</span>
         </div>
       </div>
 
       <div className="px-6 py-4 border-t border-subtle flex justify-between">
         <button onClick={onClose} className="px-4 py-2 text-sm text-content-secondary hover:text-content">
-          Close
+          {t('script_installer.ScriptInstallModal.close')}
         </button>
         <button
           onClick={onRetry}
           className="px-4 py-2 text-sm font-medium bg-surface-raised hover:bg-surface text-content border border-subtle rounded"
         >
-          Retry automatic install
+          {t('script_installer.ScriptInstallModal.retryAutomaticInstall')}
         </button>
       </div>
     </>
@@ -593,18 +588,18 @@ function ErrorStage({ message, retriable, onClose, onRetry }: { message: string;
   return (
     <>
       <div className="px-6 py-5 border-b border-subtle">
-        <h2 className="text-base font-semibold text-rose-400">✗ Install failed</h2>
+        <h2 className="text-base font-semibold text-rose-400">{t('script_installer.ScriptInstallModal.installFailed')}</h2>
       </div>
       <div className="px-6 py-6 text-sm text-content-secondary">
         {message}
       </div>
       <div className="px-6 py-4 border-t border-subtle flex justify-between">
         <button onClick={onClose} className="px-4 py-2 text-sm text-content-secondary hover:text-content">
-          Close
+          {t('script_installer.ScriptInstallModal.close')}
         </button>
         {retriable && (
           <button onClick={onRetry} className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white rounded">
-            Try again
+            {t('script_installer.ScriptInstallModal.tryAgain')}
           </button>
         )}
       </div>

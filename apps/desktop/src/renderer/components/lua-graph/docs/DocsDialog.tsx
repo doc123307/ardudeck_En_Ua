@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { X, BookOpen } from 'lucide-react';
 import { DOC_SECTIONS } from './docs-content';
 import { renderMarkdown } from './markdown-renderer';
+import { t } from '../../../i18n';
 
 interface DocsDialogProps {
   onClose: () => void;
@@ -50,9 +51,9 @@ export function DocsDialog({ onClose }: DocsDialogProps) {
               <BookOpen className="w-4 h-4 text-blue-400" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-content">Documentation</h2>
+              <h2 className="text-sm font-semibold text-content">{t('lua_graph.DocsDialog.documentation')}</h2>
               <p className="text-[10px] text-content-secondary mt-0.5">
-                Learn how to use the Lua Graph Editor
+                {t('lua_graph.DocsDialog.learnHowToUseTheLua')}
               </p>
             </div>
           </div>

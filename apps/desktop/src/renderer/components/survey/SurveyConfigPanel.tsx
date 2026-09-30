@@ -70,6 +70,7 @@ import {
 } from '../../../shared/user-units.js';
 import { useVehicleProfileStore } from '../../stores/vehicle-profile-store';
 import { AD_FEAT, supports } from '../../../shared/vehicle-profile';
+import { t } from '../../i18n';
 
 // Pattern catalog. Each entry advertises which modes it applies to so the UI
 // can filter without scattering conditional logic across the component.
@@ -79,28 +80,28 @@ const ALL_PATTERN_OPTIONS: {
   description: string;
   modes: ('camera' | 'mower')[];
 }[] = [
-  { id: 'grid', label: 'Grid', description: 'Parallel back-and-forth lines', modes: ['camera', 'mower'] },
-  { id: 'crosshatch', label: 'Crosshatch', description: 'Two perpendicular grid passes', modes: ['camera', 'mower'] },
-  { id: 'circular', label: 'Circular', description: 'Concentric rings around centroid', modes: ['camera'] },
-  { id: 'corridor', label: 'Corridor', description: 'Follow a centerline (roads, rail, power lines, pipelines)', modes: ['camera', 'mower'] },
-  { id: 'spiral', label: 'Spiral', description: 'Polygon-aware inward/outward spiral', modes: ['mower'] },
-  { id: 'perimeter-fill', label: 'Perimeter + Fill', description: 'Edge passes then grid interior', modes: ['mower'] },
+  { id: 'grid', get label() { return t('survey.SurveyConfigPanel.grid'); }, get description() { return t('survey.SurveyConfigPanel.parallelBackAndForthLines'); }, modes: ['camera', 'mower'] },
+  { id: 'crosshatch', get label() { return t('survey.SurveyConfigPanel.crosshatch'); }, get description() { return t('survey.SurveyConfigPanel.twoPerpendicularGridPasses'); }, modes: ['camera', 'mower'] },
+  { id: 'circular', get label() { return t('survey.SurveyConfigPanel.circular'); }, get description() { return t('survey.SurveyConfigPanel.concentricRingsAroundCentroid'); }, modes: ['camera'] },
+  { id: 'corridor', get label() { return t('survey.SurveyConfigPanel.corridor'); }, get description() { return t('survey.SurveyConfigPanel.followACenterlineRoadsRailPower'); }, modes: ['camera', 'mower'] },
+  { id: 'spiral', get label() { return t('survey.SurveyConfigPanel.spiral'); }, get description() { return t('survey.SurveyConfigPanel.polygonAwareInwardOutwardSpiral'); }, modes: ['mower'] },
+  { id: 'perimeter-fill', get label() { return t('survey.SurveyConfigPanel.perimeterFill'); }, get description() { return t('survey.SurveyConfigPanel.edgePassesThenGridInterior'); }, modes: ['mower'] },
 ];
 
 const CORRIDOR_MODE_OPTIONS: { id: CorridorMode; label: string; description: string }[] = [
-  { id: 'plane', label: 'Plane', description: 'Fixed wing: strips get overshoot and racetrack turns at sharp bends' },
-  { id: 'copter', label: 'Copter', description: 'Multirotor: turns on the spot, no overshoot or turn loops' },
+  { id: 'plane', get label() { return t('survey.SurveyConfigPanel.plane'); }, get description() { return t('survey.SurveyConfigPanel.fixedWingStripsGetOvershootAnd'); } },
+  { id: 'copter', get label() { return t('survey.SurveyConfigPanel.copter'); }, get description() { return t('survey.SurveyConfigPanel.multirotorTurnsOnTheSpotNo'); } },
 ];
 
 const GROUND_PATTERN_OPTIONS: { id: GroundPattern; label: string; description: string }[] = [
-  { id: 'boustrophedon', label: 'Zigzag', description: 'U-turn at line ends (skid-steer rovers)' },
-  { id: 'reverse-alternating', label: 'Reverse', description: 'Drive forward then reverse: no U-turns (Ackermann/car-like rovers, needs ArduRover DO_SET_REVERSE support)' },
+  { id: 'boustrophedon', get label() { return t('survey.SurveyConfigPanel.zigzag'); }, get description() { return t('survey.SurveyConfigPanel.uTurnAtLineEndsSkid'); } },
+  { id: 'reverse-alternating', get label() { return t('survey.SurveyConfigPanel.reverse'); }, get description() { return t('survey.SurveyConfigPanel.driveForwardThenReverseNoU'); } },
 ];
 
 const ALT_REF_OPTIONS: { id: AltitudeReference; label: string; description: string }[] = [
-  { id: 'relative', label: 'Relative', description: 'Altitude relative to home position' },
-  { id: 'terrain', label: 'Terrain', description: 'Altitude above terrain (AGL) at each point' },
-  { id: 'asl', label: 'ASL', description: 'Altitude above mean sea level' },
+  { id: 'relative', get label() { return t('survey.SurveyConfigPanel.relative'); }, get description() { return t('survey.SurveyConfigPanel.altitudeRelativeToHomePosition'); } },
+  { id: 'terrain', get label() { return t('survey.SurveyConfigPanel.terrain'); }, get description() { return t('survey.SurveyConfigPanel.altitudeAboveTerrainAglAtEach'); } },
+  { id: 'asl', label: 'ASL', get description() { return t('survey.SurveyConfigPanel.altitudeAboveMeanSeaLevel'); } },
 ];
 
 // Rehydrate a persisted preset blob from settings into a typed SurveyPreset.
@@ -110,7 +111,7 @@ function rehydrateUserPreset(p: PersistedSurveyPreset): SurveyPreset {
   return {
     id: p.id,
     name: p.name,
-    description: p.description || 'Saved preset',
+    description: p.description || t('survey.SurveyConfigPanel.savedPreset'),
     tag: 'Custom',
     isUserDefined: true,
     config: p.config as SurveyPreset['config'],
@@ -355,7 +356,7 @@ export function SurveyConfigPanel() {
     const res = await importArea();
     if (!res.ok && res.error) setImportError(res.error);
     if (res.ok && res.importedAsCorridor) {
-      setImportNote('No polygon in that file, so the line was loaded as a corridor centreline.');
+      setImportNote(t('survey.SurveyConfigPanel.noPolygonInThatFileSo'));
     }
   }, [importArea]);
 
@@ -460,7 +461,7 @@ export function SurveyConfigPanel() {
   }, [config, isCustomCamera, isManualCamera, saveSurveyPreset, setLastSurveyPresetId]);
 
   const handleDeletePreset = useCallback((id: string) => {
-    if (!window.confirm('Delete this preset?')) return;
+    if (!window.confirm(t('survey.SurveyConfigPanel.deleteThisPreset'))) return;
     removeSurveyPreset(id);
   }, [removeSurveyPreset]);
 
@@ -617,31 +618,31 @@ export function SurveyConfigPanel() {
         <svg className="w-10 h-10 mb-3 text-content-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
         </svg>
-        <p className="text-sm font-medium mb-1 text-content">No survey polygon</p>
+        <p className="text-sm font-medium mb-1 text-content">{t('survey.SurveyConfigPanel.noSurveyPolygon')}</p>
         <p className="text-xs text-content-tertiary max-w-[14rem]">
-          Click the Survey button on the map toolbar, then draw a polygon to plan a grid.
+          {t('survey.SurveyConfigPanel.clickTheSurveyButtonOnThe')}
         </p>
         <div className="mt-4 flex flex-col items-center gap-1">
-          <span className="text-[10px] uppercase tracking-wide text-content-tertiary">or</span>
+          <span className="text-[10px] uppercase tracking-wide text-content-tertiary">{t('survey.SurveyConfigPanel.or')}</span>
           <button
             onClick={handleImportArea}
             className="px-3 py-1.5 text-xs rounded-md bg-surface-raised text-content hover:text-purple-300 transition-colors"
-            title="Import a boundary from a KML, KMZ, GeoJSON, or Shapefile (.shp / zipped)"
+            title={t('survey.SurveyConfigPanel.importABoundaryFromAKml')}
           >
-            Import area from file
+            {t('survey.SurveyConfigPanel.importAreaFromFile')}
           </button>
-          <span className="text-[10px] text-content-tertiary">KML · KMZ · GeoJSON · SHP</span>
+          <span className="text-[10px] text-content-tertiary">{t('survey.SurveyConfigPanel.kmlKmzGeojsonShp')}</span>
 
           {/* Simplify tolerance — applied to imported boundaries. Dense GIS
               rings (thousands of points) are reduced to this tolerance so the
               map stays responsive; 0 disables simplification. */}
           <div className="flex items-center gap-1.5 mt-2 text-[10px] text-content-tertiary">
-            <span>Simplify</span>
+            <span>{t('survey.SurveyConfigPanel.simplify')}</span>
             <DraftNumberField
               value={simplifyToleranceM}
               onCommit={(n) => updateSurveyPerformance({ importSimplifyToleranceM: n })}
               className="w-12 px-1.5 py-0.5 bg-surface-input border border-border rounded text-content text-[10px] focus:outline-none focus:border-blue-500"
-              aria-label="Simplify tolerance"
+              aria-label={t('survey.SurveyConfigPanel.simplifyTolerance')}
               min={0}
               max={50}
               step={0.5}
@@ -650,9 +651,9 @@ export function SurveyConfigPanel() {
             <button
               onClick={goToPerformanceSettings}
               className="ml-1 underline decoration-dotted hover:text-purple-300 transition-colors"
-              title="Open survey performance settings"
+              title={t('survey.SurveyConfigPanel.openSurveyPerformanceSettings')}
             >
-              Performance settings
+              {t('survey.SurveyConfigPanel.performanceSettings')}
             </button>
           </div>
           {importError && <span className="text-[10px] text-red-400 max-w-[14rem]">{importError}</span>}
@@ -678,7 +679,7 @@ export function SurveyConfigPanel() {
         <button
           onClick={() => setPresetNameDraft((d) => (d === null ? `My preset ${userPresets.length + 1}` : null))}
           className={`p-1.5 transition-colors ${presetNameDraft !== null ? 'text-purple-400' : 'text-content-secondary hover:text-purple-400'}`}
-          title="Save current settings as a preset"
+          title={t('survey.SurveyConfigPanel.saveCurrentSettingsAsAPreset')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 4h11l3 3v13H5z M9 4v5h6V4 M9 17h6" />
@@ -687,7 +688,7 @@ export function SurveyConfigPanel() {
         <button
           onClick={handleImportArea}
           className="p-1.5 text-content-secondary hover:text-purple-400 transition-colors"
-          title="Import area from file (KML/KMZ/GeoJSON/Shapefile)"
+          title={t('survey.SurveyConfigPanel.importAreaFromFileKmlKmz')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -696,7 +697,7 @@ export function SurveyConfigPanel() {
         <button
           onClick={startDrawing}
           className="p-1.5 text-content-secondary hover:text-purple-400 transition-colors"
-          title="Redraw polygon"
+          title={t('survey.SurveyConfigPanel.redrawPolygon')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -705,7 +706,7 @@ export function SurveyConfigPanel() {
         <button
           onClick={clearSurvey}
           className="p-1.5 text-content-secondary hover:text-red-400 transition-colors"
-          title="Clear survey"
+          title={t('survey.SurveyConfigPanel.clearSurvey')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -714,7 +715,7 @@ export function SurveyConfigPanel() {
         <button
           onClick={goToPerformanceSettings}
           className="p-1.5 text-content-secondary hover:text-purple-400 transition-colors"
-          title="Survey performance settings"
+          title={t('survey.SurveyConfigPanel.surveyPerformanceSettings')}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -726,7 +727,7 @@ export function SurveyConfigPanel() {
             onClick={() => setShowFleetSplit(true)}
             disabled={!polygon}
             className="p-1.5 text-content-secondary hover:text-cyan-400 transition-colors disabled:opacity-40"
-            title="Split this survey across the connected fleet"
+            title={t('survey.SurveyConfigPanel.splitThisSurveyAcrossTheConnected')}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16M12 4v16" />
@@ -746,7 +747,7 @@ export function SurveyConfigPanel() {
               if (e.key === 'Enter') handleSavePreset(presetNameDraft);
               else if (e.key === 'Escape') setPresetNameDraft(null);
             }}
-            placeholder="Preset name"
+            placeholder={t('survey.SurveyConfigPanel.presetName')}
             className="flex-1 min-w-0 bg-surface-input text-content text-xs px-2 py-1 rounded border border-default focus:border-purple-500 focus:outline-none"
           />
           <button
@@ -754,13 +755,13 @@ export function SurveyConfigPanel() {
             disabled={!presetNameDraft.trim()}
             className="px-2 py-1 text-xs rounded bg-purple-600 text-white hover:bg-purple-500 disabled:opacity-40 transition-colors"
           >
-            Save
+            {t('survey.SurveyConfigPanel.save')}
           </button>
           <button
             onClick={() => setPresetNameDraft(null)}
             className="px-2 py-1 text-xs rounded text-content-secondary hover:text-content transition-colors"
           >
-            Cancel
+            {t('survey.SurveyConfigPanel.cancel')}
           </button>
         </div>
       )}
@@ -774,7 +775,7 @@ export function SurveyConfigPanel() {
         {generating && (
           <div className="flex items-center gap-2 text-[11px] text-content-secondary">
             <span className="w-3 h-3 rounded-full border-2 border-teal-400/30 border-t-teal-400 animate-spin" />
-            Computing coverage plan{activeGenerator ? ` (${activeGenerator.displayName})` : ''}...
+            {t('survey.SurveyConfigPanel.computingCoveragePlan')}{activeGenerator ? ` (${activeGenerator.displayName})` : ''}...
           </div>
         )}
         {generatorError && !generating && (
@@ -784,7 +785,7 @@ export function SurveyConfigPanel() {
               onClick={() => requestRecompute({ immediate: true })}
               className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-red-500/20 text-red-200 hover:bg-red-500/30 transition-colors"
             >
-              Retry
+              {t('survey.SurveyConfigPanel.retry')}
             </button>
           </div>
         )}
@@ -800,25 +801,19 @@ export function SurveyConfigPanel() {
             grid and module coverage engines (TOPAS is polygon-only) don't
             apply, so the whole selector is replaced by a type banner. */}
         {config.pattern === 'panorama' && (
-          <Section title="Type">
+          <Section title={t('survey.SurveyConfigPanel.type')}>
             <div className="px-2 py-1.5 rounded-lg bg-purple-600/15 border border-purple-500/30">
-              <span className="text-xs font-medium text-purple-300">Panorama capture</span>
+              <span className="text-xs font-medium text-purple-300">{t('survey.SurveyConfigPanel.panoramaCapture')}</span>
               <p className="text-[10px] text-content-tertiary leading-snug mt-0.5">
-                Line-based capture along a subject. To plan an area survey instead,
-                exit and pick another survey type from the Survey menu.
+                {t('survey.SurveyConfigPanel.lineBasedCaptureAlongASubject')}
               </p>
               <p className="text-[10px] text-content-secondary leading-snug mt-1.5">
-                Editing the curve: <span className="text-content">click</span> a point to
-                select it - its <span className="text-content">tangent arms</span> appear.
-                Drag the square arm handles to shape the curve through that point
-                (right-click an arm to reset it). Drag the point itself to move it,
-                right-click to delete, click a faint dot or the dashed line to add a point.
+                {t('survey.SurveyConfigPanel.editingTheCurve')} <span className="text-content">{t('survey.SurveyConfigPanel.click')}</span> {t('survey.SurveyConfigPanel.aPointToSelectItIts')} <span className="text-content">{t('survey.SurveyConfigPanel.tangentArms')}</span> {t('survey.SurveyConfigPanel.appearDragTheSquareArmHandles')}
               </p>
             </div>
             {isManualCamera && (
               <p className="mt-1.5 text-[10px] text-amber-500 leading-snug">
-                Panorama needs a real camera: the frame size at range drives the plan.
-                Pick a camera preset instead of Manual corridor.
+                {t('survey.SurveyConfigPanel.panoramaNeedsARealCameraThe')}
               </p>
             )}
           </Section>
@@ -829,7 +824,7 @@ export function SurveyConfigPanel() {
             circles regardless of polygon shape; camera mode hides Spiral and
             Perimeter+Fill which are mowing-specific). */}
         {config.pattern !== 'panorama' && (
-        <Section title="Pattern">
+        <Section title={t('survey.SurveyConfigPanel.pattern')}>
           {(() => {
             const mode = isManualCamera ? 'mower' : 'camera';
             const visible = ALL_PATTERN_OPTIONS.filter((o) => o.modes.includes(mode));
@@ -878,7 +873,7 @@ export function SurveyConfigPanel() {
                             : 'bg-teal-500/20 text-teal-300 border-teal-500/30'
                         }`}
                       >
-                        Remote
+                        {t('survey.SurveyConfigPanel.remote')}
                       </span>
                     )}
                   </span>
@@ -890,7 +885,7 @@ export function SurveyConfigPanel() {
           {/* Spiral direction sub-control — only when spiral pattern is active. */}
           {config.pattern === 'spiral' && (
             <div className="mt-2 flex items-center gap-2">
-              <span className="text-xs text-content-secondary w-14 flex-shrink-0">Direction</span>
+              <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.direction')}</span>
               <div className="flex gap-1 flex-1">
                 {(['inward', 'outward'] as const).map((dir) => {
                   const active = (config.spiralDirection ?? 'inward') === dir;
@@ -903,9 +898,9 @@ export function SurveyConfigPanel() {
                           ? 'bg-purple-600/80 text-white'
                           : 'bg-surface-raised text-content-secondary hover:text-content'
                       }`}
-                      title={dir === 'inward' ? 'Start at perimeter, end at center' : 'Start at center, end at perimeter'}
+                      title={dir === 'inward' ? t('survey.SurveyConfigPanel.startAtPerimeterEndAtCenter') : t('survey.SurveyConfigPanel.startAtCenterEndAtPerimeter')}
                     >
-                      {dir === 'inward' ? 'In' : 'Out'}
+                      {dir === 'inward' ? 'In' : t('survey.SurveyConfigPanel.out')}
                     </button>
                   );
                 })}
@@ -916,7 +911,7 @@ export function SurveyConfigPanel() {
           {/* Perimeter+Fill passes — only when that pattern is active. */}
           {config.pattern === 'perimeter-fill' && (
             <div className="mt-2 flex items-center gap-2">
-              <span className="text-xs text-content-secondary w-14 flex-shrink-0">Passes</span>
+              <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.passes')}</span>
               <input
                 type="range"
                 value={config.perimeterPasses ?? 2}
@@ -948,8 +943,8 @@ export function SurveyConfigPanel() {
               />
               <p className="mt-1 text-[10px] text-content-tertiary leading-snug">
                 {(config.crossGridAltitudeOffset ?? 0) > 0
-                  ? `Perpendicular pass flies ${formatAltitudeFromMeters(config.altitude * (1 + (config.crossGridAltitudeOffset ?? 0) / 100), altitudeUnit)} (+${config.crossGridAltitudeOffset}%) for better photogrammetry.`
-                  : 'Both passes at the same altitude. Raise to fly the second pass higher.'}
+                  ? t('survey.SurveyConfigPanel.perpendicularPassFliesForBetterPhotogrammetry', { v1: formatAltitudeFromMeters(config.altitude * (1 + (config.crossGridAltitudeOffset ?? 0) / 100), altitudeUnit), crossGridAltitudeOffset: config.crossGridAltitudeOffset })
+                  : t('survey.SurveyConfigPanel.bothPassesAtTheSameAltitude')}
               </p>
             </div>
           )}
@@ -959,7 +954,7 @@ export function SurveyConfigPanel() {
         {/* Engine parameters - declared by the active module generator via
             its configFields schema. Only shown while that engine is selected. */}
         {engineFields.length > 0 && (
-          <Section title="Engine parameters">
+          <Section title={t('survey.SurveyConfigPanel.engineParameters')}>
             <div className="space-y-2">
               {engineFields.map((field) => (
                 <EngineParamControl
@@ -971,30 +966,28 @@ export function SurveyConfigPanel() {
               ))}
               {turnRadiusTooTight && (
                 <p className="text-[10px] text-amber-500 leading-snug">
-                  {String(currentTurnRadius)} m turn radius looks too tight for a fixed wing at{' '}
-                  {config.speed} m/s: a level 30° bank turn needs about {suggestedTurnRadius} m.
-                  The engine will plan turns the aircraft can't track.
+                  {String(currentTurnRadius)} {t('survey.SurveyConfigPanel.mTurnRadiusLooksTooTight')}{' '}
+                  {config.speed} {t('survey.SurveyConfigPanel.mSALevel30Bank')} {suggestedTurnRadius} {t('survey.SurveyConfigPanel.mTheEngineWillPlanTurns')}
                 </p>
               )}
               {smoothedOnCopter && (
                 <p className="text-[10px] text-content-tertiary leading-snug">
-                  Smoothed waypoints on a copter add many extra waypoints for turn curves it
-                  doesn't need; Corners is usually the better choice.
+                  {t('survey.SurveyConfigPanel.smoothedWaypointsOnACopterAdd')}
                 </p>
               )}
             </div>
           </Section>
         )}
 
-        <Section title={isManualCamera ? 'Corridor' : 'Camera'}>
+        <Section title={isManualCamera ? t('survey.SurveyConfigPanel.corridor') : t('survey.SurveyConfigPanel.camera')}>
           <CameraPresetSelector value={config.camera} onChange={handleCameraChange} />
           {isCustomCamera && (
             <div className="grid grid-cols-2 gap-2 mt-2">
-              <NumberInput label="Sensor W (mm)" value={customCamera.sensorWidth} onChange={(v) => handleCustomField('sensorWidth', v)} min={1} max={100} step={0.1} />
-              <NumberInput label="Sensor H (mm)" value={customCamera.sensorHeight} onChange={(v) => handleCustomField('sensorHeight', v)} min={1} max={100} step={0.1} />
-              <NumberInput label="Image W (px)" value={customCamera.imageWidth} onChange={(v) => handleCustomField('imageWidth', v)} min={100} max={20000} step={1} />
-              <NumberInput label="Image H (px)" value={customCamera.imageHeight} onChange={(v) => handleCustomField('imageHeight', v)} min={100} max={20000} step={1} />
-              <NumberInput label="Focal (mm)" value={customCamera.focalLength} onChange={(v) => handleCustomField('focalLength', v)} min={1} max={200} step={0.1} />
+              <NumberInput label={t('survey.SurveyConfigPanel.sensorWMm')} value={customCamera.sensorWidth} onChange={(v) => handleCustomField('sensorWidth', v)} min={1} max={100} step={0.1} />
+              <NumberInput label={t('survey.SurveyConfigPanel.sensorHMm')} value={customCamera.sensorHeight} onChange={(v) => handleCustomField('sensorHeight', v)} min={1} max={100} step={0.1} />
+              <NumberInput label={t('survey.SurveyConfigPanel.imageWPx')} value={customCamera.imageWidth} onChange={(v) => handleCustomField('imageWidth', v)} min={100} max={20000} step={1} />
+              <NumberInput label={t('survey.SurveyConfigPanel.imageHPx')} value={customCamera.imageHeight} onChange={(v) => handleCustomField('imageHeight', v)} min={100} max={20000} step={1} />
+              <NumberInput label={t('survey.SurveyConfigPanel.focalMm')} value={customCamera.focalLength} onChange={(v) => handleCustomField('focalLength', v)} min={1} max={200} step={0.1} />
             </div>
           )}
           {isCustomCamera && (
@@ -1002,9 +995,9 @@ export function SurveyConfigPanel() {
               <button
                 onClick={() => setCameraNameDraft('')}
                 className="mt-2 w-full py-1.5 text-xs rounded-md bg-surface-raised text-content hover:text-purple-300 transition-colors"
-                title="Save these specs as a named camera in the dropdown"
+                title={t('survey.SurveyConfigPanel.saveTheseSpecsAsANamed')}
               >
-                Save camera to list
+                {t('survey.SurveyConfigPanel.saveCameraToList')}
               </button>
             ) : (
               <div className="mt-2 flex items-center gap-1.5">
@@ -1013,7 +1006,7 @@ export function SurveyConfigPanel() {
                   value={cameraNameDraft}
                   onChange={(e) => setCameraNameDraft(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') commitCameraName(); if (e.key === 'Escape') setCameraNameDraft(null); }}
-                  placeholder="Camera name"
+                  placeholder={t('survey.SurveyConfigPanel.cameraName')}
                   className="flex-1 px-2 py-1 text-xs bg-surface-input border border-subtle rounded text-content placeholder-content-tertiary focus:border-purple-500 focus:outline-none"
                 />
                 <button
@@ -1021,13 +1014,13 @@ export function SurveyConfigPanel() {
                   disabled={!cameraNameDraft.trim()}
                   className="px-2.5 py-1 text-xs rounded bg-purple-600 text-white hover:bg-purple-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  Save
+                  {t('survey.SurveyConfigPanel.save')}
                 </button>
                 <button
                   onClick={() => setCameraNameDraft(null)}
                   className="px-2 py-1 text-xs rounded bg-surface-raised text-content hover:text-content transition-colors"
                 >
-                  Cancel
+                  {t('survey.SurveyConfigPanel.cancel')}
                 </button>
               </div>
             )
@@ -1035,7 +1028,7 @@ export function SurveyConfigPanel() {
           {isManualCamera && (
             <div className="mt-2">
               <NumberInput
-                label="Corridor width (m)"
+                label={t('survey.SurveyConfigPanel.corridorWidthM')}
                 value={customCamera.manualCorridorWidth ?? 1.5}
                 onChange={handleManualCorridorChange}
                 min={0.1}
@@ -1043,19 +1036,19 @@ export function SurveyConfigPanel() {
                 step={0.1}
               />
               <p className="mt-1 text-[10px] text-content-tertiary leading-snug">
-                Sets line spacing directly. For ground vehicles (rover/lawnmower) where the corridor is the operating width, not a camera footprint.
+                {t('survey.SurveyConfigPanel.setsLineSpacingDirectlyForGround')}
               </p>
             </div>
           )}
         </Section>
 
         {/* Movement (or Flight) — always visible. Altitude only for camera modes. */}
-        <Section title={isManualCamera ? 'Movement' : 'Flight'}>
+        <Section title={isManualCamera ? t('survey.SurveyConfigPanel.movement') : t('survey.SurveyConfigPanel.flight')}>
           <div className="space-y-2">
             {!isManualCamera && (
               <>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-content-secondary w-14 flex-shrink-0">Plan by</span>
+                  <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.planBy')}</span>
                   <div className="flex gap-1 flex-1">
                     {(['altitude', 'gsd'] as const).map((mode) => (
                       <button
@@ -1066,9 +1059,9 @@ export function SurveyConfigPanel() {
                             ? 'bg-purple-600/80 text-white'
                             : 'bg-surface-raised text-content-secondary hover:text-content'
                         }`}
-                        title={mode === 'gsd' ? 'Set target ground sample distance; altitude is derived' : 'Set altitude directly'}
+                        title={mode === 'gsd' ? t('survey.SurveyConfigPanel.setTargetGroundSampleDistanceAltitude') : t('survey.SurveyConfigPanel.setAltitudeDirectly')}
                       >
-                        {mode === 'gsd' ? 'GSD' : 'Altitude'}
+                        {mode === 'gsd' ? 'GSD' : t('survey.SurveyConfigPanel.altitude')}
                       </button>
                     ))}
                   </div>
@@ -1076,7 +1069,7 @@ export function SurveyConfigPanel() {
                 {(config.planBy ?? 'altitude') === 'gsd' ? (
                   <>
                     <SliderInput
-                      label="Target GSD"
+                      label={t('survey.SurveyConfigPanel.targetGsd')}
                       value={result ? Number(result.stats.gsd.toFixed(1)) : 0}
                       onChange={setGsd}
                       min={0.5}
@@ -1085,14 +1078,14 @@ export function SurveyConfigPanel() {
                       unit="cm/px"
                     />
                     <p className="text-[10px] text-content-tertiary leading-snug">
-                      Altitude {formatAltitudeFromMeters(config.altitude, altitudeUnit)} (derived from GSD and camera)
+                      {t('survey.SurveyConfigPanel.altitude')} {formatAltitudeFromMeters(config.altitude, altitudeUnit)} {t('survey.SurveyConfigPanel.derivedFromGsdAndCamera')}
                     </p>
                   </>
                 ) : (
-                  <AltitudeSliderInput label="Altitude" valueMeters={config.altitude} onChangeMeters={setAltitude} minMeters={1} maxMeters={500} stepMeters={1} />
+                  <AltitudeSliderInput label={t('survey.SurveyConfigPanel.altitude')} valueMeters={config.altitude} onChangeMeters={setAltitude} minMeters={1} maxMeters={500} stepMeters={1} />
                 )}
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-content-secondary w-14 flex-shrink-0">Alt Ref</span>
+                  <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.altRef')}</span>
                   <div className="flex gap-1 flex-1">
                     {altRefOptions.map(opt => (
                       <button
@@ -1118,9 +1111,7 @@ export function SurveyConfigPanel() {
                     className="mt-0.5 w-3.5 h-3.5 rounded border-subtle bg-surface-input accent-purple-600 cursor-pointer"
                   />
                   <span className="text-[11px] text-content-secondary leading-snug">
-                    <span className="text-content">Terrain follow</span> - sample ground
-                    elevation at every waypoint and hold {formatAltitudeFromMeters(config.altitude, altitudeUnit)} above it (bakes
-                    absolute MSL altitudes, no onboard terrain data needed).
+                    <span className="text-content">{t('survey.SurveyConfigPanel.terrainFollow')}</span> {t('survey.SurveyConfigPanel.sampleGroundElevationAtEveryWaypoint')} {formatAltitudeFromMeters(config.altitude, altitudeUnit)} {t('survey.SurveyConfigPanel.aboveItBakesAbsoluteMslAltitudes')}
                     {terrainFollowStatus && (
                       <span className="text-purple-300"> {terrainFollowStatus}</span>
                     )}
@@ -1128,9 +1119,9 @@ export function SurveyConfigPanel() {
                 </label>
               </>
             )}
-            <SpeedSliderInput label="Speed" valueMps={config.speed} onChangeMps={setSpeed} minMps={1} maxMps={30} />
+            <SpeedSliderInput label={t('survey.SurveyConfigPanel.speed')} valueMps={config.speed} onChangeMps={setSpeed} minMps={1} maxMps={30} />
             <SliderInput
-              label="Endurance"
+              label={t('survey.SurveyConfigPanel.endurance')}
               value={config.enduranceMinutes ?? 20}
               onChange={setEnduranceMinutes}
               min={5}
@@ -1139,7 +1130,7 @@ export function SurveyConfigPanel() {
               unit="min"
             />
             <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
-              Usable flight time per battery (after your reserve). Drives the battery estimate.
+              {t('survey.SurveyConfigPanel.usableFlightTimePerBatteryAfter')}
             </p>
 
           </div>
@@ -1148,15 +1139,13 @@ export function SurveyConfigPanel() {
         {/* Panorama: the drawn line is the SUBJECT; the flight path is derived
             to one side of it with the camera yawed onto the subject. */}
         {config.pattern === 'panorama' && (
-          <Section title="Panorama">
+          <Section title={t('survey.SurveyConfigPanel.panorama')}>
             <div className="space-y-2">
               <p className="text-[10px] text-content-tertiary leading-snug">
-                The line you draw is what gets captured. The flight path is computed
-                beside it, the highlighted band shows what fits in frame, and the
-                camera turns to face the line at every waypoint.
+                {t('survey.SurveyConfigPanel.theLineYouDrawIsWhat')}
               </p>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-content-secondary w-14 flex-shrink-0">Fly on</span>
+                <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.flyOn')}</span>
                 <div className="flex gap-1 flex-1">
                   {(['left', 'right'] as const).map((side) => (
                     <button
@@ -1167,25 +1156,22 @@ export function SurveyConfigPanel() {
                           ? 'bg-purple-600/80 text-white'
                           : 'bg-surface-raised text-content-secondary hover:text-content'
                       }`}
-                      title={`Aircraft flies on the ${side} side of the line (in drawing direction); camera faces the other way`}
+                      title={t('survey.SurveyConfigPanel.aircraftFliesOnTheSideOf', { side })}
                     >
-                      {side === 'left' ? 'Left side' : 'Right side'}
+                      {side === 'left' ? t('survey.SurveyConfigPanel.leftSide') : t('survey.SurveyConfigPanel.rightSide')}
                     </button>
                   ))}
                 </div>
               </div>
-              <SliderInput label="Standoff" value={config.panoramaStandoff ?? 30} onChange={setPanoramaStandoff} min={2} max={500} step={1} unit="m" />
+              <SliderInput label={t('survey.SurveyConfigPanel.standoff')} value={config.panoramaStandoff ?? 30} onChange={setPanoramaStandoff} min={2} max={500} step={1} unit="m" />
               <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
-                Distance from the subject to the flight path. Together with altitude it
-                sets the camera range, so it drives frame size and photo spacing.
+                {t('survey.SurveyConfigPanel.distanceFromTheSubjectToThe')}
               </p>
               <p className="text-[10px] text-content-tertiary leading-snug">
-                The mission pans the camera smoothly: each leg carries a yaw command
-                whose turn rate spreads the rotation across the whole leg.
+                {t('survey.SurveyConfigPanel.theMissionPansTheCameraSmoothly')}
               </p>
               <p className="text-[10px] text-amber-500 leading-snug">
-                Copter: set WP_YAW_BEHAVIOR to 0 so mission yaw commands hold;
-                otherwise the aircraft snaps toward each next waypoint instead.
+                {t('survey.SurveyConfigPanel.copterSetWpYawBehaviorTo')}
               </p>
             </div>
           </Section>
@@ -1194,11 +1180,11 @@ export function SurveyConfigPanel() {
         {/* Corridor settings — only when the corridor pattern is active. The
             drawn polygon is treated as a centerline, not an area. */}
         {config.pattern === 'corridor' && (
-          <Section title="Corridor">
+          <Section title={t('survey.SurveyConfigPanel.corridor')}>
             <div className="space-y-2">
               {!isManualCamera && (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-content-secondary w-14 flex-shrink-0">Mode</span>
+                  <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.mode')}</span>
                   <div className="flex gap-1 flex-1">
                     {CORRIDOR_MODE_OPTIONS.map((opt) => {
                       const active = (config.corridorMode ?? 'plane') === opt.id;
@@ -1223,12 +1209,12 @@ export function SurveyConfigPanel() {
               {!isManualCamera && (
                 <p className="text-[10px] text-content-tertiary leading-snug -mt-1 pl-16">
                   {vehiclePlanningNote(mavType === undefined ? undefined : vehicleClass)}
-                  {flightModeChosen && ' · set by hand'}
+                  {flightModeChosen && t('survey.SurveyConfigPanel.setByHand')}
                 </p>
               )}
 
               <SliderInput
-                label="Width"
+                label={t('survey.SurveyConfigPanel.width')}
                 value={config.corridorWidth ?? 60}
                 onChange={setCorridorWidth}
                 min={5}
@@ -1238,7 +1224,7 @@ export function SurveyConfigPanel() {
               />
 
               <SliderInput
-                label="Margin"
+                label={t('survey.SurveyConfigPanel.margin')}
                 value={config.corridorMargin ?? 0}
                 onChange={setCorridorMargin}
                 min={0}
@@ -1248,7 +1234,7 @@ export function SurveyConfigPanel() {
               />
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-content-secondary w-14 flex-shrink-0">Strips</span>
+                <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.strips')}</span>
                 <input
                   type="range"
                   value={config.corridorStrips ?? 0}
@@ -1264,7 +1250,7 @@ export function SurveyConfigPanel() {
               </div>
 
               <SliderInput
-                label="Side off"
+                label={t('survey.SurveyConfigPanel.sideOff')}
                 value={config.corridorSideOffset ?? 0}
                 onChange={setCorridorSideOffset}
                 min={-200}
@@ -1276,48 +1262,46 @@ export function SurveyConfigPanel() {
               {/* Branches: extra centerlines that fork off the corridor (forked
                   roads, power-line spurs). Each is flown as its own strip set. */}
               <div className="flex items-center gap-2 pt-1">
-                <span className="text-xs text-content-secondary w-14 flex-shrink-0">Branches</span>
+                <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.branches')}</span>
                 {drawMode === 'branch' ? (
                   <button
                     onClick={() => completeBranch()}
                     className="flex-1 px-2 py-1 text-[11px] rounded-md bg-purple-600/80 text-white hover:bg-purple-600 transition-colors"
                   >
-                    Click the map, double-click to finish
+                    {t('survey.SurveyConfigPanel.clickTheMapDoubleClickTo')}
                   </button>
                 ) : (
                   <button
                     onClick={() => startBranchDraw()}
                     className="flex-1 px-2 py-1 text-[11px] rounded-md bg-surface-raised text-content-secondary hover:text-content transition-colors"
-                    title="Draw a branch centerline that forks off this corridor"
+                    title={t('survey.SurveyConfigPanel.drawABranchCenterlineThatForks')}
                   >
-                    + Add branch
+                    {t('survey.SurveyConfigPanel.addBranch')}
                   </button>
                 )}
                 {(config.corridorBranches?.length ?? 0) > 0 && (
                   <button
                     onClick={() => clearCorridorBranches()}
                     className="px-2 py-1 text-[11px] rounded-md bg-surface-raised text-content-secondary hover:text-content transition-colors tabular-nums"
-                    title="Remove all branches"
+                    title={t('survey.SurveyConfigPanel.removeAllBranches')}
                   >
-                    Clear {config.corridorBranches!.length}
+                    {t('survey.SurveyConfigPanel.clear')} {config.corridorBranches!.length}
                   </button>
                 )}
               </div>
 
               {!isManualCamera && (config.corridorMode ?? 'plane') === 'plane' && (
                 <>
-                  <SliderInput label="Overshoot" value={config.overshoot} onChange={setOvershoot} min={0} max={150} step={5} unit="m" />
+                  <SliderInput label={t('survey.SurveyConfigPanel.overshoot')} value={config.overshoot} onChange={setOvershoot} min={0} max={150} step={5} unit="m" />
                   <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
-                    Flies this far past each strip end before turning, so the turn happens off the
-                    mapped line. Junctions are left alone. It also sets the size of the turn waypoints below.
+                    {t('survey.SurveyConfigPanel.fliesThisFarPastEachStrip')}
                   </p>
-                  <SliderInput label="Lead-in" value={config.leadIn ?? 0} onChange={setLeadIn} min={0} max={300} step={10} unit="m" />
+                  <SliderInput label={t('survey.SurveyConfigPanel.leadIn')} value={config.leadIn ?? 0} onChange={setLeadIn} min={0} max={300} step={10} unit="m" />
                   <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
-                    A straight run onto the first line, so the aircraft is lined up before it starts
-                    rather than still turning across the first photos.
+                    {t('survey.SurveyConfigPanel.aStraightRunOntoTheFirst')}
                   </p>
                   <SliderInput
-                    label="Max turn"
+                    label={t('survey.SurveyConfigPanel.maxTurn')}
                     value={config.maxTurnAngle ?? 15}
                     onChange={setMaxTurnAngle}
                     min={5}
@@ -1326,24 +1310,21 @@ export function SurveyConfigPanel() {
                     unit="°"
                   />
                   <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
-                    Bends sharper than this get racetrack turn waypoints so the plane re-enters the
-                    next leg aligned.
+                    {t('survey.SurveyConfigPanel.bendsSharperThanThisGetRacetrack')}
                     {' '}{hairpinCount === 0
-                      ? 'No bend on this centreline is that sharp, so none are added.'
+                      ? t('survey.SurveyConfigPanel.noBendOnThisCentrelineIs')
                       : `${hairpinCount} bend${hairpinCount === 1 ? '' : 's'} qualify.`}
                   </p>
                   {(config.maxTurnAngle ?? 15) < TURN_LOOP_MIN_DEG && hairpinCount > 0 && (
                     <p className="text-[10px] text-amber-400/90 leading-snug -mt-1">
-                      Below {TURN_LOOP_MIN_DEG}° each loop replaces a {config.maxTurnAngle ?? 15}° corner with two
-                      turns of about {Math.round(180 - (config.maxTurnAngle ?? 15) / 2)}°, which is the tighter
-                      manoeuvre. Raise it if the plane is overshooting the line.
+                      {t('survey.SurveyConfigPanel.below')} {TURN_LOOP_MIN_DEG}{t('survey.SurveyConfigPanel.eachLoopReplacesA')} {config.maxTurnAngle ?? 15}{t('survey.SurveyConfigPanel.cornerWithTwoTurnsOfAbout')} {Math.round(180 - (config.maxTurnAngle ?? 15) / 2)}{t('survey.SurveyConfigPanel.whichIsTheTighterManoeuvreRaise')}
                     </p>
                   )}
                 </>
               )}
 
               <div className="flex items-center gap-2 pt-1">
-                <span className="text-xs text-content-secondary w-14 flex-shrink-0">Line order</span>
+                <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.lineOrder')}</span>
                 <div className="flex gap-1 flex-1">
                   {([
                     ['auto', 'Skip'],
@@ -1358,8 +1339,8 @@ export function SurveyConfigPanel() {
                           : 'bg-surface-raised text-content-secondary hover:text-content'
                       }`}
                       title={id === 'auto'
-                        ? 'Skip lines so each 180° turn has room: 1, 3, 5 then 2, 4'
-                        : 'Fly them 1, 2, 3 in order, whether or not the turn fits'}
+                        ? t('survey.SurveyConfigPanel.skipLinesSoEach180Turn')
+                        : t('survey.SurveyConfigPanel.flyThem123In')}
                     >
                       {label}
                     </button>
@@ -1370,11 +1351,11 @@ export function SurveyConfigPanel() {
                 <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
                   {stripPlan.chosen.order.slice(0, 6).map((i) => i + 1).join(', ')}
                   {stripPlan.chosen.order.length > 6 ? ' ...' : ''}
-                  {' · '}each turn gets {Math.round(stripPlan.chosen.tightestTurnM)} m,
-                  {' '}needs {Math.round(stripPlan.needed)} m at {Math.round(stripPlan.radius)} m turn radius.
+                  {' · '}{t('survey.SurveyConfigPanel.eachTurnGets')} {Math.round(stripPlan.chosen.tightestTurnM)} m,
+                  {' '}{t('survey.SurveyConfigPanel.needs')} {Math.round(stripPlan.needed)} {t('survey.SurveyConfigPanel.mAt')} {Math.round(stripPlan.radius)} {t('survey.SurveyConfigPanel.mTurnRadius')}
                   {!stripPlan.chosen.turnsFit && (
                     <span className="text-amber-400/90">
-                      {' '}The plane will roll out wide and miss the start of each line.
+                      {' '}{t('survey.SurveyConfigPanel.thePlaneWillRollOutWide')}
                     </span>
                   )}
                 </p>
@@ -1388,9 +1369,9 @@ export function SurveyConfigPanel() {
                       ? 'bg-purple-600/80 text-white'
                       : 'bg-surface-raised text-content-secondary hover:text-content'
                   }`}
-                  title="Fly the strips starting from the far side"
+                  title={t('survey.SurveyConfigPanel.flyTheStripsStartingFromThe')}
                 >
-                  Flip legs
+                  {t('survey.SurveyConfigPanel.flipLegs')}
                 </button>
                 <button
                   onClick={() => setInvertPath(!config.invertPath)}
@@ -1399,14 +1380,14 @@ export function SurveyConfigPanel() {
                       ? 'bg-purple-600/80 text-white'
                       : 'bg-surface-raised text-content-secondary hover:text-content'
                   }`}
-                  title="Reverse the travel direction along the centerline"
+                  title={t('survey.SurveyConfigPanel.reverseTheTravelDirectionAlongThe')}
                 >
-                  Invert path
+                  {t('survey.SurveyConfigPanel.invertPath')}
                 </button>
               </div>
 
               <p className="text-[10px] text-content-tertiary leading-snug">
-                Draw the centerline as a path (roads, rail, power lines). Strips run parallel to it; an odd strip count rides the centerline, even straddles it.
+                {t('survey.SurveyConfigPanel.drawTheCenterlineAsAPath')}
               </p>
             </div>
           </Section>
@@ -1415,7 +1396,7 @@ export function SurveyConfigPanel() {
         {/* Ground path — manual / mower mode only. Picks how the rover moves
             between lines: zigzag (skid-steer) vs reverse (Ackermann). */}
         {isManualCamera && (
-          <Section title="Path">
+          <Section title={t('survey.SurveyConfigPanel.path')}>
             <div className="flex gap-1">
               {GROUND_PATTERN_OPTIONS.map(opt => {
                 const active = (config.groundPattern ?? 'boustrophedon') === opt.id;
@@ -1437,8 +1418,8 @@ export function SurveyConfigPanel() {
             </div>
             <p className="mt-1 text-[10px] text-content-tertiary leading-snug">
               {(config.groundPattern ?? 'boustrophedon') === 'reverse-alternating'
-                ? 'Mission inserts DO_SET_REVERSE between lines. Rover firmware must support it.'
-                : 'Standard zigzag pattern. Rover turns 180° at each line end.'}
+                ? t('survey.SurveyConfigPanel.missionInsertsDoSetReverseBetween')
+                : t('survey.SurveyConfigPanel.standardZigzagPatternRoverTurns180')}
             </p>
           </Section>
         )}
@@ -1450,9 +1431,9 @@ export function SurveyConfigPanel() {
           <button
             onClick={() => setAdvancedOpen((v) => !v)}
             className="w-full flex items-center justify-between px-2 py-1.5 text-[11px] font-medium text-content-secondary hover:text-content uppercase tracking-wider transition-colors"
-            title="Show/hide advanced settings"
+            title={t('survey.SurveyConfigPanel.showHideAdvancedSettings')}
           >
-            <span>Advanced</span>
+            <span>{t('survey.SurveyConfigPanel.advanced')}</span>
             <svg
               className={`w-3 h-3 transition-transform ${advancedOpen ? 'rotate-90' : ''}`}
               fill="none"
@@ -1465,49 +1446,45 @@ export function SurveyConfigPanel() {
           {advancedOpen && (
             <div className="mt-1 space-y-3 pl-2 border-l border-subtle">
               {!isManualCamera && (
-                <Section title="Overlap">
+                <Section title={t('survey.SurveyConfigPanel.overlap')}>
                   <div className="space-y-2">
-                    <SliderInput label="Front" value={config.frontOverlap} onChange={setFrontOverlap} min={10} max={95} step={1} unit="%" />
-                    <SliderInput label="Side" value={config.sideOverlap} onChange={setSideOverlap} min={10} max={99} step={1} unit="%" />
+                    <SliderInput label={t('survey.SurveyConfigPanel.front')} value={config.frontOverlap} onChange={setFrontOverlap} min={10} max={95} step={1} unit="%" />
+                    <SliderInput label={t('survey.SurveyConfigPanel.side')} value={config.sideOverlap} onChange={setSideOverlap} min={10} max={99} step={1} unit="%" />
                   </div>
                 </Section>
               )}
 
               {externalEngine && config.pattern !== 'circular' && config.pattern !== 'corridor' && (
-                <Section title="Grid">
+                <Section title={t('survey.SurveyConfigPanel.grid')}>
                   <div className="space-y-2">
-                    <SliderInput label="Margin" value={config.margin ?? 0} onChange={setMargin} min={-50} max={50} step={1} unit="m" />
+                    <SliderInput label={t('survey.SurveyConfigPanel.margin')} value={config.margin ?? 0} onChange={setMargin} min={-50} max={50} step={1} unit="m" />
                     <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
-                      Buffers the boundary before it is sent to the engine: positive grows
-                      coverage past the edge, negative keeps lines inside.
+                      {t('survey.SurveyConfigPanel.buffersTheBoundaryBeforeItIs')}
                     </p>
                     <p className="text-[10px] text-content-tertiary leading-snug">
-                      {activeGenerator?.displayName ?? 'The engine'} picks each region's line
-                      direction and turn style itself, so the Angle, Overshoot and Turns
-                      controls don't apply. Use the engine parameters above (turn radius,
-                      waypoints, track width) to steer the plan.
+                      {activeGenerator?.displayName ?? t('survey.SurveyConfigPanel.theEngine')} {t('survey.SurveyConfigPanel.picksEachRegionSLineDirection')}
                     </p>
                   </div>
                 </Section>
               )}
 
               {!externalEngine && config.pattern !== 'circular' && config.pattern !== 'corridor' && (
-                <Section title="Grid">
+                <Section title={t('survey.SurveyConfigPanel.grid')}>
                   <div className="space-y-2">
-                    <SliderInput label="Angle" value={config.gridAngle} onChange={setGridAngle} min={0} max={359} step={1} unit="°" />
+                    <SliderInput label={t('survey.SurveyConfigPanel.angle')} value={config.gridAngle} onChange={setGridAngle} min={0} max={359} step={1} unit="°" />
                     {!isManualCamera && (
                       <>
-                        <SliderInput label="Overshoot" value={config.overshoot} onChange={setOvershoot} min={0} max={100} step={5} unit="m" />
-                        <SliderInput label="Lead-in" value={config.leadIn ?? 0} onChange={setLeadIn} min={0} max={300} step={10} unit="m" />
+                        <SliderInput label={t('survey.SurveyConfigPanel.overshoot')} value={config.overshoot} onChange={setOvershoot} min={0} max={100} step={5} unit="m" />
+                        <SliderInput label={t('survey.SurveyConfigPanel.leadIn')} value={config.leadIn ?? 0} onChange={setLeadIn} min={0} max={300} step={10} unit="m" />
                       </>
                     )}
-                    <SliderInput label="Margin" value={config.margin ?? 0} onChange={setMargin} min={-50} max={50} step={1} unit="m" />
+                    <SliderInput label={t('survey.SurveyConfigPanel.margin')} value={config.margin ?? 0} onChange={setMargin} min={-50} max={50} step={1} unit="m" />
                     <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
-                      Buffers the boundary: positive grows coverage past the edge, negative keeps lines inside.
+                      {t('survey.SurveyConfigPanel.buffersTheBoundaryPositiveGrowsCoverage')}
                     </p>
                     {!isManualCamera && (
                       <div className="flex items-center gap-2 pt-1">
-                        <span className="text-xs text-content-secondary w-14 flex-shrink-0">Turns</span>
+                        <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.turns')}</span>
                         <div className="flex gap-1 flex-1">
                           {(['copter', 'plane'] as const).map((mode) => (
                             <button
@@ -1519,17 +1496,17 @@ export function SurveyConfigPanel() {
                                   : 'bg-surface-raised text-content-secondary hover:text-content'
                               }`}
                               title={mode === 'plane'
-                                ? 'Fixed-wing: extend the shorter line end at each turn for a clean 180° racetrack turn'
-                                : 'Multirotor: turn on the spot, lines connect directly'}
+                                ? t('survey.SurveyConfigPanel.fixedWingExtendTheShorterLine')
+                                : t('survey.SurveyConfigPanel.multirotorTurnOnTheSpotLines')}
                             >
-                              {mode === 'plane' ? 'Plane' : 'Copter'}
+                              {mode === 'plane' ? t('survey.SurveyConfigPanel.plane') : t('survey.SurveyConfigPanel.copter')}
                             </button>
                           ))}
                         </div>
                       </div>
                     )}
                     <div className="flex items-center gap-2 pt-1">
-                      <span className="text-xs text-content-secondary w-14 flex-shrink-0">Start</span>
+                      <span className="text-xs text-content-secondary w-14 flex-shrink-0">{t('survey.SurveyConfigPanel.start')}</span>
                       <div className="flex gap-1 flex-1">
                         <button
                           onClick={() => setInvertPath(!config.invertPath)}
@@ -1538,9 +1515,9 @@ export function SurveyConfigPanel() {
                               ? 'bg-purple-600/80 text-white'
                               : 'bg-surface-raised text-content-secondary hover:text-content'
                           }`}
-                          title="Enter every line from its other end"
+                          title={t('survey.SurveyConfigPanel.enterEveryLineFromItsOther')}
                         >
-                          Invert path
+                          {t('survey.SurveyConfigPanel.invertPath')}
                         </button>
                         <button
                           onClick={() => setFlipLegs(!config.flipLegs)}
@@ -1549,15 +1526,14 @@ export function SurveyConfigPanel() {
                               ? 'bg-purple-600/80 text-white'
                               : 'bg-surface-raised text-content-secondary hover:text-content'
                           }`}
-                          title="Fly the lines in the opposite order, starting from the far side"
+                          title={t('survey.SurveyConfigPanel.flyTheLinesInTheOpposite')}
                         >
-                          Flip legs
+                          {t('survey.SurveyConfigPanel.flipLegs')}
                         </button>
                       </div>
                     </div>
                     <p className="text-[10px] text-content-tertiary leading-snug -mt-1">
-                      Moves the start corner. With the grid angle, these two reach all four
-                      corners, so the first line is the one nearest your launch point.
+                      {t('survey.SurveyConfigPanel.movesTheStartCornerWithThe')}
                     </p>
                   </div>
                 </Section>
@@ -1565,7 +1541,7 @@ export function SurveyConfigPanel() {
 
               {!externalEngine && !isManualCamera && (config.pattern === 'grid' || config.pattern === 'crosshatch') && (
                 <div className="flex items-center justify-between px-1">
-                  <span className="text-xs text-content-secondary" title="Camera triggers only along the scan lines; off during the turn-arounds outside the boundary">Camera off on turns</span>
+                  <span className="text-xs text-content-secondary" title={t('survey.SurveyConfigPanel.cameraTriggersOnlyAlongTheScan')}>{t('survey.SurveyConfigPanel.cameraOffOnTurns')}</span>
                   <button
                     onClick={() => setCameraOffOutside(!config.cameraOffOutside)}
                     className={`w-8 h-4.5 rounded-full transition-colors relative ${
@@ -1581,7 +1557,7 @@ export function SurveyConfigPanel() {
 
               {!isManualCamera && (
                 <div className="flex items-center justify-between px-1">
-                  <span className="text-xs text-content-secondary">Show footprints</span>
+                  <span className="text-xs text-content-secondary">{t('survey.SurveyConfigPanel.showFootprints')}</span>
                   <button
                     onClick={() => setShowFootprints(!showFootprints)}
                     className={`w-8 h-4.5 rounded-full transition-colors relative ${
@@ -1620,13 +1596,13 @@ export function SurveyConfigPanel() {
           {sourceBehind && source && (
             <div className="mb-1.5 flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-2 py-1.5">
               <span className="flex-1 text-[11px] text-amber-300 leading-snug">
-                The saved area &quot;{source.name}&quot; is now at rev {latestRevision}; this survey was built from rev {source.revision}.
+                {t('survey.SurveyConfigPanel.theSavedArea')}{source.name}{t('survey.SurveyConfigPanel.isNowAtRev')} {latestRevision}{t('survey.SurveyConfigPanel.thisSurveyWasBuiltFromRev')} {source.revision}.
               </span>
               <button
                 onClick={() => void reloadSavedArea()}
                 className="px-2 py-1 rounded-md text-[11px] font-medium bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 transition-colors"
               >
-                Reload
+                {t('survey.SurveyConfigPanel.reload')}
               </button>
             </div>
           )}
@@ -1634,23 +1610,23 @@ export function SurveyConfigPanel() {
             polygonEditMode ? (
               <div className="space-y-1.5">
                 <div className="text-[11px] text-center text-amber-300">
-                  Editing polygon - drag points on the map (zoom in to reach them).
-                  {pendingRecompute ? ' Waypoints will recompute on Done.' : ''}
+                  {t('survey.SurveyConfigPanel.editingPolygonDragPointsOnThe')}
+                  {pendingRecompute ? t('survey.SurveyConfigPanel.waypointsWillRecomputeOnDone') : ''}
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => exitPolygonEdit(true)}
                     className="flex-1 py-2 rounded-lg text-sm font-medium bg-purple-600 hover:bg-purple-500 text-white transition-colors"
-                    title="Finish editing and recompute the waypoints"
+                    title={t('survey.SurveyConfigPanel.finishEditingAndRecomputeTheWaypoints')}
                   >
-                    {pendingRecompute ? 'Done - recompute waypoints' : 'Done'}
+                    {pendingRecompute ? t('survey.SurveyConfigPanel.doneRecomputeWaypoints') : t('survey.SurveyConfigPanel.done')}
                   </button>
                   <button
                     onClick={() => exitPolygonEdit(false)}
                     className="px-3 py-2 rounded-lg text-sm font-medium bg-surface-raised text-content hover:text-white hover:bg-surface-input transition-colors"
-                    title="Discard polygon changes"
+                    title={t('survey.SurveyConfigPanel.discardPolygonChanges')}
                   >
-                    Cancel
+                    {t('survey.SurveyConfigPanel.cancel')}
                   </button>
                 </div>
               </div>
@@ -1666,16 +1642,16 @@ export function SurveyConfigPanel() {
                       : 'bg-surface-raised text-content hover:text-purple-300 border-purple-500/30')
                   }
                   title={geometryLocked
-                    ? 'Shape is locked - unlock to move vertices'
-                    : 'Edit the boundary - drag vertices on the map, then Done recomputes the waypoints'}
+                    ? t('survey.SurveyConfigPanel.shapeIsLockedUnlockToMove')
+                    : t('survey.SurveyConfigPanel.editTheBoundaryDragVerticesOn')}
                 >
-                  Edit polygon
+                  {t('survey.SurveyConfigPanel.editPolygon')}
                 </button>
                 <button
                   onClick={() => setGeometryLocked(!geometryLocked)}
                   data-tip={geometryLocked
-                    ? 'Unlock the shape so it can be dragged again'
-                    : 'Lock the shape so tuning the settings cannot move it'}
+                    ? t('survey.SurveyConfigPanel.unlockTheShapeSoItCan')
+                    : t('survey.SurveyConfigPanel.lockTheShapeSoTuningThe')}
                   className={
                     'px-3 py-2 rounded-lg transition-colors ' +
                     (geometryLocked
@@ -1689,8 +1665,8 @@ export function SurveyConfigPanel() {
                   onClick={handleSaveArea}
                   disabled={areaSaveState === 'saving'}
                   data-tip={areaSaveState === 'error'
-                    ? 'Could not save the area'
-                    : 'Save this area (shape and settings, no waypoints) so it can be reused in another mission or on another machine'}
+                    ? t('survey.SurveyConfigPanel.couldNotSaveTheArea')
+                    : t('survey.SurveyConfigPanel.saveThisAreaShapeAndSettings')}
                   className={
                     'px-3 py-2 rounded-lg transition-colors border ' +
                     (areaSaveState === 'saved'
@@ -1705,9 +1681,9 @@ export function SurveyConfigPanel() {
                 <button
                   onClick={deactivateSurvey}
                   className="px-3 py-2 rounded-lg text-sm font-medium bg-surface-raised text-content hover:text-white hover:bg-surface-input transition-colors"
-                  title="Finish editing this survey"
+                  title={t('survey.SurveyConfigPanel.finishEditingThisSurvey')}
                 >
-                  Close
+                  {t('survey.SurveyConfigPanel.close')}
                 </button>
               </div>
             )
@@ -1725,10 +1701,10 @@ export function SurveyConfigPanel() {
                 }`}
               >
                 {insertSuccess
-                  ? `Inserted ${result.waypoints.length} waypoints`
+                  ? t('survey.SurveyConfigPanel.insertedWaypoints', { length: result.waypoints.length })
                   : generating
-                    ? 'Computing...'
-                    : `Insert Survey (${result.waypoints.length} WPs)`}
+                    ? t('survey.SurveyConfigPanel.computing')
+                    : t('survey.SurveyConfigPanel.insertSurveyWps', { length: result.waypoints.length })}
               </button>
               {!isManualCamera && estimateBatteryCount(result.stats.flightTime, config.enduranceMinutes ?? 20) > 1 && (
                 config.pattern === 'corridor' ? (
@@ -1736,12 +1712,12 @@ export function SurveyConfigPanel() {
                     <button
                       onClick={() => handleSplitIntoFlights('sections')}
                       className="w-full py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-content hover:text-purple-300 transition-colors"
-                      title="One aircraft: each flight is a continuous stretch of the route, all lines included, so you finish a section then move along"
+                      title={t('survey.SurveyConfigPanel.oneAircraftEachFlightIsA')}
                     >
-                      Split along the route ({corridorSectionCount} {corridorSectionCount === 1 ? 'section' : 'sections'})
+                      {t('survey.SurveyConfigPanel.splitAlongTheRoute')}{corridorSectionCount} {corridorSectionCount === 1 ? 'section' : 'sections'})
                     </button>
                     <div className="flex items-center gap-2 px-0.5">
-                      <label className="text-[10px] text-content-tertiary whitespace-nowrap">Section length</label>
+                      <label className="text-[10px] text-content-tertiary whitespace-nowrap">{t('survey.SurveyConfigPanel.sectionLength')}</label>
                       <input
                         type="text"
                         inputMode="decimal"
@@ -1765,27 +1741,27 @@ export function SurveyConfigPanel() {
                           onClick={() => setCorridorSectionLength(null)}
                           className="ml-auto text-[10px] text-content-tertiary hover:text-content"
                         >
-                          Auto
+                          {t('survey.SurveyConfigPanel.auto')}
                         </button>
                       ) : (
-                        <span className="ml-auto text-[10px] text-content-tertiary">from endurance</span>
+                        <span className="ml-auto text-[10px] text-content-tertiary">{t('survey.SurveyConfigPanel.fromEndurance')}</span>
                       )}
                     </div>
                     <button
                       onClick={() => handleSplitIntoFlights('lines')}
                       className="w-full py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-content-secondary hover:text-purple-300 transition-colors"
-                      title="Swarm: each flight takes some of the parallel lines over the whole route, so several aircraft work side by side"
+                      title={t('survey.SurveyConfigPanel.swarmEachFlightTakesSomeOf')}
                     >
-                      Split by lines (swarm)
+                      {t('survey.SurveyConfigPanel.splitByLinesSwarm')}
                     </button>
                   </div>
                 ) : (
                   <button
                     onClick={() => handleSplitIntoFlights()}
                     className="w-full py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-content hover:text-purple-300 transition-colors"
-                    title="Split into one battery-sized flight group per sortie; upload each from the table"
+                    title={t('survey.SurveyConfigPanel.splitIntoOneBatterySizedFlight')}
                   >
-                    Split into {estimateBatteryCount(result.stats.flightTime, config.enduranceMinutes ?? 20)} flights
+                    {t('survey.SurveyConfigPanel.splitInto')} {estimateBatteryCount(result.stats.flightTime, config.enduranceMinutes ?? 20)} {t('survey.SurveyConfigPanel.flights')}
                   </button>
                 )
               )}
@@ -2173,10 +2149,10 @@ function PresetDropdown({
         ref={triggerRef}
         onClick={() => setIsOpen((v) => !v)}
         className="w-full px-2.5 py-1.5 text-left text-xs bg-surface-raised border border rounded-md text-content hover:border transition-colors flex items-center justify-between"
-        title="Pick a preset (or stay with current settings)"
+        title={t('survey.SurveyConfigPanel.pickAPresetOrStayWith')}
       >
         <span className="truncate">
-          {selected ? selected.name : 'Pick a template…'}
+          {selected ? selected.name : t('survey.SurveyConfigPanel.pickATemplate')}
         </span>
         <svg className={`w-3 h-3 text-content-secondary transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -2202,7 +2178,7 @@ function PresetDropdown({
               return (
                 <div key={tag}>
                   <div className="px-3 py-1.5 text-[10px] font-medium text-content-secondary uppercase tracking-wider bg-surface-input">
-                    {tag === 'Custom' ? 'Saved' : tag}
+                    {tag === 'Custom' ? t('survey.SurveyConfigPanel.saved') : tag}
                   </div>
                   {items.map((p) => (
                     <div
@@ -2224,7 +2200,7 @@ function PresetDropdown({
                         <button
                           onClick={(e) => { e.stopPropagation(); onDelete(p.id); }}
                           className="opacity-0 group-hover:opacity-100 px-2 text-content-tertiary hover:text-red-400 transition-opacity"
-                          title="Delete preset"
+                          title={t('survey.SurveyConfigPanel.deletePreset')}
                         >
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

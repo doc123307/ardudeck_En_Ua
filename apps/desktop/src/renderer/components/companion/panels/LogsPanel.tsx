@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer } from '../../panels/panel-utils';
 import type { LogLevel } from '@ardudeck/companion-types';
+import { t } from '../../../i18n';
 
 const LOG_LEVEL_COLORS: Record<LogLevel, { text: string; bg: string; border: string }> = {
   debug: { text: 'text-content-secondary', bg: 'bg-gray-600/20', border: 'border-l-gray-600' },
@@ -90,7 +91,7 @@ export function LogsPanel() {
           type="text"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Search logs..."
+          placeholder={t('companion.LogsPanel.searchLogs')}
           className="flex-1 bg-surface border border-subtle rounded px-2 py-0.5 text-[11px] text-content focus:outline-none focus:ring-1 focus:ring-blue-500/50"
         />
 
@@ -105,7 +106,7 @@ export function LogsPanel() {
       >
         {filteredLogs.length === 0 ? (
           <div className="flex items-center justify-center h-full text-content-tertiary text-xs">
-            {logs.length === 0 ? 'Waiting for logs...' : 'No logs match filter'}
+            {logs.length === 0 ? t('companion.LogsPanel.waitingForLogs') : t('companion.LogsPanel.noLogsMatchFilter')}
           </div>
         ) : (
           <div className="divide-y divide-subtle">
@@ -148,7 +149,7 @@ export function LogsPanel() {
           }}
           className="absolute bottom-2 right-4 px-2 py-1 bg-blue-600/80 hover:bg-blue-500/80 text-white text-[10px] rounded shadow-lg transition-colors"
         >
-          Scroll to bottom
+          {t('companion.LogsPanel.scrollToBottom')}
         </button>
       )}
     </PanelContainer>

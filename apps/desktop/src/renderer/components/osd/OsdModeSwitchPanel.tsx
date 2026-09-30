@@ -13,6 +13,7 @@ import {
   INAV_MODE_NAMES,
 } from '../../stores/flight-control-store';
 import { useConnectionStore } from '../../stores/connection-store';
+import { t } from '../../i18n';
 
 export function OsdModeSwitchPanel() {
   const connectionState = useConnectionStore((s) => s.connectionState);
@@ -35,7 +36,7 @@ export function OsdModeSwitchPanel() {
   if (!connectionState.isConnected) {
     return (
       <div className="p-3">
-        <p className="text-xs text-content-secondary">Connect to FC to see mode switches.</p>
+        <p className="text-xs text-content-secondary">{t('osd.OsdModeSwitchPanel.connectToFcToSeeMode')}</p>
       </div>
     );
   }
@@ -43,12 +44,12 @@ export function OsdModeSwitchPanel() {
   if (!modeMappingsLoaded || modeMappings.length === 0) {
     return (
       <div className="p-3 space-y-2">
-        <p className="text-xs text-content-secondary">No mode ranges loaded.</p>
+        <p className="text-xs text-content-secondary">{t('osd.OsdModeSwitchPanel.noModeRangesLoaded')}</p>
         <button
           onClick={() => loadModeRanges()}
           className="text-xs text-blue-400 hover:text-blue-300"
         >
-          Retry
+          {t('osd.OsdModeSwitchPanel.retry')}
         </button>
       </div>
     );
@@ -57,7 +58,7 @@ export function OsdModeSwitchPanel() {
   return (
     <div className="space-y-1">
       <h4 className="text-[10px] font-medium text-content-secondary uppercase tracking-wider px-3 py-1">
-        Mode Switches
+        {t('osd.OsdModeSwitchPanel.modeSwitches')}
       </h4>
       {modeMappings.map((mapping) => (
         <ModeButton

@@ -31,6 +31,7 @@ import {
   UNIT_PRECISION,
   verticalSpeedValueFromMetersPerSecond,
 } from '../../../shared/user-units.js';
+import { t as tr } from '../../i18n';
 
 interface MapCommandPopupProps {
   lat: number;
@@ -117,24 +118,24 @@ function vtolHint(
 }
 
 const ACTIONS: ActionMeta[] = [
-  { id: 'fly', zone: 'primary', label: 'Fly here', accent: 'cyan', icon: Navigation, go: 'Fly',
-    hint: 'Guided move to this point at the set altitude.', modeTo: 'GUIDED', supportedClasses: ALL },
-  { id: 'look', zone: 'primary', label: 'Look here', accent: 'amber', icon: Crosshair, go: 'Look here',
-    hint: 'Gimbal locks on and tracks this point as the vehicle moves. Flight path unchanged.', supportedClasses: ALL },
-  { id: 'orbit', zone: 'primary', label: 'Orbit', accent: 'violet', icon: RotateCw, go: 'Orbit',
-    hint: 'Circle this point at fixed altitude.', modeTo: 'GUIDED', script: 'fallback', advanced: true, supportedClasses: AIR },
-  { id: 'spiral', zone: 'secondary', label: 'Spiral', accent: 'violet', icon: Tornado, go: 'Spiral',
-    hint: 'Orbit while climbing or descending to a target altitude.', modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: AIR },
-  { id: 'watchtower', zone: 'secondary', label: 'Watch', accent: 'violet', icon: Eye, go: 'Watch',
-    hint: 'Hover at this point and rotate slowly for a panoramic view.', modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
-  { id: 'reveal', zone: 'secondary', label: 'Reveal', accent: 'violet', icon: Film, go: 'Reveal',
-    hint: 'Pull back and climb with the camera locked on this target.', modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
-  { id: 'strafe', zone: 'secondary', label: 'Strafe', accent: 'violet', icon: MoveHorizontal, go: 'Strafe',
-    hint: 'Dolly past the target at a perpendicular offset, camera locked on.', modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
-  { id: 'climbRtl', zone: 'escape', label: 'Climb + RTL', accent: 'rose', icon: ArrowUpFromLine, go: 'Climb and return',
-    hint: 'Climb in place to a safe altitude, then return home.', modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
-  { id: 'land', zone: 'escape', label: 'Land here', accent: 'rose', icon: ArrowDownToLine, go: 'Confirm Land',
-    hint: 'Fly to this point, then descend and land.', modeTo: 'LAND', advanced: true, guarded: true, supportedClasses: ALL },
+  { id: 'fly', zone: 'primary', get label() { return tr('map.MapCommandPopup.flyHere'); }, accent: 'cyan', icon: Navigation, go: 'Fly',
+    get hint() { return tr('map.MapCommandPopup.guidedMoveToThisPointAt'); }, modeTo: 'GUIDED', supportedClasses: ALL },
+  { id: 'look', zone: 'primary', get label() { return tr('map.MapCommandPopup.lookHere'); }, accent: 'amber', icon: Crosshair, go: 'Look here',
+    get hint() { return tr('map.MapCommandPopup.gimbalLocksOnAndTracksThis'); }, supportedClasses: ALL },
+  { id: 'orbit', zone: 'primary', get label() { return tr('map.MapCommandPopup.orbit'); }, accent: 'violet', icon: RotateCw, go: 'Orbit',
+    get hint() { return tr('map.MapCommandPopup.circleThisPointAtFixedAltitude'); }, modeTo: 'GUIDED', script: 'fallback', advanced: true, supportedClasses: AIR },
+  { id: 'spiral', zone: 'secondary', get label() { return tr('map.MapCommandPopup.spiral'); }, accent: 'violet', icon: Tornado, go: 'Spiral',
+    get hint() { return tr('map.MapCommandPopup.orbitWhileClimbingOrDescendingTo'); }, modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: AIR },
+  { id: 'watchtower', zone: 'secondary', get label() { return tr('map.MapCommandPopup.watch'); }, accent: 'violet', icon: Eye, go: 'Watch',
+    get hint() { return tr('map.MapCommandPopup.hoverAtThisPointAndRotate'); }, modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
+  { id: 'reveal', zone: 'secondary', get label() { return tr('map.MapCommandPopup.reveal'); }, accent: 'violet', icon: Film, go: 'Reveal',
+    get hint() { return tr('map.MapCommandPopup.pullBackAndClimbWithThe'); }, modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
+  { id: 'strafe', zone: 'secondary', get label() { return tr('map.MapCommandPopup.strafe'); }, accent: 'violet', icon: MoveHorizontal, go: 'Strafe',
+    get hint() { return tr('map.MapCommandPopup.dollyPastTheTargetAtA'); }, modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
+  { id: 'climbRtl', zone: 'escape', get label() { return tr('map.MapCommandPopup.climbRtl'); }, accent: 'rose', icon: ArrowUpFromLine, go: 'Climb and return',
+    get hint() { return tr('map.MapCommandPopup.climbInPlaceToASafe'); }, modeTo: 'GUIDED', script: 'required', advanced: true, supportedClasses: HOVER },
+  { id: 'land', zone: 'escape', get label() { return tr('map.MapCommandPopup.landHere'); }, accent: 'rose', icon: ArrowDownToLine, go: 'Confirm Land',
+    get hint() { return tr('map.MapCommandPopup.flyToThisPointThenDescend'); }, modeTo: 'LAND', advanced: true, guarded: true, supportedClasses: ALL },
 ];
 
 /** Per-accent classes. Solid button colors read fine on both themes; the
@@ -434,14 +435,14 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
       <div className="flex items-baseline justify-between gap-2 border-b border-subtle px-1 pb-2 mb-2">
         <span className="flex min-w-0 items-baseline gap-1.5">
           {targetLabel && (
-            <span className="shrink-0 rounded border border-cyan-500/50 px-1 font-mono text-[9.5px] font-bold text-cyan-500" data-tip="Vehicle this command will be sent to">
+            <span className="shrink-0 rounded border border-cyan-500/50 px-1 font-mono text-[9.5px] font-bold text-cyan-500" data-tip={tr('map.MapCommandPopup.vehicleThisCommandWillBeSent')}>
               {targetLabel}
             </span>
           )}
           <span className="font-mono text-[11px] text-content truncate">{lat.toFixed(6)}, {lon.toFixed(6)}</span>
         </span>
         <span className="text-[10px] text-content-tertiary shrink-0">
-          <span className="font-mono text-content-secondary">{formatDistanceFromMeters(distanceMeters, distanceUnit)}</span> away
+          <span className="font-mono text-content-secondary">{formatDistanceFromMeters(distanceMeters, distanceUnit)}</span> {tr('map.MapCommandPopup.away')}
         </span>
       </div>
 
@@ -495,8 +496,8 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
           <div className="flex items-center justify-between gap-2">
             <span className="text-[10.5px] leading-snug text-content-secondary">
               {scriptHealth.status === 'stale'
-                ? 'ArduDeck Lua script installed but not responding.'
-                : 'Needs the ArduDeck Lua script on the flight controller.'}
+                ? tr('map.MapCommandPopup.ardudeckLuaScriptInstalledButNot')
+                : tr('map.MapCommandPopup.needsTheArdudeckLuaScriptOn')}
             </span>
             {scriptHealth.status === 'missing' && (
               <button
@@ -504,7 +505,7 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
                 onClick={() => setInstallModalOpen(true)}
                 className="shrink-0 rounded-md bg-violet-600 px-2.5 py-1 text-[10.5px] font-medium text-white hover:bg-violet-500"
               >
-                Install
+                {tr('map.MapCommandPopup.install')}
               </button>
             )}
           </div>
@@ -520,7 +521,7 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
                     onClick={onClearRoi}
                     className="font-semibold text-amber-500 underline underline-offset-2 hover:text-amber-400"
                   >
-                    Clear current ROI
+                    {tr('map.MapCommandPopup.clearCurrentRoi')}
                   </button>
                 </>
               )}
@@ -530,18 +531,18 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
             <div className="grid grid-cols-[62px_1fr] items-center gap-x-2.5 gap-y-1.5">
               {(meta.id === 'fly' || meta.id === 'orbit' || meta.id === 'watchtower' || meta.id === 'reveal' || meta.id === 'strafe') && (
                 <>
-                  <ParamRow label="Altitude">
+                  <ParamRow label={tr('map.MapCommandPopup.altitude')}>
                     <Stepper value={displayAltitude(altitude)} onChange={(v) => setAltitude(nativeAltitude(v))}
                       min={displayAltitude(2)} max={displayAltitude(5000)} step={altitudeStep}
                       unit={altFrameSelectable ? altitudeLabel : `${altitudeLabel} rel home`} autoFocus={meta.id === 'fly'} />
                   </ParamRow>
                   {altFrameSelectable && (
-                    <ParamRow label="Above">
+                    <ParamRow label={tr('map.MapCommandPopup.above')}>
                       <FrameSeg value={altFrame} onChange={chooseAltFrame} />
                     </ParamRow>
                   )}
                   {(meta.id === 'fly' || meta.id === 'orbit') && (
-                    <ParamRow label="Speed">
+                    <ParamRow label={tr('map.MapCommandPopup.speed')}>
                       <Stepper
                         value={cruiseSpeed > 0 ? Number(speedValueFromMetersPerSecond(cruiseSpeed, speedUnit).toFixed(UNIT_PRECISION.speed[speedUnit] ?? 0)) : 0}
                         onChange={(v) => setCruiseSpeed(v <= 0 ? 0 : toMetersPerSecondFromSpeedUnit(v, speedUnit))}
@@ -559,7 +560,7 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
                     return (
                       <p className={`px-1 text-[10px] leading-snug ${belowMin ? 'text-amber-400' : 'text-content-tertiary'}`}>
                         {belowMin
-                          ? `Below AIRSPEED_MIN (${displaySpeed(speedRange.min)} ${UNIT_LABELS.speed[speedUnit]}); the vehicle will refuse this speed`
+                          ? tr('map.MapCommandPopup.belowAirspeedMinTheVehicleWill', { v1: displaySpeed(speedRange.min), v2: UNIT_LABELS.speed[speedUnit] })
                           : hint}
                       </p>
                     );
@@ -576,58 +577,58 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
                       <div className="col-span-2 text-[11px] rounded-md px-2 py-1.5 border"
                         style={{ borderColor: 'var(--status-warn)', color: 'var(--status-warn-fg)', background: 'var(--status-warn-bg)' }}>
                         {aboveHome <= 0
-                          ? `${altitude} m above sea level is AT or BELOW home ground level here (home is ${homeAmsl.toFixed(0)} m AMSL).`
-                          : `${altitude} m above sea level = ${aboveHome.toFixed(0)} m above home here.`}
+                          ? tr('map.MapCommandPopup.mAboveSeaLevelIsAt', { altitude, v2: homeAmsl.toFixed(0) })
+                          : tr('map.MapCommandPopup.mAboveSeaLevelMAbove', { altitude, v2: aboveHome.toFixed(0) })}
                       </div>
                     );
                   })()}
                 </>
               )}
               {(meta.id === 'orbit' || meta.id === 'spiral') && (
-                <ParamRow label="Radius">
+                <ParamRow label={tr('map.MapCommandPopup.radius')}>
                   <Stepper value={displayDistance(radius)} onChange={(v) => setRadius(nativeDistance(v))}
                     min={displayDistance(5)} max={displayDistance(1000)} step={distanceStep} unit={distanceLabel} />
                 </ParamRow>
               )}
               {(meta.id === 'orbit' || meta.id === 'spiral' || meta.id === 'watchtower') && (
-                <ParamRow label="Direction">
+                <ParamRow label={tr('map.MapCommandPopup.direction')}>
                   <DirSeg value={direction} onChange={setDirection} />
                 </ParamRow>
               )}
               {meta.id === 'orbit' && (
-                <ParamRow label="Orbits">
+                <ParamRow label={tr('map.MapCommandPopup.orbits')}>
                   <Stepper value={revolutions} onChange={setRevolutions} min={0} max={50} step={1}
                     unit={revolutions === 0 ? 'endless' : revolutions === 1 ? 'circle' : 'circles'} showInfinityAtZero />
                 </ParamRow>
               )}
               {meta.id === 'spiral' && (
                 <>
-                  <ParamRow label="To alt">
+                  <ParamRow label={tr('map.MapCommandPopup.toAlt')}>
                     <Stepper value={displayAltitude(spiralTargetAlt)} onChange={(v) => setSpiralTargetAlt(nativeAltitude(v))}
                       min={displayAltitude(2)} max={displayAltitude(5000)} step={altitudeStep} unit={altitudeLabel} />
                   </ParamRow>
-                  <ParamRow label="Climb">
+                  <ParamRow label={tr('map.MapCommandPopup.climb')}>
                     <Stepper value={displayVerticalSpeed(climbRate)} onChange={(v) => setClimbRate(nativeVerticalSpeed(v))}
                       min={displayVerticalSpeed(0.1)} max={displayVerticalSpeed(10)} step={verticalSpeedStep} unit={verticalSpeedLabel} />
                   </ParamRow>
                 </>
               )}
               {meta.id === 'watchtower' && (
-                <ParamRow label="Yaw rate">
+                <ParamRow label={tr('map.MapCommandPopup.yawRate')}>
                   <Stepper value={yawRate} onChange={setYawRate} min={5} max={180} step={5} unit={`°/s, ${(360 / Math.max(yawRate, 1)).toFixed(1)}s/rev`} />
                 </ParamRow>
               )}
               {meta.id === 'reveal' && (
                 <>
-                  <ParamRow label="Pullback">
+                  <ParamRow label={tr('map.MapCommandPopup.pullback')}>
                     <Stepper value={displayDistance(revealPullback)} onChange={(v) => setRevealPullback(nativeDistance(v))}
                       min={displayDistance(5)} max={displayDistance(500)} step={distanceStep} unit={distanceLabel} />
                   </ParamRow>
-                  <ParamRow label="Climb">
+                  <ParamRow label={tr('map.MapCommandPopup.climb')}>
                     <Stepper value={displayAltitude(revealClimb)} onChange={(v) => setRevealClimb(nativeAltitude(v))}
                       min={displayAltitude(-100)} max={displayAltitude(200)} step={altitudeStep} unit={altitudeLabel} />
                   </ParamRow>
-                  <ParamRow label="Speed">
+                  <ParamRow label={tr('map.MapCommandPopup.speed')}>
                     <Stepper value={displaySpeed(revealSpeed)} onChange={(v) => setRevealSpeed(nativeSpeed(v))}
                       min={displaySpeed(0.5)} max={displaySpeed(15)} step={speedStep} unit={speedLabel} />
                   </ParamRow>
@@ -635,22 +636,22 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
               )}
               {meta.id === 'strafe' && (
                 <>
-                  <ParamRow label="Offset">
+                  <ParamRow label={tr('map.MapCommandPopup.offset')}>
                     <Stepper value={displayDistance(strafeOffset)} onChange={(v) => setStrafeOffset(nativeDistance(v))}
                       min={displayDistance(2)} max={displayDistance(300)} step={distanceStep} unit={distanceLabel} />
                   </ParamRow>
-                  <ParamRow label="Length">
+                  <ParamRow label={tr('map.MapCommandPopup.length')}>
                     <Stepper value={displayDistance(strafeLength)} onChange={(v) => setStrafeLength(nativeDistance(v))}
                       min={displayDistance(5)} max={displayDistance(500)} step={distanceStep} unit={distanceLabel} />
                   </ParamRow>
-                  <ParamRow label="Speed">
+                  <ParamRow label={tr('map.MapCommandPopup.speed')}>
                     <Stepper value={displaySpeed(strafeSpeed)} onChange={(v) => setStrafeSpeed(nativeSpeed(v))}
                       min={displaySpeed(0.5)} max={displaySpeed(15)} step={speedStep} unit={speedLabel} />
                   </ParamRow>
                 </>
               )}
               {meta.id === 'climbRtl' && (
-                <ParamRow label="Climb to">
+                <ParamRow label={tr('map.MapCommandPopup.climbTo')}>
                   <Stepper value={displayAltitude(climbRtlAlt)} onChange={(v) => setClimbRtlAlt(nativeAltitude(v))}
                     min={displayAltitude(5)} max={displayAltitude(500)} step={altitudeStep} unit={`${altitudeLabel} AGL`} />
                 </ParamRow>
@@ -678,23 +679,21 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
 
             {heldByFollowLoop && meta.id !== 'look' && (
               <div className="mt-1.5 rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-[10px] leading-snug text-amber-500">
-                {targetLabel ?? 'This vehicle'} is a wingman{leaderSysid !== undefined ? ` of SYS ${leaderSysid}` : ''}.
-                The formation loop re-targets it every tick, so this command will be accepted and
-                immediately overridden. Command the leader, or drop it from the fleet first.
+                {targetLabel ?? tr('map.MapCommandPopup.thisVehicle')} {tr('map.MapCommandPopup.isAWingman')}{leaderSysid !== undefined ? ` of SYS ${leaderSysid}` : ''}{tr('map.MapCommandPopup.theFormationLoopReTargetsIt')}
               </div>
             )}
 
             {fenceWarning && (
               <div className="mt-1.5 rounded-md border border-rose-500/40 bg-rose-500/10 px-2 py-1 text-[10px] leading-snug text-rose-500">
-                Vehicle will refuse this point: {fenceWarning}
+                {tr('map.MapCommandPopup.vehicleWillRefuseThisPoint')} {fenceWarning}
               </div>
             )}
 
             {meta.id === 'orbit' && !scriptHealthy && (
               <div className="mt-1.5 text-[9.5px] text-content-tertiary">
                 {scriptHealth.status === 'stale'
-                  ? 'Script silent: native DO_ORBIT fallback, orbit count ignored.'
-                  : 'Script not installed: native DO_ORBIT, orbit count ignored.'}
+                  ? tr('map.MapCommandPopup.scriptSilentNativeDoOrbitFallback')
+                  : tr('map.MapCommandPopup.scriptNotInstalledNativeDoOrbit')}
               </div>
             )}
 
@@ -702,19 +701,19 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
               sendBlockedByTerrain ? (
                 <div className="mt-1.5 flex items-center justify-between gap-2 rounded-md border border-rose-500/40 bg-rose-500/10 px-2 py-1.5">
                   <span className="text-[11px] leading-snug font-medium text-rose-500">
-                    {targetLabel ?? 'Vehicle'} has no terrain data: it will reject this command.
+                    {targetLabel ?? tr('map.MapCommandPopup.vehicle')} {tr('map.MapCommandPopup.hasNoTerrainDataItWill')}
                   </span>
                   <button
                     type="button"
                     onClick={() => chooseAltFrame('relative')}
                     className="shrink-0 rounded-md bg-rose-600 px-2.5 py-1 text-[10.5px] font-semibold text-white hover:bg-rose-500"
                   >
-                    Use Home
+                    {tr('map.MapCommandPopup.useHome')}
                   </button>
                 </div>
               ) : terrainAvailable === true ? (
                 <div className="mt-1.5 text-[9.5px] text-content-tertiary">
-                  Vehicle reports terrain data on board.
+                  {tr('map.MapCommandPopup.vehicleReportsTerrainDataOnBoard')}
                 </div>
               ) : null
             )}
@@ -724,9 +723,9 @@ export const MapCommandPopup: React.FC<MapCommandPopupProps> = ({
 
       {/* Keyboard hint footer */}
       <div className="mt-1.5 flex items-center justify-center gap-3 text-[9px] text-content-tertiary">
-        <span><Kbd>1</Kbd>-<Kbd>9</Kbd> select</span>
-        <span><Kbd>Enter</Kbd> or click again to send</span>
-        <span><Kbd>Esc</Kbd> close</span>
+        <span><Kbd>1</Kbd>-<Kbd>9</Kbd> {tr('map.MapCommandPopup.select')}</span>
+        <span><Kbd>{tr('map.MapCommandPopup.enter')}</Kbd> {tr('map.MapCommandPopup.orClickAgainToSend')}</span>
+        <span><Kbd>{tr('map.MapCommandPopup.esc')}</Kbd> {tr('map.MapCommandPopup.close')}</span>
       </div>
 
       <ScriptInstallModal open={installModalOpen} onClose={() => setInstallModalOpen(false)} />
@@ -823,9 +822,9 @@ function Stepper({ value, onChange, min, max, step, unit, autoFocus, showInfinit
  *  so the labels stay short. Mirrors DirSeg geometry so the row lines up. */
 function FrameSeg({ value, onChange }: { value: AltReferenceFrame; onChange: (f: AltReferenceFrame) => void }) {
   const opts: { id: AltReferenceFrame; label: string; tip: string }[] = [
-    { id: 'relative', label: 'Home', tip: 'Above the home / launch point (ArduPilot default)' },
-    { id: 'terrain', label: 'Terrain', tip: 'Above the ground below the vehicle. Needs terrain data or a rangefinder.' },
-    { id: 'asl', label: 'Sea', tip: 'Above mean sea level (AMSL)' },
+    { id: 'relative', label: tr('map.MapCommandPopup.home'), tip: tr('map.MapCommandPopup.aboveTheHomeLaunchPointArdupilot') },
+    { id: 'terrain', label: tr('map.MapCommandPopup.terrain'), tip: tr('map.MapCommandPopup.aboveTheGroundBelowTheVehicle') },
+    { id: 'asl', label: tr('map.MapCommandPopup.sea'), tip: tr('map.MapCommandPopup.aboveMeanSeaLevelAmsl') },
   ];
   return (
     <div className="flex h-7 items-stretch overflow-hidden rounded-lg border border-subtle">

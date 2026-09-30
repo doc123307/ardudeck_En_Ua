@@ -16,6 +16,7 @@ import { createPortal } from 'react-dom';
 import * as L from 'leaflet';
 import { useWindStore } from '../../../stores/wind-store';
 import { sampleWind, windVectorFromUV, compassPoint, computeWindRose, windColor, formatWindSpeed } from '../wind/wind-field';
+import { t } from '../../../i18n';
 
 const R = 90; // ring radius (px)
 const M = 28; // margin for labels
@@ -138,7 +139,7 @@ export function WindRoseCard(): JSX.Element | null {
         ref={closeRef}
         type="button"
         onClick={() => setProbe(null)}
-        data-tip="Close"
+        data-tip={t('map.WindRoseCard.close')}
         style={{ position: 'absolute', left: '50%', top: -4, transform: 'translateX(-50%)', pointerEvents: 'auto' }}
         className="w-5 h-5 flex items-center justify-center rounded-full bg-surface-solid border border-subtle text-content-tertiary hover:text-content shadow"
       >

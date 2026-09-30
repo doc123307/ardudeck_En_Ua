@@ -5,6 +5,7 @@ import { WebLinksAddon } from '@xterm/addon-web-links';
 import '@xterm/xterm/css/xterm.css';
 import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer } from '../../panels/panel-utils';
+import { t } from '../../../i18n';
 
 export function TerminalPanel() {
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -163,8 +164,8 @@ export function TerminalPanel() {
     return (
       <PanelContainer className="flex items-center justify-center">
         <div className="text-center text-content-tertiary text-xs">
-          <div className="text-content-secondary mb-1">Terminal unavailable</div>
-          <div>Connect to companion agent to open a terminal session.</div>
+          <div className="text-content-secondary mb-1">{t('companion.TerminalPanel.terminalUnavailable')}</div>
+          <div>{t('companion.TerminalPanel.connectToCompanionAgentToOpen')}</div>
         </div>
       </PanelContainer>
     );
@@ -182,15 +183,15 @@ export function TerminalPanel() {
       <div className="flex items-center justify-between px-3 py-1 bg-surface border-t border-subtle text-xs">
         <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-green-400" />
-          <span className="text-green-400">PTY Connected</span>
+          <span className="text-green-400">{t('companion.TerminalPanel.ptyConnected')}</span>
           {connectionState.host && (
             <span className="text-content-secondary ml-1">{connectionState.host}</span>
           )}
         </div>
         <div className="flex items-center gap-2 text-content-secondary">
-          <span>Ctrl+C: Copy/Interrupt</span>
+          <span>{t('companion.TerminalPanel.ctrlCCopyInterrupt')}</span>
           <span>|</span>
-          <span>Ctrl+V: Paste</span>
+          <span>{t('companion.TerminalPanel.ctrlVPaste')}</span>
         </div>
       </div>
     </div>

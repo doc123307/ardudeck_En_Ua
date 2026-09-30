@@ -1,0 +1,91 @@
+{
+  "fleet": {
+    "DraggableFleetActions": {
+      "dragToMoveMagnetsToPanel": "Drag to move - magnets to panel & window edges",
+      "fleetOps": "Fleet Ops",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "expandFleetOpsPanel": "Expand fleet ops panel",
+      "collapseFleetOpsPanel": "Collapse fleet ops panel"
+    },
+    "FleetContextMenu": {
+      "commandThisVehicle": "Command this vehicle",
+      "leadsAFleet": "Leads a fleet",
+      "createLeader": "Create leader",
+      "addToFleet": "Add to fleet",
+      "join": "Join",
+      "formationShape": "Formation shape",
+      "current": "{{label}} (current)",
+      "reForm": "Re-form: {{label}}",
+      "formUp": "Form up",
+      "free": "free",
+      "disbandsThisFleetItsWingmenReturn": "Disbands this fleet - its wingmen return to manual control",
+      "dropFromTheFleetTheRest": "Drop {{label}} from the fleet - the rest hold formation",
+      "disbandFleet": "Disband fleet",
+      "leaveFleet": "Leave fleet"
+    },
+    "FleetCoordination": {
+      "everyConnectedVehicleArmsAndClimbs": "Every connected vehicle arms and climbs to {{alt}} m together",
+      "takeOffAll": "Take off all",
+      "takeoffAltitudeM": "Takeoff altitude (m)",
+      "latestReportFromTheCoordinationEngine": "Latest report from the coordination engine (group takeoff / mission start)",
+      "uploadEachVehicleSAssignedWp": "Upload each vehicle's assigned WP group and start all {{assignedCount}} missions in AUTO",
+      "startMissions": "Start missions (",
+      "collapseFleet": "Collapse fleet",
+      "expandFleet": "Expand fleet",
+      "fleet": "Fleet",
+      "armAndClimbOnlySFleet": "Arm and climb only {{label}}'s fleet to {{alt}} m",
+      "takeOff": "Take off",
+      "reFormSFleet": "Re-form {{label}}'s fleet: {{label2}}",
+      "fliesItsUploadedMissionInAuto": "{{label}} flies its uploaded mission in AUTO; its wingmen hold formation and follow",
+      "startMission": "Start mission"
+    },
+    "FleetDisclosure": {
+      "fleets": "Fleets",
+      "collapseEveryFleet": "Collapse every fleet",
+      "expandEveryFleet": "Expand every fleet",
+      "collapseAll": "Collapse all",
+      "expandAll": "Expand all"
+    },
+    "FleetGroupActions": {
+      "selected": "selected",
+      "clear": "Clear",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "arm": "Arm",
+      "disarm": "Disarm",
+      "start": "Start"
+    },
+    "FleetStrip": {
+      "clickToDeselect": "{{label}} - click to deselect",
+      "clickToSetIdentityColour": "{{v1}} - {{state}} (click to set identity colour)",
+      "setColour": "Set colour {{c}}",
+      "lead": "Lead",
+      "selectForGroupCommands": "Select for group commands",
+      "orders": "Orders",
+      "expandFleet": "Expand fleet",
+      "fleet": "Fleet",
+      "collapseFleet": "Collapse fleet",
+      "dragAVehicleHere": "Drag a vehicle here",
+      "unassigned": "Unassigned",
+      "dropToRemoveFromFleet": "Drop to remove from fleet"
+    },
+    "FormationGlyphs": {
+      "veeDelta": "Vee (delta)",
+      "lineAbreastWall": "Line abreast (wall)",
+      "columnTrail": "Column (trail)",
+      "echelonRight": "Echelon right",
+      "echelonLeft": "Echelon left",
+      "diamond": "Diamond",
+      "boxGrid": "Box (grid)",
+      "surveySweepWide": "Survey sweep (wide)"
+    },
+    "MissionPathsToggle": {
+      "missionPaths": "Mission paths",
+      "drawEveryVehicleSFlightPath": "Draw every vehicle's flight path (selected solid, others dimmed)",
+      "allVehiclePaths": "All vehicle paths",
+      "drawOnlyTheSelectedVehicleS": "Draw only the selected vehicle's flight path",
+      "selectedOnly": "Selected only"
+    }
+  }
+}

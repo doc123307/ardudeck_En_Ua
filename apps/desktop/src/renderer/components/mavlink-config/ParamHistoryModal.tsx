@@ -9,6 +9,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { History, ChevronDown, ChevronRight, RotateCcw, Trash2, X, Loader2 } from 'lucide-react';
 import type { ParamCheckpoint, ParamChange } from '../../../shared/param-history-types';
 import { useParameterStore } from '../../stores/parameter-store';
+import { t } from '../../i18n';
 
 interface Props {
   boardUid: string;
@@ -79,17 +80,17 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
         }
         if (applied > 0) {
           showToast(
-            `Restored ${applied} parameter${applied !== 1 ? 's' : ''} to previous values${failed > 0 ? ` (${failed} failed)` : ''}. Write to Flash to persist.`,
+            t('mavlink_config.ParamHistoryModal.restoredParameterToPreviousValuesWrite', { applied, v2: applied !== 1 ? 's' : '', v3: failed > 0 ? ` (${failed} failed)` : '' }),
             failed > 0 ? 'info' : 'success'
           );
         } else {
-          showToast('Failed to restore parameters', 'error');
+          showToast(t('mavlink_config.ParamHistoryModal.failedToRestoreParameters'), 'error');
         }
       } else {
-        showToast('Checkpoint not found', 'error');
+        showToast(t('mavlink_config.ParamHistoryModal.checkpointNotFound'), 'error');
       }
     } catch {
-      showToast('Failed to restore checkpoint', 'error');
+      showToast(t('mavlink_config.ParamHistoryModal.failedToRestoreCheckpoint'), 'error');
     } finally {
       setRestoring(null);
     }
@@ -103,7 +104,7 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
         setConfirmDeleteId(null);
       }
     } catch {
-      showToast('Failed to delete checkpoint', 'error');
+      showToast(t('mavlink_config.ParamHistoryModal.failedToDeleteCheckpoint'), 'error');
     }
   }, [boardUid, showToast]);
 
@@ -121,7 +122,7 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
               <History className="w-5 h-5 text-blue-400" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-content">Parameter History</h3>
+              <h3 className="text-lg font-semibold text-content">{t('mavlink_config.ParamHistoryModal.parameterHistory')}</h3>
               <p className="text-xs text-content-secondary">{boardName}</p>
             </div>
           </div>
@@ -138,14 +139,14 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
           {loading ? (
             <div className="flex items-center justify-center py-12 text-content-secondary">
               <Loader2 className="w-5 h-5 animate-spin mr-2" />
-              Loading history...
+              {t('mavlink_config.ParamHistoryModal.loadingHistory')}
             </div>
           ) : checkpoints.length === 0 ? (
             <div className="text-center py-12">
               <History className="w-10 h-10 text-content-tertiary mx-auto mb-3" />
-              <p className="text-content-secondary text-sm">No history yet</p>
+              <p className="text-content-secondary text-sm">{t('mavlink_config.ParamHistoryModal.noHistoryYet')}</p>
               <p className="text-content-tertiary text-xs mt-1">
-                Changes are recorded each time you write to flash.
+                {t('mavlink_config.ParamHistoryModal.changesAreRecordedEachTimeYou')}
               </p>
             </div>
           ) : (
@@ -189,14 +190,14 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
                         onClick={() => handleRestore(cp.id)}
                         disabled={restoring !== null}
                         className="px-2.5 py-1.5 text-xs font-medium rounded-md bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-colors flex items-center gap-1.5 disabled:opacity-50"
-                        title="Restore these parameters (sets values in RAM, then Write to Flash to persist)"
+                        title={t('mavlink_config.ParamHistoryModal.restoreTheseParametersSetsValuesIn')}
                       >
                         {restoring === cp.id ? (
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
                         ) : (
                           <RotateCcw className="w-3.5 h-3.5" />
                         )}
-                        Restore
+                        {t('mavlink_config.ParamHistoryModal.restore')}
                       </button>
                       {confirmDeleteId === cp.id ? (
                         <div className="flex items-center gap-1">
@@ -204,20 +205,20 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
                             onClick={() => handleDelete(cp.id)}
                             className="px-2 py-1.5 text-xs font-medium rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
                           >
-                            Confirm
+                            {t('mavlink_config.ParamHistoryModal.confirm')}
                           </button>
                           <button
                             onClick={() => setConfirmDeleteId(null)}
                             className="px-2 py-1.5 text-xs font-medium rounded-md text-content-secondary hover:text-content transition-colors"
                           >
-                            Cancel
+                            {t('mavlink_config.ParamHistoryModal.cancel')}
                           </button>
                         </div>
                       ) : (
                         <button
                           onClick={() => setConfirmDeleteId(cp.id)}
                           className="p-1.5 text-content-tertiary hover:text-red-400 transition-colors rounded-md hover:bg-surface-raised"
-                          title="Delete checkpoint"
+                          title={t('mavlink_config.ParamHistoryModal.deleteCheckpoint')}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -231,10 +232,10 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
                       <table className="w-full text-xs mt-2">
                         <thead>
                           <tr className="text-content-tertiary uppercase">
-                            <th className="pb-1.5 text-left font-medium">Parameter</th>
-                            <th className="pb-1.5 text-right font-medium">Old Value</th>
+                            <th className="pb-1.5 text-left font-medium">{t('mavlink_config.ParamHistoryModal.parameter')}</th>
+                            <th className="pb-1.5 text-right font-medium">{t('mavlink_config.ParamHistoryModal.oldValue')}</th>
                             <th className="pb-1.5 text-center font-medium px-2"></th>
-                            <th className="pb-1.5 text-left font-medium">New Value</th>
+                            <th className="pb-1.5 text-left font-medium">{t('mavlink_config.ParamHistoryModal.newValue')}</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-subtle/30">
@@ -259,13 +260,13 @@ const ParamHistoryModal: React.FC<Props> = ({ boardUid, boardName, onClose, show
         {/* Footer */}
         <div className="px-6 py-3 border-t border-subtle flex justify-between items-center">
           <span className="text-xs text-content-tertiary">
-            {checkpoints.length} checkpoint{checkpoints.length !== 1 ? 's' : ''}
+            {checkpoints.length} {t('mavlink_config.ParamHistoryModal.checkpoint')}{checkpoints.length !== 1 ? 's' : ''}
           </span>
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm text-content-secondary hover:text-content transition-colors"
           >
-            Close
+            {t('mavlink_config.ParamHistoryModal.close')}
           </button>
         </div>
       </div>

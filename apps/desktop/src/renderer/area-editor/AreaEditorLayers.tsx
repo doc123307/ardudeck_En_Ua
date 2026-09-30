@@ -14,6 +14,7 @@ import {
 } from './area-editor-layers-store';
 import { LayerIcon } from '../components/map/LayerIcon';
 import { MAP_LAYERS } from '../../shared/map-layers';
+import { t } from '../i18n';
 
 // Overlay glyphs mirror the main map's overlay set (see components/map/overlays/
 // OverlayToggles) so the two layer menus read identically: Aviation = OpenAIP,
@@ -60,14 +61,14 @@ export function AreaEditorLayers(): JSX.Element {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        data-tip="Map layers & overlays"
+        data-tip={t('area_editor.AreaEditorLayers.mapLayersOverlays')}
         className="h-8 px-2.5 inline-flex items-center gap-2 rounded-md bg-surface-solid border border-subtle text-content-secondary hover:text-content shadow-lg transition-colors"
       >
         <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 2l9 5-9 5-9-5 9-5z" />
           <path d="M3 12l9 5 9-5M3 17l9 5 9-5" />
         </svg>
-        <span className="text-xs font-medium">Layers{activeCount > 0 ? ` (${activeCount})` : ''}</span>
+        <span className="text-xs font-medium">{t('area_editor.AreaEditorLayers.layers')}{activeCount > 0 ? ` (${activeCount})` : ''}</span>
       </button>
 
       {open && (
@@ -76,7 +77,7 @@ export function AreaEditorLayers(): JSX.Element {
           <div className="fixed inset-0 z-[1000]" onClick={() => setOpen(false)} />
           <div className="absolute top-full right-0 mt-1.5 w-52 z-[1001] rounded-lg bg-surface-solid border border-subtle shadow-xl overflow-hidden">
             <div className="px-3 py-2 text-[11px] uppercase tracking-wide text-content-tertiary border-b border-subtle">
-              Base map
+              {t('area_editor.AreaEditorLayers.baseMap')}
             </div>
             <div className="p-1">
               {AREA_EDITOR_BASE_LAYERS.map(({ key }) => (
@@ -98,7 +99,7 @@ export function AreaEditorLayers(): JSX.Element {
             </div>
 
             <div className="px-3 py-2 text-[11px] uppercase tracking-wide text-content-tertiary border-y border-subtle">
-              Overlays
+              {t('area_editor.AreaEditorLayers.overlays')}
             </div>
             <div className="p-1">
               {AREA_EDITOR_OVERLAYS.map(({ id, label, hint }) => (

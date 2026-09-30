@@ -4,6 +4,7 @@ import { DraggableSlider } from '../../ui/DraggableSlider';
 import { DraftNumberInput } from '../../../hooks/useNumericDraft';
 import { OutputVisual } from './OutputVisual';
 import { classifyOutput, isTravelEditable, travelFromEndpoints, type OutputShape } from './output-shape';
+import { t as tr } from '../../../i18n';
 
 const SERVO_TRAVEL_MAX_US = 500;
 const PWM_FLOOR = 800;
@@ -127,11 +128,11 @@ export const OutputCards: React.FC<OutputCardsProps> = ({
   if (groups.length === 0) {
     return (
       <div className="rounded-xl border border-subtle bg-surface p-6 text-sm text-content-secondary">
-        No output has a function yet.{' '}
+        {tr('mavlink_config.OutputCards.noOutputHasAFunctionYet')}{' '}
         <button onClick={onAssignOutputs} className="text-emerald-400 hover:underline">
-          Assign outputs
+          {tr('mavlink_config.OutputCards.assignOutputs')}
         </button>{' '}
-        and they will appear here.
+        {tr('mavlink_config.OutputCards.andTheyWillAppearHere')}
       </div>
     );
   }
@@ -160,15 +161,15 @@ export const OutputCards: React.FC<OutputCardsProps> = ({
                   <div className="text-sm font-medium text-content truncate">{g.functionName}</div>
                 )}
                 <div className="text-[11px] text-content-tertiary px-1">
-                  {g.channels.length > 1 ? `Outputs ${g.channels.join(', ')}` : `Output ${g.primary}`}
+                  {g.channels.length > 1 ? tr('mavlink_config.OutputCards.outputs', { v1: g.channels.join(', ') }) : tr('mavlink_config.OutputCards.output', { primary: g.primary })}
                 </div>
               </div>
               {!g.confident && (
                 <span
                   className="shrink-0 rounded px-1.5 py-0.5 text-[10px] text-content-tertiary bg-surface-raised"
-                  title="Shape inferred from this vehicle's endpoints, not from a known function name"
+                  title={tr('mavlink_config.OutputCards.shapeInferredFromThisVehicleS')}
                 >
-                  inferred
+                  {tr('mavlink_config.OutputCards.inferred')}
                 </span>
               )}
             </div>
@@ -189,14 +190,14 @@ export const OutputCards: React.FC<OutputCardsProps> = ({
 
             {editable ? (
               <DraggableSlider
-                label="Travel"
+                label={tr('mavlink_config.OutputCards.travel')}
                 value={percent}
                 onChange={(v) => setTravel(g, v)}
                 min={10}
                 max={100}
                 step={1}
                 color="#10B981"
-                hint={`Full stick reaches ${percent}% (${g.trim - g.travel}–${g.trim + g.travel} µs)`}
+                hint={tr('mavlink_config.OutputCards.fullStickReachesS', { percent, v2: g.trim - g.travel, v3: g.trim + g.travel })}
               />
             ) : (
               <p className="text-[11px] text-content-tertiary">{SHAPE_NOTE[g.shape]}</p>
@@ -220,7 +221,7 @@ export const OutputCards: React.FC<OutputCardsProps> = ({
 
             {g.min >= g.max && (
               <p className="text-[11px] text-amber-400">
-                Min is not below max, so this output cannot move.
+                {tr('mavlink_config.OutputCards.minIsNotBelowMaxSo')}
               </p>
             )}
 
@@ -231,7 +232,7 @@ export const OutputCards: React.FC<OutputCardsProps> = ({
                 onChange={() => toggleReversed(g)}
                 className="accent-emerald-500"
               />
-              Reversed
+              {tr('mavlink_config.OutputCards.reversed')}
             </label>
           </div>
         );
@@ -241,11 +242,11 @@ export const OutputCards: React.FC<OutputCardsProps> = ({
     <div className="mt-4 flex items-center gap-2 text-xs text-content-tertiary">
       <span>
         {unassigned.length === 0
-          ? 'Every output has a function.'
-          : `${unassigned.length} output${unassigned.length === 1 ? '' : 's'} unassigned (${unassigned.slice(0, 6).join(', ')}${unassigned.length > 6 ? '…' : ''}).`}
+          ? tr('mavlink_config.OutputCards.everyOutputHasAFunction')
+          : tr('mavlink_config.OutputCards.outputUnassigned', { length: unassigned.length, v2: unassigned.length === 1 ? '' : 's', v3: unassigned.slice(0, 6).join(', '), v4: unassigned.length > 6 ? '…' : '' })}
       </span>
       <button onClick={onAssignOutputs} className="text-emerald-400 hover:underline">
-        Open all outputs
+        {tr('mavlink_config.OutputCards.openAllOutputs')}
       </button>
     </div>
     </>

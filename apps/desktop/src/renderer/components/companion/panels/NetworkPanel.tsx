@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer, SectionTitle } from '../../panels/panel-utils';
 import type { NetworkInterface } from '@ardudeck/companion-types';
+import { t } from '../../../i18n';
 
 function InterfaceIcon({ type }: { type: string }) {
   if (type === 'wireless') {
@@ -56,13 +57,13 @@ function InterfaceCard({ iface }: { iface: NetworkInterface }) {
       <div className="space-y-0.5 text-xs">
         {iface.ip4 && (
           <div className="flex justify-between">
-            <span className="text-content-secondary">IPv4</span>
+            <span className="text-content-secondary">{t('companion.NetworkPanel.ipv4')}</span>
             <span className="text-content font-mono">{iface.ip4}</span>
           </div>
         )}
         {iface.ip6 && (
           <div className="flex justify-between">
-            <span className="text-content-secondary">IPv6</span>
+            <span className="text-content-secondary">{t('companion.NetworkPanel.ipv6')}</span>
             <span className="text-content font-mono text-[10px] truncate max-w-[200px]">{iface.ip6}</span>
           </div>
         )}
@@ -80,7 +81,7 @@ function InterfaceCard({ iface }: { iface: NetworkInterface }) {
         )}
         {iface.signal !== undefined && iface.signal !== 0 && (
           <div className="flex justify-between items-center">
-            <span className="text-content-secondary">Signal</span>
+            <span className="text-content-secondary">{t('companion.NetworkPanel.signal')}</span>
             <SignalStrength signal={iface.signal} />
           </div>
         )}
@@ -116,8 +117,8 @@ export function NetworkPanel() {
     return (
       <PanelContainer className="flex items-center justify-center">
         <div className="text-center text-content-tertiary text-xs">
-          <div className="text-content-secondary mb-1">No network data</div>
-          <div>Waiting for agent connection...</div>
+          <div className="text-content-secondary mb-1">{t('companion.NetworkPanel.noNetworkData')}</div>
+          <div>{t('companion.NetworkPanel.waitingForAgentConnection')}</div>
         </div>
       </PanelContainer>
     );
@@ -126,10 +127,10 @@ export function NetworkPanel() {
   return (
     <PanelContainer>
       <div className="space-y-3">
-        <SectionTitle>Network Interfaces</SectionTitle>
+        <SectionTitle>{t('companion.NetworkPanel.networkInterfaces')}</SectionTitle>
         {network.interfaces.length === 0 ? (
           <div className="text-xs text-content-tertiary text-center py-4">
-            No interfaces found
+            {t('companion.NetworkPanel.noInterfacesFound')}
           </div>
         ) : (
           <div className="space-y-2">

@@ -27,6 +27,7 @@ import { DockedContext } from './dock-context';
 import { groupOverlayKey, isCluster, groupDisplayOptions, CLUSTER_ANCHOR, type DockGroup } from './dock-groups';
 import { memberInsertionIndex, isOutsideUndockZone, snapToBallEdge, type DockRect } from './dock-snap';
 import { useDockPreviewStore, measureGroupDockCandidate, commitGroupDock, type MeasuredCandidate } from './dock-tracking';
+import { t } from '../../../i18n';
 
 const RESIZE_PX_PER_SCALE_UNIT = 100;
 const DOCK_EASE = 'cubic-bezier(0.05, 0.7, 0.1, 1.0)';
@@ -76,7 +77,7 @@ function GroupDisplayPopover({
       <div className="fixed z-[9999] rounded-lg bg-surface-solid border border-subtle shadow-xl" style={{ top, left, width }}>
         <div className="px-3 py-2 text-[11px] uppercase tracking-wide text-content-tertiary border-b border-subtle">{title}</div>
         <div className="p-2">
-          <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-1.5">Display for all</div>
+          <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-1.5">{t('map.DockedGroup.displayForAll')}</div>
           <div className="grid grid-cols-3 gap-1.5">
             {options.map((opt) => {
               const active = shared === opt.id;
@@ -85,7 +86,7 @@ function GroupDisplayPopover({
                   key={opt.id}
                   type="button"
                   onClick={() => setDisplayModes(ids, opt.id as InstrumentDisplayMode)}
-                  data-tip={`${opt.label} display for the whole group`}
+                  data-tip={t('map.DockedGroup.displayForTheWholeGroup', { label: opt.label })}
                   className={
                     'flex flex-col items-center justify-center gap-1 py-1.5 rounded-md border transition-colors ' +
                     (active
@@ -799,8 +800,8 @@ export function DockedGroup({ gid, group }: { gid: string; group: DockGroup }): 
           type="button"
           onClick={() => dockSetStretch(gid, !stretched)}
           data-tip={stretched
-            ? 'Shrink the group back to its content'
-            : (row ? 'Stretch the group across the panel' : 'Stretch the group down the panel')}
+            ? t('map.DockedGroup.shrinkTheGroupBackToIts')
+            : (row ? t('map.DockedGroup.stretchTheGroupAcrossThePanel') : t('map.DockedGroup.stretchTheGroupDownThePanel'))}
           style={stretched && panelExt
             ? (row
                 ? { top: 6, left: 6 - panelExt.before }
@@ -831,7 +832,7 @@ export function DockedGroup({ gid, group }: { gid: string; group: DockGroup }): 
             const r = wrapperRef.current?.getBoundingClientRect();
             if (r) { setDisplayAnchor(r); setDisplayOpen(true); }
           }}
-          data-tip="Display mode for the whole group"
+          data-tip={t('map.DockedGroup.displayModeForTheWholeGroup')}
           style={stretched && panelExt
             ? (row
                 ? { top: 8, left: 38 - panelExt.before }
@@ -851,7 +852,7 @@ export function DockedGroup({ gid, group }: { gid: string; group: DockGroup }): 
       )}
       {displayOpen && displayAnchor && displayChoices && (
         <GroupDisplayPopover
-          title={cluster ? 'Constellation' : 'Docked group'}
+          title={cluster ? t('map.DockedGroup.constellation') : t('map.DockedGroup.dockedGroup')}
           ids={displayChoices.ids}
           options={displayChoices.options}
           anchorRect={displayAnchor}
@@ -943,7 +944,7 @@ function MemberCell({
       <button
         type="button"
         onPointerDown={onPillPointerDown}
-        data-tip={`Drag out or click to undock ${label}`}
+        data-tip={t('map.DockedGroup.dragOutOrClickToUndock', { label })}
         className={
           'absolute top-0.5 right-0.5 p-1 rounded-full bg-surface shadow-lg text-content-secondary ' +
           'hover:text-content hover:bg-surface-raised cursor-grab transition-opacity ' +

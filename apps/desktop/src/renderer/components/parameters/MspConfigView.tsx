@@ -92,6 +92,7 @@ import {
   Check,
   type LucideIcon,
 } from 'lucide-react';
+import { t as tr } from '../../i18n';
 
 // Types
 interface MSPPidCoefficients {
@@ -175,7 +176,7 @@ const RATE_PRESETS: Record<string, {
 }> = {
   beginner: {
     name: 'Beginner',
-    description: 'Slow & predictable - great for learning',
+    get description() { return tr('parameters.MspConfigView.slowPredictableGreatForLearning'); },
     icon: Egg,
     iconColor: 'text-green-400',
     color: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
@@ -187,7 +188,7 @@ const RATE_PRESETS: Record<string, {
   },
   freestyle: {
     name: 'Freestyle',
-    description: 'Balanced for tricks & flow',
+    get description() { return tr('parameters.MspConfigView.balancedForTricksFlow'); },
     icon: Drama,
     iconColor: 'text-purple-400',
     color: 'from-purple-500/20 to-violet-500/10 border-purple-500/30',
@@ -199,7 +200,7 @@ const RATE_PRESETS: Record<string, {
   },
   racing: {
     name: 'Racing',
-    description: 'Fast & responsive for speed',
+    get description() { return tr('parameters.MspConfigView.fastResponsiveForSpeed'); },
     icon: Zap,
     iconColor: 'text-red-400',
     color: 'from-red-500/20 to-orange-500/10 border-red-500/30',
@@ -211,7 +212,7 @@ const RATE_PRESETS: Record<string, {
   },
   cinematic: {
     name: 'Cinematic',
-    description: 'Ultra-smooth for filming',
+    get description() { return tr('parameters.MspConfigView.ultraSmoothForFilming'); },
     icon: Film,
     iconColor: 'text-blue-400',
     color: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30',
@@ -253,7 +254,7 @@ const PID_PRESETS: Record<string, {
 }> = {
   beginner: {
     name: 'Beginner',
-    description: 'Smooth & forgiving - great for learning',
+    get description() { return tr('parameters.MspConfigView.smoothForgivingGreatForLearning'); },
     icon: Egg,
     iconColor: 'text-green-400',
     color: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
@@ -265,7 +266,7 @@ const PID_PRESETS: Record<string, {
   },
   freestyle: {
     name: 'Freestyle',
-    description: 'Responsive & smooth for tricks',
+    get description() { return tr('parameters.MspConfigView.responsiveSmoothForTricks'); },
     icon: Drama,
     iconColor: 'text-purple-400',
     color: 'from-purple-500/20 to-violet-500/10 border-purple-500/30',
@@ -277,7 +278,7 @@ const PID_PRESETS: Record<string, {
   },
   racing: {
     name: 'Racing',
-    description: 'Snappy & precise for speed',
+    get description() { return tr('parameters.MspConfigView.snappyPreciseForSpeed'); },
     icon: Zap,
     iconColor: 'text-red-400',
     color: 'from-red-500/20 to-orange-500/10 border-red-500/30',
@@ -289,7 +290,7 @@ const PID_PRESETS: Record<string, {
   },
   cinematic: {
     name: 'Cinematic',
-    description: 'Ultra-smooth for video',
+    get description() { return tr('parameters.MspConfigView.ultraSmoothForVideo'); },
     icon: Film,
     iconColor: 'text-blue-400',
     color: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30',
@@ -304,50 +305,50 @@ const PID_PRESETS: Record<string, {
 // Mode definitions with beginner-friendly explanations
 // iNav permanent box IDs (from fc_msp_box.c) - must match mode-presets.ts BOX_ID
 const MODE_INFO: Record<number, { name: string; icon: LucideIcon; description: string; color: string; beginner: string; configureTab?: string }> = {
-  0: { name: 'ARM', icon: Power, description: 'Enable motors', color: 'bg-red-500', beginner: 'SAFETY SWITCH - Arms/disarms your aircraft. Always have this on a switch!' },
-  1: { name: 'ANGLE', icon: Square, description: 'Self-level', color: 'bg-blue-500', beginner: 'BEGINNER MODE - Aircraft stays level automatically. Best for learning!' },
-  2: { name: 'HORIZON', icon: Sunrise, description: 'Hybrid mode', color: 'bg-cyan-500', beginner: 'TRAINING MODE - Self-levels at center, allows flips at full stick' },
-  3: { name: 'NAV ALTHOLD', icon: ArrowUpFromLine, description: 'Hold altitude', color: 'bg-teal-500', beginner: 'Holds current altitude using barometer/GPS. Throttle controls climb/descent rate.' },
-  5: { name: 'HEADING HOLD', icon: Navigation, description: 'Hold heading', color: 'bg-emerald-500', beginner: 'Maintains current magnetic heading. Useful for flying straight lines.' },
-  6: { name: 'HEADFREE', icon: Move3d, description: 'Headless mode', color: 'bg-purple-500', beginner: 'Stick directions are relative to pilot, not aircraft - useful for beginners' },
-  7: { name: 'HEADADJ', icon: RotateCw, description: 'Head adjust', color: 'bg-gray-500', beginner: 'Resets headfree reference direction' },
-  8: { name: 'CAMSTAB', icon: Camera, description: 'Camera stabilization', color: 'bg-indigo-500', beginner: 'Stabilizes camera servo output' },
-  10: { name: 'NAV RTH', icon: Home, description: 'Return to home', color: 'bg-green-500', beginner: 'Return To Home - Aircraft will climb to safe altitude and fly back to launch point. Essential safety feature!' },
-  11: { name: 'NAV POSHOLD', icon: MapPin, description: 'Hold position', color: 'bg-cyan-500', beginner: 'GPS position hold - Aircraft will stay in place. Great for aerial photography or when you need to stop.' },
-  12: { name: 'MANUAL', icon: Joystick, description: 'Direct control', color: 'bg-rose-500', beginner: 'Direct servo/motor control without stabilization. For experienced pilots only!' },
-  13: { name: 'BEEPER', icon: Volume2, description: 'Find aircraft', color: 'bg-yellow-500', beginner: 'Makes your aircraft beep - great for finding it in grass!' },
-  15: { name: 'LEDS OFF', icon: Lightbulb, description: 'Disable LEDs', color: 'bg-gray-500', beginner: 'Turns off LED strip' },
-  16: { name: 'LIGHTS', icon: Flashlight, description: 'Navigation lights', color: 'bg-amber-500', beginner: 'Turns on navigation lights' },
-  19: { name: 'OSD OFF', icon: Monitor, description: 'Hide OSD', color: 'bg-gray-500', beginner: 'Turns off on-screen display' },
-  20: { name: 'TELEMETRY', icon: Satellite, description: 'Telemetry output', color: 'bg-blue-500', beginner: 'Enables telemetry transmission' },
-  21: { name: 'AUTO TUNE', icon: Settings2, description: 'PID autotune', color: 'bg-violet-500', beginner: 'Automatically tunes PID values during flight' },
-  26: { name: 'BLACKBOX', icon: Package, description: 'Flight logging', color: 'bg-pink-500', beginner: 'Records flight data for tuning analysis' },
-  27: { name: 'FAILSAFE', icon: ShieldAlert, description: 'Emergency', color: 'bg-orange-500', beginner: 'EMERGENCY MODE - Triggers failsafe behavior. Normally activated automatically when signal is lost.' },
-  28: { name: 'NAV WP', icon: Map, description: 'Waypoint mission', color: 'bg-indigo-500', beginner: 'Execute uploaded waypoint mission. Aircraft will fly to each waypoint automatically.' },
-  29: { name: 'AIRMODE', icon: Wind, description: 'Full control at zero throttle', color: 'bg-cyan-500', beginner: 'Keeps full stick authority even at zero throttle. Essential for freestyle tricks and flips.' },
-  30: { name: 'HOME RESET', icon: RotateCcw, description: 'Reset home position', color: 'bg-red-400', beginner: 'Sets current position as new home point. Use when you relocate during a session.' },
-  31: { name: 'GCS NAV', icon: Gamepad2, description: 'Ground control', color: 'bg-purple-500', beginner: 'Allow ground control station to send navigation commands (fly-to-here, etc).' },
-  34: { name: 'FLAPERON', icon: PlaneTakeoff, description: 'Flaps mode', color: 'bg-amber-500', beginner: 'Activates flaperons for slower landing approach. Ailerons droop down to act as flaps.' },
-  35: { name: 'TURN ASSIST', icon: RotateCw, description: 'Coordinated turns', color: 'bg-lime-500', beginner: 'Auto-coordinates rudder with ailerons for smooth turns. Great for fixed-wing beginners.' },
-  36: { name: 'NAV LAUNCH', icon: Rocket, description: 'Auto launch', color: 'bg-orange-500', beginner: 'Automatic launch sequence for fixed-wing. Throw the plane and it will climb to safe altitude.', configureTab: 'auto-launch' },
-  37: { name: 'SERVO AUTOTRIM', icon: Scissors, description: 'Auto trim servos', color: 'bg-gray-500', beginner: 'Automatically adjusts servo trim during flight' },
-  45: { name: 'NAV CRUISE', icon: Plane, description: 'Cruise control', color: 'bg-sky-500', beginner: 'Fixed-wing cruise mode - Maintains heading and altitude. Perfect for long-range flights.' },
-  46: { name: 'MC BRAKING', icon: OctagonX, description: 'Multirotor braking', color: 'bg-red-500', beginner: 'Aggressive braking when releasing sticks on multirotor' },
-  51: { name: 'PREARM', icon: KeyRound, description: 'Pre-arm check', color: 'bg-yellow-600', beginner: 'Safety switch - must be enabled before arming. Prevents accidental arm.' },
-  52: { name: 'TURTLE', icon: Turtle, description: 'Flip over', color: 'bg-stone-500', beginner: 'Flip crashed aircraft back over using motor spin. For multirotors only.' },
-  53: { name: 'COURSE HOLD', icon: Compass, description: 'Hold course', color: 'bg-violet-500', beginner: 'Maintains current heading while allowing altitude control. Good for flying in a straight line.' },
-  55: { name: 'WP PLANNER', icon: Waypoints, description: 'Mission planner', color: 'bg-fuchsia-500', beginner: 'Enable in-flight waypoint planning via stick commands.' },
-  56: { name: 'SOARING', icon: CloudSun, description: 'Thermal soaring', color: 'bg-sky-400', beginner: 'Enables thermal detection and circling for gliders' },
+  0: { name: 'ARM', icon: Power, get description() { return tr('parameters.MspConfigView.enableMotors'); }, color: 'bg-red-500', beginner: 'SAFETY SWITCH - Arms/disarms your aircraft. Always have this on a switch!' },
+  1: { name: 'ANGLE', icon: Square, get description() { return tr('parameters.MspConfigView.selfLevel'); }, color: 'bg-blue-500', beginner: 'BEGINNER MODE - Aircraft stays level automatically. Best for learning!' },
+  2: { name: 'HORIZON', icon: Sunrise, get description() { return tr('parameters.MspConfigView.hybridMode'); }, color: 'bg-cyan-500', beginner: 'TRAINING MODE - Self-levels at center, allows flips at full stick' },
+  3: { name: 'NAV ALTHOLD', icon: ArrowUpFromLine, get description() { return tr('parameters.MspConfigView.holdAltitude'); }, color: 'bg-teal-500', beginner: 'Holds current altitude using barometer/GPS. Throttle controls climb/descent rate.' },
+  5: { name: 'HEADING HOLD', icon: Navigation, get description() { return tr('parameters.MspConfigView.holdHeading'); }, color: 'bg-emerald-500', beginner: 'Maintains current magnetic heading. Useful for flying straight lines.' },
+  6: { name: 'HEADFREE', icon: Move3d, get description() { return tr('parameters.MspConfigView.headlessMode'); }, color: 'bg-purple-500', beginner: 'Stick directions are relative to pilot, not aircraft - useful for beginners' },
+  7: { name: 'HEADADJ', icon: RotateCw, get description() { return tr('parameters.MspConfigView.headAdjust'); }, color: 'bg-gray-500', beginner: 'Resets headfree reference direction' },
+  8: { name: 'CAMSTAB', icon: Camera, get description() { return tr('parameters.MspConfigView.cameraStabilization'); }, color: 'bg-indigo-500', beginner: 'Stabilizes camera servo output' },
+  10: { name: 'NAV RTH', icon: Home, get description() { return tr('parameters.MspConfigView.returnToHome'); }, color: 'bg-green-500', beginner: 'Return To Home - Aircraft will climb to safe altitude and fly back to launch point. Essential safety feature!' },
+  11: { name: 'NAV POSHOLD', icon: MapPin, get description() { return tr('parameters.MspConfigView.holdPosition'); }, color: 'bg-cyan-500', beginner: 'GPS position hold - Aircraft will stay in place. Great for aerial photography or when you need to stop.' },
+  12: { name: 'MANUAL', icon: Joystick, get description() { return tr('parameters.MspConfigView.directControl'); }, color: 'bg-rose-500', beginner: 'Direct servo/motor control without stabilization. For experienced pilots only!' },
+  13: { name: 'BEEPER', icon: Volume2, get description() { return tr('parameters.MspConfigView.findAircraft'); }, color: 'bg-yellow-500', beginner: 'Makes your aircraft beep - great for finding it in grass!' },
+  15: { name: 'LEDS OFF', icon: Lightbulb, get description() { return tr('parameters.MspConfigView.disableLeds'); }, color: 'bg-gray-500', beginner: 'Turns off LED strip' },
+  16: { name: 'LIGHTS', icon: Flashlight, get description() { return tr('parameters.MspConfigView.navigationLights'); }, color: 'bg-amber-500', beginner: 'Turns on navigation lights' },
+  19: { name: 'OSD OFF', icon: Monitor, get description() { return tr('parameters.MspConfigView.hideOsd'); }, color: 'bg-gray-500', beginner: 'Turns off on-screen display' },
+  20: { name: 'TELEMETRY', icon: Satellite, get description() { return tr('parameters.MspConfigView.telemetryOutput'); }, color: 'bg-blue-500', beginner: 'Enables telemetry transmission' },
+  21: { name: 'AUTO TUNE', icon: Settings2, get description() { return tr('parameters.MspConfigView.pidAutotune'); }, color: 'bg-violet-500', beginner: 'Automatically tunes PID values during flight' },
+  26: { name: 'BLACKBOX', icon: Package, get description() { return tr('parameters.MspConfigView.flightLogging'); }, color: 'bg-pink-500', beginner: 'Records flight data for tuning analysis' },
+  27: { name: 'FAILSAFE', icon: ShieldAlert, get description() { return tr('parameters.MspConfigView.emergency'); }, color: 'bg-orange-500', beginner: 'EMERGENCY MODE - Triggers failsafe behavior. Normally activated automatically when signal is lost.' },
+  28: { name: 'NAV WP', icon: Map, get description() { return tr('parameters.MspConfigView.waypointMission'); }, color: 'bg-indigo-500', beginner: 'Execute uploaded waypoint mission. Aircraft will fly to each waypoint automatically.' },
+  29: { name: 'AIRMODE', icon: Wind, get description() { return tr('parameters.MspConfigView.fullControlAtZeroThrottle'); }, color: 'bg-cyan-500', beginner: 'Keeps full stick authority even at zero throttle. Essential for freestyle tricks and flips.' },
+  30: { name: 'HOME RESET', icon: RotateCcw, get description() { return tr('parameters.MspConfigView.resetHomePosition'); }, color: 'bg-red-400', beginner: 'Sets current position as new home point. Use when you relocate during a session.' },
+  31: { name: 'GCS NAV', icon: Gamepad2, get description() { return tr('parameters.MspConfigView.groundControl'); }, color: 'bg-purple-500', beginner: 'Allow ground control station to send navigation commands (fly-to-here, etc).' },
+  34: { name: 'FLAPERON', icon: PlaneTakeoff, get description() { return tr('parameters.MspConfigView.flapsMode'); }, color: 'bg-amber-500', beginner: 'Activates flaperons for slower landing approach. Ailerons droop down to act as flaps.' },
+  35: { name: 'TURN ASSIST', icon: RotateCw, get description() { return tr('parameters.MspConfigView.coordinatedTurns'); }, color: 'bg-lime-500', beginner: 'Auto-coordinates rudder with ailerons for smooth turns. Great for fixed-wing beginners.' },
+  36: { name: 'NAV LAUNCH', icon: Rocket, get description() { return tr('parameters.MspConfigView.autoLaunch'); }, color: 'bg-orange-500', beginner: 'Automatic launch sequence for fixed-wing. Throw the plane and it will climb to safe altitude.', configureTab: 'auto-launch' },
+  37: { name: 'SERVO AUTOTRIM', icon: Scissors, get description() { return tr('parameters.MspConfigView.autoTrimServos'); }, color: 'bg-gray-500', beginner: 'Automatically adjusts servo trim during flight' },
+  45: { name: 'NAV CRUISE', icon: Plane, get description() { return tr('parameters.MspConfigView.cruiseControl'); }, color: 'bg-sky-500', beginner: 'Fixed-wing cruise mode - Maintains heading and altitude. Perfect for long-range flights.' },
+  46: { name: 'MC BRAKING', icon: OctagonX, get description() { return tr('parameters.MspConfigView.multirotorBraking'); }, color: 'bg-red-500', beginner: 'Aggressive braking when releasing sticks on multirotor' },
+  51: { name: 'PREARM', icon: KeyRound, get description() { return tr('parameters.MspConfigView.preArmCheck'); }, color: 'bg-yellow-600', beginner: 'Safety switch - must be enabled before arming. Prevents accidental arm.' },
+  52: { name: 'TURTLE', icon: Turtle, get description() { return tr('parameters.MspConfigView.flipOver'); }, color: 'bg-stone-500', beginner: 'Flip crashed aircraft back over using motor spin. For multirotors only.' },
+  53: { name: 'COURSE HOLD', icon: Compass, get description() { return tr('parameters.MspConfigView.holdCourse'); }, color: 'bg-violet-500', beginner: 'Maintains current heading while allowing altitude control. Good for flying in a straight line.' },
+  55: { name: 'WP PLANNER', icon: Waypoints, get description() { return tr('parameters.MspConfigView.missionPlanner'); }, color: 'bg-fuchsia-500', beginner: 'Enable in-flight waypoint planning via stick commands.' },
+  56: { name: 'SOARING', icon: CloudSun, get description() { return tr('parameters.MspConfigView.thermalSoaring'); }, color: 'bg-sky-400', beginner: 'Enables thermal detection and circling for gliders' },
 };
 
 
 // Betaflight Rate Types - different curve algorithms
 const RATE_TYPES = [
-  { value: 0, label: 'Betaflight', description: 'Classic exponential + super rate' },
-  { value: 1, label: 'Raceflight', description: 'Polynomial curves for racing' },
-  { value: 2, label: 'KISS', description: 'Linear rate response' },
-  { value: 3, label: 'Actual', description: 'Precise deg/s control (popular)' },
-  { value: 4, label: 'Quick', description: 'Rapid response curves' },
+  { value: 0, label: 'Betaflight', get description() { return tr('parameters.MspConfigView.classicExponentialSuperRate'); } },
+  { value: 1, get label() { return tr('parameters.MspConfigView.raceflight'); }, get description() { return tr('parameters.MspConfigView.polynomialCurvesForRacing'); } },
+  { value: 2, label: 'KISS', get description() { return tr('parameters.MspConfigView.linearRateResponse'); } },
+  { value: 3, get label() { return tr('parameters.MspConfigView.actual'); }, get description() { return tr('parameters.MspConfigView.preciseDegSControlPopular'); } },
+  { value: 4, get label() { return tr('parameters.MspConfigView.quick'); }, get description() { return tr('parameters.MspConfigView.rapidResponseCurves'); } },
 ];
 
 // Quick Preset Selector Component
@@ -372,7 +373,7 @@ function PresetSelector<T extends Record<string, { name: string; description: st
           </div>
           <div>
             <p className="text-indigo-300 font-medium">{label}</p>
-            <p className="text-xs text-content-secondary">Click to apply a tuning style</p>
+            <p className="text-xs text-content-secondary">{tr('parameters.MspConfigView.clickToApplyATuningStyle')}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -493,9 +494,9 @@ function calculateMaxRate(rcRate: number, superRate: number, ratesType: number):
 // Combined rates preview graph - centered at 0 like Betaflight Configurator
 function CombinedRatesCurve({ rcTuning }: { rcTuning: MSPRcTuning }) {
   const axes = useMemo(() => [
-    { label: 'Roll', color: '#3B82F6', rcRate: rcTuning.rcRate, superRate: rcTuning.rollRate, expo: rcTuning.rcExpo },
-    { label: 'Pitch', color: '#10B981', rcRate: rcTuning.rcPitchRate, superRate: rcTuning.pitchRate, expo: rcTuning.rcPitchExpo },
-    { label: 'Yaw', color: '#F97316', rcRate: rcTuning.rcYawRate, superRate: rcTuning.yawRate, expo: rcTuning.rcYawExpo },
+    { label: tr('parameters.MspConfigView.roll'), color: '#3B82F6', rcRate: rcTuning.rcRate, superRate: rcTuning.rollRate, expo: rcTuning.rcExpo },
+    { label: tr('parameters.MspConfigView.pitch'), color: '#10B981', rcRate: rcTuning.rcPitchRate, superRate: rcTuning.pitchRate, expo: rcTuning.rcPitchExpo },
+    { label: tr('parameters.MspConfigView.yaw'), color: '#F97316', rcRate: rcTuning.rcYawRate, superRate: rcTuning.yawRate, expo: rcTuning.rcYawExpo },
   ], [rcTuning]);
 
   // Graph layout constants
@@ -546,7 +547,7 @@ function CombinedRatesCurve({ rcTuning }: { rcTuning: MSPRcTuning }) {
   return (
     <div className="bg-surface rounded-xl border-subtle p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-content-secondary">Rates Preview</h3>
+        <h3 className="text-sm font-medium text-content-secondary">{tr('parameters.MspConfigView.ratesPreview')}</h3>
         <div className="flex items-center gap-4">
           {curves.map(c => (
             <div key={c.label} className="flex items-center gap-1.5">
@@ -584,7 +585,7 @@ function CombinedRatesCurve({ rcTuning }: { rcTuning: MSPRcTuning }) {
         })}
 
         {/* Axis labels */}
-        <text x={gLeft - 35} y={gCy} fill="#6B7280" fontSize="10" textAnchor="middle" transform={`rotate(-90, ${gLeft - 35}, ${gCy})`}>deg/s</text>
+        <text x={gLeft - 35} y={gCy} fill="#6B7280" fontSize="10" textAnchor="middle" transform={`rotate(-90, ${gLeft - 35}, ${gCy})`}>{tr('parameters.MspConfigView.degS')}</text>
 
         {/* Curves */}
         {curves.map(c => (
@@ -642,8 +643,8 @@ function RateCurve({
   return (
     <div className="bg-surface-raised rounded-lg p-3 border-subtle">
       <div className="flex items-center justify-between text-xs text-content-secondary mb-2">
-        <span>Response Curve</span>
-        <span className="text-content-secondary">Max: <span style={{ color }}>{maxRate}°/s</span></span>
+        <span>{tr('parameters.MspConfigView.responseCurve')}</span>
+        <span className="text-content-secondary">{tr('parameters.MspConfigView.max')} <span style={{ color }}>{maxRate}°/s</span></span>
       </div>
       <svg viewBox="0 0 100 100" className="w-full h-24">
         {/* Grid */}
@@ -652,8 +653,8 @@ function RateCurve({
         <line x1="5" y1="5" x2="5" y2="95" stroke="#374151" strokeWidth="0.5" />
         <line x1="50" y1="5" x2="50" y2="95" stroke="#374151" strokeWidth="0.5" strokeDasharray="2,2" />
         {/* Labels */}
-        <text x="50" y="99" fill="#6B7280" fontSize="4" textAnchor="middle">Stick</text>
-        <text x="2" y="50" fill="#6B7280" fontSize="4" textAnchor="middle" transform="rotate(-90, 2, 50)">Rate</text>
+        <text x="50" y="99" fill="#6B7280" fontSize="4" textAnchor="middle">{tr('parameters.MspConfigView.stick')}</text>
+        <text x="2" y="50" fill="#6B7280" fontSize="4" textAnchor="middle" transform="rotate(-90, 2, 50)">{tr('parameters.MspConfigView.rate')}</text>
         {/* Curve */}
         <polyline fill="none" stroke={color} strokeWidth="2.5" points={points} strokeLinecap="round" />
       </svg>
@@ -753,8 +754,8 @@ function RatesTab({
             <Info className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <p className="text-blue-400 font-medium">What are rates?</p>
-            <p className="text-sm text-content-secondary">Rates control how fast your quad spins when you move the sticks. Higher = faster rotation.</p>
+            <p className="text-blue-400 font-medium">{tr('parameters.MspConfigView.whatAreRates')}</p>
+            <p className="text-sm text-content-secondary">{tr('parameters.MspConfigView.ratesControlHowFastYourQuad')}</p>
           </div>
         </div>
       )}
@@ -763,7 +764,7 @@ function RatesTab({
       <PresetSelector
         presets={RATE_PRESETS}
         onApply={(key) => applyPreset(key as keyof typeof RATE_PRESETS)}
-        label="Quick Presets"
+        label={tr('parameters.MspConfigView.quickPresets')}
       />
 
       {/* Rate Type Selector (Betaflight only) */}
@@ -775,9 +776,9 @@ function RatesTab({
                 <Gauge className="w-5 h-5 text-orange-400" />
               </div>
               <div>
-                <p className="text-orange-300 font-medium">Rate Profile Type</p>
+                <p className="text-orange-300 font-medium">{tr('parameters.MspConfigView.rateProfileType')}</p>
                 <p className="text-xs text-content-secondary">
-                  {RATE_TYPES.find(t => t.value === rcTuning.ratesType)?.description || 'Select curve algorithm'}
+                  {RATE_TYPES.find(t => t.value === rcTuning.ratesType)?.description || tr('parameters.MspConfigView.selectCurveAlgorithm')}
                 </p>
               </div>
             </div>
@@ -802,14 +803,14 @@ function RatesTab({
       <div className="bg-surface rounded-xl border-subtle p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-medium text-content-secondary">My Profiles</h4>
+            <h4 className="text-sm font-medium text-content-secondary">{tr('parameters.MspConfigView.myProfiles')}</h4>
             <button
               onClick={resetToDefaults}
               className="px-2 py-1 text-xs rounded bg-surface-raised hover:bg-surface-raised text-content-secondary hover:text-content transition-colors flex items-center gap-1"
-              title="Reset to factory defaults"
+              title={tr('parameters.MspConfigView.resetToFactoryDefaults')}
             >
               <RotateCcw className="w-3 h-3" />
-              Reset
+              {tr('parameters.MspConfigView.reset')}
             </button>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
@@ -835,7 +836,7 @@ function RatesTab({
                   type="text"
                   value={profileName}
                   onChange={(e) => setProfileName(e.target.value)}
-                  placeholder="Name..."
+                  placeholder={tr('parameters.MspConfigView.name')}
                   className="w-24 px-2 py-1.5 bg-transparent text-content text-sm focus:outline-none"
                   autoFocus
                   onKeyDown={(e) => {
@@ -861,9 +862,9 @@ function RatesTab({
               <button
                 onClick={() => setShowSaveDialog(true)}
                 className="px-3 py-1.5 text-sm rounded-lg bg-surface-raised hover:bg-surface-raised text-content-secondary hover:text-content transition-colors flex items-center gap-1"
-                title="Save current settings as a profile"
+                title={tr('parameters.MspConfigView.saveCurrentSettingsAsAProfile')}
               >
-                <span>+</span> Save
+                <span>+</span> {tr('parameters.MspConfigView.save')}
               </button>
             )}
           </div>
@@ -886,28 +887,28 @@ function RatesTab({
               {/* Only show for Betaflight which supports configurable rcRate */}
               {!isInav && (
                 <DraggableSlider
-                  label="Center Rate"
+                  label={tr('parameters.MspConfigView.centerRate')}
                   value={rcTuning[rcRate] as number}
                   onChange={(v) => updateRcTuning(rcRate, v)}
                   color={color}
-                  hint="Sensitivity near center"
+                  hint={tr('parameters.MspConfigView.sensitivityNearCenter')}
                 />
               )}
               <DraggableSlider
-                label="Max Rate"
+                label={tr('parameters.MspConfigView.maxRate')}
                 value={rcTuning[superRate] as number}
                 onChange={(v) => updateRcTuning(superRate, v)}
                 color={color}
-                hint="Full stick speed"
+                hint={tr('parameters.MspConfigView.fullStickSpeed')}
                 max={isLegacyInav ? 1000 : 200}
               />
               <DraggableSlider
-                label={isInav && axis === 'Pitch' ? 'Expo (linked to Roll)' : 'Expo'}
+                label={isInav && axis === 'Pitch' ? tr('parameters.MspConfigView.expoLinkedToRoll') : tr('parameters.MspConfigView.expo')}
                 value={rcTuning[expo] as number}
                 onChange={(v) => updateRcTuning(expo, v)}
                 max={100}
                 color={color}
-                hint={isInav && axis === 'Pitch' ? 'Shared with Roll in iNav' : 'Curve softness'}
+                hint={isInav && axis === 'Pitch' ? tr('parameters.MspConfigView.sharedWithRollInInav') : tr('parameters.MspConfigView.curveSoftness')}
               />
             </div>
             <div className="mt-4">
@@ -1007,21 +1008,21 @@ function PidTuningTab({
       <PresetSelector
         presets={PID_PRESETS}
         onApply={(key) => applyPreset(key as keyof typeof PID_PRESETS)}
-        label="Quick Presets"
+        label={tr('parameters.MspConfigView.quickPresets')}
       />
 
       {/* My Custom Profiles */}
       <div className="bg-surface rounded-xl border-subtle p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-medium text-content-secondary">My Profiles</h4>
+            <h4 className="text-sm font-medium text-content-secondary">{tr('parameters.MspConfigView.myProfiles')}</h4>
             <button
               onClick={resetToDefaults}
               className="px-2 py-1 text-xs rounded bg-surface-raised hover:bg-surface-raised text-content-secondary hover:text-content transition-colors flex items-center gap-1"
-              title="Reset to factory defaults"
+              title={tr('parameters.MspConfigView.resetToFactoryDefaults')}
             >
               <RotateCcw className="w-3 h-3" />
-              Reset
+              {tr('parameters.MspConfigView.reset')}
             </button>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
@@ -1047,7 +1048,7 @@ function PidTuningTab({
                   type="text"
                   value={profileName}
                   onChange={(e) => setProfileName(e.target.value)}
-                  placeholder="Name..."
+                  placeholder={tr('parameters.MspConfigView.name')}
                   className="w-24 px-2 py-1.5 bg-transparent text-content text-sm focus:outline-none"
                   autoFocus
                   onKeyDown={(e) => {
@@ -1073,9 +1074,9 @@ function PidTuningTab({
               <button
                 onClick={() => setShowSaveDialog(true)}
                 className="px-3 py-1.5 text-sm rounded-lg bg-surface-raised hover:bg-surface-raised text-content-secondary hover:text-content transition-colors flex items-center gap-1"
-                title="Save current settings as a profile"
+                title={tr('parameters.MspConfigView.saveCurrentSettingsAsAProfile')}
               >
-                <span>+</span> Save
+                <span>+</span> {tr('parameters.MspConfigView.save')}
               </button>
             )}
           </div>
@@ -1091,14 +1092,14 @@ function PidTuningTab({
               <MoveHorizontal className="w-5 h-5 text-blue-400" />
             </div>
             <div>
-              <h3 className="text-lg font-medium text-content">Roll</h3>
-              <p className="text-xs text-content-secondary">Left/right tilt</p>
+              <h3 className="text-lg font-medium text-content">{tr('parameters.MspConfigView.roll')}</h3>
+              <p className="text-xs text-content-secondary">{tr('parameters.MspConfigView.leftRightTilt')}</p>
             </div>
           </div>
           <div className="space-y-5">
-            <DraggableSlider label="P - Response" value={pid.roll.p} onChange={(v) => updatePid('roll', 'p', v)} color="#3B82F6" hint="Higher = snappier" />
-            <DraggableSlider label="I - Stability" value={pid.roll.i} onChange={(v) => updatePid('roll', 'i', v)} color="#10B981" hint="Higher = more stable" />
-            <DraggableSlider label="D - Smoothness" value={pid.roll.d} onChange={(v) => updatePid('roll', 'd', v)} color="#8B5CF6" hint="Higher = smoother" />
+            <DraggableSlider label={tr('parameters.MspConfigView.pResponse')} value={pid.roll.p} onChange={(v) => updatePid('roll', 'p', v)} color="#3B82F6" hint={tr('parameters.MspConfigView.higherSnappier')} />
+            <DraggableSlider label={tr('parameters.MspConfigView.iStability')} value={pid.roll.i} onChange={(v) => updatePid('roll', 'i', v)} color="#10B981" hint={tr('parameters.MspConfigView.higherMoreStable')} />
+            <DraggableSlider label={tr('parameters.MspConfigView.dSmoothness')} value={pid.roll.d} onChange={(v) => updatePid('roll', 'd', v)} color="#8B5CF6" hint={tr('parameters.MspConfigView.higherSmoother')} />
           </div>
         </div>
 
@@ -1109,14 +1110,14 @@ function PidTuningTab({
               <MoveVertical className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
-              <h3 className="text-lg font-medium text-content">Pitch</h3>
-              <p className="text-xs text-content-secondary">Forward/back tilt</p>
+              <h3 className="text-lg font-medium text-content">{tr('parameters.MspConfigView.pitch')}</h3>
+              <p className="text-xs text-content-secondary">{tr('parameters.MspConfigView.forwardBackTilt')}</p>
             </div>
           </div>
           <div className="space-y-5">
-            <DraggableSlider label="P - Response" value={pid.pitch.p} onChange={(v) => updatePid('pitch', 'p', v)} color="#3B82F6" hint="Higher = snappier" />
-            <DraggableSlider label="I - Stability" value={pid.pitch.i} onChange={(v) => updatePid('pitch', 'i', v)} color="#10B981" hint="Higher = more stable" />
-            <DraggableSlider label="D - Smoothness" value={pid.pitch.d} onChange={(v) => updatePid('pitch', 'd', v)} color="#8B5CF6" hint="Higher = smoother" />
+            <DraggableSlider label={tr('parameters.MspConfigView.pResponse')} value={pid.pitch.p} onChange={(v) => updatePid('pitch', 'p', v)} color="#3B82F6" hint={tr('parameters.MspConfigView.higherSnappier')} />
+            <DraggableSlider label={tr('parameters.MspConfigView.iStability')} value={pid.pitch.i} onChange={(v) => updatePid('pitch', 'i', v)} color="#10B981" hint={tr('parameters.MspConfigView.higherMoreStable')} />
+            <DraggableSlider label={tr('parameters.MspConfigView.dSmoothness')} value={pid.pitch.d} onChange={(v) => updatePid('pitch', 'd', v)} color="#8B5CF6" hint={tr('parameters.MspConfigView.higherSmoother')} />
           </div>
         </div>
 
@@ -1127,14 +1128,14 @@ function PidTuningTab({
               <RefreshCw className="w-5 h-5 text-orange-400" />
             </div>
             <div>
-              <h3 className="text-lg font-medium text-content">Yaw</h3>
-              <p className="text-xs text-content-secondary">Rotation</p>
+              <h3 className="text-lg font-medium text-content">{tr('parameters.MspConfigView.yaw')}</h3>
+              <p className="text-xs text-content-secondary">{tr('parameters.MspConfigView.rotation')}</p>
             </div>
           </div>
           <div className="space-y-5">
-            <DraggableSlider label="P - Response" value={pid.yaw.p} onChange={(v) => updatePid('yaw', 'p', v)} color="#3B82F6" hint="Higher = snappier" />
-            <DraggableSlider label="I - Stability" value={pid.yaw.i} onChange={(v) => updatePid('yaw', 'i', v)} color="#10B981" hint="Higher = more stable" />
-            <DraggableSlider label="D - Smoothness" value={pid.yaw.d} onChange={(v) => updatePid('yaw', 'd', v)} color="#8B5CF6" hint="Higher = smoother" />
+            <DraggableSlider label={tr('parameters.MspConfigView.pResponse')} value={pid.yaw.p} onChange={(v) => updatePid('yaw', 'p', v)} color="#3B82F6" hint={tr('parameters.MspConfigView.higherSnappier')} />
+            <DraggableSlider label={tr('parameters.MspConfigView.iStability')} value={pid.yaw.i} onChange={(v) => updatePid('yaw', 'i', v)} color="#10B981" hint={tr('parameters.MspConfigView.higherMoreStable')} />
+            <DraggableSlider label={tr('parameters.MspConfigView.dSmoothness')} value={pid.yaw.d} onChange={(v) => updatePid('yaw', 'd', v)} color="#8B5CF6" hint={tr('parameters.MspConfigView.higherSmoother')} />
           </div>
         </div>
       </div>
@@ -1143,20 +1144,20 @@ function PidTuningTab({
       {showExplanationCards && (
         <div className="bg-surface rounded-xl border-subtle p-5">
           <h4 className="font-medium text-content mb-3 flex items-center gap-2">
-            <Lightbulb className="w-4 h-4 text-yellow-400" /> What do these numbers mean?
+            <Lightbulb className="w-4 h-4 text-yellow-400" /> {tr('parameters.MspConfigView.whatDoTheseNumbersMean')}
           </h4>
           <div className="grid grid-cols-3 gap-6 text-sm">
             <div>
-              <span className="text-blue-400 font-medium">P (Response)</span>
-              <p className="text-content-secondary mt-1">How quickly your quad reacts. Too high = oscillation/vibration. Too low = mushy feeling.</p>
+              <span className="text-blue-400 font-medium">{tr('parameters.MspConfigView.pResponse2')}</span>
+              <p className="text-content-secondary mt-1">{tr('parameters.MspConfigView.howQuicklyYourQuadReactsToo')}</p>
             </div>
             <div>
-              <span className="text-emerald-400 font-medium">I (Stability)</span>
-              <p className="text-content-secondary mt-1">Keeps your quad on target. Helps fight wind and drift. Too high = slow wobbles.</p>
+              <span className="text-emerald-400 font-medium">{tr('parameters.MspConfigView.iStability2')}</span>
+              <p className="text-content-secondary mt-1">{tr('parameters.MspConfigView.keepsYourQuadOnTargetHelps')}</p>
             </div>
             <div>
-              <span className="text-purple-400 font-medium">D (Smoothness)</span>
-              <p className="text-content-secondary mt-1">Dampens overshooting. Too high = hot motors and noise. Too low = bouncy stops.</p>
+              <span className="text-purple-400 font-medium">{tr('parameters.MspConfigView.dSmoothness2')}</span>
+              <p className="text-content-secondary mt-1">{tr('parameters.MspConfigView.dampensOvershootingTooHighHotMotors')}</p>
             </div>
           </div>
         </div>
@@ -1179,7 +1180,7 @@ function ModeChannelIndicator({
   const info = MODE_INFO[mode.boxId] || {
     name: `Mode ${mode.boxId}`,
     icon: HelpCircle,
-    description: 'Unknown',
+    description: tr('parameters.MspConfigView.unknown'),
     color: 'bg-gray-500',
     beginner: 'Unknown mode',
   };
@@ -1242,7 +1243,7 @@ function ModeChannelIndicator({
 
       {/* Current value */}
       <div className="mt-2 text-center text-xs text-content-secondary">
-        Current: <span className={isActive ? 'text-emerald-400' : 'text-yellow-400'}>{rcValue}</span>
+        {tr('parameters.MspConfigView.current')} <span className={isActive ? 'text-emerald-400' : 'text-yellow-400'}>{rcValue}</span>
       </div>
     </div>
   );
@@ -1296,7 +1297,7 @@ function SensorCard({
           </div>
           <div className="text-xs text-content-secondary">
             {!hardwareDetected && featureEnabled
-              ? 'Feature enabled but hardware not detected'
+              ? tr('parameters.MspConfigView.featureEnabledButHardwareNotDetected')
               : description}
           </div>
         </div>
@@ -1315,7 +1316,7 @@ function SensorCard({
             className={`relative w-11 h-6 rounded-full transition-colors ${
               toggleSaving ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
             } ${isEnabled ? 'bg-emerald-500' : 'bg-gray-600'}`}
-            title={isEnabled ? `Disable ${name} feature` : `Enable ${name} feature`}
+            title={isEnabled ? tr('parameters.MspConfigView.disableFeature', { name }) : tr('parameters.MspConfigView.enableFeature', { name })}
           >
             <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white border border-strong shadow-sm transition-transform ${
               isEnabled ? 'translate-x-5' : 'translate-x-0'
@@ -1401,20 +1402,20 @@ function MspSensorsTabContent({
           name="Gyroscope"
           available={sensors.gyro}
           Icon={RefreshCw}
-          description="Measures rotation speed - essential for flight"
+          description={tr('parameters.MspConfigView.measuresRotationSpeedEssentialForFlight')}
         />
         <SensorCard
           name="Accelerometer"
           available={sensors.acc}
           Icon={Ruler}
-          description="Measures tilt angle - needed for self-level"
+          description={tr('parameters.MspConfigView.measuresTiltAngleNeededForSelf')}
           liveValue={`${(attitude?.roll ?? 0).toFixed(0)}° / ${(attitude?.pitch ?? 0).toFixed(0)}°`}
         />
         <SensorCard
           name="GPS"
           available={sensors.gps}
           Icon={Satellite}
-          description={sensors.gps ? `${gps?.satellites || 0} satellites locked` : 'Feature disabled or not connected'}
+          description={sensors.gps ? `${gps?.satellites || 0} satellites locked` : tr('parameters.MspConfigView.featureDisabledOrNotConnected')}
           liveValue={sensors.gps ? `${gps?.satellites || 0} sats` : undefined}
           canToggle={true}
           isEnabled={(features & (1 << FEATURE_GPS)) !== 0}
@@ -1425,7 +1426,7 @@ function MspSensorsTabContent({
           name="Barometer"
           available={sensors.baro}
           Icon={Gauge}
-          description="Measures altitude via air pressure"
+          description={tr('parameters.MspConfigView.measuresAltitudeViaAirPressure')}
           liveValue={sensors.baro ? (vfrHud?.alt ?? 0) : undefined}
           unit="m"
           canToggle={true}
@@ -1437,7 +1438,7 @@ function MspSensorsTabContent({
           name="Magnetometer"
           available={sensors.mag}
           Icon={Compass}
-          description="Measures heading - needed for GPS navigation"
+          description={tr('parameters.MspConfigView.measuresHeadingNeededForGpsNavigation')}
           liveValue={sensors.mag ? `${(attitude?.yaw ?? 0).toFixed(0)}°` : undefined}
           canToggle={true}
           isEnabled={sensors.mag}
@@ -1448,7 +1449,7 @@ function MspSensorsTabContent({
           name="Rangefinder"
           available={sensors.sonar}
           Icon={Ruler}
-          description="Measures distance to ground - for precise landings"
+          description={tr('parameters.MspConfigView.measuresDistanceToGroundForPrecise')}
           canToggle={true}
           isEnabled={(features & (1 << FEATURE_SONAR)) !== 0}
           onToggle={(enabled) => onFeatureToggle(FEATURE_SONAR, enabled)}
@@ -1458,27 +1459,27 @@ function MspSensorsTabContent({
 
       {/* Live Telemetry Section */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium text-content-secondary uppercase tracking-wider">Live Telemetry</h3>
+        <h3 className="text-sm font-medium text-content-secondary uppercase tracking-wider">{tr('parameters.MspConfigView.liveTelemetry')}</h3>
         <div className="grid grid-cols-2 gap-4">
           {/* Attitude Card */}
           <TelemetryCard
-            title="Attitude"
+            title={tr('parameters.MspConfigView.attitude')}
             icon={Target}
             values={[
-              { label: 'Roll', value: attitude?.roll ?? 0, unit: '°' },
-              { label: 'Pitch', value: attitude?.pitch ?? 0, unit: '°' },
-              { label: 'Yaw', value: attitude?.yaw ?? 0, unit: '°' },
+              { label: tr('parameters.MspConfigView.roll'), value: attitude?.roll ?? 0, unit: '°' },
+              { label: tr('parameters.MspConfigView.pitch'), value: attitude?.pitch ?? 0, unit: '°' },
+              { label: tr('parameters.MspConfigView.yaw'), value: attitude?.yaw ?? 0, unit: '°' },
             ]}
           />
 
           {/* Altitude Card */}
           <TelemetryCard
-            title="Altitude"
+            title={tr('parameters.MspConfigView.altitude')}
             icon={Ruler}
             values={[
-              { label: 'Alt', value: vfrHud?.alt ?? 0, unit: 'm' },
-              { label: 'Vario', value: vfrHud?.climb ?? 0, unit: 'm/s' },
-              { label: 'Voltage', value: battery?.voltage ?? 0, unit: 'V' },
+              { label: tr('parameters.MspConfigView.alt'), value: vfrHud?.alt ?? 0, unit: 'm' },
+              { label: tr('parameters.MspConfigView.vario'), value: vfrHud?.climb ?? 0, unit: 'm/s' },
+              { label: tr('parameters.MspConfigView.voltage'), value: battery?.voltage ?? 0, unit: 'V' },
             ]}
           />
         </div>
@@ -1488,34 +1489,34 @@ function MspSensorsTabContent({
           <div className="p-4 rounded-xl border bg-blue-500/10 border-blue-500/30">
             <div className="flex items-center gap-2 mb-3">
               <Satellite className="w-5 h-5 text-blue-400" />
-              <span className="font-medium text-blue-300">GPS Position</span>
+              <span className="font-medium text-blue-300">{tr('parameters.MspConfigView.gpsPosition')}</span>
             </div>
             <div className="grid grid-cols-4 gap-3">
               <div className="text-center">
                 <div className="text-lg font-mono text-cyan-400">
                   {(gps?.lat || 0).toFixed(6)}
                 </div>
-                <div className="text-xs text-content-secondary">Latitude</div>
+                <div className="text-xs text-content-secondary">{tr('parameters.MspConfigView.latitude')}</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-mono text-cyan-400">
                   {(gps?.lon || 0).toFixed(6)}
                 </div>
-                <div className="text-xs text-content-secondary">Longitude</div>
+                <div className="text-xs text-content-secondary">{tr('parameters.MspConfigView.longitude')}</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-mono text-cyan-400">
                   {(gps?.alt || 0).toFixed(1)}
                   <span className="text-xs text-content-secondary ml-1">m</span>
                 </div>
-                <div className="text-xs text-content-secondary">GPS Alt</div>
+                <div className="text-xs text-content-secondary">{tr('parameters.MspConfigView.gpsAlt')}</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-mono text-cyan-400">
                   {(vfrHud?.groundspeed || 0).toFixed(1)}
                   <span className="text-xs text-content-secondary ml-1">m/s</span>
                 </div>
-                <div className="text-xs text-content-secondary">Speed</div>
+                <div className="text-xs text-content-secondary">{tr('parameters.MspConfigView.speed')}</div>
               </div>
             </div>
           </div>
@@ -1527,9 +1528,9 @@ function MspSensorsTabContent({
           <div className="flex items-center gap-3">
             <AlertTriangle className="w-6 h-6 text-yellow-400" />
             <div>
-              <h4 className="font-medium text-yellow-400">GPS Not Connected</h4>
+              <h4 className="font-medium text-yellow-400">{tr('parameters.MspConfigView.gpsNotConnected')}</h4>
               <p className="text-sm text-content-secondary">
-                To use GPS Rescue (automatic return home), connect a GPS module to your flight controller.
+                {tr('parameters.MspConfigView.toUseGpsRescueAutomaticReturn')}
               </p>
             </div>
           </div>
@@ -1541,9 +1542,9 @@ function MspSensorsTabContent({
           <div className="flex items-center gap-3">
             <Map className="w-6 h-6 text-green-400" />
             <div>
-              <h4 className="font-medium text-green-400">iNav - Mission Planning Available!</h4>
+              <h4 className="font-medium text-green-400">{tr('parameters.MspConfigView.inavMissionPlanningAvailable')}</h4>
               <p className="text-sm text-content-secondary">
-                Your board runs iNav which supports autonomous waypoint missions. Check Mission Planning in the navigation.
+                {tr('parameters.MspConfigView.yourBoardRunsInavWhichSupports')}
               </p>
             </div>
           </div>
@@ -1553,9 +1554,9 @@ function MspSensorsTabContent({
           <div className="flex items-center gap-3">
             <Info className="w-6 h-6 text-content-secondary" />
             <div>
-              <h4 className="font-medium text-content">Betaflight - FPV Racing & Freestyle</h4>
+              <h4 className="font-medium text-content">{tr('parameters.MspConfigView.betaflightFpvRacingFreestyle')}</h4>
               <p className="text-sm text-content-secondary">
-                Betaflight is optimized for manual flight. For autonomous missions and GPS navigation, consider flashing iNav firmware.
+                {tr('parameters.MspConfigView.betaflightIsOptimizedForManualFlight')}
               </p>
             </div>
           </div>
@@ -1620,7 +1621,7 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          <span className="font-medium">Modes saved to flight controller!</span>
+          <span className="font-medium">{tr('parameters.MspConfigView.modesSavedToFlightController')}</span>
         </div>
       )}
 
@@ -1631,10 +1632,10 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
             <Radio className="w-6 h-6 text-purple-400" />
           </div>
           <div>
-            <p className="text-purple-300 font-medium">Flight Modes</p>
+            <p className="text-purple-300 font-medium">{tr('parameters.MspConfigView.flightModes')}</p>
             {showSectionDescriptions && (
               <p className="text-sm text-purple-200/60">
-                Configure how your {connectionState.vehicleType?.toLowerCase() || 'aircraft'} responds to switch positions on your transmitter.
+                {tr('parameters.MspConfigView.configureHowYour')} {connectionState.vehicleType?.toLowerCase() || 'aircraft'} {tr('parameters.MspConfigView.respondsToSwitchPositionsOnYour')}
               </p>
             )}
           </div>
@@ -1651,7 +1652,7 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                   : 'text-content-secondary hover:text-content'
               }`}
             >
-              Simple
+              {tr('parameters.MspConfigView.simple')}
             </button>
             <button
               onClick={() => setViewMode('advanced')}
@@ -1661,7 +1662,7 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                   : 'text-content-secondary hover:text-content'
               }`}
             >
-              Advanced
+              {tr('parameters.MspConfigView.advanced')}
             </button>
           </div>
         </div>
@@ -1674,7 +1675,7 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
           {isLoading ? (
             <div className="text-center py-8">
               <div className="w-8 h-8 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto" />
-              <p className="text-sm text-content-secondary mt-2">Loading modes from flight controller...</p>
+              <p className="text-sm text-content-secondary mt-2">{tr('parameters.MspConfigView.loadingModesFromFlightController')}</p>
             </div>
           ) : originalModes.length === 0 ? (
             /* No modes configured - show wizard prompt */
@@ -1682,17 +1683,16 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
               <div className="w-16 h-16 rounded-2xl bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
                 <Radio className="w-8 h-8 text-purple-400" />
               </div>
-              <h3 className="text-lg font-medium text-content mb-2">No Modes Configured</h3>
+              <h3 className="text-lg font-medium text-content mb-2">{tr('parameters.MspConfigView.noModesConfigured')}</h3>
               <p className="text-sm text-content-secondary max-w-md mx-auto mb-6">
-                Your flight controller doesn't have any modes set up yet.
-                Use the wizard to configure recommended modes for your flying style.
+                {tr('parameters.MspConfigView.yourFlightControllerDoesnTHave')}
               </p>
               <button
                 onClick={openWizard}
                 className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-colors flex items-center gap-2 mx-auto"
               >
                 <Wand2 className="w-4 h-4" />
-                Start Setup Wizard
+                {tr('parameters.MspConfigView.startSetupWizard')}
               </button>
             </div>
           ) : (
@@ -1703,8 +1703,7 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                 <div className="flex items-start gap-3 p-3 bg-blue-500/10 border-blue-500/20 rounded-lg">
                   <HelpCircle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                   <p className="text-sm text-blue-200/80">
-                    <strong>How this works:</strong> Each mode is triggered by a switch on your transmitter.
-                    Move your switches to see which modes activate. The bar shows where your switch needs to be.
+                    <strong>{tr('parameters.MspConfigView.howThisWorks')}</strong> {tr('parameters.MspConfigView.eachModeIsTriggeredByA')}
                   </p>
                 </div>
               )}
@@ -1766,7 +1765,7 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                           <div>
                             <div className="font-medium text-content">{info.name}</div>
                             <div className="text-xs text-content-secondary">
-                              {modeInfo?.beginner || modeInfo?.description || 'Flight mode'}
+                              {modeInfo?.beginner || modeInfo?.description || tr('parameters.MspConfigView.flightMode')}
                             </div>
                           </div>
                         </div>
@@ -1776,10 +1775,10 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                             <button
                               onClick={() => onNavigateToTab(modeInfo.configureTab!)}
                               className="px-2 py-1 text-xs bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 rounded-lg transition-colors flex items-center gap-1"
-                              title={`Configure ${info.name} settings`}
+                              title={tr('parameters.MspConfigView.configureSettings', { name: info.name })}
                             >
                               <Settings2 className="w-3 h-3" />
-                              Configure
+                              {tr('parameters.MspConfigView.configure')}
                             </button>
                           )}
                           {isActive ? (
@@ -1799,7 +1798,7 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                         <div className="flex items-center justify-between text-xs text-content-secondary">
                           <span>{switchName}</span>
                           <span className={isActive ? 'text-green-400' : 'text-content-secondary'}>
-                            Position: {rcValue < 1300 ? 'Low' : rcValue < 1700 ? 'Mid' : 'High'}
+                            {tr('parameters.MspConfigView.position')} {rcValue < 1300 ? tr('parameters.MspConfigView.low') : rcValue < 1700 ? tr('parameters.MspConfigView.mid') : tr('parameters.MspConfigView.high')}
                           </span>
                         </div>
                         <div className="relative h-4 bg-surface-inset rounded-full overflow-hidden">
@@ -1820,13 +1819,13 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                           />
                           {/* Low/Mid/High labels */}
                           <div className="absolute inset-0 flex items-center justify-between px-2 text-[10px] text-content-secondary pointer-events-none">
-                            <span>Low</span>
-                            <span>Mid</span>
-                            <span>High</span>
+                            <span>{tr('parameters.MspConfigView.low')}</span>
+                            <span>{tr('parameters.MspConfigView.mid')}</span>
+                            <span>{tr('parameters.MspConfigView.high')}</span>
                           </div>
                         </div>
                         <div className="text-[10px] text-content-tertiary text-center">
-                          Activates when {switchName} is in {positionDescription}
+                          {tr('parameters.MspConfigView.activatesWhen')} {switchName} {tr('parameters.MspConfigView.isIn')} {positionDescription}
                         </div>
                       </div>
                     </div>
@@ -1841,7 +1840,7 @@ function ModesTabContent({ onNavigateToTab }: { onNavigateToTab?: (tabId: string
                   className="px-4 py-2 bg-surface-raised hover:bg-surface-raised text-content rounded-lg text-sm transition-colors flex items-center gap-2"
                 >
                   <Wand2 className="w-4 h-4" />
-                  Reconfigure with Wizard
+                  {tr('parameters.MspConfigView.reconfigureWithWizard')}
                 </button>
               </div>
             </div>
@@ -1924,10 +1923,10 @@ export function MspConfigView() {
 
   // Platform options for iNav
   const PLATFORM_OPTIONS = [
-    { value: 0, label: 'Multirotor' },
-    { value: 1, label: 'Airplane' },
-    { value: 2, label: 'Helicopter' },
-    { value: 3, label: 'Tricopter' },
+    { value: 0, label: tr('parameters.MspConfigView.multirotor') },
+    { value: 1, label: tr('parameters.MspConfigView.airplane') },
+    { value: 2, label: tr('parameters.MspConfigView.helicopter') },
+    { value: 3, label: tr('parameters.MspConfigView.tricopter') },
   ];
 
   // Handle platform change with auto-reconnect
@@ -1969,7 +1968,7 @@ export function MspConfigView() {
     } catch (err) {
       console.error('Platform change error:', err);
       setPlatformChangeState('error');
-      setPlatformChangeError(err instanceof Error ? err.message : 'Unknown error');
+      setPlatformChangeError(err instanceof Error ? err.message : tr('parameters.MspConfigView.unknownError'));
     }
   };
 
@@ -2035,7 +2034,7 @@ export function MspConfigView() {
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-      setError(`Hardware toggle error: ${errorMsg}`);
+      setError(tr('parameters.MspConfigView.hardwareToggleError', { errorMsg }));
       console.error('[UI] Hardware sensor toggle error:', err);
     } finally {
       setFeatureSaving(false);
@@ -2059,7 +2058,7 @@ export function MspConfigView() {
           setFeatures(reloaded);
           console.log('[UI] Reloaded features:', reloaded.toString(2).padStart(32, '0'));
         } else {
-          setError('Failed to load features - cannot toggle');
+          setError(tr('parameters.MspConfigView.failedToLoadFeaturesCannotToggle'));
           return;
         }
       }
@@ -2079,12 +2078,12 @@ export function MspConfigView() {
         await window.electronAPI?.mspSaveEeprom();
         console.log(`[UI] Feature bit ${bit} ${enabled ? 'enabled' : 'disabled'} and saved`);
       } else {
-        setError('Failed to set features');
+        setError(tr('parameters.MspConfigView.failedToSetFeatures'));
         console.error('[UI] Failed to set features');
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-      setError(`Feature toggle error: ${errorMsg}`);
+      setError(tr('parameters.MspConfigView.featureToggleError', { errorMsg }));
       console.error('[UI] Feature toggle error:', err);
     } finally {
       setFeatureSaving(false);
@@ -2208,7 +2207,7 @@ export function MspConfigView() {
       setPidRatesModified(false);
       setRebootNeeded(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load config');
+      setError(err instanceof Error ? err.message : tr('parameters.MspConfigView.failedToLoadConfig'));
     } finally {
       setLoading(false);
       loadInProgressRef.current = false;
@@ -2252,7 +2251,7 @@ export function MspConfigView() {
         console.log('[UI] Saving PIDs...');
         const pidSuccess = await window.electronAPI?.mspSetPid(pid);
         if (!pidSuccess) {
-          setError('Failed to save PIDs');
+          setError(tr('parameters.MspConfigView.failedToSavePids'));
           return;
         }
       }
@@ -2262,7 +2261,7 @@ export function MspConfigView() {
         console.log('[UI] Saving Rates...');
         const ratesSuccess = await window.electronAPI?.mspSetRcTuning(rcTuning);
         if (!ratesSuccess) {
-          setError('Failed to save Rates');
+          setError(tr('parameters.MspConfigView.failedToSaveRates'));
           return;
         }
       }
@@ -2272,7 +2271,7 @@ export function MspConfigView() {
         console.log('[UI] Saving Modes...');
         const modesSuccess = await saveModesToFC();
         if (!modesSuccess) {
-          setError('Failed to save Modes');
+          setError(tr('parameters.MspConfigView.failedToSaveModes'));
           return;
         }
       }
@@ -2282,7 +2281,7 @@ export function MspConfigView() {
         console.log('[UI] Saving Safety...');
         const safetySuccess = await safetyRef.current.save();
         if (!safetySuccess) {
-          setError('Failed to save Safety settings');
+          setError(tr('parameters.MspConfigView.failedToSaveSafetySettings'));
           return;
         }
       }
@@ -2292,7 +2291,7 @@ export function MspConfigView() {
         console.log('[UI] Saving Receiver config...');
         const receiverSuccess = await useReceiverStore.getState().saveConfig();
         if (!receiverSuccess) {
-          setError('Failed to save Receiver config');
+          setError(tr('parameters.MspConfigView.failedToSaveReceiverConfig'));
           return;
         }
       }
@@ -2302,7 +2301,7 @@ export function MspConfigView() {
         console.log('[UI] Saving to EEPROM...');
         const eepromSuccess = await window.electronAPI?.mspSaveEeprom();
         if (!eepromSuccess) {
-          setError('Failed to save to EEPROM');
+          setError(tr('parameters.MspConfigView.failedToSaveToEeprom'));
           return;
         }
       }
@@ -2312,7 +2311,7 @@ export function MspConfigView() {
       console.log('[UI] All settings saved successfully');
     } catch (err) {
       console.error('[UI] Save error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save');
+      setError(err instanceof Error ? err.message : tr('parameters.MspConfigView.failedToSave'));
     } finally {
       setSaving(false);
     }
@@ -2355,7 +2354,7 @@ export function MspConfigView() {
       <div className="h-full flex items-center justify-center bg-surface-base">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          <div className="text-content-secondary">Loading your settings...</div>
+          <div className="text-content-secondary">{tr('parameters.MspConfigView.loadingYourSettings')}</div>
         </div>
       </div>
     );
@@ -2382,20 +2381,20 @@ export function MspConfigView() {
 
             {/* Title */}
             <h3 className="text-lg font-semibold text-content mb-2">
-              {platformChangeState === 'changing' && `Changing to ${platformChangeTarget}`}
-              {platformChangeState === 'saving' && 'Saving Configuration'}
-              {platformChangeState === 'rebooting' && 'Rebooting Board'}
-              {platformChangeState === 'reconnecting' && 'Reconnecting'}
-              {platformChangeState === 'error' && 'Change Failed'}
+              {platformChangeState === 'changing' && tr('parameters.MspConfigView.changingTo', { platformChangeTarget })}
+              {platformChangeState === 'saving' && tr('parameters.MspConfigView.savingConfiguration')}
+              {platformChangeState === 'rebooting' && tr('parameters.MspConfigView.rebootingBoard')}
+              {platformChangeState === 'reconnecting' && tr('parameters.MspConfigView.reconnecting')}
+              {platformChangeState === 'error' && tr('parameters.MspConfigView.changeFailed')}
             </h3>
 
             {/* Message */}
             <p className="text-sm text-content-secondary mb-4">
-              {platformChangeState === 'changing' && 'Sending platform change command...'}
-              {platformChangeState === 'saving' && 'Writing to EEPROM...'}
-              {platformChangeState === 'rebooting' && 'Waiting for board to reboot...'}
-              {platformChangeState === 'reconnecting' && 'Connecting to board...'}
-              {platformChangeState === 'error' && (platformChangeError || 'An error occurred')}
+              {platformChangeState === 'changing' && tr('parameters.MspConfigView.sendingPlatformChangeCommand')}
+              {platformChangeState === 'saving' && tr('parameters.MspConfigView.writingToEeprom')}
+              {platformChangeState === 'rebooting' && tr('parameters.MspConfigView.waitingForBoardToReboot')}
+              {platformChangeState === 'reconnecting' && tr('parameters.MspConfigView.connectingToBoard')}
+              {platformChangeState === 'error' && (platformChangeError || tr('parameters.MspConfigView.anErrorOccurred'))}
             </p>
 
             {/* Progress indicator for non-terminal states */}
@@ -2415,7 +2414,7 @@ export function MspConfigView() {
                 onClick={clearPlatformChangeState}
                 className="mt-4 px-6 py-2 bg-surface-raised hover:bg-surface-raised text-content rounded-lg text-sm transition-colors"
               >
-                Dismiss
+                {tr('parameters.MspConfigView.dismiss')}
               </button>
             )}
           </div>
@@ -2439,7 +2438,7 @@ export function MspConfigView() {
             </div>
             <div>
               <h2 className="text-xl font-bold text-content">
-                {connectionState.fcVariant === 'BTFL' ? 'Betaflight' : connectionState.fcVariant === 'INAV' ? 'iNav' : connectionState.fcVariant} Tuning
+                {connectionState.fcVariant === 'BTFL' ? 'Betaflight' : connectionState.fcVariant === 'INAV' ? 'iNav' : connectionState.fcVariant} {tr('parameters.MspConfigView.tuning')}
               </h2>
               <div className="flex items-center gap-2 text-sm text-content-secondary">
                 <span className="text-blue-400">{connectionState.fcVersion}</span>
@@ -2454,7 +2453,7 @@ export function MspConfigView() {
                         }}
                         disabled={platformChangeState !== 'idle'}
                         className="text-emerald-400 hover:text-emerald-300 hover:underline cursor-pointer flex items-center gap-1 disabled:opacity-50"
-                        title="Click to change platform type"
+                        title={tr('parameters.MspConfigView.clickToChangePlatformType')}
                       >
                         {connectionState.vehicleType}
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -2504,12 +2503,12 @@ export function MspConfigView() {
               className="px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white shadow-lg shadow-blue-500/20 flex items-center gap-2 transition-all"
             >
               <Rocket className="w-4 h-4" />
-              Quick Setup
+              {tr('parameters.MspConfigView.quickSetup')}
             </button>
 
             {modified && (
               <span className="px-3 py-1 text-sm rounded-lg bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
-                Unsaved
+                {tr('parameters.MspConfigView.unsaved')}
               </span>
             )}
             <button
@@ -2517,7 +2516,7 @@ export function MspConfigView() {
               disabled={loading}
               className="px-4 py-2 text-sm rounded-lg bg-surface-raised hover:bg-surface-raised text-content border"
             >
-              Refresh
+              {tr('parameters.MspConfigView.refresh')}
             </button>
             <button
               onClick={handleReboot}
@@ -2527,10 +2526,10 @@ export function MspConfigView() {
                   ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30 animate-pulse'
                   : 'bg-surface-raised hover:bg-surface-raised text-content border'
               }`}
-              title={rebootNeeded ? 'Settings changed - reboot to apply' : 'Reboot flight controller'}
+              title={rebootNeeded ? tr('parameters.MspConfigView.settingsChangedRebootToApply') : tr('parameters.MspConfigView.rebootFlightController')}
             >
               <RotateCw className={`w-4 h-4 ${rebooting ? 'animate-spin' : ''}`} />
-              {rebooting ? 'Rebooting...' : rebootNeeded ? 'Reboot to Apply' : 'Reboot'}
+              {rebooting ? tr('parameters.MspConfigView.rebooting') : rebootNeeded ? tr('parameters.MspConfigView.rebootToApply') : tr('parameters.MspConfigView.reboot')}
             </button>
             <button
               onClick={saveAll}
@@ -2541,7 +2540,7 @@ export function MspConfigView() {
                   : 'bg-surface-raised text-content-secondary cursor-not-allowed'
               }`}
             >
-              {saving ? <><Save className="w-4 h-4 inline mr-1" />Saving...</> : <><Save className="w-4 h-4 inline mr-1" />Save All Changes</>}
+              {saving ? <><Save className="w-4 h-4 inline mr-1" />{tr('parameters.MspConfigView.saving')}</> : <><Save className="w-4 h-4 inline mr-1" />{tr('parameters.MspConfigView.saveAllChanges')}</>}
             </button>
           </div>
         </div>
@@ -2550,9 +2549,9 @@ export function MspConfigView() {
         <div className="flex gap-1.5 mt-4 flex-wrap items-center">
           {/* Main tabs */}
           {[
-            { id: 'tuning', label: 'PID Tuning', icon: SlidersHorizontal, color: 'text-blue-400' },
-            { id: 'rates', label: 'Rates', icon: Gauge, color: 'text-purple-400' },
-            { id: 'modes', label: 'Modes', icon: Gamepad2, color: 'text-green-400' },
+            { id: 'tuning', label: tr('parameters.MspConfigView.pidTuning'), icon: SlidersHorizontal, color: 'text-blue-400' },
+            { id: 'rates', label: tr('parameters.MspConfigView.rates'), icon: Gauge, color: 'text-purple-400' },
+            { id: 'modes', label: tr('parameters.MspConfigView.modes'), icon: Gamepad2, color: 'text-green-400' },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -2582,7 +2581,7 @@ export function MspConfigView() {
             }`}
           >
             <Radio className={`w-4 h-4 ${activeTab === 'receiver' ? 'text-teal-400' : 'text-teal-400 opacity-50'}`} />
-            <span className="text-sm font-medium">Receiver</span>
+            <span className="text-sm font-medium">{tr('parameters.MspConfigView.receiver')}</span>
           </button>
 
           {/* Ports */}
@@ -2595,7 +2594,7 @@ export function MspConfigView() {
             }`}
           >
             <Cable className={`w-4 h-4 ${activeTab === 'ports' ? 'text-sky-400' : 'text-sky-400 opacity-50'}`} />
-            <span className="text-sm font-medium">Ports</span>
+            <span className="text-sm font-medium">{tr('parameters.MspConfigView.ports')}</span>
           </button>
 
           {/* Mixing dropdown (iNav only) */}
@@ -2618,18 +2617,18 @@ export function MspConfigView() {
                     : 'text-cyan-400 opacity-50'
                 }`} />
                 <span className="text-sm font-medium">
-                  {activeTab === 'servo-tuning' ? 'Servo Tuning' :
-                   activeTab === 'servo-mixer' ? 'Servo Mixer' :
-                   activeTab === 'motor-mixer' ? 'Motor Mixer' : 'Mixing'}
+                  {activeTab === 'servo-tuning' ? tr('parameters.MspConfigView.servoTuning') :
+                   activeTab === 'servo-mixer' ? tr('parameters.MspConfigView.servoMixer') :
+                   activeTab === 'motor-mixer' ? tr('parameters.MspConfigView.motorMixer') : tr('parameters.MspConfigView.mixing')}
                 </span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${showMixingDropdown ? 'rotate-180' : ''}`} />
               </button>
               {showMixingDropdown && (
                 <div className="absolute top-full left-0 mt-1 bg-surface-solid border rounded-lg shadow-xl z-50 min-w-[180px] py-1">
                   {[
-                    { id: 'servo-tuning', label: 'Servo Tuning', icon: SlidersHorizontal, color: 'text-orange-400', desc: 'Endpoints' },
-                    { id: 'servo-mixer', label: 'Servo Mixer', icon: Shuffle, color: 'text-cyan-400', desc: 'Surfaces' },
-                    { id: 'motor-mixer', label: 'Motor Mixer', icon: Cog, color: 'text-rose-400', desc: 'Motors' },
+                    { id: 'servo-tuning', label: tr('parameters.MspConfigView.servoTuning'), icon: SlidersHorizontal, color: 'text-orange-400', desc: tr('parameters.MspConfigView.endpoints') },
+                    { id: 'servo-mixer', label: tr('parameters.MspConfigView.servoMixer'), icon: Shuffle, color: 'text-cyan-400', desc: tr('parameters.MspConfigView.surfaces') },
+                    { id: 'motor-mixer', label: tr('parameters.MspConfigView.motorMixer'), icon: Cog, color: 'text-rose-400', desc: tr('parameters.MspConfigView.motors') },
                   ].map((item) => {
                     const Icon = item.icon;
                     const isActive = activeTab === item.id;
@@ -2670,7 +2669,7 @@ export function MspConfigView() {
               }`}
             >
               <Compass className={`w-4 h-4 ${activeTab === 'navigation' ? 'text-amber-400' : 'text-amber-400 opacity-50'}`} />
-              <span className="text-sm font-medium">Navigation</span>
+              <span className="text-sm font-medium">{tr('parameters.MspConfigView.navigation')}</span>
             </button>
           )}
 
@@ -2685,7 +2684,7 @@ export function MspConfigView() {
               }`}
             >
               <PlaneTakeoff className={`w-4 h-4 ${activeTab === 'auto-launch' ? 'text-orange-400' : 'text-orange-400 opacity-50'}`} />
-              <span className="text-sm font-medium">Auto Launch</span>
+              <span className="text-sm font-medium">{tr('parameters.MspConfigView.autoLaunch2')}</span>
             </button>
           )}
 
@@ -2700,7 +2699,7 @@ export function MspConfigView() {
               }`}
             >
               <Waves className={`w-4 h-4 ${activeTab === 'filters' ? 'text-purple-400' : 'text-purple-400 opacity-50'}`} />
-              <span className="text-sm font-medium">Filters</span>
+              <span className="text-sm font-medium">{tr('parameters.MspConfigView.filters')}</span>
             </button>
           )}
 
@@ -2721,12 +2720,12 @@ export function MspConfigView() {
           {!isInav && (
             <button
               disabled
-              title="Coming Soon - Launch Control for race starts"
+              title={tr('parameters.MspConfigView.comingSoonLaunchControlForRace')}
               className="px-3 py-2 rounded-lg flex items-center gap-2 text-content-tertiary cursor-not-allowed opacity-50"
             >
               <Rocket className="w-4 h-4 text-cyan-400 opacity-50" />
-              <span className="text-sm font-medium">Launch Control</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface-raised text-content-secondary">Soon</span>
+              <span className="text-sm font-medium">{tr('parameters.MspConfigView.launchControl')}</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface-raised text-content-secondary">{tr('parameters.MspConfigView.soon')}</span>
             </button>
           )}
 
@@ -2740,7 +2739,7 @@ export function MspConfigView() {
             }`}
           >
             <Shield className={`w-4 h-4 ${activeTab === 'safety' ? 'text-red-400' : 'text-red-400 opacity-50'}`} />
-            <span className="text-sm font-medium">Safety</span>
+            <span className="text-sm font-medium">{tr('parameters.MspConfigView.safety')}</span>
           </button>
 
           {/* Sensors */}
@@ -2753,7 +2752,7 @@ export function MspConfigView() {
             }`}
           >
             <Radio className={`w-4 h-4 ${activeTab === 'sensors' ? 'text-emerald-400' : 'text-emerald-400 opacity-50'}`} />
-            <span className="text-sm font-medium">Sensors</span>
+            <span className="text-sm font-medium">{tr('parameters.MspConfigView.sensors')}</span>
           </button>
         </div>
       </div>
@@ -2770,12 +2769,12 @@ export function MspConfigView() {
       {rebootNeeded && !rebooting && (
         <div className="px-6 py-3 bg-amber-500/10 border-b border-amber-500/30 text-amber-300 text-sm flex items-center gap-2">
           <RotateCw className="w-4 h-4" />
-          <span>Settings changed that require a reboot to take effect.</span>
+          <span>{tr('parameters.MspConfigView.settingsChangedThatRequireAReboot')}</span>
           <button
             onClick={handleReboot}
             className="ml-auto px-3 py-1 text-xs font-medium rounded bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 transition-colors"
           >
-            Reboot Now
+            {tr('parameters.MspConfigView.rebootNow')}
           </button>
         </div>
       )}

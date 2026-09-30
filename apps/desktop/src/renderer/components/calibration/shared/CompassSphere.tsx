@@ -26,6 +26,7 @@ import {
   sectionCovered,
   type Vec3,
 } from '../../../../shared/geodesic-grid';
+import { t } from '../../../i18n';
 
 interface CompassSphereProps {
   /** The 10-byte completion mask, or null before the first frame arrives. */
@@ -268,7 +269,7 @@ export function CompassSphere({ mask, direction, size = 260, spinning = true }: 
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
-      aria-label="Compass calibration coverage"
+      aria-label={t('calibration.CompassSphere.compassCalibrationCoverage')}
     />
   );
 }

@@ -28,6 +28,7 @@ import {
   type BatteryChemistry,
 } from './presets/mavlink-presets';
 import { SitlBatteryCard } from './SitlBatteryCard';
+import { t } from '../../i18n';
 
 const BatteryTab: React.FC = () => {
   const { parameters, setParameter, modifiedCount } = useParameterStore();
@@ -127,14 +128,13 @@ const BatteryTab: React.FC = () => {
   return (
     <div className="p-6 space-y-6">
       {/* Help Card */}
-      <InfoCard title="Battery Monitoring" variant="info">
-        Configure your battery monitor to track voltage, current, and remaining capacity.
-        Accurate monitoring is essential for safe flying.
+      <InfoCard title={t('mavlink_config.BatteryTab.batteryMonitoring')} variant="info">
+        {t('mavlink_config.BatteryTab.configureYourBatteryMonitorToTrack')}
       </InfoCard>
 
       {availableInstances.length > 1 && (
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-content-secondary">Battery instance</span>
+          <span className="text-xs text-content-secondary">{t('mavlink_config.BatteryTab.batteryInstance')}</span>
           {availableInstances.map((i) => {
             const active = instance === i;
             const enabled = monitorOf(i) > 0;
@@ -143,7 +143,7 @@ const BatteryTab: React.FC = () => {
                 key={i}
                 type="button"
                 onClick={() => setInstance(i)}
-                data-tip={enabled ? `Configure battery ${i}` : `Battery ${i} monitor is disabled; select it and set a monitor type to enable`}
+                data-tip={enabled ? t('mavlink_config.BatteryTab.configureBattery', { i }) : t('mavlink_config.BatteryTab.batteryMonitorIsDisabledSelectIt', { i })}
                 className={
                   'px-2.5 py-1 rounded-md border text-xs transition-colors ' +
                   (active
@@ -151,8 +151,8 @@ const BatteryTab: React.FC = () => {
                     : 'border-subtle text-content-secondary hover:border-default hover:text-content hover:bg-surface-raised')
                 }
               >
-                Battery {i}
-                {!enabled && <span className="ml-1 text-[10px] uppercase tracking-wide text-content-tertiary">off</span>}
+                {t('mavlink_config.BatteryTab.battery')} {i}
+                {!enabled && <span className="ml-1 text-[10px] uppercase tracking-wide text-content-tertiary">{t('mavlink_config.BatteryTab.off')}</span>}
               </button>
             );
           })}
@@ -167,8 +167,8 @@ const BatteryTab: React.FC = () => {
               <BarChart3 className="w-5 h-5 text-blue-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Monitor Type</h3>
-              <p className="text-xs text-content-secondary">How is battery connected?</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.BatteryTab.monitorType')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.BatteryTab.howIsBatteryConnected')}</p>
             </div>
           </div>
 
@@ -186,7 +186,7 @@ const BatteryTab: React.FC = () => {
 
           <div className="bg-surface-raised rounded-lg p-3">
             <p className="text-xs text-content-secondary">
-              {BATTERY_MONITORS[batteryValues.battMonitor]?.description || 'Select a monitor type'}
+              {BATTERY_MONITORS[batteryValues.battMonitor]?.description || t('mavlink_config.BatteryTab.selectAMonitorType')}
             </p>
           </div>
 
@@ -194,7 +194,7 @@ const BatteryTab: React.FC = () => {
             <div className="bg-amber-500/10 border-amber-500/30 rounded-lg p-3 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
               <p className="text-xs text-amber-400">
-                Battery monitoring disabled. You won't see voltage or remaining capacity!
+                {t('mavlink_config.BatteryTab.batteryMonitoringDisabledYouWonT')}
               </p>
             </div>
           )}
@@ -208,25 +208,25 @@ const BatteryTab: React.FC = () => {
               <Zap className="w-5 h-5 text-green-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Battery Capacity</h3>
-              <p className="text-xs text-content-secondary">For accurate mAh remaining</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.BatteryTab.batteryCapacity')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.BatteryTab.forAccurateMahRemaining')}</p>
             </div>
           </div>
 
           <DraggableSlider
-            label="Capacity (mAh)"
+            label={t('mavlink_config.BatteryTab.capacityMah')}
             value={batteryValues.battCapacity}
             onChange={(v) => setParameter(bp('CAPACITY'), v)}
             min={0}
             max={200000}
             step={100}
             color="#22C55E"
-            hint="Match your battery pack capacity. Heavy-lift industrial multirotors typically 20-100 Ah."
+            hint={t('mavlink_config.BatteryTab.matchYourBatteryPackCapacityHeavy')}
           />
 
           {/* Hobby / racing / cinema capacity presets */}
           <div>
-            <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-1.5">Hobby / cinema</div>
+            <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-1.5">{t('mavlink_config.BatteryTab.hobbyCinema')}</div>
             <div className="flex flex-wrap gap-2">
               {[1300, 2200, 3000, 5000, 8000, 10000, 16000].map((cap) => (
                 <button
@@ -246,7 +246,7 @@ const BatteryTab: React.FC = () => {
 
           {/* Heavy-lift / industrial capacity presets */}
           <div>
-            <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-1.5">Heavy lift / industrial</div>
+            <div className="text-[10px] uppercase tracking-wide text-content-tertiary mb-1.5">{t('mavlink_config.BatteryTab.heavyLiftIndustrial')}</div>
             <div className="flex flex-wrap gap-2">
               {[22000, 30000, 44000, 56000, 80000, 100000].map((cap) => (
                 <button
@@ -268,10 +268,8 @@ const BatteryTab: React.FC = () => {
       </div>
 
       {!instanceReady && (
-        <InfoCard title={`Battery ${instance} settings not created yet`} variant="warning">
-          ArduPilot creates the BATT{instance === 1 ? '' : instance}_ parameters on boot once a
-          monitor type is set. Choose the monitor type above, Save All Changes, reboot the flight
-          controller, then Refresh: capacity, thresholds and calibration will unlock here.
+        <InfoCard title={t('mavlink_config.BatteryTab.batterySettingsNotCreatedYet', { instance })} variant="warning">
+          {t('mavlink_config.BatteryTab.ardupilotCreatesTheBatt')}{instance === 1 ? '' : instance}{t('mavlink_config.BatteryTab.parametersOnBootOnceAMonitor')}
         </InfoCard>
       )}
 
@@ -284,13 +282,13 @@ const BatteryTab: React.FC = () => {
               <Plug className="w-5 h-5 text-amber-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Battery Chemistry & Cell Count</h3>
-              <p className="text-xs text-content-secondary">Select chemistry, then cell count to auto-calculate thresholds</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.BatteryTab.batteryChemistryCellCount')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.BatteryTab.selectChemistryThenCellCountTo')}</p>
             </div>
           </div>
           {estimatedCells > 0 && (
             <span className="px-2 py-1 text-xs bg-surface-raised rounded text-content-secondary">
-              Currently: ~{estimatedCells}S {chemInfo.name}
+              {t('mavlink_config.BatteryTab.currently')}{estimatedCells}S {chemInfo.name}
             </span>
           )}
         </div>
@@ -318,7 +316,7 @@ const BatteryTab: React.FC = () => {
             >
               <div className="text-sm font-medium">{chem.name}</div>
               <div className="text-[10px] text-content-secondary mt-0.5">
-                {chem.cellNominal}V/cell
+                {chem.cellNominal}{t('mavlink_config.BatteryTab.vCell')}
               </div>
             </button>
           ))}
@@ -406,10 +404,10 @@ const BatteryTab: React.FC = () => {
           <div className="bg-surface-raised rounded-lg p-3">
             <div className="grid grid-cols-4 gap-3 text-center">
               {[
-                { label: 'Full', voltage: getCellVoltages(estimatedCells, chemistry).full, color: 'text-green-400' },
-                { label: 'Storage', voltage: getCellVoltages(estimatedCells, chemistry).storage, color: 'text-blue-400' },
-                { label: 'Low (RTL)', voltage: getCellVoltages(estimatedCells, chemistry).low, color: 'text-amber-400' },
-                { label: 'Critical', voltage: getCellVoltages(estimatedCells, chemistry).critical, color: 'text-red-400' },
+                { label: t('mavlink_config.BatteryTab.full'), voltage: getCellVoltages(estimatedCells, chemistry).full, color: 'text-green-400' },
+                { label: t('mavlink_config.BatteryTab.storage'), voltage: getCellVoltages(estimatedCells, chemistry).storage, color: 'text-blue-400' },
+                { label: t('mavlink_config.BatteryTab.lowRtl'), voltage: getCellVoltages(estimatedCells, chemistry).low, color: 'text-amber-400' },
+                { label: t('mavlink_config.BatteryTab.critical'), voltage: getCellVoltages(estimatedCells, chemistry).critical, color: 'text-red-400' },
               ].map((v) => (
                 <div key={v.label}>
                   <div className={`text-sm font-mono ${v.color}`}>{v.voltage.toFixed(1)}V</div>
@@ -423,9 +421,7 @@ const BatteryTab: React.FC = () => {
         {/* ArduPilot threshold philosophy note */}
         <div className="bg-blue-500/5 border-blue-500/20 rounded-lg p-3">
           <p className="text-xs text-content-secondary">
-            <span className="text-blue-400">ArduPilot note:</span> Thresholds are set conservatively to ensure enough
-            battery remains for RTL. Low triggers RTL warning, Critical triggers emergency land. Unlike Betaflight,
-            these must account for the energy needed to fly home.
+            <span className="text-blue-400">{t('mavlink_config.BatteryTab.ardupilotNote')}</span> {t('mavlink_config.BatteryTab.thresholdsAreSetConservativelyToEnsure')}
           </p>
         </div>
       </div>
@@ -437,43 +433,43 @@ const BatteryTab: React.FC = () => {
             <AlertTriangle className="w-5 h-5 text-red-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">Voltage Thresholds</h3>
-            <p className="text-xs text-content-secondary">When to warn and take action</p>
+            <h3 className="text-sm font-medium text-content">{t('mavlink_config.BatteryTab.voltageThresholds')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.BatteryTab.whenToWarnAndTakeAction')}</p>
           </div>
         </div>
 
         <div className="space-y-4">
           <DraggableSlider
-            label="Minimum Arm Voltage (V)"
+            label={t('mavlink_config.BatteryTab.minimumArmVoltageV')}
             value={batteryValues.battArmVolt}
             onChange={(v) => setParameter(bp('ARM_VOLT'), v)}
             min={0}
             max={maxVoltageSlider}
             step={0.1}
             color="#3B82F6"
-            hint="Won't arm below this voltage"
+            hint={t('mavlink_config.BatteryTab.wonTArmBelowThisVoltage')}
           />
 
           <DraggableSlider
-            label="Low Warning Voltage (V)"
+            label={t('mavlink_config.BatteryTab.lowWarningVoltageV')}
             value={batteryValues.battLowVolt}
             onChange={(v) => setParameter(bp('LOW_VOLT'), v)}
             min={0}
             max={maxVoltageSlider}
             step={0.1}
             color="#F59E0B"
-            hint="RTL warning triggers here"
+            hint={t('mavlink_config.BatteryTab.rtlWarningTriggersHere')}
           />
 
           <DraggableSlider
-            label="Critical Voltage (V)"
+            label={t('mavlink_config.BatteryTab.criticalVoltageV')}
             value={batteryValues.battCrtVolt}
             onChange={(v) => setParameter(bp('CRT_VOLT'), v)}
             min={0}
             max={maxVoltageSlider}
             step={0.1}
             color="#EF4444"
-            hint="Emergency land triggers here"
+            hint={t('mavlink_config.BatteryTab.emergencyLandTriggersHere')}
           />
         </div>
 
@@ -507,59 +503,59 @@ const BatteryTab: React.FC = () => {
               <Wrench className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Calibration</h3>
-              <p className="text-xs text-content-secondary">Fine-tune voltage/current readings</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.BatteryTab.calibration')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.BatteryTab.fineTuneVoltageCurrentReadings')}</p>
             </div>
           </div>
-          <span className="px-2 py-0.5 text-[10px] bg-surface-raised text-content-secondary rounded">Advanced</span>
+          <span className="px-2 py-0.5 text-[10px] bg-surface-raised text-content-secondary rounded">{t('mavlink_config.BatteryTab.advanced')}</span>
         </div>
 
         <div className="space-y-4">
           <DraggableSlider
-            label="Voltage Multiplier"
+            label={t('mavlink_config.BatteryTab.voltageMultiplier')}
             value={batteryValues.battVoltMult}
             onChange={(v) => setParameter(bp('VOLT_MULT'), v)}
             min={0}
             max={200}
             step={0.01}
             color="#8B5CF6"
-            hint="Adjusts voltage reading accuracy. Range covers high-voltage industrial setups (up to 200)."
+            hint={t('mavlink_config.BatteryTab.adjustsVoltageReadingAccuracyRangeCovers')}
           />
 
           <DraggableSlider
-            label="Amps Per Volt"
+            label={t('mavlink_config.BatteryTab.ampsPerVolt')}
             value={batteryValues.battAmpPervlt}
             onChange={(v) => setParameter(bp('AMP_PERVLT'), v)}
             min={0}
             max={500}
             step={0.1}
             color="#8B5CF6"
-            hint="Current sensor calibration. Range covers high-current industrial setups (up to 500 A/V)."
+            hint={t('mavlink_config.BatteryTab.currentSensorCalibrationRangeCoversHigh')}
           />
 
           <DraggableSlider
-            label="Current Offset"
+            label={t('mavlink_config.BatteryTab.currentOffset')}
             value={batteryValues.battAmpOffset}
             onChange={(v) => setParameter(bp('AMP_OFFSET'), v)}
             min={-1}
             max={1}
             step={0.01}
             color="#8B5CF6"
-            hint="Zero-point adjustment"
+            hint={t('mavlink_config.BatteryTab.zeroPointAdjustment')}
           />
         </div>
 
         {/* Pin assignments — board-specific analog input pins */}
         <div className="border-t border-subtle pt-4 space-y-3">
           <div>
-            <h4 className="text-xs font-medium text-content uppercase tracking-wide">Analog Pin Assignments</h4>
+            <h4 className="text-xs font-medium text-content uppercase tracking-wide">{t('mavlink_config.BatteryTab.analogPinAssignments')}</h4>
             <p className="text-[11px] text-content-secondary mt-0.5">
-              Required for analog monitor types. Pin numbers are board-specific (Cube Orange, SITL, Pixhawk variants all differ). Set -1 to disable.
+              {t('mavlink_config.BatteryTab.requiredForAnalogMonitorTypesPin')}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs text-content-secondary mb-1">Voltage Pin ({bp('VOLT_PIN')})</label>
+              <label className="block text-xs text-content-secondary mb-1">{t('mavlink_config.BatteryTab.voltagePin')}{bp('VOLT_PIN')})</label>
               <DraftNumberInput
                 integer
                 value={batteryValues.battVoltPin}
@@ -568,7 +564,7 @@ const BatteryTab: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-xs text-content-secondary mb-1">Current Pin ({bp('CURR_PIN')})</label>
+              <label className="block text-xs text-content-secondary mb-1">{t('mavlink_config.BatteryTab.currentPin')}{bp('CURR_PIN')})</label>
               <DraftNumberInput
                 integer
                 value={batteryValues.battCurrPin}
@@ -578,22 +574,20 @@ const BatteryTab: React.FC = () => {
             </div>
           </div>
           <div className="bg-surface-raised rounded-lg p-2.5 space-y-1">
-            <p className="text-[11px] text-content-secondary"><span className="text-blue-400 font-medium">Common values:</span></p>
+            <p className="text-[11px] text-content-secondary"><span className="text-blue-400 font-medium">{t('mavlink_config.BatteryTab.commonValues')}</span></p>
             <ul className="text-[11px] text-content-secondary pl-3 space-y-0.5 list-disc">
               <li>SITL: VOLT 13, CURR 12</li>
-              <li>Cube Orange (default carrier): VOLT 14, CURR 15</li>
-              <li>Pixhawk 1/2.1: VOLT 2, CURR 3</li>
-              <li>Pixhawk 4/5/6: VOLT 16, CURR 17</li>
-              <li>Disabled: -1</li>
+              <li>{t('mavlink_config.BatteryTab.cubeOrangeDefaultCarrierVolt14')}</li>
+              <li>{t('mavlink_config.BatteryTab.pixhawk121Volt2')}</li>
+              <li>{t('mavlink_config.BatteryTab.pixhawk456Volt16')}</li>
+              <li>{t('mavlink_config.BatteryTab.disabled1')}</li>
             </ul>
           </div>
         </div>
 
         <div className="bg-surface-raised rounded-lg p-3">
           <p className="text-xs text-content-secondary">
-            <span className="text-blue-400">Tip:</span> To calibrate voltage, measure your battery with a
-            multimeter and adjust the multiplier until readings match. For current, compare with a watt
-            meter during a hover test.
+            <span className="text-blue-400">{t('mavlink_config.BatteryTab.tip')}</span> {t('mavlink_config.BatteryTab.toCalibrateVoltageMeasureYourBattery')}
           </p>
         </div>
       </div>
@@ -605,7 +599,7 @@ const BatteryTab: React.FC = () => {
         <div className="bg-amber-500/10 rounded-xl border border-amber-500/30 p-4 flex items-center gap-3">
           <Save className="w-5 h-5 text-amber-400" />
           <p className="text-sm text-amber-400">
-            You have unsaved changes. Click <span className="font-medium">"Write to Flash"</span> in the header to save.
+            {t('mavlink_config.BatteryTab.youHaveUnsavedChangesClick')} <span className="font-medium">{t('mavlink_config.BatteryTab.writeToFlash')}</span> {t('mavlink_config.BatteryTab.inTheHeaderToSave')}
           </p>
         </div>
       )}

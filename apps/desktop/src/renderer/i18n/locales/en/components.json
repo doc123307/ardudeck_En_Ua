@@ -1,0 +1,28 @@
+{
+  "components": {
+    "PseudoTxSwitch": {
+      "channelMapping": "Channel mapping",
+      "reset": "Reset",
+      "channelIsReversedClickToRestore": "Channel is reversed - click to restore",
+      "reverseThisChannel": "Reverse this channel",
+      "rev": "Rev",
+      "assign": "Assign",
+      "unassign": "Unassign",
+      "press": "Press",
+      "thenMoveTheStickOrFlick": ", then move the stick or flick the switch you want on that channel. Unassigned channels hold 1500.",
+      "deviceMonitor": "Device monitor",
+      "axes": "axes -",
+      "buttons": "buttons",
+      "mapping": " - mapping \"{{mappingMode}}\"",
+      "rawHid": " - raw HID",
+      "theBrowserHasAppliedItsStandard": "The browser has applied its standard gamepad layout to this device, which keeps only four axes and drops the rest - so the switches never arrive. Re-plug with the handset already in USB Joystick mode, or use a model whose USB descriptor is not recognised as a game controller.",
+      "flyWithUsbTransmitter": "Fly with USB transmitter",
+      "looksLikeAGamepadNotA": "- looks like a gamepad, not a handset",
+      "trainerSessionActiveTheTrainerOwns": "Trainer session active - the Trainer owns the sticks",
+      "sendsRcChannelsOverrideToThe": "Sends RC_CHANNELS_OVERRIDE to the connected vehicle. The joystick WILL command the aircraft.",
+      "joystickControlsVehicle": "Joystick controls vehicle",
+      "framesSToVehicle": "frames/s to vehicle",
+      "offSendsNothingToTheAircraft": "Off - sends nothing to the aircraft"
+    }
+  }
+}

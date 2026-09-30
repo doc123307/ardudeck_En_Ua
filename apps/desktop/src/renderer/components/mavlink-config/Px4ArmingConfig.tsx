@@ -15,6 +15,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { Shield, AlertTriangle, Unlock } from 'lucide-react';
 import { useParameterStore } from '../../stores/parameter-store';
 import { InfoCard } from '../ui/InfoCard';
+import { t } from '../../i18n';
 
 interface CheckRow {
   param: string;
@@ -34,62 +35,62 @@ interface CheckRow {
 const TOGGLE_CHECKS: CheckRow[] = [
   {
     param: 'COM_ARM_WO_GPS',
-    label: 'Arming without GNSS',
-    hint: 'PX4 inverts this one: 0 requires a position fix',
+    get label() { return t('mavlink_config.Px4ArmingConfig.armingWithoutGnss'); },
+    get hint() { return t('mavlink_config.Px4ArmingConfig.px4InvertsThisOne0Requires'); },
     strict: 0,
     options: [
-      { value: 0, label: 'Deny' },
-      { value: 1, label: 'Allow, warn' },
-      { value: 2, label: 'Allow' },
+      { value: 0, get label() { return t('mavlink_config.Px4ArmingConfig.deny'); } },
+      { value: 1, get label() { return t('mavlink_config.Px4ArmingConfig.allowWarn'); } },
+      { value: 2, get label() { return t('mavlink_config.Px4ArmingConfig.allow'); } },
     ],
   },
   {
     param: 'COM_ARM_MAG_STR',
-    label: 'Magnetometer field strength',
-    hint: 'Catches interference and a bad calibration',
+    get label() { return t('mavlink_config.Px4ArmingConfig.magnetometerFieldStrength'); },
+    get hint() { return t('mavlink_config.Px4ArmingConfig.catchesInterferenceAndABadCalibration'); },
     strict: 1,
     options: [
-      { value: 1, label: 'Deny' },
-      { value: 2, label: 'Warn' },
-      { value: 0, label: 'Off' },
+      { value: 1, get label() { return t('mavlink_config.Px4ArmingConfig.deny'); } },
+      { value: 2, get label() { return t('mavlink_config.Px4ArmingConfig.warn'); } },
+      { value: 0, get label() { return t('mavlink_config.Px4ArmingConfig.off'); } },
     ],
   },
   {
     param: 'COM_ARM_CHK_ESCS',
-    label: 'ESC telemetry',
-    hint: 'Only for ESCs that report back',
+    get label() { return t('mavlink_config.Px4ArmingConfig.escTelemetry'); },
+    get hint() { return t('mavlink_config.Px4ArmingConfig.onlyForEscsThatReportBack'); },
     strict: 1,
-    options: [{ value: 1, label: 'Checked' }, { value: 0, label: 'Off' }],
+    options: [{ value: 1, get label() { return t('mavlink_config.Px4ArmingConfig.checked'); } }, { value: 0, get label() { return t('mavlink_config.Px4ArmingConfig.off'); } }],
   },
   {
     param: 'COM_ARM_MIS_REQ',
-    label: 'Require a valid mission',
-    hint: 'Refuses to arm with nothing loaded',
+    get label() { return t('mavlink_config.Px4ArmingConfig.requireAValidMission'); },
+    get hint() { return t('mavlink_config.Px4ArmingConfig.refusesToArmWithNothingLoaded'); },
     strict: 1,
-    options: [{ value: 1, label: 'Required' }, { value: 0, label: 'Off' }],
+    options: [{ value: 1, get label() { return t('mavlink_config.Px4ArmingConfig.required'); } }, { value: 0, get label() { return t('mavlink_config.Px4ArmingConfig.off'); } }],
   },
   {
     param: 'COM_ARM_AUTH_REQ',
-    label: 'External arm authorisation',
-    hint: 'A companion must grant arming',
+    get label() { return t('mavlink_config.Px4ArmingConfig.externalArmAuthorisation'); },
+    get hint() { return t('mavlink_config.Px4ArmingConfig.aCompanionMustGrantArming'); },
     strict: 1,
-    options: [{ value: 1, label: 'Required' }, { value: 0, label: 'Off' }],
+    options: [{ value: 1, get label() { return t('mavlink_config.Px4ArmingConfig.required'); } }, { value: 0, get label() { return t('mavlink_config.Px4ArmingConfig.off'); } }],
   },
   {
     param: 'COM_ARM_SWISBTN',
-    label: 'Arm switch is a button',
-    hint: 'Momentary rather than a latching switch',
+    get label() { return t('mavlink_config.Px4ArmingConfig.armSwitchIsAButton'); },
+    get hint() { return t('mavlink_config.Px4ArmingConfig.momentaryRatherThanALatchingSwitch'); },
     strict: 1,
-    options: [{ value: 1, label: 'Button' }, { value: 0, label: 'Switch' }],
+    options: [{ value: 1, get label() { return t('mavlink_config.Px4ArmingConfig.button'); } }, { value: 0, get label() { return t('mavlink_config.Px4ArmingConfig.switch'); } }],
   },
 ];
 
 /** Circuit breakers: writing the magic value DISABLES the check. */
 const BREAKERS: Array<{ param: string; label: string; hint: string }> = [
-  { param: 'CBRK_SUPPLY_CHK', label: 'Power module check', hint: 'Disable only on a bench with no power module' },
-  { param: 'CBRK_USB_CHK', label: 'Refuse to arm on USB', hint: 'Disable to allow arming while plugged in' },
-  { param: 'CBRK_IO_SAFETY', label: 'Safety switch', hint: 'Disable when no safety button is fitted' },
-  { param: 'CBRK_VTOLARMING', label: 'VTOL fixed-wing arming check', hint: 'VTOL only' },
+  { param: 'CBRK_SUPPLY_CHK', get label() { return t('mavlink_config.Px4ArmingConfig.powerModuleCheck'); }, get hint() { return t('mavlink_config.Px4ArmingConfig.disableOnlyOnABenchWith'); } },
+  { param: 'CBRK_USB_CHK', get label() { return t('mavlink_config.Px4ArmingConfig.refuseToArmOnUsb'); }, get hint() { return t('mavlink_config.Px4ArmingConfig.disableToAllowArmingWhilePlugged'); } },
+  { param: 'CBRK_IO_SAFETY', get label() { return t('mavlink_config.Px4ArmingConfig.safetySwitch'); }, get hint() { return t('mavlink_config.Px4ArmingConfig.disableWhenNoSafetyButtonIs'); } },
+  { param: 'CBRK_VTOLARMING', get label() { return t('mavlink_config.Px4ArmingConfig.vtolFixedWingArmingCheck'); }, get hint() { return t('mavlink_config.Px4ArmingConfig.vtolOnly'); } },
 ];
 
 export default function Px4ArmingConfig(): JSX.Element {
@@ -139,8 +140,8 @@ export default function Px4ArmingConfig(): JSX.Element {
   if (!supported) {
     return (
       <div className="p-6">
-        <InfoCard title="Arming" variant="info">
-          This vehicle does not expose the arming check parameters.
+        <InfoCard title={t('mavlink_config.Px4ArmingConfig.arming')} variant="info">
+          {t('mavlink_config.Px4ArmingConfig.thisVehicleDoesNotExposeThe')}
         </InfoCard>
       </div>
     );
@@ -154,10 +155,10 @@ export default function Px4ArmingConfig(): JSX.Element {
             <Shield className="w-5 h-5 text-emerald-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-content">Arming checks</h3>
+            <h3 className="font-medium text-content">{t('mavlink_config.Px4ArmingConfig.armingChecks')}</h3>
             <p className="text-xs text-content-secondary">
               {disabledCount === 0
-                ? 'Every check this vehicle exposes is active'
+                ? t('mavlink_config.Px4ArmingConfig.everyCheckThisVehicleExposesIs')
                 : `${disabledCount} ${disabledCount === 1 ? 'check is' : 'checks are'} switched off`}
             </p>
           </div>
@@ -168,8 +169,7 @@ export default function Px4ArmingConfig(): JSX.Element {
             <div className="flex items-start gap-2">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
               <span>
-                A disabled check does not fix the fault it was catching. Turn each one back on once
-                the underlying problem is solved.
+                {t('mavlink_config.Px4ArmingConfig.aDisabledCheckDoesNotFix')}
               </span>
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function Px4ArmingConfig(): JSX.Element {
 
       {activeToggles.length > 0 && (
         <div className="bg-surface rounded-xl border border-subtle p-5">
-          <h3 className="mb-3 font-medium text-content">Preflight checks</h3>
+          <h3 className="mb-3 font-medium text-content">{t('mavlink_config.Px4ArmingConfig.preflightChecks')}</h3>
           <div className="space-y-2">
             {activeToggles.map((c) => {
               const value = (parameters.get(c.param)?.value as number) ?? c.strict;
@@ -226,11 +226,10 @@ export default function Px4ArmingConfig(): JSX.Element {
         <div className="bg-surface rounded-xl border border-subtle p-5">
           <div className="mb-1 flex items-center gap-2">
             <Unlock className="h-4 w-4 text-content-tertiary" />
-            <h3 className="font-medium text-content">Circuit breakers</h3>
+            <h3 className="font-medium text-content">{t('mavlink_config.Px4ArmingConfig.circuitBreakers')}</h3>
           </div>
           <p className="mb-3 text-xs text-content-secondary">
-            PX4 protects these behind a specific unlock value rather than a simple switch, because
-            each one removes a safety check outright.
+            {t('mavlink_config.Px4ArmingConfig.px4ProtectsTheseBehindASpecific')}
           </p>
           <div className="space-y-2">
             {activeBreakers.map((c) => {
@@ -250,7 +249,7 @@ export default function Px4ArmingConfig(): JSX.Element {
                   </div>
                   {magic === null ? (
                     <span className="shrink-0 text-[11px] text-content-tertiary">
-                      unlock value unknown
+                      {t('mavlink_config.Px4ArmingConfig.unlockValueUnknown')}
                     </span>
                   ) : (
                     <button
@@ -262,7 +261,7 @@ export default function Px4ArmingConfig(): JSX.Element {
                           : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30'
                       }`}
                     >
-                      {engaged ? 'Check off' : 'Checked'}
+                      {engaged ? t('mavlink_config.Px4ArmingConfig.checkOff') : t('mavlink_config.Px4ArmingConfig.checked')}
                     </button>
                   )}
                 </div>

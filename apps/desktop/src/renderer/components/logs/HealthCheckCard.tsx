@@ -1,4 +1,5 @@
 import type { HealthCheckResult, CheckStatus } from '@ardudeck/dataflash-parser';
+import { t } from '../../i18n';
 
 const STATUS_STYLES: Record<CheckStatus, { bg: string; border: string; icon: string; text: string }> = {
   pass: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', icon: 'text-emerald-400', text: 'text-emerald-400' },
@@ -77,7 +78,7 @@ export function HealthCheckCard({ result, onViewData, onAskAi, aiLabel }: { resu
               onClick={onViewData}
               className="text-xs px-3 py-1.5 bg-surface hover:bg-surface-raised text-content hover:text-content rounded-md transition-colors"
             >
-              View Data
+              {t('logs.HealthCheckCard.viewData')}
             </button>
           )}
           {onAskAi && (
@@ -85,7 +86,7 @@ export function HealthCheckCard({ result, onViewData, onAskAi, aiLabel }: { resu
               onClick={onAskAi}
               className="text-xs px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 hover:text-purple-300 border border-purple-500/20 rounded-md transition-colors"
             >
-              {aiLabel ?? 'Analyze with AI'}
+              {aiLabel ?? t('logs.HealthCheckCard.analyzeWithAi')}
             </button>
           )}
         </div>

@@ -20,6 +20,7 @@ import {
   UNIT_LABELS,
   type AltitudeUnit,
 } from '../../../shared/user-units.js';
+import { t } from '../../i18n';
 
 interface RallyListPanelProps {
   readOnly?: boolean;
@@ -60,14 +61,14 @@ export function RallyListPanel({
       {/* Header */}
       <div className="p-3 border-b border-subtle">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-medium">Rally Points</h3>
+          <h3 className="text-sm font-medium">{t('rally.RallyListPanel.rallyPoints')}</h3>
           {isDirty && (
             <span className="px-2 py-0.5 text-xs bg-amber-500/20 text-amber-400 rounded">
-              Modified
+              {t('rally.RallyListPanel.modified')}
             </span>
           )}
         </div>
-        <p className="text-xs text-content-secondary mt-1">Emergency landing locations</p>
+        <p className="text-xs text-content-secondary mt-1">{t('rally.RallyListPanel.emergencyLandingLocations')}</p>
       </div>
 
       {/* Success message */}
@@ -92,7 +93,7 @@ export function RallyListPanel({
         <div className="m-2 p-2 bg-surface-raised rounded">
           <div className="flex items-center justify-between text-xs mb-1">
             <span className="text-content-secondary">
-              {progress.operation === 'download' ? 'Downloading' : 'Uploading'}...
+              {progress.operation === 'download' ? t('rally.RallyListPanel.downloading') : t('rally.RallyListPanel.uploading')}...
             </span>
             <span className="text-content">
               {progress.transferred}/{progress.total}
@@ -127,8 +128,8 @@ export function RallyListPanel({
                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            <p>No rally points</p>
-            <p className="mt-1 text-content-tertiary">Click "Add Rally" on the map to create one</p>
+            <p>{t('rally.RallyListPanel.noRallyPoints')}</p>
+            <p className="mt-1 text-content-tertiary">{t('rally.RallyListPanel.clickAddRallyOnTheMap')}</p>
           </div>
         ) : (
           <div className="p-2 space-y-1">
@@ -159,7 +160,7 @@ export function RallyListPanel({
       {/* Status Bar */}
       <div className="p-2 border-t border-subtle text-xs text-content-secondary flex items-center justify-between">
         <span>
-          {rallyPoints.length} point{rallyPoints.length !== 1 ? 's' : ''}
+          {rallyPoints.length} {t('rally.RallyListPanel.point')}{rallyPoints.length !== 1 ? 's' : ''}
         </span>
         {isLoading && (
           <span className="flex items-center gap-1">
@@ -171,7 +172,7 @@ export function RallyListPanel({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
               />
             </svg>
-            Loading...
+            {t('rally.RallyListPanel.loading')}
           </span>
         )}
       </div>
@@ -218,7 +219,7 @@ function RallyListItem({ point, isSelected, readOnly, altitudeUnit, onSelect, on
           <div className="text-content">
             {point.latitude.toFixed(6)}, {point.longitude.toFixed(6)}
           </div>
-          <div className="text-content-secondary">Alt: {formatAltitudeFromMeters(point.altitude, altitudeUnit)}</div>
+          <div className="text-content-secondary">{t('rally.RallyListPanel.alt')} {formatAltitudeFromMeters(point.altitude, altitudeUnit)}</div>
         </div>
       </div>
       {!readOnly && (
@@ -228,7 +229,7 @@ function RallyListItem({ point, isSelected, readOnly, altitudeUnit, onSelect, on
             onRemove();
           }}
           className="p-1 text-content-secondary hover:text-red-400"
-          title="Remove"
+          title={t('rally.RallyListPanel.remove')}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -326,13 +327,13 @@ function RallyDetailsPanel({ point, altitudeUnit, onUpdate }: RallyDetailsPanelP
   return (
     <div className="p-3 border-t border-subtle bg-surface">
       <div className="text-xs font-medium text-orange-400 mb-2">
-        Rally Point R{point.seq + 1}
+        {t('rally.RallyListPanel.rallyPointR')}{point.seq + 1}
       </div>
 
       <div className="space-y-2">
         {/* Position (read-only, drag on map to change) */}
         <div className="flex items-center justify-between">
-          <label className="text-xs text-content-secondary">Position</label>
+          <label className="text-xs text-content-secondary">{t('rally.RallyListPanel.position')}</label>
           <span className="text-xs text-content">
             {point.latitude.toFixed(6)}, {point.longitude.toFixed(6)}
           </span>
@@ -340,7 +341,7 @@ function RallyDetailsPanel({ point, altitudeUnit, onUpdate }: RallyDetailsPanelP
 
         {/* Altitude */}
         <div className="flex items-center justify-between">
-          <label className="text-xs text-content-secondary">Altitude</label>
+          <label className="text-xs text-content-secondary">{t('rally.RallyListPanel.altitude')}</label>
           <div className="flex items-center gap-1">
             <input
               type="number"
@@ -357,8 +358,8 @@ function RallyDetailsPanel({ point, altitudeUnit, onUpdate }: RallyDetailsPanelP
         {/* Break Altitude */}
         <div className="flex items-center justify-between">
           <label className="text-xs text-content-secondary">
-            Break Alt
-            <span className="ml-1 text-content-tertiary" title="Altitude to exit loiter and begin landing">
+            {t('rally.RallyListPanel.breakAlt')}
+            <span className="ml-1 text-content-tertiary" title={t('rally.RallyListPanel.altitudeToExitLoiterAndBegin')}>
               ?
             </span>
           </label>
@@ -378,8 +379,8 @@ function RallyDetailsPanel({ point, altitudeUnit, onUpdate }: RallyDetailsPanelP
         {/* Land Direction */}
         <div className="flex items-center justify-between">
           <label className="text-xs text-content-secondary">
-            Land Heading (°)
-            <span className="ml-1 text-content-tertiary" title="0 = any direction">
+            {t('rally.RallyListPanel.landHeading')}
+            <span className="ml-1 text-content-tertiary" title={t('rally.RallyListPanel.n0AnyDirection')}>
               ?
             </span>
           </label>
@@ -397,7 +398,7 @@ function RallyDetailsPanel({ point, altitudeUnit, onUpdate }: RallyDetailsPanelP
 
         {/* Flags */}
         <div>
-          <label className="text-xs text-content-secondary block mb-1">Flags</label>
+          <label className="text-xs text-content-secondary block mb-1">{t('rally.RallyListPanel.flags')}</label>
           <div className="space-y-1">
             <label className="flex items-center gap-2 text-xs">
               <input
@@ -406,7 +407,7 @@ function RallyDetailsPanel({ point, altitudeUnit, onUpdate }: RallyDetailsPanelP
                 onChange={() => toggleFlag(RALLY_FLAGS.FAVORABLE_WIND)}
                 className="rounded bg-surface-raised border"
               />
-              <span className="text-content">Land into wind</span>
+              <span className="text-content">{t('rally.RallyListPanel.landIntoWind')}</span>
             </label>
             <label className="flex items-center gap-2 text-xs">
               <input
@@ -415,7 +416,7 @@ function RallyDetailsPanel({ point, altitudeUnit, onUpdate }: RallyDetailsPanelP
                 onChange={() => toggleFlag(RALLY_FLAGS.LAND_IMMEDIATELY)}
                 className="rounded bg-surface-raised border"
               />
-              <span className="text-content">Land immediately (no loiter)</span>
+              <span className="text-content">{t('rally.RallyListPanel.landImmediatelyNoLoiter')}</span>
             </label>
           </div>
         </div>

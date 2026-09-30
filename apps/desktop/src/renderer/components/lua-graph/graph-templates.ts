@@ -4,6 +4,7 @@
  * and a clear left-to-right data flow to serve as learning examples.
  */
 import type { GraphFile } from './lua-graph-types';
+import { t } from '../../i18n';
 
 export interface GraphTemplate {
   id: string;
@@ -18,12 +19,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'low-battery-warning',
     name: 'Low Battery Warning',
-    description: 'Send a GCS alert when battery voltage drops below a threshold.',
+    get description() { return t('lua_graph.graph_templates.sendAGcsAlertWhenBattery'); },
     category: 'Safety',
     graph: {
       version: 1,
       name: 'Low Battery Warning',
-      description: 'Send a GCS alert when battery voltage drops below threshold',
+      get description() { return t('lua_graph.graph_templates.sendAGcsAlertWhenBattery2'); },
       runIntervalMs: 1000,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -35,9 +36,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read battery voltage from the flight controller' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readBatteryVoltageFromTheFlight'); } },
           },
         },
         {
@@ -46,9 +47,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Is voltage below our safety limit?' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.isVoltageBelowOurSafetyLimit'); } },
           },
         },
         {
@@ -57,9 +58,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 740, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Warn the pilot via GCS message' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.warnThePilotViaGcsMessage'); } },
           },
         },
         // ── Data flow ──
@@ -69,7 +70,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 100 },
           data: {
             definitionType: 'sensor-battery',
-            label: 'Battery',
+            get label() { return t('lua_graph.graph_templates.battery'); },
             category: 'sensors',
             propertyValues: { instance: 0 },
           },
@@ -80,7 +81,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 420, y: 110 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Voltage < 14.2?',
+            get label() { return t('lua_graph.graph_templates.voltage142'); },
             category: 'logic',
             propertyValues: { operator: '<' },
           },
@@ -91,7 +92,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 220, y: 290 },
           data: {
             definitionType: 'var-constant',
-            label: 'Threshold (V)',
+            get label() { return t('lua_graph.graph_templates.thresholdV'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '14.2' },
           },
@@ -102,9 +103,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 740, y: 120 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Warn Low Battery',
+            get label() { return t('lua_graph.graph_templates.warnLowBattery'); },
             category: 'actions',
-            propertyValues: { message: 'WARNING: Low battery voltage!', severity: 4 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.warningLowBatteryVoltage'); }, severity: 4 },
           },
         },
       ],
@@ -121,12 +122,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'geofence-alert',
     name: 'Geofence Alert',
-    description: 'Warn when altitude exceeds a safety limit.',
+    get description() { return t('lua_graph.graph_templates.warnWhenAltitudeExceedsASafety'); },
     category: 'Safety',
     graph: {
       version: 1,
       name: 'Geofence Alert',
-      description: 'Warn when altitude exceeds a safety limit',
+      get description() { return t('lua_graph.graph_templates.warnWhenAltitudeExceedsASafety2'); },
       runIntervalMs: 500,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -138,9 +139,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read current barometric altitude' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readCurrentBarometricAltitude'); } },
           },
         },
         {
@@ -149,9 +150,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 380, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Has vehicle exceeded the altitude fence?' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.hasVehicleExceededTheAltitudeFence'); } },
           },
         },
         {
@@ -160,9 +161,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 720, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Alert GCS with urgent warning' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.alertGcsWithUrgentWarning'); } },
           },
         },
         // ── Data flow ──
@@ -172,7 +173,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 110 },
           data: {
             definitionType: 'sensor-baro-alt',
-            label: 'Baro Altitude',
+            get label() { return t('lua_graph.graph_templates.baroAltitude'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -183,7 +184,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 110 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Alt > 120m?',
+            get label() { return t('lua_graph.graph_templates.alt120m'); },
             category: 'logic',
             propertyValues: { operator: '>' },
           },
@@ -194,7 +195,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 200, y: 280 },
           data: {
             definitionType: 'var-constant',
-            label: 'Max Altitude (m)',
+            get label() { return t('lua_graph.graph_templates.maxAltitudeM'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '120' },
           },
@@ -205,7 +206,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 740, y: 120 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Altitude Warning',
+            get label() { return t('lua_graph.graph_templates.altitudeWarning'); },
             category: 'actions',
             propertyValues: { message: 'ALTITUDE LIMIT EXCEEDED!', severity: 4 },
           },
@@ -224,12 +225,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'mode-announcement',
     name: 'Mode Announcement',
-    description: 'Send a GCS message whenever the RC mode channel changes.',
+    get description() { return t('lua_graph.graph_templates.sendAGcsMessageWheneverThe'); },
     category: 'Utility',
     graph: {
       version: 1,
       name: 'Mode Announcement',
-      description: 'Send a GCS message whenever the RC mode channel changes',
+      get description() { return t('lua_graph.graph_templates.sendAGcsMessageWheneverThe2'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -241,9 +242,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 30 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read the RC mode switch (channel 5)' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readTheRcModeSwitchChannel'); } },
           },
         },
         {
@@ -252,9 +253,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 380, y: 30 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Only fire when the value actually changes' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.onlyFireWhenTheValueActually'); } },
           },
         },
         {
@@ -263,9 +264,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 700, y: 30 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Notify pilot of the switch change' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.notifyPilotOfTheSwitchChange'); } },
           },
         },
         // ── Data flow ──
@@ -275,7 +276,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 120 },
           data: {
             definitionType: 'sensor-rc-channel',
-            label: 'Mode Switch (CH5)',
+            get label() { return t('lua_graph.graph_templates.modeSwitchCh5'); },
             category: 'sensors',
             propertyValues: { channel: 5 },
           },
@@ -286,7 +287,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 125 },
           data: {
             definitionType: 'timing-on-change',
-            label: 'Detect Change',
+            get label() { return t('lua_graph.graph_templates.detectChange'); },
             category: 'timing',
             propertyValues: {},
           },
@@ -297,9 +298,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 720, y: 125 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Mode Changed',
+            get label() { return t('lua_graph.graph_templates.modeChanged'); },
             category: 'actions',
-            propertyValues: { message: 'Flight mode switch changed', severity: 6 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.flightModeSwitchChanged'); }, severity: 6 },
           },
         },
       ],
@@ -315,12 +316,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'landing-gear',
     name: 'Landing Gear',
-    description: 'Auto retract/deploy landing gear based on altitude threshold.',
+    get description() { return t('lua_graph.graph_templates.autoRetractDeployLandingGearBased'); },
     category: 'Automation',
     graph: {
       version: 1,
       name: 'Landing Gear',
-      description: 'Auto retract/deploy landing gear based on altitude',
+      get description() { return t('lua_graph.graph_templates.autoRetractDeployLandingGearBased2'); },
       runIntervalMs: 500,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -332,9 +333,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 30, y: 10 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Sense',
+            get label() { return t('lua_graph.graph_templates.sense'); },
             category: 'flow',
-            propertyValues: { text: 'Read current altitude above ground' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readCurrentAltitudeAboveGround'); } },
           },
         },
         {
@@ -343,9 +344,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 370, y: 10 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Decide',
+            get label() { return t('lua_graph.graph_templates.decide'); },
             category: 'flow',
-            propertyValues: { text: 'Above gear-change altitude?' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.aboveGearChangeAltitude'); } },
           },
         },
         {
@@ -354,9 +355,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 660, y: 10 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Branch',
+            get label() { return t('lua_graph.graph_templates.branch'); },
             category: 'flow',
-            propertyValues: { text: 'Take different action based on result' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.takeDifferentActionBasedOnResult'); } },
           },
         },
         // ── Sensor column ──
@@ -366,7 +367,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 50, y: 100 },
           data: {
             definitionType: 'sensor-baro-alt',
-            label: 'Altitude',
+            get label() { return t('lua_graph.graph_templates.altitude'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -377,7 +378,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 50, y: 260 },
           data: {
             definitionType: 'var-constant',
-            label: 'Gear Alt (m)',
+            get label() { return t('lua_graph.graph_templates.gearAltM'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '10' },
           },
@@ -389,7 +390,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 380, y: 100 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Above 10m?',
+            get label() { return t('lua_graph.graph_templates.above10m'); },
             category: 'logic',
             propertyValues: { operator: '>' },
           },
@@ -400,7 +401,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 680, y: 110 },
           data: {
             definitionType: 'logic-if-else',
-            label: 'Branch',
+            get label() { return t('lua_graph.graph_templates.branch'); },
             category: 'logic',
             propertyValues: {},
           },
@@ -412,7 +413,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 30 },
           data: {
             definitionType: 'var-constant',
-            label: 'Retracted PWM',
+            get label() { return t('lua_graph.graph_templates.retractedPwm'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '1100' },
           },
@@ -423,7 +424,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 1000, y: 100 },
           data: {
             definitionType: 'action-set-servo',
-            label: 'Retract Gear',
+            get label() { return t('lua_graph.graph_templates.retractGear'); },
             category: 'actions',
             propertyValues: { servo_num: 9 },
           },
@@ -435,7 +436,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 260 },
           data: {
             definitionType: 'var-constant',
-            label: 'Deployed PWM',
+            get label() { return t('lua_graph.graph_templates.deployedPwm'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '1900' },
           },
@@ -446,7 +447,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 1000, y: 330 },
           data: {
             definitionType: 'action-set-servo',
-            label: 'Deploy Gear',
+            get label() { return t('lua_graph.graph_templates.deployGear'); },
             category: 'actions',
             propertyValues: { servo_num: 9 },
           },
@@ -473,12 +474,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'camera-trigger',
     name: 'Camera Trigger',
-    description: 'Trigger camera relay at a fixed time interval while the vehicle is moving.',
+    get description() { return t('lua_graph.graph_templates.triggerCameraRelayAtAFixed'); },
     category: 'Automation',
     graph: {
       version: 1,
       name: 'Camera Trigger',
-      description: 'Trigger camera relay at time intervals while moving',
+      get description() { return t('lua_graph.graph_templates.triggerCameraRelayAtTimeIntervals'); },
       runIntervalMs: 500,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -490,9 +491,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Check if the vehicle is moving' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.checkIfTheVehicleIsMoving'); } },
           },
         },
         {
@@ -501,9 +502,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 380, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Only trigger while speed > minimum' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.onlyTriggerWhileSpeedMinimum'); } },
           },
         },
         {
@@ -512,9 +513,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 690, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Rate-limit the shutter trigger' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.rateLimitTheShutterTrigger'); } },
           },
         },
         {
@@ -523,9 +524,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 1000, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 4',
+            get label() { return t('lua_graph.graph_templates.step4'); },
             category: 'flow',
-            propertyValues: { text: 'Activate camera relay' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.activateCameraRelay'); } },
           },
         },
         // ── Data flow ──
@@ -535,7 +536,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 110 },
           data: {
             definitionType: 'sensor-groundspeed',
-            label: 'Ground Speed',
+            get label() { return t('lua_graph.graph_templates.groundSpeed'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -546,7 +547,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 160, y: 270 },
           data: {
             definitionType: 'var-constant',
-            label: 'Min Speed (m/s)',
+            get label() { return t('lua_graph.graph_templates.minSpeedMS'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '1' },
           },
@@ -557,7 +558,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 115 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Moving?',
+            get label() { return t('lua_graph.graph_templates.moving'); },
             category: 'logic',
             propertyValues: { operator: '>' },
           },
@@ -568,7 +569,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 710, y: 120 },
           data: {
             definitionType: 'timing-run-every',
-            label: 'Every 5 sec',
+            get label() { return t('lua_graph.graph_templates.every5Sec'); },
             category: 'timing',
             propertyValues: { interval_ms: 5000 },
           },
@@ -579,7 +580,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 1020, y: 120 },
           data: {
             definitionType: 'action-relay',
-            label: 'Camera Shutter',
+            get label() { return t('lua_graph.graph_templates.cameraShutter'); },
             category: 'actions',
             propertyValues: { relay_num: 0, state: 1 },
           },
@@ -599,12 +600,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'terrain-follow',
     name: 'Terrain Follow',
-    description: 'Warn when rangefinder reading is outside the safe range for terrain following.',
+    get description() { return t('lua_graph.graph_templates.warnWhenRangefinderReadingIsOutside'); },
     category: 'Navigation',
     graph: {
       version: 1,
       name: 'Terrain Follow',
-      description: 'Monitor rangefinder for safe terrain-following altitude',
+      get description() { return t('lua_graph.graph_templates.monitorRangefinderForSafeTerrainFollowing'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -616,9 +617,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 30 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read distance to ground from rangefinder' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readDistanceToGroundFromRangefinder'); } },
           },
         },
         {
@@ -627,9 +628,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 370, y: 30 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Is altitude within safe 3-50m range?' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.isAltitudeWithinSafe350m'); } },
           },
         },
         {
@@ -638,9 +639,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 670, y: 30 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Invert: trigger when OUT of range' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.invertTriggerWhenOutOfRange'); } },
           },
         },
         {
@@ -649,9 +650,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 940, y: 30 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 4',
+            get label() { return t('lua_graph.graph_templates.step4'); },
             category: 'flow',
-            propertyValues: { text: 'Send urgent terrain warning' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.sendUrgentTerrainWarning'); } },
           },
         },
         // ── Data flow ──
@@ -661,7 +662,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 120 },
           data: {
             definitionType: 'sensor-rangefinder',
-            label: 'Rangefinder',
+            get label() { return t('lua_graph.graph_templates.rangefinder'); },
             category: 'sensors',
             propertyValues: { instance: 0 },
           },
@@ -672,7 +673,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 390, y: 120 },
           data: {
             definitionType: 'logic-range-check',
-            label: 'Safe Range?',
+            get label() { return t('lua_graph.graph_templates.safeRange'); },
             category: 'logic',
             propertyValues: { min: 3, max: 50 },
           },
@@ -683,7 +684,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 690, y: 130 },
           data: {
             definitionType: 'logic-not',
-            label: 'Out of Range?',
+            get label() { return t('lua_graph.graph_templates.outOfRange'); },
             category: 'logic',
             propertyValues: {},
           },
@@ -694,9 +695,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 960, y: 130 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Terrain Warning',
+            get label() { return t('lua_graph.graph_templates.terrainWarning'); },
             category: 'actions',
-            propertyValues: { message: 'TERRAIN: Rangefinder out of safe range!', severity: 4 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.terrainRangefinderOutOfSafeRange'); }, severity: 4 },
           },
         },
       ],
@@ -713,12 +714,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'depth-logger',
     name: 'Depth Logger',
-    description: 'Log rangefinder depth + GPS position to a CSV file, triggered by an RC aux switch.',
+    get description() { return t('lua_graph.graph_templates.logRangefinderDepthGpsPositionTo'); },
     category: 'Data Logging',
     graph: {
       version: 1,
       name: 'Depth Logger',
-      description: 'Log rangefinder depth and GPS position to file on switch trigger',
+      get description() { return t('lua_graph.graph_templates.logRangefinderDepthAndGpsPosition'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -730,9 +731,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Trigger',
+            get label() { return t('lua_graph.graph_templates.trigger'); },
             category: 'flow',
-            propertyValues: { text: 'Detect when the pilot flips the aux switch HIGH' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.detectWhenThePilotFlipsThe'); } },
           },
         },
         {
@@ -741,9 +742,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 430, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Read Sensors',
+            get label() { return t('lua_graph.graph_templates.readSensors'); },
             category: 'flow',
-            propertyValues: { text: 'Grab depth from rangefinder and GPS position' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.grabDepthFromRangefinderAndGps'); } },
           },
         },
         {
@@ -752,9 +753,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 810, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Log & Notify',
+            get label() { return t('lua_graph.graph_templates.logNotify'); },
             category: 'flow',
-            propertyValues: { text: 'Write to file and notify pilot' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.writeToFileAndNotifyPilot'); } },
           },
         },
         // ── Trigger chain ──
@@ -764,7 +765,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 110 },
           data: {
             definitionType: 'sensor-rc-aux-switch',
-            label: 'Depth Switch',
+            get label() { return t('lua_graph.graph_templates.depthSwitch'); },
             category: 'sensors',
             propertyValues: { aux_fn: 300 },
           },
@@ -775,7 +776,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 260, y: 120 },
           data: {
             definitionType: 'timing-rising-edge',
-            label: 'Switch Flipped?',
+            get label() { return t('lua_graph.graph_templates.switchFlipped'); },
             category: 'timing',
             propertyValues: {},
           },
@@ -787,7 +788,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 450, y: 110 },
           data: {
             definitionType: 'sensor-rangefinder-orient',
-            label: 'Depth Sensor',
+            get label() { return t('lua_graph.graph_templates.depthSensor'); },
             category: 'sensors',
             propertyValues: { orientation: 25 },
           },
@@ -798,7 +799,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 450, y: 230 },
           data: {
             definitionType: 'sensor-gps',
-            label: 'GPS Position',
+            get label() { return t('lua_graph.graph_templates.gpsPosition'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -810,7 +811,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 830, y: 100 },
           data: {
             definitionType: 'action-log-to-file',
-            label: 'Write CSV',
+            get label() { return t('lua_graph.graph_templates.writeCsv'); },
             category: 'actions',
             propertyValues: { filename: 'depth_log.csv', separator: ';' },
           },
@@ -821,9 +822,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 830, y: 300 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Notify Pilot',
+            get label() { return t('lua_graph.graph_templates.notifyPilot'); },
             category: 'actions',
-            propertyValues: { message: 'Depth measurement logged', severity: 6 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.depthMeasurementLogged'); }, severity: 6 },
           },
         },
       ],
@@ -843,12 +844,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'auto-rtl-battery',
     name: 'Auto RTL on Low Battery',
-    description: 'Automatically switch to RTL flight mode when battery drops below a critical threshold.',
+    get description() { return t('lua_graph.graph_templates.automaticallySwitchToRtlFlightMode'); },
     category: 'Safety',
     graph: {
       version: 1,
       name: 'Auto RTL on Low Battery',
-      description: 'Switch to RTL when battery is critically low',
+      get description() { return t('lua_graph.graph_templates.switchToRtlWhenBatteryIs'); },
       runIntervalMs: 1000,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -859,9 +860,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Monitor battery remaining percentage' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.monitorBatteryRemainingPercentage'); } },
           },
         },
         {
@@ -870,9 +871,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Is battery below critical level?' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.isBatteryBelowCriticalLevel'); } },
           },
         },
         {
@@ -881,9 +882,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 740, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Force return-to-launch and warn pilot' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.forceReturnToLaunchAndWarn'); } },
           },
         },
         {
@@ -892,7 +893,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 100 },
           data: {
             definitionType: 'sensor-battery',
-            label: 'Battery',
+            get label() { return t('lua_graph.graph_templates.battery'); },
             category: 'sensors',
             propertyValues: { instance: 0 },
           },
@@ -903,7 +904,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 200, y: 280 },
           data: {
             definitionType: 'var-constant',
-            label: 'Critical % (20)',
+            get label() { return t('lua_graph.graph_templates.critical20'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '20' },
           },
@@ -914,7 +915,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 420, y: 110 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Below 20%?',
+            get label() { return t('lua_graph.graph_templates.below20'); },
             category: 'logic',
             propertyValues: { operator: '<' },
           },
@@ -925,7 +926,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 620, y: 115 },
           data: {
             definitionType: 'timing-debounce',
-            label: 'Debounce 3s',
+            get label() { return t('lua_graph.graph_templates.debounce3s'); },
             category: 'timing',
             propertyValues: { delay_ms: 3000 },
           },
@@ -936,7 +937,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 830, y: 100 },
           data: {
             definitionType: 'action-set-mode',
-            label: 'Set RTL Mode',
+            get label() { return t('lua_graph.graph_templates.setRtlMode'); },
             category: 'actions',
             propertyValues: { mode_num: 11 },
           },
@@ -947,9 +948,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 830, y: 230 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Critical Warning',
+            get label() { return t('lua_graph.graph_templates.criticalWarning'); },
             category: 'actions',
-            propertyValues: { message: 'CRITICAL: Battery low, RTL activated!', severity: 2 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.criticalBatteryLowRtlActivated'); }, severity: 2 },
           },
         },
       ],
@@ -968,12 +969,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'payload-drop',
     name: 'Payload Drop',
-    description: 'Release a servo-actuated payload when an RC aux switch is flipped to HIGH.',
+    get description() { return t('lua_graph.graph_templates.releaseAServoActuatedPayloadWhen'); },
     category: 'Automation',
     graph: {
       version: 1,
       name: 'Payload Drop',
-      description: 'Servo-actuated payload release via RC aux switch',
+      get description() { return t('lua_graph.graph_templates.servoActuatedPayloadReleaseViaRc'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -984,9 +985,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Trigger',
+            get label() { return t('lua_graph.graph_templates.trigger'); },
             category: 'flow',
-            propertyValues: { text: 'Pilot flips aux switch to release' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.pilotFlipsAuxSwitchToRelease'); } },
           },
         },
         {
@@ -995,9 +996,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Branch',
+            get label() { return t('lua_graph.graph_templates.branch'); },
             category: 'flow',
-            propertyValues: { text: 'Switch HIGH = release, LOW = hold' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.switchHighReleaseLowHold'); } },
           },
         },
         {
@@ -1006,9 +1007,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 730, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Actuate',
+            get label() { return t('lua_graph.graph_templates.actuate'); },
             category: 'flow',
-            propertyValues: { text: 'Move servo to release or hold position' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.moveServoToReleaseOrHold'); } },
           },
         },
         {
@@ -1017,7 +1018,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 110 },
           data: {
             definitionType: 'sensor-rc-aux-switch',
-            label: 'Drop Switch',
+            get label() { return t('lua_graph.graph_templates.dropSwitch'); },
             category: 'sensors',
             propertyValues: { aux_fn: 301 },
           },
@@ -1028,7 +1029,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 420, y: 120 },
           data: {
             definitionType: 'logic-if-else',
-            label: 'Switch HIGH?',
+            get label() { return t('lua_graph.graph_templates.switchHigh'); },
             category: 'logic',
             propertyValues: {},
           },
@@ -1040,7 +1041,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 600, y: 40 },
           data: {
             definitionType: 'var-constant',
-            label: 'Release PWM',
+            get label() { return t('lua_graph.graph_templates.releasePwm'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '1100' },
           },
@@ -1051,7 +1052,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 750, y: 100 },
           data: {
             definitionType: 'action-set-servo',
-            label: 'Release Payload',
+            get label() { return t('lua_graph.graph_templates.releasePayload'); },
             category: 'actions',
             propertyValues: { servo_num: 10 },
           },
@@ -1062,7 +1063,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 980, y: 105 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Drop Confirmed',
+            get label() { return t('lua_graph.graph_templates.dropConfirmed'); },
             category: 'actions',
             propertyValues: { message: 'PAYLOAD RELEASED', severity: 5 },
           },
@@ -1074,7 +1075,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 600, y: 280 },
           data: {
             definitionType: 'var-constant',
-            label: 'Hold PWM',
+            get label() { return t('lua_graph.graph_templates.holdPwm'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '1900' },
           },
@@ -1085,7 +1086,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 750, y: 310 },
           data: {
             definitionType: 'action-set-servo',
-            label: 'Hold Payload',
+            get label() { return t('lua_graph.graph_templates.holdPayload'); },
             category: 'actions',
             propertyValues: { servo_num: 10 },
           },
@@ -1109,12 +1110,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'speed-limit-warning',
     name: 'Speed Limit Warning',
-    description: 'Send periodic GCS warnings when ground speed exceeds a configurable limit.',
+    get description() { return t('lua_graph.graph_templates.sendPeriodicGcsWarningsWhenGround'); },
     category: 'Safety',
     graph: {
       version: 1,
       name: 'Speed Limit Warning',
-      description: 'Warn pilot when ground speed exceeds limit',
+      get description() { return t('lua_graph.graph_templates.warnPilotWhenGroundSpeedExceeds'); },
       runIntervalMs: 500,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -1125,9 +1126,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read current ground speed' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readCurrentGroundSpeed'); } },
           },
         },
         {
@@ -1136,9 +1137,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 380, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Compare against speed limit' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.compareAgainstSpeedLimit'); } },
           },
         },
         {
@@ -1147,9 +1148,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 700, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Rate-limited warning to GCS' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.rateLimitedWarningToGcs'); } },
           },
         },
         {
@@ -1158,7 +1159,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 110 },
           data: {
             definitionType: 'sensor-groundspeed',
-            label: 'Ground Speed',
+            get label() { return t('lua_graph.graph_templates.groundSpeed'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -1169,7 +1170,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 160, y: 270 },
           data: {
             definitionType: 'var-constant',
-            label: 'Speed Limit (m/s)',
+            get label() { return t('lua_graph.graph_templates.speedLimitMS'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '25' },
           },
@@ -1180,7 +1181,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 115 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Over Limit?',
+            get label() { return t('lua_graph.graph_templates.overLimit'); },
             category: 'logic',
             propertyValues: { operator: '>' },
           },
@@ -1191,7 +1192,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 600, y: 120 },
           data: {
             definitionType: 'timing-run-every',
-            label: 'Every 5s',
+            get label() { return t('lua_graph.graph_templates.every5s'); },
             category: 'timing',
             propertyValues: { interval_ms: 5000 },
           },
@@ -1202,9 +1203,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 820, y: 120 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Speed Warning',
+            get label() { return t('lua_graph.graph_templates.speedWarning'); },
             category: 'actions',
-            propertyValues: { message: 'WARNING: Speed limit exceeded!', severity: 4 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.warningSpeedLimitExceeded'); }, severity: 4 },
           },
         },
       ],
@@ -1222,12 +1223,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'flight-data-logger',
     name: 'Flight Data Logger',
-    description: 'Periodically log GPS position, altitude, and speed to a CSV file on the SD card.',
+    get description() { return t('lua_graph.graph_templates.periodicallyLogGpsPositionAltitudeAnd'); },
     category: 'Data Logging',
     graph: {
       version: 1,
       name: 'Flight Data Logger',
-      description: 'Periodic GPS + altitude + speed logging to CSV',
+      get description() { return t('lua_graph.graph_templates.periodicGpsAltitudeSpeedLoggingTo'); },
       runIntervalMs: 500,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -1238,9 +1239,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Timing',
+            get label() { return t('lua_graph.graph_templates.timing'); },
             category: 'flow',
-            propertyValues: { text: 'Log a data point every 2 seconds' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.logADataPointEvery2'); } },
           },
         },
         {
@@ -1249,9 +1250,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 370, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Data Sources',
+            get label() { return t('lua_graph.graph_templates.dataSources'); },
             category: 'flow',
-            propertyValues: { text: 'Read GPS, altitude, and speed' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readGpsAltitudeAndSpeed'); } },
           },
         },
         {
@@ -1260,9 +1261,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 740, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Storage',
+            get label() { return t('lua_graph.graph_templates.storage'); },
             category: 'flow',
-            propertyValues: { text: 'Append to CSV file on SD card' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.appendToCsvFileOnSd'); } },
           },
         },
         {
@@ -1271,7 +1272,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 120 },
           data: {
             definitionType: 'timing-run-every',
-            label: 'Every 2s',
+            get label() { return t('lua_graph.graph_templates.every2s'); },
             category: 'timing',
             propertyValues: { interval_ms: 2000 },
           },
@@ -1282,7 +1283,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 390, y: 110 },
           data: {
             definitionType: 'sensor-gps',
-            label: 'GPS Position',
+            get label() { return t('lua_graph.graph_templates.gpsPosition'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -1293,7 +1294,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 390, y: 260 },
           data: {
             definitionType: 'sensor-groundspeed',
-            label: 'Ground Speed',
+            get label() { return t('lua_graph.graph_templates.groundSpeed'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -1304,7 +1305,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 760, y: 110 },
           data: {
             definitionType: 'action-log-to-file',
-            label: 'Log Position',
+            get label() { return t('lua_graph.graph_templates.logPosition'); },
             category: 'actions',
             propertyValues: { filename: 'flight_log.csv', separator: ',' },
           },
@@ -1325,12 +1326,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'wind-speed-failsafe',
     name: 'Wind Speed Failsafe',
-    description: 'Warn when wind exceeds a threshold, force RTL if it gets critical. Based on ArduPilot plane-wind-failsafe.lua.',
+    get description() { return t('lua_graph.graph_templates.warnWhenWindExceedsAThreshold'); },
     category: 'Safety',
     graph: {
       version: 1,
       name: 'Wind Speed Failsafe',
-      description: 'Wind speed warning + RTL failsafe for planes',
+      get description() { return t('lua_graph.graph_templates.windSpeedWarningRtlFailsafeFor'); },
       runIntervalMs: 1000,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -1341,9 +1342,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Sense',
+            get label() { return t('lua_graph.graph_templates.sense'); },
             category: 'flow',
-            propertyValues: { text: 'Read estimated wind speed' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readEstimatedWindSpeed'); } },
           },
         },
         {
@@ -1352,9 +1353,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 380, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Warning',
+            get label() { return t('lua_graph.graph_templates.warning'); },
             category: 'flow',
-            propertyValues: { text: 'Warn pilot at 10 m/s' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.warnPilotAt10MS'); } },
           },
         },
         {
@@ -1363,9 +1364,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 380, y: 250 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Failsafe',
+            get label() { return t('lua_graph.graph_templates.failsafe'); },
             category: 'flow',
-            propertyValues: { text: 'Force RTL at 15 m/s' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.forceRtlAt15MS'); } },
           },
         },
         {
@@ -1374,7 +1375,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 120 },
           data: {
             definitionType: 'sensor-wind',
-            label: 'Wind Estimate',
+            get label() { return t('lua_graph.graph_templates.windEstimate'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -1385,7 +1386,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 200, y: 200 },
           data: {
             definitionType: 'var-constant',
-            label: 'Warn (m/s)',
+            get label() { return t('lua_graph.graph_templates.warnMS'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '10' },
           },
@@ -1396,7 +1397,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 110 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Wind > 10?',
+            get label() { return t('lua_graph.graph_templates.wind10'); },
             category: 'logic',
             propertyValues: { operator: '>' },
           },
@@ -1407,9 +1408,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 680, y: 100 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Wind Warning',
+            get label() { return t('lua_graph.graph_templates.windWarning'); },
             category: 'actions',
-            propertyValues: { message: 'Wind warning: speed exceeding limit', severity: 4 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.windWarningSpeedExceedingLimit'); }, severity: 4 },
           },
         },
         {
@@ -1418,7 +1419,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 200, y: 410 },
           data: {
             definitionType: 'var-constant',
-            label: 'Failsafe (m/s)',
+            get label() { return t('lua_graph.graph_templates.failsafeMS'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '15' },
           },
@@ -1429,7 +1430,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 400, y: 330 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Wind > 15?',
+            get label() { return t('lua_graph.graph_templates.wind15'); },
             category: 'logic',
             propertyValues: { operator: '>' },
           },
@@ -1440,7 +1441,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 600, y: 330 },
           data: {
             definitionType: 'timing-debounce',
-            label: 'Debounce 5s',
+            get label() { return t('lua_graph.graph_templates.debounce5s'); },
             category: 'timing',
             propertyValues: { delay_ms: 5000 },
           },
@@ -1451,7 +1452,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 830, y: 310 },
           data: {
             definitionType: 'action-set-mode',
-            label: 'Set RTL',
+            get label() { return t('lua_graph.graph_templates.setRtl'); },
             category: 'actions',
             propertyValues: { mode_num: 11 },
           },
@@ -1462,9 +1463,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 830, y: 430 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Wind Failsafe',
+            get label() { return t('lua_graph.graph_templates.windFailsafe'); },
             category: 'actions',
-            propertyValues: { message: 'WIND FAILSAFE: RTL activated!', severity: 0 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.windFailsafeRtlActivated'); }, severity: 0 },
           },
         },
       ],
@@ -1487,12 +1488,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'camera-on-arm',
     name: 'Camera on Arm/Disarm',
-    description: 'Notify when vehicle arms or disarms. Extend with relay/servo to auto-start camera recording. Based on ArduPilot runcam_on_arm.lua.',
+    get description() { return t('lua_graph.graph_templates.notifyWhenVehicleArmsOrDisarms'); },
     category: 'Automation',
     graph: {
       version: 1,
       name: 'Camera on Arm/Disarm',
-      description: 'Notify on arm/disarm transitions with buzzer alerts',
+      get description() { return t('lua_graph.graph_templates.notifyOnArmDisarmTransitionsWith'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -1503,9 +1504,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Monitor arm/disarm state' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.monitorArmDisarmState'); } },
           },
         },
         {
@@ -1514,9 +1515,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 340, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Detect arm and disarm transitions' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.detectArmAndDisarmTransitions'); } },
           },
         },
         {
@@ -1525,9 +1526,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 680, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Alert pilot and play tunes' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.alertPilotAndPlayTunes'); } },
           },
         },
         {
@@ -1536,7 +1537,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 130 },
           data: {
             definitionType: 'sensor-armed',
-            label: 'Armed State',
+            get label() { return t('lua_graph.graph_templates.armedState'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -1547,7 +1548,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 340, y: 100 },
           data: {
             definitionType: 'timing-rising-edge',
-            label: 'Just Armed?',
+            get label() { return t('lua_graph.graph_templates.justArmed'); },
             category: 'timing',
             propertyValues: {},
           },
@@ -1558,7 +1559,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 340, y: 260 },
           data: {
             definitionType: 'timing-falling-edge',
-            label: 'Just Disarmed?',
+            get label() { return t('lua_graph.graph_templates.justDisarmed'); },
             category: 'timing',
             propertyValues: {},
           },
@@ -1569,9 +1570,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 600, y: 80 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Armed Alert',
+            get label() { return t('lua_graph.graph_templates.armedAlert'); },
             category: 'actions',
-            propertyValues: { message: 'Camera recording started', severity: 6 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.cameraRecordingStarted'); }, severity: 6 },
           },
         },
         {
@@ -1580,7 +1581,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 850, y: 80 },
           data: {
             definitionType: 'action-play-tune',
-            label: 'Arm Beep',
+            get label() { return t('lua_graph.graph_templates.armBeep'); },
             category: 'actions',
             propertyValues: { tune: 'MFT200L4O5CEG' },
           },
@@ -1591,9 +1592,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 600, y: 240 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Disarmed Alert',
+            get label() { return t('lua_graph.graph_templates.disarmedAlert'); },
             category: 'actions',
-            propertyValues: { message: 'Camera recording stopped', severity: 6 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.cameraRecordingStopped'); }, severity: 6 },
           },
         },
         {
@@ -1602,7 +1603,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 850, y: 240 },
           data: {
             definitionType: 'action-play-tune',
-            label: 'Disarm Beep',
+            get label() { return t('lua_graph.graph_templates.disarmBeep'); },
             category: 'actions',
             propertyValues: { tune: 'MFT200L4O5GEC' },
           },
@@ -1624,12 +1625,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'gps-satellite-monitor',
     name: 'GPS Satellite Monitor',
-    description: 'Warn the pilot with a buzzer alert when GPS fix degrades below 3D fix quality.',
+    get description() { return t('lua_graph.graph_templates.warnThePilotWithABuzzer'); },
     category: 'Safety',
     graph: {
       version: 1,
       name: 'GPS Satellite Monitor',
-      description: 'Alert when GPS fix is lost or degraded',
+      get description() { return t('lua_graph.graph_templates.alertWhenGpsFixIsLost'); },
       runIntervalMs: 1000,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -1640,9 +1641,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read GPS fix status' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readGpsFixStatus'); } },
           },
         },
         {
@@ -1651,9 +1652,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 370, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Only alert when fix is lost while armed' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.onlyAlertWhenFixIsLost'); } },
           },
         },
         {
@@ -1662,9 +1663,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 730, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Warn pilot with message and buzzer' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.warnPilotWithMessageAndBuzzer'); } },
           },
         },
         {
@@ -1673,7 +1674,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 100 },
           data: {
             definitionType: 'sensor-gps-status',
-            label: 'GPS Status',
+            get label() { return t('lua_graph.graph_templates.gpsStatus'); },
             category: 'sensors',
             propertyValues: { instance: 0 },
           },
@@ -1684,7 +1685,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 280 },
           data: {
             definitionType: 'sensor-armed',
-            label: 'Armed?',
+            get label() { return t('lua_graph.graph_templates.armed'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -1695,7 +1696,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 320, y: 110 },
           data: {
             definitionType: 'logic-not',
-            label: 'No 3D Fix?',
+            get label() { return t('lua_graph.graph_templates.no3dFix'); },
             category: 'logic',
             propertyValues: {},
           },
@@ -1706,7 +1707,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 520, y: 150 },
           data: {
             definitionType: 'logic-and',
-            label: 'Armed + No Fix',
+            get label() { return t('lua_graph.graph_templates.armedNoFix'); },
             category: 'logic',
             propertyValues: {},
           },
@@ -1717,9 +1718,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 750, y: 100 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'GPS Warning',
+            get label() { return t('lua_graph.graph_templates.gpsWarning'); },
             category: 'actions',
-            propertyValues: { message: 'WARNING: GPS 3D fix lost!', severity: 2 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.warningGps3dFixLost'); }, severity: 2 },
           },
         },
         {
@@ -1728,7 +1729,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 750, y: 240 },
           data: {
             definitionType: 'action-play-tune',
-            label: 'Alert Buzzer',
+            get label() { return t('lua_graph.graph_templates.alertBuzzer'); },
             category: 'actions',
             propertyValues: { tune: 'MFT100L8O5CDCD' },
           },
@@ -1749,12 +1750,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'flight-mode-logger',
     name: 'Flight Mode Change Logger',
-    description: 'Log every flight mode change to a file and announce it via GCS message.',
+    get description() { return t('lua_graph.graph_templates.logEveryFlightModeChangeTo'); },
     category: 'Data Logging',
     graph: {
       version: 1,
       name: 'Flight Mode Change Logger',
-      description: 'Track and log all flight mode transitions',
+      get description() { return t('lua_graph.graph_templates.trackAndLogAllFlightMode'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -1765,9 +1766,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read the current flight mode number' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readTheCurrentFlightModeNumber'); } },
           },
         },
         {
@@ -1776,9 +1777,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 360, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Only act when the mode changes' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.onlyActWhenTheModeChanges'); } },
           },
         },
         {
@@ -1787,9 +1788,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 680, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Log to file and notify pilot' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.logToFileAndNotifyPilot'); } },
           },
         },
         {
@@ -1798,7 +1799,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 120 },
           data: {
             definitionType: 'sensor-flight-mode',
-            label: 'Flight Mode',
+            get label() { return t('lua_graph.graph_templates.flightMode'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -1809,7 +1810,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 360, y: 125 },
           data: {
             definitionType: 'timing-on-change',
-            label: 'Mode Changed?',
+            get label() { return t('lua_graph.graph_templates.modeChanged2'); },
             category: 'timing',
             propertyValues: {},
           },
@@ -1820,7 +1821,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 360, y: 260 },
           data: {
             definitionType: 'sensor-gps',
-            label: 'GPS Position',
+            get label() { return t('lua_graph.graph_templates.gpsPosition'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -1831,9 +1832,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 700, y: 100 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Mode Changed',
+            get label() { return t('lua_graph.graph_templates.modeChanged'); },
             category: 'actions',
-            propertyValues: { message: 'Flight mode changed', severity: 6 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.flightModeChanged'); }, severity: 6 },
           },
         },
         {
@@ -1842,7 +1843,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 700, y: 240 },
           data: {
             definitionType: 'action-log-to-file',
-            label: 'Log Mode Change',
+            get label() { return t('lua_graph.graph_templates.logModeChange'); },
             category: 'actions',
             propertyValues: { filename: 'mode_log.csv', separator: ',' },
           },
@@ -1865,12 +1866,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'led-brightness-switch',
     name: 'LED Brightness Switch',
-    description: 'Control LED brightness with a 3-position aux switch (Off / Dim / Bright). Based on ArduPilot leds_on_a_switch.lua.',
+    get description() { return t('lua_graph.graph_templates.controlLedBrightnessWithA3'); },
     category: 'Automation',
     graph: {
       version: 1,
       name: 'LED Brightness Switch',
-      description: '3-position aux switch for LED brightness control',
+      get description() { return t('lua_graph.graph_templates.n3PositionAuxSwitchForLed'); },
       runIntervalMs: 500,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -1881,9 +1882,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read aux switch (Low / Mid / High)' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readAuxSwitchLowMidHigh'); } },
           },
         },
         {
@@ -1892,9 +1893,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 380, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Route to the correct brightness level' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.routeToTheCorrectBrightnessLevel'); } },
           },
         },
         {
@@ -1903,9 +1904,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 700, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Set NTF_LED_BRIGHT parameter' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.setNtfLedBrightParameter'); } },
           },
         },
         {
@@ -1914,7 +1915,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 120 },
           data: {
             definitionType: 'sensor-rc-aux-switch',
-            label: 'LED Switch',
+            get label() { return t('lua_graph.graph_templates.ledSwitch'); },
             category: 'sensors',
             propertyValues: { aux_fn: 300 },
           },
@@ -1925,7 +1926,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 530, y: 80 },
           data: {
             definitionType: 'var-constant',
-            label: 'Off (0)',
+            get label() { return t('lua_graph.graph_templates.off0'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '0' },
           },
@@ -1936,7 +1937,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 720, y: 80 },
           data: {
             definitionType: 'action-set-param',
-            label: 'LEDs Off',
+            get label() { return t('lua_graph.graph_templates.ledsOff'); },
             category: 'actions',
             propertyValues: { param_name: 'NTF_LED_BRIGHT' },
           },
@@ -1947,7 +1948,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 530, y: 220 },
           data: {
             definitionType: 'var-constant',
-            label: 'Dim (1)',
+            get label() { return t('lua_graph.graph_templates.dim1'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '1' },
           },
@@ -1958,7 +1959,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 720, y: 220 },
           data: {
             definitionType: 'action-set-param',
-            label: 'LEDs Dim',
+            get label() { return t('lua_graph.graph_templates.ledsDim'); },
             category: 'actions',
             propertyValues: { param_name: 'NTF_LED_BRIGHT' },
           },
@@ -1969,7 +1970,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 530, y: 360 },
           data: {
             definitionType: 'var-constant',
-            label: 'Bright (3)',
+            get label() { return t('lua_graph.graph_templates.bright3'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '3' },
           },
@@ -1980,7 +1981,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 720, y: 360 },
           data: {
             definitionType: 'action-set-param',
-            label: 'LEDs Bright',
+            get label() { return t('lua_graph.graph_templates.ledsBright'); },
             category: 'actions',
             propertyValues: { param_name: 'NTF_LED_BRIGHT' },
           },
@@ -2003,12 +2004,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'aerial-survey',
     name: 'Aerial Survey Automation',
-    description: 'Auto-trigger camera at timed intervals when all survey conditions are met: armed, in AUTO mode, moving, and at correct altitude. Logs GPS coordinates for each photo.',
+    get description() { return t('lua_graph.graph_templates.autoTriggerCameraAtTimedIntervals'); },
     category: 'Automation',
     graph: {
       version: 1,
       name: 'Aerial Survey Automation',
-      description: 'Camera trigger + GPS logging for automated aerial survey missions',
+      get description() { return t('lua_graph.graph_templates.cameraTriggerGpsLoggingForAutomated'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -2016,102 +2017,102 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
         // ── Stage comments ──
         {
           id: 'c1', type: 'flow-comment', position: { x: 40, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Sensors', category: 'flow', propertyValues: { text: 'Read vehicle state: arm, mode, speed, altitude, GPS' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.sensors'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.readVehicleStateArmModeSpeed'); } } },
         },
         {
           id: 'c2', type: 'flow-comment', position: { x: 400, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Conditions', category: 'flow', propertyValues: { text: 'Check: correct mode, moving, at survey altitude' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.conditions'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.checkCorrectModeMovingAtSurvey'); } } },
         },
         {
           id: 'c3', type: 'flow-comment', position: { x: 800, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Gate', category: 'flow', propertyValues: { text: 'All 4 conditions must pass before triggering' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.gate'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.all4ConditionsMustPassBefore'); } } },
         },
         {
           id: 'c4', type: 'flow-comment', position: { x: 1200, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Actions', category: 'flow', propertyValues: { text: 'Trigger camera, log GPS + alt, notify pilot' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.actions'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.triggerCameraLogGpsAltNotify'); } } },
         },
         // ── Sensors ──
         {
           id: 'armed', type: 'sensor-armed', position: { x: 60, y: 120 },
-          data: { definitionType: 'sensor-armed', label: 'Armed State', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-armed', get label() { return t('lua_graph.graph_templates.armedState'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'mode', type: 'sensor-flight-mode', position: { x: 60, y: 260 },
-          data: { definitionType: 'sensor-flight-mode', label: 'Flight Mode', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-flight-mode', get label() { return t('lua_graph.graph_templates.flightMode'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'speed', type: 'sensor-groundspeed', position: { x: 60, y: 400 },
-          data: { definitionType: 'sensor-groundspeed', label: 'Ground Speed', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-groundspeed', get label() { return t('lua_graph.graph_templates.groundSpeed'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'altitude', type: 'sensor-baro-alt', position: { x: 60, y: 540 },
-          data: { definitionType: 'sensor-baro-alt', label: 'Altitude', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-baro-alt', get label() { return t('lua_graph.graph_templates.altitude'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'gps', type: 'sensor-gps', position: { x: 60, y: 680 },
-          data: { definitionType: 'sensor-gps', label: 'GPS Position', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-gps', get label() { return t('lua_graph.graph_templates.gpsPosition'); }, category: 'sensors', propertyValues: {} },
         },
         // ── Constants ──
         {
           id: 'auto_mode_val', type: 'var-constant', position: { x: 240, y: 330 },
-          data: { definitionType: 'var-constant', label: 'AUTO Mode (10)', category: 'variables', propertyValues: { type: 'number', value: '10' } },
+          data: { definitionType: 'var-constant', get label() { return t('lua_graph.graph_templates.autoMode10'); }, category: 'variables', propertyValues: { type: 'number', value: '10' } },
         },
         {
           id: 'min_speed_val', type: 'var-constant', position: { x: 240, y: 470 },
-          data: { definitionType: 'var-constant', label: 'Min Speed (m/s)', category: 'variables', propertyValues: { type: 'number', value: '2' } },
+          data: { definitionType: 'var-constant', get label() { return t('lua_graph.graph_templates.minSpeedMS'); }, category: 'variables', propertyValues: { type: 'number', value: '2' } },
         },
         // ── Edge detect on arm ──
         {
           id: 'arm_edge', type: 'timing-rising-edge', position: { x: 420, y: 120 },
-          data: { definitionType: 'timing-rising-edge', label: 'Just Armed?', category: 'timing', propertyValues: {} },
+          data: { definitionType: 'timing-rising-edge', get label() { return t('lua_graph.graph_templates.justArmed'); }, category: 'timing', propertyValues: {} },
         },
         // ── Logic checks ──
         {
           id: 'mode_check', type: 'logic-compare', position: { x: 420, y: 260 },
-          data: { definitionType: 'logic-compare', label: 'In AUTO?', category: 'logic', propertyValues: { operator: '==' } },
+          data: { definitionType: 'logic-compare', get label() { return t('lua_graph.graph_templates.inAuto'); }, category: 'logic', propertyValues: { operator: '==' } },
         },
         {
           id: 'speed_check', type: 'logic-compare', position: { x: 420, y: 400 },
-          data: { definitionType: 'logic-compare', label: 'Moving?', category: 'logic', propertyValues: { operator: '>' } },
+          data: { definitionType: 'logic-compare', get label() { return t('lua_graph.graph_templates.moving'); }, category: 'logic', propertyValues: { operator: '>' } },
         },
         {
           id: 'alt_check', type: 'logic-range-check', position: { x: 420, y: 540 },
-          data: { definitionType: 'logic-range-check', label: 'At Survey Alt?', category: 'logic', propertyValues: { min: 30, max: 120 } },
+          data: { definitionType: 'logic-range-check', get label() { return t('lua_graph.graph_templates.atSurveyAlt'); }, category: 'logic', propertyValues: { min: 30, max: 120 } },
         },
         // ── AND gates (chain 4 conditions) ──
         {
           id: 'gate1', type: 'logic-and', position: { x: 680, y: 180 },
-          data: { definitionType: 'logic-and', label: 'Armed + AUTO', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.armedAuto'); }, category: 'logic', propertyValues: {} },
         },
         {
           id: 'gate2', type: 'logic-and', position: { x: 680, y: 440 },
-          data: { definitionType: 'logic-and', label: 'Moving + Alt OK', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.movingAltOk'); }, category: 'logic', propertyValues: {} },
         },
         {
           id: 'gate3', type: 'logic-and', position: { x: 900, y: 300 },
-          data: { definitionType: 'logic-and', label: 'All Conditions', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.allConditions'); }, category: 'logic', propertyValues: {} },
         },
         // ── Camera timer ──
         {
           id: 'camera_timer', type: 'timing-run-every', position: { x: 1100, y: 300 },
-          data: { definitionType: 'timing-run-every', label: 'Every 3 sec', category: 'timing', propertyValues: { interval_ms: 3000 } },
+          data: { definitionType: 'timing-run-every', get label() { return t('lua_graph.graph_templates.every3Sec'); }, category: 'timing', propertyValues: { interval_ms: 3000 } },
         },
         // ── Actions ──
         {
           id: 'start_msg', type: 'action-gcs-text', position: { x: 680, y: 80 },
-          data: { definitionType: 'action-gcs-text', label: 'Survey Ready', category: 'actions', propertyValues: { message: 'Survey mode active - camera armed', severity: 5 } },
+          data: { definitionType: 'action-gcs-text', get label() { return t('lua_graph.graph_templates.surveyReady'); }, category: 'actions', propertyValues: { get message() { return t('lua_graph.graph_templates.surveyModeActiveCameraArmed'); }, severity: 5 } },
         },
         {
           id: 'camera_relay', type: 'action-relay', position: { x: 1300, y: 200 },
-          data: { definitionType: 'action-relay', label: 'Camera Shutter', category: 'actions', propertyValues: { relay_num: 0, state: 1 } },
+          data: { definitionType: 'action-relay', get label() { return t('lua_graph.graph_templates.cameraShutter'); }, category: 'actions', propertyValues: { relay_num: 0, state: 1 } },
         },
         {
           id: 'photo_msg', type: 'action-gcs-text', position: { x: 1300, y: 350 },
-          data: { definitionType: 'action-gcs-text', label: 'Photo Taken', category: 'actions', propertyValues: { message: 'Photo captured', severity: 6 } },
+          data: { definitionType: 'action-gcs-text', get label() { return t('lua_graph.graph_templates.photoTaken'); }, category: 'actions', propertyValues: { get message() { return t('lua_graph.graph_templates.photoCaptured'); }, severity: 6 } },
         },
         {
           id: 'log_photo', type: 'action-log-to-file', position: { x: 1300, y: 500 },
-          data: { definitionType: 'action-log-to-file', label: 'Log GPS + Alt', category: 'actions', propertyValues: { filename: 'survey_log.csv', separator: ',' } },
+          data: { definitionType: 'action-log-to-file', get label() { return t('lua_graph.graph_templates.logGpsAlt'); }, category: 'actions', propertyValues: { filename: 'survey_log.csv', separator: ',' } },
         },
       ],
       edges: [
@@ -2152,12 +2153,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'gimbal-stabilizer',
     name: 'Gimbal Stabilizer',
-    description: 'Two-axis camera gimbal stabilization using RC input with attitude compensation. Subtracts vehicle pitch/roll from operator stick input for smooth, stabilized servo output.',
+    get description() { return t('lua_graph.graph_templates.twoAxisCameraGimbalStabilizationUsing'); },
     category: 'Configuration',
     graph: {
       version: 1,
       name: 'Gimbal Stabilizer',
-      description: 'Two-axis servo gimbal with RC control and attitude stabilization',
+      get description() { return t('lua_graph.graph_templates.twoAxisServoGimbalWithRc'); },
       runIntervalMs: 50,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -2165,90 +2166,90 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
         // ── Stage comments ──
         {
           id: 'c1', type: 'flow-comment', position: { x: 40, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'RC Inputs', category: 'flow', propertyValues: { text: 'Read RC gimbal sticks + vehicle attitude' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.rcInputs'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.readRcGimbalSticksVehicleAttitude'); } } },
         },
         {
           id: 'c2', type: 'flow-comment', position: { x: 280, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Normalize', category: 'flow', propertyValues: { text: 'Map RC PWM (1000-2000) to angle (-45..45)' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.normalize'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.mapRcPwm10002000To'); } } },
         },
         {
           id: 'c3', type: 'flow-comment', position: { x: 520, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Stabilize', category: 'flow', propertyValues: { text: 'Subtract vehicle tilt for stabilization' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.stabilize'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.subtractVehicleTiltForStabilization'); } } },
         },
         {
           id: 'c4', type: 'flow-comment', position: { x: 960, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Output', category: 'flow', propertyValues: { text: 'Clamp, convert to PWM, drive servos' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.output'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.clampConvertToPwmDriveServos'); } } },
         },
         // ── Sensors ──
         {
           id: 'rc_tilt', type: 'sensor-rc-channel', position: { x: 60, y: 120 },
-          data: { definitionType: 'sensor-rc-channel', label: 'Tilt Stick (CH6)', category: 'sensors', propertyValues: { channel: 6 } },
+          data: { definitionType: 'sensor-rc-channel', get label() { return t('lua_graph.graph_templates.tiltStickCh6'); }, category: 'sensors', propertyValues: { channel: 6 } },
         },
         {
           id: 'rc_pan', type: 'sensor-rc-channel', position: { x: 60, y: 280 },
-          data: { definitionType: 'sensor-rc-channel', label: 'Pan Stick (CH7)', category: 'sensors', propertyValues: { channel: 7 } },
+          data: { definitionType: 'sensor-rc-channel', get label() { return t('lua_graph.graph_templates.panStickCh7'); }, category: 'sensors', propertyValues: { channel: 7 } },
         },
         {
           id: 'attitude', type: 'sensor-attitude', position: { x: 60, y: 440 },
-          data: { definitionType: 'sensor-attitude', label: 'Vehicle Attitude', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-attitude', get label() { return t('lua_graph.graph_templates.vehicleAttitude'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'aux', type: 'sensor-rc-aux-switch', position: { x: 60, y: 620 },
-          data: { definitionType: 'sensor-rc-aux-switch', label: 'Stabilize Switch', category: 'sensors', propertyValues: { aux_fn: 300 } },
+          data: { definitionType: 'sensor-rc-aux-switch', get label() { return t('lua_graph.graph_templates.stabilizeSwitch'); }, category: 'sensors', propertyValues: { aux_fn: 300 } },
         },
         // ── Map RC to angle ──
         {
           id: 'map_tilt', type: 'math-map-range', position: { x: 300, y: 120 },
-          data: { definitionType: 'math-map-range', label: 'RC to Tilt Angle', category: 'math', propertyValues: { in_min: 1000, in_max: 2000, out_min: -45, out_max: 45 } },
+          data: { definitionType: 'math-map-range', get label() { return t('lua_graph.graph_templates.rcToTiltAngle'); }, category: 'math', propertyValues: { in_min: 1000, in_max: 2000, out_min: -45, out_max: 45 } },
         },
         {
           id: 'map_pan', type: 'math-map-range', position: { x: 300, y: 280 },
-          data: { definitionType: 'math-map-range', label: 'RC to Pan Angle', category: 'math', propertyValues: { in_min: 1000, in_max: 2000, out_min: -45, out_max: 45 } },
+          data: { definitionType: 'math-map-range', get label() { return t('lua_graph.graph_templates.rcToPanAngle'); }, category: 'math', propertyValues: { in_min: 1000, in_max: 2000, out_min: -45, out_max: 45 } },
         },
         // ── Subtract attitude (stabilization) ──
         {
           id: 'stab_tilt', type: 'math-subtract', position: { x: 540, y: 160 },
-          data: { definitionType: 'math-subtract', label: 'Tilt - Pitch', category: 'math', propertyValues: {} },
+          data: { definitionType: 'math-subtract', get label() { return t('lua_graph.graph_templates.tiltPitch'); }, category: 'math', propertyValues: {} },
         },
         {
           id: 'stab_pan', type: 'math-subtract', position: { x: 540, y: 320 },
-          data: { definitionType: 'math-subtract', label: 'Pan - Roll', category: 'math', propertyValues: {} },
+          data: { definitionType: 'math-subtract', get label() { return t('lua_graph.graph_templates.panRoll'); }, category: 'math', propertyValues: {} },
         },
         // ── Clamp to safe travel ──
         {
           id: 'clamp_tilt', type: 'math-clamp', position: { x: 760, y: 160 },
-          data: { definitionType: 'math-clamp', label: 'Clamp Tilt', category: 'math', propertyValues: { min: -60, max: 60 } },
+          data: { definitionType: 'math-clamp', get label() { return t('lua_graph.graph_templates.clampTilt'); }, category: 'math', propertyValues: { min: -60, max: 60 } },
         },
         {
           id: 'clamp_pan', type: 'math-clamp', position: { x: 760, y: 320 },
-          data: { definitionType: 'math-clamp', label: 'Clamp Pan', category: 'math', propertyValues: { min: -60, max: 60 } },
+          data: { definitionType: 'math-clamp', get label() { return t('lua_graph.graph_templates.clampPan'); }, category: 'math', propertyValues: { min: -60, max: 60 } },
         },
         // ── Map angle to servo PWM ──
         {
           id: 'tilt_pwm', type: 'math-map-range', position: { x: 980, y: 160 },
-          data: { definitionType: 'math-map-range', label: 'Tilt to PWM', category: 'math', propertyValues: { in_min: -60, in_max: 60, out_min: 1000, out_max: 2000 } },
+          data: { definitionType: 'math-map-range', get label() { return t('lua_graph.graph_templates.tiltToPwm'); }, category: 'math', propertyValues: { in_min: -60, in_max: 60, out_min: 1000, out_max: 2000 } },
         },
         {
           id: 'pan_pwm', type: 'math-map-range', position: { x: 980, y: 320 },
-          data: { definitionType: 'math-map-range', label: 'Pan to PWM', category: 'math', propertyValues: { in_min: -60, in_max: 60, out_min: 1000, out_max: 2000 } },
+          data: { definitionType: 'math-map-range', get label() { return t('lua_graph.graph_templates.panToPwm'); }, category: 'math', propertyValues: { in_min: -60, in_max: 60, out_min: 1000, out_max: 2000 } },
         },
         // ── Servo outputs ──
         {
           id: 'servo_tilt', type: 'action-set-servo', position: { x: 1220, y: 160 },
-          data: { definitionType: 'action-set-servo', label: 'Tilt Servo (S7)', category: 'actions', propertyValues: { servo_num: 7 } },
+          data: { definitionType: 'action-set-servo', get label() { return t('lua_graph.graph_templates.tiltServoS7'); }, category: 'actions', propertyValues: { servo_num: 7 } },
         },
         {
           id: 'servo_pan', type: 'action-set-servo', position: { x: 1220, y: 320 },
-          data: { definitionType: 'action-set-servo', label: 'Pan Servo (S8)', category: 'actions', propertyValues: { servo_num: 8 } },
+          data: { definitionType: 'action-set-servo', get label() { return t('lua_graph.graph_templates.panServoS8'); }, category: 'actions', propertyValues: { servo_num: 8 } },
         },
         // ── Enable notification ──
         {
           id: 'aux_edge', type: 'timing-rising-edge', position: { x: 300, y: 620 },
-          data: { definitionType: 'timing-rising-edge', label: 'Switch ON?', category: 'timing', propertyValues: {} },
+          data: { definitionType: 'timing-rising-edge', get label() { return t('lua_graph.graph_templates.switchOn'); }, category: 'timing', propertyValues: {} },
         },
         {
           id: 'enable_msg', type: 'action-gcs-text', position: { x: 540, y: 620 },
-          data: { definitionType: 'action-gcs-text', label: 'Stab Enabled', category: 'actions', propertyValues: { message: 'Gimbal stabilization enabled', severity: 6 } },
+          data: { definitionType: 'action-gcs-text', get label() { return t('lua_graph.graph_templates.stabEnabled'); }, category: 'actions', propertyValues: { get message() { return t('lua_graph.graph_templates.gimbalStabilizationEnabled'); }, severity: 6 } },
         },
       ],
       edges: [
@@ -2285,12 +2286,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'attitude-led-display',
     name: 'Attitude LED Display',
-    description: 'Drive NeoPixel LED colors based on vehicle attitude: roll controls red, pitch controls green, yaw controls blue. Enabled by aux switch, only when armed.',
+    get description() { return t('lua_graph.graph_templates.driveNeopixelLedColorsBasedOn'); },
     category: 'Creative',
     graph: {
       version: 1,
       name: 'Attitude LED Display',
-      description: 'RGB LEDs react dynamically to vehicle attitude angles',
+      get description() { return t('lua_graph.graph_templates.rgbLedsReactDynamicallyToVehicle'); },
       runIntervalMs: 50,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -2298,32 +2299,32 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
         // ── Stage comments ──
         {
           id: 'c1', type: 'flow-comment', position: { x: 40, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Inputs', category: 'flow', propertyValues: { text: 'Read attitude angles, arm state, and enable switch' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.inputs'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.readAttitudeAnglesArmStateAnd'); } } },
         },
         {
           id: 'c2', type: 'flow-comment', position: { x: 280, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Process', category: 'flow', propertyValues: { text: 'Abs value, then map angles to 0-255 color range' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.process'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.absValueThenMapAnglesTo'); } } },
         },
         {
           id: 'c3', type: 'flow-comment', position: { x: 720, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Clamp', category: 'flow', propertyValues: { text: 'Limit to valid 0-255 for each color channel' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.clamp'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.limitToValid0255For'); } } },
         },
         {
           id: 'c4', type: 'flow-comment', position: { x: 980, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Output', category: 'flow', propertyValues: { text: 'Gate by armed + switch, output to LED strip' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.output'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.gateByArmedSwitchOutputTo'); } } },
         },
         // ── Sensors ──
         {
           id: 'attitude', type: 'sensor-attitude', position: { x: 60, y: 160 },
-          data: { definitionType: 'sensor-attitude', label: 'Attitude', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-attitude', get label() { return t('lua_graph.graph_templates.attitude'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'armed', type: 'sensor-armed', position: { x: 60, y: 420 },
-          data: { definitionType: 'sensor-armed', label: 'Armed?', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-armed', get label() { return t('lua_graph.graph_templates.armed'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'aux', type: 'sensor-rc-aux-switch', position: { x: 60, y: 560 },
-          data: { definitionType: 'sensor-rc-aux-switch', label: 'LED Switch', category: 'sensors', propertyValues: { aux_fn: 300 } },
+          data: { definitionType: 'sensor-rc-aux-switch', get label() { return t('lua_graph.graph_templates.ledSwitch'); }, category: 'sensors', propertyValues: { aux_fn: 300 } },
         },
         // ── Absolute value (roll and pitch can be negative) ──
         {
@@ -2337,51 +2338,51 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
         // ── Map to 0-255 color range ──
         {
           id: 'map_r', type: 'math-map-range', position: { x: 500, y: 120 },
-          data: { definitionType: 'math-map-range', label: 'Roll to Red', category: 'math', propertyValues: { in_min: 0, in_max: 45, out_min: 0, out_max: 255 } },
+          data: { definitionType: 'math-map-range', get label() { return t('lua_graph.graph_templates.rollToRed'); }, category: 'math', propertyValues: { in_min: 0, in_max: 45, out_min: 0, out_max: 255 } },
         },
         {
           id: 'map_g', type: 'math-map-range', position: { x: 500, y: 280 },
-          data: { definitionType: 'math-map-range', label: 'Pitch to Green', category: 'math', propertyValues: { in_min: 0, in_max: 45, out_min: 0, out_max: 255 } },
+          data: { definitionType: 'math-map-range', get label() { return t('lua_graph.graph_templates.pitchToGreen'); }, category: 'math', propertyValues: { in_min: 0, in_max: 45, out_min: 0, out_max: 255 } },
         },
         {
           id: 'map_b', type: 'math-map-range', position: { x: 500, y: 440 },
-          data: { definitionType: 'math-map-range', label: 'Yaw to Blue', category: 'math', propertyValues: { in_min: 0, in_max: 360, out_min: 0, out_max: 255 } },
+          data: { definitionType: 'math-map-range', get label() { return t('lua_graph.graph_templates.yawToBlue'); }, category: 'math', propertyValues: { in_min: 0, in_max: 360, out_min: 0, out_max: 255 } },
         },
         // ── Clamp to valid 0-255 ──
         {
           id: 'clamp_r', type: 'math-clamp', position: { x: 740, y: 120 },
-          data: { definitionType: 'math-clamp', label: 'Clamp Red', category: 'math', propertyValues: { min: 0, max: 255 } },
+          data: { definitionType: 'math-clamp', get label() { return t('lua_graph.graph_templates.clampRed'); }, category: 'math', propertyValues: { min: 0, max: 255 } },
         },
         {
           id: 'clamp_g', type: 'math-clamp', position: { x: 740, y: 280 },
-          data: { definitionType: 'math-clamp', label: 'Clamp Green', category: 'math', propertyValues: { min: 0, max: 255 } },
+          data: { definitionType: 'math-clamp', get label() { return t('lua_graph.graph_templates.clampGreen'); }, category: 'math', propertyValues: { min: 0, max: 255 } },
         },
         {
           id: 'clamp_b', type: 'math-clamp', position: { x: 740, y: 440 },
-          data: { definitionType: 'math-clamp', label: 'Clamp Blue', category: 'math', propertyValues: { min: 0, max: 255 } },
+          data: { definitionType: 'math-clamp', get label() { return t('lua_graph.graph_templates.clampBlue'); }, category: 'math', propertyValues: { min: 0, max: 255 } },
         },
         // ── Gate: armed + aux switch ──
         {
           id: 'gate', type: 'logic-and', position: { x: 780, y: 560 },
-          data: { definitionType: 'logic-and', label: 'Armed + Enabled', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.armedEnabled'); }, category: 'logic', propertyValues: {} },
         },
         {
           id: 'timer', type: 'timing-run-every', position: { x: 990, y: 490 },
-          data: { definitionType: 'timing-run-every', label: 'Every 100ms', category: 'timing', propertyValues: { interval_ms: 100 } },
+          data: { definitionType: 'timing-run-every', get label() { return t('lua_graph.graph_templates.every100ms'); }, category: 'timing', propertyValues: { interval_ms: 100 } },
         },
         // ── LED output ──
         {
           id: 'led', type: 'action-set-led', position: { x: 1020, y: 240 },
-          data: { definitionType: 'action-set-led', label: 'NeoPixel LED', category: 'actions', propertyValues: { instance: 0 } },
+          data: { definitionType: 'action-set-led', get label() { return t('lua_graph.graph_templates.neopixelLed'); }, category: 'actions', propertyValues: { instance: 0 } },
         },
         // ── Enable notification ──
         {
           id: 'aux_edge', type: 'timing-rising-edge', position: { x: 300, y: 560 },
-          data: { definitionType: 'timing-rising-edge', label: 'Switch ON?', category: 'timing', propertyValues: {} },
+          data: { definitionType: 'timing-rising-edge', get label() { return t('lua_graph.graph_templates.switchOn'); }, category: 'timing', propertyValues: {} },
         },
         {
           id: 'enable_msg', type: 'action-gcs-text', position: { x: 540, y: 560 },
-          data: { definitionType: 'action-gcs-text', label: 'LED Active', category: 'actions', propertyValues: { message: 'Attitude LED display activated', severity: 6 } },
+          data: { definitionType: 'action-gcs-text', get label() { return t('lua_graph.graph_templates.ledActive'); }, category: 'actions', propertyValues: { get message() { return t('lua_graph.graph_templates.attitudeLedDisplayActivated'); }, severity: 6 } },
         },
       ],
       edges: [
@@ -2419,12 +2420,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'preflight-health-check',
     name: 'Preflight Health Check',
-    description: 'On arm, checks GPS satellite count, battery voltage, and altitude sensor health. Announces PASS or FAIL with a buzzer melody. 19 interconnected nodes.',
+    get description() { return t('lua_graph.graph_templates.onArmChecksGpsSatelliteCount'); },
     category: 'Utility',
     graph: {
       version: 1,
       name: 'Preflight Health Check',
-      description: 'Automated preflight sensor checks with pass/fail announcement',
+      get description() { return t('lua_graph.graph_templates.automatedPreflightSensorChecksWithPass'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -2432,103 +2433,103 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
         // ── Stage comments ──
         {
           id: 'c1', type: 'flow-comment', position: { x: 40, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Sensors', category: 'flow', propertyValues: { text: 'Read all sensor health indicators on every cycle' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.sensors'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.readAllSensorHealthIndicatorsOn'); } } },
         },
         {
           id: 'c2', type: 'flow-comment', position: { x: 400, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Checks', category: 'flow', propertyValues: { text: 'Verify GPS sats >= 8, voltage > 14V, altitude near ground' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.checks'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.verifyGpsSats8Voltage14v'); } } },
         },
         {
           id: 'c3', type: 'flow-comment', position: { x: 700, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Health', category: 'flow', propertyValues: { text: 'Chain all checks into a single healthy/unhealthy flag' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.health'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.chainAllChecksIntoASingle'); } } },
         },
         {
           id: 'c4', type: 'flow-comment', position: { x: 1040, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Announce', category: 'flow', propertyValues: { text: 'On arm moment: play pass/fail melody and notify GCS' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.announce'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.onArmMomentPlayPassFail'); } } },
         },
         // ── Sensors ──
         {
           id: 'armed', type: 'sensor-armed', position: { x: 60, y: 120 },
-          data: { definitionType: 'sensor-armed', label: 'Armed State', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-armed', get label() { return t('lua_graph.graph_templates.armedState'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'gps', type: 'sensor-gps-status', position: { x: 60, y: 280 },
-          data: { definitionType: 'sensor-gps-status', label: 'GPS Status', category: 'sensors', propertyValues: { instance: 0 } },
+          data: { definitionType: 'sensor-gps-status', get label() { return t('lua_graph.graph_templates.gpsStatus'); }, category: 'sensors', propertyValues: { instance: 0 } },
         },
         {
           id: 'battery', type: 'sensor-battery', position: { x: 60, y: 440 },
-          data: { definitionType: 'sensor-battery', label: 'Battery', category: 'sensors', propertyValues: { instance: 0 } },
+          data: { definitionType: 'sensor-battery', get label() { return t('lua_graph.graph_templates.battery'); }, category: 'sensors', propertyValues: { instance: 0 } },
         },
         {
           id: 'altitude', type: 'sensor-baro-alt', position: { x: 60, y: 580 },
-          data: { definitionType: 'sensor-baro-alt', label: 'Altitude', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-baro-alt', get label() { return t('lua_graph.graph_templates.altitude'); }, category: 'sensors', propertyValues: {} },
         },
         // ── Constants ──
         {
           id: 'sat_min', type: 'var-constant', position: { x: 240, y: 350 },
-          data: { definitionType: 'var-constant', label: 'Min Sats (8)', category: 'variables', propertyValues: { type: 'number', value: '8' } },
+          data: { definitionType: 'var-constant', get label() { return t('lua_graph.graph_templates.minSats8'); }, category: 'variables', propertyValues: { type: 'number', value: '8' } },
         },
         {
           id: 'batt_min', type: 'var-constant', position: { x: 240, y: 510 },
-          data: { definitionType: 'var-constant', label: 'Min Volts (14)', category: 'variables', propertyValues: { type: 'number', value: '14' } },
+          data: { definitionType: 'var-constant', get label() { return t('lua_graph.graph_templates.minVolts14'); }, category: 'variables', propertyValues: { type: 'number', value: '14' } },
         },
         // ── Arm edge detect ──
         {
           id: 'arm_edge', type: 'timing-rising-edge', position: { x: 420, y: 120 },
-          data: { definitionType: 'timing-rising-edge', label: 'Arm Moment', category: 'timing', propertyValues: {} },
+          data: { definitionType: 'timing-rising-edge', get label() { return t('lua_graph.graph_templates.armMoment'); }, category: 'timing', propertyValues: {} },
         },
         // ── Individual checks ──
         {
           id: 'sat_check', type: 'logic-compare', position: { x: 420, y: 280 },
-          data: { definitionType: 'logic-compare', label: 'Sats >= 8?', category: 'logic', propertyValues: { operator: '>=' } },
+          data: { definitionType: 'logic-compare', get label() { return t('lua_graph.graph_templates.sats8'); }, category: 'logic', propertyValues: { operator: '>=' } },
         },
         {
           id: 'batt_check', type: 'logic-compare', position: { x: 420, y: 440 },
-          data: { definitionType: 'logic-compare', label: 'Voltage > 14?', category: 'logic', propertyValues: { operator: '>' } },
+          data: { definitionType: 'logic-compare', get label() { return t('lua_graph.graph_templates.voltage14'); }, category: 'logic', propertyValues: { operator: '>' } },
         },
         {
           id: 'alt_check', type: 'logic-range-check', position: { x: 420, y: 580 },
-          data: { definitionType: 'logic-range-check', label: 'Near Ground?', category: 'logic', propertyValues: { min: -5, max: 5 } },
+          data: { definitionType: 'logic-range-check', get label() { return t('lua_graph.graph_templates.nearGround'); }, category: 'logic', propertyValues: { min: -5, max: 5 } },
         },
         // ── AND chain → single health flag ──
         {
           id: 'health1', type: 'logic-and', position: { x: 660, y: 350 },
-          data: { definitionType: 'logic-and', label: 'GPS + Battery', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.gpsBattery'); }, category: 'logic', propertyValues: {} },
         },
         {
           id: 'health2', type: 'logic-and', position: { x: 660, y: 500 },
-          data: { definitionType: 'logic-and', label: 'All Healthy', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.allHealthy'); }, category: 'logic', propertyValues: {} },
         },
         // ── Branch: pass vs fail ──
         {
           id: 'not_healthy', type: 'logic-not', position: { x: 850, y: 560 },
-          data: { definitionType: 'logic-not', label: 'Unhealthy?', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-not', get label() { return t('lua_graph.graph_templates.unhealthy'); }, category: 'logic', propertyValues: {} },
         },
         {
           id: 'pass_gate', type: 'logic-and', position: { x: 880, y: 260 },
-          data: { definitionType: 'logic-and', label: 'Arm + Healthy', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.armHealthy'); }, category: 'logic', propertyValues: {} },
         },
         {
           id: 'fail_gate', type: 'logic-and', position: { x: 880, y: 480 },
-          data: { definitionType: 'logic-and', label: 'Arm + Unhealthy', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.armUnhealthy'); }, category: 'logic', propertyValues: {} },
         },
         // ── Pass actions ──
         {
           id: 'pass_msg', type: 'action-gcs-text', position: { x: 1100, y: 180 },
-          data: { definitionType: 'action-gcs-text', label: 'PASS', category: 'actions', propertyValues: { message: 'PREFLIGHT PASS: All systems go', severity: 5 } },
+          data: { definitionType: 'action-gcs-text', label: 'PASS', category: 'actions', propertyValues: { get message() { return t('lua_graph.graph_templates.preflightPassAllSystemsGo'); }, severity: 5 } },
         },
         {
           id: 'pass_tune', type: 'action-play-tune', position: { x: 1100, y: 320 },
-          data: { definitionType: 'action-play-tune', label: 'Success Beep', category: 'actions', propertyValues: { tune: 'MFT200L8O5CEGC6' } },
+          data: { definitionType: 'action-play-tune', get label() { return t('lua_graph.graph_templates.successBeep'); }, category: 'actions', propertyValues: { tune: 'MFT200L8O5CEGC6' } },
         },
         // ── Fail actions ──
         {
           id: 'fail_msg', type: 'action-gcs-text', position: { x: 1100, y: 460 },
-          data: { definitionType: 'action-gcs-text', label: 'FAIL', category: 'actions', propertyValues: { message: 'PREFLIGHT FAIL: Check GPS/battery/alt', severity: 2 } },
+          data: { definitionType: 'action-gcs-text', label: 'FAIL', category: 'actions', propertyValues: { get message() { return t('lua_graph.graph_templates.preflightFailCheckGpsBatteryAlt'); }, severity: 2 } },
         },
         {
           id: 'fail_tune', type: 'action-play-tune', position: { x: 1100, y: 600 },
-          data: { definitionType: 'action-play-tune', label: 'Fail Buzzer', category: 'actions', propertyValues: { tune: 'MFT100L4O4GAGAG' } },
+          data: { definitionType: 'action-play-tune', get label() { return t('lua_graph.graph_templates.failBuzzer'); }, category: 'actions', propertyValues: { tune: 'MFT100L4O4GAGAG' } },
         },
       ],
       edges: [
@@ -2568,12 +2569,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'multi-timer-scheduler',
     name: 'Multi-Timer Task Scheduler',
-    description: 'Three independent timers running at different rates: GPS logging every 2s, conditional battery warning every 10s, and GPS quality check every 30s. All gated by arm state.',
+    get description() { return t('lua_graph.graph_templates.threeIndependentTimersRunningAtDifferent'); },
     category: 'Utility',
     graph: {
       version: 1,
       name: 'Multi-Timer Task Scheduler',
-      description: 'Independent timed tasks for logging and conditional monitoring',
+      get description() { return t('lua_graph.graph_templates.independentTimedTasksForLoggingAnd'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -2581,89 +2582,89 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
         // ── Stage comments ──
         {
           id: 'c1', type: 'flow-comment', position: { x: 40, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Sensors', category: 'flow', propertyValues: { text: 'Read GPS, battery, and satellite status' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.sensors'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.readGpsBatteryAndSatelliteStatus'); } } },
         },
         {
           id: 'c2', type: 'flow-comment', position: { x: 360, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Timers', category: 'flow', propertyValues: { text: 'Three independent timers, all gated by armed state' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.timers'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.threeIndependentTimersAllGatedBy'); } } },
         },
         {
           id: 'c3', type: 'flow-comment', position: { x: 620, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Conditions', category: 'flow', propertyValues: { text: 'Only warn when conditions are actually bad' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.conditions'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.onlyWarnWhenConditionsAreActually'); } } },
         },
         {
           id: 'c4', type: 'flow-comment', position: { x: 920, y: 20 },
-          data: { definitionType: 'flow-comment', label: 'Actions', category: 'flow', propertyValues: { text: 'Log data and send conditional warnings' } },
+          data: { definitionType: 'flow-comment', get label() { return t('lua_graph.graph_templates.actions'); }, category: 'flow', propertyValues: { get text() { return t('lua_graph.graph_templates.logDataAndSendConditionalWarnings'); } } },
         },
         // ── Sensors ──
         {
           id: 'armed', type: 'sensor-armed', position: { x: 60, y: 140 },
-          data: { definitionType: 'sensor-armed', label: 'Armed State', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-armed', get label() { return t('lua_graph.graph_templates.armedState'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'gps', type: 'sensor-gps', position: { x: 60, y: 280 },
-          data: { definitionType: 'sensor-gps', label: 'GPS Position', category: 'sensors', propertyValues: {} },
+          data: { definitionType: 'sensor-gps', get label() { return t('lua_graph.graph_templates.gpsPosition'); }, category: 'sensors', propertyValues: {} },
         },
         {
           id: 'battery', type: 'sensor-battery', position: { x: 60, y: 460 },
-          data: { definitionType: 'sensor-battery', label: 'Battery', category: 'sensors', propertyValues: { instance: 0 } },
+          data: { definitionType: 'sensor-battery', get label() { return t('lua_graph.graph_templates.battery'); }, category: 'sensors', propertyValues: { instance: 0 } },
         },
         {
           id: 'gps_status', type: 'sensor-gps-status', position: { x: 60, y: 620 },
-          data: { definitionType: 'sensor-gps-status', label: 'GPS Quality', category: 'sensors', propertyValues: { instance: 0 } },
+          data: { definitionType: 'sensor-gps-status', get label() { return t('lua_graph.graph_templates.gpsQuality'); }, category: 'sensors', propertyValues: { instance: 0 } },
         },
         // ── Thresholds ──
         {
           id: 'batt_threshold', type: 'var-constant', position: { x: 240, y: 530 },
-          data: { definitionType: 'var-constant', label: 'Min Battery %', category: 'variables', propertyValues: { type: 'number', value: '20' } },
+          data: { definitionType: 'var-constant', get label() { return t('lua_graph.graph_templates.minBattery'); }, category: 'variables', propertyValues: { type: 'number', value: '20' } },
         },
         {
           id: 'sat_threshold', type: 'var-constant', position: { x: 240, y: 690 },
-          data: { definitionType: 'var-constant', label: 'Min Sats', category: 'variables', propertyValues: { type: 'number', value: '6' } },
+          data: { definitionType: 'var-constant', get label() { return t('lua_graph.graph_templates.minSats'); }, category: 'variables', propertyValues: { type: 'number', value: '6' } },
         },
         // ── Timers (all armed-gated) ──
         {
           id: 'timer_log', type: 'timing-run-every', position: { x: 380, y: 200 },
-          data: { definitionType: 'timing-run-every', label: 'Every 2s (Log)', category: 'timing', propertyValues: { interval_ms: 2000 } },
+          data: { definitionType: 'timing-run-every', get label() { return t('lua_graph.graph_templates.every2sLog'); }, category: 'timing', propertyValues: { interval_ms: 2000 } },
         },
         {
           id: 'timer_batt', type: 'timing-run-every', position: { x: 380, y: 400 },
-          data: { definitionType: 'timing-run-every', label: 'Every 10s (Batt)', category: 'timing', propertyValues: { interval_ms: 10000 } },
+          data: { definitionType: 'timing-run-every', get label() { return t('lua_graph.graph_templates.every10sBatt'); }, category: 'timing', propertyValues: { interval_ms: 10000 } },
         },
         {
           id: 'timer_gps', type: 'timing-run-every', position: { x: 380, y: 580 },
-          data: { definitionType: 'timing-run-every', label: 'Every 30s (GPS)', category: 'timing', propertyValues: { interval_ms: 30000 } },
+          data: { definitionType: 'timing-run-every', get label() { return t('lua_graph.graph_templates.every30sGps'); }, category: 'timing', propertyValues: { interval_ms: 30000 } },
         },
         // ── Conditional checks ──
         {
           id: 'batt_low', type: 'logic-compare', position: { x: 620, y: 460 },
-          data: { definitionType: 'logic-compare', label: 'Battery < 20%?', category: 'logic', propertyValues: { operator: '<' } },
+          data: { definitionType: 'logic-compare', get label() { return t('lua_graph.graph_templates.battery20'); }, category: 'logic', propertyValues: { operator: '<' } },
         },
         {
           id: 'sats_low', type: 'logic-compare', position: { x: 620, y: 620 },
-          data: { definitionType: 'logic-compare', label: 'Sats < 6?', category: 'logic', propertyValues: { operator: '<' } },
+          data: { definitionType: 'logic-compare', get label() { return t('lua_graph.graph_templates.sats6'); }, category: 'logic', propertyValues: { operator: '<' } },
         },
         // ── Gates: timer fires AND condition is bad ──
         {
           id: 'batt_gate', type: 'logic-and', position: { x: 820, y: 400 },
-          data: { definitionType: 'logic-and', label: 'Timer + Low Batt', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.timerLowBatt'); }, category: 'logic', propertyValues: {} },
         },
         {
           id: 'gps_gate', type: 'logic-and', position: { x: 820, y: 580 },
-          data: { definitionType: 'logic-and', label: 'Timer + Low Sats', category: 'logic', propertyValues: {} },
+          data: { definitionType: 'logic-and', get label() { return t('lua_graph.graph_templates.timerLowSats'); }, category: 'logic', propertyValues: {} },
         },
         // ── Actions ──
         {
           id: 'log_gps', type: 'action-log-to-file', position: { x: 940, y: 140 },
-          data: { definitionType: 'action-log-to-file', label: 'Log GPS + Alt', category: 'actions', propertyValues: { filename: 'flight_track.csv', separator: ',' } },
+          data: { definitionType: 'action-log-to-file', get label() { return t('lua_graph.graph_templates.logGpsAlt'); }, category: 'actions', propertyValues: { filename: 'flight_track.csv', separator: ',' } },
         },
         {
           id: 'batt_warn', type: 'action-gcs-text', position: { x: 1040, y: 380 },
-          data: { definitionType: 'action-gcs-text', label: 'Battery Warning', category: 'actions', propertyValues: { message: 'WARNING: Battery below 20%', severity: 4 } },
+          data: { definitionType: 'action-gcs-text', get label() { return t('lua_graph.graph_templates.batteryWarning'); }, category: 'actions', propertyValues: { get message() { return t('lua_graph.graph_templates.warningBatteryBelow20'); }, severity: 4 } },
         },
         {
           id: 'gps_warn', type: 'action-gcs-text', position: { x: 1040, y: 560 },
-          data: { definitionType: 'action-gcs-text', label: 'GPS Warning', category: 'actions', propertyValues: { message: 'WARNING: Low satellite count', severity: 4 } },
+          data: { definitionType: 'action-gcs-text', get label() { return t('lua_graph.graph_templates.gpsWarning'); }, category: 'actions', propertyValues: { get message() { return t('lua_graph.graph_templates.warningLowSatelliteCount'); }, severity: 4 } },
         },
       ],
       edges: [
@@ -2702,12 +2703,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'ad-heartbeat-beacon',
     name: 'ArduDeck Heartbeat Beacon',
-    description: 'Publish a NAMED_VALUE_FLOAT heartbeat every second so the GCS can confirm the script is alive (mirrors the AD_HB pattern).',
+    get description() { return t('lua_graph.graph_templates.publishANamedValueFloatHeartbeat'); },
     category: 'FC Script',
     graph: {
       version: 1,
       name: 'ArduDeck Heartbeat Beacon',
-      description: 'Publish AD_HB once per second',
+      get description() { return t('lua_graph.graph_templates.publishAdHbOncePerSecond'); },
       runIntervalMs: 100,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -2718,9 +2719,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Tick once per second' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.tickOncePerSecond'); } },
           },
         },
         {
@@ -2729,9 +2730,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Send AD_HB to the GCS so it knows we are alive' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.sendAdHbToTheGcs'); } },
           },
         },
         {
@@ -2740,7 +2741,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 100 },
           data: {
             definitionType: 'timing-run-every',
-            label: 'Every 1 sec',
+            get label() { return t('lua_graph.graph_templates.every1Sec'); },
             category: 'timing',
             propertyValues: { interval_ms: 1000 },
           },
@@ -2751,7 +2752,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 240, y: 280 },
           data: {
             definitionType: 'var-constant',
-            label: 'Script version',
+            get label() { return t('lua_graph.graph_templates.scriptVersion'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '1.0' },
           },
@@ -2762,7 +2763,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 500, y: 110 },
           data: {
             definitionType: 'action-publish-named-float',
-            label: 'Publish AD_HB',
+            get label() { return t('lua_graph.graph_templates.publishAdHb'); },
             category: 'actions',
             propertyValues: { name: 'AD_HB' },
           },
@@ -2783,12 +2784,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'telemetry-beacon',
     name: 'Telemetry Beacon (3 Channels)',
-    description: 'Publish distance-to-home, sat count, and battery voltage as NAMED_VALUE_FLOATs every second for custom GCS dashboards.',
+    get description() { return t('lua_graph.graph_templates.publishDistanceToHomeSatCount'); },
     category: 'FC Script',
     graph: {
       version: 1,
       name: 'Telemetry Beacon',
-      description: 'Publish DIST_H, SATS, BATT_V to GCS once per second',
+      get description() { return t('lua_graph.graph_templates.publishDistHSatsBattV'); },
       runIntervalMs: 100,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -2799,9 +2800,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read live position, GPS status, and battery' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readLivePositionGpsStatusAnd'); } },
           },
         },
         {
@@ -2810,9 +2811,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 460, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Compute distance from vehicle to home' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.computeDistanceFromVehicleToHome'); } },
           },
         },
         {
@@ -2821,9 +2822,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 880, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Publish each value as a NAMED_VALUE_FLOAT' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.publishEachValueAsANamed'); } },
           },
         },
         {
@@ -2832,7 +2833,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 100 },
           data: {
             definitionType: 'timing-run-every',
-            label: 'Every 1 sec',
+            get label() { return t('lua_graph.graph_templates.every1Sec'); },
             category: 'timing',
             propertyValues: { interval_ms: 1000 },
           },
@@ -2843,7 +2844,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 240 },
           data: {
             definitionType: 'sensor-ahrs-location',
-            label: 'Vehicle Location',
+            get label() { return t('lua_graph.graph_templates.vehicleLocation'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -2854,7 +2855,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 380 },
           data: {
             definitionType: 'sensor-home',
-            label: 'Home Position',
+            get label() { return t('lua_graph.graph_templates.homePosition'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -2865,7 +2866,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 520 },
           data: {
             definitionType: 'sensor-gps-status',
-            label: 'GPS Status',
+            get label() { return t('lua_graph.graph_templates.gpsStatus'); },
             category: 'sensors',
             propertyValues: { instance: 0 },
           },
@@ -2876,7 +2877,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 660 },
           data: {
             definitionType: 'sensor-battery',
-            label: 'Battery',
+            get label() { return t('lua_graph.graph_templates.battery'); },
             category: 'sensors',
             propertyValues: { instance: 0 },
           },
@@ -2887,7 +2888,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 290 },
           data: {
             definitionType: 'math-location-distance',
-            label: 'Vehicle → Home',
+            get label() { return t('lua_graph.graph_templates.vehicleHome'); },
             category: 'math',
             propertyValues: {},
           },
@@ -2898,7 +2899,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 240 },
           data: {
             definitionType: 'action-publish-named-float',
-            label: 'Publish DIST_H',
+            get label() { return t('lua_graph.graph_templates.publishDistH'); },
             category: 'actions',
             propertyValues: { name: 'DIST_H' },
           },
@@ -2909,7 +2910,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 420 },
           data: {
             definitionType: 'action-publish-named-float',
-            label: 'Publish SATS',
+            get label() { return t('lua_graph.graph_templates.publishSats'); },
             category: 'actions',
             propertyValues: { name: 'SATS' },
           },
@@ -2920,7 +2921,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 600 },
           data: {
             definitionType: 'action-publish-named-float',
-            label: 'Publish BATT_V',
+            get label() { return t('lua_graph.graph_templates.publishBattV'); },
             category: 'actions',
             propertyValues: { name: 'BATT_V' },
           },
@@ -2950,12 +2951,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'guided-set-target-rc',
     name: 'GUIDED Set-Target via RC Switch',
-    description: 'When an RC AUX switch is HIGH in GUIDED mode, command the vehicle to fly to a fixed offset from home (e.g. 50m north of takeoff).',
+    get description() { return t('lua_graph.graph_templates.whenAnRcAuxSwitchIs'); },
     category: 'FC Script',
     graph: {
       version: 1,
       name: 'GUIDED Set-Target via RC Switch',
-      description: 'RC AUX HIGH → fly to home + 50m north',
+      get description() { return t('lua_graph.graph_templates.rcAuxHighFlyToHome'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -2966,9 +2967,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Watch RC AUX switch state' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.watchRcAuxSwitchState'); } },
           },
         },
         {
@@ -2977,9 +2978,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Compute target = home offset by 50m at 0° (north)' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.computeTargetHomeOffsetBy50m'); } },
           },
         },
         {
@@ -2988,9 +2989,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Push GUIDED target while switch is HIGH' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.pushGuidedTargetWhileSwitchIs'); } },
           },
         },
         {
@@ -3010,7 +3011,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 280 },
           data: {
             definitionType: 'sensor-home',
-            label: 'Home',
+            get label() { return t('lua_graph.graph_templates.home'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -3021,7 +3022,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 280, y: 460 },
           data: {
             definitionType: 'var-constant',
-            label: 'Bearing (deg)',
+            get label() { return t('lua_graph.graph_templates.bearingDeg'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '0' },
           },
@@ -3032,7 +3033,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 280, y: 580 },
           data: {
             definitionType: 'var-constant',
-            label: 'Distance (m)',
+            get label() { return t('lua_graph.graph_templates.distanceM'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '50' },
           },
@@ -3043,7 +3044,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 500, y: 280 },
           data: {
             definitionType: 'math-location-offset',
-            label: 'Home + 50m N',
+            get label() { return t('lua_graph.graph_templates.home50mN'); },
             category: 'math',
             propertyValues: {},
           },
@@ -3054,7 +3055,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 920, y: 200 },
           data: {
             definitionType: 'action-set-target-location',
-            label: 'GUIDED → target',
+            get label() { return t('lua_graph.graph_templates.guidedTarget'); },
             category: 'actions',
             propertyValues: {},
           },
@@ -3080,12 +3081,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'distance-triggered-rtl',
     name: 'Distance-Triggered RTL',
-    description: 'When vehicle drifts more than 200m from home, automatically switch to RTL mode. Backup geofence using location math + mode change.',
+    get description() { return t('lua_graph.graph_templates.whenVehicleDriftsMoreThan200m'); },
     category: 'FC Script',
     graph: {
       version: 1,
       name: 'Distance-Triggered RTL',
-      description: 'Auto-RTL when distance from home exceeds 200m',
+      get description() { return t('lua_graph.graph_templates.autoRtlWhenDistanceFromHome'); },
       runIntervalMs: 500,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -3096,9 +3097,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read live position + home' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readLivePositionHome'); } },
           },
         },
         {
@@ -3107,9 +3108,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 460, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Are we more than 200m from home?' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.areWeMoreThan200mFrom'); } },
           },
         },
         {
@@ -3118,9 +3119,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 880, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Switch to RTL mode (Copter mode 6) + warn pilot' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.switchToRtlModeCopterMode'); } },
           },
         },
         {
@@ -3129,7 +3130,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 110 },
           data: {
             definitionType: 'sensor-ahrs-location',
-            label: 'Vehicle',
+            get label() { return t('lua_graph.graph_templates.vehicle'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -3140,7 +3141,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 260 },
           data: {
             definitionType: 'sensor-home',
-            label: 'Home',
+            get label() { return t('lua_graph.graph_templates.home'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -3151,7 +3152,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 180 },
           data: {
             definitionType: 'math-location-distance',
-            label: 'Distance to home',
+            get label() { return t('lua_graph.graph_templates.distanceToHome'); },
             category: 'math',
             propertyValues: {},
           },
@@ -3162,7 +3163,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 280, y: 420 },
           data: {
             definitionType: 'var-constant',
-            label: 'Limit (m)',
+            get label() { return t('lua_graph.graph_templates.limitM'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '200' },
           },
@@ -3173,7 +3174,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 360 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Distance > 200?',
+            get label() { return t('lua_graph.graph_templates.distance200'); },
             category: 'logic',
             propertyValues: { operator: '>' },
           },
@@ -3184,7 +3185,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 120 },
           data: {
             definitionType: 'action-set-mode',
-            label: 'Switch to RTL',
+            get label() { return t('lua_graph.graph_templates.switchToRtl'); },
             category: 'actions',
             propertyValues: { mode_num: 6 },
           },
@@ -3195,9 +3196,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 280 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Warn pilot',
+            get label() { return t('lua_graph.graph_templates.warnPilot'); },
             category: 'actions',
-            propertyValues: { message: 'AUTO RTL: distance from home exceeded', severity: 4 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.autoRtlDistanceFromHomeExceeded'); }, severity: 4 },
           },
         },
       ],
@@ -3220,12 +3221,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'patrol-two-anchors',
     name: 'Patrol Between Two Anchors',
-    description: 'Toggle the GUIDED target between two fixed offsets from home every 30 seconds. Simple ad-hoc patrol with no mission required.',
+    get description() { return t('lua_graph.graph_templates.toggleTheGuidedTargetBetweenTwo'); },
     category: 'FC Script',
     graph: {
       version: 1,
       name: 'Patrol Between Two Anchors',
-      description: 'Alternate target between home+80m N and home+80m S every 30s',
+      get description() { return t('lua_graph.graph_templates.alternateTargetBetweenHome80mN'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -3236,9 +3237,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Toggle every 30s using a latch' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.toggleEvery30sUsingALatch'); } },
           },
         },
         {
@@ -3247,9 +3248,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Build two anchor positions from home' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.buildTwoAnchorPositionsFromHome'); } },
           },
         },
         {
@@ -3258,9 +3259,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 920, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Push the active anchor as GUIDED target' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.pushTheActiveAnchorAsGuided'); } },
           },
         },
         // Toggle source
@@ -3270,7 +3271,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 100 },
           data: {
             definitionType: 'timing-run-every',
-            label: 'Every 30s',
+            get label() { return t('lua_graph.graph_templates.every30s'); },
             category: 'timing',
             propertyValues: { interval_ms: 30000 },
           },
@@ -3281,7 +3282,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 240, y: 200 },
           data: {
             definitionType: 'timing-latch',
-            label: 'Patrol toggle',
+            get label() { return t('lua_graph.graph_templates.patrolToggle'); },
             category: 'timing',
             propertyValues: {},
           },
@@ -3292,7 +3293,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 240, y: 320 },
           data: {
             definitionType: 'logic-not',
-            label: 'Other anchor',
+            get label() { return t('lua_graph.graph_templates.otherAnchor'); },
             category: 'logic',
             propertyValues: {},
           },
@@ -3304,7 +3305,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 200 },
           data: {
             definitionType: 'sensor-home',
-            label: 'Home',
+            get label() { return t('lua_graph.graph_templates.home'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -3315,7 +3316,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 380 },
           data: {
             definitionType: 'var-constant',
-            label: 'A bearing (N)',
+            get label() { return t('lua_graph.graph_templates.aBearingN'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '0' },
           },
@@ -3326,7 +3327,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 480 },
           data: {
             definitionType: 'var-constant',
-            label: 'B bearing (S)',
+            get label() { return t('lua_graph.graph_templates.bBearingS'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '180' },
           },
@@ -3337,7 +3338,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 480, y: 580 },
           data: {
             definitionType: 'var-constant',
-            label: 'Leg length (m)',
+            get label() { return t('lua_graph.graph_templates.legLengthM'); },
             category: 'variables',
             propertyValues: { type: 'number', value: '80' },
           },
@@ -3348,7 +3349,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 720, y: 230 },
           data: {
             definitionType: 'math-location-offset',
-            label: 'Anchor A',
+            get label() { return t('lua_graph.graph_templates.anchorA'); },
             category: 'math',
             propertyValues: {},
           },
@@ -3359,7 +3360,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 720, y: 430 },
           data: {
             definitionType: 'math-location-offset',
-            label: 'Anchor B',
+            get label() { return t('lua_graph.graph_templates.anchorB'); },
             category: 'math',
             propertyValues: {},
           },
@@ -3371,7 +3372,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 940, y: 230 },
           data: {
             definitionType: 'action-set-target-location',
-            label: 'Go to A',
+            get label() { return t('lua_graph.graph_templates.goToA'); },
             category: 'actions',
             propertyValues: {},
           },
@@ -3382,7 +3383,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 940, y: 430 },
           data: {
             definitionType: 'action-set-target-location',
-            label: 'Go to B',
+            get label() { return t('lua_graph.graph_templates.goToB'); },
             category: 'actions',
             propertyValues: {},
           },
@@ -3414,12 +3415,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'camera-trigger-watchdog',
     name: 'Camera Trigger Watchdog',
-    description: 'Warn on the GCS with the current waypoint when a distance-triggered camera stops actually taking photos (e.g. it overheats). Catches the hotshoe pulse with a hardware interrupt: polling gpio:read misses the 1-2 ms pulse.',
+    get description() { return t('lua_graph.graph_templates.warnOnTheGcsWithThe'); },
     category: 'Safety',
     graph: {
       version: 1,
       name: 'Camera Trigger Watchdog',
-      description: 'Alert when a distance-triggered camera stops capturing, using an interrupt on the hotshoe signal',
+      get description() { return t('lua_graph.graph_templates.alertWhenADistanceTriggeredCamera'); },
       runIntervalMs: 100,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2026-07-09T00:00:00.000Z',
@@ -3430,9 +3431,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Real photo = hotshoe pulse caught by interrupt. Y-wire the hotshoe signal to a free AUX pin with SERVOx_FUNCTION = -1. Do NOT reuse CAM1_FEEDBAK_PIN: whoever attaches first owns the interrupt.' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.realPhotoHotshoePulseCaughtBy'); } },
           },
         },
         {
@@ -3441,9 +3442,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 300 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Only watch while armed and the distance trigger is active (CAM1_TRIGG_DIST > 0)' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.onlyWatchWhileArmedAndThe'); } },
           },
         },
         {
@@ -3452,9 +3453,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 900, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'No photo within the timeout: warn once with the current waypoint' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.noPhotoWithinTheTimeoutWarn'); } },
           },
         },
         {
@@ -3463,7 +3464,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 320, y: 90 },
           data: {
             definitionType: 'sensor-pwm-pulse',
-            label: 'Hotshoe Pulse',
+            get label() { return t('lua_graph.graph_templates.hotshoePulse'); },
             category: 'sensors',
             propertyValues: { pin: 54 },
           },
@@ -3474,7 +3475,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 370 },
           data: {
             definitionType: 'sensor-param-get',
-            label: 'Trigger Distance',
+            get label() { return t('lua_graph.graph_templates.triggerDistance'); },
             category: 'sensors',
             propertyValues: { param_name: 'CAM1_TRIGG_DIST' },
           },
@@ -3485,7 +3486,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 320, y: 370 },
           data: {
             definitionType: 'logic-compare',
-            label: 'Dist > 0?',
+            get label() { return t('lua_graph.graph_templates.dist0'); },
             category: 'logic',
             propertyValues: { operator: '>' },
           },
@@ -3496,7 +3497,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 320, y: 500 },
           data: {
             definitionType: 'sensor-armed',
-            label: 'Armed',
+            get label() { return t('lua_graph.graph_templates.armed2'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -3507,7 +3508,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 580, y: 420 },
           data: {
             definitionType: 'logic-and',
-            label: 'Armed AND triggering',
+            get label() { return t('lua_graph.graph_templates.armedAndTriggering'); },
             category: 'logic',
             propertyValues: {},
           },
@@ -3518,7 +3519,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 840, y: 250 },
           data: {
             definitionType: 'timing-watchdog',
-            label: 'No photo timer',
+            get label() { return t('lua_graph.graph_templates.noPhotoTimer'); },
             category: 'timing',
             propertyValues: { timeout_ms: 3000 },
           },
@@ -3529,7 +3530,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 1080, y: 250 },
           data: {
             definitionType: 'timing-rising-edge',
-            label: 'On first stall',
+            get label() { return t('lua_graph.graph_templates.onFirstStall'); },
             category: 'timing',
             propertyValues: {},
           },
@@ -3540,7 +3541,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 1080, y: 400 },
           data: {
             definitionType: 'sensor-current-waypoint',
-            label: 'Current WP',
+            get label() { return t('lua_graph.graph_templates.currentWp'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -3551,9 +3552,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 1320, y: 250 },
           data: {
             definitionType: 'action-gcs-text',
-            label: 'Warn no photo',
+            get label() { return t('lua_graph.graph_templates.warnNoPhoto'); },
             category: 'actions',
-            propertyValues: { message: 'CAM WATCHDOG: kein Foto bei WP ', severity: 4 },
+            propertyValues: { get message() { return t('lua_graph.graph_templates.camWatchdogKeinFotoBeiWp'); }, severity: 4 },
           },
         },
       ],
@@ -3575,12 +3576,12 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
   {
     id: 'custom-serial-telemetry',
     name: 'Custom Serial Telemetry',
-    description: 'Format position + battery into a custom text sentence with a Custom Lua node and stream it out a serial port and UDP once a second.',
+    get description() { return t('lua_graph.graph_templates.formatPositionBatteryIntoACustom'); },
     category: 'Utility',
     graph: {
       version: 1,
       name: 'Custom Serial Telemetry',
-      description: 'Custom-formatted telemetry sentence over serial and UDP',
+      get description() { return t('lua_graph.graph_templates.customFormattedTelemetrySentenceOverSerial'); },
       runIntervalMs: 200,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-01-01T00:00:00.000Z',
@@ -3592,9 +3593,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 40, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 1',
+            get label() { return t('lua_graph.graph_templates.step1'); },
             category: 'flow',
-            propertyValues: { text: 'Read position and battery' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.readPositionAndBattery'); } },
           },
         },
         {
@@ -3603,9 +3604,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 420, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 2',
+            get label() { return t('lua_graph.graph_templates.step2'); },
             category: 'flow',
-            propertyValues: { text: 'Custom Lua builds the message. Edit pins and code in the inspector.' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.customLuaBuildsTheMessageEdit'); } },
           },
         },
         {
@@ -3614,9 +3615,9 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 800, y: 20 },
           data: {
             definitionType: 'flow-comment',
-            label: 'Step 3',
+            get label() { return t('lua_graph.graph_templates.step3'); },
             category: 'flow',
-            propertyValues: { text: 'Rate-limit to 1 Hz, send over serial and UDP. Delete the output you do not need.' },
+            propertyValues: { get text() { return t('lua_graph.graph_templates.rateLimitTo1HzSend'); } },
           },
         },
         // ── Sensors ──
@@ -3626,7 +3627,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 100 },
           data: {
             definitionType: 'sensor-gps',
-            label: 'GPS Position',
+            get label() { return t('lua_graph.graph_templates.gpsPosition'); },
             category: 'sensors',
             propertyValues: {},
           },
@@ -3637,7 +3638,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 60, y: 280 },
           data: {
             definitionType: 'sensor-battery',
-            label: 'Battery',
+            get label() { return t('lua_graph.graph_templates.battery'); },
             category: 'sensors',
             propertyValues: { instance: 0 },
           },
@@ -3649,7 +3650,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 440, y: 120 },
           data: {
             definitionType: 'flow-custom-lua',
-            label: 'Build Sentence',
+            get label() { return t('lua_graph.graph_templates.buildSentence'); },
             category: 'flow',
             propertyValues: {
               inputs: 'lat, lng, alt, volt',
@@ -3665,7 +3666,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 440, y: 340 },
           data: {
             definitionType: 'timing-run-every',
-            label: 'Every 1s',
+            get label() { return t('lua_graph.graph_templates.every1s'); },
             category: 'timing',
             propertyValues: { interval_ms: 1000 },
           },
@@ -3676,7 +3677,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 820, y: 100 },
           data: {
             definitionType: 'action-serial-write',
-            label: 'Serial Out',
+            get label() { return t('lua_graph.graph_templates.serialOut'); },
             category: 'actions',
             propertyValues: { instance: 0, baud: 57600, line_ending: 'lf' },
           },
@@ -3687,7 +3688,7 @@ export const GRAPH_TEMPLATES: GraphTemplate[] = [
           position: { x: 820, y: 290 },
           data: {
             definitionType: 'action-socket-send',
-            label: 'UDP Out',
+            get label() { return t('lua_graph.graph_templates.udpOut'); },
             category: 'actions',
             propertyValues: { protocol: 'udp', ip: '192.168.1.10', port: 14550 },
           },

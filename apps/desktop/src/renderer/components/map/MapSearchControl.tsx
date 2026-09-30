@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import type { GeocodeResult } from '../../../shared/overlay-types';
+import { t as tr } from '../../i18n';
 
 /** Parse "lat, lon" (or "lat lon") in decimal degrees. */
 function parseLatLng(q: string): { lat: number; lng: number } | null {
@@ -73,10 +74,10 @@ export function MapSearchControl() {
         .then((hits) => {
           if (cancelled) return;
           setResults(hits);
-          setMsg(hits.length === 0 ? 'No match found' : null);
+          setMsg(hits.length === 0 ? tr('map.MapSearchControl.noMatchFound') : null);
         })
         .catch(() => {
-          if (!cancelled) setMsg('Search failed');
+          if (!cancelled) setMsg(tr('map.MapSearchControl.searchFailed'));
         })
         .finally(() => {
           if (!cancelled) setBusy(false);
@@ -105,12 +106,12 @@ export function MapSearchControl() {
     try {
       const hits = await window.electronAPI.geocodeSearch(query);
       if (hits.length === 0) {
-        setMsg('No match found');
+        setMsg(tr('map.MapSearchControl.noMatchFound'));
         return;
       }
       pick(hits[0]!);
     } catch {
-      setMsg('Search failed');
+      setMsg(tr('map.MapSearchControl.searchFailed'));
     } finally {
       setBusy(false);
     }
@@ -136,8 +137,8 @@ export function MapSearchControl() {
             if (e.key === 'Enter') void submit();
             else if (e.key === 'Escape') closeResults();
           }}
-          placeholder="Go to place or lat, lon"
-          aria-label="Go to location"
+          placeholder={tr('map.MapSearchControl.goToPlaceOrLatLon')}
+          aria-label={tr('map.MapSearchControl.goToLocation')}
           className="flex-1 min-w-0 bg-transparent text-xs text-content placeholder:text-content-tertiary focus:outline-none"
         />
         {busy && (

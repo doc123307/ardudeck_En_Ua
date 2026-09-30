@@ -1,0 +1,127 @@
+{
+  "stores": {
+    "ardupilot_sitl_store": {
+      "quadDefault": "Quad (default)",
+      "quadPlus": "Quad Plus (+)",
+      "hexacopter": "Hexacopter",
+      "octocopter": "Octocopter",
+      "tricopter": "Tricopter",
+      "coaxialCopter": "Coaxial Copter",
+      "helicopter": "Helicopter",
+      "singleCopter": "Single Copter",
+      "planeDefault": "Plane (default)",
+      "vTailPlane": "V-Tail Plane",
+      "planeWSpoilers": "Plane w/ Spoilers",
+      "roverDefault": "Rover (default)",
+      "skidSteering": "Skid Steering",
+      "boat": "Boat",
+      "sailboat": "Sailboat",
+      "balanceBot": "Balance Bot",
+      "vectoredDefault": "Vectored (default)",
+      "vectored6dof": "Vectored 6DOF"
+    },
+    "calibration_store": {
+      "waitingForFlightController": "Waiting for flight controller...",
+      "placeVehicle": "Place vehicle {{v1}}",
+      "finalizingCalibrationOnFlightController": "Finalizing calibration on flight controller...",
+      "savingCalibration": "Saving calibration...",
+      "noCompassFitnessReported": "No compass fitness reported.",
+      "recorded": "Recorded."
+    },
+    "cli_store": {
+      "failedToSaveConfiguration": "Failed to save configuration"
+    },
+    "fence_store": {
+      "downloadedFenceItemsFromFlightController": "Downloaded {{length}} fence items from flight controller",
+      "uploadedFenceItemsToFlightController": "Uploaded {{itemCount}} fence items to flight controller",
+      "fenceClearedFromFlightController": "Fence cleared from flight controller"
+    },
+    "firmware_store": {
+      "downloadingFirmware": "Downloading firmware...",
+      "startingFlash": "Starting flash...",
+      "flashFailed": "Flash failed",
+      "waitingForBoardToReboot6s": "Waiting for board to reboot (6s)...",
+      "connectingToBoardAttempt": "Connecting to board (attempt {{attempt}}/{{MAX_RETRIES}})...",
+      "connectionFailedRetryingInS": "Connection failed, retrying in {{v1}}s...",
+      "checkingPlatformConfiguration": "Checking platform configuration...",
+      "boardAlreadyConfiguredAsAirplane": "Board already configured as airplane",
+      "configuringBoardAsAirplane": "Configuring board as airplane...",
+      "savingToEeprom": "Saving to EEPROM...",
+      "rebootingBoard": "Rebooting board...",
+      "boardConfiguredAsAirplaneReconnectWhen": "Board configured as airplane! Reconnect when ready."
+    },
+    "legacy_config_store": {
+      "failedToSaveConfiguration": "Failed to save configuration"
+    },
+    "mission_store": {
+      "noWaypointsOnFc": "No waypoints on FC",
+      "vehicleMission": "Vehicle mission @ {{stamp}}",
+      "downloadedWaypointsFromFcInto": "Downloaded {{length}} waypoints from FC into \"{{name}}\"",
+      "uploadedWaypointsToFc": "Uploaded {{length}} waypoints to FC",
+      "uploadedWaypointsToVehicle": "Uploaded {{length}} waypoints to vehicle",
+      "savedWaypointsToFile": "Saved {{length}} waypoints to file",
+      "missionClearedFromFc": "Mission cleared from FC",
+      "downloadedWaypointsFromFlightControllerInto": "Downloaded {{length}} waypoints from flight controller into \"{{name}}\"",
+      "uploadedWaypointsToFlightController": "Uploaded {{itemCount}} waypoints to flight controller",
+      "missionClearedFromFlightController": "Mission cleared from flight controller",
+      "recoveredWaypointsFromYourLastSession": "Recovered {{length}} waypoints from your last session"
+    },
+    "osd_store": {
+      "readingFromFlightController": "Reading from flight controller...",
+      "noOsdConfigReturnedByFc": "No OSD config returned by FC",
+      "loadedElementsFromFc": "Loaded {{count}} elements from FC",
+      "downloadingParameters": "Downloading parameters...",
+      "noOsdParametersOnThisBoard": "No OSD parameters on this board (set OSD_TYPE?)",
+      "loadedElementsFromScreen": "Loaded {{resolved}} elements from screen {{screen}}",
+      "connectToAnArdupilotOrBetaflight": "Connect to an ArduPilot or Betaflight/iNav FC first",
+      "readFailed": "Read failed: {{msg}}",
+      "uploadingOsdLayout": "Uploading OSD layout...",
+      "uploadedElementsAndSavedToFc": "Uploaded {{written}} elements and saved to FC",
+      "uploadFailed": "Upload failed: {{v1}}",
+      "downloadingParameters2": "Downloading parameters…",
+      "noneOfTheEnabledElementsMap": "None of the enabled elements map to this screen’s OSD params",
+      "noOsdParametersOnThisBoard2": "No OSD parameters on this board (set OSD_TYPE / OSD enabled?)",
+      "uploadingParameters": "Uploading {{length}} parameters...",
+      "uploadedParametersToScreen": "Uploaded {{confirmed}} parameters to screen {{screen}}",
+      "uploadedNotConfirmed": "Uploaded {{confirmed}}/{{length}}; {{length2}} not confirmed",
+      "connectToAFlightControllerFirst": "Connect to a flight controller first",
+      "uploadFailed2": "Upload failed: {{msg}}",
+      "ardupilotPicksAFontViaThe": "ArduPilot picks a font via the OSD_FONT parameter, not by upload",
+      "connectABetaflightInavBoardTo": "Connect a Betaflight/iNAV board to upload an analog font",
+      "noFontLoaded": "No font loaded",
+      "uploadingFontToFcNvm": "Uploading font to FC NVM…",
+      "fontUploadedCharsRebootTheFc": "Font uploaded ({{written}} chars), reboot the FC to apply",
+      "fontUploadFailed": "Font upload failed: {{v1}}",
+      "fontUploadFailed2": "Font upload failed: {{msg}}"
+    },
+    "pseudo_tx_store": {
+      "switchTheUsbTransmitterOnFirst": "Switch the USB transmitter on first",
+      "needsAConnectedMavlinkVehicle": "Needs a connected MAVLink vehicle"
+    },
+    "rally_store": {
+      "downloadedRallyPointsFromFlightController": "Downloaded {{length}} rally points from flight controller",
+      "uploadedRallyPointsToFlightController": "Uploaded {{itemCount}} rally points to flight controller",
+      "rallyPointsClearedFromFlightController": "Rally points cleared from flight controller"
+    },
+    "servo_wizard_store": {
+      "aircraft": "Aircraft",
+      "selectYourAircraftType": "Select your aircraft type",
+      "assign": "Assign",
+      "mapServosToControlSurfaces": "Map servos to control surfaces",
+      "test": "Test",
+      "verifyServoMovement": "Verify servo movement",
+      "calibrate": "Calibrate",
+      "adjustServoLimits": "Adjust servo limits",
+      "save": "Save",
+      "reviewAndSave": "Review and save"
+    },
+    "settings_store": {
+      "udpListen": "UDP :{{v1}} listen ({{v2}})"
+    },
+    "sitl_store": {
+      "freshInavInstallWithFactoryDefaults": "Fresh iNav install with factory defaults. Use for general testing.",
+      "preConfiguredForFixedWingTesting": "Pre-configured for fixed-wing testing with airplane mixer.",
+      "preConfiguredForQuadTestingWith": "Pre-configured for quad testing with X mixer."
+    }
+  }
+}

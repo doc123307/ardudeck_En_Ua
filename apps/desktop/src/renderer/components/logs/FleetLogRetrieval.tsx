@@ -7,6 +7,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Download, RadioTower, Loader2, Check, AlertTriangle, ChevronDown, ChevronRight } from 'lucide-react';
 import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
+import { t } from '../../i18n';
 
 interface LogEntry { id: number; sizeBytes: number; timeUtc: number }
 interface JobState { state: string; received: number; total: number; message?: string }
@@ -99,15 +100,14 @@ export function FleetLogRetrieval({ onIngested }: { onIngested: () => void }) {
       >
         {open ? <ChevronDown className="w-4 h-4 text-content-secondary" /> : <ChevronRight className="w-4 h-4 text-content-secondary" />}
         <RadioTower className="w-4 h-4 text-blue-400" />
-        <span className="text-sm font-medium text-content">Pull logs from fleet</span>
-        <span className="text-[11px] text-content-tertiary">{vehicles.length} connected</span>
+        <span className="text-sm font-medium text-content">{t('logs.FleetLogRetrieval.pullLogsFromFleet')}</span>
+        <span className="text-[11px] text-content-tertiary">{vehicles.length} {t('logs.FleetLogRetrieval.connected')}</span>
       </button>
 
       {open && (
         <div className="px-3 pb-3 space-y-2">
           <p className="text-[11px] text-content-secondary">
-            The orchestrator fetches each log over the vehicle's link (can take minutes on a radio)
-            and streams it back; finished logs are parsed into the history below.
+            {t('logs.FleetLogRetrieval.theOrchestratorFetchesEachLogOver')}
           </p>
           {vehicles.map((v) => {
             const vs = state[v.sysid];
@@ -120,11 +120,11 @@ export function FleetLogRetrieval({ onIngested }: { onIngested: () => void }) {
                     disabled={vs?.listing}
                     className="px-2 py-1 text-[11px] bg-surface-input hover:bg-surface-raised border border-subtle rounded-md text-content transition-colors disabled:opacity-50"
                   >
-                    {vs?.listing ? <Loader2 className="w-3 h-3 animate-spin inline" /> : 'List logs'}
+                    {vs?.listing ? <Loader2 className="w-3 h-3 animate-spin inline" /> : t('logs.FleetLogRetrieval.listLogs')}
                   </button>
                 </div>
                 {vs?.entries && vs.entries.length === 0 && (
-                  <p className="text-[11px] text-content-tertiary mt-1.5">No onboard logs.</p>
+                  <p className="text-[11px] text-content-tertiary mt-1.5">{t('logs.FleetLogRetrieval.noOnboardLogs')}</p>
                 )}
                 {vs?.entries && vs.entries.length > 0 && (
                   <div className="mt-2 space-y-1">
@@ -146,11 +146,11 @@ export function FleetLogRetrieval({ onIngested }: { onIngested: () => void }) {
                               <span className="text-content-tertiary tabular-nums w-9 text-right">{pct}%</span>
                             </div>
                           ) : done ? (
-                            <span className="flex-1 flex items-center gap-1 text-emerald-400"><Check className="w-3 h-3" /> fetched</span>
+                            <span className="flex-1 flex items-center gap-1 text-emerald-400"><Check className="w-3 h-3" /> {t('logs.FleetLogRetrieval.fetched')}</span>
                           ) : failed ? (
                             <span className="flex-1 min-w-0 flex items-center gap-1 text-red-400" title={job?.message}>
                               <AlertTriangle className="w-3 h-3 shrink-0" />
-                              <span className="shrink-0">failed</span>
+                              <span className="shrink-0">{t('logs.FleetLogRetrieval.failed')}</span>
                               {job?.message && <span className="truncate">: {job.message}</span>}
                             </span>
                           ) : (
@@ -158,7 +158,7 @@ export function FleetLogRetrieval({ onIngested }: { onIngested: () => void }) {
                               onClick={() => void fetchLog(v.sysid, e.id)}
                               className="ml-auto inline-flex items-center gap-1 px-2 py-0.5 bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors"
                             >
-                              <Download className="w-3 h-3" /> Fetch
+                              <Download className="w-3 h-3" /> {t('logs.FleetLogRetrieval.fetch')}
                             </button>
                           )}
                         </div>

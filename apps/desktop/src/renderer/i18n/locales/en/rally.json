@@ -1,0 +1,27 @@
+{
+  "rally": {
+    "RallyListPanel": {
+      "rallyPoints": "Rally Points",
+      "modified": "Modified",
+      "emergencyLandingLocations": "Emergency landing locations",
+      "downloading": "Downloading",
+      "uploading": "Uploading",
+      "noRallyPoints": "No rally points",
+      "clickAddRallyOnTheMap": "Click \"Add Rally\" on the map to create one",
+      "point": "point",
+      "loading": "Loading...",
+      "alt": "Alt:",
+      "remove": "Remove",
+      "rallyPointR": "Rally Point R",
+      "position": "Position",
+      "altitude": "Altitude",
+      "breakAlt": "Break Alt",
+      "altitudeToExitLoiterAndBegin": "Altitude to exit loiter and begin landing",
+      "landHeading": "Land Heading (°)",
+      "n0AnyDirection": "0 = any direction",
+      "flags": "Flags",
+      "landIntoWind": "Land into wind",
+      "landImmediatelyNoLoiter": "Land immediately (no loiter)"
+    }
+  }
+}

@@ -57,22 +57,23 @@ import {
   PLANE_FLIGHT_MODE_PRESETS,
   type FlightModePreset,
 } from './presets/mavlink-presets';
+import { t } from '../../i18n';
 
 // PWM ranges for each mode slot (standard 3-position switch mapping)
 const MODE_PWM_RANGES = [
-  { slot: 1, min: 900, max: 1230, label: 'Position 1 (Low)', position: 'low', group: 1 },
-  { slot: 2, min: 1231, max: 1360, label: 'Position 2', position: 'low', group: 1 },
-  { slot: 3, min: 1361, max: 1490, label: 'Position 3 (Mid)', position: 'mid', group: 2 },
-  { slot: 4, min: 1491, max: 1620, label: 'Position 4', position: 'mid', group: 2 },
-  { slot: 5, min: 1621, max: 1749, label: 'Position 5', position: 'high', group: 3 },
-  { slot: 6, min: 1750, max: 2100, label: 'Position 6 (High)', position: 'high', group: 3 },
+  { slot: 1, min: 900, max: 1230, get label() { return t('mavlink_config.FlightModesTab.position1Low'); }, position: 'low', group: 1 },
+  { slot: 2, min: 1231, max: 1360, get label() { return t('mavlink_config.FlightModesTab.position2'); }, position: 'low', group: 1 },
+  { slot: 3, min: 1361, max: 1490, get label() { return t('mavlink_config.FlightModesTab.position3Mid'); }, position: 'mid', group: 2 },
+  { slot: 4, min: 1491, max: 1620, get label() { return t('mavlink_config.FlightModesTab.position4'); }, position: 'mid', group: 2 },
+  { slot: 5, min: 1621, max: 1749, get label() { return t('mavlink_config.FlightModesTab.position5'); }, position: 'high', group: 3 },
+  { slot: 6, min: 1750, max: 2100, get label() { return t('mavlink_config.FlightModesTab.position6High'); }, position: 'high', group: 3 },
 ];
 
 // Switch position groupings (for 3-position switch), ordered top-to-bottom to match physical switch
 const SWITCH_POSITIONS = [
-  { name: 'High', label: 'Switch Up', slots: [5, 6], color: 'bg-orange-500' },
-  { name: 'Mid', label: 'Switch Center', slots: [3, 4], color: 'bg-purple-500' },
-  { name: 'Low', label: 'Switch Down', slots: [1, 2], color: 'bg-blue-500' },
+  { name: 'High', get label() { return t('mavlink_config.FlightModesTab.switchUp'); }, slots: [5, 6], color: 'bg-orange-500' },
+  { name: 'Mid', get label() { return t('mavlink_config.FlightModesTab.switchCenter'); }, slots: [3, 4], color: 'bg-purple-500' },
+  { name: 'Low', get label() { return t('mavlink_config.FlightModesTab.switchDown'); }, slots: [1, 2], color: 'bg-blue-500' },
 ];
 
 // Primary slots for simple mode (most commonly used with 3-position switch)
@@ -85,73 +86,73 @@ const DETECT_THRESHOLD = 150; // PWM movement to trigger detection
 
 // ArduCopter flight modes with proper icons
 const COPTER_MODES: Record<number, { name: string; description: string; icon: React.ElementType; safe: boolean }> = {
-  0: { name: 'Stabilize', description: 'Manual flight with self-leveling', icon: Hand, safe: true },
-  1: { name: 'Acro', description: 'Full manual control, no self-leveling', icon: Gamepad2, safe: false },
-  2: { name: 'AltHold', description: 'Altitude hold with manual position', icon: Ruler, safe: true },
-  3: { name: 'Auto', description: 'Follow mission waypoints', icon: Map, safe: true },
-  4: { name: 'Guided', description: 'Fly to GCS-commanded points', icon: Navigation, safe: true },
-  5: { name: 'Loiter', description: 'Hold position and altitude', icon: Lock, safe: true },
-  6: { name: 'RTL', description: 'Return to launch point', icon: Home, safe: true },
-  7: { name: 'Circle', description: 'Circle around a point', icon: Circle, safe: true },
-  9: { name: 'Land', description: 'Automatic landing', icon: PlaneLanding, safe: true },
-  11: { name: 'Drift', description: 'Like Stabilize but with drift', icon: Wind, safe: false },
-  13: { name: 'Sport', description: 'Stabilize with higher rates', icon: Dumbbell, safe: false },
-  14: { name: 'Flip', description: 'Automatic flip maneuver', icon: RotateCcw, safe: false },
-  15: { name: 'AutoTune', description: 'Automatic PID tuning', icon: Wrench, safe: true },
-  16: { name: 'PosHold', description: 'Position hold like Loiter', icon: Pin, safe: true },
-  17: { name: 'Brake', description: 'Stop immediately', icon: Octagon, safe: true },
-  18: { name: 'Throw', description: 'Throw to start', icon: Rocket, safe: false },
-  19: { name: 'Avoid_ADSB', description: 'Avoid other aircraft', icon: Plane, safe: true },
-  20: { name: 'Guided_NoGPS', description: 'Guided without GPS', icon: Navigation, safe: false },
-  21: { name: 'Smart_RTL', description: 'Return via original path', icon: Home, safe: true },
-  22: { name: 'FlowHold', description: 'Position hold with optical flow', icon: Move, safe: true },
-  23: { name: 'Follow', description: 'Follow another vehicle', icon: Users, safe: true },
-  24: { name: 'ZigZag', description: 'Zigzag survey pattern', icon: Zap, safe: true },
-  25: { name: 'SystemID', description: 'System identification', icon: Activity, safe: false },
+  0: { name: 'Stabilize', get description() { return t('mavlink_config.FlightModesTab.manualFlightWithSelfLeveling'); }, icon: Hand, safe: true },
+  1: { name: 'Acro', get description() { return t('mavlink_config.FlightModesTab.fullManualControlNoSelfLeveling'); }, icon: Gamepad2, safe: false },
+  2: { name: 'AltHold', get description() { return t('mavlink_config.FlightModesTab.altitudeHoldWithManualPosition'); }, icon: Ruler, safe: true },
+  3: { name: 'Auto', get description() { return t('mavlink_config.FlightModesTab.followMissionWaypoints'); }, icon: Map, safe: true },
+  4: { name: 'Guided', get description() { return t('mavlink_config.FlightModesTab.flyToGcsCommandedPoints'); }, icon: Navigation, safe: true },
+  5: { name: 'Loiter', get description() { return t('mavlink_config.FlightModesTab.holdPositionAndAltitude'); }, icon: Lock, safe: true },
+  6: { name: 'RTL', get description() { return t('mavlink_config.FlightModesTab.returnToLaunchPoint'); }, icon: Home, safe: true },
+  7: { name: 'Circle', get description() { return t('mavlink_config.FlightModesTab.circleAroundAPoint'); }, icon: Circle, safe: true },
+  9: { name: 'Land', get description() { return t('mavlink_config.FlightModesTab.automaticLanding'); }, icon: PlaneLanding, safe: true },
+  11: { name: 'Drift', get description() { return t('mavlink_config.FlightModesTab.likeStabilizeButWithDrift'); }, icon: Wind, safe: false },
+  13: { name: 'Sport', get description() { return t('mavlink_config.FlightModesTab.stabilizeWithHigherRates'); }, icon: Dumbbell, safe: false },
+  14: { name: 'Flip', get description() { return t('mavlink_config.FlightModesTab.automaticFlipManeuver'); }, icon: RotateCcw, safe: false },
+  15: { name: 'AutoTune', get description() { return t('mavlink_config.FlightModesTab.automaticPidTuning'); }, icon: Wrench, safe: true },
+  16: { name: 'PosHold', get description() { return t('mavlink_config.FlightModesTab.positionHoldLikeLoiter'); }, icon: Pin, safe: true },
+  17: { name: 'Brake', get description() { return t('mavlink_config.FlightModesTab.stopImmediately'); }, icon: Octagon, safe: true },
+  18: { name: 'Throw', get description() { return t('mavlink_config.FlightModesTab.throwToStart'); }, icon: Rocket, safe: false },
+  19: { name: 'Avoid_ADSB', get description() { return t('mavlink_config.FlightModesTab.avoidOtherAircraft'); }, icon: Plane, safe: true },
+  20: { name: 'Guided_NoGPS', get description() { return t('mavlink_config.FlightModesTab.guidedWithoutGps'); }, icon: Navigation, safe: false },
+  21: { name: 'Smart_RTL', get description() { return t('mavlink_config.FlightModesTab.returnViaOriginalPath'); }, icon: Home, safe: true },
+  22: { name: 'FlowHold', get description() { return t('mavlink_config.FlightModesTab.positionHoldWithOpticalFlow'); }, icon: Move, safe: true },
+  23: { name: 'Follow', get description() { return t('mavlink_config.FlightModesTab.followAnotherVehicle'); }, icon: Users, safe: true },
+  24: { name: 'ZigZag', get description() { return t('mavlink_config.FlightModesTab.zigzagSurveyPattern'); }, icon: Zap, safe: true },
+  25: { name: 'SystemID', get description() { return t('mavlink_config.FlightModesTab.systemIdentification'); }, icon: Activity, safe: false },
 };
 
 // ArduPlane flight modes with proper icons
 const PLANE_MODES: Record<number, { name: string; description: string; icon: React.ElementType; safe: boolean }> = {
-  0: { name: 'Manual', description: 'Full manual control', icon: Hand, safe: false },
-  1: { name: 'Circle', description: 'Circle around a point', icon: Circle, safe: true },
-  2: { name: 'Stabilize', description: 'Level flight with manual throttle', icon: Hand, safe: true },
-  3: { name: 'Training', description: 'Limits roll/pitch but allows recovery', icon: Dumbbell, safe: true },
-  4: { name: 'Acro', description: 'Rate-controlled aerobatics', icon: Gamepad2, safe: false },
-  5: { name: 'FBWA', description: 'Fly By Wire A - stabilized manual', icon: Plane, safe: true },
-  6: { name: 'FBWB', description: 'Fly By Wire B - speed/altitude hold', icon: Plane, safe: true },
-  7: { name: 'Cruise', description: 'Throttle and roll hold heading/alt', icon: Navigation, safe: true },
-  8: { name: 'AutoTune', description: 'Automatic PID tuning', icon: Wrench, safe: true },
-  10: { name: 'Auto', description: 'Follow mission waypoints', icon: Map, safe: true },
-  11: { name: 'RTL', description: 'Return to launch point', icon: Home, safe: true },
-  12: { name: 'Loiter', description: 'Circle and hold position', icon: Lock, safe: true },
-  13: { name: 'Takeoff', description: 'Automatic takeoff', icon: Rocket, safe: true },
-  14: { name: 'Avoid_ADSB', description: 'Avoid other aircraft', icon: AlertTriangle, safe: true },
-  15: { name: 'Guided', description: 'Fly to GCS-commanded points', icon: Navigation, safe: true },
-  17: { name: 'QStabilize', description: 'VTOL stabilize mode', icon: Hand, safe: true },
-  18: { name: 'QHover', description: 'VTOL hover in place', icon: Pin, safe: true },
-  19: { name: 'QLoiter', description: 'VTOL position hold', icon: Lock, safe: true },
-  20: { name: 'QLand', description: 'VTOL automatic landing', icon: PlaneLanding, safe: true },
-  21: { name: 'QRTL', description: 'VTOL return to launch', icon: Home, safe: true },
-  22: { name: 'QAutotune', description: 'VTOL automatic PID tuning', icon: Wrench, safe: true },
-  23: { name: 'QAcro', description: 'VTOL rate-controlled aerobatics', icon: Gamepad2, safe: false },
-  24: { name: 'Thermal', description: 'Soaring thermal detection', icon: Wind, safe: true },
-  25: { name: 'Loiter to QLand', description: 'Loiter then VTOL land', icon: PlaneLanding, safe: true },
+  0: { name: 'Manual', get description() { return t('mavlink_config.FlightModesTab.fullManualControl'); }, icon: Hand, safe: false },
+  1: { name: 'Circle', get description() { return t('mavlink_config.FlightModesTab.circleAroundAPoint'); }, icon: Circle, safe: true },
+  2: { name: 'Stabilize', get description() { return t('mavlink_config.FlightModesTab.levelFlightWithManualThrottle'); }, icon: Hand, safe: true },
+  3: { name: 'Training', get description() { return t('mavlink_config.FlightModesTab.limitsRollPitchButAllowsRecovery'); }, icon: Dumbbell, safe: true },
+  4: { name: 'Acro', get description() { return t('mavlink_config.FlightModesTab.rateControlledAerobatics'); }, icon: Gamepad2, safe: false },
+  5: { name: 'FBWA', get description() { return t('mavlink_config.FlightModesTab.flyByWireAStabilizedManual'); }, icon: Plane, safe: true },
+  6: { name: 'FBWB', get description() { return t('mavlink_config.FlightModesTab.flyByWireBSpeedAltitude'); }, icon: Plane, safe: true },
+  7: { name: 'Cruise', get description() { return t('mavlink_config.FlightModesTab.throttleAndRollHoldHeadingAlt'); }, icon: Navigation, safe: true },
+  8: { name: 'AutoTune', get description() { return t('mavlink_config.FlightModesTab.automaticPidTuning'); }, icon: Wrench, safe: true },
+  10: { name: 'Auto', get description() { return t('mavlink_config.FlightModesTab.followMissionWaypoints'); }, icon: Map, safe: true },
+  11: { name: 'RTL', get description() { return t('mavlink_config.FlightModesTab.returnToLaunchPoint'); }, icon: Home, safe: true },
+  12: { name: 'Loiter', get description() { return t('mavlink_config.FlightModesTab.circleAndHoldPosition'); }, icon: Lock, safe: true },
+  13: { name: 'Takeoff', get description() { return t('mavlink_config.FlightModesTab.automaticTakeoff'); }, icon: Rocket, safe: true },
+  14: { name: 'Avoid_ADSB', get description() { return t('mavlink_config.FlightModesTab.avoidOtherAircraft'); }, icon: AlertTriangle, safe: true },
+  15: { name: 'Guided', get description() { return t('mavlink_config.FlightModesTab.flyToGcsCommandedPoints'); }, icon: Navigation, safe: true },
+  17: { name: 'QStabilize', get description() { return t('mavlink_config.FlightModesTab.vtolStabilizeMode'); }, icon: Hand, safe: true },
+  18: { name: 'QHover', get description() { return t('mavlink_config.FlightModesTab.vtolHoverInPlace'); }, icon: Pin, safe: true },
+  19: { name: 'QLoiter', get description() { return t('mavlink_config.FlightModesTab.vtolPositionHold'); }, icon: Lock, safe: true },
+  20: { name: 'QLand', get description() { return t('mavlink_config.FlightModesTab.vtolAutomaticLanding'); }, icon: PlaneLanding, safe: true },
+  21: { name: 'QRTL', get description() { return t('mavlink_config.FlightModesTab.vtolReturnToLaunch'); }, icon: Home, safe: true },
+  22: { name: 'QAutotune', get description() { return t('mavlink_config.FlightModesTab.vtolAutomaticPidTuning'); }, icon: Wrench, safe: true },
+  23: { name: 'QAcro', get description() { return t('mavlink_config.FlightModesTab.vtolRateControlledAerobatics'); }, icon: Gamepad2, safe: false },
+  24: { name: 'Thermal', get description() { return t('mavlink_config.FlightModesTab.soaringThermalDetection'); }, icon: Wind, safe: true },
+  25: { name: 'Loiter to QLand', get description() { return t('mavlink_config.FlightModesTab.loiterThenVtolLand'); }, icon: PlaneLanding, safe: true },
 };
 
 // ArduRover drive modes
 const ROVER_MODES: Record<number, { name: string; description: string; icon: React.ElementType; safe: boolean }> = {
-  0: { name: 'Manual', description: 'Full manual throttle and steering', icon: Hand, safe: true },
-  1: { name: 'Acro', description: 'Manual with turn rate control', icon: Gamepad2, safe: false },
-  3: { name: 'Steering', description: 'Manual steering, speed controlled', icon: Navigation, safe: true },
-  4: { name: 'Hold', description: 'Stop and hold position', icon: Lock, safe: true },
-  5: { name: 'Loiter', description: 'Hold position using GPS', icon: Pin, safe: true },
-  6: { name: 'Follow', description: 'Follow another vehicle', icon: Users, safe: true },
-  7: { name: 'Simple', description: 'Simplified control relative to home', icon: Home, safe: true },
-  10: { name: 'Auto', description: 'Follow mission waypoints', icon: Map, safe: true },
-  11: { name: 'RTL', description: 'Return to launch point', icon: Home, safe: true },
-  12: { name: 'Smart RTL', description: 'Return via original path', icon: Home, safe: true },
-  15: { name: 'Guided', description: 'Drive to GCS-commanded points', icon: Navigation, safe: true },
-  16: { name: 'Initialising', description: 'System initializing', icon: Activity, safe: false },
+  0: { name: 'Manual', get description() { return t('mavlink_config.FlightModesTab.fullManualThrottleAndSteering'); }, icon: Hand, safe: true },
+  1: { name: 'Acro', get description() { return t('mavlink_config.FlightModesTab.manualWithTurnRateControl'); }, icon: Gamepad2, safe: false },
+  3: { name: 'Steering', get description() { return t('mavlink_config.FlightModesTab.manualSteeringSpeedControlled'); }, icon: Navigation, safe: true },
+  4: { name: 'Hold', get description() { return t('mavlink_config.FlightModesTab.stopAndHoldPosition'); }, icon: Lock, safe: true },
+  5: { name: 'Loiter', get description() { return t('mavlink_config.FlightModesTab.holdPositionUsingGps'); }, icon: Pin, safe: true },
+  6: { name: 'Follow', get description() { return t('mavlink_config.FlightModesTab.followAnotherVehicle'); }, icon: Users, safe: true },
+  7: { name: 'Simple', get description() { return t('mavlink_config.FlightModesTab.simplifiedControlRelativeToHome'); }, icon: Home, safe: true },
+  10: { name: 'Auto', get description() { return t('mavlink_config.FlightModesTab.followMissionWaypoints'); }, icon: Map, safe: true },
+  11: { name: 'RTL', get description() { return t('mavlink_config.FlightModesTab.returnToLaunchPoint'); }, icon: Home, safe: true },
+  12: { name: 'Smart RTL', get description() { return t('mavlink_config.FlightModesTab.returnViaOriginalPath'); }, icon: Home, safe: true },
+  15: { name: 'Guided', get description() { return t('mavlink_config.FlightModesTab.driveToGcsCommandedPoints'); }, icon: Navigation, safe: true },
+  16: { name: 'Initialising', get description() { return t('mavlink_config.FlightModesTab.systemInitializing'); }, icon: Activity, safe: false },
 };
 
 // Convert FLIGHT_MODE_PRESETS to PresetSelector format
@@ -229,7 +230,7 @@ function getModesForCategory(category: VehicleCategory) {
 
 function getModeInfo(modeNum: number, category: VehicleCategory = 'copter') {
   const modes = getModesForCategory(category);
-  return modes[modeNum] ?? { name: 'Unknown', description: 'Unknown mode', icon: HelpCircle, safe: false };
+  return modes[modeNum] ?? { name: 'Unknown', description: t('mavlink_config.FlightModesTab.unknownMode'), icon: HelpCircle, safe: false };
 }
 
 interface FlightModesTabProps {
@@ -379,10 +380,10 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
     <div className="p-6 space-y-6">
       {/* Header with View Mode Toggle */}
       <div className="flex items-center justify-between">
-        <InfoCard title={isRover ? "Drive Mode Configuration" : vehicleCategory === 'plane' ? "Plane Mode Configuration" : "Flight Mode Configuration"} variant="info" className="flex-1">
+        <InfoCard title={isRover ? t('mavlink_config.FlightModesTab.driveModeConfiguration') : vehicleCategory === 'plane' ? t('mavlink_config.FlightModesTab.planeModeConfiguration') : t('mavlink_config.FlightModesTab.flightModeConfiguration')} variant="info" className="flex-1">
           {advancedMode
-            ? `Configure all 6 mode slots for fine-grained control with multi-position switches.`
-            : `Configure the 3 primary switch positions. Most transmitters use a 3-position switch.`}
+            ? t('mavlink_config.FlightModesTab.configureAll6ModeSlotsFor')
+            : t('mavlink_config.FlightModesTab.configureThe3PrimarySwitchPositions')}
         </InfoCard>
         <button
           onClick={() => setAdvancedMode(!advancedMode)}
@@ -393,7 +394,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
           }`}
         >
           {advancedMode ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
-          {advancedMode ? 'Advanced' : 'Simple'}
+          {advancedMode ? t('mavlink_config.FlightModesTab.advanced') : t('mavlink_config.FlightModesTab.simple')}
         </button>
       </div>
 
@@ -403,8 +404,8 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
           /* Default state: dropdown + detect button */
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-content">Mode Switch Channel</h3>
-              <p className="text-xs text-content-secondary mt-0.5">Which RC channel controls {isRover ? 'drive modes' : 'flight modes'}</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.FlightModesTab.modeSwitchChannel')}</h3>
+              <p className="text-xs text-content-secondary mt-0.5">{t('mavlink_config.FlightModesTab.whichRcChannelControls')} {isRover ? 'drive modes' : 'flight modes'}</p>
             </div>
             <div className="flex items-center gap-2">
               <select
@@ -414,7 +415,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
               >
                 {[5, 6, 7, 8, 9, 10, 11, 12].map((ch) => (
                   <option key={ch} value={ch}>
-                    Channel {ch}
+                    {t('mavlink_config.FlightModesTab.channel')} {ch}
                   </option>
                 ))}
               </select>
@@ -426,10 +427,10 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                     ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/30'
                     : 'bg-surface-raised text-content-tertiary border border-subtle cursor-not-allowed'
                 }`}
-                title={signalStatus !== 'active' ? 'Connect to vehicle to use auto-detect' : 'Auto-detect mode switch channel'}
+                title={signalStatus !== 'active' ? t('mavlink_config.FlightModesTab.connectToVehicleToUseAuto') : t('mavlink_config.FlightModesTab.autoDetectModeSwitchChannel')}
               >
                 <Search className="w-3.5 h-3.5" />
-                Detect
+                {t('mavlink_config.FlightModesTab.detect')}
               </button>
             </div>
           </div>
@@ -438,11 +439,11 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-medium text-cyan-300">Detecting Mode Switch Channel</h3>
+                <h3 className="text-sm font-medium text-cyan-300">{t('mavlink_config.FlightModesTab.detectingModeSwitchChannel')}</h3>
                 <p className="text-xs text-content-secondary mt-0.5">
                   {detectedChannel
-                    ? `Channel ${detectedChannel} detected: use this channel?`
-                    : 'Flip your mode switch on your transmitter'}
+                    ? t('mavlink_config.FlightModesTab.channelDetectedUseThisChannel', { detectedChannel })
+                    : t('mavlink_config.FlightModesTab.flipYourModeSwitchOnYour')}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -452,7 +453,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                     className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm bg-green-500/20 text-green-400 border-green-500/30 hover:bg-green-500/30 transition-colors"
                   >
                     <Check className="w-3.5 h-3.5" />
-                    Use CH{detectedChannel}
+                    {t('mavlink_config.FlightModesTab.useCh')}{detectedChannel}
                   </button>
                 )}
                 <button
@@ -460,7 +461,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm bg-surface-raised text-content-secondary border border-subtle hover:bg-surface transition-colors"
                 >
                   <X className="w-3.5 h-3.5" />
-                  Cancel
+                  {t('mavlink_config.FlightModesTab.cancel')}
                 </button>
               </div>
             </div>
@@ -508,22 +509,22 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
         <PresetSelector
           presets={presetSelectorPresets}
           onApply={applyPreset}
-          label="Quick Presets"
-          hint="Click to apply a mode configuration"
+          label={t('mavlink_config.FlightModesTab.quickPresets')}
+          hint={t('mavlink_config.FlightModesTab.clickToApplyAModeConfiguration')}
         />
       )}
 
       {/* Visual Switch Position Diagram */}
       <div className="bg-surface rounded-xl border border-subtle p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium text-content">Switch Position Diagram</h3>
+          <h3 className="text-sm font-medium text-content">{t('mavlink_config.FlightModesTab.switchPositionDiagram')}</h3>
           {signalStatus === 'active' ? (
             <span className="flex items-center gap-1.5 px-2 py-0.5 text-[10px] bg-green-500/20 text-green-400 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
               LIVE
             </span>
           ) : (
-            <span className="text-[10px] text-content-tertiary">Connect to see live data</span>
+            <span className="text-[10px] text-content-tertiary">{t('mavlink_config.FlightModesTab.connectToSeeLiveData')}</span>
           )}
         </div>
         <div className="flex items-center justify-center gap-8">
@@ -561,7 +562,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                 )}
               </div>
             )}
-            <span className="text-xs text-content-secondary mt-2">Mode Switch</span>
+            <span className="text-xs text-content-secondary mt-2">{t('mavlink_config.FlightModesTab.modeSwitch')}</span>
           </div>
 
           {/* Position to modes mapping */}
@@ -587,7 +588,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                     <div className={`w-2.5 h-2.5 rounded-full ${dotColor}`} />
                     <div className="w-20">
                       <div className={`text-sm font-medium ${isSlotActive ? 'text-cyan-400' : 'text-content'}`}>
-                        Slot {range.slot}
+                        {t('mavlink_config.FlightModesTab.slot')} {range.slot}
                       </div>
                       <div className="text-[10px] text-content-secondary font-mono">{range.min}-{range.max}</div>
                     </div>
@@ -645,7 +646,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                       <span className="text-xs font-mono text-cyan-400/70">{liveRcValue}</span>
                     )}
                     <span className="text-xs text-content-tertiary">
-                      Slots {pos.slots.join(', ')}
+                      {t('mavlink_config.FlightModesTab.slots')} {pos.slots.join(', ')}
                     </span>
                   </div>
                 );
@@ -658,7 +659,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
       {/* Mode Slots - Simple Mode (Primary 3 positions) */}
       {!advancedMode && (
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-content">{isRover ? 'Drive' : 'Flight'} Modes (3-Position Switch)</h3>
+          <h3 className="text-sm font-medium text-content">{isRover ? t('mavlink_config.FlightModesTab.drive') : t('mavlink_config.FlightModesTab.flight')} {t('mavlink_config.FlightModesTab.modes3PositionSwitch')}</h3>
           <div className="grid grid-cols-3 gap-4">
             {SWITCH_POSITIONS.map((pos) => {
               const primarySlot = pos.name === 'High' ? 6 : pos.name === 'Mid' ? 3 : 1;
@@ -712,7 +713,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                   >
                     {Object.entries(getModesForCategory(vehicleCategory)).map(([num, mode]) => (
                       <option key={num} value={num}>
-                        {mode.name} {!mode.safe ? '(Advanced)' : ''}
+                        {mode.name} {!mode.safe ? t('mavlink_config.FlightModesTab.advanced2') : ''}
                       </option>
                     ))}
                   </select>
@@ -729,7 +730,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
       {/* Mode Slots - Advanced Mode (All 6 slots) */}
       {advancedMode && (
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-content">{isRover ? 'Drive' : 'Flight'} Mode Slots (All 6)</h3>
+          <h3 className="text-sm font-medium text-content">{isRover ? t('mavlink_config.FlightModesTab.drive') : t('mavlink_config.FlightModesTab.flight')} {t('mavlink_config.FlightModesTab.modeSlotsAll6')}</h3>
           <div className="grid grid-cols-2 gap-4">
             {MODE_PWM_RANGES.map((range) => {
               const currentMode = flightModes[range.slot - 1] ?? 0;
@@ -760,7 +761,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-content">Slot {range.slot}</span>
+                          <span className="text-sm font-medium text-content">{t('mavlink_config.FlightModesTab.slot')} {range.slot}</span>
                           {positionInfo && (
                             <span className={`w-2 h-2 rounded-full ${positionInfo.color}`} />
                           )}
@@ -776,7 +777,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                       )}
                       {!isSafe && (
                         <span className="px-2 py-0.5 text-[10px] bg-orange-500/20 text-orange-400 rounded-full">
-                          Advanced
+                          {t('mavlink_config.FlightModesTab.advanced')}
                         </span>
                       )}
                     </div>
@@ -807,7 +808,7 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
                   >
                     {Object.entries(getModesForCategory(vehicleCategory)).map(([num, mode]) => (
                       <option key={num} value={num}>
-                        {mode.name} {!mode.safe ? '(Advanced)' : ''}
+                        {mode.name} {!mode.safe ? t('mavlink_config.FlightModesTab.advanced2') : ''}
                       </option>
                     ))}
                   </select>
@@ -826,14 +827,14 @@ const FlightModesTab: React.FC<FlightModesTabProps> = ({ vehicleCategory = 'copt
         <div className="bg-amber-500/10 rounded-xl border border-amber-500/30 p-4 flex items-center gap-3">
           <AlertTriangle className="w-5 h-5 text-amber-400" />
           <p className="text-sm text-amber-400">
-            You have unsaved changes. Click <span className="font-medium">"Save All Changes"</span> in the header to save.
+            {t('mavlink_config.FlightModesTab.youHaveUnsavedChangesClick')} <span className="font-medium">{t('mavlink_config.FlightModesTab.saveAllChanges')}</span> {t('mavlink_config.FlightModesTab.inTheHeaderToSave')}
           </p>
         </div>
       )}
 
       {/* Mode Reference */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium text-content">Mode Reference</h3>
+        <h3 className="text-sm font-medium text-content">{t('mavlink_config.FlightModesTab.modeReference')}</h3>
         <div className="bg-surface rounded-xl border border-subtle p-4">
           <div className="grid grid-cols-3 gap-3">
             {Object.entries(getModesForCategory(vehicleCategory))

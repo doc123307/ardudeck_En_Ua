@@ -13,6 +13,7 @@ import {
   normalizeAxes,
   toggleAxis,
 } from './autotune';
+import { t } from '../../i18n';
 
 const AXIS_CHIP: Record<string, { on: string; off: string }> = {
   Roll: {
@@ -83,9 +84,9 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
       <div className="p-6">
         <div className="bg-surface rounded-xl border border-subtle p-8 text-center">
           <Wrench className="w-8 h-8 mx-auto mb-3 text-content-secondary" />
-          <p className="text-content font-medium">This vehicle has no autotune</p>
+          <p className="text-content font-medium">{t('mavlink_config.AutotuneTab.thisVehicleHasNoAutotune')}</p>
           <p className="text-sm text-content-secondary mt-1">
-            AUTOTUNE_AXES is not in its parameters, so the firmware does not offer it.
+            {t('mavlink_config.AutotuneTab.autotuneAxesIsNotInIts')}
           </p>
         </div>
       </div>
@@ -102,12 +103,12 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
             </div>
             <div>
               <p className="text-amber-300 font-medium">
-                {downloadState === 'failed' ? 'Parameter Download Failed' : 'Parameters Not Loaded'}
+                {downloadState === 'failed' ? t('mavlink_config.AutotuneTab.parameterDownloadFailed') : t('mavlink_config.AutotuneTab.parametersNotLoaded')}
               </p>
               <p className="text-xs text-content-secondary">
                 {downloadState === 'failed'
-                  ? 'The vehicle did not send a full parameter set. Retry to pull them again.'
-                  : 'Autotune settings are read from the vehicle'}
+                  ? t('mavlink_config.AutotuneTab.theVehicleDidNotSendA')
+                  : t('mavlink_config.AutotuneTab.autotuneSettingsAreReadFromThe')}
               </p>
             </div>
           </div>
@@ -116,7 +117,7 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
             disabled={isLoading}
             className="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
           >
-            {isLoading ? 'Loading...' : downloadState === 'failed' ? 'Retry' : 'Fetch Parameters'}
+            {isLoading ? t('mavlink_config.AutotuneTab.loading') : downloadState === 'failed' ? t('mavlink_config.AutotuneTab.retry') : t('mavlink_config.AutotuneTab.fetchParameters')}
           </button>
         </div>
       )}
@@ -124,10 +125,9 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
       {hasParameters && armed && (
         <div className="bg-surface rounded-xl border border-subtle p-8 text-center">
           <Lock className="w-8 h-8 mx-auto mb-3 text-amber-400" />
-          <p className="text-content font-medium">Disarm to set up autotune</p>
+          <p className="text-content font-medium">{t('mavlink_config.AutotuneTab.disarmToSetUpAutotune')}</p>
           <p className="text-sm text-content-secondary mt-1 max-w-md mx-auto">
-            The axes are read the moment the mode engages, so changing them in the air means
-            tuning something other than what this screen says.
+            {t('mavlink_config.AutotuneTab.theAxesAreReadTheMoment')}
           </p>
         </div>
       )}
@@ -140,10 +140,9 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
                 <Wrench className="w-5 h-5 text-orange-400" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-content">Axes to Tune</h3>
+                <h3 className="text-base font-semibold text-content">{t('mavlink_config.AutotuneTab.axesToTune')}</h3>
                 <p className="text-sm text-content-secondary">
-                  One axis at a time takes longer but gives a cleaner result, and lets you land
-                  between them.
+                  {t('mavlink_config.AutotuneTab.oneAxisAtATimeTakes')}
                 </p>
               </div>
             </div>
@@ -158,7 +157,7 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
                   <button
                     key={name}
                     onClick={() => stage('AUTOTUNE_AXES', toggleAxis(axes, bit))}
-                    data-tip={on ? `Skip ${name.toLowerCase()} this tune` : `Tune ${name.toLowerCase()}`}
+                    data-tip={on ? t('mavlink_config.AutotuneTab.skipThisTune', { v1: name.toLowerCase() }) : t('mavlink_config.AutotuneTab.tune', { v1: name.toLowerCase() })}
                     className={`flex-1 py-2.5 rounded-lg border text-sm font-semibold transition-colors ${on ? c.on : c.off}`}
                   >
                     {name}
@@ -168,13 +167,13 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
             </div>
 
             <div className="mt-3 flex items-center justify-between">
-              <p className="text-sm text-content-secondary">Tuning {axisNames(axes)}.</p>
+              <p className="text-sm text-content-secondary">{t('mavlink_config.AutotuneTab.tuning')} {axisNames(axes)}.</p>
               {axes !== AXIS_ALL && (
                 <button
                   onClick={() => stage('AUTOTUNE_AXES', AXIS_ALL)}
                   className="text-sm text-teal-400 hover:underline"
                 >
-                  Select all three
+                  {t('mavlink_config.AutotuneTab.selectAllThree')}
                 </button>
               )}
             </div>
@@ -187,9 +186,9 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
                   <Zap className="w-5 h-5 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-content">How Hard</h3>
+                  <h3 className="text-base font-semibold text-content">{t('mavlink_config.AutotuneTab.howHard')}</h3>
                   <p className="text-sm text-content-secondary">
-                    How aggressively the tune chases a crisp response.
+                    {t('mavlink_config.AutotuneTab.howAggressivelyTheTuneChasesA')}
                   </p>
                 </div>
               </div>
@@ -232,25 +231,21 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
                 <CheckCircle2 className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-content">How to Start It</h3>
+                <h3 className="text-base font-semibold text-content">{t('mavlink_config.AutotuneTab.howToStartIt')}</h3>
                 <p className="text-sm text-content-secondary">
                   {modeNum === null
-                    ? 'Switch the aircraft into AutoTune once you are flying.'
-                    : `Switch into AutoTune (mode ${modeNum}) once you are flying, either from the mode picker on the telemetry screen or from a transmitter switch.`}
+                    ? t('mavlink_config.AutotuneTab.switchTheAircraftIntoAutotuneOnce')
+                    : t('mavlink_config.AutotuneTab.switchIntoAutotuneModeOnceYou', { modeNum })}
                 </p>
               </div>
             </div>
             <p className="text-sm text-content-secondary">
-              To put it on a switch, use Switch Actions on the Flight Modes tab: pick the channel,
-              then the AutoTune option. That is the same RCn_OPTION you would otherwise hunt for by
-              number.
+              {t('mavlink_config.AutotuneTab.toPutItOnASwitch')}
             </p>
             <div className="mt-4 flex items-start gap-3 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2.5">
               <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <p className="text-sm text-amber-300">
-                Fly it in calm air with plenty of room, keep the aircraft roughly in position with
-                the sticks, and be ready to switch out. A tune saves only when you land and disarm
-                in the mode; leaving it any other way throws the result away.
+                {t('mavlink_config.AutotuneTab.flyItInCalmAirWith')}
               </p>
             </div>
           </div>
@@ -259,21 +254,20 @@ export const AutotuneTab: React.FC<Props> = ({ vehicleCategory }) => {
             <div className="flex items-center gap-3 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
               <Zap className="w-4 h-4 text-amber-400 shrink-0" />
               <span className="flex-1 text-sm text-amber-300">
-                {pending.size} change{pending.size === 1 ? '' : 's'} staged. Nothing is written to
-                the vehicle until Apply.
+                {pending.size} {t('mavlink_config.AutotuneTab.change')}{pending.size === 1 ? '' : 's'} {t('mavlink_config.AutotuneTab.stagedNothingIsWrittenToThe')}
               </span>
               <button
                 onClick={() => setPending(new Map())}
                 className="px-3 py-1.5 rounded-lg text-sm text-content-secondary hover:text-content transition-colors"
               >
-                Discard
+                {t('mavlink_config.AutotuneTab.discard')}
               </button>
               <button
                 onClick={apply}
                 disabled={applying}
                 className="px-4 py-1.5 rounded-lg text-sm font-medium bg-amber-600 hover:bg-amber-500 text-white transition-colors disabled:opacity-50"
               >
-                {applying ? 'Writing...' : 'Apply'}
+                {applying ? t('mavlink_config.AutotuneTab.writing') : t('mavlink_config.AutotuneTab.apply')}
               </button>
             </div>
           )}

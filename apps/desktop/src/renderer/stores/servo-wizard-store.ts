@@ -14,6 +14,7 @@ import {
   getPreset,
 } from '../components/servo-wizard/presets/servo-presets';
 import { Plane, Wrench, Gamepad2, Ruler, Save, type LucideIcon } from 'lucide-react';
+import { t } from '../i18n';
 
 // Wizard steps
 export type WizardStep = 'aircraft' | 'assign' | 'test' | 'endpoints' | 'review';
@@ -21,11 +22,11 @@ export type WizardStep = 'aircraft' | 'assign' | 'test' | 'endpoints' | 'review'
 const STEPS: WizardStep[] = ['aircraft', 'assign', 'test', 'endpoints', 'review'];
 
 export const STEP_INFO: Record<WizardStep, { label: string; icon: LucideIcon; description: string }> = {
-  aircraft: { label: 'Aircraft', icon: Plane, description: 'Select your aircraft type' },
-  assign: { label: 'Assign', icon: Wrench, description: 'Map servos to control surfaces' },
-  test: { label: 'Test', icon: Gamepad2, description: 'Verify servo movement' },
-  endpoints: { label: 'Calibrate', icon: Ruler, description: 'Adjust servo limits' },
-  review: { label: 'Save', icon: Save, description: 'Review and save' },
+  aircraft: { get label() { return t('stores.servo_wizard_store.aircraft'); }, icon: Plane, get description() { return t('stores.servo_wizard_store.selectYourAircraftType'); } },
+  assign: { get label() { return t('stores.servo_wizard_store.assign'); }, icon: Wrench, get description() { return t('stores.servo_wizard_store.mapServosToControlSurfaces'); } },
+  test: { get label() { return t('stores.servo_wizard_store.test'); }, icon: Gamepad2, get description() { return t('stores.servo_wizard_store.verifyServoMovement'); } },
+  endpoints: { get label() { return t('stores.servo_wizard_store.calibrate'); }, icon: Ruler, get description() { return t('stores.servo_wizard_store.adjustServoLimits'); } },
+  review: { get label() { return t('stores.servo_wizard_store.save'); }, icon: Save, get description() { return t('stores.servo_wizard_store.reviewAndSave'); } },
 };
 
 interface ServoWizardState {

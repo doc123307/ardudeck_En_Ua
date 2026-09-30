@@ -9,6 +9,7 @@ import { createPortal } from 'react-dom';
 import { useFleetRepoStore } from '../../stores/fleet-repo-store';
 import { useNavigationStore } from '../../stores/navigation-store';
 import { useCargoEnabled, VAULT_CARGO_SLUG } from '../../modules/capabilities';
+import { t } from '../../i18n';
 
 function timeAgo(ts: number): string {
   const s = Math.floor((Date.now() - ts) / 1000);
@@ -81,7 +82,7 @@ export function VaultSyncBadge({ variant = 'icon' }: VaultSyncBadgeProps) {
           className="px-4 py-2 text-sm rounded-lg flex items-center gap-2 bg-surface-raised hover:bg-surface text-content border border-subtle"
         >
           <Icon className={`w-4 h-4 ${connected ? 'text-emerald-600 dark:text-emerald-400' : 'text-content-secondary'}`} />
-          {connected ? 'Backup on' : 'Set up backup'}
+          {connected ? t('vault.VaultSyncBadge.backupOn') : t('vault.VaultSyncBadge.setUpBackup')}
         </button>
       ) : (
         <button
@@ -95,7 +96,7 @@ export function VaultSyncBadge({ variant = 'icon' }: VaultSyncBadgeProps) {
           }`}
         >
           <Icon className={`w-4 h-4 ${syncBusy ? 'animate-pulse' : ''}`} />
-          Backup
+          {t('vault.VaultSyncBadge.backup')}
         </button>
       )}
 
@@ -108,14 +109,14 @@ export function VaultSyncBadge({ variant = 'icon' }: VaultSyncBadgeProps) {
           >
             <div className="px-3 py-2 border-b border-subtle">
               <div className="text-xs font-medium text-content">
-                {connected ? 'Backup is on' : 'Backup is off'}
+                {connected ? t('vault.VaultSyncBadge.backupIsOn') : t('vault.VaultSyncBadge.backupIsOff')}
               </div>
               <div className="text-[11px] text-content-secondary mt-0.5">
                 {connected
                   ? lastSyncAt
-                    ? `Last copied online ${timeAgo(lastSyncAt)}.`
-                    : 'Nothing has been copied online yet.'
-                  : 'Saves stay on this computer until you set it up.'}
+                    ? t('vault.VaultSyncBadge.lastCopiedOnline', { v1: timeAgo(lastSyncAt) })
+                    : t('vault.VaultSyncBadge.nothingHasBeenCopiedOnlineYet')
+                  : t('vault.VaultSyncBadge.savesStayOnThisComputerUntil')}
               </div>
               {lastError && <div className="text-[11px] text-red-500 mt-1">{lastError}</div>}
             </div>
@@ -127,7 +128,7 @@ export function VaultSyncBadge({ variant = 'icon' }: VaultSyncBadgeProps) {
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs text-content hover:bg-surface-raised transition-colors disabled:opacity-50"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${syncBusy ? 'animate-spin' : ''}`} />
-                {syncBusy ? 'Copying online...' : 'Copy online now'}
+                {syncBusy ? t('vault.VaultSyncBadge.copyingOnline') : t('vault.VaultSyncBadge.copyOnlineNow')}
               </button>
             )}
 
@@ -136,7 +137,7 @@ export function VaultSyncBadge({ variant = 'icon' }: VaultSyncBadgeProps) {
               className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs text-content hover:bg-surface-raised transition-colors"
             >
               <Settings2 className="w-3.5 h-3.5" />
-              {connected ? 'Open Backup & Sync' : 'Set up backup'}
+              {connected ? t('vault.VaultSyncBadge.openBackupSync') : t('vault.VaultSyncBadge.setUpBackup')}
             </button>
           </div>
         </>,

@@ -14,6 +14,7 @@ import { Gamepad2, Square, AlertTriangle } from 'lucide-react';
 import { useParameterStore } from '../../../stores/parameter-store';
 import { useTelemetryStore } from '../../../stores/telemetry-store';
 import { useConnectionStore } from '../../../stores/connection-store';
+import { t as tr } from '../../../i18n';
 
 // 50 Hz so we can outpace ELRS-MAVLink's RC stream when the GCS connection is
 // over ELRS. At 10Hz we lose the race; at 50Hz our values dominate.
@@ -143,7 +144,7 @@ export const StickTestPanel: React.FC = () => {
         savedArmingCheckRef.current = currentCheck;
         const ok = await setParameter('ARMING_CHECK', 0);
         if (!ok) {
-          setError('Failed to relax ARMING_CHECK');
+          setError(tr('mavlink_config.StickTestPanel.failedToRelaxArmingCheck'));
           setBusy(false);
           return;
         }
@@ -153,7 +154,7 @@ export const StickTestPanel: React.FC = () => {
       //    autopilot stabilization fighting our demands.
       const modeOk = await window.electronAPI?.mavlinkSetMode?.(MANUAL_MODE);
       if (!modeOk) {
-        setError('Failed to set MANUAL mode');
+        setError(tr('mavlink_config.StickTestPanel.failedToSetManualMode'));
         setBusy(false);
         return;
       }
@@ -170,7 +171,7 @@ export const StickTestPanel: React.FC = () => {
       // 4. Force-arm.
       const armOk = await window.electronAPI?.mavlinkArmDisarm?.(true, true);
       if (!armOk) {
-        setError('Failed to arm vehicle - check Messages for PreArm reason');
+        setError(tr('mavlink_config.StickTestPanel.failedToArmVehicleCheckMessages'));
         setBusy(false);
         if (preArmInterval) clearInterval(preArmInterval);
         void window.electronAPI?.rcOverrideRelease?.();
@@ -183,7 +184,7 @@ export const StickTestPanel: React.FC = () => {
     } catch (e) {
       if (preArmInterval) clearInterval(preArmInterval);
       void window.electronAPI?.rcOverrideRelease?.();
-      setError(e instanceof Error ? e.message : 'Unknown error');
+      setError(e instanceof Error ? e.message : tr('mavlink_config.StickTestPanel.unknownError'));
     } finally {
       setBusy(false);
     }
@@ -231,9 +232,9 @@ export const StickTestPanel: React.FC = () => {
             <Gamepad2 className="w-5 h-5 text-pink-400" />
           </div>
           <div className="flex-1">
-            <h3 className="text-base font-semibold text-content">Stick Test</h3>
+            <h3 className="text-base font-semibold text-content">{tr('mavlink_config.StickTestPanel.stickTest')}</h3>
             <p className="text-sm text-content-secondary">
-              Not available on multirotors. Injecting throttle into an armed copter spins the motors. Use <span className="text-pink-300 font-medium">Motor Test</span> to bench-check outputs one motor at a time.
+              {tr('mavlink_config.StickTestPanel.notAvailableOnMultirotorsInjectingThrottle')} <span className="text-pink-300 font-medium">{tr('mavlink_config.StickTestPanel.motorTest')}</span> {tr('mavlink_config.StickTestPanel.toBenchCheckOutputsOneMotor')}
             </p>
           </div>
         </div>
@@ -248,9 +249,9 @@ export const StickTestPanel: React.FC = () => {
           <Gamepad2 className="w-5 h-5 text-pink-400" />
         </div>
         <div className="flex-1">
-          <h3 className="text-base font-semibold text-content">Stick Test</h3>
+          <h3 className="text-base font-semibold text-content">{tr('mavlink_config.StickTestPanel.stickTest')}</h3>
           <p className="text-sm text-content-secondary">
-            Inject synthetic RC input. Mixer drives outputs as if you moved real sticks. Double-click a slider to recenter.
+            {tr('mavlink_config.StickTestPanel.injectSyntheticRcInputMixerDrives')}
           </p>
         </div>
         {active ? (
@@ -260,7 +261,7 @@ export const StickTestPanel: React.FC = () => {
             onClick={release}
             className="h-9 px-4 inline-flex items-center gap-2 rounded-lg border border-amber-500/40 text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 text-sm font-medium"
           >
-            <Square className="w-4 h-4" /> Release
+            <Square className="w-4 h-4" /> {tr('mavlink_config.StickTestPanel.release')}
           </button>
         ) : (
           <button
@@ -269,7 +270,7 @@ export const StickTestPanel: React.FC = () => {
             onClick={start}
             className="h-9 px-4 inline-flex items-center gap-2 rounded-lg border border-pink-500/40 text-pink-300 bg-pink-500/10 hover:bg-pink-500/20 disabled:opacity-50 text-sm font-medium"
           >
-            <Gamepad2 className="w-4 h-4" /> Start
+            <Gamepad2 className="w-4 h-4" /> {tr('mavlink_config.StickTestPanel.start')}
           </button>
         )}
       </div>
@@ -278,7 +279,7 @@ export const StickTestPanel: React.FC = () => {
         <div className="mb-4 text-xs text-amber-400/80 bg-amber-500/5 border border-amber-500/20 rounded-lg p-3 flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <div>
-            Start sets MANUAL mode and force-arms the vehicle (bypassing pre-arm checks). Bench use only - {isRover ? 'lift the drive wheels off the bench' : 'remove propellers'} before pressing Start.
+            {tr('mavlink_config.StickTestPanel.startSetsManualModeAndForce')} {isRover ? tr('mavlink_config.StickTestPanel.liftTheDriveWheelsOffThe') : 'remove propellers'} {tr('mavlink_config.StickTestPanel.beforePressingStart')}
           </div>
         </div>
       )}
@@ -286,26 +287,26 @@ export const StickTestPanel: React.FC = () => {
       <div className="space-y-2">
         {isRover ? (
           <>
-            <SliderRow label="Steering" value={roll}     min={1100} max={1900} center={1500} onChange={setRoll}     fcValue={fcCh(steerCh - 1)} />
-            <SliderRow label="Throttle" value={throttle} min={1100} max={1900} center={throttleNeutral} onChange={setThrottle} fcValue={fcCh(thrCh - 1)} />
+            <SliderRow label={tr('mavlink_config.StickTestPanel.steering')} value={roll}     min={1100} max={1900} center={1500} onChange={setRoll}     fcValue={fcCh(steerCh - 1)} />
+            <SliderRow label={tr('mavlink_config.StickTestPanel.throttle')} value={throttle} min={1100} max={1900} center={throttleNeutral} onChange={setThrottle} fcValue={fcCh(thrCh - 1)} />
           </>
         ) : (
           <>
-            <SliderRow label="Roll"     value={roll}     min={1100} max={1900} center={1500} onChange={setRoll}     fcValue={fcCh(0)} />
-            <SliderRow label="Pitch"    value={pitch}    min={1100} max={1900} center={1500} onChange={setPitch}    fcValue={fcCh(1)} />
-            <SliderRow label="Throttle" value={throttle} min={1100} max={1900} center={1100} onChange={setThrottle} fcValue={fcCh(2)} />
-            <SliderRow label="Yaw"      value={yaw}      min={1100} max={1900} center={1500} onChange={setYaw}      fcValue={fcCh(3)} />
+            <SliderRow label={tr('mavlink_config.StickTestPanel.roll')}     value={roll}     min={1100} max={1900} center={1500} onChange={setRoll}     fcValue={fcCh(0)} />
+            <SliderRow label={tr('mavlink_config.StickTestPanel.pitch')}    value={pitch}    min={1100} max={1900} center={1500} onChange={setPitch}    fcValue={fcCh(1)} />
+            <SliderRow label={tr('mavlink_config.StickTestPanel.throttle')} value={throttle} min={1100} max={1900} center={1100} onChange={setThrottle} fcValue={fcCh(2)} />
+            <SliderRow label={tr('mavlink_config.StickTestPanel.yaw')}      value={yaw}      min={1100} max={1900} center={1500} onChange={setYaw}      fcValue={fcCh(3)} />
           </>
         )}
       </div>
 
       <div className="mt-2 text-[11px] text-content-tertiary">
-        FC column shows what the autopilot currently reads on {isRover ? `RC${steerCh}/RC${thrCh}` : 'RC1-4'} (msg 65). Green = matches your slider (override winning). Amber = mismatch. Dash = FC isn't reporting RC at all.
+        {tr('mavlink_config.StickTestPanel.fcColumnShowsWhatTheAutopilot')} {isRover ? `RC${steerCh}/RC${thrCh}` : 'RC1-4'} {tr('mavlink_config.StickTestPanel.msg65GreenMatchesYourSlider')}
       </div>
 
       {active && (
         <div className="mt-4 text-xs text-pink-400/80 bg-pink-500/5 border border-pink-500/20 rounded-lg p-3">
-          Armed in MANUAL mode. Override streaming at {Math.round(1000 / SEND_INTERVAL_MS)}Hz. Click Release to stop and disarm.
+          {tr('mavlink_config.StickTestPanel.armedInManualModeOverrideStreaming')} {Math.round(1000 / SEND_INTERVAL_MS)}{tr('mavlink_config.StickTestPanel.hzClickReleaseToStopAnd')}
         </div>
       )}
 

@@ -7,6 +7,7 @@ import { Code2, Copy, Check, ChevronUp, ChevronDown } from 'lucide-react';
 import { useLuaGraphStore } from '../../stores/lua-graph-store';
 import { compileGraph } from './lua-compiler';
 import { highlightLua } from './lua-highlighter';
+import { t } from '../../i18n';
 
 export function LuaPreviewPanel() {
   const nodes = useLuaGraphStore((s) => s.nodes);
@@ -43,7 +44,7 @@ export function LuaPreviewPanel() {
         <div className="flex items-center gap-2">
           <Code2 className="w-3 h-3 text-content-secondary" />
           <span className="text-[10px] font-medium uppercase tracking-wider text-content-secondary">
-            Lua Preview
+            {t('lua_graph.LuaPreviewPanel.luaPreview')}
           </span>
           {result.errors.length > 0 && (
             <span className="text-[9px] text-red-400 bg-red-500/10 px-1.5 rounded">
@@ -59,7 +60,7 @@ export function LuaPreviewPanel() {
                 handleCopy();
               }}
               className="p-0.5 rounded hover:bg-surface-raised transition-colors"
-              title="Copy to clipboard"
+              title={t('lua_graph.LuaPreviewPanel.copyToClipboard')}
             >
               {copied ? (
                 <Check className="w-3 h-3 text-emerald-400" />
@@ -96,7 +97,7 @@ export function LuaPreviewPanel() {
               </pre>
             ) : (
               <div className="text-[10px] text-content-tertiary italic">
-                Add nodes to see generated Lua code
+                {t('lua_graph.LuaPreviewPanel.addNodesToSeeGeneratedLua')}
               </div>
             )}
           </div>

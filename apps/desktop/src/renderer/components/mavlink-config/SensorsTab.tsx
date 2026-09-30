@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { GpsOffsetSection } from './sensors/GpsOffsetSection';
+import { t } from '../../i18n';
 
 // Sensor status indicator
 function SensorStatus({
@@ -146,13 +147,13 @@ const SensorsTab: React.FC = () => {
         <div className="flex items-center gap-2">
           <Activity className={`w-5 h-5 ${lastUpdate ? 'text-emerald-400 animate-pulse' : 'text-content-secondary'}`} />
           <span className="text-sm text-content-secondary">
-            {lastUpdate ? `Last update: ${lastUpdate.toLocaleTimeString()}` : 'Waiting for telemetry...'}
+            {lastUpdate ? t('mavlink_config.SensorsTab.lastUpdate', { v1: lastUpdate.toLocaleTimeString() }) : t('mavlink_config.SensorsTab.waitingForTelemetry')}
           </span>
         </div>
         {heartbeat && (
           <div className="flex items-center gap-2 text-sm text-content-secondary">
             <Wifi className="w-4 h-4" />
-            <span>{heartbeat.autopilot || 'Unknown'}</span>
+            <span>{heartbeat.autopilot || t('mavlink_config.SensorsTab.unknown')}</span>
           </div>
         )}
       </div>
@@ -166,26 +167,26 @@ const SensorsTab: React.FC = () => {
               <Compass className="w-5 h-5 text-blue-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Attitude</h3>
-              <p className="text-xs text-content-secondary">Aircraft orientation</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.SensorsTab.attitude')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SensorsTab.aircraftOrientation')}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <TelemetryValue
-              label="Roll"
+              label={t('mavlink_config.SensorsTab.roll')}
               value={attitude?.roll ?? 0}
               unit="°"
               color="text-blue-400"
             />
             <TelemetryValue
-              label="Pitch"
+              label={t('mavlink_config.SensorsTab.pitch')}
               value={attitude?.pitch ?? 0}
               unit="°"
               color="text-emerald-400"
             />
             <TelemetryValue
-              label="Yaw"
+              label={t('mavlink_config.SensorsTab.yaw')}
               value={attitude?.yaw ?? 0}
               unit="°"
               color="text-orange-400"
@@ -217,19 +218,19 @@ const SensorsTab: React.FC = () => {
               <Satellite className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">GPS Status</h3>
-              <p className="text-xs text-content-secondary">Position and fix quality</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.SensorsTab.gpsStatus')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SensorsTab.positionAndFixQuality')}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <TelemetryValue
-              label="Fix Type"
+              label={t('mavlink_config.SensorsTab.fixType')}
               value={gpsFixTypes[gps?.fixType ?? 0] || 'Unknown'}
               color={gps?.fixType && gps.fixType >= 3 ? 'text-emerald-400' : 'text-amber-400'}
             />
             <TelemetryValue
-              label="Satellites"
+              label={t('mavlink_config.SensorsTab.satellites')}
               value={gps?.satellites ?? 0}
               color={gps?.satellites && gps.satellites >= 8 ? 'text-emerald-400' : 'text-amber-400'}
             />
@@ -243,11 +244,11 @@ const SensorsTab: React.FC = () => {
           {gps && (
             <div className="bg-surface-raised rounded-lg p-3 space-y-1">
               <div className="flex justify-between text-xs">
-                <span className="text-content-secondary">Latitude</span>
+                <span className="text-content-secondary">{t('mavlink_config.SensorsTab.latitude')}</span>
                 <span className="font-mono text-content">{gps.lat?.toFixed(6) ?? 'N/A'}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-content-secondary">Longitude</span>
+                <span className="text-content-secondary">{t('mavlink_config.SensorsTab.longitude')}</span>
                 <span className="font-mono text-content">{gps.lon?.toFixed(6) ?? 'N/A'}</span>
               </div>
             </div>
@@ -261,26 +262,26 @@ const SensorsTab: React.FC = () => {
               <Battery className="w-5 h-5 text-amber-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Battery</h3>
-              <p className="text-xs text-content-secondary">Power status</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.SensorsTab.battery')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SensorsTab.powerStatus')}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <TelemetryValue
-              label="Voltage"
+              label={t('mavlink_config.SensorsTab.voltage')}
               value={battery?.voltage ?? 0}
               unit="V"
               color={battery?.voltage && battery.voltage > 3.5 * 4 ? 'text-emerald-400' : 'text-red-400'}
             />
             <TelemetryValue
-              label="Current"
+              label={t('mavlink_config.SensorsTab.current')}
               value={battery?.current ?? 0}
               unit="A"
               color="text-amber-400"
             />
             <TelemetryValue
-              label="Remaining"
+              label={t('mavlink_config.SensorsTab.remaining')}
               value={battery?.remaining ?? 0}
               unit="%"
               color={battery?.remaining && battery.remaining > 20 ? 'text-emerald-400' : 'text-red-400'}
@@ -315,21 +316,21 @@ const SensorsTab: React.FC = () => {
               <Gauge className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Flight Data</h3>
-              <p className="text-xs text-content-secondary">Altitude and speed</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.SensorsTab.flightData')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SensorsTab.altitudeAndSpeed')}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <TelemetryValue
-              label="Altitude"
+              label={t('mavlink_config.SensorsTab.altitude')}
               value={vfrHud?.alt ?? 0}
               unit="m"
               color="text-purple-400"
               size="large"
             />
             <TelemetryValue
-              label="Climb Rate"
+              label={t('mavlink_config.SensorsTab.climbRate')}
               value={vfrHud?.climb ?? 0}
               unit="m/s"
               color={(vfrHud?.climb ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}
@@ -339,21 +340,21 @@ const SensorsTab: React.FC = () => {
 
           <div className="grid grid-cols-3 gap-4 pt-2">
             <TelemetryValue
-              label="Ground Speed"
+              label={t('mavlink_config.SensorsTab.groundSpeed')}
               value={vfrHud?.groundspeed ?? 0}
               unit="m/s"
               color="text-cyan-400"
               size="small"
             />
             <TelemetryValue
-              label="Air Speed"
+              label={t('mavlink_config.SensorsTab.airSpeed')}
               value={vfrHud?.airspeed ?? 0}
               unit="m/s"
               color="text-cyan-400"
               size="small"
             />
             <TelemetryValue
-              label="Heading"
+              label={t('mavlink_config.SensorsTab.heading')}
               value={vfrHud?.heading ?? 0}
               unit="°"
               color="text-cyan-400"
@@ -365,7 +366,7 @@ const SensorsTab: React.FC = () => {
 
       {/* Sensor Health */}
       <div className="bg-surface rounded-xl border border-subtle p-4 space-y-4">
-        <h3 className="text-sm font-medium text-content">Sensor Health</h3>
+        <h3 className="text-sm font-medium text-content">{t('mavlink_config.SensorsTab.sensorHealth')}</h3>
         <div className="grid grid-cols-6 gap-3">
           <SensorStatus name="Gyro" healthy={sensorHealth.gyro} enabled={sensorEnabled.gyro} icon={Activity} />
           <SensorStatus name="Accel" healthy={sensorHealth.accel} enabled={sensorEnabled.accel} icon={Navigation} />
@@ -383,7 +384,7 @@ const SensorsTab: React.FC = () => {
         <div className="bg-amber-500/10 border-amber-500/30 rounded-xl p-4 flex items-center gap-3">
           <AlertTriangle className="w-5 h-5 text-amber-400" />
           <p className="text-sm text-amber-400">
-            No telemetry data received. Make sure you're connected to the flight controller.
+            {t('mavlink_config.SensorsTab.noTelemetryDataReceivedMakeSure')}
           </p>
         </div>
       )}

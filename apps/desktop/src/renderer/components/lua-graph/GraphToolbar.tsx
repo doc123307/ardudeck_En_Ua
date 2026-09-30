@@ -19,6 +19,7 @@ import { TemplateDialog } from './TemplateDialog';
 import { DocsDialog } from './docs/DocsDialog';
 import { ConfirmDialog } from './ConfirmDialog';
 import type { GraphFile } from './lua-graph-types';
+import { t } from '../../i18n';
 
 export function GraphToolbar() {
   const {
@@ -124,33 +125,33 @@ export function GraphToolbar() {
         />
 
         {isDirty && (
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mr-2" title="Unsaved changes" />
+          <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mr-2" title={t('lua_graph.GraphToolbar.unsavedChanges')} />
         )}
 
         <div className="w-px h-5 bg-subtle mx-1" />
 
         {/* File operations */}
-        <ToolbarButton icon={FilePlus} label="New" onClick={handleNew} />
-        <ToolbarButton icon={FolderOpen} label="Open" onClick={handleOpen} />
-        <ToolbarButton icon={Save} label="Save" onClick={handleSave} />
-        <ToolbarButton icon={BookTemplate} label="Templates" onClick={() => setShowTemplates(true)} />
-        <ToolbarButton icon={BookOpen} label="Docs" onClick={() => setShowDocs(true)} />
+        <ToolbarButton icon={FilePlus} label={t('lua_graph.GraphToolbar.new')} onClick={handleNew} />
+        <ToolbarButton icon={FolderOpen} label={t('lua_graph.GraphToolbar.open')} onClick={handleOpen} />
+        <ToolbarButton icon={Save} label={t('lua_graph.GraphToolbar.save')} onClick={handleSave} />
+        <ToolbarButton icon={BookTemplate} label={t('lua_graph.GraphToolbar.templates')} onClick={() => setShowTemplates(true)} />
+        <ToolbarButton icon={BookOpen} label={t('lua_graph.GraphToolbar.docs')} onClick={() => setShowDocs(true)} />
 
         <div className="w-px h-5 bg-subtle mx-1" />
 
-        <ToolbarButton icon={FileCode} label="Export Lua" onClick={handleExportLua} accent />
+        <ToolbarButton icon={FileCode} label={t('lua_graph.GraphToolbar.exportLua')} onClick={handleExportLua} accent />
 
         <div className="w-px h-5 bg-subtle mx-1" />
 
         {/* Undo / Redo */}
-        <ToolbarButton icon={Undo2} label="Undo" onClick={undo} disabled={!canUndo()} />
-        <ToolbarButton icon={Redo2} label="Redo" onClick={redo} disabled={!canRedo()} />
+        <ToolbarButton icon={Undo2} label={t('lua_graph.GraphToolbar.undo')} onClick={undo} disabled={!canUndo()} />
+        <ToolbarButton icon={Redo2} label={t('lua_graph.GraphToolbar.redo')} onClick={redo} disabled={!canRedo()} />
 
         <div className="flex-1" />
 
         {/* Node count */}
         <span className="text-[10px] text-content-secondary">
-          {nodes.length} node{nodes.length !== 1 ? 's' : ''} | {edges.length} connection{edges.length !== 1 ? 's' : ''}
+          {nodes.length} {t('lua_graph.GraphToolbar.node')}{nodes.length !== 1 ? 's' : ''} | {edges.length} {t('lua_graph.GraphToolbar.connection')}{edges.length !== 1 ? 's' : ''}
         </span>
       </div>
 
@@ -159,10 +160,10 @@ export function GraphToolbar() {
 
       {showNewConfirm && (
         <ConfirmDialog
-          title="Unsaved changes"
-          message="Your current graph has unsaved changes. Creating a new graph will discard them."
-          confirmLabel="New graph"
-          cancelLabel="Go back"
+          title={t('lua_graph.GraphToolbar.unsavedChanges')}
+          message={t('lua_graph.GraphToolbar.yourCurrentGraphHasUnsavedChanges')}
+          confirmLabel={t('lua_graph.GraphToolbar.newGraph')}
+          cancelLabel={t('lua_graph.GraphToolbar.goBack')}
           onConfirm={() => {
             newGraph();
             setShowNewConfirm(false);
@@ -173,10 +174,10 @@ export function GraphToolbar() {
 
       {exportErrors && (
         <ConfirmDialog
-          title="Compilation errors"
+          title={t('lua_graph.GraphToolbar.compilationErrors')}
           message={exportErrors.join('\n')}
           confirmLabel="OK"
-          cancelLabel="Close"
+          cancelLabel={t('lua_graph.GraphToolbar.close')}
           onConfirm={() => setExportErrors(null)}
           onCancel={() => setExportErrors(null)}
         />

@@ -43,6 +43,7 @@ import {
   FENCE_TYPES,
   type SafetyPreset,
 } from './presets/mavlink-presets';
+import { t } from '../../i18n';
 
 // Convert safety presets to PresetSelector format
 const PRESET_SELECTOR_PRESETS: Record<string, Preset> = {
@@ -128,7 +129,7 @@ const Px4SafetyConfig: React.FC<{
             </option>
           ))
         ) : (
-          <option value={value}>{`Value ${value}`}</option>
+          <option value={value}>{t('mavlink_config.SafetyTab.value', { value })}</option>
         )}
       </select>
     );
@@ -157,31 +158,31 @@ const Px4SafetyConfig: React.FC<{
             <Radio className="w-5 h-5 text-red-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">RC Signal Lost</h3>
-            <p className="text-xs text-content-secondary">What happens when manual control signal is lost</p>
+            <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.rcSignalLost')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.whatHappensWhenManualControlSignal')}</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs text-content-secondary block mb-1.5">Failsafe Action (NAV_RCL_ACT)</label>
+            <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.failsafeActionNavRclAct')}</label>
             {renderEnum('NAV_RCL_ACT', px4Values.navRclAct)}
           </div>
 
           <DraggableSlider
-            label="Loss Timeout (s)"
+            label={t('mavlink_config.SafetyTab.lossTimeoutS')}
             value={Math.round(px4Values.comRcLossT * 10)}
             onChange={(v) => setParameter('COM_RC_LOSS_T', v / 10)}
             min={0}
             max={350}
             step={1}
             color="#EF4444"
-            hint="COM_RC_LOSS_T: delay before declaring RC loss"
+            hint={t('mavlink_config.SafetyTab.comRcLossTDelayBefore')}
             formatValue={(v) => (v / 10).toFixed(1)}
           />
 
           <div>
-            <label className="text-xs text-content-secondary block mb-1.5">Manual Control Source (COM_RC_IN_MODE)</label>
+            <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.manualControlSourceComRcIn')}</label>
             {renderEnum('COM_RC_IN_MODE', px4Values.comRcInMode)}
           </div>
         </div>
@@ -194,33 +195,32 @@ const Px4SafetyConfig: React.FC<{
             <Monitor className="w-5 h-5 text-purple-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">Datalink Lost</h3>
-            <p className="text-xs text-content-secondary">What happens when the GCS connection is lost</p>
+            <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.datalinkLost')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.whatHappensWhenTheGcsConnection')}</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs text-content-secondary block mb-1.5">Failsafe Action (NAV_DLL_ACT)</label>
+            <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.failsafeActionNavDllAct')}</label>
             {renderEnum('NAV_DLL_ACT', px4Values.navDllAct)}
           </div>
 
           <DraggableSlider
-            label="Loss Timeout (s)"
+            label={t('mavlink_config.SafetyTab.lossTimeoutS')}
             value={px4Values.comDlLossT}
             onChange={(v) => setParameter('COM_DL_LOSS_T', v)}
             min={5}
             max={300}
             step={1}
             color="#A855F7"
-            hint="COM_DL_LOSS_T: delay before declaring datalink loss"
+            hint={t('mavlink_config.SafetyTab.comDlLossTDelayBefore')}
           />
         </div>
 
         <div className="bg-surface-raised rounded-lg p-3">
           <p className="text-xs text-content-secondary">
-            <span className="text-amber-400">Tip:</span> Datalink failsafe needs a telemetry
-            heartbeat. If flying without a GCS link, set the action to Disabled.
+            <span className="text-amber-400">{t('mavlink_config.SafetyTab.tip')}</span> {t('mavlink_config.SafetyTab.datalinkFailsafeNeedsATelemetryHeartbeat')}
           </p>
         </div>
       </div>
@@ -232,20 +232,19 @@ const Px4SafetyConfig: React.FC<{
             <Battery className="w-5 h-5 text-amber-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">Low Battery</h3>
-            <p className="text-xs text-content-secondary">Protect against flying with a depleted battery</p>
+            <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.lowBattery')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.protectAgainstFlyingWithADepleted')}</p>
           </div>
         </div>
 
         <div>
-          <label className="text-xs text-content-secondary block mb-1.5">Failsafe Action (COM_LOW_BAT_ACT)</label>
+          <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.failsafeActionComLowBatAct')}</label>
           {renderEnum('COM_LOW_BAT_ACT', px4Values.comLowBatAct)}
         </div>
 
         <div className="bg-surface-raised rounded-lg p-3">
           <p className="text-xs text-content-secondary">
-            Battery warning, critical, and emergency thresholds are configured on the Battery tab
-            (BAT_LOW_THR, BAT_CRIT_THR, BAT_EMERGEN_THR).
+            {t('mavlink_config.SafetyTab.batteryWarningCriticalAndEmergencyThresholds')}
           </p>
         </div>
       </div>
@@ -257,37 +256,37 @@ const Px4SafetyConfig: React.FC<{
             <Fence className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">Geofence</h3>
-            <p className="text-xs text-content-secondary">Limit how far the vehicle can travel from home</p>
+            <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.geofence')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.limitHowFarTheVehicleCan')}</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs text-content-secondary block mb-1.5">Violation Action (GF_ACTION)</label>
+            <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.violationActionGfAction')}</label>
             {renderEnum('GF_ACTION', px4Values.gfAction)}
           </div>
 
           <DraggableSlider
-            label="Max Horizontal Distance (m)"
+            label={t('mavlink_config.SafetyTab.maxHorizontalDistanceM')}
             value={px4Values.gfMaxHorDist}
             onChange={(v) => setParameter('GF_MAX_HOR_DIST', v)}
             min={0}
             max={10000}
             step={10}
             color="#3B82F6"
-            hint="GF_MAX_HOR_DIST: 0 disables the horizontal limit"
+            hint={t('mavlink_config.SafetyTab.gfMaxHorDist0Disables')}
           />
 
           <DraggableSlider
-            label="Max Vertical Distance (m)"
+            label={t('mavlink_config.SafetyTab.maxVerticalDistanceM')}
             value={px4Values.gfMaxVerDist}
             onChange={(v) => setParameter('GF_MAX_VER_DIST', v)}
             min={0}
             max={10000}
             step={10}
             color="#3B82F6"
-            hint="GF_MAX_VER_DIST: 0 disables the altitude limit"
+            hint={t('mavlink_config.SafetyTab.gfMaxVerDist0Disables')}
           />
         </div>
       </div>
@@ -299,33 +298,33 @@ const Px4SafetyConfig: React.FC<{
             <CheckCircle className="w-5 h-5 text-green-400" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-content">Auto-Disarm</h3>
-            <p className="text-xs text-content-secondary">Automatically disarm after landing or idle on the ground</p>
+            <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.autoDisarm')}</h3>
+            <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.automaticallyDisarmAfterLandingOrIdle')}</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <DraggableSlider
-            label="Disarm After Landing (s)"
+            label={t('mavlink_config.SafetyTab.disarmAfterLandingS')}
             value={Math.round(px4Values.comDisarmLand * 10)}
             onChange={(v) => setParameter('COM_DISARM_LAND', v / 10)}
             min={0}
             max={200}
             step={1}
             color="#22C55E"
-            hint="COM_DISARM_LAND: 0 disables auto-disarm after landing"
+            hint={t('mavlink_config.SafetyTab.comDisarmLand0DisablesAuto')}
             formatValue={(v) => (v / 10).toFixed(1)}
           />
 
           <DraggableSlider
-            label="Disarm If Not Taking Off (s)"
+            label={t('mavlink_config.SafetyTab.disarmIfNotTakingOffS')}
             value={Math.round(px4Values.comDisarmPrflt * 10)}
             onChange={(v) => setParameter('COM_DISARM_PRFLT', v / 10)}
             min={0}
             max={300}
             step={1}
             color="#22C55E"
-            hint="COM_DISARM_PRFLT: 0 disables preflight idle auto-disarm"
+            hint={t('mavlink_config.SafetyTab.comDisarmPrflt0DisablesPreflight')}
             formatValue={(v) => (v / 10).toFixed(1)}
           />
         </div>
@@ -447,8 +446,8 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
                 <Lightbulb className="w-5 h-5 text-amber-400" />
               </div>
               <div>
-                <p className="text-amber-300 font-medium">Parameters Not Loaded</p>
-                <p className="text-xs text-content-secondary">Fetch parameters from the FC to configure failsafes</p>
+                <p className="text-amber-300 font-medium">{t('mavlink_config.SafetyTab.parametersNotLoaded')}</p>
+                <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.fetchParametersFromTheFcTo')}</p>
               </div>
             </div>
             <button
@@ -456,14 +455,13 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               disabled={isLoading}
               className="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
             >
-              {isLoading ? 'Loading...' : 'Fetch Parameters'}
+              {isLoading ? t('mavlink_config.SafetyTab.loading') : t('mavlink_config.SafetyTab.fetchParameters')}
             </button>
           </div>
         )}
 
-        <InfoCard title="Safety Features" variant="info">
-          Configure what PX4 does when things go wrong. Failsafes can save your aircraft
-          from flyaways and crashes. Each card maps directly to PX4 parameters.
+        <InfoCard title={t('mavlink_config.SafetyTab.safetyFeatures')} variant="info">
+          {t('mavlink_config.SafetyTab.configureWhatPx4DoesWhenThings')}
         </InfoCard>
 
         <Px4SafetyConfig
@@ -478,7 +476,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
           <div className="bg-amber-500/10 rounded-xl border-amber-500/30 p-4 flex items-center gap-3">
             <Save className="w-5 h-5 text-amber-400" />
             <p className="text-sm text-amber-400">
-              You have unsaved changes. Click <span className="font-medium">"Save All Changes"</span> in the header to save.
+              {t('mavlink_config.SafetyTab.youHaveUnsavedChangesClick')} <span className="font-medium">{t('mavlink_config.SafetyTab.saveAllChanges')}</span> {t('mavlink_config.SafetyTab.inTheHeaderToSave')}
             </p>
           </div>
         )}
@@ -496,8 +494,8 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               <Lightbulb className="w-5 h-5 text-amber-400" />
             </div>
             <div>
-              <p className="text-amber-300 font-medium">Parameters Not Loaded</p>
-              <p className="text-xs text-content-secondary">Fetch parameters from the FC to use presets</p>
+              <p className="text-amber-300 font-medium">{t('mavlink_config.SafetyTab.parametersNotLoaded')}</p>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.fetchParametersFromTheFcTo2')}</p>
             </div>
           </div>
           <button
@@ -505,7 +503,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
             disabled={isLoading}
             className="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
           >
-            {isLoading ? 'Loading...' : 'Fetch Parameters'}
+            {isLoading ? t('mavlink_config.SafetyTab.loading') : t('mavlink_config.SafetyTab.fetchParameters')}
           </button>
         </div>
       )}
@@ -519,17 +517,16 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
       )}
 
       {/* Help Card */}
-      <InfoCard title="Safety Features" variant="info">
-        Configure what happens when things go wrong. Failsafes can save your aircraft
-        from flyaways and crashes. Beginners should use the Maximum Safety preset.
+      <InfoCard title={t('mavlink_config.SafetyTab.safetyFeatures')} variant="info">
+        {t('mavlink_config.SafetyTab.configureWhatHappensWhenThingsGo')}
       </InfoCard>
 
       {/* Safety Presets */}
       <PresetSelector
         presets={PRESET_SELECTOR_PRESETS}
         onApply={(key) => setConfirmAction({ type: 'preset', key })}
-        label="Safety Presets"
-        hint="Click to review and apply all settings"
+        label={t('mavlink_config.SafetyTab.safetyPresets')}
+        hint={t('mavlink_config.SafetyTab.clickToReviewAndApplyAll')}
       />
 
       {/* Failsafe Settings Grid */}
@@ -541,37 +538,37 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               <Radio className="w-5 h-5 text-red-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">RC Signal Lost</h3>
-              <p className="text-xs text-content-secondary">What happens when transmitter signal is lost</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.rcSignalLost')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.whatHappensWhenTransmitterSignalIs')}</p>
             </div>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs text-content-secondary block mb-1.5">Action</label>
+              <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.action')}</label>
               <select
                 value={safetyValues.fsThrEnable}
                 onChange={(e) => setParameter('FS_THR_ENABLE', Number(e.target.value))}
                 className="w-full px-3 py-2 bg-surface-raised border rounded-lg text-sm text-content focus:outline-none focus:border-blue-500"
               >
-                <option value={0}>Disabled (Not Recommended)</option>
-                <option value={1}>RTL - Return to Launch</option>
-                <option value={2}>Continue Mission</option>
-                <option value={3}>Land Immediately</option>
-                <option value={4}>SmartRTL or RTL</option>
-                <option value={5}>SmartRTL or Land</option>
+                <option value={0}>{t('mavlink_config.SafetyTab.disabledNotRecommended')}</option>
+                <option value={1}>{t('mavlink_config.SafetyTab.rtlReturnToLaunch')}</option>
+                <option value={2}>{t('mavlink_config.SafetyTab.continueMission')}</option>
+                <option value={3}>{t('mavlink_config.SafetyTab.landImmediately')}</option>
+                <option value={4}>{t('mavlink_config.SafetyTab.smartrtlOrRtl')}</option>
+                <option value={5}>{t('mavlink_config.SafetyTab.smartrtlOrLand')}</option>
               </select>
             </div>
 
             <DraggableSlider
-              label="Trigger PWM Threshold"
+              label={t('mavlink_config.SafetyTab.triggerPwmThreshold')}
               value={safetyValues.fsThrValue}
               onChange={(v) => setParameter('FS_THR_VALUE', v)}
               min={900}
               max={1100}
               step={5}
               color="#EF4444"
-              hint="Failsafe triggers when throttle drops below this value"
+              hint={t('mavlink_config.SafetyTab.failsafeTriggersWhenThrottleDropsBelow')}
             />
           </div>
         </div>
@@ -583,31 +580,30 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               <Monitor className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">GCS Connection Lost</h3>
-              <p className="text-xs text-content-secondary">What happens when ground station disconnects</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.gcsConnectionLost')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.whatHappensWhenGroundStationDisconnects')}</p>
             </div>
           </div>
 
           <div>
-            <label className="text-xs text-content-secondary block mb-1.5">Action</label>
+            <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.action')}</label>
             <select
               value={safetyValues.fsGcsEnable}
               onChange={(e) => setParameter('FS_GCS_ENABLE', Number(e.target.value))}
               className="w-full px-3 py-2 bg-surface-raised border rounded-lg text-sm text-content focus:outline-none focus:border-blue-500"
             >
-              <option value={0}>Disabled</option>
-              <option value={1}>RTL - Return to Launch</option>
-              <option value={2}>Continue Mission</option>
-              <option value={3}>SmartRTL or RTL</option>
-              <option value={4}>SmartRTL or Land</option>
-              <option value={5}>Land Immediately</option>
+              <option value={0}>{t('mavlink_config.SafetyTab.disabled')}</option>
+              <option value={1}>{t('mavlink_config.SafetyTab.rtlReturnToLaunch')}</option>
+              <option value={2}>{t('mavlink_config.SafetyTab.continueMission')}</option>
+              <option value={3}>{t('mavlink_config.SafetyTab.smartrtlOrRtl')}</option>
+              <option value={4}>{t('mavlink_config.SafetyTab.smartrtlOrLand')}</option>
+              <option value={5}>{t('mavlink_config.SafetyTab.landImmediately')}</option>
             </select>
           </div>
 
           <div className="bg-surface-raised rounded-lg p-3">
             <p className="text-xs text-content-secondary">
-              <span className="text-amber-400">Tip:</span> GCS failsafe requires heartbeat
-              from ground station. If flying without GCS, leave disabled.
+              <span className="text-amber-400">{t('mavlink_config.SafetyTab.tip')}</span> {t('mavlink_config.SafetyTab.gcsFailsafeRequiresHeartbeatFromGround')}
             </p>
           </div>
         </div>
@@ -619,49 +615,49 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               <Battery className="w-5 h-5 text-amber-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Low Battery</h3>
-              <p className="text-xs text-content-secondary">Protect against flying home with dead battery</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.lowBattery')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.protectAgainstFlyingHomeWithDead')}</p>
             </div>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs text-content-secondary block mb-1.5">Action</label>
+              <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.action')}</label>
               <select
                 value={safetyValues.battFsLowAct}
                 onChange={(e) => setParameter('BATT_FS_LOW_ACT', Number(e.target.value))}
                 className="w-full px-3 py-2 bg-surface-raised border rounded-lg text-sm text-content focus:outline-none focus:border-blue-500"
               >
-                <option value={0}>Disabled</option>
-                <option value={1}>Land Immediately</option>
-                <option value={2}>RTL - Return to Launch</option>
-                <option value={3}>SmartRTL or RTL</option>
-                <option value={4}>SmartRTL or Land</option>
-                <option value={5}>Terminate</option>
-                <option value={6}>Auto DO_LAND_START or RTL</option>
+                <option value={0}>{t('mavlink_config.SafetyTab.disabled')}</option>
+                <option value={1}>{t('mavlink_config.SafetyTab.landImmediately')}</option>
+                <option value={2}>{t('mavlink_config.SafetyTab.rtlReturnToLaunch')}</option>
+                <option value={3}>{t('mavlink_config.SafetyTab.smartrtlOrRtl')}</option>
+                <option value={4}>{t('mavlink_config.SafetyTab.smartrtlOrLand')}</option>
+                <option value={5}>{t('mavlink_config.SafetyTab.terminate')}</option>
+                <option value={6}>{t('mavlink_config.SafetyTab.autoDoLandStartOrRtl')}</option>
               </select>
             </div>
 
             <DraggableSlider
-              label="Low Voltage (V)"
+              label={t('mavlink_config.SafetyTab.lowVoltageV')}
               value={safetyValues.battLowVolt}
               onChange={(v) => setParameter('BATT_LOW_VOLT', v)}
               min={0}
               max={26}
               step={0.1}
               color="#F59E0B"
-              hint="Trigger when voltage drops below this"
+              hint={t('mavlink_config.SafetyTab.triggerWhenVoltageDropsBelowThis')}
             />
 
             <DraggableSlider
-              label="Low mAh Remaining"
+              label={t('mavlink_config.SafetyTab.lowMahRemaining')}
               value={safetyValues.battLowMah}
               onChange={(v) => setParameter('BATT_LOW_MAH', v)}
               min={0}
               max={10000}
               step={100}
               color="#F59E0B"
-              hint="Trigger when remaining mAh drops below this"
+              hint={t('mavlink_config.SafetyTab.triggerWhenRemainingMahDropsBelow')}
             />
           </div>
         </div>
@@ -673,56 +669,55 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               <AlertTriangle className="w-5 h-5 text-red-400" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-content">Critical Battery</h3>
-              <p className="text-xs text-content-secondary">Last resort when battery is dangerously low</p>
+              <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.criticalBattery')}</h3>
+              <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.lastResortWhenBatteryIsDangerously')}</p>
             </div>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs text-content-secondary block mb-1.5">Action</label>
+              <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.action')}</label>
               <select
                 value={safetyValues.battFsCrtAct}
                 onChange={(e) => setParameter('BATT_FS_CRT_ACT', Number(e.target.value))}
                 className="w-full px-3 py-2 bg-surface-raised border rounded-lg text-sm text-content focus:outline-none focus:border-blue-500"
               >
-                <option value={0}>Disabled</option>
-                <option value={1}>Land Immediately</option>
-                <option value={2}>RTL - Return to Launch</option>
-                <option value={3}>SmartRTL or RTL</option>
-                <option value={4}>SmartRTL or Land</option>
-                <option value={5}>Terminate</option>
-                <option value={6}>Auto DO_LAND_START or RTL</option>
+                <option value={0}>{t('mavlink_config.SafetyTab.disabled')}</option>
+                <option value={1}>{t('mavlink_config.SafetyTab.landImmediately')}</option>
+                <option value={2}>{t('mavlink_config.SafetyTab.rtlReturnToLaunch')}</option>
+                <option value={3}>{t('mavlink_config.SafetyTab.smartrtlOrRtl')}</option>
+                <option value={4}>{t('mavlink_config.SafetyTab.smartrtlOrLand')}</option>
+                <option value={5}>{t('mavlink_config.SafetyTab.terminate')}</option>
+                <option value={6}>{t('mavlink_config.SafetyTab.autoDoLandStartOrRtl')}</option>
               </select>
             </div>
 
             <DraggableSlider
-              label="Critical Voltage (V)"
+              label={t('mavlink_config.SafetyTab.criticalVoltageV')}
               value={safetyValues.battCrtVolt}
               onChange={(v) => setParameter('BATT_CRT_VOLT', v)}
               min={0}
               max={26}
               step={0.1}
               color="#EF4444"
-              hint="Emergency action when voltage drops below this"
+              hint={t('mavlink_config.SafetyTab.emergencyActionWhenVoltageDropsBelow')}
             />
 
             <DraggableSlider
-              label="Critical mAh Remaining"
+              label={t('mavlink_config.SafetyTab.criticalMahRemaining')}
               value={safetyValues.battCrtMah}
               onChange={(v) => setParameter('BATT_CRT_MAH', v)}
               min={0}
               max={10000}
               step={100}
               color="#EF4444"
-              hint="Emergency action when remaining mAh drops below this"
+              hint={t('mavlink_config.SafetyTab.emergencyActionWhenRemainingMahDrops')}
             />
           </div>
 
           <div className="bg-surface-raised rounded-lg p-3">
             <p className="text-xs text-content-secondary">
-              <span className="text-red-400">Warning:</span> Critical battery should trigger a more
-              aggressive action than low battery (e.g. Land vs RTL). Set voltage lower than the low battery threshold.
+              <span className="text-red-400">{t('mavlink_config.SafetyTab.warning')}</span> {t('mavlink_config.SafetyTab.criticalBatteryShouldTriggerAMore')}
             </p>
           </div>
         </div>
@@ -735,8 +730,8 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
                 <Fence className="w-5 h-5 text-blue-400" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-content">Geofence</h3>
-                <p className="text-xs text-content-secondary">Prevent flying out of bounds</p>
+                <h3 className="text-sm font-medium text-content">{t('mavlink_config.SafetyTab.geofence')}</h3>
+                <p className="text-xs text-content-secondary">{t('mavlink_config.SafetyTab.preventFlyingOutOfBounds')}</p>
               </div>
             </div>
             <button
@@ -759,7 +754,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
           {safetyValues.fenceEnable ? (
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-content-secondary block mb-1.5">Fence Type</label>
+                <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.fenceType')}</label>
                 <select
                   value={safetyValues.fenceType}
                   onChange={(e) => setParameter('FENCE_TYPE', Number(e.target.value))}
@@ -774,7 +769,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               </div>
 
               <DraggableSlider
-                label="Max Altitude (m)"
+                label={t('mavlink_config.SafetyTab.maxAltitudeM')}
                 value={safetyValues.fenceAltMax}
                 onChange={(v) => setParameter('FENCE_ALT_MAX', v)}
                 min={10}
@@ -784,7 +779,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               />
 
               <DraggableSlider
-                label="Max Radius (m)"
+                label={t('mavlink_config.SafetyTab.maxRadiusM')}
                 value={safetyValues.fenceRadius}
                 onChange={(v) => setParameter('FENCE_RADIUS', v)}
                 min={30}
@@ -794,25 +789,24 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               />
 
               <div>
-                <label className="text-xs text-content-secondary block mb-1.5">Breach Action</label>
+                <label className="text-xs text-content-secondary block mb-1.5">{t('mavlink_config.SafetyTab.breachAction')}</label>
                 <select
                   value={safetyValues.fenceAction}
                   onChange={(e) => setParameter('FENCE_ACTION', Number(e.target.value))}
                   className="w-full px-3 py-2 bg-surface-raised border rounded-lg text-sm text-content focus:outline-none focus:border-blue-500"
                 >
-                  <option value={0}>Report Only</option>
-                  <option value={1}>RTL or Land</option>
-                  <option value={2}>Always Land</option>
-                  <option value={3}>SmartRTL or RTL</option>
-                  <option value={4}>Brake or Land</option>
+                  <option value={0}>{t('mavlink_config.SafetyTab.reportOnly')}</option>
+                  <option value={1}>{t('mavlink_config.SafetyTab.rtlOrLand')}</option>
+                  <option value={2}>{t('mavlink_config.SafetyTab.alwaysLand')}</option>
+                  <option value={3}>{t('mavlink_config.SafetyTab.smartrtlOrRtl')}</option>
+                  <option value={4}>{t('mavlink_config.SafetyTab.brakeOrLand')}</option>
                 </select>
               </div>
             </div>
           ) : (
             <div className="bg-surface-raised rounded-lg p-3">
               <p className="text-xs text-content-secondary">
-                Enable geofence to set altitude and distance limits.
-                Your aircraft will RTL or land if it breaches the fence.
+                {t('mavlink_config.SafetyTab.enableGeofenceToSetAltitudeAnd')}
               </p>
             </div>
           )}
@@ -829,7 +823,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
         <div className="bg-amber-500/10 rounded-xl border border-amber-500/30 p-4 flex items-center gap-3">
           <Save className="w-5 h-5 text-amber-400" />
           <p className="text-sm text-amber-400">
-            You have unsaved changes. Click <span className="font-medium">"Save All Changes"</span> in the header to save.
+            {t('mavlink_config.SafetyTab.youHaveUnsavedChangesClick')} <span className="font-medium">{t('mavlink_config.SafetyTab.saveAllChanges')}</span> {t('mavlink_config.SafetyTab.inTheHeaderToSave')}
           </p>
         </div>
       )}
@@ -842,20 +836,20 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
               <>
                 <div className="px-6 py-4 border-b border-subtle">
                   <h3 className="text-lg font-semibold text-content">
-                    Apply "{SAFETY_PRESETS[confirmAction.key]?.name}" Preset
+                    {t('mavlink_config.SafetyTab.apply')}{SAFETY_PRESETS[confirmAction.key]?.name}{t('mavlink_config.SafetyTab.preset')}
                   </h3>
                   <p className="text-sm text-content-secondary mt-1">
-                    The following parameters will be changed on the vehicle.
+                    {t('mavlink_config.SafetyTab.theFollowingParametersWillBeChanged')}
                   </p>
                 </div>
                 <div className="flex-1 min-h-0 overflow-auto px-6 py-4">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="text-left text-xs text-content-secondary uppercase">
-                        <th className="pb-2">Parameter</th>
-                        <th className="pb-2 text-right">Current</th>
+                        <th className="pb-2">{t('mavlink_config.SafetyTab.parameter')}</th>
+                        <th className="pb-2 text-right">{t('mavlink_config.SafetyTab.current')}</th>
                         <th className="pb-2 text-center px-2">→</th>
-                        <th className="pb-2">New</th>
+                        <th className="pb-2">{t('mavlink_config.SafetyTab.new')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-subtle">
@@ -880,7 +874,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
                     onClick={() => setConfirmAction(null)}
                     className="px-4 py-2 text-sm text-content-secondary hover:text-content transition-colors"
                   >
-                    Cancel
+                    {t('mavlink_config.SafetyTab.cancel')}
                   </button>
                   <button
                     onClick={() => {
@@ -890,7 +884,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
                     }}
                     className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm font-medium transition-colors"
                   >
-                    Apply Preset
+                    {t('mavlink_config.SafetyTab.applyPreset')}
                   </button>
                 </div>
               </>
@@ -899,11 +893,10 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
                 <div className="px-6 py-4">
                   <h3 className="text-lg font-semibold text-content flex items-center gap-2">
                     <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
-                    Disable all arming checks?
+                    {t('mavlink_config.SafetyTab.disableAllArmingChecks')}
                   </h3>
                   <p className="text-sm text-content-secondary mt-2">
-                    ARMING_CHECK will be set to 0. The vehicle will arm without validating
-                    sensors, GPS lock, or calibration. This can lead to flyaways and crashes.
+                    {t('mavlink_config.SafetyTab.armingCheckWillBeSetTo')}
                   </p>
                 </div>
                 <div className="px-6 py-4 flex justify-end gap-3">
@@ -911,7 +904,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
                     onClick={() => setConfirmAction(null)}
                     className="px-4 py-2 text-sm text-content-secondary hover:text-content transition-colors"
                   >
-                    Cancel
+                    {t('mavlink_config.SafetyTab.cancel')}
                   </button>
                   <button
                     onClick={() => {
@@ -920,7 +913,7 @@ const SafetyTab: React.FC<SafetyTabProps> = ({ onGoTo }) => {
                     }}
                     className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-colors"
                   >
-                    Disable Checks
+                    {t('mavlink_config.SafetyTab.disableChecks')}
                   </button>
                 </div>
               </>

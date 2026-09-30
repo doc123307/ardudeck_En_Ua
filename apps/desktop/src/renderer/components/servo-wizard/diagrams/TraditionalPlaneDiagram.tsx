@@ -6,6 +6,7 @@
  */
 
 import { ControlSurface } from '../presets/servo-presets';
+import { t } from '../../../i18n';
 
 interface Props {
   highlightSurface?: ControlSurface | null;
@@ -79,7 +80,7 @@ export default function TraditionalPlaneDiagram({
           onClick={handleClick('aileron_left')}
         />
       </g>
-      <text x="55" y="75" textAnchor="middle" fill="#9CA3AF" fontSize="10">L Aileron</text>
+      <text x="55" y="75" textAnchor="middle" fill="#9CA3AF" fontSize="10">{t('servo_wizard.TraditionalPlaneDiagram.lAileron')}</text>
       {servoLabels.aileron_left && (
         <text x="55" y="110" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
           {servoLabels.aileron_left}
@@ -101,7 +102,7 @@ export default function TraditionalPlaneDiagram({
           onClick={handleClick('aileron_right')}
         />
       </g>
-      <text x="245" y="75" textAnchor="middle" fill="#9CA3AF" fontSize="10">R Aileron</text>
+      <text x="245" y="75" textAnchor="middle" fill="#9CA3AF" fontSize="10">{t('servo_wizard.TraditionalPlaneDiagram.rAileron')}</text>
       {servoLabels.aileron_right && (
         <text x="245" y="110" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
           {servoLabels.aileron_right}
@@ -137,7 +138,7 @@ export default function TraditionalPlaneDiagram({
           onClick={handleClick('elevator')}
         />
       </g>
-      <text x="150" y="155" textAnchor="middle" fill="#9CA3AF" fontSize="10">Elevator</text>
+      <text x="150" y="155" textAnchor="middle" fill="#9CA3AF" fontSize="10">{t('servo_wizard.TraditionalPlaneDiagram.elevator')}</text>
       {servoLabels.elevator && (
         <text x="150" y="185" textAnchor="middle" fill="#60A5FA" fontSize="9" fontWeight="bold">
           {servoLabels.elevator}
@@ -158,7 +159,7 @@ export default function TraditionalPlaneDiagram({
           onClick={handleClick('rudder')}
         />
       </g>
-      <text x="168" y="190" textAnchor="start" fill="#9CA3AF" fontSize="10">Rudder</text>
+      <text x="168" y="190" textAnchor="start" fill="#9CA3AF" fontSize="10">{t('servo_wizard.TraditionalPlaneDiagram.rudder')}</text>
       {servoLabels.rudder && (
         <text x="168" y="200" textAnchor="start" fill="#60A5FA" fontSize="9" fontWeight="bold">
           {servoLabels.rudder}
