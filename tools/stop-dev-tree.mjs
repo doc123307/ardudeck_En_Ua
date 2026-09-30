@@ -9,6 +9,9 @@
 
 import { execSync } from 'node:child_process';
 
+// Relies on ps and POSIX process groups; neither exists on Windows.
+if (process.platform === 'win32') process.exit(0);
+
 function snapshot() {
   const out = execSync('ps -ax -o pid=,ppid=,pgid=,command=', { encoding: 'utf8' });
   return out
