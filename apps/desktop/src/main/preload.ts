@@ -7,7 +7,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_CHANNELS, type ConnectOptions, type ConnectionState, type ConsoleLogEntry, type SavedLayout, type SettingsStoreSchema, type MSPConnectOptions, type MSPConnectionState, type MSPTelemetryData, type SitlConfig, type SitlStatus, type SitlExitData, type VirtualRCState, type ArduPilotSitlConfig, type ArduPilotSitlStatus, type ArduPilotSitlExitData, type ArduPilotSitlStartedData, type ArduPilotFlightGearConfig, type ArduPilotSitlDownloadProgress, type ArduPilotSitlBinaryInfo, type ArduPilotFrameCatalog, type ArduPilotVehicleType, type ArduPilotReleaseTrack, type Px4SitlConfig, type Px4SitlStatus, type Px4SitlExitData, type Px4SitlStartedData, type Px4SitlDownloadProgress, type Px4SitlBinaryInfo, type Px4ReleaseTrack, type SwarmSitlConfig, type SwarmSitlStatus, type SwarmInstanceStatus, type SwarmSitlLogLine, type AppUpdateInfo, type SigningStatus, type TelemetrySpeed, type LegacyStreamConsentRequest, type StatusMessage, type TileCacheStats, type TileCacheDownloadProgress, type TileCacheSettings, type TileCacheDownloadRegion, type CompanionConnectOptions, type CompanionConnectionIpcState, type CompanionDiscoveryResult, type TransportInfoIpc, type VehicleInfoIpc, type SetActiveSelectionPayload, type VehicleCommand, type MissionVehicleProgress, type OrchestrationIntentIpc, type OrchestrationStatusIpc, type OrchestratorSource, type OrchestratorStatus, type CameraSourceConfig, type CameraStartResult, type CameraMediaActionResult, type MediaEngineStatus, type GimbalCommand, type CameraCommand, type VideoStreamInfoIpc, type GimbalAttitudeIpc, type GimbalInfoIpc, type FrameBlueprintResult, type FrameBlueprintRequest } from '../shared/ipc-channels.js';
 import type { SigningAuditSnapshot } from '../shared/signing-audit-types.js';
 import type { StreamDiagnosis, ElrsModuleInfo, ElrsSetModeResult, ElrsProgressEvent } from '../shared/link-doctor-types.js';
-import type { WfbngStatus, CanvasStreamStartResult, CanvasStreamStatus, CanvasStreamSnapshot, VisionStreamOpenOptions } from '../shared/camera-types.js';
+import type { WfbngStatus, CanvasStreamStartResult, CanvasStreamStatus, CanvasStreamSnapshot, VisionStreamOpenOptions, CameraControlAction, CameraControlState } from '../shared/camera-types.js';
 import type { VehicleFlightHistory } from '../shared/fleet-log-types.js';
 import type { DetachedWindowInfo, OpenDetachedRequest } from '../shared/window-types.js';
 import type { ExportArea } from '../shared/kml-export.js';
@@ -206,6 +206,10 @@ const api = {
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_GIMBAL_COMMAND, vehicleKey, cmd),
   cameraCameraCommand: (vehicleKey: string, cmd: CameraCommand): Promise<boolean> =>
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CAMERA_COMMAND, vehicleKey, cmd),
+  cameraControlState: (source: CameraSourceConfig): Promise<CameraControlState> =>
+    ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CONTROL_STATE, source),
+  cameraControlSet: (source: CameraSourceConfig, action: CameraControlAction): Promise<CameraControlState> =>
+    ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CONTROL_SET, source, action),
   onCameraVideoStreamInfo: (callback: (info: VideoStreamInfoIpc) => void) => {
     const handler = (_: unknown, info: VideoStreamInfoIpc) => callback(info);
     ipcRenderer.on(IPC_CHANNELS.CAMERA_VIDEO_STREAM_INFO, handler);

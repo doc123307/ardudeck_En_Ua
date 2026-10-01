@@ -1,0 +1,43 @@
+/**
+ * Main stream (HD) vs sub stream (SD) of an IP camera, read off and written into its
+ * RTSP url. The camera serves both all the time; switching is just asking for the
+ * other one, so it works on any camera that names its streams in the path.
+ *
+ *  - Hikvision:  /Streaming/Channels/101 (main), 102 (sub); 201/202 for channel 2
+ *  - Hikvision (old firmware): /h264/ch1/main/av_stream, /h264/ch1/sub/av_stream
+ *  - Dahua and clones: ?channel=1&subtype=0 (main), subtype=1 (sub)
+ */
+
+export type StreamQuality = 'hd' | 'sd';
+
+const HIK_CHANNEL = /(\/Streaming\/channels\/)(\d+)/i;
+const HIK_LEGACY = /(\/ch\d+\/)(main|sub)(\/)/i;
+const DAHUA = /([?&]subtype=)(\d)/i;
+
+/** The quality the url asks for, or null when the url does not name its stream. */
+export function streamQuality(url: string | undefined): StreamQuality | null {
+  if (!url) return null;
+  const hik = HIK_CHANNEL.exec(url);
+  if (hik) {
+    const stream = Number(hik[2]) % 100;
+    return stream === 1 ? 'hd' : stream === 2 ? 'sd' : null;
+  }
+  const legacy = HIK_LEGACY.exec(url);
+  if (legacy) return legacy[2]!.toLowerCase() === 'main' ? 'hd' : 'sd';
+  const dahua = DAHUA.exec(url);
+  if (dahua) return dahua[2] === '0' ? 'hd' : dahua[2] === '1' ? 'sd' : null;
+  return null;
+}
+
+/** The same url asking for `quality`; unchanged when the url does not name its stream. */
+export function withStreamQuality(url: string, quality: StreamQuality): string {
+  if (HIK_CHANNEL.test(url)) {
+    return url.replace(HIK_CHANNEL, (_, prefix: string, id: string) => {
+      const channel = Math.max(1, Math.floor(Number(id) / 100));
+      return `${prefix}${channel * 100 + (quality === 'hd' ? 1 : 2)}`;
+    });
+  }
+  if (HIK_LEGACY.test(url)) return url.replace(HIK_LEGACY, `$1${quality === 'hd' ? 'main' : 'sub'}$3`);
+  if (DAHUA.test(url)) return url.replace(DAHUA, `$1${quality === 'hd' ? '0' : '1'}`);
+  return url;
+}

@@ -950,6 +950,10 @@ export const IPC_CHANNELS = {
   CAMERA_GIMBAL_COMMAND: 'camera:gimbal-command',
   /** Renderer → main: camera command (zoom/focus, CameraCommand) for a vehicle. */
   CAMERA_CAMERA_COMMAND: 'camera:camera-command',
+  /** Renderer → main: read an IP camera's image controls (CameraSourceConfig → CameraControlState). */
+  CAMERA_CONTROL_STATE: 'camera:control-state',
+  /** Renderer → main: change one image control (day/night, supplement light); returns the new state. */
+  CAMERA_CONTROL_SET: 'camera:control-set',
   /** Main → renderer: VIDEO_STREAM_INFORMATION discovered for a vehicle. */
   CAMERA_VIDEO_STREAM_INFO: 'camera:video-stream-info',
   /** Main → renderer: GIMBAL_DEVICE_ATTITUDE_STATUS for a vehicle. */

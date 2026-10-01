@@ -43,7 +43,18 @@
       "snapshotFailed": "Не вдалося зробити знімок: {{v1}}",
       "recordFailed": "Помилка запису: {{v1}}",
       "recordingSaved": "Запис збережено",
-      "videoDiagnosticsCopied": "Діагностику відео скопійовано"
+      "videoDiagnosticsCopied": "Діагностику відео скопійовано",
+      "oneFeed": "Одна камера",
+      "allFeeds": "Усі камери",
+      "oneFeedTip": "Показувати лише вибране джерело",
+      "allFeedsTip": "Показувати всі джерела апарата поруч; клацніть, щоб зробити джерело основним",
+      "vehicleGrid": "Сітка апаратів",
+      "liveFeedBadge": "основне",
+      "osdTelemetry": "Телеметрія",
+      "osdCrosshair": "Приціл",
+      "osdCompass": "Компас",
+      "osdHorizon": "Горизонт",
+      "recordingStarted": "Запис…"
     },
     "CameraSourceMenu": {
       "selectAVehicleToConfigureIts": "Виберіть апарат, щоб налаштувати його камери.",
@@ -80,7 +91,16 @@
       "rtspTransportAutoNegotiatesUdpThen": "Транспорт RTSP: «Авто» пробує UDP, потім переходить на TCP. UDP — найменша затримка в чистій локальній мережі; TCP — надійно через фаєрволи й нестабільні канали.",
       "auto": "Авто",
       "lowLatencySmallJitterBufferDrop": "Низька затримка: малий буфер, запізнілі кадри відкидаються",
-      "lowLatency": "Низька затримка"
+      "lowLatency": "Низька затримка",
+      "cameraControl": "Керування камерою",
+      "cameraControlTip": "День/ніч, ІЧ та біле світло через вебінтерфейс самої камери",
+      "cameraControlNone": "Немає",
+      "cameraHost": "адреса камери",
+      "cameraHostTip": "Вебадреса камери; порожньо = адреса з RTSP-посилання",
+      "httpPort": "HTTP-порт вебінтерфейсу камери (типово 80)",
+      "cameraChannel": "Канал камери (1 для однієї камери)",
+      "userFromRtsp": "логін (з RTSP)",
+      "passwordFromRtsp": "пароль (з RTSP)"
     },
     "CameraSourceSwitch": {
       "show": "Показати {{label}}"
@@ -292,6 +312,23 @@
     },
     "whip_publish": {
       "whipUnreachable": "WHIP недоступний: {{v1}}"
+    },
+    "CameraControlBar": {
+      "quality": "Якість",
+      "hdTip": "Основний потік: повна роздільність, більше трафіку",
+      "sdTip": "Додатковий потік: менша роздільність, тримається на слабкому каналі",
+      "dayNight": "Режим",
+      "dayNight_auto": "Авто",
+      "dayNight_day": "День",
+      "dayNight_night": "Ніч",
+      "light": "Підсвітка",
+      "lightIr": "ІЧ",
+      "lightWhite": "Біле",
+      "lightSmart": "Розумна",
+      "lightMixed": "Змішана",
+      "lightOff": "Вимк.",
+      "controlUnavailable": "Керування камерою недоступне",
+      "retry": "Повторити"
     }
   }
 }

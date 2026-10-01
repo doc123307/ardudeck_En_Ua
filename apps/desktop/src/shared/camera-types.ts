@@ -65,7 +65,50 @@ export interface CameraSourceConfig {
   wfbMode?: 'dongle' | 'network';
   /** Provenance, when created from a preset (e.g. 'siyi-a8'). */
   preset?: string;
+  /** Image controls over the camera's own HTTP API (day/night, IR, white light). */
+  control?: CameraControlConfig;
 }
+
+/**
+ * Where and how to reach an IP camera's control API. Hikvision speaks ISAPI over
+ * HTTP with digest auth; host and credentials default to the ones in the RTSP url,
+ * since that is the same camera and usually the same account.
+ */
+export interface CameraControlConfig {
+  vendor: 'hikvision';
+  /** Defaults to the RTSP url's host (a port-forward may need another one). */
+  host?: string;
+  /** HTTP port of the camera's web API, 80 by default. */
+  port?: number;
+  https?: boolean;
+  /** Default to the user and password in the RTSP url. */
+  username?: string;
+  password?: string;
+  /** Video input channel; 1 for a single-sensor camera. */
+  channel?: number;
+}
+
+export type DayNightMode = 'auto' | 'day' | 'night';
+
+/**
+ * Supplement light modes as ISAPI names them. Which ones a camera offers depends on
+ * the model (a plain IR camera has irLight/close, a ColorVu one adds white light).
+ */
+export type SupplementLightMode = 'irLight' | 'colorVuWhiteLight' | 'eventIntelligence' | 'mixed' | 'close' | (string & {});
+
+/** What the camera reported; a missing field means the camera does not offer that control. */
+export interface CameraControlState {
+  ok: boolean;
+  error?: string;
+  dayNight?: DayNightMode;
+  dayNightOptions?: DayNightMode[];
+  light?: SupplementLightMode;
+  lightOptions?: SupplementLightMode[];
+}
+
+export type CameraControlAction =
+  | { kind: 'dayNight'; mode: DayNightMode }
+  | { kind: 'light'; mode: SupplementLightMode };
 
 /** wfb-ng dongle receiver state, rendered as plain-language chips in the UI. */
 export interface WfbngStatus {
@@ -256,7 +299,8 @@ export const DEFAULT_OSD_LAYERS: OsdLayers = {
   waypoints: true,
 };
 
-export type CameraViewMode = 'follow' | 'grid';
+/** 'feeds' tiles every feed of one vehicle (front, rear, thermal...) side by side. */
+export type CameraViewMode = 'follow' | 'grid' | 'feeds';
 
 /**
  * What a view renders:

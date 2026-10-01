@@ -204,7 +204,8 @@ import { writeFile as writeFileAsync } from 'node:fs/promises';
 import { sitlProcess } from './sitl/sitl-process.js';
 import { simEngineProcess } from './sim/sim-engine-process.js';
 import { mediaEngine } from './media/media-engine.js';
-import { CANVAS_STREAM_PATHS, type CanvasStreamSnapshot, type VisionStreamOpenOptions } from '../shared/camera-types.js';
+import { CANVAS_STREAM_PATHS, type CameraControlAction, type CanvasStreamSnapshot, type VisionStreamOpenOptions } from '../shared/camera-types.js';
+import { applyControl, getControlState } from './media/hikvision-isapi.js';
 import { openVisionStreamWindow, closeVisionStreamWindow, reportVisionStream, visionStreamSnapshot } from './media/vision-stream-window.js';
 import { ardupilotSitlProcess, swarmSitlProcess, ardupilotSitlDownloader, ardupilotRcSender } from './sitl/index.js';
 import { px4SitlProcess, px4SitlDownloader } from './sitl/index.js';
@@ -4910,6 +4911,12 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_DIAGNOSTICS, async () => {
     return mediaEngine.diagnostics();
+  });
+  ipcMain.handle(IPC_CHANNELS.CAMERA_CONTROL_STATE, async (_, source: CameraSourceConfig) => {
+    return getControlState(source);
+  });
+  ipcMain.handle(IPC_CHANNELS.CAMERA_CONTROL_SET, async (_, source: CameraSourceConfig, action: CameraControlAction) => {
+    return applyControl(source, action);
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_ENGINE_STATUS, async () => {
     return mediaEngine.getStatus();

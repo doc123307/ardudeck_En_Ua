@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useCameraStore, sourcesForVehicle } from '../../stores/camera-store';
 import { CAMERA_PRESETS, presetById } from './camera-presets';
 import { WfbngSetupGuide } from './WfbngSetupGuide';
+import { CameraControlBar } from './CameraControlBar';
 import type { CameraSourceConfig, GimbalControlMode } from '../../../shared/camera-types';
 import { DEFAULT_GIMBAL_CONFIG } from '../../../shared/camera-types';
 import { t } from '../../i18n';
@@ -255,6 +256,86 @@ function SourceRow({ source, selected, onSelect, onChange, onRemove }: {
           {t('camera.CameraSourceMenu.lowLatency')}
         </label>
       </div>
+      {source.kind === 'rtsp' && <ControlSettings source={source} onChange={onChange} />}
+    </div>
+  );
+}
+
+/** IP-camera image controls: which API, where it is and which account (defaults from the RTSP url). */
+function ControlSettings({ source, onChange }: {
+  source: CameraSourceConfig;
+  onChange: (patch: Partial<CameraSourceConfig>) => void;
+}) {
+  const control = source.control;
+  let rtspHost = '';
+  try { rtspHost = source.url ? new URL(source.url).hostname : ''; } catch { /* half-typed url */ }
+  const patch = (p: Partial<NonNullable<CameraSourceConfig['control']>>) =>
+    onChange({ control: { vendor: 'hikvision', ...control, ...p } });
+  const field = 'min-w-0 rounded bg-surface-input px-1 py-0.5 text-content';
+
+  return (
+    <div className="mt-1.5 border-t border-subtle pt-1.5 text-[10px] text-content-secondary">
+      <label className="flex items-center gap-1" title={t('camera.CameraSourceMenu.cameraControlTip')}>
+        {t('camera.CameraSourceMenu.cameraControl')}
+        <select
+          value={control?.vendor ?? 'none'}
+          onChange={(e) => onChange({ control: e.target.value === 'hikvision' ? { vendor: 'hikvision', ...control } : undefined })}
+          className={field}
+        >
+          <option value="none">{t('camera.CameraSourceMenu.cameraControlNone')}</option>
+          <option value="hikvision">Hikvision (ISAPI)</option>
+        </select>
+      </label>
+      {control && (
+        <>
+          <div className="mt-1 grid grid-cols-[1fr_4rem_3rem] gap-1">
+            <input
+              value={control.host ?? ''}
+              onChange={(e) => patch({ host: e.target.value || undefined })}
+              placeholder={rtspHost || t('camera.CameraSourceMenu.cameraHost')}
+              title={t('camera.CameraSourceMenu.cameraHostTip')}
+              className={`${field} font-mono`}
+            />
+            <input
+              type="number"
+              value={control.port ?? ''}
+              onChange={(e) => patch({ port: e.target.value ? Number(e.target.value) : undefined })}
+              placeholder="80"
+              title={t('camera.CameraSourceMenu.httpPort')}
+              className={field}
+            />
+            <input
+              type="number"
+              min={1}
+              value={control.channel ?? ''}
+              onChange={(e) => patch({ channel: e.target.value ? Number(e.target.value) : undefined })}
+              placeholder="1"
+              title={t('camera.CameraSourceMenu.cameraChannel')}
+              className={field}
+            />
+          </div>
+          <div className="mt-1 grid grid-cols-2 gap-1">
+            <input
+              value={control.username ?? ''}
+              onChange={(e) => patch({ username: e.target.value || undefined })}
+              placeholder={t('camera.CameraSourceMenu.userFromRtsp')}
+              className={field}
+              autoComplete="off"
+            />
+            <input
+              type="password"
+              value={control.password ?? ''}
+              onChange={(e) => patch({ password: e.target.value || undefined })}
+              placeholder={t('camera.CameraSourceMenu.passwordFromRtsp')}
+              className={field}
+              autoComplete="new-password"
+            />
+          </div>
+          <div className="mt-1.5">
+            <CameraControlBar source={source} />
+          </div>
+        </>
+      )}
     </div>
   );
 }

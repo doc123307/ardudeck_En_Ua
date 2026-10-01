@@ -43,7 +43,18 @@
       "snapshotFailed": "Snapshot failed: {{v1}}",
       "recordFailed": "Record failed: {{v1}}",
       "recordingSaved": "Recording saved",
-      "videoDiagnosticsCopied": "Video diagnostics copied"
+      "videoDiagnosticsCopied": "Video diagnostics copied",
+      "oneFeed": "One camera",
+      "allFeeds": "All cameras",
+      "oneFeedTip": "Show the selected feed only",
+      "allFeedsTip": "Show every feed of this vehicle side by side; click one to make it the live feed",
+      "vehicleGrid": "Vehicle grid",
+      "liveFeedBadge": "main",
+      "osdTelemetry": "Telemetry",
+      "osdCrosshair": "Crosshair",
+      "osdCompass": "Compass",
+      "osdHorizon": "Horizon",
+      "recordingStarted": "Recording…"
     },
     "CameraSourceMenu": {
       "selectAVehicleToConfigureIts": "Select a vehicle to configure its camera feeds.",
@@ -80,7 +91,16 @@
       "rtspTransportAutoNegotiatesUdpThen": "RTSP transport: Auto negotiates UDP then falls back to TCP. UDP = lowest latency on a clean LAN; TCP = reliable through firewalls / lossy links.",
       "auto": "Auto",
       "lowLatencySmallJitterBufferDrop": "Low-latency: small jitter buffer, drop late frames",
-      "lowLatency": "Low latency"
+      "lowLatency": "Low latency",
+      "cameraControl": "Camera control",
+      "cameraControlTip": "Day/night, IR and white light through the camera's own web API",
+      "cameraControlNone": "None",
+      "cameraHost": "camera address",
+      "cameraHostTip": "Camera web address; empty = the address from the RTSP link",
+      "httpPort": "HTTP port of the camera web interface (80 by default)",
+      "cameraChannel": "Camera channel (1 for a single camera)",
+      "userFromRtsp": "user (from RTSP)",
+      "passwordFromRtsp": "password (from RTSP)"
     },
     "CameraSourceSwitch": {
       "show": "Show {{label}}"
@@ -292,6 +312,23 @@
     },
     "whip_publish": {
       "whipUnreachable": "WHIP unreachable: {{v1}}"
+    },
+    "CameraControlBar": {
+      "quality": "Quality",
+      "hdTip": "Main stream: full resolution, more bandwidth",
+      "sdTip": "Sub stream: lower resolution, holds up on a weak link",
+      "dayNight": "Mode",
+      "dayNight_auto": "Auto",
+      "dayNight_day": "Day",
+      "dayNight_night": "Night",
+      "light": "Light",
+      "lightIr": "IR",
+      "lightWhite": "White",
+      "lightSmart": "Smart",
+      "lightMixed": "Mixed",
+      "lightOff": "Off",
+      "controlUnavailable": "Camera control unavailable",
+      "retry": "Retry"
     }
   }
 }

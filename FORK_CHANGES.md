@@ -56,7 +56,25 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - file formats and network identifiers;
   - the radio widget folder.
 
-### 3. Bug fixes (several also apply to upstream)
+### 3. Added features
+- **Multi-camera view for one vehicle.** "All cameras" in the Vision panel tiles every feed of the vehicle side
+  by side (1-4 columns). Clicking a tile makes it the main feed, which is the one used for snapshot, recording
+  and click-to-point. The existing vehicle grid is unchanged.
+- **IP camera image controls (Hikvision ISAPI).** Set per RTSP source; credentials and host default to the
+  RTSP url.
+  - Day/night/auto: `IrcutFilter`.
+  - Supplement light (IR, white light, smart, off): `supplementLight`. Only the modes the camera reports are
+    shown.
+  - Digest auth is implemented without extra dependencies, and settings are changed read-modify-write so
+    installer thresholds survive.
+  - Code: `src/main/media/hikvision-isapi.ts`, `CameraControlBar.tsx`.
+- **HD/SD switch for RTSP feeds.** Switches main and sub stream by rewriting the url:
+  - Hikvision `/Streaming/Channels/101` ↔ `102` and `/h264/ch1/main|sub/`;
+  - Dahua `subtype=0|1`.
+
+  Code: `stream-quality.ts`.
+
+### 4. Bug fixes (several also apply to upstream)
 | Fix | Upstream too? |
 |---|---|
 | Hangar **app** install failures (e.g. the Trainer's `minAppVersion` gate) were stored but never rendered, so Install looked dead. The Apps section now shows the error with a dismiss button. | yes |
@@ -65,7 +83,7 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 | `afterPack.cjs` hard-coded `@ardudeckdesktop` and `ArduDeck.app`; it now takes both names from the packager. | only when renamed |
 | Text that doubled as an identifier was translated: the "Pilot cockpit" instrument preset, compass fit verdict, custom-frame "Physical" group, default log chart. Preset names are ids again; the UI shows a separate `label`. | fork only |
 
-### 4. Build and packaging
+### 5. Build and packaging
 - **Windows.** `nsis` installer plus a portable exe. Build with `pnpm exec electron-builder` (not `npx`) so
   the hoisted pnpm dependencies are bundled. mediamtx is fetched before packaging.
 - **Linux.** AppImage and `.deb` built on GitHub Actions by `.github/workflows/build-linux-stohid.yml`, from
@@ -73,7 +91,7 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 - **Multi-vehicle orchestrator.** It is not bundled: `engine.json` points at a release of a private
   repository. The "Multiple vehicles" mode is therefore unavailable in fork builds.
 
-### 5. Known limitations
+### 6. Known limitations
 - **ArduDeck Trainer** (Hangar app) cannot be installed. Its Hangar release declares
   `minAppVersion 1.1.0` and the archive layout (`build/ArduDeckTrainer.exe`, Godot) does not answer the
   current `--trainer-query` protocol, so it needs a newer host than ArduDeck 0.1.2 (the same applies to
@@ -128,7 +146,17 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - формати файлів;
   - тека віджета пульта.
 
-### 3. Виправлення помилок
+### 3. Нові можливості
+- **Кілька камер одного апарата одночасно.** Режим «Усі камери» в панелі «Бачення» показує всі джерела
+  апарата поруч (1-4 стовпці). Клік по плитці робить камеру основною: для знімка, запису й наведення підвісу.
+- **Керування IP-камерою Hikvision (ISAPI):**
+  - день/ніч/авто;
+  - підсвітка: ІЧ, біле світло, розумна, вимк. Показуються лише ті режими, які підтримує камера.
+
+  Логін і адреса типово беруться з RTSP-посилання.
+- **Перемикач HD/SD** для RTSP: основний ↔ додатковий потік (Hikvision `101` ↔ `102`, Dahua `subtype`).
+
+### 4. Виправлення помилок
 - **Встановлення програм із Hangar.** Помилка встановлення не показувалася, тож кнопка «Встановити»
   здавалася неробочою. Тепер повідомлення видно. Стосується й оригіналу.
 - **Перевірка типів.** `app.dock` у нових типах Electron може бути відсутнім. Стосується й оригіналу.
@@ -138,12 +166,12 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 - **Перекладені ідентифікатори.** Набір приладів «Pilot cockpit» (через нього був порожній головний екран),
   оцінка калібрування компаса, блок гвинтів власної рами, графік журналу за замовчуванням. Лише у форку.
 
-### 4. Збирання
+### 5. Збирання
 - **Windows:** інсталятор і портативний exe.
 - **Linux:** AppImage і `.deb` збираються на GitHub Actions
   (`.github/workflows/build-linux-stohid.yml`); файл програми `stohid`.
 - **Модуль «Кілька апаратів»** (оркестратор) не входить у збірки: він у закритому репозиторії автора.
 
-### 5. Відомі обмеження
+### 6. Відомі обмеження
 - **ArduDeck Trainer** не встановлюється: у Hangar він вимагає версію 1.1.0 і новий протокол, яких ще
   немає ні в оригіналі, ні у форку.

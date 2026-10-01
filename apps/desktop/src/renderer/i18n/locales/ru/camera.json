@@ -43,7 +43,18 @@
       "snapshotFailed": "Не удалось сделать снимок: {{v1}}",
       "recordFailed": "Ошибка записи: {{v1}}",
       "recordingSaved": "Запись сохранена",
-      "videoDiagnosticsCopied": "Диагностика видео скопирована"
+      "videoDiagnosticsCopied": "Диагностика видео скопирована",
+      "oneFeed": "Одна камера",
+      "allFeeds": "Все камеры",
+      "oneFeedTip": "Показывать только выбранный источник",
+      "allFeedsTip": "Показывать все источники аппарата рядом; щёлкните, чтобы сделать источник основным",
+      "vehicleGrid": "Сетка аппаратов",
+      "liveFeedBadge": "основной",
+      "osdTelemetry": "Телеметрия",
+      "osdCrosshair": "Прицел",
+      "osdCompass": "Компас",
+      "osdHorizon": "Горизонт",
+      "recordingStarted": "Запись…"
     },
     "CameraSourceMenu": {
       "selectAVehicleToConfigureIts": "Выберите аппарат, чтобы настроить его камеры.",
@@ -80,7 +91,16 @@
       "rtspTransportAutoNegotiatesUdpThen": "Транспорт RTSP: «Авто» пробует UDP, затем переходит на TCP. UDP — минимальная задержка в чистой локальной сети; TCP — надёжно через файрволы и нестабильные каналы.",
       "auto": "Авто",
       "lowLatencySmallJitterBufferDrop": "Низкая задержка: малый буфер, опоздавшие кадры отбрасываются",
-      "lowLatency": "Низкая задержка"
+      "lowLatency": "Низкая задержка",
+      "cameraControl": "Управление камерой",
+      "cameraControlTip": "День/ночь, ИК и белый свет через веб-интерфейс самой камеры",
+      "cameraControlNone": "Нет",
+      "cameraHost": "адрес камеры",
+      "cameraHostTip": "Веб-адрес камеры; пусто = адрес из RTSP-ссылки",
+      "httpPort": "HTTP-порт веб-интерфейса камеры (по умолчанию 80)",
+      "cameraChannel": "Канал камеры (1 для одной камеры)",
+      "userFromRtsp": "логин (из RTSP)",
+      "passwordFromRtsp": "пароль (из RTSP)"
     },
     "CameraSourceSwitch": {
       "show": "Показать {{label}}"
@@ -292,6 +312,23 @@
     },
     "whip_publish": {
       "whipUnreachable": "WHIP недоступен: {{v1}}"
+    },
+    "CameraControlBar": {
+      "quality": "Качество",
+      "hdTip": "Основной поток: полное разрешение, больше трафика",
+      "sdTip": "Дополнительный поток: меньшее разрешение, держится на слабом канале",
+      "dayNight": "Режим",
+      "dayNight_auto": "Авто",
+      "dayNight_day": "День",
+      "dayNight_night": "Ночь",
+      "light": "Подсветка",
+      "lightIr": "ИК",
+      "lightWhite": "Белый",
+      "lightSmart": "Умная",
+      "lightMixed": "Смешанная",
+      "lightOff": "Выкл.",
+      "controlUnavailable": "Управление камерой недоступно",
+      "retry": "Повторить"
     }
   }
 }
