@@ -563,7 +563,8 @@
       "unsupportedPlatform": "Unsupported platform: {{platform}}"
     },
     "sitl_swarm_sitl_process": {
-      "sitlBinaryNotFoundAtDownload": "SITL binary not found at {{binaryPath}}. Download it on the SITL tab first."
+      "sitlBinaryNotFoundAtDownload": "SITL binary not found at {{binaryPath}}. Download it on the SITL tab first.",
+      "mavlinkPortTimeout": "SITL did not report its MAVLink port in time"
     },
     "trainer_trainer_ipc_handlers": {
       "aRegionIsAlreadyBeingBuilt": "A region is already being built.",

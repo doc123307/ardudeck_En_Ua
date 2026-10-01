@@ -10,7 +10,6 @@ import { useModesWizardStore } from '../../../stores/modes-wizard-store';
 import { useReceiverStore } from '../../../stores/receiver-store';
 import TransmitterVisualizer from '../shared/TransmitterVisualizer';
 import { Satellite, CheckCircle2, Clock, AlertTriangle, Square, CheckSquare } from 'lucide-react';
-import { reorderChannels } from '../../../utils/rc-channel-constants';
 import { t } from '../../../i18n';
 
 export const TransmitterCheckStep: React.FC = () => {
@@ -24,9 +23,8 @@ export const TransmitterCheckStep: React.FC = () => {
     nextStep,
     prevStep,
   } = useModesWizardStore();
-  const rxMap = useReceiverStore((s) => s.rxMap);
-  const displayChannels = useMemo(() => reorderChannels(rcChannels, rxMap), [rcChannels, rxMap]);
-  const displayDetected = useMemo(() => reorderChannels(channelsDetected, rxMap), [channelsDetected, rxMap]);
+  const displayChannels = rcChannels;
+  const displayDetected = channelsDetected;
 
   // Start RC polling when step mounts
   useEffect(() => {

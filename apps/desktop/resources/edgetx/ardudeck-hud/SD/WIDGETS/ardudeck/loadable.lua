@@ -693,6 +693,40 @@ local function tileFrame(x, y, w, h, caption)
   lcd.drawText(x + 8, y + 3, caption, SMLSIZE + T.TEXT_3)
 end
 
+local FONT_H = {}
+-- Measured once; the fallbacks cover firmware whose sizeText returns no height.
+local function fontH(f)
+  if not FONT_H[f] then
+    local _, th = lcd.sizeText('0', f)
+    FONT_H[f] = th or (f == DBLSIZE and 34 or f == MIDSIZE and 25 or f == SMLSIZE and 13 or 17)
+  end
+  return FONT_H[f]
+end
+
+-- Big value over an optional sub line, fonts picked so they fit the tile without overlapping.
+-- Returns valueY, valueFont, subY, subFont; subY is nil when there is no room for it.
+-- First of `options` that fits `maxW` at `font`, else the shortest one.
+local function fitText(maxW, font, options)
+  for _, o in ipairs(options) do
+    if lcd.sizeText(o, font) <= maxW then return o end
+  end
+  return options[#options]
+end
+
+local STACK_SUB = { { DBLSIZE, 0 }, { DBLSIZE, SMLSIZE }, { MIDSIZE, 0 }, { MIDSIZE, SMLSIZE }, { DBLSIZE }, { MIDSIZE } }
+local STACK_ONE = { { DBLSIZE }, { MIDSIZE } }
+local function stack(y, h, withSub)
+  local top, room = y + 16, h - 18
+  for _, t in ipairs(withSub and STACK_SUB or STACK_ONE) do
+    local vh, sh = fontH(t[1]), t[2] and fontH(t[2]) or 0
+    if vh + sh <= room then
+      local vy = top + math.floor((room - vh - sh) / 2)
+      return vy, t[1], t[2] and (vy + vh) or nil, t[2]
+    end
+  end
+  return top, MIDSIZE
+end
+
 local function staleColor(t, liveColor)
   return (now() - t > STALE_AFTER) and T.STALE or liveColor
 end
@@ -739,19 +773,25 @@ TILE.batt = function (x, y, w, h, variant)
     return
   end
   if pct then
-    lcd.drawText(x + 8, y + 18, string.format('%d%%', math.floor(pct + 0.5)),
-      DBLSIZE + staleColor(V.tBatt, vColor))
-    lcd.drawText(x + w - 8, y + 30, string.format('%.1fV', V.voltV),
+    -- value, then the bar, then the sub line: 12px of the tile goes to the bar
+    local vy, vf, sy, sf = stack(y, h - 12, true)
+    local vh = fontH(vf)
+    lcd.drawText(x + 8, vy, string.format('%d%%', math.floor(pct + 0.5)),
+      vf + staleColor(V.tBatt, vColor))
+    lcd.drawText(x + w - 8, vy + vh - fontH(0), string.format('%.1fV', V.voltV),
       0 + RIGHT + staleColor(V.tBatt, T.TEXT_2))
-    local bx, by, bw, bh = x + 8, y + h - 34, w - 16, 8
+    local bx, by, bw, bh = x + 8, vy + vh + 2, w - 16, 8
     lcd.drawFilledRectangle(bx, by, bw, bh, T.GAUGE_BEZEL_2)
     local fill = math.floor(bw * pct / 100 + 0.5)
     if fill > 0 then lcd.drawFilledRectangle(bx, by, fill, bh, vColor) end
     lcd.drawRectangle(bx, by, bw, bh, T.GAUGE_EDGE)
-    if h >= 80 then
-      lcd.drawText(bx, by + 12, string.format('%s%.0fA  %dmAh used',
-        cellV and string.format('%.2fV/c  ', cellV) or '', V.currA, V.mah),
-        SMLSIZE + staleColor(V.tBatt, T.TEXT_2))
+    if sy then
+      local cv = cellV and string.format('%.2fV/c  ', cellV) or ''
+      lcd.drawText(bx, sy + 12, fitText(bw, sf, {
+        string.format('%s%.0fA  %dmAh used', cv, V.currA, V.mah),
+        string.format('%s%.0fA  %dmAh', cv, V.currA, V.mah),
+        string.format('%s%.0fA', cv, V.currA) }),
+        sf + staleColor(V.tBatt, T.TEXT_2))
     end
   elseif cellV then
     -- no %, but cells known: keep the graphic, fill by per-cell voltage
@@ -769,34 +809,40 @@ TILE.batt = function (x, y, w, h, variant)
       lcd.drawText(x + 8, by + bh + 6, string.format('%.2fV/c  %.0fA', cellV, V.currA),
         SMLSIZE + staleColor(V.tBatt, T.TEXT_2))
     else
-      lcd.drawText(x + 8, y + 18, string.format('%.1fV', V.voltV),
-        DBLSIZE + staleColor(V.tBatt, vColor))
-      local bx, by, bw, bh = x + 8, y + h - 34, w - 16, 8
+      local vy, vf, sy, sf = stack(y, h - 12, true)
+      lcd.drawText(x + 8, vy, string.format('%.1fV', V.voltV),
+        vf + staleColor(V.tBatt, vColor))
+      local bx, by, bw, bh = x + 8, vy + fontH(vf) + 2, w - 16, 8
       lcd.drawFilledRectangle(bx, by, bw, bh, T.GAUGE_BEZEL_2)
       local fill = math.floor(bw * vfrac + 0.5)
       if fill > 0 then lcd.drawFilledRectangle(bx, by, fill, bh, vColor) end
       lcd.drawRectangle(bx, by, bw, bh, T.GAUGE_EDGE)
-      if h >= 80 then
-        lcd.drawText(bx, by + 12, string.format('%.2fV/c  %.0fA  %dmAh used', cellV, V.currA, V.mah),
-          SMLSIZE + staleColor(V.tBatt, T.TEXT_2))
+      if sy then
+        lcd.drawText(bx, sy + 12, fitText(bw, sf, {
+          string.format('%.2fV/c  %.0fA  %dmAh used', cellV, V.currA, V.mah),
+          string.format('%.2fV/c  %.0fA  %dmAh', cellV, V.currA, V.mah),
+          string.format('%.2fV/c  %.0fA', cellV, V.currA) }),
+          sf + staleColor(V.tBatt, T.TEXT_2))
       end
     end
   else
-    lcd.drawText(x + 8, y + 18, string.format('%.1fV', V.voltV), DBLSIZE + staleColor(V.tBatt, vColor))
-    if h >= 70 then
-      lcd.drawText(x + 8, y + h - 26, string.format('%.0fA  %dmAh', V.currA, V.mah),
-        SMLSIZE + staleColor(V.tBatt, T.TEXT_2))
+    local vy, vf, sy, sf = stack(y, h, true)
+    lcd.drawText(x + 8, vy, string.format('%.1fV', V.voltV), vf + staleColor(V.tBatt, vColor))
+    if sy then
+      lcd.drawText(x + 8, sy, string.format('%.0fA  %dmAh', V.currA, V.mah),
+        sf + staleColor(V.tBatt, T.TEXT_2))
     end
   end
 end
 
 TILE.home = function (x, y, w, h)
   tileFrame(x, y, w, h, 'HOME')
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), string.format('%dm', V.homeDistM),
-    DBLSIZE + staleColor(V.tHome, T.TEXT))
-  if h >= 70 then
-    lcd.drawText(x + 8, y + h - 26, string.format('brg %d', V.homeBearingDeg),
-      SMLSIZE + staleColor(V.tHome, T.TEXT_2))
+  local vy, vf, sy, sf = stack(y, h, true)
+  lcd.drawText(x + 8, vy, string.format('%dm', V.homeDistM),
+    vf + staleColor(V.tHome, T.TEXT))
+  if sy then
+    lcd.drawText(x + 8, sy, string.format('brg %d', V.homeBearingDeg),
+      sf + staleColor(V.tHome, T.TEXT_2))
   end
   -- relative home-direction arrow (amber, matches the home markers)
   if V.homeDistM > 0 then
@@ -811,12 +857,13 @@ end
 
 TILE.alt = function (x, y, w, h)
   tileFrame(x, y, w, h, 'ALT / VSPD')
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), string.format('%.0fm', V.homeAltM),
-    DBLSIZE + staleColor(V.tHome, T.TEXT))
+  local vy, vf, sy, sf = stack(y, h, true)
+  lcd.drawText(x + 8, vy, string.format('%.0fm', V.homeAltM),
+    vf + staleColor(V.tHome, T.TEXT))
   local vsColor = math.abs(V.vspdMs) > 3 and T.WARN_STRONG or T.SUCCESS
-  if h >= 70 then
-    lcd.drawText(x + 8, y + h - 26, string.format('%+.1f  %s spd', V.vspdMs, fmtSpeed(V.hspdMs)),
-      SMLSIZE + staleColor(V.tVel, math.abs(V.vspdMs) > 3 and T.WARN_STRONG or T.TEXT_2))
+  if sy then
+    lcd.drawText(x + 8, sy, string.format('%+.1f  %s spd', V.vspdMs, fmtSpeed(V.hspdMs)),
+      sf + staleColor(V.tVel, math.abs(V.vspdMs) > 3 and T.WARN_STRONG or T.TEXT_2))
   end
   -- VSI: center-zero vertical bar, +/-5 m/s full scale
   local bx, bh2 = x + w - 16, h - 34
@@ -840,11 +887,12 @@ TILE.gps = function (x, y, w, h)
   tileFrame(x, y, w, h, 'GPS')
   local FIX_LABEL = { [0] = 'NO GPS', 'NO FIX', '2D', '3D' }
   local gpsColor = V.fix >= 3 and T.SUCCESS or (V.fix == 2 and T.WARN_STRONG or T.DANGER)
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), string.format('%d', V.sats),
-    DBLSIZE + staleColor(V.tGps, gpsColor))
-  if h >= 70 then
-    lcd.drawText(x + 8, y + h - 26, string.format('%s  hdop %.1f', FIX_LABEL[V.fix] or '?', V.hdop),
-      SMLSIZE + staleColor(V.tGps, T.TEXT_2))
+  local vy, vf, sy, sf = stack(y, h, true)
+  lcd.drawText(x + 8, vy, string.format('%d', V.sats),
+    vf + staleColor(V.tGps, gpsColor))
+  if sy then
+    lcd.drawText(x + 8, sy, string.format('%s  hdop %.1f', FIX_LABEL[V.fix] or '?', V.hdop),
+      sf + staleColor(V.tGps, T.TEXT_2))
   end
   -- satellite segments: 8 cells, lit by sats/2, in fix color
   local segs = 8
@@ -1006,7 +1054,8 @@ TILE.compass = function (x, y, w, h)
     local len = major and 9 or 5
     lcd.drawLine(cx + sa * (r - len), cy - ca * (r - len), cx + sa * (r - 1), cy - ca * (r - 1),
       SOLID, major and T.GAUGE_TICK or T.TEXT_3)
-    if major then
+    -- a small dial only has room for N; E/S/W would pile onto it
+    if major and (deg == 0 or r >= 34) then
       local L = ({ [0]='N', [90]='E', [180]='S', [270]='W' })[deg]
       local color = deg == 0 and (stale and T.STALE or T.DANGER) or (stale and T.STALE or T.GAUGE_TICK)
       lcd.drawText(cx + sa * (r - 17) - 4, cy - ca * (r - 17) - 8, L, SMLSIZE + color)
@@ -1031,11 +1080,12 @@ end
 TILE.spd = function (x, y, w, h)
   local vsColor = math.abs(V.vspdMs) > 3 and T.WARN or T.TEXT_2
   tileFrame(x, y, w, h, 'SPEED')
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), fmtSpeed(V.hspdMs) .. ' m/s',
-    DBLSIZE + staleColor(V.tVel, T.TEXT))
-  if h >= 70 then
-    lcd.drawText(x + 8, y + h - 26, string.format('vspd %+.1f', V.vspdMs),
-      SMLSIZE + staleColor(V.tVel, vsColor))
+  local vy, vf, sy, sf = stack(y, h, true)
+  lcd.drawText(x + 8, vy, fmtSpeed(V.hspdMs) .. ' m/s',
+    vf + staleColor(V.tVel, T.TEXT))
+  if sy then
+    lcd.drawText(x + 8, sy, string.format('vspd %+.1f', V.vspdMs),
+      sf + staleColor(V.tVel, vsColor))
   end
 end
 
@@ -1043,12 +1093,13 @@ TILE.timer = function (x, y, w, h)
   tileFrame(x, y, w, h, isGround() and 'RUN TIME' or 'FLIGHT TIME')
   local total = V.armedAccum + (V.armedAtT and (now() - V.armedAtT) or 0)
   local secs = math.floor(total / 100)
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18),
-    string.format('%02d:%02d', math.floor(secs / 60), secs % 60), DBLSIZE + T.TEXT)
-  if h >= 70 then
-    lcd.drawText(x + 8, y + h - 26,
+  local vy, vf, sy, sf = stack(y, h, true)
+  lcd.drawText(x + 8, vy,
+    string.format('%02d:%02d', math.floor(secs / 60), secs % 60), vf + T.TEXT)
+  if sy then
+    lcd.drawText(x + 8, sy,
       V.armed and (isGround() and 'running' or 'flying') or 'total this session',
-      SMLSIZE + (V.armed and T.SUCCESS or T.TEXT_3))
+      sf + (V.armed and T.SUCCESS or T.TEXT_3))
   end
   if V.armed then
     -- pulse dot: alive-and-counting cue
@@ -1060,11 +1111,12 @@ end
 
 TILE.wind = function (x, y, w, h)
   tileFrame(x, y, w, h, 'WIND')
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), string.format('%.1f m/s', V.windMs),
-    DBLSIZE + staleColor(V.tWind, V.windMs > 8 and T.WARN or T.TEXT))
-  if h >= 70 then
-    lcd.drawText(x + 8, y + h - 26, string.format('from %03d', V.windDirDeg % 360),
-      SMLSIZE + staleColor(V.tWind, T.TEXT_2))
+  local vy, vf, sy, sf = stack(y, h, true)
+  lcd.drawText(x + 8, vy, string.format('%.1f m/s', V.windMs),
+    vf + staleColor(V.tWind, V.windMs > 8 and T.WARN or T.TEXT))
+  if sy then
+    lcd.drawText(x + 8, sy, string.format('from %03d', V.windDirDeg % 360),
+      sf + staleColor(V.tWind, T.TEXT_2))
   end
   -- arrow showing wind direction relative to aircraft heading
   local a = math.rad(V.windDirDeg - V.yawDeg)
@@ -1090,8 +1142,9 @@ end
 TILE.imu = function (x, y, w, h)
   tileFrame(x, y, w, h, 'IMU TEMP')
   local c = V.imuTemp >= 70 and T.DANGER or (V.imuTemp >= 60 and T.WARN_STRONG or T.SUCCESS)
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), string.format('%dC', V.imuTemp),
-    DBLSIZE + staleColor(V.tAp, c))
+  local vy, vf, sy, sf = stack(y, h, false)
+  lcd.drawText(x + 8, vy, string.format('%dC', V.imuTemp),
+    vf + staleColor(V.tAp, c))
   -- thermometer strip: 20..80C
   local bx, bh2 = x + w - 16, h - 30
   local by = y + 18
@@ -1106,8 +1159,9 @@ TILE.rng = function (x, y, w, h)
   tileFrame(x, y, w, h, 'RANGE')
   -- near-ground is what a rangefinder is for: amber inside 1m
   local c = (V.rangeM > 0 and V.rangeM < 1) and T.WARN_STRONG or T.TEXT
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), string.format('%.2fm', V.rangeM),
-    DBLSIZE + staleColor(V.tAtt, c))
+  local vy, vf, sy, sf = stack(y, h, false)
+  lcd.drawText(x + 8, vy, string.format('%.2fm', V.rangeM),
+    vf + staleColor(V.tAtt, c))
   local bx, bh2 = x + w - 16, h - 30
   local by = y + 18
   lcd.drawFilledRectangle(bx, by, 8, bh2, T.GAUGE_BEZEL_2)
@@ -1303,12 +1357,12 @@ TILE.link = function (x, y, w, h)
   local tpwr = getValue('TPWR') or 0
   local lqC = not hasLq and T.TEXT_3
     or (lq >= 70 and T.SUCCESS or (lq >= 40 and T.WARN_STRONG or T.DANGER))
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18),
-    hasLq and string.format('%d%%', lq) or '--', DBLSIZE + lqC)
-  if not hasLq then
-    lcd.drawText(x + 8, y + h - 26, 'no link sensor', SMLSIZE + T.TEXT_3)
-  elseif fromRadio and h >= 70 then
-    lcd.drawText(x + 8, y + h - 26, 'radio RSSI', SMLSIZE + T.TEXT_3)
+  local vy, vf, sy, sf = stack(y, h, true)
+  lcd.drawText(x + 8, vy, hasLq and string.format('%d%%', lq) or '--', vf + lqC)
+  if sy and not hasLq then
+    lcd.drawText(x + 8, sy, 'no link sensor', sf + T.TEXT_3)
+  elseif sy and fromRadio then
+    lcd.drawText(x + 8, sy, 'radio RSSI', sf + T.TEXT_3)
   end
   -- ascending signal bars, phone-style: lit count by LQ, all in band color
   local bars = 5
@@ -1325,13 +1379,13 @@ TILE.link = function (x, y, w, h)
       lcd.drawRectangle(bxi, baseY - bh2, 6, bh2, T.GAUGE_EDGE)
     end
   end
-  if h >= 70 and hasLq and not fromRadio then
+  if sy and hasLq and not fromRadio then
     local rssiC = rssi > -85 and T.SUCCESS or (rssi > -100 and T.WARN_STRONG or T.DANGER)
-    lcd.drawText(x + 8, y + h - 26, string.format('%d dBm', rssi), SMLSIZE + rssiC)
+    lcd.drawText(x + 8, sy, string.format('%d dBm', rssi), sf + rssiC)
     if tpwr > 0 then
       local pwrC = tpwr >= 250 and T.WARN_STRONG or T.TEXT_2
-      lcd.drawText(x + 8 + lcd.sizeText(string.format('%d dBm', rssi), SMLSIZE) + 10, y + h - 26,
-        string.format('%dmW', tpwr), SMLSIZE + pwrC)
+      lcd.drawText(x + 8 + lcd.sizeText(string.format('%d dBm', rssi), sf) + 10, sy,
+        string.format('%dmW', tpwr), sf + pwrC)
     end
   end
 end
@@ -1347,10 +1401,13 @@ TILE.txbat = function (x, y, w, h)
   end
   local pct = vMax > vMin and math.max(0, math.min(100, (v - vMin) / (vMax - vMin) * 100)) or 0
   local c = pct > 30 and T.TEXT or (pct > 15 and T.WARN or T.DANGER)
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), string.format('%.1fV', v), DBLSIZE + c)
-  if h >= 70 then
-    lcd.drawText(x + 8, y + h - 26, string.format('%d%% of %.1f-%.1fV', math.floor(pct + 0.5), vMin, vMax),
-      SMLSIZE + T.TEXT_2)
+  local vy, vf, sy, sf = stack(y, h, true)
+  lcd.drawText(x + 8, vy, string.format('%.1fV', v), vf + c)
+  if sy then
+    -- clear of the level strip on the right
+    lcd.drawText(x + 8, sy, fitText(w - 36, sf, {
+      string.format('%d%% of %.1f-%.1fV', math.floor(pct + 0.5), vMin, vMax),
+      string.format('%d%%', math.floor(pct + 0.5)) }), sf + T.TEXT_2)
   end
   local bx, by, bw, bh = x + w - 14, y + 18, 6, h - 30
   lcd.drawFilledRectangle(bx, by, bw, bh, T.GAUGE_BEZEL_2)
@@ -1361,15 +1418,16 @@ end
 
 TILE.wp = function (x, y, w, h)
   tileFrame(x, y, w, h, 'MISSION')
+  local vy, vf, sy, sf = stack(y, h, true)
   if V.wpNum <= 0 then
-    lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), 'no mission', 0 + T.STALE)
+    lcd.drawText(x + 8, vy, 'no mission', 0 + T.STALE)
     return
   end
-  lcd.drawText(x + 8, y + math.max(18, h / 2 - 18), string.format('WP %d', V.wpNum),
-    DBLSIZE + staleColor(V.tWp, T.INFO))
-  if h >= 70 then
-    lcd.drawText(x + 8, y + h - 26, string.format('%dm to go', math.floor(V.wpDistM + 0.5)),
-      SMLSIZE + staleColor(V.tWp, T.TEXT_2))
+  lcd.drawText(x + 8, vy, string.format('WP %d', V.wpNum),
+    vf + staleColor(V.tWp, T.INFO))
+  if sy then
+    lcd.drawText(x + 8, sy, string.format('%dm to go', math.floor(V.wpDistM + 0.5)),
+      sf + staleColor(V.tWp, T.TEXT_2))
   end
   -- relative bearing arrow to the waypoint (info blue; home stays amber)
   local a = math.rad(V.wpBearingDeg - V.yawDeg)
@@ -1405,12 +1463,14 @@ local function drawLive()
   else
     lcd.drawCircle(52, 19, narrow and 7 or 5, T.TEXT_3)
   end
-  if not narrow then
-    lcd.drawText(64, 7, V.armed and 'ARMED' or 'DISARMED', MIDSIZE + armColor)
-  end
   local modeName = MODES[V.modeNum] or ('MODE ' .. tostring(V.modeNum))
   local mw = lcd.sizeText(modeName, MIDSIZE) + 20
   local mx = (LCD_W - mw) / 2
+  local armWord = V.armed and 'ARMED' or 'DISARMED'
+  -- the word goes when it would reach the mode pill; the dot still carries arm state
+  if not narrow and 64 + lcd.sizeText(armWord, MIDSIZE) + 6 <= mx then
+    lcd.drawText(64, 7, armWord, MIDSIZE + armColor)
+  end
   lcd.drawFilledRectangle(mx, 5, mw, 28, T.PILL_ON)
   lcd.drawText(LCD_W / 2, 7, modeName, MIDSIZE + CENTER + staleColor(V.tAp, T.SUCCESS))
   -- brand cluster, right-aligned: [LQ]  [logo] [ArduDeck]. Everything
@@ -1418,11 +1478,12 @@ local function drawLive()
   -- height. Light mode uses the dark-tile logo (brand direction); wordmark
   -- follows the asset (white on dark, near-black on light). The corner is
   -- the theme tap target.
+  local pillR = mx + mw + 8
   local logoX
-  if narrow then
+  local tw = lcd.sizeText('STOHID', SMLSIZE)
+  if narrow or LCD_W - 8 - tw - 28 < pillR then
     logoX = LCD_W - 8 - 20 -- logo only; no room for the wordmark
   else
-    local tw = lcd.sizeText('STOHID', SMLSIZE)
     lcd.drawText(LCD_W - 8, 19, 'STOHID', SMLSIZE + RIGHT + VCENTER + T.TEXT)
     logoX = LCD_W - 8 - tw - 28
   end
@@ -1432,14 +1493,14 @@ local function drawLive()
   end
   local lq = getValue('RQly')
   local lqX = logoX - 10
-  if lq and lq > 0 then
+  if lq and lq > 0 and lqX - lcd.sizeText('LQ ' .. lq, SMLSIZE) >= pillR then
     lcd.drawText(lqX, 19, 'LQ ' .. lq, SMLSIZE + RIGHT + VCENTER + (lq > 70 and T.TEXT_2 or T.WARN))
     lqX = lqX - lcd.sizeText('LQ ' .. lq, SMLSIZE) - 14
   end
   -- TX battery chip: always-visible handset vitals (glyph + voltage);
   -- dropped on narrow screens (would run into the mode pill)
   local txv = narrow and 0 or (getValue('tx-voltage') or 0)
-  if txv > 0 then
+  if txv > 0 and lqX - lcd.sizeText(string.format('%.1f', txv), SMLSIZE) - 20 >= pillR then
     local vMin, vMax = 6.6, 8.4
     local ok, gs = pcall(getGeneralSettings)
     if ok and gs then

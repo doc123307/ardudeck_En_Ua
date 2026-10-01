@@ -11,7 +11,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useQuickSetupStore } from '../../../stores/quick-setup-store';
 import { Radio, CheckCircle2, AlertTriangle, ArrowLeft, ArrowRight, Wrench, Loader2 } from 'lucide-react';
-import { PRIMARY_CHANNEL_COUNT, getChannelName, reorderChannels } from '../../../utils/rc-channel-constants';
+import { PRIMARY_CHANNEL_COUNT, getChannelName } from '../../../utils/rc-channel-constants';
 import { useReceiverStore } from '../../../stores/receiver-store';
 import {
   INAV_RECEIVER_TYPES,
@@ -115,15 +115,8 @@ export const TransmitterCheckStep: React.FC = () => {
   const isInav = fcVariant === 'INAV';
   const rxMap = useReceiverStore((s) => s.rxMap);
 
-  // Reorder raw channels and detection flags into logical order using rxMap
-  const displayChannels = React.useMemo(
-    () => reorderChannels(rcChannels, rxMap),
-    [rcChannels, rxMap],
-  );
-  const displayDetected = React.useMemo(
-    () => reorderChannels(channelsDetected, rxMap),
-    [channelsDetected, rxMap],
-  );
+  const displayChannels = rcChannels;
+  const displayDetected = channelsDetected;
 
   // Start polling when component mounts
   useEffect(() => {

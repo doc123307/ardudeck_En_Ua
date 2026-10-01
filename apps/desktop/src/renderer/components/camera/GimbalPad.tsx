@@ -114,23 +114,48 @@ export function GimbalPad({ vehicleKey, maxRate = 30 }: GimbalPadProps) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <button
-          disabled={!vehicleKey}
-          onClick={() => vehicleKey && window.electronAPI.cameraCameraCommand(vehicleKey, { kind: 'zoom', mode: 'continuous', value: 1 })}
-          onMouseUp={() => vehicleKey && window.electronAPI.cameraCameraCommand(vehicleKey, { kind: 'zoom', mode: 'continuous', value: 0 })}
-          className="rounded bg-surface-raised px-2 py-1 text-[11px] text-content hover:bg-surface-raised disabled:opacity-40"
-          title={t('camera.GimbalPad.zoomInHold')}
-        >{t('camera.GimbalPad.zoom')}</button>
-        <button
-          disabled={!vehicleKey}
-          onClick={() => vehicleKey && window.electronAPI.cameraCameraCommand(vehicleKey, { kind: 'zoom', mode: 'continuous', value: -1 })}
-          onMouseUp={() => vehicleKey && window.electronAPI.cameraCameraCommand(vehicleKey, { kind: 'zoom', mode: 'continuous', value: 0 })}
-          className="rounded bg-surface-raised px-2 py-1 text-[11px] text-content hover:bg-surface-raised disabled:opacity-40"
-          title={t('camera.GimbalPad.zoomOutHold')}
-        >{t('camera.GimbalPad.zoom2')}</button>
+        <ZoomHoldButton vehicleKey={vehicleKey} direction={1} label={t('camera.GimbalPad.zoom')} title={t('camera.GimbalPad.zoomInHold')} />
+        <ZoomHoldButton vehicleKey={vehicleKey} direction={-1} label={t('camera.GimbalPad.zoom2')} title={t('camera.GimbalPad.zoomOutHold')} />
       </div>
 
       {readOnly && <span className="text-[10px] text-content-tertiary">{t('camera.GimbalPad.rcDriven')}</span>}
     </div>
+  );
+}
+
+/** Zooms while held. Any way the hold can end (release, cancel, blur, unmount) sends the stop. */
+function ZoomHoldButton({ vehicleKey, direction, label, title }: { vehicleKey: string | null; direction: 1 | -1; label: string; title: string }) {
+  const zoomingRef = useRef<string | null>(null);
+
+  const stop = useCallback(() => {
+    const key = zoomingRef.current;
+    if (!key) return;
+    zoomingRef.current = null;
+    void window.electronAPI.cameraCameraCommand(key, { kind: 'zoom', mode: 'continuous', value: 0 });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('blur', stop);
+    return () => {
+      window.removeEventListener('blur', stop);
+      stop();
+    };
+  }, [stop]);
+
+  return (
+    <button
+      disabled={!vehicleKey}
+      onPointerDown={(e) => {
+        if (!vehicleKey || e.button !== 0) return;
+        e.currentTarget.setPointerCapture?.(e.pointerId);
+        zoomingRef.current = vehicleKey;
+        void window.electronAPI.cameraCameraCommand(vehicleKey, { kind: 'zoom', mode: 'continuous', value: direction });
+      }}
+      onPointerUp={stop}
+      onPointerCancel={stop}
+      onLostPointerCapture={stop}
+      className="rounded bg-surface-raised px-2 py-1 text-[11px] text-content hover:bg-surface-raised disabled:opacity-40 select-none touch-none"
+      title={title}
+    >{label}</button>
   );
 }

@@ -3,13 +3,12 @@
  *
  * Shared channel naming for MSP and MAVLink protocols.
  *
- * IMPORTANT: MSP_RC returns raw receiver channels in the receiver's physical order.
- * The order depends on the receiver protocol (e.g. SBUS uses AETR, Spektrum uses TAER).
- * The rxMap (MSP_RX_MAP) tells us which physical channel maps to which logical function.
- * Use reorderChannels() to convert raw channels into logical RPYT order for display.
+ * MSP_RC arrives already in Roll, Pitch, Yaw, Throttle order: INAV and Betaflight apply
+ * the RX map in firmware before answering, as their configurators assume. Only MAVLink
+ * RC_CHANNELS is physical and needs RCMAP (reorderChannelsWithRcmap).
  */
 
-/** Logical channel names — always Roll, Pitch, Yaw, Throttle after rxMap reordering */
+/** MSP channel names: Roll, Pitch, Yaw, Throttle, as MSP_RC delivers them */
 export const LOGICAL_CHANNEL_NAMES = [
   'Roll', 'Pitch', 'Yaw', 'Throttle',
   'AUX1', 'AUX2', 'AUX3', 'AUX4',
@@ -17,7 +16,7 @@ export const LOGICAL_CHANNEL_NAMES = [
   'AUX9', 'AUX10', 'AUX11', 'AUX12',
 ] as const;
 
-/** @deprecated Use LOGICAL_CHANNEL_NAMES + reorderChannels() instead */
+/** @deprecated Use LOGICAL_CHANNEL_NAMES instead */
 export const MSP_CHANNEL_NAMES = LOGICAL_CHANNEL_NAMES;
 
 export const MAVLINK_CHANNEL_NAMES = [
@@ -51,28 +50,6 @@ export function getMavlinkChannelNames(rcmap: { roll: number; pitch: number; thr
 
   // Label remaining channels 5+ as CHx (AUX)
   return names;
-}
-
-/**
- * Reorder raw MSP_RC channels into logical order using the rxMap.
- *
- * MSP_RC returns channels in the receiver's physical order (e.g. AETR for SBUS).
- * rxMap[logicalIndex] = physicalChannel (e.g. rxMap = [0,1,3,2] for AETR).
- * This function returns channels in logical order: Roll, Pitch, Yaw, Throttle, AUX1...
- *
- * Only the first 4 channels are reordered; AUX channels (index 4+) pass through unchanged.
- */
-export function reorderChannels<T>(rawChannels: T[], rxMap: number[]): T[] {
-  if (rxMap.length < 4) return rawChannels;
-
-  const reordered = [...rawChannels];
-  for (let logical = 0; logical < 4; logical++) {
-    const physical = rxMap[logical];
-    if (physical !== undefined && physical < rawChannels.length) {
-      reordered[logical] = rawChannels[physical]!;
-    }
-  }
-  return reordered;
 }
 
 /**

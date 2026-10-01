@@ -563,7 +563,8 @@
       "unsupportedPlatform": "Неподдерживаемая платформа: {{platform}}"
     },
     "sitl_swarm_sitl_process": {
-      "sitlBinaryNotFoundAtDownload": "Бинарник SITL не найден в {{binaryPath}}. Сначала загрузите его на вкладке SITL."
+      "sitlBinaryNotFoundAtDownload": "Бинарник SITL не найден в {{binaryPath}}. Сначала загрузите его на вкладке SITL.",
+      "mavlinkPortTimeout": "SITL не сообщил свой порт MAVLink вовремя"
     },
     "trainer_trainer_ipc_handlers": {
       "aRegionIsAlreadyBeingBuilt": "Регион уже строится.",

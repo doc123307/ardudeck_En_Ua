@@ -19,8 +19,8 @@
 import { spawn, ChildProcess } from 'node:child_process';
 import { app, BrowserWindow } from 'electron';
 import { chmod, mkdir, writeFile, access } from 'node:fs/promises';
-import net from 'node:net';
 import path from 'node:path';
+import { waitForSerial0Announce } from './sitl-readiness.js';
 import type {
   SwarmSitlConfig,
   SwarmSitlStatus,
@@ -33,6 +33,7 @@ import { ardupilotSitlDownloader } from './ardupilot-sitl-downloader.js';
 import { generateDefaultParams } from './ardupilot-sitl-process.js';
 import { resolveDefaultsFile } from './frame-config.js';
 import { mt } from '../i18n';
+import { killProcessTree, reapSitlOnPort, withPathPrepended } from './sitl-os.js';
 
 const BASE_TCP_PORT = 5760;
 /** ArduPilot shifts all instance ports by this many per `-I` step. */
@@ -100,27 +101,6 @@ function computeHomes(config: SwarmSitlConfig): Array<{ lat: number; lng: number
     alt: base.alt,
     heading: base.heading,
   }));
-}
-
-/**
- * Resolve once when the port begins accepting connections. SITL takes a couple
- * of seconds to open its TCP server after spawn; we poll until it answers (or
- * the deadline passes) so the renderer's auto-connect succeeds first try.
- */
-function waitForPort(port: number, timeoutMs: number): Promise<boolean> {
-  const deadline = Date.now() + timeoutMs;
-  return new Promise((resolve) => {
-    const attempt = () => {
-      const sock = net.connect({ host: '127.0.0.1', port });
-      sock.once('connect', () => { sock.destroy(); resolve(true); });
-      sock.once('error', () => {
-        sock.destroy();
-        if (Date.now() >= deadline) { resolve(false); return; }
-        setTimeout(attempt, 400);
-      });
-    };
-    attempt();
-  });
 }
 
 class SwarmSitlProcessManager {
@@ -240,11 +220,9 @@ class SwarmSitlProcessManager {
     this.instances = [];
     this._isRunning = true;
 
-    const env = { ...process.env };
-    if (process.platform === 'win32') {
-      const cygwinPath = path.join(app.getPath('userData'), 'ardupilot-sitl', 'cygwin');
-      env.PATH = `${cygwinPath};${env.PATH}`;
-    }
+    const env = process.platform === 'win32'
+      ? withPathPrepended(process.env, path.join(app.getPath('userData'), 'ardupilot-sitl', 'cygwin'))
+      : { ...process.env };
 
     for (let i = 0; i < count; i++) {
       const sysid = i + 1;
@@ -267,11 +245,11 @@ class SwarmSitlProcessManager {
         // vehicles, so a clean boot every launch is the right default.
         const args = this.buildArgs(config, i, model, home, defaultsArg, true);
 
+        await reapSitlOnPort(tcpPort);
         const child = spawn(binaryPath, args, {
           cwd: instanceDir,
           env,
           stdio: ['pipe', 'pipe', 'pipe'],
-          shell: process.platform === 'win32',
         });
         inst.process = child;
         inst.pid = child.pid;
@@ -293,12 +271,12 @@ class SwarmSitlProcessManager {
 
         this.emitInstance(inst);
 
-        // Probe for readiness without blocking the spawn loop, then announce.
-        void waitForPort(tcpPort, 20_000).then((ready) => {
+        // Readiness from SITL's own announcement; the engine's tcpout keeps redialling until the port is open.
+        void waitForSerial0Announce([child.stdout, child.stderr], 20_000).then((ready) => {
           // Don't override a process that already died.
           if (inst.state === 'exited' || inst.state === 'error') return;
           inst.state = ready ? 'ready' : 'error';
-          if (!ready) inst.error = 'SITL did not open its MAVLink port in time';
+          if (!ready) inst.error = mt('main.sitl_swarm_sitl_process.mavlinkPortTimeout');
           this.emitInstance(inst);
           this.emitState();
         });
@@ -322,10 +300,7 @@ class SwarmSitlProcessManager {
     for (const inst of this.instances) {
       const proc = inst.process;
       if (!proc) continue;
-      try {
-        proc.kill('SIGTERM');
-        setTimeout(() => { try { proc.kill('SIGKILL'); } catch { /* gone */ } }, 2000);
-      } catch { /* ignore */ }
+      killProcessTree(proc);
       inst.process = null;
     }
     this.instances = [];

@@ -44,10 +44,18 @@ function loadTile(layer: string, z: number, xTile: number, yTile: number): Promi
     const n = 2 ** z;
     const wrappedX = ((xTile % n) + n) % n;
     if (yTile < 0 || yTile >= n) { resolve(null); return; }
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
-    img.src = `tile-cache://${layer}/${z}/${wrappedX}/${yTile}.png`;
+    // Bytes over IPC into a blob: URL. An <img> straight from tile-cache:// is cross-origin
+    // and taints the canvas, so toDataURL would throw.
+    void window.electronAPI.tileCacheGetTile(`tile-cache://${layer}/${z}/${wrappedX}/${yTile}.png`)
+      .then((bytes) => {
+        if (!bytes) { resolve(null); return; }
+        const url = URL.createObjectURL(new Blob([bytes]));
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+        img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+        img.src = url;
+      })
+      .catch(() => resolve(null));
   });
 }
 

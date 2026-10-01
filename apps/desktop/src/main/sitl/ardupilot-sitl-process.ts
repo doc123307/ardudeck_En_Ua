@@ -20,6 +20,7 @@ import type {
 } from '../../shared/ipc-channels.js';
 import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import { isVtolFrame } from './frame-config.js';
+import { killProcessTree, reapSitlOnPort, withPathPrepended } from './sitl-os.js';
 import type { AuthoredObstacle, SimObstacleStoreSchema } from '../../shared/sim-obstacle-types.js';
 import { resolveCopterFrame, sitlFrameForMotorCount } from '../../shared/sitl-frame-geometry.js';
 import { ardupilotSitlDownloader } from './ardupilot-sitl-downloader.js';
@@ -767,26 +768,20 @@ class ArduPilotSitlProcessManager {
       const commandString = `${binaryPath} ${args.join(' ')}`;
 
       // Environment setup
-      const env = { ...process.env };
-
-      // Windows: Add Cygwin DLLs to PATH
-      if (process.platform === 'win32') {
-        const cygwinPath = this.getCygwinDllPath();
-        env.PATH = `${cygwinPath};${env.PATH}`;
-      }
+      // Windows: the Cygwin DLLs the binary needs
+      const env = process.platform === 'win32' ? withPathPrepended(process.env, this.getCygwinDllPath()) : { ...process.env };
 
       // Reap any stale SITL still holding the MAVLink TCP port. A previous crash
       // or a dev hot-reload can orphan an arducopter/plane/rover process that
       // stop() never reached; it keeps port 5760 bound and the new SITL dies with
       // "bind failed on port 5760 - Address already in use". Kill only an
       // ArduPilot SITL binary, matched by name, so nothing unrelated is touched.
-      await this.reapStaleSitl(5760);
+      await reapSitlOnPort(5760);
 
       const child = spawn(spawnCmd, args, {
         cwd: path.dirname(binaryPath),
         env,
         stdio: ['pipe', 'pipe', 'pipe'],
-        shell: process.platform === 'win32',
       });
       this.process = child;
       this._isRunning = true;
@@ -883,36 +878,6 @@ class ArduPilotSitlProcessManager {
    * an unrelated process that happens to hold the port. macOS/Linux only (uses
    * lsof); a no-op on Windows.
    */
-  private async reapStaleSitl(tcpPort: number): Promise<void> {
-    if (process.platform === 'win32') return;
-    try {
-      const { execFile } = await import('node:child_process');
-      const { promisify } = await import('node:util');
-      const run = promisify(execFile);
-      const { stdout } = await run('lsof', ['-ti', `TCP:${tcpPort}`]).catch(() => ({ stdout: '' }));
-      const pids = stdout.split('\n').map((s) => s.trim()).filter(Boolean);
-      const SITL_BINARIES = ['arducopter', 'arduplane', 'ardurover', 'ardusub'];
-      let reaped = 0;
-      for (const pid of pids) {
-        const { stdout: cmd } = await run('ps', ['-o', 'command=', '-p', pid]).catch(() => ({ stdout: '' }));
-        if (!SITL_BINARIES.some((b) => cmd.toLowerCase().includes(b))) continue;
-        try {
-          process.kill(Number(pid), 'SIGKILL');
-          reaped++;
-        } catch {
-          /* already gone */
-        }
-      }
-      if (reaped > 0) {
-        console.log(`[sitl] reaped ${reaped} stale SITL process(es) on TCP ${tcpPort}`);
-        // Give the OS a moment to release the port before SITL binds it.
-        await new Promise((r) => setTimeout(r, 300));
-      }
-    } catch (err) {
-      console.warn('[sitl] reapStaleSitl failed (continuing):', err);
-    }
-  }
-
   stop(): void {
     // Tear down the in-app sim engine alongside SITL (no-op if not running).
     if (this._engineManaged) simEngineProcess.stop();
@@ -923,18 +888,7 @@ class ArduPilotSitlProcessManager {
     // bound, and the next Start couldn't bind ("can't connect after restart").
     const proc = this.process;
     if (proc) {
-      try {
-        proc.kill('SIGTERM');
-        setTimeout(() => {
-          try {
-            proc.kill('SIGKILL');
-          } catch {
-            // Already dead
-          }
-        }, 2000);
-      } catch (err) {
-        console.error('Failed to kill ArduPilot SITL process:', err);
-      }
+      killProcessTree(proc);
       this.process = null;
       this._isRunning = false;
       this._currentConfig = null;
@@ -957,12 +911,7 @@ class ArduPilotSitlProcessManager {
       let settled = false;
       const settle = () => { if (!settled) { settled = true; resolve(); } };
       proc.once('exit', settle);
-      try {
-        proc.kill('SIGTERM');
-        setTimeout(() => {
-          try { proc.kill('SIGKILL'); } catch { /* already dead */ }
-        }, 2000);
-      } catch { /* ignore */ }
+      killProcessTree(proc);
       this.process = null;
       this._isRunning = false;
       this._currentConfig = null;

@@ -210,7 +210,12 @@
       "loadedTheLayoutHasOfIts": "Завантажено власну розкладку «{{applyTarget}}».",
       "hasNoLayoutOfItsOwn": "«{{applyTarget}}» ще не має власної розкладки, тож це спільна.",
       "loadedTheSharedLayoutEveryModel": "Завантажено спільну розкладку, яку використовують усі моделі.",
-      "seconds": "секунд"
+      "seconds": "секунд",
+      "resetToDefault": "Скинути до типового",
+      "putEverySlotBackToThe": "Повернути всі слоти до типового розташування",
+      "mahShort": "мА·год",
+      "vPerCell": "В/банку",
+      "pctOfRange": "{{pct}}% від 6,6-8,4 В"
     }
   }
 }

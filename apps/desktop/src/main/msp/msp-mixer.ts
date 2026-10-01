@@ -57,46 +57,28 @@ export async function getInavMixerConfig(): Promise<MSPInavMixerConfig | null> {
       }
     }
 
-    try {
-      const payload = await sendMspV2Request(MSP2.INAV_MIXER, 2000);
-      const config = deserializeInavMixerConfig(payload);
-      ctx.currentPlatformType = config.platformType;
-
-      const platformNames = ['MULTIROTOR', 'AIRPLANE', 'HELICOPTER', 'TRICOPTER', 'ROVER', 'BOAT'];
-      const platformName = platformNames[config.platformType] ?? `UNKNOWN(${config.platformType})`;
-      ctx.sendLog('info', `Platform: ${platformName}`, `Mixer: ${config.appliedMixerPreset}, Servos: ${config.numberOfServos}`);
-
-      return config;
-    } catch (msp2Error) {
-      if (isCliModeBlockedError(msp2Error)) return null;
-
-      const msg = msp2Error instanceof Error ? msp2Error.message : String(msp2Error);
-      if (!msg.includes('not supported')) {
-        console.warn('[MSP] MSP2 mixer config failed:', msg);
-      }
-
+    // INAV answers the legacy MSP_MIXER_CONFIG with a fixed Quad-X, so it can't tell an
+    // airplane from a quad; only MSP2_INAV_MIXER can. Retry once for a busy serial link.
+    let lastError: unknown;
+    for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        const payload = await sendMspRequest(MSP.MIXER_CONFIG, 2000);
-        const legacyConfig = deserializeMixerConfig(payload);
-        const isMultirotor = isMultirotorMixer(legacyConfig.mixer);
-        const platformType = isMultirotor ? 0 : 1;
-        ctx.currentPlatformType = platformType;
+        const payload = await sendMspV2Request(MSP2.INAV_MIXER, 2000);
+        const config = deserializeInavMixerConfig(payload);
+        ctx.currentPlatformType = config.platformType;
 
-        const platformNames = ['MULTIROTOR', 'AIRPLANE'];
-        ctx.sendLog('info', `Platform: ${platformNames[platformType]} (legacy)`, `Mixer type: ${legacyConfig.mixer}`);
+        const platformNames = ['MULTIROTOR', 'AIRPLANE', 'HELICOPTER', 'TRICOPTER', 'ROVER', 'BOAT'];
+        const platformName = platformNames[config.platformType] ?? `UNKNOWN(${config.platformType})`;
+        ctx.sendLog('info', `Platform: ${platformName}`, `Mixer: ${config.appliedMixerPreset}, Servos: ${config.numberOfServos}`);
 
-        return {
-          yawMotorDirection: 1, yawJumpPreventionLimit: 200, motorStopOnLow: 0,
-          platformType, hasFlaps: 0, appliedMixerPreset: legacyConfig.mixer,
-          numberOfMotors: 0, numberOfServos: 0,
-        } as MSPInavMixerConfig;
-      } catch (legacyError) {
-        if (!isCliModeBlockedError(legacyError)) {
-          console.error('[MSP] Legacy mixer config also failed:', legacyError);
-        }
-        return null;
+        return config;
+      } catch (err) {
+        if (isCliModeBlockedError(err)) return null;
+        lastError = err;
       }
     }
+    const msg = lastError instanceof Error ? lastError.message : String(lastError);
+    ctx.sendLog('warn', 'Could not read the platform type (MSP2_INAV_MIXER)', msg);
+    return null;
   });
 }
 

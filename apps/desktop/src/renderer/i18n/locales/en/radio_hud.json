@@ -210,7 +210,12 @@
       "loadedTheLayoutHasOfIts": "Loaded the layout \"{{applyTarget}}\" has of its own.",
       "hasNoLayoutOfItsOwn": "\"{{applyTarget}}\" has no layout of its own yet, so this is the shared one.",
       "loadedTheSharedLayoutEveryModel": "Loaded the shared layout every model uses.",
-      "seconds": "seconds"
+      "seconds": "seconds",
+      "resetToDefault": "Reset to default",
+      "putEverySlotBackToThe": "Put every slot back to the default layout",
+      "mahShort": "mAh",
+      "vPerCell": "V/cell",
+      "pctOfRange": "{{pct}}% of 6.6-8.4V"
     }
   }
 }

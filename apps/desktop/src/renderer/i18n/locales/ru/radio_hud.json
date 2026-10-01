@@ -210,7 +210,12 @@
       "loadedTheLayoutHasOfIts": "Загружена собственная раскладка «{{applyTarget}}».",
       "hasNoLayoutOfItsOwn": "У «{{applyTarget}}» ещё нет собственной раскладки, так что это общая.",
       "loadedTheSharedLayoutEveryModel": "Загружена общая раскладка, которую используют все модели.",
-      "seconds": "секунд"
+      "seconds": "секунд",
+      "resetToDefault": "Сбросить по умолчанию",
+      "putEverySlotBackToThe": "Вернуть все слоты к расположению по умолчанию",
+      "mahShort": "мА·ч",
+      "vPerCell": "В/банку",
+      "pctOfRange": "{{pct}}% от 6,6-8,4 В"
     }
   }
 }

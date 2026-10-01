@@ -21,7 +21,7 @@ import {
   Zap,
   HelpCircle,
 } from 'lucide-react';
-import { PRIMARY_CHANNEL_COUNT, getChannelName, reorderChannels } from '../../utils/rc-channel-constants';
+import { PRIMARY_CHANNEL_COUNT, getChannelName } from '../../utils/rc-channel-constants';
 import {
   INAV_RECEIVER_TYPES,
   INAV_QUICK_SELECT,
@@ -334,11 +334,8 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
   // Track which channels are active — baseline captured on first data, then compared
   const [channelBaseline, setChannelBaseline] = useState<number[]>([]);
 
-  // Reorder raw MSP_RC channels into logical order (Roll, Pitch, Yaw, Throttle) using rxMap
-  const displayChannels = React.useMemo(
-    () => reorderChannels(channels, rxMap),
-    [channels, rxMap],
-  );
+  // MSP_RC is already in Roll, Pitch, Yaw, Throttle order: the firmware applies the RX map.
+  const displayChannels = channels;
 
   // Memoize active channel detection (no state update cascade)
   const activeChannels = React.useMemo(() => {
@@ -562,7 +559,7 @@ export default function ReceiverTab({ isInav, modified, setModified, onNavigateT
         badgeColor={signalBadge.color}
       >
         <div className="mt-4 space-y-4">
-          {/* Primary sticks - 2 column grid (reordered by rxMap) */}
+          {/* Primary sticks - 2 column grid */}
           <div className="grid grid-cols-2 gap-x-6 gap-y-3">
             {displayChannels.slice(0, PRIMARY_CHANNEL_COUNT).map((value, i) => (
               <ChannelBar
