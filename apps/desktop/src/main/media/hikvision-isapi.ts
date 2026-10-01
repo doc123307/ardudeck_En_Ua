@@ -21,7 +21,12 @@ export interface IsapiTarget {
   username: string;
   password: string;
   channel: number;
+  /** The host came from an RTSP url on a relay port, which is rarely the camera itself. */
+  likelyRelay?: boolean;
 }
+
+/** RTSP ports used by relays (mediamtx, go2rtc), not by IP cameras (554). */
+const RELAY_RTSP_PORTS = new Set(['8554', '8555']);
 
 /** Where the API is: explicit control settings first, then whatever the RTSP url says. */
 export function resolveTarget(source: CameraSourceConfig): IsapiTarget | null {
@@ -43,6 +48,7 @@ export function resolveTarget(source: CameraSourceConfig): IsapiTarget | null {
     username: control.username ?? decodeURIComponent(rtsp?.username ?? ''),
     password: control.password ?? decodeURIComponent(rtsp?.password ?? ''),
     channel: control.channel ?? 1,
+    likelyRelay: !control.host?.trim() && !!rtsp && RELAY_RTSP_PORTS.has(rtsp.port),
   };
 }
 
@@ -127,7 +133,8 @@ function describeFailure(status: number, text: string): string {
 
 function networkError(target: IsapiTarget, err: unknown): string {
   const detail = err instanceof Error ? (err.cause instanceof Error ? err.cause.message : err.message) : String(err);
-  return mt('main.media_hikvision.unreachable', { address: target.base, detail });
+  const message = mt('main.media_hikvision.unreachable', { address: target.base, detail });
+  return target.likelyRelay ? `${message} ${mt('main.media_hikvision.relayHint')}` : message;
 }
 
 const ircutPath = (ch: number) => `/ISAPI/Image/channels/${ch}/IrcutFilter`;

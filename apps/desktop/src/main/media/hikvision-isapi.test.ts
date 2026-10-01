@@ -148,6 +148,15 @@ describe('hikvision isapi', () => {
     expect(state.error).toMatch(/login or password/);
   });
 
+  it('points at the camera address when the RTSP url is a relay', async () => {
+    const relayed = source({ url: 'rtsp://127.0.0.1:8554/frontsub', control: { vendor: 'hikvision', port: 1 } });
+    expect(resolveTarget(relayed)!.likelyRelay).toBe(true);
+    const state = await getControlState(relayed);
+    expect(state.error).toMatch(/relay/);
+    // an explicit camera address is not second-guessed
+    expect(resolveTarget(source({ url: 'rtsp://127.0.0.1:8554/frontsub', control: { vendor: 'hikvision', host: '192.168.4.102' } }))!.likelyRelay).toBe(false);
+  });
+
   it('names the address when the camera cannot be reached', async () => {
     const state = await getControlState(source({ control: { vendor: 'hikvision', host: '127.0.0.1', port: 1 } }));
     expect(state.ok).toBe(false);

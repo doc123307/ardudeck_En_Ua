@@ -593,7 +593,8 @@
       "wrongLogin": "The camera rejected the login or password.",
       "cameraRefused": "The camera refused the request (HTTP {{status}}) {{reason}}",
       "unreachable": "No answer from the camera at {{address}}: {{detail}}",
-      "noImageControls": "The camera answered but offers no day/night or light control."
+      "noImageControls": "The camera answered but offers no day/night or light control.",
+      "relayHint": "This RTSP address looks like a video relay (port 8554), not the camera: enter the camera's own IP, login and password in the camera control fields."
     }
   }
 }

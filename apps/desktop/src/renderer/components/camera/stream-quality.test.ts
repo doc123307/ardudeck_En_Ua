@@ -23,6 +23,17 @@ describe('stream quality (main vs sub stream)', () => {
     expect(withStreamQuality('rtsp://h/cam/realmonitor?channel=1&subtype=0', 'sd')).toBe('rtsp://h/cam/realmonitor?channel=1&subtype=1');
   });
 
+  it('switches main/sub path pairs on a relay', () => {
+    expect(streamQuality('rtsp://100.67.0.245:8554/frontsub')).toBe('sd');
+    expect(withStreamQuality('rtsp://100.67.0.245:8554/frontsub', 'hd')).toBe('rtsp://100.67.0.245:8554/frontmain');
+    expect(withStreamQuality('rtsp://100.67.0.245:8554/rearmain', 'sd')).toBe('rtsp://100.67.0.245:8554/rearsub');
+    expect(withStreamQuality('rtsp://h:8554/cams/rear_Main?x=1', 'sd')).toBe('rtsp://h:8554/cams/rear_Sub?x=1');
+    // a word that merely contains "main" elsewhere is not a stream name
+    expect(streamQuality('rtsp://h:8554/maintenance/cam1')).toBeNull();
+    // Hikvision paths keep their own rule
+    expect(withStreamQuality('rtsp://h/Streaming/Channels/101', 'sd')).toBe('rtsp://h/Streaming/Channels/102');
+  });
+
   it('leaves urls that do not name their stream alone', () => {
     expect(streamQuality('rtsp://h:8554/live')).toBeNull();
     expect(withStreamQuality('rtsp://h:8554/live', 'sd')).toBe('rtsp://h:8554/live');
