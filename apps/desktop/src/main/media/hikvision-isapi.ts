@@ -52,7 +52,7 @@ export function resolveTarget(source: CameraSourceConfig): IsapiTarget | null {
   };
 }
 
-/** Parses `Digest realm="..", nonce="..", qop="auth"` into its fields. */
+/** Parses one `Digest realm="..", nonce="..", qop="auth"` challenge into its fields. */
 export function parseChallenge(header: string): Record<string, string> {
   const out: Record<string, string> = {};
   for (const m of header.replace(/^\s*Digest\s+/i, '').matchAll(/(\w+)=(?:"([^"]*)"|([^,\s]+))/g)) {
@@ -61,22 +61,35 @@ export function parseChallenge(header: string): Record<string, string> {
   return out;
 }
 
-const md5 = (s: string) => createHash('md5').update(s).digest('hex');
+/**
+ * Newer firmware sends several challenges at once (Digest MD5, Digest SHA-256, sometimes
+ * Basic), and fetch joins them into one header. Mixing their fields - one's nonce with
+ * another's algorithm - is rejected as a wrong password, so take exactly one.
+ */
+export function pickChallenge(header: string): { scheme: 'digest' | 'basic'; fields: Record<string, string> } {
+  const parts = header.split(/,\s*(?=(?:Digest|Basic)\s)/i).map((p) => p.trim()).filter(Boolean);
+  const digests = parts.filter((p) => /^digest\s/i.test(p)).map(parseChallenge);
+  const md5 = digests.find((d) => !d.algorithm || /^md5$/i.test(d.algorithm));
+  const chosen = md5 ?? digests.find((d) => /^sha-256$/i.test(d.algorithm ?? '')) ?? digests[0];
+  return chosen ? { scheme: 'digest', fields: chosen } : { scheme: 'basic', fields: {} };
+}
 
-/** RFC 7616 digest response (MD5, qop=auth or none), which is what Hikvision firmware asks for. */
+/** RFC 7616 digest response for the challenge's algorithm (MD5 or SHA-256), qop=auth or none. */
 export function digestHeader(
   challenge: Record<string, string>, method: string, uri: string, username: string, password: string,
   cnonce = randomBytes(8).toString('hex'), nc = '00000001',
 ): string {
-  const ha1 = md5(`${username}:${challenge.realm ?? ''}:${password}`);
-  const ha2 = md5(`${method}:${uri}`);
+  const algorithm = challenge.algorithm ?? 'MD5';
+  const hash = (s: string) => createHash(/^sha-256/i.test(algorithm) ? 'sha256' : 'md5').update(s).digest('hex');
+  const ha1 = hash(`${username}:${challenge.realm ?? ''}:${password}`);
+  const ha2 = hash(`${method}:${uri}`);
   const qop = (challenge.qop ?? '').split(',').map((q) => q.trim()).includes('auth') ? 'auth' : '';
   const response = qop
-    ? md5(`${ha1}:${challenge.nonce}:${nc}:${cnonce}:${qop}:${ha2}`)
-    : md5(`${ha1}:${challenge.nonce}:${ha2}`);
+    ? hash(`${ha1}:${challenge.nonce}:${nc}:${cnonce}:${qop}:${ha2}`)
+    : hash(`${ha1}:${challenge.nonce}:${ha2}`);
   const parts = [
     `username="${username}"`, `realm="${challenge.realm ?? ''}"`, `nonce="${challenge.nonce ?? ''}"`,
-    `uri="${uri}"`, `response="${response}"`, 'algorithm=MD5',
+    `uri="${uri}"`, `response="${response}"`, `algorithm=${algorithm}`,
   ];
   if (challenge.opaque) parts.push(`opaque="${challenge.opaque}"`);
   if (qop) parts.push(`qop=${qop}`, `nc=${nc}`, `cnonce="${cnonce}"`);
@@ -99,11 +112,11 @@ export async function isapiRequest(
   });
   let res = await send();
   if (res.status === 401) {
-    const challenge = res.headers.get('www-authenticate') ?? '';
+    const challenge = pickChallenge(res.headers.get('www-authenticate') ?? '');
     await res.arrayBuffer().catch(() => undefined);
-    const auth = /^\s*basic/i.test(challenge)
+    const auth = challenge.scheme === 'basic'
       ? `Basic ${Buffer.from(`${target.username}:${target.password}`).toString('base64')}`
-      : digestHeader(parseChallenge(challenge), method, path, target.username, target.password);
+      : digestHeader(challenge.fields, method, path, target.username, target.password);
     res = await send(auth);
   }
   return { status: res.status, text: await res.text() };
@@ -125,10 +138,28 @@ export function xmlReplace(xml: string, tag: string, value: string): string {
   return xml.replace(new RegExp(`(<${tag}(?:\\s[^>]*)?>)[^<]*(</${tag}>)`), `$1${value}$2`);
 }
 
-function describeFailure(status: number, text: string): string {
-  if (status === 401 || status === 403) return mt('main.media_hikvision.wrongLogin');
+/**
+ * A 401 after answering the challenge: a wrong account, or the camera's illegal-login
+ * lock. The body says which, and how many tries are left - worth showing, because every
+ * further try with the same password brings the lock closer.
+ */
+function authFailure(text: string): CameraControlState {
+  const unlock = Number(xmlValue(text, 'unlockTime') ?? 0);
+  if (xmlValue(text, 'lockStatus') === 'lock' || unlock > 0) {
+    return { ok: false, authFailed: true, error: mt('main.media_hikvision.locked', { minutes: Math.max(1, Math.ceil(unlock / 60)) }) };
+  }
+  const retries = xmlValue(text, 'retryLoginTime');
+  const message = mt('main.media_hikvision.wrongLogin');
+  return {
+    ok: false,
+    authFailed: true,
+    error: retries ? `${message} ${mt('main.media_hikvision.retriesLeft', { n: retries })}` : message,
+  };
+}
+
+function refusal(what: string, status: number, text: string): string {
   const reason = xmlValue(text, 'subStatusCode') ?? xmlValue(text, 'statusString');
-  return mt('main.media_hikvision.cameraRefused', { status, reason: reason ?? '' });
+  return `${what}: HTTP ${status}${reason ? ` ${reason}` : ''}`;
 }
 
 function networkError(target: IsapiTarget, err: unknown): string {
@@ -145,15 +176,23 @@ export async function getControlState(source: CameraSourceConfig): Promise<Camer
   const target = resolveTarget(source);
   if (!target) return { ok: false, error: mt('main.media_hikvision.noAddress') };
   try {
+    // The login is checked on its own first: a model without one of the image endpoints
+    // answers 403 there, which must not read as a wrong password.
+    const login = await isapiRequest(target, 'GET', '/ISAPI/Security/userCheck');
+    if (login.status === 401) return authFailure(login.text);
+
     const state: CameraControlState = { ok: true };
+    const missing: string[] = [];
     const ircut = await isapiRequest(target, 'GET', ircutPath(target.channel));
-    if (ircut.status === 401 || ircut.status === 403) return { ok: false, error: describeFailure(ircut.status, ircut.text) };
+    if (ircut.status === 401) return authFailure(ircut.text);
     if (ircut.status === 200) {
       const mode = xmlValue(ircut.text, 'IrcutFilterType');
       if (mode && (DAY_NIGHT_MODES as string[]).includes(mode)) state.dayNight = mode as DayNightMode;
       const caps = await isapiRequest(target, 'GET', `${ircutPath(target.channel)}/capabilities`).catch(() => null);
       const opts = caps?.status === 200 ? xmlOptions(caps.text, 'IrcutFilterType') : undefined;
       state.dayNightOptions = (opts?.filter((o) => (DAY_NIGHT_MODES as string[]).includes(o)) as DayNightMode[] | undefined) ?? DAY_NIGHT_MODES;
+    } else {
+      missing.push(refusal('IrcutFilter', ircut.status, ircut.text));
     }
     const light = await isapiRequest(target, 'GET', lightPath(target.channel));
     if (light.status === 200) {
@@ -161,8 +200,12 @@ export async function getControlState(source: CameraSourceConfig): Promise<Camer
       const caps = await isapiRequest(target, 'GET', `${lightPath(target.channel)}/capabilities`).catch(() => null);
       state.lightOptions = (caps?.status === 200 ? xmlOptions(caps.text, 'supplementLightMode') : undefined)
         ?? (state.light ? [state.light, ...(state.light === 'close' ? [] : ['close'])] : undefined);
+    } else {
+      missing.push(refusal('supplementLight', light.status, light.text));
     }
-    if (!state.dayNight && !state.light) return { ok: false, error: mt('main.media_hikvision.noImageControls') };
+    if (!state.dayNight && !state.light) {
+      return { ok: false, error: `${mt('main.media_hikvision.noImageControls')} (${missing.join('; ')})` };
+    }
     return state;
   } catch (err) {
     return { ok: false, error: networkError(target, err) };
@@ -176,11 +219,20 @@ export async function applyControl(source: CameraSourceConfig, action: CameraCon
   const [path, tag] = action.kind === 'dayNight'
     ? [ircutPath(target.channel), 'IrcutFilterType']
     : [lightPath(target.channel), 'supplementLightMode'];
+  const refused = (res: { status: number; text: string }): CameraControlState => (res.status === 401
+    ? authFailure(res.text)
+    : {
+      ok: false,
+      error: mt('main.media_hikvision.cameraRefused', {
+        status: res.status,
+        reason: xmlValue(res.text, 'subStatusCode') ?? xmlValue(res.text, 'statusString') ?? '',
+      }),
+    });
   try {
     const current = await isapiRequest(target, 'GET', path);
-    if (current.status !== 200) return { ok: false, error: describeFailure(current.status, current.text) };
+    if (current.status !== 200) return refused(current);
     const res = await isapiRequest(target, 'PUT', path, xmlReplace(current.text, tag, action.mode));
-    if (res.status !== 200) return { ok: false, error: describeFailure(res.status, res.text) };
+    if (res.status !== 200) return refused(res);
   } catch (err) {
     return { ok: false, error: networkError(target, err) };
   }

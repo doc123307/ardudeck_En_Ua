@@ -104,7 +104,11 @@
       "mirror": "Mirror",
       "mirrorTip": "Show the picture mirrored left-right, like a rear-view mirror",
       "rotate180": "Rotate 180°",
-      "rotate180Tip": "For a camera mounted upside down"
+      "rotate180Tip": "For a camera mounted upside down",
+      "saveAndCheck": "Save and check",
+      "notSavedYet": "not saved yet",
+      "title": "Camera feeds",
+      "close": "Close"
     },
     "CameraSourceSwitch": {
       "show": "Show {{label}}"

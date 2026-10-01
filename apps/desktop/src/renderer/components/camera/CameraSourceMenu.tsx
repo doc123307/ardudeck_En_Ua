@@ -5,10 +5,12 @@
  */
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useCameraStore, sourcesForVehicle } from '../../stores/camera-store';
 import { CAMERA_PRESETS, presetById } from './camera-presets';
 import { WfbngSetupGuide } from './WfbngSetupGuide';
 import { CameraControlBar } from './CameraControlBar';
+import { useCameraControlStore } from '../../stores/camera-control-store';
 import type { CameraSourceConfig, GimbalControlMode } from '../../../shared/camera-types';
 import { DEFAULT_GIMBAL_CONFIG } from '../../../shared/camera-types';
 import { t } from '../../i18n';
@@ -271,36 +273,55 @@ function SourceRow({ source, selected, onSelect, onChange, onRemove }: {
   );
 }
 
-/** IP-camera image controls: which API, where it is and which account (defaults from the RTSP url). */
+/**
+ * IP-camera image controls: which API, where it is and which account (defaults from the RTSP url).
+ *
+ * The fields edit a draft; the camera is only contacted on "Save and check". Logging in on
+ * every keystroke sent half-typed passwords, and cameras lock the account after a few of those.
+ */
 function ControlSettings({ source, onChange }: {
   source: CameraSourceConfig;
   onChange: (patch: Partial<CameraSourceConfig>) => void;
 }) {
-  const control = source.control;
+  type Control = NonNullable<CameraSourceConfig['control']>;
+  const saved = source.control;
+  const [draft, setDraft] = useState<Control | undefined>(saved);
+  const refresh = useCameraControlStore((s) => s.refresh);
+  // A different feed, or settings changed elsewhere: start from what is saved.
+  useEffect(() => { setDraft(saved); }, [source.id, saved]);
+
   let rtspHost = '';
   try { rtspHost = source.url ? new URL(source.url).hostname : ''; } catch { /* half-typed url */ }
-  const patch = (p: Partial<NonNullable<CameraSourceConfig['control']>>) =>
-    onChange({ control: { vendor: 'hikvision', ...control, ...p } });
-  const field = 'min-w-0 rounded bg-surface-input px-1 py-0.5 text-content';
+  const patch = (p: Partial<Control>) => setDraft((d) => ({ vendor: 'hikvision', ...d, ...p }));
+  const dirty = JSON.stringify(draft ?? null) !== JSON.stringify(saved ?? null);
+  const save = () => {
+    onChange({ control: draft });
+    if (draft) void refresh({ ...source, control: draft });
+  };
+  const field = 'min-w-0 rounded bg-surface-input px-1.5 py-1 text-[11px] text-content';
 
   return (
     <div className="mt-1.5 border-t border-subtle pt-1.5 text-[10px] text-content-secondary">
       <label className="flex items-center gap-1" title={t('camera.CameraSourceMenu.cameraControlTip')}>
         {t('camera.CameraSourceMenu.cameraControl')}
         <select
-          value={control?.vendor ?? 'none'}
-          onChange={(e) => onChange({ control: e.target.value === 'hikvision' ? { vendor: 'hikvision', ...control } : undefined })}
+          value={draft?.vendor ?? 'none'}
+          onChange={(e) => {
+            if (e.target.value === 'hikvision') { patch({}); return; }
+            setDraft(undefined);
+            onChange({ control: undefined }); // switching control off needs no check
+          }}
           className={field}
         >
           <option value="none">{t('camera.CameraSourceMenu.cameraControlNone')}</option>
           <option value="hikvision">Hikvision (ISAPI)</option>
         </select>
       </label>
-      {control && (
+      {draft && (
         <>
-          <div className="mt-1 grid grid-cols-[1fr_4rem_3rem] gap-1">
+          <div className="mt-1 grid grid-cols-[1fr_4.5rem_3.5rem] gap-1">
             <input
-              value={control.host ?? ''}
+              value={draft.host ?? ''}
               onChange={(e) => patch({ host: e.target.value || undefined })}
               placeholder={rtspHost || t('camera.CameraSourceMenu.cameraHost')}
               title={t('camera.CameraSourceMenu.cameraHostTip')}
@@ -308,7 +329,7 @@ function ControlSettings({ source, onChange }: {
             />
             <input
               type="number"
-              value={control.port ?? ''}
+              value={draft.port ?? ''}
               onChange={(e) => patch({ port: e.target.value ? Number(e.target.value) : undefined })}
               placeholder="80"
               title={t('camera.CameraSourceMenu.httpPort')}
@@ -317,7 +338,7 @@ function ControlSettings({ source, onChange }: {
             <input
               type="number"
               min={1}
-              value={control.channel ?? ''}
+              value={draft.channel ?? ''}
               onChange={(e) => patch({ channel: e.target.value ? Number(e.target.value) : undefined })}
               placeholder="1"
               title={t('camera.CameraSourceMenu.cameraChannel')}
@@ -326,7 +347,7 @@ function ControlSettings({ source, onChange }: {
           </div>
           <div className="mt-1 grid grid-cols-2 gap-1">
             <input
-              value={control.username ?? ''}
+              value={draft.username ?? ''}
               onChange={(e) => patch({ username: e.target.value || undefined })}
               placeholder={t('camera.CameraSourceMenu.userFromRtsp')}
               className={field}
@@ -334,29 +355,49 @@ function ControlSettings({ source, onChange }: {
             />
             <input
               type="password"
-              value={control.password ?? ''}
+              value={draft.password ?? ''}
               onChange={(e) => patch({ password: e.target.value || undefined })}
+              onKeyDown={(e) => { if (e.key === 'Enter' && dirty) save(); }}
               placeholder={t('camera.CameraSourceMenu.passwordFromRtsp')}
               className={field}
               autoComplete="new-password"
             />
           </div>
-          <div className="mt-1.5">
-            <CameraControlBar source={source} />
+          <div className="mt-1.5 flex items-center gap-2">
+            <button
+              onClick={save}
+              disabled={!dirty}
+              className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-blue-500 disabled:opacity-40"
+            >{t('camera.CameraSourceMenu.saveAndCheck')}</button>
+            {dirty && <span className="text-amber-400">{t('camera.CameraSourceMenu.notSavedYet')}</span>}
           </div>
+          {saved && !dirty && (
+            <div className="mt-1.5">
+              <CameraControlBar source={source} />
+            </div>
+          )}
         </>
       )}
     </div>
   );
 }
 
+/**
+ * The menu is drawn over the whole window, not inside the video panel: inside it, a short
+ * or narrow panel cut the lower feeds off with no way to scroll to them.
+ */
 function Shell({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
-  return (
+  return createPortal(
     <>
-      <div className="fixed inset-0 z-30" onClick={onClose} />
-      <div className="absolute right-2 top-9 z-40 w-96 max-w-[calc(100vw-1rem)] max-h-[calc(100vh-6rem)] overflow-y-auto overflow-x-hidden rounded-xl border border-default bg-surface-solid p-3 shadow-xl">
-        {children}
+      <div className="fixed inset-0 z-[60] bg-black/30" onClick={onClose} />
+      <div className="fixed right-3 top-14 z-[61] flex max-h-[calc(100vh-4.5rem)] w-[28rem] max-w-[calc(100vw-1.5rem)] flex-col rounded-xl border border-default bg-surface-solid shadow-xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-subtle px-3 py-2">
+          <span className="text-xs font-medium text-content">{t('camera.CameraSourceMenu.title')}</span>
+          <button onClick={onClose} className="text-content-tertiary hover:text-content" aria-label={t('camera.CameraSourceMenu.close')}>✕</button>
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden p-3">{children}</div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }

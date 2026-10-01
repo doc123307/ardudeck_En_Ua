@@ -4,7 +4,8 @@
  * camera never offers a white light it does not have.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { controlKey, useCameraControlStore } from '../../stores/camera-control-store';
 import { Loader2, Moon, Sun, SunMoon } from 'lucide-react';
 import type {
   CameraControlAction, CameraControlState, CameraSourceConfig, DayNightMode, SupplementLightMode,
@@ -42,36 +43,24 @@ const OFF = 'text-content-secondary hover:bg-surface-raised';
 
 export function CameraControlBar({ source, compact = false }: { source: CameraSourceConfig; compact?: boolean }) {
   const updateSource = useCameraStore((s) => s.updateSource);
-  const [state, setState] = useState<CameraControlState | null>(null);
-  const [busy, setBusy] = useState(false);
   const hasControl = source.control?.vendor === 'hikvision';
   const quality = source.kind === 'rtsp' ? streamQuality(source.url) : null;
+  // Shared with every other view of this camera, so it is asked once, not once per widget.
+  const key = controlKey(source);
+  const entry = useCameraControlStore((s) => s.entries[source.id]);
+  const current = entry?.key === key ? entry : undefined;
+  const state: CameraControlState | null = current?.state ?? null;
+  const busy = current?.busy ?? false;
+  const ensure = useCameraControlStore((s) => s.ensure);
+  const refresh = useCameraControlStore((s) => s.refresh);
+  const applyAction = useCameraControlStore((s) => s.apply);
 
-  // Re-read whenever the address or account changes, not on every label edit.
-  const controlKey = JSON.stringify([source.control, source.url?.replace(/\/[^/]*$/, '')]);
-  const [retry, setRetry] = useState(0);
   useEffect(() => {
-    if (!hasControl) { setState(null); return; }
-    let cancelled = false;
-    setBusy(true);
-    // Debounced: the address and account are typed into the source menu a key at a time.
-    const timer = setTimeout(() => {
-      void window.electronAPI.cameraControlState(source).then((s) => {
-        if (!cancelled) { setState(s); setBusy(false); }
-      });
-    }, 600);
-    return () => { cancelled = true; clearTimeout(timer); };
+    if (hasControl) ensure(source);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasControl, controlKey, retry]);
+  }, [hasControl, key]);
 
-  const apply = useCallback(async (action: CameraControlAction) => {
-    setBusy(true);
-    try {
-      setState(await window.electronAPI.cameraControlSet(source, action));
-    } finally {
-      setBusy(false);
-    }
-  }, [source]);
+  const apply = (action: CameraControlAction) => applyAction(source, action);
 
   const setQuality = (q: StreamQuality) => {
     if (source.url && q !== quality) updateSource(source.id, { url: withStreamQuality(source.url, q) });
@@ -138,7 +127,7 @@ export function CameraControlBar({ source, compact = false }: { source: CameraSo
           </span>
           {!busy && (
             <button
-              onClick={() => setRetry((n) => n + 1)}
+              onClick={() => void refresh(source)}
               className="rounded border border-subtle px-1.5 py-0.5 text-[10px] text-content-secondary hover:text-content"
             >{t('camera.CameraControlBar.retry')}</button>
           )}

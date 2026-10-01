@@ -104,6 +104,8 @@ export type SupplementLightMode = 'irLight' | 'colorVuWhiteLight' | 'eventIntell
 export interface CameraControlState {
   ok: boolean;
   error?: string;
+  /** The camera rejected the account (or locked it): do not try again without a change. */
+  authFailed?: boolean;
   dayNight?: DayNightMode;
   dayNightOptions?: DayNightMode[];
   light?: SupplementLightMode;
