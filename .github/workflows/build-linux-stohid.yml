@@ -12,6 +12,10 @@ on:
         description: 'Tag to build and attach the packages to (e.g. v0.1.2-0.3). Drafts work too.'
         required: true
         type: string
+      ref:
+        description: 'Commit or branch to build; defaults to the tag itself.'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -22,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.release_tag }}
+          ref: ${{ inputs.ref || inputs.release_tag }}
 
       - uses: pnpm/action-setup@v4
 

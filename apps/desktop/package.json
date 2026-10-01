@@ -203,6 +203,7 @@
     "afterPack": "./afterPack.cjs",
     "afterSign": "./scripts/notarize.cjs",
     "linux": {
+      "executableName": "stohid",
       "icon": "resources/icon.png",
       "category": "Utility",
       "target": [
