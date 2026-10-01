@@ -256,6 +256,16 @@ function SourceRow({ source, selected, onSelect, onChange, onRemove }: {
           {t('camera.CameraSourceMenu.lowLatency')}
         </label>
       </div>
+      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-content-secondary">
+        <label className="flex items-center gap-1" title={t('camera.CameraSourceMenu.mirrorTip')}>
+          <input type="checkbox" checked={source.mirror ?? false} onChange={(e) => onChange({ mirror: e.target.checked || undefined })} className="accent-blue-500" />
+          {t('camera.CameraSourceMenu.mirror')}
+        </label>
+        <label className="flex items-center gap-1" title={t('camera.CameraSourceMenu.rotate180Tip')}>
+          <input type="checkbox" checked={source.rotate180 ?? false} onChange={(e) => onChange({ rotate180: e.target.checked || undefined })} className="accent-blue-500" />
+          {t('camera.CameraSourceMenu.rotate180')}
+        </label>
+      </div>
       {source.kind === 'rtsp' && <ControlSettings source={source} onChange={onChange} />}
     </div>
   );

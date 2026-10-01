@@ -432,6 +432,11 @@
     "wind_store": {
       "windDataUnavailable": "Wind data unavailable",
       "windFetchFailed": "Wind fetch failed"
+    },
+    "relay_store": {
+      "lowBeam": "Low beam",
+      "markerLights": "Marker lights",
+      "output": "Output {{n}}"
     }
   }
 }

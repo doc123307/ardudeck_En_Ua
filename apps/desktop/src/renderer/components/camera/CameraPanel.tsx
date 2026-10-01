@@ -20,6 +20,7 @@ import { useCameraStore } from '../../stores/camera-store';
 import type { OsdLayers, CameraRenderMode, CameraSourceConfig } from '../../../shared/camera-types';
 import { CameraView } from './CameraView';
 import { CameraControlBar, hasCameraControls } from './CameraControlBar';
+import { RelayButtons } from '../vehicle-outputs/RelayButtons';
 import { SyntheticVisionView } from './SyntheticVisionView';
 import { CameraSourceMenu } from './CameraSourceMenu';
 import { GimbalPad } from './GimbalPad';
@@ -386,8 +387,9 @@ export function CameraPanel() {
       </div>
 
       {/* Gimbal footer — live feed only (synthetic vision has no physical mount) */}
-      {(showGimbal || showFeedControls) && (
+      {(showGimbal || showFeedControls || targetVehicle) && (
         <div className="flex shrink-0 flex-wrap items-center justify-center gap-3 border-t border-subtle bg-surface px-2 py-1.5">
+          {targetVehicle && <RelayButtons vehicleKey={targetKey} compact />}
           {showFeedControls && liveSource && <CameraControlBar source={liveSource} />}
           {showGimbal && <GimbalPad vehicleKey={targetKey} />}
         </div>

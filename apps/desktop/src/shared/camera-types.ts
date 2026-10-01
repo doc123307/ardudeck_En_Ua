@@ -67,6 +67,10 @@ export interface CameraSourceConfig {
   preset?: string;
   /** Image controls over the camera's own HTTP API (day/night, IR, white light). */
   control?: CameraControlConfig;
+  /** Show the picture mirrored left-right, like a rear-view mirror. */
+  mirror?: boolean;
+  /** Turn the picture upside down, for a camera mounted inverted. */
+  rotate180?: boolean;
 }
 
 /**

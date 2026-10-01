@@ -188,6 +188,9 @@ import {
   deserializeGimbalDeviceAttitudeStatus,
   GIMBAL_MANAGER_INFORMATION_ID,
   deserializeGimbalManagerInformation,
+  RELAY_STATUS_ID,
+  RELAY_STATUS_MAX_LENGTH,
+  deserializeRelayStatus,
 } from '@ardudeck/mavlink-ts';
 import { LogDownloadManager, type LogListEntry } from './mavlink-log/index.js';
 import { classifyStream, classifyDatagrams } from './link-doctor/stream-classifier.js';
@@ -2866,6 +2869,20 @@ function parseTelemetry(mainWindow: BrowserWindow, packet: MAVLinkPacket): void 
       } catch { /* malformed — ignore */ }
       break;
     }
+    case RELAY_STATUS_ID: {
+      // The flight controller's own view of its relays, so a light switched from the
+      // transmitter shows as on here too.
+      try {
+        // MAVLink 2 trims trailing zero bytes: with every relay off the frame arrives
+        // short, so pad it back to the full 8 bytes before reading.
+        const full = new Uint8Array(RELAY_STATUS_MAX_LENGTH);
+        full.set(payload.subarray(0, RELAY_STATUS_MAX_LENGTH));
+        const r = deserializeRelayStatus(full);
+        const vehicleKey = connectionRegistry.getActiveVehicleKey() ?? parseVehicleKey;
+        safeSend(mainWindow, IPC_CHANNELS.RELAY_STATUS, { vehicleKey, on: r.on, present: r.present });
+      } catch { /* malformed — ignore */ }
+      break;
+    }
     case GIMBAL_MANAGER_INFORMATION_ID: {
       try {
         const g = deserializeGimbalManagerInformation(payload);
@@ -4844,6 +4861,16 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
           return await sendCommandLongToVehicle(vehicleKey, 20, {});
         case 'takeoff':
           return await sendCommandLongToVehicle(vehicleKey, 22, { param7: cmd.altitude });
+        case 'relay': {
+          // MAV_CMD_DO_SET_RELAY (181). Then ask for RELAY_STATUS (MAV_CMD_REQUEST_MESSAGE 512)
+          // so the button reflects the confirmed state without waiting for the next report.
+          const ok = await sendCommandLongToVehicle(vehicleKey, 181, { param1: cmd.instance, param2: cmd.on ? 1 : 0 });
+          void sendCommandLongToVehicle(vehicleKey, 512, { param1: 376 }).catch(() => false);
+          return ok;
+        }
+        case 'message-interval':
+          // MAV_CMD_SET_MESSAGE_INTERVAL (511); interval in microseconds, 0 = default, -1 = off.
+          return await sendCommandLongToVehicle(vehicleKey, 511, { param1: cmd.messageId, param2: cmd.intervalUs });
         case 'setmode': {
           const armedBit = lastReportedArmed ? 128 : 0;
           return await sendCommandLongToVehicle(vehicleKey, 176, { param1: 1 | armedBit, param2: cmd.customMode });

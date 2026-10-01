@@ -206,6 +206,11 @@ const api = {
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_GIMBAL_COMMAND, vehicleKey, cmd),
   cameraCameraCommand: (vehicleKey: string, cmd: CameraCommand): Promise<boolean> =>
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CAMERA_COMMAND, vehicleKey, cmd),
+  onRelayStatus: (callback: (status: { vehicleKey: string; on: number; present: number }) => void) => {
+    const handler = (_: unknown, status: { vehicleKey: string; on: number; present: number }) => callback(status);
+    ipcRenderer.on(IPC_CHANNELS.RELAY_STATUS, handler);
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.RELAY_STATUS, handler);
+  },
   cameraControlState: (source: CameraSourceConfig): Promise<CameraControlState> =>
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CONTROL_STATE, source),
   cameraControlSet: (source: CameraSourceConfig, action: CameraControlAction): Promise<CameraControlState> =>

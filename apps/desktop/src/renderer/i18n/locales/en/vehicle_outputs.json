@@ -1,0 +1,25 @@
+{
+  "vehicle_outputs": {
+    "RelayButtons": {
+      "state_on": "on (confirmed by the vehicle)",
+      "state_off": "off (confirmed by the vehicle)",
+      "state_pending": "waiting for the vehicle to confirm",
+      "state_failed": "the vehicle did not confirm the command",
+      "state_absent": "this relay is not set up on the flight controller",
+      "state_unknown": "no state from the vehicle",
+      "configure": "Set up output buttons",
+      "outputs": "Vehicle outputs",
+      "howItWorks": "Each button switches a flight controller relay (MAV_CMD_DO_SET_RELAY). Relays on a CAN node are set up on the flight controller (RELAYn_FUNCTION / RELAYn_PIN). A button lights only when the vehicle reports the relay on, so switching from the transmitter shows here too.",
+      "relayNumberTip": "Relay number on the flight controller (RELAY1 = 1)",
+      "kindToggle": "Switch",
+      "kindMomentary": "While held",
+      "addOutput": "Add output",
+      "color_white": "White",
+      "color_amber": "Amber",
+      "color_red": "Red",
+      "color_ir": "IR",
+      "color_green": "Green",
+      "color_blue": "Blue"
+    }
+  }
+}

@@ -100,7 +100,11 @@
       "httpPort": "HTTP-порт веб-интерфейса камеры (по умолчанию 80)",
       "cameraChannel": "Канал камеры (1 для одной камеры)",
       "userFromRtsp": "логин (из RTSP)",
-      "passwordFromRtsp": "пароль (из RTSP)"
+      "passwordFromRtsp": "пароль (из RTSP)",
+      "mirror": "Зеркально",
+      "mirrorTip": "Показывать изображение зеркально, как в зеркале заднего вида",
+      "rotate180": "Повернуть на 180°",
+      "rotate180Tip": "Для камеры, установленной вверх ногами"
     },
     "CameraSourceSwitch": {
       "show": "Показать {{label}}"
@@ -113,7 +117,10 @@
       "theFeedStoppedDeliveringFramesRetrying": "Источник перестал присылать кадры. Повторяем автоматически; переподключение устройства тоже помогает.",
       "noVideo": "Нет видео",
       "reconnectNow": "Переподключить",
-      "noUrl": "нет URL"
+      "noUrl": "нет URL",
+      "zoomIn": "Приблизить (или колесо мыши)",
+      "zoomOut": "Отдалить",
+      "zoomReset": "Вернуться ко всему кадру"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "Подвес управляется с RC, управляйте им с пульта",

@@ -386,7 +386,8 @@
       "waypoints": "Путевые точки",
       "altitudeProfile": "Профиль высоты",
       "sitlEnvironment": "Окружение SITL",
-      "sitlFailures": "Отказы SITL"
+      "sitlFailures": "Отказы SITL",
+      "vehicleOutputs": "Выходы борта"
     },
     "takeoff_strategies": {
       "autoTakeoff": "Автовзлёт…",

@@ -100,7 +100,11 @@
       "httpPort": "HTTP port of the camera web interface (80 by default)",
       "cameraChannel": "Camera channel (1 for a single camera)",
       "userFromRtsp": "user (from RTSP)",
-      "passwordFromRtsp": "password (from RTSP)"
+      "passwordFromRtsp": "password (from RTSP)",
+      "mirror": "Mirror",
+      "mirrorTip": "Show the picture mirrored left-right, like a rear-view mirror",
+      "rotate180": "Rotate 180°",
+      "rotate180Tip": "For a camera mounted upside down"
     },
     "CameraSourceSwitch": {
       "show": "Show {{label}}"
@@ -113,7 +117,10 @@
       "theFeedStoppedDeliveringFramesRetrying": "The feed stopped delivering frames. Retrying automatically; replugging the device also recovers it.",
       "noVideo": "No video",
       "reconnectNow": "Reconnect now",
-      "noUrl": "no url"
+      "noUrl": "no url",
+      "zoomIn": "Zoom in (or mouse wheel)",
+      "zoomOut": "Zoom out",
+      "zoomReset": "Back to the whole picture"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "RC-driven mount, control it from your transmitter",

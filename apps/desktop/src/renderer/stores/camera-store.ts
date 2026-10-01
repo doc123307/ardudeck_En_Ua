@@ -65,6 +65,8 @@ interface CameraState {
   engineStatus: MediaEngineStatus | null;
   /** Bumped by the Reconnect button; the player restarts that feed when its count changes. */
   reconnectRequests: Record<string, number>;
+  /** Digital zoom per source: factor and the frame point (0..1) shown at the centre. */
+  zoom: Record<string, CameraZoom>;
 
   // Config actions
   /** Rebind persisted per-vehicle config from stale vehicle keys (transport id rotates on reconnect) to live ones by sysid suffix. */
@@ -92,6 +94,20 @@ interface CameraState {
   recordGimbalInfo: (info: GimbalInfoIpc) => void;
   setEngineStatus: (status: MediaEngineStatus) => void;
   requestReconnect: (sourceId: string) => void;
+  setZoom: (sourceId: string, zoom: CameraZoom | null) => void;
+}
+
+export interface CameraZoom { z: number; cx: number; cy: number }
+
+/** Highest digital zoom: past this an IP camera's pixels are just blocks. */
+export const MAX_ZOOM = 8;
+
+/** Keeps the view inside the frame: the centre can only move as far as the zoom leaves room. */
+export function clampZoom(zoom: CameraZoom): CameraZoom | null {
+  const z = Math.min(MAX_ZOOM, Math.max(1, zoom.z));
+  if (z <= 1.001) return null;
+  const half = 0.5 / z;
+  return { z, cx: Math.min(1 - half, Math.max(half, zoom.cx)), cy: Math.min(1 - half, Math.max(half, zoom.cy)) };
 }
 
 export const useCameraStore = create<CameraState>()(
@@ -114,6 +130,7 @@ export const useCameraStore = create<CameraState>()(
       sessions: {},
       videoStreams: {},
       reconnectRequests: {},
+      zoom: {},
       gimbalAttitude: {},
       gimbalInfo: {},
       engineStatus: null,
@@ -221,6 +238,13 @@ export const useCameraStore = create<CameraState>()(
         set((s) => ({ videoStreams: { ...s.videoStreams, [info.vehicleKey]: info } })),
       requestReconnect: (sourceId) =>
         set((s) => ({ reconnectRequests: { ...s.reconnectRequests, [sourceId]: (s.reconnectRequests[sourceId] ?? 0) + 1 } })),
+      setZoom: (sourceId, zoom) =>
+        set((s) => {
+          const next = { ...s.zoom };
+          const clamped = zoom ? clampZoom(zoom) : null;
+          if (clamped) next[sourceId] = clamped; else delete next[sourceId];
+          return { zoom: next };
+        }),
       recordGimbalAttitude: (att) =>
         set((s) => ({ gimbalAttitude: { ...s.gimbalAttitude, [att.vehicleKey]: att } })),
       recordGimbalInfo: (info) =>

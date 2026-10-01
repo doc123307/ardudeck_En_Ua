@@ -68,6 +68,19 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - Digest auth is implemented without extra dependencies, and settings are changed read-modify-write so
     installer thresholds survive.
   - Code: `src/main/media/hikvision-isapi.ts`, `CameraControlBar.tsx`.
+- **Mirror and 180° rotation per feed, and digital zoom.**
+  - Mirror suits a rear-view camera.
+  - Zoom works with the wheel toward the cursor, with drag-to-pan and −/+/1:1 buttons.
+  - Click-to-point maps back through zoom and flips, so the gimbal points at what is under the cursor.
+  - Code: `view-transform.ts`.
+- **Vehicle output buttons (lights, marker lights, IR...).** They drive the flight controller's relays with
+  `MAV_CMD_DO_SET_RELAY`, so relays on a DroneCAN node work through the flight controller.
+  - A button lights only from `RELAY_STATUS` reported by the vehicle (requested with
+    `SET_MESSAGE_INTERVAL`). It blinks while unconfirmed and marks an unconfirmed click or an
+    unconfigured relay.
+  - The button set is configurable.
+  - Shown under the Vision panel and as a dock panel "Vehicle outputs".
+  - `RELAY_STATUS` is padded before parsing, since MAVLink 2 trims its trailing zero bytes.
 - **HD/SD switch for RTSP feeds.** Switches main and sub stream by rewriting the url:
   - Hikvision `/Streaming/Channels/101` ↔ `102` and `/h264/ch1/main|sub/`;
   - Dahua `subtype=0|1`.
@@ -154,6 +167,9 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - підсвітка: ІЧ, біле світло, розумна, вимк. Показуються лише ті режими, які підтримує камера.
 
   Логін і адреса типово беруться з RTSP-посилання.
+- **Дзеркало й поворот на 180°** для кожної камери, **цифровий зум** (коліщатко, перетягування, кнопки −/+/1:1).
+- **Кнопки виходів борту** (світло, габарити, ІЧ…) через реле польотного контролера (`DO_SET_RELAY`, у тому
+  числі реле на DroneCAN-вузлі). Кнопка світиться лише за станом, який повідомив борт (`RELAY_STATUS`).
 - **Перемикач HD/SD** для RTSP: основний ↔ додатковий потік (Hikvision `101` ↔ `102`, Dahua `subtype`).
 
 ### 4. Виправлення помилок

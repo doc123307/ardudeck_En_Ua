@@ -100,7 +100,11 @@
       "httpPort": "HTTP-порт вебінтерфейсу камери (типово 80)",
       "cameraChannel": "Канал камери (1 для однієї камери)",
       "userFromRtsp": "логін (з RTSP)",
-      "passwordFromRtsp": "пароль (з RTSP)"
+      "passwordFromRtsp": "пароль (з RTSP)",
+      "mirror": "Дзеркально",
+      "mirrorTip": "Показувати зображення дзеркально, як у дзеркалі заднього виду",
+      "rotate180": "Повернути на 180°",
+      "rotate180Tip": "Для камери, встановленої догори дриґом"
     },
     "CameraSourceSwitch": {
       "show": "Показати {{label}}"
@@ -113,7 +117,10 @@
       "theFeedStoppedDeliveringFramesRetrying": "Джерело перестало надсилати кадри. Повторюємо автоматично; перепідключення пристрою теж допомагає.",
       "noVideo": "Немає відео",
       "reconnectNow": "Перепідключити",
-      "noUrl": "немає URL"
+      "noUrl": "немає URL",
+      "zoomIn": "Наблизити (або коліщатко миші)",
+      "zoomOut": "Віддалити",
+      "zoomReset": "Повернутися до всього кадру"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "Підвіс керується з RC, керуйте ним з пульта",

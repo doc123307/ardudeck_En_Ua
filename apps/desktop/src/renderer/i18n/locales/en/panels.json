@@ -386,7 +386,8 @@
       "waypoints": "Waypoints",
       "altitudeProfile": "Altitude Profile",
       "sitlEnvironment": "SITL Environment",
-      "sitlFailures": "SITL Failures"
+      "sitlFailures": "SITL Failures",
+      "vehicleOutputs": "Vehicle outputs"
     },
     "takeoff_strategies": {
       "autoTakeoff": "Auto Takeoff…",

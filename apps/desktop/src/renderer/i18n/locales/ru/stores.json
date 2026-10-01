@@ -432,6 +432,11 @@
     "wind_store": {
       "windDataUnavailable": "Данные о ветре недоступны",
       "windFetchFailed": "Не удалось получить данные о ветре"
+    },
+    "relay_store": {
+      "lowBeam": "Ближний свет",
+      "markerLights": "Габариты",
+      "output": "Выход {{n}}"
     }
   }
 }

@@ -14,6 +14,7 @@ export { NtripPanel } from './NtripPanel';
 export { PreflightCheckCard } from '../prearm/PreflightCheckCard';
 export { CameraPanel } from '../camera/CameraPanel';
 export { JoystickPanel } from './JoystickPanel';
+export { VehicleOutputsPanel } from '../vehicle-outputs/VehicleOutputsPanel';
 
 // Re-export mission panels for use in telemetry dashboard
 // Note: MissionMapPanel not exported here - mission data now integrated into MapPanel
@@ -41,6 +42,7 @@ export const PANEL_COMPONENTS = {
   messages: { component: 'MessagesPanel', get title() { return t('panels.index.messages'); } },
   safetyMonitor: { component: 'SafetyMonitorPanel', get title() { return t('panels.index.safetyMonitor'); } },
   joystick: { component: 'JoystickPanel', get title() { return t('panels.index.joystick'); } },
+  vehicleOutputs: { component: 'VehicleOutputsPanel', get title() { return t('panels.index.vehicleOutputs'); } },
   rtk: { component: 'NtripPanel', title: 'RTK / NTRIP' },
   preflightCheck: { component: 'PreflightCheckCard', get title() { return t('panels.index.preFlightChecks'); } },
   // Mission panels (for monitoring during flight)
@@ -76,6 +78,7 @@ import { PreflightCheckCard as PreflightCheckCardC } from '../prearm/PreflightCh
 import { t } from '../../i18n';
 import { CameraPanel as CameraPanelC } from '../camera/CameraPanel';
 import { JoystickPanel as JoystickPanelC } from './JoystickPanel';
+import { VehicleOutputsPanel as VehicleOutputsPanelC } from '../vehicle-outputs/VehicleOutputsPanel';
 import { WaypointTablePanel as WaypointTablePanelC } from '../mission/WaypointTablePanel';
 import { AltitudeProfilePanel as AltitudeProfilePanelC } from '../mission/AltitudeProfilePanel';
 import { SitlEnvironmentDockPanel as SitlEnvironmentDockPanelC } from './SitlEnvironmentDockPanel';
@@ -95,6 +98,7 @@ export const PANEL_RENDERERS: Partial<Record<PanelId, ComponentType>> = {
   messages: MessagesPanelC,
   safetyMonitor: SafetyMonitorPanelC,
   joystick: JoystickPanelC,
+  vehicleOutputs: VehicleOutputsPanelC,
   rtk: NtripPanelC,
   preflightCheck: PreflightCheckCardC,
   waypoints: WaypointTablePanelC,

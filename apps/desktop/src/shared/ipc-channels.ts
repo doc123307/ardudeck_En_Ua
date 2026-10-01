@@ -950,6 +950,8 @@ export const IPC_CHANNELS = {
   CAMERA_GIMBAL_COMMAND: 'camera:gimbal-command',
   /** Renderer → main: camera command (zoom/focus, CameraCommand) for a vehicle. */
   CAMERA_CAMERA_COMMAND: 'camera:camera-command',
+  /** Main → renderer: RELAY_STATUS from the flight controller ({ vehicleKey, on, present } bitmasks). */
+  RELAY_STATUS: 'vehicle:relay-status',
   /** Renderer → main: read an IP camera's image controls (CameraSourceConfig → CameraControlState). */
   CAMERA_CONTROL_STATE: 'camera:control-state',
   /** Renderer → main: change one image control (day/night, supplement light); returns the new state. */
@@ -1093,7 +1095,11 @@ export type VehicleCommand =
   | { kind: 'rtl' }
   | { kind: 'takeoff'; altitude: number }
   | { kind: 'setmode'; customMode: number }
-  | { kind: 'mission-start' };
+  | { kind: 'mission-start' }
+  /** MAV_CMD_DO_SET_RELAY: `instance` is ArduPilot's relay number minus one (RELAY1 = 0). */
+  | { kind: 'relay'; instance: number; on: boolean }
+  /** MAV_CMD_SET_MESSAGE_INTERVAL for one message id. */
+  | { kind: 'message-interval'; messageId: number; intervalUs: number };
 
 /** A group intent submitted to an orchestration server (see `COMMS_SUBMIT_INTENT`). */
 export interface OrchestrationIntentIpc {

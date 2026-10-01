@@ -10,7 +10,8 @@
  *  ever speaks getUserMedia or WHEP.
  */
 
-import { useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
+import { flipTransform, panBy, viewToFrame, zoomAround, zoomTransform } from './view-transform';
 import type { CameraSourceConfig, OsdLayers } from '../../../shared/camera-types';
 import type { FleetVehicle } from '../../hooks/useFleet';
 import { useCameraStore } from '../../stores/camera-store';
@@ -39,7 +40,52 @@ interface CameraViewProps {
 
 export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onError, onLive, onSignalLost }: CameraViewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const viewRef = useRef<HTMLDivElement>(null);
   const { status, error, health } = useCameraStream(source, videoRef, onError, onLive, onSignalLost);
+  const zoom = useCameraStore((s) => s.zoom[source.id] ?? null);
+  const setZoom = useCameraStore((s) => s.setZoom);
+  const drag = useRef<{ x: number; y: number; moved: boolean } | null>(null);
+  const suppressClick = useRef(false);
+
+  // Wheel zooms toward the cursor. Native listener: React's wheel handler is passive and
+  // cannot stop the page behind from scrolling.
+  useEffect(() => {
+    const el = viewRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+      const current = useCameraStore.getState().zoom[source.id] ?? null;
+      setZoom(source.id, zoomAround(current, px, py, e.deltaY < 0 ? 1.25 : 0.8));
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [source.id, setZoom]);
+
+  // Drag pans while zoomed; a drag must not also count as a click-to-point.
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (!zoom || e.button !== 0) return;
+    drag.current = { x: e.clientX, y: e.clientY, moved: false };
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const d = drag.current;
+    const el = viewRef.current;
+    if (!d || !zoom || !el || !e.buttons) return;
+    const rect = el.getBoundingClientRect();
+    const dx = (e.clientX - d.x) / rect.width;
+    const dy = (e.clientY - d.y) / rect.height;
+    if (!d.moved && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 4) return;
+    d.moved = true;
+    d.x = e.clientX;
+    d.y = e.clientY;
+    setZoom(source.id, panBy(zoom, dx, dy));
+  };
+  const onPointerUp = () => {
+    suppressClick.current = !!drag.current?.moved;
+    drag.current = null;
+  };
   const showStats = useCameraStore((s) => s.showStats);
   const gimbal = useCameraStore((s) => s.gimbalAttitude[source.vehicleKey]);
   const gimbalCfg = useCameraStore((s) => s.gimbalByVehicle[source.vehicleKey]);
@@ -76,6 +122,7 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
 
   // ---- Click to point gimbal at target -----------------------------------
   const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (suppressClick.current) { suppressClick.current = false; return; }
     // Grid tiles activate their vehicle on click; only the primary view points.
     if (!isPrimary) { onActivate?.(); return; }
     // Don't fire ROI when there's no commandable gimbal (RC-driven or off).
@@ -83,8 +130,10 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
     const pose = buildPose();
     if (!pose || !vehicle) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const u = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const v = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    // What is under the cursor in the camera's own image, through zoom and mirror.
+    const frame = viewToFrame((e.clientX - rect.left) / rect.width, (e.clientY - rect.top) / rect.height, zoom, source);
+    const u = frame.x * 2 - 1;
+    const v = frame.y * 2 - 1;
     // Ground AMSL under the vehicle = its AMSL minus AGL.
     const groundAmsl = gps.alt - position.relativeAlt;
     const hit = projectPixelToGround(pose, u, v, 0);
@@ -92,15 +141,45 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
     void window.electronAPI.cameraGimbalCommand(vehicle.key, {
       kind: 'point-roi', lat: hit.lat, lon: hit.lon, alt: groundAmsl, deviceId: gimbalCfg?.deviceId ?? 0,
     });
-  }, [isPrimary, onActivate, buildPose, vehicle, gps.alt, position.relativeAlt, gimbalCfg]);
+  }, [isPrimary, onActivate, buildPose, vehicle, gps.alt, position.relativeAlt, gimbalCfg, zoom, source]);
 
   return (
     <div
-      className="relative h-full w-full overflow-hidden bg-black"
+      ref={viewRef}
+      className={`group relative h-full w-full overflow-hidden bg-black ${zoom ? 'cursor-grab active:cursor-grabbing' : ''}`}
       onClick={handleClick}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
       title={isPrimary ? t('camera.CameraView.clickToPointGimbalAtTarget') : t('camera.CameraView.clickToMakeActive')}
     >
-      <video ref={videoRef} className="h-full w-full object-contain" muted playsInline autoPlay />
+      <div className="h-full w-full" style={{ transform: zoomTransform(zoom), transformOrigin: 'center' }}>
+        <video
+          ref={videoRef}
+          className="h-full w-full object-contain"
+          style={{ transform: flipTransform(source) }}
+          muted
+          playsInline
+          autoPlay
+        />
+      </div>
+
+      {/* Digital zoom: wheel or these buttons; only blows pixels up, so HD gives the most to zoom into. */}
+      <div
+        className={`absolute bottom-1 left-1 z-10 flex items-center gap-0.5 rounded bg-black/60 px-1 py-0.5 text-[10px] text-white transition-opacity ${zoom ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <button className="px-1 hover:text-blue-300" data-tip={t('camera.CameraView.zoomOut')}
+          onClick={() => setZoom(source.id, zoomAround(zoom, 0.5, 0.5, 0.8))}>−</button>
+        <span className="min-w-[2.5rem] text-center tabular-nums">×{(zoom?.z ?? 1).toFixed(1)}</span>
+        <button className="px-1 hover:text-blue-300" data-tip={t('camera.CameraView.zoomIn')}
+          onClick={() => setZoom(source.id, zoomAround(zoom, 0.5, 0.5, 1.25))}>+</button>
+        {zoom && (
+          <button className="ml-0.5 px-1 hover:text-blue-300" data-tip={t('camera.CameraView.zoomReset')}
+            onClick={() => setZoom(source.id, null)}>1:1</button>
+        )}
+      </div>
 
       <CameraOverlays
         vehicle={vehicle}
