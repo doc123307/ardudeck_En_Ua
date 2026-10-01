@@ -13,7 +13,7 @@ import {
 import type { EdgeTxScanResult } from '../../../shared/edgetx-types';
 import logoUrl from './hud-logo.png';
 import logoLightUrl from './hud-logo-light.png';
-import { MapContainer, TileLayer, Circle, Marker, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Circle, CircleMarker, useMap, useMapEvents } from 'react-leaflet';
 import {
   BatteryMedium, Zap, Fuel, MoveVertical, MoveRight, TrendingUp, Satellite, Home,
   Wind, Crosshair, Ruler, Thermometer, MapPin, SlidersHorizontal, Compass, X, BookOpen,
@@ -375,6 +375,37 @@ function FieldRecenter({ lat, lon }: { lat: number; lon: number }) {
 
 // ------------------------------------------------------------ tile bodies --
 
+// Mirrors the widget's stack(): EdgeTX line heights per font, and the px the preview draws them at.
+const FONT = { dbl: { h: 34, px: 30 }, mid: { h: 25, px: 21 }, std: { h: 17, px: 15 }, sml: { h: 13, px: 11 } } as const;
+type FontKey = keyof typeof FONT;
+const STACK_SUB: Array<[FontKey, FontKey?]> = [['dbl', 'std'], ['dbl', 'sml'], ['mid', 'std'], ['mid', 'sml'], ['dbl'], ['mid']];
+const STACK_ONE: Array<[FontKey, FontKey?]> = [['dbl'], ['mid']];
+
+function stack(h: number, withSub: boolean): { vy: number; vf: FontKey; sy: number | null; sf: FontKey } {
+  const top = 16;
+  const room = h - 18;
+  for (const [vf, sf] of withSub ? STACK_SUB : STACK_ONE) {
+    const vh = FONT[vf].h;
+    const sh = sf ? FONT[sf].h : 0;
+    if (vh + sh <= room) {
+      const vy = top + Math.floor((room - vh - sh) / 2);
+      return { vy, vf, sy: sf ? vy + vh : null, sf: sf ?? 'sml' };
+    }
+  }
+  return { vy: top, vf: 'mid', sy: null, sf: 'sml' };
+}
+
+let measureCtx: CanvasRenderingContext2D | null = null;
+/** First option that fits `maxW` at `font`, else the shortest; mirrors the widget's fitText(). */
+function fitText(maxW: number, font: FontKey, options: string[]): string {
+  measureCtx ??= document.createElement('canvas').getContext('2d');
+  if (!measureCtx) return options[options.length - 1]!;
+  measureCtx.font = `${FONT[font].px}px Roboto, system-ui, sans-serif`;
+  return options.find((o) => measureCtx!.measureText(o).width <= maxW) ?? options[options.length - 1]!;
+}
+
+const fontStyle = (f: FontKey, weight?: number) => ({ fontSize: FONT[f].px, lineHeight: `${FONT[f].h}px`, fontWeight: weight });
+
 function TileFrame({ t, caption, children }: { t: TileDef; caption: string; children?: React.ReactNode }) {
   return (
     <div style={{ position: 'absolute', left: t.x, top: t.y, width: t.w, height: t.h, background: C.surface, border: `1px solid ${C.gaugeEdge}`, overflow: 'hidden' }}>
@@ -384,11 +415,14 @@ function TileFrame({ t, caption, children }: { t: TileDef; caption: string; chil
   );
 }
 
-function NumericBody({ t, value, sub, color }: { t: TileDef; value: string; sub?: string; color?: string }) {
+function NumericBody({ t, value, sub, color }: { t: TileDef; value: string; sub?: React.ReactNode; color?: string }) {
+  const L = stack(t.h, sub != null);
   return (
     <>
-      <div style={{ position: 'absolute', left: 8, top: Math.max(18, t.h / 2 - 18), fontSize: 30, fontWeight: 700, color: color ?? C.text }}>{value}</div>
-      {sub && t.h >= 70 && <div style={{ position: 'absolute', left: 8, top: t.h - 26, fontSize: 12, color: C.text2, whiteSpace: 'nowrap' }}>{sub}</div>}
+      <div style={{ position: 'absolute', left: 8, top: L.vy, ...fontStyle(L.vf, 700), color: color ?? C.text }}>{value}</div>
+      {sub != null && L.sy != null && (
+        <div style={{ position: 'absolute', left: 8, top: L.sy, ...fontStyle(L.sf), color: C.text2, whiteSpace: 'nowrap' }}>{sub}</div>
+      )}
     </>
   );
 }
@@ -429,22 +463,28 @@ function TileBody({ t, data, cfg }: { t: TileDef; data: PreviewData; cfg: HudCfg
       }
       return (
         <TileFrame t={t} caption="BATTERY">
-          {fillPct != null ? (
-            <>
-              <div style={{ position: 'absolute', left: 8, top: 18, fontSize: 30, fontWeight: 700, color: vColor }}>{bigText}</div>
-              {pct != null && (
-                <div style={{ position: 'absolute', right: 8, top: 30, fontSize: 15, color: C.text2 }}>{data.voltV.toFixed(1)}V</div>
-              )}
-              <div style={{ position: 'absolute', left: 8, top: t.h - 34, width: t.w - 16, height: 8, background: C.gaugeBezel, border: `1px solid ${C.gaugeEdge}` }}>
-                <div style={{ width: `${fillPct}%`, height: '100%', background: vColor }} />
-              </div>
-              {t.h >= 80 && (
-                <div style={{ position: 'absolute', left: 8, top: t.h - 22, fontSize: 11, color: C.text2, whiteSpace: 'nowrap' }}>
-                  {cellV != null ? `${cellV.toFixed(2)}V/c  ` : ''}{data.currA.toFixed(0)}A  {data.mahUsed}mAh used
+          {fillPct != null ? (() => {
+            const L = stack(t.h - 12, true);
+            const vh = FONT[L.vf].h;
+            const cv = cellV != null ? `${cellV.toFixed(2)}V/c  ` : '';
+            const a = `${data.currA.toFixed(0)}A`;
+            return (
+              <>
+                <div style={{ position: 'absolute', left: 8, top: L.vy, ...fontStyle(L.vf, 700), color: vColor }}>{bigText}</div>
+                {pct != null && (
+                  <div style={{ position: 'absolute', right: 8, top: L.vy + vh - FONT.std.h, ...fontStyle('std'), color: C.text2 }}>{data.voltV.toFixed(1)}V</div>
+                )}
+                <div style={{ position: 'absolute', left: 8, top: L.vy + vh + 2, width: t.w - 16, height: 8, background: C.gaugeBezel, border: `1px solid ${C.gaugeEdge}` }}>
+                  <div style={{ width: `${fillPct}%`, height: '100%', background: vColor }} />
                 </div>
-              )}
-            </>
-          ) : (
+                {L.sy != null && (
+                  <div style={{ position: 'absolute', left: 8, top: L.sy + 12, ...fontStyle(L.sf), color: C.text2, whiteSpace: 'nowrap' }}>
+                    {fitText(t.w - 16, L.sf, [`${cv}${a}  ${data.mahUsed}mAh used`, `${cv}${a}  ${data.mahUsed}mAh`, `${cv}${a}`])}
+                  </div>
+                )}
+              </>
+            );
+          })() : (
             <NumericBody t={t} value={`${data.voltV.toFixed(1)}V`} color={vColor}
               sub={cellV != null ? `${cellV.toFixed(2)}V/cell  ${data.currA.toFixed(0)}A` : `${data.currA.toFixed(0)}A`} />
           )}
@@ -675,13 +715,12 @@ function TileBody({ t, data, cfg }: { t: TileDef; data: PreviewData; cfg: HudCfg
       const baseY = Math.min(t.h - 30, 58);
       return (
         <TileFrame t={t} caption="SIGNAL">
-          <NumericBody t={t} value={`${lq}%`} color={lqC} />
-          {t.h >= 70 && (
-            <div style={{ position: 'absolute', left: 8, top: t.h - 26, fontSize: 12 }}>
+          <NumericBody t={t} value={`${lq}%`} color={lqC} sub={(
+            <>
               <span style={{ color: C.success }}>-58 dBm</span>
               <span style={{ color: C.warnStrong, marginLeft: 10 }}>250mW</span>
-            </div>
-          )}
+            </>
+          )} />
           {Array.from({ length: 5 }, (_, i) => {
             const bh = 6 + i * 7;
             return (
@@ -2375,7 +2414,8 @@ export function RadioHudView() {
                   <FieldRecenter lat={mapCenter.lat} lon={mapCenter.lon} />
                   {mapCenter.lat !== 0 && (
                     <>
-                      <Marker position={[mapCenter.lat, mapCenter.lon]} />
+                      <CircleMarker center={[mapCenter.lat, mapCenter.lon]} radius={6}
+                        pathOptions={{ color: '#ffffff', weight: 2, fillColor: '#2dd4bf', fillOpacity: 1 }} />
                       {FIELD_MAP_SPANS.map((s) => (
                         <Circle key={s} center={[mapCenter.lat, mapCenter.lon]} radius={s}
                           pathOptions={{ color: '#2dd4bf', weight: 1, fillOpacity: 0.03 }} />

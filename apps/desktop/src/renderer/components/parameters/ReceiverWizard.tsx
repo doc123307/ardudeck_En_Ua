@@ -23,7 +23,7 @@ import {
   AlertTriangle,
   Loader2,
 } from 'lucide-react';
-import { PRIMARY_CHANNEL_COUNT, getChannelName, reorderChannels } from '../../utils/rc-channel-constants';
+import { PRIMARY_CHANNEL_COUNT, getChannelName } from '../../utils/rc-channel-constants';
 import { INAV_SERIALRX_PROVIDER_INDEX } from '../../utils/receiver-constants';
 
 // =============================================================================
@@ -103,7 +103,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
     updatePortFunction,
   } = useReceiverStore();
 
-  const displayChannels = React.useMemo(() => reorderChannels(channels, rxMap), [channels, rxMap]);
+  const displayChannels = channels;
 
   const [step, setStep] = useState<WizardStep>('select-rx');
   const [selectedRx, setSelectedRx] = useState<ReceiverOption | null>(null);
@@ -354,7 +354,7 @@ export default function ReceiverWizard({ isOpen, onClose, isInav }: ReceiverWiza
             <div className="space-y-4">
               <p className="text-sm text-content-secondary">Move your transmitter sticks to verify signal.</p>
 
-              {/* Primary sticks (reordered by rxMap) */}
+              {/* Primary sticks */}
               <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                 {displayChannels.slice(0, PRIMARY_CHANNEL_COUNT).map((value, i) => {
                   const base = channelBaseline[i] ?? 1500;

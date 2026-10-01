@@ -7,7 +7,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useMspTelemetryStore, setupMspTelemetryListeners } from '../../stores/msp-telemetry-store';
-import { PRIMARY_CHANNEL_COUNT, getChannelName, reorderChannels } from '../../utils/rc-channel-constants';
+import { PRIMARY_CHANNEL_COUNT, getChannelName } from '../../utils/rc-channel-constants';
 import { useReceiverStore } from '../../stores/receiver-store';
 import { useSettingsStore } from '../../stores/settings-store';
 import { formatAltitudeFromMeters, formatCapacityFromMah, formatVerticalSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
@@ -34,8 +34,7 @@ export function BetaflightDashboard() {
   const analog = useMspTelemetryStore((s) => s.analog);
   const status = useMspTelemetryStore((s) => s.status);
   const rc = useMspTelemetryStore((s) => s.rc);
-  const rxMap = useReceiverStore((s) => s.rxMap);
-  const displayRcChannels = useMemo(() => reorderChannels(rc.channels, rxMap), [rc.channels, rxMap]);
+  const displayRcChannels = rc.channels;
   const motors = useMspTelemetryStore((s) => s.motors);
   const gps = useMspTelemetryStore((s) => s.gps);
   const lastUpdate = useMspTelemetryStore((s) => s.lastUpdate);
