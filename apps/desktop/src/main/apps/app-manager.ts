@@ -105,8 +105,7 @@ export async function installApp(
   const needs = release?.minAppVersion;
   if (needs && compareSemver(app.getVersion(), needs) < 0) {
     throw new Error(
-      `${detail?.name ?? slug} needs STOHID ${needs} or newer (this is ${app.getVersion()}). ` +
-        'Update STOHID first.',
+      mt('main.apps_app_manager.needsNewerVersion', { name: detail?.name ?? slug, needs, current: app.getVersion() }),
     );
   }
 

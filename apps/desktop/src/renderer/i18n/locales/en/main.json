@@ -12,7 +12,8 @@
       "verifying": "Verifying {{slug}}...",
       "hashMismatchForTheDownloadWas": "Hash mismatch for {{slug}} - the download was corrupted or tampered with",
       "installing": "Installing {{slug}}...",
-      "installed": "{{name}} installed."
+      "installed": "{{name}} installed.",
+      "needsNewerVersion": "{{name}} needs app version {{needs}} or newer, this is {{current}}. It cannot be installed until a version that supports it is released."
     },
     "area_editor_window": {
       "ardudeckAreaEditor": "STOHID Area Editor"

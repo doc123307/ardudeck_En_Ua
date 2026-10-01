@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Download, Loader2, MonitorDown, RefreshCw, Trash2 } from 'lucide-react';
+import { AlertTriangle, Download, Loader2, MonitorDown, RefreshCw, Trash2, X } from 'lucide-react';
 import { useAppStore } from '../../stores/app-store';
 import { HangarAppCard } from './HangarAppCard';
 import { t } from '../../i18n';
@@ -13,8 +13,10 @@ import { t } from '../../i18n';
  * it there.
  */
 export function HangarApps({ mode }: { mode: 'browse' | 'installed' }) {
-  const { catalog, installed, loading, installing, progress, fetchCatalog, fetchInstalled, install, uninstall } =
-    useAppStore();
+  const {
+    catalog, installed, loading, installing, progress, error,
+    fetchCatalog, fetchInstalled, install, uninstall, clearError,
+  } = useAppStore();
 
   useEffect(() => {
     fetchInstalled();
@@ -76,6 +78,22 @@ export function HangarApps({ mode }: { mode: 'browse' | 'installed' }) {
           {t('modules.HangarApps.refresh')}
         </button>
       </div>
+
+      {/* Install and catalog failures used to land in the store with nothing rendering them,
+          so a refused install looked like a button that did nothing. */}
+      {error && (
+        <div role="alert" className="flex items-start gap-3 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2.5">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
+          <p className="flex-1 text-sm text-red-300">{error}</p>
+          <button
+            onClick={clearError}
+            aria-label={t('modules.HangarApps.dismiss')}
+            className="shrink-0 text-red-300/70 hover:text-red-200"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       {rows.map((a) => (
         <HangarAppCard

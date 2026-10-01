@@ -12,7 +12,8 @@
       "verifying": "Проверка {{slug}}...",
       "hashMismatchForTheDownloadWas": "Хеш {{slug}} не совпадает — загрузка повреждена или подделана",
       "installing": "Установка {{slug}}...",
-      "installed": "{{name}} установлен."
+      "installed": "{{name}} установлен.",
+      "needsNewerVersion": "«{{name}}» требует версии программы {{needs}} или новее, а у вас {{current}}. Установить его можно будет, когда выйдет версия с его поддержкой."
     },
     "area_editor_window": {
       "ardudeckAreaEditor": "Редактор участков «Стохід»"

@@ -12,7 +12,8 @@
       "verifying": "Перевірка {{slug}}...",
       "hashMismatchForTheDownloadWas": "Хеш {{slug}} не збігається — завантаження пошкоджене або підроблене",
       "installing": "Встановлення {{slug}}...",
-      "installed": "{{name}} встановлено."
+      "installed": "{{name}} встановлено.",
+      "needsNewerVersion": "«{{name}}» потребує версії програми {{needs}} або новішої, а у вас {{current}}. Встановити його можна буде, коли вийде версія з його підтримкою."
     },
     "area_editor_window": {
       "ardudeckAreaEditor": "Редактор ділянок «Стохід»"

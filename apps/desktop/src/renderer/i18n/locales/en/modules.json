@@ -21,13 +21,15 @@
       "noBuild": "No {{label}} build",
       "previous": "Previous",
       "next": "Next",
-      "unreleased": "unreleased"
+      "unreleased": "unreleased",
+      "buildAvailable": "{{label}} build available"
     },
     "HangarApps": {
       "installedApps": "Installed apps",
       "remove": "Remove",
       "apps": "Apps",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "dismiss": "Dismiss"
     },
     "ModuleDock": {
       "backToCargo": "Back to cargo",

@@ -21,13 +21,15 @@
       "noBuild": "Нет сборки для {{label}}",
       "previous": "Предыдущее",
       "next": "Следующее",
-      "unreleased": "не выпущено"
+      "unreleased": "не выпущено",
+      "buildAvailable": "Есть сборка для {{label}}"
     },
     "HangarApps": {
       "installedApps": "Установленные программы",
       "remove": "Удалить",
       "apps": "Программы",
-      "refresh": "Обновить"
+      "refresh": "Обновить",
+      "dismiss": "Закрыть"
     },
     "ModuleDock": {
       "backToCargo": "Назад к модулям",

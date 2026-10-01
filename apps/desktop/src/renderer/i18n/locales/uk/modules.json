@@ -21,13 +21,15 @@
       "noBuild": "Немає збірки для {{label}}",
       "previous": "Попереднє",
       "next": "Наступне",
-      "unreleased": "не випущено"
+      "unreleased": "не випущено",
+      "buildAvailable": "Є збірка для {{label}}"
     },
     "HangarApps": {
       "installedApps": "Встановлені програми",
       "remove": "Видалити",
       "apps": "Програми",
-      "refresh": "Оновити"
+      "refresh": "Оновити",
+      "dismiss": "Закрити"
     },
     "ModuleDock": {
       "backToCargo": "Назад до модулів",

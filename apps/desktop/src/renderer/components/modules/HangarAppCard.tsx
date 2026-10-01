@@ -153,7 +153,7 @@ export function HangarAppCard({
               {PLATFORMS.map(({ id, label, icon: Icon }) => (
                 <span
                   key={id}
-                  title={app.platforms.includes(id) ? `${label} build available` : t('modules.HangarAppCard.noBuild', { label })}
+                  title={app.platforms.includes(id) ? t('modules.HangarAppCard.buildAvailable', { label }) : t('modules.HangarAppCard.noBuild', { label })}
                   className={app.platforms.includes(id)
                     ? id === mine ? 'text-sky-400' : 'text-content-secondary'
                     : 'text-content-tertiary opacity-30'}
