@@ -25,7 +25,7 @@ import {
   UNIT_LABELS,
 } from '../../../shared/user-units.js';
 import { TrainerQuickAction } from '../trainer/TrainerQuickAction';
-import { t } from '../../i18n';
+import { t, ago, justNow } from '../../i18n';
 
 const VEHICLE_TYPE_OPTIONS: Array<{ value: ArduPilotVehicleType; label: string; icon: string }> = [
   { value: 'copter', get label() { return t('sitl.ArduPilotSitlTab.copter'); }, icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
@@ -603,7 +603,7 @@ export default function ArduPilotSitlTab() {
             <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/[0.04] p-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-content">{t('sitl.ArduPilotSitlTab.n3dSimWorld')}</span>
-                <span className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-indigo-500/15 text-indigo-300">pop-out</span>
+                <span className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-indigo-500/15 text-indigo-300">{t('sitl.ArduPilotSitlTab.popOut')}</span>
               </div>
               <p className="text-[11px] text-content-secondary mt-1 leading-snug">
                 {t('sitl.ArduPilotSitlTab.a3dViewOfTheConnected')}
@@ -1404,7 +1404,7 @@ function FrameCatalogStatus({
 
   const variant =
     loading              ? { dot: 'bg-blue-400 animate-pulse',   text: 'text-content-tertiary', label: 'syncing…' } :
-    source === 'fresh'   ? { dot: 'bg-emerald-400',              text: 'text-content-tertiary', label: ageLabel ? `synced ${ageLabel}` : 'synced' } :
+    source === 'fresh'   ? { dot: 'bg-emerald-400',              text: 'text-content-tertiary', label: ageLabel ? t('sitl.ArduPilotSitlTab.syncedAgo', { age: ageLabel }) : t('sitl.ArduPilotSitlTab.synced') } :
     source === 'cached'  ? { dot: 'bg-amber-400',                text: 'text-amber-400',        label: ageLabel ? `cached · ${ageLabel}` : 'cached' } :
     source === 'fallback'? { dot: 'bg-rose-400',                 text: 'text-rose-400',         label: t('sitl.ArduPilotSitlTab.offlineDefaultList') } :
                            { dot: 'bg-content-tertiary',         text: 'text-content-tertiary', label: 'pending' };
@@ -1468,11 +1468,11 @@ function relativeAge(iso: string | undefined): string | null {
   if (!iso) return null;
   const ms = Date.now() - new Date(iso).getTime();
   if (Number.isNaN(ms) || ms < 0) return null;
-  if (ms < 60_000) return 'just now';
+  if (ms < 60_000) return justNow();
   const mins = Math.round(ms / 60_000);
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 60) return ago(mins, 'minute');
   const hours = Math.round(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return ago(hours, 'hour');
   const days = Math.round(hours / 24);
-  return `${days}d ago`;
+  return ago(days, 'day');
 }

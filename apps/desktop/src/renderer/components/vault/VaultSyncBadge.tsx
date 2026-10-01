@@ -9,14 +9,14 @@ import { createPortal } from 'react-dom';
 import { useFleetRepoStore } from '../../stores/fleet-repo-store';
 import { useNavigationStore } from '../../stores/navigation-store';
 import { useCargoEnabled, VAULT_CARGO_SLUG } from '../../modules/capabilities';
-import { t } from '../../i18n';
+import { t, ago, justNow } from '../../i18n';
 
 function timeAgo(ts: number): string {
   const s = Math.floor((Date.now() - ts) / 1000);
-  if (s < 60) return 'just now';
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-  return `${Math.floor(s / 86400)}d ago`;
+  if (s < 60) return justNow();
+  if (s < 3600) return ago(Math.floor(s / 60), 'minute');
+  if (s < 86400) return ago(Math.floor(s / 3600), 'hour');
+  return ago(Math.floor(s / 86400), 'day');
 }
 
 interface VaultSyncBadgeProps {

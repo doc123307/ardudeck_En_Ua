@@ -25,9 +25,9 @@ export const GRADE_COLOR: Record<Grade, string> = {
 };
 
 export const STATUS_PILL_WORD: Record<WxStatus, string> = {
-  go: STATUS_WORD.go,
-  caution: STATUS_WORD.caution,
-  nogo: 'NO GO',
+  get go() { return STATUS_WORD.go; },
+  get caution() { return STATUS_WORD.caution; },
+  get nogo() { return STATUS_WORD.nogo; },
 };
 
 export const STATUS_SUMMARY: Record<WxStatus, string> = {

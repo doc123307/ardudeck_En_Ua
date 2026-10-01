@@ -201,6 +201,16 @@
       "readTheGuideForMonochromeRadios": "Read the guide for monochrome radios",
       "afterInstallingEjectTheSdVolume": "After installing: eject the SD volume, unplug USB, then on the radio add the widget to a model screen (long-press TELE, full-screen widget). Packages are downloaded from their official repositories at install time.",
       "versionUnknown": "version unknown"
+    },
+    "sources": {
+      "custom": "Custom File"
+    },
+    "vehicleTypes": {
+      "copter": "Copter",
+      "plane": "Plane",
+      "rover": "Rover",
+      "boat": "Boat",
+      "sub": "Sub"
     }
   }
 }

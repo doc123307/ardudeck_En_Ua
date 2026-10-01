@@ -5,6 +5,7 @@
  * and MAVLink (ArduPilot) protocols.
  */
 
+import { st } from './i18n-shim';
 // ============================================================================
 // Calibration Types
 // ============================================================================
@@ -45,8 +46,8 @@ export interface CalibrationTypeInfo {
 export const CALIBRATION_TYPES: CalibrationTypeInfo[] = [
   {
     id: 'accel-level',
-    name: 'Accelerometer (Level)',
-    description: 'Quick 1-position level calibration. Place your vehicle on a flat surface.',
+    get name() { return st('shared.calibration_types.accelerometerLevel', 'Accelerometer (Level)'); },
+    get description() { return st('shared.calibration_types.quick1PositionLevelCalibrationPlace', 'Quick 1-position level calibration. Place your vehicle on a flat surface.'); },
     icon: 'level',
     protocols: ['msp', 'mavlink'],
     variants: ['INAV', 'BTFL', 'ARDU', 'PX4'],
@@ -54,8 +55,8 @@ export const CALIBRATION_TYPES: CalibrationTypeInfo[] = [
   },
   {
     id: 'accel-quick',
-    name: 'Accelerometer (Quick)',
-    description: 'One position, vehicle level and still. Writes the offsets ArduPilot wants before it will arm, without turning the vehicle over.',
+    get name() { return st('shared.calibration_types.accelerometerQuick', 'Accelerometer (Quick)'); },
+    get description() { return st('shared.calibration_types.onePositionVehicleLevelAndStill', 'One position, vehicle level and still. Writes the offsets ArduPilot wants before it will arm, without turning the vehicle over.'); },
     icon: 'level',
     protocols: ['mavlink'],
     variants: ['ARDU'],
@@ -63,8 +64,8 @@ export const CALIBRATION_TYPES: CalibrationTypeInfo[] = [
   },
   {
     id: 'accel-6point',
-    name: 'Accelerometer (6-Point)',
-    description: 'Full 6-position calibration for maximum accuracy.',
+    get name() { return st('shared.calibration_types.accelerometer6Point', 'Accelerometer (6-Point)'); },
+    get description() { return st('shared.calibration_types.full6PositionCalibrationForMaximum', 'Full 6-position calibration for maximum accuracy.'); },
     icon: '6point',
     protocols: ['msp', 'mavlink'],
     variants: ['INAV', 'ARDU', 'PX4'],
@@ -72,8 +73,8 @@ export const CALIBRATION_TYPES: CalibrationTypeInfo[] = [
   },
   {
     id: 'compass',
-    name: 'Compass / Magnetometer',
-    description: 'Rotate your vehicle in all directions to calibrate the compass.',
+    get name() { return st('shared.calibration_types.compassMagnetometer', 'Compass / Magnetometer'); },
+    get description() { return st('shared.calibration_types.rotateYourVehicleInAllDirections', 'Rotate your vehicle in all directions to calibrate the compass.'); },
     icon: 'compass',
     protocols: ['msp', 'mavlink'],
     variants: ['INAV', 'BTFL', 'ARDU', 'PX4'],
@@ -82,8 +83,8 @@ export const CALIBRATION_TYPES: CalibrationTypeInfo[] = [
   },
   {
     id: 'gyro',
-    name: 'Gyroscope',
-    description: 'Quick gyro calibration. Keep your vehicle completely still.',
+    get name() { return st('shared.calibration_types.gyroscope', 'Gyroscope'); },
+    get description() { return st('shared.calibration_types.quickGyroCalibrationKeepYourVehicle', 'Quick gyro calibration. Keep your vehicle completely still.'); },
     icon: 'gyro',
     protocols: ['msp', 'mavlink'],
     variants: ['INAV', 'BTFL', 'ARDU', 'PX4'],
@@ -91,8 +92,8 @@ export const CALIBRATION_TYPES: CalibrationTypeInfo[] = [
   },
   {
     id: 'opflow',
-    name: 'Optical Flow',
-    description: 'Calibrate optical flow sensor. iNav only.',
+    get name() { return st('shared.calibration_types.opticalFlow', 'Optical Flow'); },
+    get description() { return st('shared.calibration_types.calibrateOpticalFlowSensorInavOnly', 'Calibrate optical flow sensor. iNav only.'); },
     icon: 'opflow',
     protocols: ['msp'],
     variants: ['INAV'],

@@ -27,17 +27,17 @@ import { t as tr } from '../../i18n';
 /** None of these touch the slew rate: every bit of ramp is stick-to-motor
  * latency, and the same calm comes from less power and a softer low end. */
 const THROTTLE_PRESETS = [
-  { name: 'Gentle', get blurb() { return tr('mavlink_config.RoverTuningTab.halfPowerSoftLowEnd'); }, expo: -0.5, thrMax: 50, accel: 1 },
-  { name: 'Balanced', get blurb() { return tr('mavlink_config.RoverTuningTab.threeQuarterPowerMildSoftening'); }, expo: -0.25, thrMax: 75, accel: 2 },
-  { name: 'Direct', get blurb() { return tr('mavlink_config.RoverTuningTab.ardupilotStockFullPowerNoSoftening'); }, expo: 0, thrMax: 100, accel: 0 },
+  { get name() { return tr('mavlink_config.RoverTuningTab.presetGentle'); }, get blurb() { return tr('mavlink_config.RoverTuningTab.halfPowerSoftLowEnd'); }, expo: -0.5, thrMax: 50, accel: 1 },
+  { get name() { return tr('mavlink_config.RoverTuningTab.presetBalanced'); }, get blurb() { return tr('mavlink_config.RoverTuningTab.threeQuarterPowerMildSoftening'); }, expo: -0.25, thrMax: 75, accel: 2 },
+  { get name() { return tr('mavlink_config.RoverTuningTab.presetDirect'); }, get blurb() { return tr('mavlink_config.RoverTuningTab.ardupilotStockFullPowerNoSoftening'); }, expo: 0, thrMax: 100, accel: 0 },
 ];
 
 /** Manual steering curves, described by what half stick actually gives, since
  * that is the part of the travel a driver lives in. */
 const STEERING_PRESETS = [
   { name: 'Calm', get blurb() { return tr('mavlink_config.RoverTuningTab.softAroundCentreFullLockUnchanged'); }, expo: 0.5 },
-  { name: 'Balanced', get blurb() { return tr('mavlink_config.RoverTuningTab.aLittleSoftening'); }, expo: 0.25 },
-  { name: 'Direct', get blurb() { return tr('mavlink_config.RoverTuningTab.stickAngleIsSteeringAngle'); }, expo: 0 },
+  { get name() { return tr('mavlink_config.RoverTuningTab.presetBalanced'); }, get blurb() { return tr('mavlink_config.RoverTuningTab.aLittleSoftening'); }, expo: 0.25 },
+  { get name() { return tr('mavlink_config.RoverTuningTab.presetDirect'); }, get blurb() { return tr('mavlink_config.RoverTuningTab.stickAngleIsSteeringAngle'); }, expo: 0 },
 ];
 
 /** Below this the ramp is long enough to feel as delay rather than smoothing. */

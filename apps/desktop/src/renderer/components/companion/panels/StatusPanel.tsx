@@ -1,6 +1,6 @@
 import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer, StatRow } from '../../panels/panel-utils';
-import { t } from '../../../i18n';
+import { t, ago, justNow } from '../../../i18n';
 
 function formatUptime(seconds: number): string {
   const d = Math.floor(seconds / 86400);
@@ -14,9 +14,9 @@ function formatUptime(seconds: number): string {
 
 function formatTimeSince(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
-  if (seconds < 5) return 'just now';
-  if (seconds < 60) return `${seconds}s ago`;
-  return `${Math.floor(seconds / 60)}m ago`;
+  if (seconds < 5) return justNow();
+  if (seconds < 60) return ago(seconds, 'second');
+  return ago(Math.floor(seconds / 60), 'minute');
 }
 
 export function StatusPanel() {

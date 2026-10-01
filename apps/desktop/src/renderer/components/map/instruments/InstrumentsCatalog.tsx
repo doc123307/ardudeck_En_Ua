@@ -535,7 +535,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
       <div>
         <SectionHeading label={t('map.InstrumentsCatalog.presets')} accent="var(--text-secondary)" />
         <div className="mt-2 grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
-          {PRESET_INSTRUMENT_LAYOUTS.map(({ name, description, accent, layout }) => {
+          {PRESET_INSTRUMENT_LAYOUTS.map(({ name, label, description, accent, layout }) => {
             const a = PRESET_ACCENTS[accent];
             return (
               <button
@@ -547,7 +547,7 @@ function LayoutPane({ onClose }: { onClose: () => void }): JSX.Element {
               >
                 <span className="flex items-center gap-2">
                   <span style={{ color: a.edge }}>{layoutIcon}</span>
-                  <span className="flex-1 min-w-0 truncate text-[13px] text-content">{name}</span>
+                  <span className="flex-1 min-w-0 truncate text-[13px] text-content">{label}</span>
                   <span className="text-[10px] uppercase tracking-wide text-content-tertiary">{t('map.InstrumentsCatalog.preset')}</span>
                 </span>
                 <span className="mt-1 block text-[11px] leading-snug text-content-tertiary">{description}</span>

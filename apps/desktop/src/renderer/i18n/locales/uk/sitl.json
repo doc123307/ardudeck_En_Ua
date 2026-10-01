@@ -124,7 +124,10 @@
       "group_Rover": "Ровер",
       "group_Boat": "Човен",
       "group_Sub": "Підводний",
-      "group_Other": "Інше"
+      "group_Other": "Інше",
+      "syncedAgo": "синхр. {{age}}",
+      "synced": "синхронізовано",
+      "popOut": "окреме вікно"
     },
     "CustomFramePanel": {
       "physical": "Фізичні",

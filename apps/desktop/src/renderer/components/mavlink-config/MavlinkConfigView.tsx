@@ -132,14 +132,14 @@ function isRoverType(mavType: number | undefined): boolean {
 const TUNING_GROUP: TabGroup = {
   kind: 'group',
   id: 'tuning-group',
-  name: 'Tuning',
+  get name() { return t('mavlink_config.MavlinkConfigView.tuning'); },
   Icon: Sliders,
   color: 'text-emerald-400',
   get description() { return t('mavlink_config.MavlinkConfigView.pidGainsRateCurvesAndPerformance'); },
   children: [
     { id: 'pid', name: 'PID', Icon: Gauge, color: 'text-blue-400', get description() { return t('mavlink_config.MavlinkConfigView.fineTunePidGainsForEach'); } },
-    { id: 'rates', name: 'Rates', Icon: Activity, color: 'text-purple-400', get description() { return t('mavlink_config.MavlinkConfigView.configureRateCurvesAndExpo'); } },
-    { id: 'tuning', name: 'Tuning', Icon: Sliders, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.performancePresetsAndBasicTuning'); } },
+    { id: 'rates', get name() { return t('mavlink_config.MavlinkConfigView.rates'); }, Icon: Activity, color: 'text-purple-400', get description() { return t('mavlink_config.MavlinkConfigView.configureRateCurvesAndExpo'); } },
+    { id: 'tuning', get name() { return t('mavlink_config.MavlinkConfigView.tuning'); }, Icon: Sliders, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.performancePresetsAndBasicTuning'); } },
     { id: 'autotune', name: 'AutoTune', Icon: Wrench, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.setUpAnAutotuneWithoutParameter'); } },
   ],
 };
@@ -155,8 +155,8 @@ const RC_GROUP: TabGroup = {
   color: 'text-teal-400',
   get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolFlightModeSwitch'); },
   children: [
-    { id: 'receiver', name: 'Receiver',     Icon: Radio,    color: 'text-teal-400',  get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolAndLiveChannel'); } },
-    { id: 'modes',    name: 'Flight Modes', Icon: Settings, color: 'text-green-400', get description() { return t('mavlink_config.MavlinkConfigView.configureYourTransmitterSwitchPositions'); } },
+    { id: 'receiver', get name() { return t('mavlink_config.MavlinkConfigView.receiver'); },     Icon: Radio,    color: 'text-teal-400',  get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolAndLiveChannel'); } },
+    { id: 'modes',    get name() { return t('mavlink_config.MavlinkConfigView.flightModes'); }, Icon: Settings, color: 'text-green-400', get description() { return t('mavlink_config.MavlinkConfigView.configureYourTransmitterSwitchPositions'); } },
   ],
 };
 
@@ -171,8 +171,8 @@ const ROVER_RC_GROUP: TabGroup = {
   color: 'text-teal-400',
   get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolDriveModeSwitch'); },
   children: [
-    { id: 'receiver', name: 'Receiver',    Icon: Radio,    color: 'text-teal-400',  get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolAndLiveChannel'); } },
-    { id: 'modes',    name: 'Drive Modes', Icon: Settings, color: 'text-green-400', get description() { return t('mavlink_config.MavlinkConfigView.configureYourTransmitterSwitchPositions'); } },
+    { id: 'receiver', get name() { return t('mavlink_config.MavlinkConfigView.receiver'); },    Icon: Radio,    color: 'text-teal-400',  get description() { return t('mavlink_config.MavlinkConfigView.rcReceiverProtocolAndLiveChannel'); } },
+    { id: 'modes',    get name() { return t('mavlink_config.MavlinkConfigView.driveModes'); }, Icon: Settings, color: 'text-green-400', get description() { return t('mavlink_config.MavlinkConfigView.configureYourTransmitterSwitchPositions'); } },
   ],
 };
 
@@ -182,13 +182,13 @@ const ROVER_RC_GROUP: TabGroup = {
 const OUTPUTS_GROUP: TabGroup = {
   kind: 'group',
   id: 'outputs-group',
-  name: 'Outputs',
+  get name() { return t('mavlink_config.MavlinkConfigView.outputs'); },
   Icon: Fan,
   color: 'text-yellow-400',
   get description() { return t('mavlink_config.MavlinkConfigView.motorTestServoOutputMapping'); },
   children: [
-    { id: 'motor-test',   name: 'Motor Test',   Icon: Fan,  color: 'text-yellow-400', get description() { return t('mavlink_config.MavlinkConfigView.spinIndividualMotorsWithLiveVibration'); } },
-    { id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400',   get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
+    { id: 'motor-test',   get name() { return t('mavlink_config.MavlinkConfigView.motorTest'); },   Icon: Fan,  color: 'text-yellow-400', get description() { return t('mavlink_config.MavlinkConfigView.spinIndividualMotorsWithLiveVibration'); } },
+    { id: 'servo-output', get name() { return t('mavlink_config.MavlinkConfigView.servoOutput'); }, Icon: Move, color: 'text-pink-400',   get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
   ],
 };
 
@@ -198,14 +198,14 @@ const OUTPUTS_GROUP: TabGroup = {
 const STORAGE_GROUP: TabGroup = {
   kind: 'group',
   id: 'storage-group',
-  name: 'Storage',
+  get name() { return t('mavlink_config.MavlinkConfigView.storage'); },
   Icon: HardDrive,
   color: 'text-content-secondary',
   get description() { return t('mavlink_config.MavlinkConfigView.rawParameterTableFcFilesystemBrowser'); },
   children: [
-    { id: 'parameters', name: 'Parameters', Icon: Table,      color: 'text-content-secondary', get description() { return t('mavlink_config.MavlinkConfigView.fullParameterListForExperts'); } },
-    { id: 'files',      name: 'Files',      Icon: FolderOpen, color: 'text-content-secondary', get description() { return t('mavlink_config.MavlinkConfigView.browseAndDownloadFilesFromThe'); } },
-    { id: 'logging',    name: 'Logging',    Icon: HardDrive,  color: 'text-sky-400', get description() { return t('mavlink_config.MavlinkConfigView.whatTheFlightControllerRecordsAnd'); } },
+    { id: 'parameters', get name() { return t('mavlink_config.MavlinkConfigView.parameters'); }, Icon: Table,      color: 'text-content-secondary', get description() { return t('mavlink_config.MavlinkConfigView.fullParameterListForExperts'); } },
+    { id: 'files',      get name() { return t('mavlink_config.MavlinkConfigView.files'); },      Icon: FolderOpen, color: 'text-content-secondary', get description() { return t('mavlink_config.MavlinkConfigView.browseAndDownloadFilesFromThe'); } },
+    { id: 'logging',    get name() { return t('mavlink_config.MavlinkConfigView.logging'); },    Icon: HardDrive,  color: 'text-sky-400', get description() { return t('mavlink_config.MavlinkConfigView.whatTheFlightControllerRecordsAnd'); } },
   ],
 };
 
@@ -216,13 +216,13 @@ const STORAGE_GROUP: TabGroup = {
 const LINKS_GROUP: TabGroup = {
   kind: 'group',
   id: 'links-group',
-  name: 'Links',
+  get name() { return t('mavlink_config.MavlinkConfigView.links'); },
   Icon: Radio,
   color: 'text-sky-400',
   get description() { return t('mavlink_config.MavlinkConfigView.serialPortProtocolsAndWhatEach'); },
   children: [
-    { id: 'serial-ports', name: 'Serial Ports', Icon: Cable, color: 'text-sky-400', get description() { return t('mavlink_config.MavlinkConfigView.configureSerialPortProtocolsAndBaud'); } },
-    { id: 'telemetry-rates', name: 'Telemetry Rates', Icon: Gauge, color: 'text-teal-400', get description() { return t('mavlink_config.MavlinkConfigView.howOftenEachKindOfData'); } },
+    { id: 'serial-ports', get name() { return t('mavlink_config.MavlinkConfigView.serialPorts'); }, Icon: Cable, color: 'text-sky-400', get description() { return t('mavlink_config.MavlinkConfigView.configureSerialPortProtocolsAndBaud'); } },
+    { id: 'telemetry-rates', get name() { return t('mavlink_config.MavlinkConfigView.telemetryRates'); }, Icon: Gauge, color: 'text-teal-400', get description() { return t('mavlink_config.MavlinkConfigView.howOftenEachKindOfData'); } },
   ],
 };
 
@@ -232,13 +232,13 @@ const LINKS_GROUP: TabGroup = {
 const SAFETY_GROUP: TabGroup = {
   kind: 'group',
   id: 'safety-group',
-  name: 'Safety',
+  get name() { return t('mavlink_config.MavlinkConfigView.safety'); },
   Icon: Shield,
   color: 'text-amber-400',
   get description() { return t('mavlink_config.MavlinkConfigView.preArmChecksFailsafesAndGeofence'); },
   children: [
-    { id: 'arming', name: 'Arming', Icon: ShieldCheck, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.preArmChecksWhyItWill'); } },
-    { id: 'safety', name: 'Failsafes & fence', Icon: Shield, color: 'text-amber-400', get description() { return t('mavlink_config.MavlinkConfigView.whatHappensOnLinkLossLow'); } },
+    { id: 'arming', get name() { return t('mavlink_config.MavlinkConfigView.arming'); }, Icon: ShieldCheck, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.preArmChecksWhyItWill'); } },
+    { id: 'safety', get name() { return t('mavlink_config.MavlinkConfigView.failsafesFence'); }, Icon: Shield, color: 'text-amber-400', get description() { return t('mavlink_config.MavlinkConfigView.whatHappensOnLinkLossLow'); } },
   ],
 };
 
@@ -251,14 +251,14 @@ const SAFETY_GROUP: TabGroup = {
 const HARDWARE_GROUP: TabGroup = {
   kind: 'group',
   id: 'hardware-group',
-  name: 'Sensors',
+  get name() { return t('mavlink_config.MavlinkConfigView.sensors'); },
   Icon: Cpu,
   color: 'text-cyan-400',
   get description() { return t('mavlink_config.MavlinkConfigView.sensorHealthOrientationGpsWiringAnd'); },
   children: [
-    { id: 'sensors', name: 'Health', Icon: Cpu, color: 'text-cyan-400', get description() { return t('mavlink_config.MavlinkConfigView.liveTelemetryAndSensorHealth'); } },
-    { id: 'sensor-config', name: 'Configuration', Icon: Satellite, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.boardOrientationCompassesAndGpsWiring'); } },
-    { id: 'notify', name: 'LEDs & Sound', Icon: Lightbulb, color: 'text-amber-400', get description() { return t('mavlink_config.MavlinkConfigView.statusLedBuzzerAndTheSafety'); } },
+    { id: 'sensors', get name() { return t('mavlink_config.MavlinkConfigView.health'); }, Icon: Cpu, color: 'text-cyan-400', get description() { return t('mavlink_config.MavlinkConfigView.liveTelemetryAndSensorHealth'); } },
+    { id: 'sensor-config', get name() { return t('mavlink_config.MavlinkConfigView.configuration'); }, Icon: Satellite, color: 'text-emerald-400', get description() { return t('mavlink_config.MavlinkConfigView.boardOrientationCompassesAndGpsWiring'); } },
+    { id: 'notify', get name() { return t('mavlink_config.MavlinkConfigView.ledsSound'); }, Icon: Lightbulb, color: 'text-amber-400', get description() { return t('mavlink_config.MavlinkConfigView.statusLedBuzzerAndTheSafety'); } },
   ],
 };
 
@@ -268,7 +268,7 @@ const COPTER_TABS: TabNode[] = [
   RC_GROUP,
   OUTPUTS_GROUP,
   SAFETY_GROUP,
-  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
+  { kind: 'item', id: 'battery', get name() { return t('mavlink_config.MavlinkConfigView.battery'); }, Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
   HARDWARE_GROUP,
   LINKS_GROUP,
   STORAGE_GROUP,
@@ -279,10 +279,10 @@ const COPTER_TABS: TabNode[] = [
 // since control surfaces are fundamental to plane setup.
 const PLANE_TABS: TabNode[] = [
   TUNING_GROUP,
-  { kind: 'item', id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400', get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
+  { kind: 'item', id: 'servo-output', get name() { return t('mavlink_config.MavlinkConfigView.servoOutput'); }, Icon: Move, color: 'text-pink-400', get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
   RC_GROUP,
   SAFETY_GROUP,
-  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
+  { kind: 'item', id: 'battery', get name() { return t('mavlink_config.MavlinkConfigView.battery'); }, Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
   HARDWARE_GROUP,
   LINKS_GROUP,
   STORAGE_GROUP,
@@ -296,23 +296,23 @@ const PLANE_TABS: TabNode[] = [
 const ROVER_TUNING_GROUP: TabGroup = {
   kind: 'group',
   id: 'rover-tuning-group',
-  name: 'Tuning',
+  get name() { return t('mavlink_config.MavlinkConfigView.tuning'); },
   Icon: Gauge,
   color: 'text-blue-400',
   get description() { return t('mavlink_config.MavlinkConfigView.steeringAndSpeedControllersLimitsAnd'); },
   children: [
     { id: 'pid', name: 'PID', Icon: Activity, color: 'text-blue-400', get description() { return t('mavlink_config.MavlinkConfigView.steeringRateAndSpeedControllerGains'); } },
-    { id: 'rover-tuning', name: 'Speed & Steering', Icon: Car, color: 'text-blue-400', get description() { return t('mavlink_config.MavlinkConfigView.configureSpeedLimitsAndSteeringBehavior'); } },
-    { id: 'rover-nav', name: 'Navigation', Icon: Navigation, color: 'text-purple-400', get description() { return t('mavlink_config.MavlinkConfigView.waypointFollowingAndLoiterSettings'); } },
+    { id: 'rover-tuning', get name() { return t('mavlink_config.MavlinkConfigView.speedSteering'); }, Icon: Car, color: 'text-blue-400', get description() { return t('mavlink_config.MavlinkConfigView.configureSpeedLimitsAndSteeringBehavior'); } },
+    { id: 'rover-nav', get name() { return t('mavlink_config.MavlinkConfigView.navigation'); }, Icon: Navigation, color: 'text-purple-400', get description() { return t('mavlink_config.MavlinkConfigView.waypointFollowingAndLoiterSettings'); } },
   ],
 };
 
 const ROVER_TABS: TabNode[] = [
   ROVER_TUNING_GROUP,
   ROVER_RC_GROUP,
-  { kind: 'item', id: 'servo-output', name: 'Servo Output', Icon: Move, color: 'text-pink-400', get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
+  { kind: 'item', id: 'servo-output', get name() { return t('mavlink_config.MavlinkConfigView.servoOutput'); }, Icon: Move, color: 'text-pink-400', get description() { return t('mavlink_config.MavlinkConfigView.perChannelServoFunctionRangeAnd'); } },
   SAFETY_GROUP,
-  { kind: 'item', id: 'battery', name: 'Battery', Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
+  { kind: 'item', id: 'battery', get name() { return t('mavlink_config.MavlinkConfigView.battery'); }, Icon: Battery, color: 'text-orange-400', get description() { return t('mavlink_config.MavlinkConfigView.batteryMonitorConfiguration'); } },
   HARDWARE_GROUP,
   LINKS_GROUP,
   STORAGE_GROUP,

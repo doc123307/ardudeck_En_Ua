@@ -107,6 +107,11 @@
       "conditionsAreWithinLimitsForLaunch": "Умови в межах норми для старту.",
       "conditionsAreMarginalReviewTheFlagged": "Умови на межі. Перегляньте позначені параметри перед стартом.",
       "oneOrMoreParametersExceedSafe": "Один або кілька параметрів перевищують безпечні межі. Не запускайте."
+    },
+    "status": {
+      "go": "ДОБРЕ",
+      "caution": "ОБЕРЕЖНО",
+      "nogo": "НЕ ЛІТАТИ"
     }
   }
 }

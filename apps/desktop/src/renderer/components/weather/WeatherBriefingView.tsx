@@ -384,7 +384,7 @@ export function WeatherBriefingView() {
                         icon={<Thermometer className="w-3.5 h-3.5" />}
                         label={tr('weather.WeatherBriefingView.temp')}
                         value={`${Math.round(weather.tempC)}`}
-                        unit="degC"
+                        unit="°C"
                         animate={animate}
                       />
                       <MetricTile

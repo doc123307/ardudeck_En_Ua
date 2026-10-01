@@ -582,6 +582,9 @@
     "trainer_trainer_request": {
       "noTakeOffPointYetStart": "No take-off point yet. Start a flight controller and wait for a GPS fix.",
       "theFlightControllerHasNoGps": "The flight controller has no GPS fix yet."
+    },
+    "trainer_ipc": {
+      "notInstalled": "The Trainer is not installed."
     }
   }
 }

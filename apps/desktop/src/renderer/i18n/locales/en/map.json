@@ -389,7 +389,14 @@
       "justTheBallFlightDataAnd": "Just the ball, flight data and the status strips.",
       "compactReadoutBandsMaximumMap": "Compact readout bands, maximum map.",
       "slimSetForTheInMap": "Slim set for the in-map split; applied automatically.",
-      "groundSetTiltSteeringAndCross": "Ground set: tilt, steering and cross-track instead of the ball."
+      "groundSetTiltSteeringAndCross": "Ground set: tilt, steering and cross-track instead of the ball.",
+      "names": {
+        "pilotCockpit": "Pilot cockpit",
+        "minimal": "Minimal",
+        "stripsOnly": "Strips only",
+        "splitCockpit": "Split cockpit",
+        "rover": "Rover"
+      }
     },
     "registry": {
       "strip": "Strip",

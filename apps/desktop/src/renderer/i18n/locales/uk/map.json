@@ -389,7 +389,14 @@
       "justTheBallFlightDataAnd": "Лише авіагоризонт, польотні дані й смуги стану.",
       "compactReadoutBandsMaximumMap": "Компактні смуги показників, максимум карти.",
       "slimSetForTheInMap": "Мінімальний набір для розділеного режиму карти; застосовується автоматично.",
-      "groundSetTiltSteeringAndCross": "Наземний набір: нахил, кермо й бічне відхилення замість авіагоризонту."
+      "groundSetTiltSteeringAndCross": "Наземний набір: нахил, кермо й бічне відхилення замість авіагоризонту.",
+      "names": {
+        "pilotCockpit": "Кабіна пілота",
+        "minimal": "Мінімальний",
+        "stripsOnly": "Лише смуги",
+        "splitCockpit": "Розділена кабіна",
+        "rover": "Ровер"
+      }
     },
     "registry": {
       "strip": "Смуга",

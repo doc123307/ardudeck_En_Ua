@@ -95,7 +95,7 @@ export function trainerStatus(deps: TrainerDeps): TrainerStatus {
     searched,
     home,
     canLaunch: target !== null && buildTrainerRequest({ home }).ok,
-    reason: target === null ? 'The Trainer is not installed.' : notReady(deps),
+    reason: target === null ? mt('main.trainer_ipc.notInstalled') : notReady(deps),
   };
 }
 

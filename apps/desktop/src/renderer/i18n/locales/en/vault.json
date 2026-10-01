@@ -144,7 +144,8 @@
       "flyingWorseAfterAChangeOpen": "Flying worse after a change? Open an old copy, see exactly which settings are different, and put them back with one click.",
       "n3KeepItSafeOnlineOptional": "3. Keep it safe online (optional)",
       "connectAFreeGithubAccountAnd": "Connect a free GitHub account and your copies are backed up to the cloud and shared with your other computers.",
-      "boundary": " - boundary"
+      "boundary": " - boundary",
+      "saveCount": "Saves: {{count}}"
     }
   }
 }

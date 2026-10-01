@@ -153,7 +153,9 @@ function presetCockpit(name: string): InstrumentLayoutSnapshot {
   return preset.layout;
 }
 
-const PILOT_COCKPIT = t('telemetry.workspace_layouts.pilotCockpit');
+// Preset id, matched against PRESET_INSTRUMENT_LAYOUTS names and persisted as the active
+// preset - never translate it (the UI shows the preset's label instead).
+const PILOT_COCKPIT = 'Pilot cockpit';
 
 /** Pilot cockpit with the gauge bar centred and lifted clear of the edge, for the shorter mission map. */
 function missionCockpit(): InstrumentLayoutSnapshot {

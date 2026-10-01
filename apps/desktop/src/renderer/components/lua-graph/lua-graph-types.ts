@@ -2,6 +2,8 @@
  * Type definitions for the Lua Graph Editor node system.
  */
 
+import { t } from '../../i18n';
+
 // ── Port & Value Types ──────────────────────────────────────────
 
 export type PortValueType = 'number' | 'boolean' | 'string' | 'vector3' | 'any';
@@ -46,13 +48,13 @@ export const CATEGORY_COLORS: Record<NodeCategory, string> = {
 };
 
 export const CATEGORY_LABELS: Record<NodeCategory, string> = {
-  sensors: 'Sensors',
-  logic: 'Logic',
-  math: 'Math',
-  actions: 'Actions',
-  timing: 'Timing',
-  variables: 'Variables',
-  flow: 'Flow',
+  get sensors() { return t('lua_graph.categories.sensors'); },
+  get logic() { return t('lua_graph.categories.logic'); },
+  get math() { return t('lua_graph.categories.math'); },
+  get actions() { return t('lua_graph.categories.actions'); },
+  get timing() { return t('lua_graph.categories.timing'); },
+  get variables() { return t('lua_graph.categories.variables'); },
+  get flow() { return t('lua_graph.categories.flow'); },
 };
 
 // ── Node Definition (Template) ──────────────────────────────────

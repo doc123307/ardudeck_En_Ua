@@ -2,7 +2,7 @@ import { CloudUpload, Download } from 'lucide-react';
 import type { MissionSummary, FlightStatus } from '../../../shared/mission-library-types';
 import { useSettingsStore } from '../../stores/settings-store';
 import { formatDistanceFromMeters } from '../../../shared/user-units.js';
-import { t } from '../../i18n';
+import { t, ago } from '../../i18n';
 
 const STATUS_DOT_COLORS: Record<FlightStatus, string> = {
   planned: 'bg-blue-400',
@@ -42,9 +42,9 @@ function formatRelativeDate(iso: string): string {
   const diffDay = Math.floor(diffHr / 24);
 
   if (diffMin < 1) return t('mission_library.MissionCard.justNow');
-  if (diffMin < 60) return `${diffMin}m ago`;
-  if (diffHr < 24) return `${diffHr}h ago`;
-  if (diffDay < 7) return `${diffDay}d ago`;
+  if (diffMin < 60) return ago(diffMin, 'minute');
+  if (diffHr < 24) return ago(diffHr, 'hour');
+  if (diffDay < 7) return ago(diffDay, 'day');
   return date.toLocaleDateString();
 }
 

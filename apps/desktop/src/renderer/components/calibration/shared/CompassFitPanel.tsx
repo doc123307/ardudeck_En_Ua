@@ -154,7 +154,7 @@ export function CompassFitPanel({ results }: CompassFitPanelProps): JSX.Element 
                         ? 'text-amber-600 dark:text-amber-400'
                         : 'text-red-600 dark:text-red-400'
                   }`}>
-                    {assessment.verdict === t('calibration.CompassFitPanel.good') ? t('calibration.CompassFitPanel.good') : assessment.verdict === 'marginal' ? 'usable' : 'poor'}
+                    {assessment.verdict === 'good' ? t('calibration.CompassFitPanel.good') : assessment.verdict === 'marginal' ? t('calibration.CompassFitPanel.usable') : t('calibration.CompassFitPanel.poor')}
                   </span>
                 )}
               </div>

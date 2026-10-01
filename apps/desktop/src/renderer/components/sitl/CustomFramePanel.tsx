@@ -588,7 +588,7 @@ export function CustomFramePanel() {
                       ))}
                     </div>
                   </div>
-                  {group.title === 'Physical' && renderDiscBlock()}
+                  {group === FIELD_GROUPS[0] && renderDiscBlock()}
                 </Fragment>
               ))}
             </div>

@@ -20,7 +20,7 @@ import {
 import { GRADE_COLOR } from './weather-visuals';
 import { MetricTile } from './MetricTile';
 import { ThresholdTrack, type TrackZone } from './ThresholdTrack';
-import { t } from '../../i18n';
+import { t, fromNow } from '../../i18n';
 
 const GREEN = 'var(--gauge-green)';
 const AMBER = 'var(--gauge-amber)';
@@ -199,7 +199,7 @@ export function GeomagSection({ activity, unavailable, field, modelValid, verdic
                         </span>
                       </div>
                       <div className="text-[11px] text-content-secondary mt-0.5 tabular-nums">
-                        {peakHours != null ? `in ${peakHours}h` : t('weather.GeomagSection.within72h')}
+                        {peakHours != null ? fromNow(peakHours, 'hour') : t('weather.GeomagSection.within72h')}
                         {activity.peakTime72hIso && (
                           <span className="text-content-tertiary">
                             {' '}&middot; {new Date(activity.peakTime72hIso).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })}

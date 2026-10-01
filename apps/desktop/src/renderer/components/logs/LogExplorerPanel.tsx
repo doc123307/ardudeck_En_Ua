@@ -1091,7 +1091,7 @@ function ChartPanel({ chartId }: { chartId: string }) {
     if (autoLoaded.current) return;
     autoLoaded.current = true;
     if (selectedTypes.length > 0) return; // already has selection
-    const preferred = ['Altitude', 'Attitude'];
+    const preferred = [tr('logs.LogExplorerPanel.altitude'), tr('logs.LogExplorerPanel.attitude')];
     for (const name of preferred) {
       const preset = presets.find((p) => p.label === name && p.types.some((t) => messageTypes.includes(t)));
       if (preset) { applyPreset(preset); return; }

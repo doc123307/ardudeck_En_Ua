@@ -94,6 +94,18 @@ function ensureFlightInfoPanel(api: DockviewApi): void {
   api.getPanel('waypointTable')?.api.setActive();
 }
 
+// A saved layout keeps the tab titles it was saved with, in whatever language the
+// UI was in then. Re-title the fixed panels so tabs follow the current language.
+function retitlePanels(api: DockviewApi): void {
+  const titles: Record<string, string> = {
+    missionMap: t('mission.MissionPlanningView.missionMap'),
+    waypointTable: t('mission.MissionPlanningView.waypoints'),
+    altitudeProfile: t('mission.MissionPlanningView.altitudeProfile'),
+    flightInfo: t('mission.MissionPlanningView.flightInfo'),
+  };
+  for (const [id, title] of Object.entries(titles)) api.getPanel(id)?.api.setTitle(title);
+}
+
 // Stable panel id for the Survey tab — opened/closed dynamically based on
 // whether survey mode is active. Lives as a sibling tab next to Waypoints.
 const SURVEY_PANEL_ID = 'surveyConfig';
@@ -562,6 +574,7 @@ export function MissionPlanningView() {
         event.api.fromJSON(savedLayout.data as SerializedDockview);
         // Saved layouts from before this panel existed won't include it.
         ensureFlightInfoPanel(event.api);
+        retitlePanels(event.api);
         setLayoutLoaded(true);
         return;
       }

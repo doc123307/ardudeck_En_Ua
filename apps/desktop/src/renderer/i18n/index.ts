@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { setSharedTranslator } from '../../shared/i18n-shim';
 
 export const SUPPORTED_LANGUAGES = ['en', 'uk', 'ru'] as const;
 export type AppLanguage = (typeof SUPPORTED_LANGUAGES)[number];
@@ -85,6 +86,9 @@ void i18n.use(initReactI18next).init({
 
 if (hasDom) document.documentElement.lang = i18n.language;
 
+// Shared tables (check lists, parameter groups) read their text through this.
+setSharedTranslator((key) => (i18n.exists(key) ? i18n.t(key) : undefined));
+
 /**
  * Translate outside React hooks. Works anywhere (render helpers, stores, module-level
  * getters); the app root remounts on a language change so rendered text follows.
@@ -96,6 +100,18 @@ export const t = i18n.t.bind(i18n);
  * inflect the word itself, so the suffix only applies while the UI is in English.
  */
 export const enPlural = (suffix: string): string => (i18n.language?.startsWith('en') ? suffix : '');
+
+/** "3h ago" in the UI language, from a positive amount of a unit in the past. */
+export const ago = (value: number, unit: Intl.RelativeTimeFormatUnit): string =>
+  new Intl.RelativeTimeFormat(i18n.language, { style: 'narrow' }).format(-value, unit);
+
+/** "in 30h" in the UI language, from a positive amount of a unit in the future. */
+export const fromNow = (value: number, unit: Intl.RelativeTimeFormatUnit): string =>
+  new Intl.RelativeTimeFormat(i18n.language, { style: 'narrow' }).format(value, unit);
+
+/** "just now" in the UI language. */
+export const justNow = (): string =>
+  new Intl.RelativeTimeFormat(i18n.language, { numeric: 'auto' }).format(0, 'second');
 
 export function applyLanguage(language: AppLanguage): void {
   if (i18n.language !== language) void i18n.changeLanguage(language);

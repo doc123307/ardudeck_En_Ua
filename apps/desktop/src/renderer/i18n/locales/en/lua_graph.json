@@ -727,6 +727,15 @@
       "luaCode": "Lua code",
       "comment": "Comment",
       "aTextCommentForDocumentationPurposes": "A text comment for documentation purposes, no effect on code"
+    },
+    "categories": {
+      "sensors": "Sensors",
+      "logic": "Logic",
+      "math": "Math",
+      "actions": "Actions",
+      "timing": "Timing",
+      "variables": "Variables",
+      "flow": "Flow"
     }
   }
 }

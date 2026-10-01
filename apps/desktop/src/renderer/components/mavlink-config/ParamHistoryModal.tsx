@@ -9,7 +9,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { History, ChevronDown, ChevronRight, RotateCcw, Trash2, X, Loader2 } from 'lucide-react';
 import type { ParamCheckpoint, ParamChange } from '../../../shared/param-history-types';
 import { useParameterStore } from '../../stores/parameter-store';
-import { t, enPlural } from '../../i18n';
+import { t, enPlural, ago } from '../../i18n';
 
 interface Props {
   boardUid: string;
@@ -27,9 +27,9 @@ function formatRelativeTime(timestamp: number): string {
   const days = Math.floor(hours / 24);
 
   if (seconds < 60) return t('mavlink_config.ParamHistoryModal.justNow');
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 30) return `${days}d ago`;
+  if (minutes < 60) return ago(minutes, 'minute');
+  if (hours < 24) return ago(hours, 'hour');
+  if (days < 30) return ago(days, 'day');
   return new Date(timestamp).toLocaleDateString();
 }
 

@@ -582,6 +582,9 @@
     "trainer_trainer_request": {
       "noTakeOffPointYetStart": "Точки зльоту ще немає. Запустіть польотний контролер і дочекайтеся GPS-фіксу.",
       "theFlightControllerHasNoGps": "Польотний контролер ще не має GPS-фіксу."
+    },
+    "trainer_ipc": {
+      "notInstalled": "Тренажер не встановлено."
     }
   }
 }

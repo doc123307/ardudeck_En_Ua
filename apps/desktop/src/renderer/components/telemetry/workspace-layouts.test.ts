@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { SerializedDockview } from 'dockview-react';
@@ -35,6 +35,21 @@ describe('workspace layouts', () => {
     useMapSplitStore.setState({ target: null, ratio: 0.6, layoutApplyPending: false });
     useMapInstrumentsStore.getState().restoreWorkspace(preset('Minimal'), null, null);
     useCameraStore.getState().setRenderMode('live');
+  });
+
+  // Preset names are ids: a translated id once made every built-in layout throw when the
+  // app started in another language. Module-level text takes the startup language, so
+  // load the module fresh with that language stored.
+  it.each(['uk', 'ru'])('builds every built-in layout when the app starts in %s', async (lang) => {
+    vi.resetModules();
+    localStorage.setItem('ardudeck.language', lang);
+    try {
+      const fresh = await import('./workspace-layouts');
+      for (const layout of Object.values(fresh.BUILTIN_LAYOUTS)) expect(() => layout.data()).not.toThrow();
+    } finally {
+      // The fresh i18n module switched the shared i18next instance; put English back.
+      (await import('../../i18n')).applyLanguage('en');
+    }
   });
 
   it('round-trips the cockpit, preset, split and render mode with the grid', () => {

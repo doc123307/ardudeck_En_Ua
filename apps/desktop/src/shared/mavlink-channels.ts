@@ -12,6 +12,7 @@
  * never assumed from a version number.
  */
 
+import { st } from './i18n-shim';
 /** SERIALn_PROTOCOL values that make a port a MAVLink channel. */
 const MAVLINK_PROTOCOLS = new Set([1, 2]);
 
@@ -96,7 +97,7 @@ export const RATE_GROUPS: RateGroup[] = [
   {
     id: 'attitude',
     suffix: 'EXTRA1',
-    label: 'Horizon smoothness',
+    get label() { return st('shared.mavlink_channels.horizonSmoothness', 'Horizon smoothness'); },
     messages: ['ATTITUDE', 'AHRS2'],
     msgIds: [30, 178],
     bytesPerCycle: 42 + 38,
@@ -105,7 +106,7 @@ export const RATE_GROUPS: RateGroup[] = [
   {
     id: 'position',
     suffix: 'POSITION',
-    label: 'Map / position',
+    get label() { return st('shared.mavlink_channels.mapPosition', 'Map / position'); },
     messages: ['GLOBAL_POSITION_INT', 'GPS_RAW_INT'],
     msgIds: [33, 24],
     bytesPerCycle: 42 + 66,
@@ -114,7 +115,7 @@ export const RATE_GROUPS: RateGroup[] = [
   {
     id: 'vfr',
     suffix: 'EXTRA2',
-    label: 'Speed, altitude, throttle',
+    get label() { return st('shared.mavlink_channels.speedAltitudeThrottle', 'Speed, altitude, throttle'); },
     messages: ['VFR_HUD'],
     msgIds: [74],
     bytesPerCycle: 34,
@@ -123,7 +124,7 @@ export const RATE_GROUPS: RateGroup[] = [
   {
     id: 'status',
     suffix: 'EXT_STAT',
-    label: 'Battery & status',
+    get label() { return st('shared.mavlink_channels.batteryStatus', 'Battery & status'); },
     messages: ['SYS_STATUS', 'BATTERY_STATUS', 'GPS_RAW_INT', 'MISSION_CURRENT'],
     msgIds: [1, 147, 24, 42],
     bytesPerCycle: 45 + 50 + 66 + 20,
@@ -132,7 +133,7 @@ export const RATE_GROUPS: RateGroup[] = [
   {
     id: 'rc',
     suffix: 'RC_CHAN',
-    label: 'RC inputs',
+    get label() { return st('shared.mavlink_channels.rcInputs', 'RC inputs'); },
     messages: ['RC_CHANNELS', 'SERVO_OUTPUT_RAW'],
     msgIds: [65, 36],
     bytesPerCycle: 56 + 35,
@@ -141,7 +142,7 @@ export const RATE_GROUPS: RateGroup[] = [
   {
     id: 'raw',
     suffix: 'RAW_SENS',
-    label: 'Raw IMU (tuning only)',
+    get label() { return st('shared.mavlink_channels.rawImuTuningOnly', 'Raw IMU (tuning only)'); },
     messages: ['RAW_IMU', 'SCALED_PRESSURE'],
     msgIds: [27, 29],
     bytesPerCycle: 40 + 28,
@@ -150,7 +151,7 @@ export const RATE_GROUPS: RateGroup[] = [
   {
     id: 'extra3',
     suffix: 'EXTRA3',
-    label: 'Extra sensors',
+    get label() { return st('shared.mavlink_channels.extraSensors', 'Extra sensors'); },
     messages: ['RANGEFINDER', 'BATTERY2', 'SYSTEM_TIME'],
     msgIds: [173, 181, 2],
     bytesPerCycle: 22 + 18 + 26,

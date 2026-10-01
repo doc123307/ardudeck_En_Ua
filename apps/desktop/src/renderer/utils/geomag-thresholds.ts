@@ -23,9 +23,9 @@ const STATUS_RANK: Record<GeomagStatus, number> = { go: 0, caution: 1, nogo: 2 }
 
 /** Short word paired with color, never shown alone. Mirrors STATUS_WORD. */
 export const GEOMAG_STATUS_WORD: Record<GeomagStatus, string> = {
-  go: 'GO',
-  caution: 'CAUTION',
-  nogo: 'NO-GO',
+  get go() { return t('weather.status.go'); },
+  get caution() { return t('weather.status.caution'); },
+  get nogo() { return t('weather.status.nogo'); },
 };
 
 export function worstGeomagStatus(statuses: GeomagStatus[]): GeomagStatus {

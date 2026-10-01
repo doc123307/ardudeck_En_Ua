@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useCompanionStore } from '../../../stores/companion-store';
 import { PanelContainer, SectionTitle } from '../../panels/panel-utils';
 import type { ContainerAction } from '@ardudeck/companion-types';
-import { t } from '../../../i18n';
+import { t, ago } from '../../../i18n';
 
 const CONTAINER_STATUS_COLORS: Record<string, { dot: string; text: string }> = {
   running: { dot: 'bg-emerald-400', text: 'text-emerald-400' },
@@ -17,9 +17,9 @@ function formatAge(created: number): string {
   const seconds = Math.floor((Date.now() - created) / 1000);
   const d = Math.floor(seconds / 86400);
   const h = Math.floor((seconds % 86400) / 3600);
-  if (d > 0) return `${d}d ago`;
-  if (h > 0) return `${h}h ago`;
-  return `${Math.floor(seconds / 60)}m ago`;
+  if (d > 0) return ago(d, 'day');
+  if (h > 0) return ago(h, 'hour');
+  return ago(Math.floor(seconds / 60), 'minute');
 }
 
 export function ContainersPanel() {

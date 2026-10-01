@@ -107,6 +107,11 @@
       "conditionsAreWithinLimitsForLaunch": "Условия в пределах нормы для старта.",
       "conditionsAreMarginalReviewTheFlagged": "Условия на грани. Просмотрите отмеченные параметры перед стартом.",
       "oneOrMoreParametersExceedSafe": "Один или несколько параметров превышают безопасные пределы. Не запускайте."
+    },
+    "status": {
+      "go": "ХОРОШО",
+      "caution": "ОСТОРОЖНО",
+      "nogo": "НЕ ЛЕТАТЬ"
     }
   }
 }

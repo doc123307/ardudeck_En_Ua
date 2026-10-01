@@ -24,14 +24,14 @@ import { useFleetRepoStore, useCurrentVaultUnit, isRestoreTargetMatch, isRestore
 import { VaultAutoSyncToggle } from './VaultAutoSyncToggle';
 import { useParameterStore } from '../../stores/parameter-store';
 import { useConnectionStore } from '../../stores/connection-store';
-import { t as tr, enPlural } from '../../i18n';
+import { t as tr, enPlural, ago, justNow } from '../../i18n';
 
 function timeAgo(ts: number): string {
   const s = Math.floor((Date.now() - ts) / 1000);
-  if (s < 60) return 'just now';
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-  if (s < 86400 * 30) return `${Math.floor(s / 86400)}d ago`;
+  if (s < 60) return justNow();
+  if (s < 3600) return ago(Math.floor(s / 60), 'minute');
+  if (s < 86400) return ago(Math.floor(s / 3600), 'hour');
+  if (s < 86400 * 30) return ago(Math.floor(s / 86400), 'day');
   return new Date(ts).toLocaleDateString();
 }
 
@@ -668,7 +668,7 @@ export function VaultView() {
           <h1 className="text-sm font-semibold text-content leading-tight">{tr('vault.VaultView.fleetVault')}</h1>
           <p className="text-[10px] text-content-secondary">
             {tr('vault.VaultView.backupAndHistoryForSettingsMissions')}{' '}
-            {status ? `${status.commitCount} save${status.commitCount === 1 ? '' : enPlural('s')}` : tr('vault.VaultView.loading')}
+            {status ? tr('vault.VaultView.saveCount', { count: status.commitCount }) : tr('vault.VaultView.loading')}
             {status?.github.lastSyncAt ? tr('vault.VaultView.copiedOnline', { v1: timeAgo(status.github.lastSyncAt) }) : ''}
           </p>
         </div>

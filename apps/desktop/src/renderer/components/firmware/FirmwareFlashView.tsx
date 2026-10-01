@@ -361,13 +361,17 @@ const VEHICLE_ICONS: Record<FirmwareVehicleType, React.ReactNode> = {
   ),
 };
 
+/** Source name for display: the custom-file source is the only one that is a word, not a brand. */
+const sourceName = (s: keyof typeof FIRMWARE_SOURCE_NAMES): string =>
+  s === 'custom' ? t('firmware.sources.custom') : FIRMWARE_SOURCE_NAMES[s];
+
 const VEHICLE_TYPE_NAMES: Record<FirmwareVehicleType, string> = {
-  copter: 'Copter',
-  plane: 'Plane',
+  get copter() { return t('firmware.vehicleTypes.copter'); },
+  get plane() { return t('firmware.vehicleTypes.plane'); },
   vtol: 'VTOL',
-  rover: 'Rover',
-  boat: 'Boat',
-  sub: 'Sub',
+  get rover() { return t('firmware.vehicleTypes.rover'); },
+  get boat() { return t('firmware.vehicleTypes.boat'); },
+  get sub() { return t('firmware.vehicleTypes.sub'); },
 };
 
 // Supported vehicle types per firmware source
@@ -892,7 +896,7 @@ export function FirmwareFlashView() {
                       }
                     `}
                   >
-                    {FIRMWARE_SOURCE_NAMES[source]}
+                    {sourceName(source)}
                   </button>
                 )
               )}
@@ -972,7 +976,7 @@ export function FirmwareFlashView() {
                     key={type}
                     onClick={() => isAvailable && setSelectedVehicleType(type)}
                     disabled={isDisabled}
-                    title={!isAvailable ? t('firmware.FirmwareFlashView.notSupportedBy', { v1: VEHICLE_TYPE_NAMES[type], v2: FIRMWARE_SOURCE_NAMES[selectedSource] }) : undefined}
+                    title={!isAvailable ? t('firmware.FirmwareFlashView.notSupportedBy', { v1: VEHICLE_TYPE_NAMES[type], v2: sourceName(selectedSource) }) : undefined}
                     className={`
                       px-3 py-2 rounded-lg border transition-all flex items-center gap-2 relative
                       ${isSelected
@@ -1389,7 +1393,7 @@ export function FirmwareFlashView() {
                   </>
                 ) : (
                   <>
-                    {FIRMWARE_SOURCE_NAMES[selectedSource]}{' '}
+                    {sourceName(selectedSource)}{' '}
                     <span className="text-amber-300 font-medium">
                       {VEHICLE_TYPE_NAMES[selectedVehicleType]}
                     </span>{' '}

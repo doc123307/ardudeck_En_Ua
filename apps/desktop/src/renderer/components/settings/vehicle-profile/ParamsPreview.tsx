@@ -5,7 +5,7 @@ import { getTemplate, defaultTemplateForType } from '../../../lib/vehicle-templa
 import { useConnectionStore } from '../../../stores/connection-store.js';
 import { useParameterStore } from '../../../stores/parameter-store.js';
 import { ApplyProfileButton } from './ApplyProfileButton.js';
-import { t, enPlural } from '../../../i18n';
+import { t, enPlural, ago, justNow } from '../../../i18n';
 
 interface ParamsPreviewProps {
   vehicle: VehicleProfile;
@@ -279,11 +279,11 @@ function Chip({ name, reason, status, variant }: ChipProps) {
 /** Human-readable relative time. */
 function timeAgo(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
-  if (ms < 60_000) return 'just now';
+  if (ms < 60_000) return justNow();
   const mins = Math.round(ms / 60_000);
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 60) return ago(mins, 'minute');
   const hours = Math.round(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return ago(hours, 'hour');
   const days = Math.round(hours / 24);
-  return `${days}d ago`;
+  return ago(days, 'day');
 }

@@ -8,6 +8,7 @@
  * pressure and cloud cover are shown for context but never gate a launch.
  */
 import type { WeatherSummary } from '../../utils/weather-api';
+import { t } from '../../i18n';
 
 export type WxStatus = 'go' | 'caution' | 'nogo';
 
@@ -72,7 +73,7 @@ export function overallStatus(wx: WeatherSummary): WxStatus {
 
 /** Short word an operator reads at a glance. Paired with color, never alone. */
 export const STATUS_WORD: Record<WxStatus, string> = {
-  go: 'GO',
-  caution: 'CAUTION',
-  nogo: 'NO-GO',
+  get go() { return t('weather.status.go'); },
+  get caution() { return t('weather.status.caution'); },
+  get nogo() { return t('weather.status.nogo'); },
 };

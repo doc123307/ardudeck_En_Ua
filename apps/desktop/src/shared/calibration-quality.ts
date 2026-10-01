@@ -10,6 +10,7 @@
  * "probably".
  */
 
+import { st } from './i18n-shim';
 export type CalibrationVerdict = 'good' | 'marginal' | 'bad' | 'unknown';
 
 /**
@@ -60,7 +61,7 @@ export function assessCompassFitness(
   calFitThreshold: number = COMPASS_FITNESS_DEFAULT_LIMIT,
 ): CalibrationAssessment {
   if (!Number.isFinite(fitness) || fitness < 0) {
-    return { verdict: 'unknown', summary: 'No fitness reported by the flight controller.' };
+    return { verdict: 'unknown', get summary() { return st('shared.calibration_quality.noFitnessReportedByTheFlight', 'No fitness reported by the flight controller.'); } };
   }
   const value = `fitness ${fitness.toFixed(1)} mGauss`;
 
@@ -103,7 +104,7 @@ export interface AccelCalibrationValues {
 export function assessAccelCalibration(values: AccelCalibrationValues): CalibrationAssessment {
   const { offsets, scales } = values;
   if (!offsets && !scales) {
-    return { verdict: 'unknown', summary: 'Calibration values not read from the vehicle.' };
+    return { verdict: 'unknown', get summary() { return st('shared.calibration_quality.calibrationValuesNotReadFromThe', 'Calibration values not read from the vehicle.'); } };
   }
 
   // An untouched board reads exactly zero offsets and exactly 1.0 scales. That
@@ -113,7 +114,7 @@ export function assessAccelCalibration(values: AccelCalibrationValues): Calibrat
   if (allZero && allUnity) {
     return {
       verdict: 'bad',
-      summary: 'Factory defaults: this accelerometer has never been calibrated.',
+      get summary() { return st('shared.calibration_quality.factoryDefaultsThisAccelerometerHasNever', 'Factory defaults: this accelerometer has never been calibrated.'); },
       advice: 'Run the six-point accelerometer calibration before flying.',
     };
   }
@@ -186,7 +187,7 @@ export function verifyCalibrationPersisted(
 ): PersistenceResult {
   const names = Object.keys(written);
   if (names.length === 0) {
-    return { state: 'unverified', summary: 'Nothing to verify.', mismatched: [] };
+    return { state: 'unverified', get summary() { return st('shared.calibration_quality.nothingToVerify', 'Nothing to verify.'); }, mismatched: [] };
   }
 
   const missing: string[] = [];
@@ -206,7 +207,7 @@ export function verifyCalibrationPersisted(
   if (missing.length === names.length) {
     return {
       state: 'unverified',
-      summary: 'Could not read the calibration back from the vehicle.',
+      get summary() { return st('shared.calibration_quality.couldNotReadTheCalibrationBack', 'Could not read the calibration back from the vehicle.'); },
       mismatched: missing,
     };
   }
@@ -219,5 +220,5 @@ export function verifyCalibrationPersisted(
     };
   }
 
-  return { state: 'verified', summary: 'Calibration confirmed on the vehicle after reboot.', mismatched: [] };
+  return { state: 'verified', get summary() { return st('shared.calibration_quality.calibrationConfirmedOnTheVehicleAfter', 'Calibration confirmed on the vehicle after reboot.'); }, mismatched: [] };
 }

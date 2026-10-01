@@ -124,7 +124,10 @@
       "group_Rover": "Rover",
       "group_Boat": "Boat",
       "group_Sub": "Sub",
-      "group_Other": "Other"
+      "group_Other": "Other",
+      "syncedAgo": "synced {{age}}",
+      "synced": "synced",
+      "popOut": "pop-out"
     },
     "CustomFramePanel": {
       "physical": "Physical",

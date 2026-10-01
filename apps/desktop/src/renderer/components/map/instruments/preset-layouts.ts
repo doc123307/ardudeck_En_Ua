@@ -12,7 +12,10 @@ import { t } from '../../../i18n';
 export type PresetAccent = 'green' | 'blue' | 'amber' | 'violet';
 
 export interface PresetInstrumentLayout {
+  /** Stable id: matched by workspace layouts and persisted as the active preset. */
   name: string;
+  /** Display name in the UI language. */
+  label: string;
   /** One line under the card name; keep it short so cards stay equal height. */
   description: string;
   accent: PresetAccent;
@@ -264,9 +267,9 @@ const ROVER_COCKPIT: InstrumentLayoutSnapshot = {
 };
 
 export const PRESET_INSTRUMENT_LAYOUTS: PresetInstrumentLayout[] = [
-  { name: 'Pilot cockpit', get description() { return t('map.preset_layouts.gaugeBarAlongTheBottomCommand'); }, accent: 'green', layout: PILOT_COCKPIT },
-  { name: 'Minimal', get description() { return t('map.preset_layouts.justTheBallFlightDataAnd'); }, accent: 'blue', layout: MINIMAL },
-  { name: 'Strips only', get description() { return t('map.preset_layouts.compactReadoutBandsMaximumMap'); }, accent: 'amber', layout: STRIPS_ONLY },
-  { name: 'Split cockpit', get description() { return t('map.preset_layouts.slimSetForTheInMap'); }, accent: 'violet', layout: SPLIT_COCKPIT },
-  { name: 'Rover', get description() { return t('map.preset_layouts.groundSetTiltSteeringAndCross'); }, accent: 'amber', layout: ROVER_COCKPIT },
+  { name: 'Pilot cockpit', get label() { return t('map.preset_layouts.names.pilotCockpit'); }, get description() { return t('map.preset_layouts.gaugeBarAlongTheBottomCommand'); }, accent: 'green', layout: PILOT_COCKPIT },
+  { name: 'Minimal', get label() { return t('map.preset_layouts.names.minimal'); }, get description() { return t('map.preset_layouts.justTheBallFlightDataAnd'); }, accent: 'blue', layout: MINIMAL },
+  { name: 'Strips only', get label() { return t('map.preset_layouts.names.stripsOnly'); }, get description() { return t('map.preset_layouts.compactReadoutBandsMaximumMap'); }, accent: 'amber', layout: STRIPS_ONLY },
+  { name: 'Split cockpit', get label() { return t('map.preset_layouts.names.splitCockpit'); }, get description() { return t('map.preset_layouts.slimSetForTheInMap'); }, accent: 'violet', layout: SPLIT_COCKPIT },
+  { name: 'Rover', get label() { return t('map.preset_layouts.names.rover'); }, get description() { return t('map.preset_layouts.groundSetTiltSteeringAndCross'); }, accent: 'amber', layout: ROVER_COCKPIT },
 ];

@@ -727,6 +727,15 @@
       "luaCode": "Код Lua",
       "comment": "Комментарий",
       "aTextCommentForDocumentationPurposes": "Текстовый комментарий для документирования, на код не влияет"
+    },
+    "categories": {
+      "sensors": "Датчики",
+      "logic": "Логика",
+      "math": "Математика",
+      "actions": "Действия",
+      "timing": "Время",
+      "variables": "Переменные",
+      "flow": "Поток"
     }
   }
 }

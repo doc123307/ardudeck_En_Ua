@@ -140,7 +140,9 @@
       "inUse": "In use",
       "notUsed": "Not used",
       "keepTheCompassInTheBest": "Keep the compass in the best position rather than the best score: an onboard one sits in the battery's field, which moves with current draw and no calibration corrects that.",
-      "good": "good"
+      "good": "good",
+      "usable": "usable",
+      "poor": "poor"
     },
     "CompassMotDialog": {
       "good": "Good",

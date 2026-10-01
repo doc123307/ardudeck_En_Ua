@@ -14,6 +14,7 @@
  *   - Every finding says what happens to the AIRCRAFT, not what the setting is.
  */
 
+import { st } from './i18n-shim';
 import type { CalibrationVerdict } from './calibration-quality';
 
 export type SafetySeverity = 'critical' | 'warning' | 'advisory';
@@ -84,12 +85,12 @@ export function checkSafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'ekf-failsafe-report-only',
       severity: compassSuspect ? 'critical' : 'warning',
-      title: 'If the aircraft loses track of where it is, nothing will happen',
+      get title() { return st('shared.safety_config_checks.ifTheAircraftLosesTrackOf', 'If the aircraft loses track of where it is, nothing will happen'); },
       consequence: compassSuspect
         ? 'Your compass calibration is already weak, and the navigation failsafe is set to report only. A confused aircraft will keep flying instead of landing.'
         : 'The navigation failsafe is set to report only. If position or heading goes bad in flight, the aircraft will keep trying to fly the mode you are in.',
       params: ['FS_EKF_ACTION'],
-      recommend: { param: 'FS_EKF_ACTION', value: 1, label: 'Land when navigation fails' },
+      recommend: { param: 'FS_EKF_ACTION', value: 1, get label() { return st('shared.safety_config_checks.landWhenNavigationFails', 'Land when navigation fails'); } },
     });
   }
 
@@ -99,10 +100,10 @@ export function checkSafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'ekf-threshold-disabled',
       severity: 'critical',
-      title: 'The navigation quality check is switched off',
+      get title() { return st('shared.safety_config_checks.theNavigationQualityCheckIsSwitched', 'The navigation quality check is switched off'); },
       consequence: 'Nothing will stop you arming with a bad heading or position estimate, and the in-flight failsafe cannot trigger either.',
       params: ['FS_EKF_THRESH'],
-      recommend: { param: 'FS_EKF_THRESH', value: 0.8, label: 'Restore the default threshold' },
+      recommend: { param: 'FS_EKF_THRESH', value: 0.8, get label() { return st('shared.safety_config_checks.restoreTheDefaultThreshold', 'Restore the default threshold'); } },
     });
   }
 
@@ -111,10 +112,10 @@ export function checkSafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'fence-rtl-with-weak-compass',
       severity: 'warning',
-      title: 'On a fence breach the aircraft will try to fly home',
+      get title() { return st('shared.safety_config_checks.onAFenceBreachTheAircraft', 'On a fence breach the aircraft will try to fly home'); },
       consequence: 'Flying home needs the same heading your compass calibration is weak on. Landing where it is does not.',
       params: ['FENCE_ACTION'],
-      recommend: { param: 'FENCE_ACTION', value: 2, label: 'Land instead of flying home' },
+      recommend: { param: 'FENCE_ACTION', value: 2, get label() { return st('shared.safety_config_checks.landInsteadOfFlyingHome', 'Land instead of flying home'); } },
     });
   }
 
@@ -123,7 +124,7 @@ export function checkSafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'compass-weak',
       severity: 'advisory',
-      title: 'The compass calibration is weaker than it should be',
+      get title() { return st('shared.safety_config_checks.theCompassCalibrationIsWeakerThan', 'The compass calibration is weaker than it should be'); },
       consequence: 'Position hold may wander or circle. Recalibrating away from metal and power wiring usually fixes it.',
       params: [],
     });
@@ -164,10 +165,10 @@ function checkPx4SafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'px4-battery-warning-only',
       severity: 'warning',
-      title: 'A flat battery will only produce a warning',
+      get title() { return st('shared.safety_config_checks.aFlatBatteryWillOnlyProduce', 'A flat battery will only produce a warning'); },
       consequence: 'The aircraft will keep flying on an empty pack until it falls out of the sky. Nothing lands it for you.',
       params: ['COM_LOW_BAT_ACT'],
-      recommend: { param: 'COM_LOW_BAT_ACT', value: 3, label: 'Return when critical, land when empty' },
+      recommend: { param: 'COM_LOW_BAT_ACT', value: 3, get label() { return st('shared.safety_config_checks.returnWhenCriticalLandWhenEmpty', 'Return when critical, land when empty'); } },
     });
   }
 
@@ -175,10 +176,10 @@ function checkPx4SafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'px4-gcs-loss-disabled',
       severity: 'warning',
-      title: 'Losing the ground station link does nothing',
+      get title() { return st('shared.safety_config_checks.losingTheGroundStationLinkDoes', 'Losing the ground station link does nothing'); },
       consequence: 'If telemetry drops while the aircraft is out of RC range, it will carry on with no way to reach it.',
       params: ['NAV_DLL_ACT'],
-      recommend: { param: 'NAV_DLL_ACT', value: 2, label: 'Return home on link loss' },
+      recommend: { param: 'NAV_DLL_ACT', value: 2, get label() { return st('shared.safety_config_checks.returnHomeOnLinkLoss', 'Return home on link loss'); } },
     });
   }
 
@@ -186,10 +187,10 @@ function checkPx4SafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'px4-fence-no-action',
       severity: 'warning',
-      title: 'Crossing the geofence does nothing',
+      get title() { return st('shared.safety_config_checks.crossingTheGeofenceDoesNothing', 'Crossing the geofence does nothing'); },
       consequence: 'The fence is set to take no action, so it will not hold, return or land the aircraft when it leaves the allowed area.',
       params: ['GF_ACTION'],
-      recommend: { param: 'GF_ACTION', value: 2, label: 'Hold position at the fence' },
+      recommend: { param: 'GF_ACTION', value: 2, get label() { return st('shared.safety_config_checks.holdPositionAtTheFence', 'Hold position at the fence'); } },
     });
   }
 
@@ -197,10 +198,10 @@ function checkPx4SafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'px4-fence-rtl-with-weak-compass',
       severity: 'warning',
-      title: 'On a fence breach the aircraft will try to fly home',
+      get title() { return st('shared.safety_config_checks.onAFenceBreachTheAircraft', 'On a fence breach the aircraft will try to fly home'); },
       consequence: 'Flying home needs the same heading your compass calibration is weak on. Holding where it is does not.',
       params: ['GF_ACTION'],
-      recommend: { param: 'GF_ACTION', value: 2, label: 'Hold position instead of flying home' },
+      recommend: { param: 'GF_ACTION', value: 2, get label() { return st('shared.safety_config_checks.holdPositionInsteadOfFlyingHome', 'Hold position instead of flying home'); } },
     });
   }
 
@@ -208,10 +209,10 @@ function checkPx4SafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'px4-rc-loss-terminates',
       severity: 'critical',
-      title: 'Losing the radio will cut the motors',
+      get title() { return st('shared.safety_config_checks.losingTheRadioWillCutThe', 'Losing the radio will cut the motors'); },
       consequence: 'Flight termination and disarm both drop the aircraft where it is. A brief RC dropout becomes a crash.',
       params: ['NAV_RCL_ACT'],
-      recommend: { param: 'NAV_RCL_ACT', value: 2, label: 'Return home on radio loss' },
+      recommend: { param: 'NAV_RCL_ACT', value: 2, get label() { return st('shared.safety_config_checks.returnHomeOnRadioLoss', 'Return home on radio loss'); } },
     });
   }
 
@@ -219,10 +220,10 @@ function checkPx4SafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'px4-mag-check-disabled',
       severity: 'critical',
-      title: 'The compass strength check is switched off',
+      get title() { return st('shared.safety_config_checks.theCompassStrengthCheckIsSwitched', 'The compass strength check is switched off'); },
       consequence: 'Nothing will stop you arming next to steel or with a magnetometer reading nonsense.',
       params: ['COM_ARM_MAG_STR'],
-      recommend: { param: 'COM_ARM_MAG_STR', value: 1, label: 'Refuse to arm on a bad compass' },
+      recommend: { param: 'COM_ARM_MAG_STR', value: 1, get label() { return st('shared.safety_config_checks.refuseToArmOnABad', 'Refuse to arm on a bad compass'); } },
     });
   }
 
@@ -230,7 +231,7 @@ function checkPx4SafetyConfig(ctx: SafetyConfigContext): SafetyFinding[] {
     findings.push({
       id: 'compass-weak',
       severity: 'advisory',
-      title: 'The compass calibration is weaker than it should be',
+      get title() { return st('shared.safety_config_checks.theCompassCalibrationIsWeakerThan', 'The compass calibration is weaker than it should be'); },
       consequence: 'Position hold may wander or circle. Recalibrating away from metal and power wiring usually fixes it.',
       params: [],
     });

@@ -107,6 +107,11 @@
       "conditionsAreWithinLimitsForLaunch": "Conditions are within limits for launch.",
       "conditionsAreMarginalReviewTheFlagged": "Conditions are marginal. Review the flagged parameters before launch.",
       "oneOrMoreParametersExceedSafe": "One or more parameters exceed safe limits. Do not launch."
+    },
+    "status": {
+      "go": "GO",
+      "caution": "CAUTION",
+      "nogo": "NO-GO"
     }
   }
 }
