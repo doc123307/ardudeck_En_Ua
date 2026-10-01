@@ -1404,8 +1404,10 @@ TILE.txbat = function (x, y, w, h)
   local vy, vf, sy, sf = stack(y, h, true)
   lcd.drawText(x + 8, vy, string.format('%.1fV', v), vf + c)
   if sy then
-    lcd.drawText(x + 8, sy, string.format('%d%% of %.1f-%.1fV', math.floor(pct + 0.5), vMin, vMax),
-      sf + T.TEXT_2)
+    -- clear of the level strip on the right
+    lcd.drawText(x + 8, sy, fitText(w - 36, sf, {
+      string.format('%d%% of %.1f-%.1fV', math.floor(pct + 0.5), vMin, vMax),
+      string.format('%d%%', math.floor(pct + 0.5)) }), sf + T.TEXT_2)
   end
   local bx, by, bw, bh = x + w - 14, y + 18, 6, h - 30
   lcd.drawFilledRectangle(bx, by, bw, bh, T.GAUGE_BEZEL_2)

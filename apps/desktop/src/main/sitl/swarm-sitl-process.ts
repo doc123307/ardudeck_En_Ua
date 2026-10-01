@@ -32,6 +32,7 @@ import { IPC_CHANNELS } from '../../shared/ipc-channels.js';
 import { ardupilotSitlDownloader } from './ardupilot-sitl-downloader.js';
 import { generateDefaultParams } from './ardupilot-sitl-process.js';
 import { resolveDefaultsFile } from './frame-config.js';
+import { killProcessTree, reapSitlOnPort, withPathPrepended } from './sitl-os.js';
 
 const BASE_TCP_PORT = 5760;
 /** ArduPilot shifts all instance ports by this many per `-I` step. */
@@ -218,11 +219,9 @@ class SwarmSitlProcessManager {
     this.instances = [];
     this._isRunning = true;
 
-    const env = { ...process.env };
-    if (process.platform === 'win32') {
-      const cygwinPath = path.join(app.getPath('userData'), 'ardupilot-sitl', 'cygwin');
-      env.PATH = `${cygwinPath};${env.PATH}`;
-    }
+    const env = process.platform === 'win32'
+      ? withPathPrepended(process.env, path.join(app.getPath('userData'), 'ardupilot-sitl', 'cygwin'))
+      : { ...process.env };
 
     for (let i = 0; i < count; i++) {
       const sysid = i + 1;
@@ -245,11 +244,11 @@ class SwarmSitlProcessManager {
         // vehicles, so a clean boot every launch is the right default.
         const args = this.buildArgs(config, i, model, home, defaultsArg, true);
 
+        await reapSitlOnPort(tcpPort);
         const child = spawn(binaryPath, args, {
           cwd: instanceDir,
           env,
           stdio: ['pipe', 'pipe', 'pipe'],
-          shell: process.platform === 'win32',
         });
         inst.process = child;
         inst.pid = child.pid;
@@ -300,10 +299,7 @@ class SwarmSitlProcessManager {
     for (const inst of this.instances) {
       const proc = inst.process;
       if (!proc) continue;
-      try {
-        proc.kill('SIGTERM');
-        setTimeout(() => { try { proc.kill('SIGKILL'); } catch { /* gone */ } }, 2000);
-      } catch { /* ignore */ }
+      killProcessTree(proc);
       inst.process = null;
     }
     this.instances = [];

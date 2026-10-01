@@ -739,7 +739,7 @@ function TileBody({ t, data, cfg }: { t: TileDef; data: PreviewData; cfg: HudCfg
       const pct = Math.max(0, Math.min(100, ((v - 6.6) / (8.4 - 6.6)) * 100));
       return (
         <TileFrame t={t} caption="TX BATTERY">
-          <NumericBody t={t} value={`${v.toFixed(1)}V`} sub={`${Math.round(pct)}% of 6.6-8.4V`} />
+          <NumericBody t={t} value={`${v.toFixed(1)}V`} sub={fitText(t.w - 36, stack(t.h, true).sf, [`${Math.round(pct)}% of 6.6-8.4V`, `${Math.round(pct)}%`])} />
           <div style={{ position: 'absolute', right: 8, top: 18, width: 6, height: t.h - 30, background: C.gaugeBezel, border: `1px solid ${C.gaugeEdge}` }}>
             <div style={{ position: 'absolute', bottom: 0, width: '100%', height: `${pct}%`, background: C.success }} />
           </div>
