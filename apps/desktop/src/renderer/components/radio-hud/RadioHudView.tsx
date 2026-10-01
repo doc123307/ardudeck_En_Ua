@@ -2152,16 +2152,6 @@ export function RadioHudView() {
                   Guide
                 </button>
               )}
-              {isBw && (
-                <button
-                  onClick={() => setGuideOpen(true)}
-                  data-tip="How the HUD works on a monochrome radio: installing it, opening it, reading it"
-                  className="flex items-center gap-1.5 px-3 py-1 text-xs rounded border bg-surface-input text-content-secondary border-subtle hover:text-content transition-colors"
-                >
-                  <BookOpen className="w-3.5 h-3.5 text-teal-400" />
-                  Guide
-                </button>
-              )}
               {!isBw && (
                 <>
                   <select
@@ -2234,6 +2224,16 @@ export function RadioHudView() {
               >
                 {editing ? 'Done editing' : isBw ? 'Edit slots' : 'Edit layout'}
               </button>
+              {editing && isBw && (
+                <button
+                  onClick={() => setBw(DEFAULT_BW_LAYOUT)}
+                  disabled={JSON.stringify(bw) === JSON.stringify(DEFAULT_BW_LAYOUT)}
+                  data-tip="Put every slot back to the default layout"
+                  className="px-3 py-1 text-xs rounded border bg-surface-input text-content-secondary border-subtle hover:text-content disabled:opacity-40 disabled:hover:text-content-secondary transition-colors"
+                >
+                  Reset to default
+                </button>
+              )}
               {editing && !isBw && (
                 <select
                   value=""
