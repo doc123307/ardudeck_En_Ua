@@ -1,0 +1,83 @@
+name: Build STOHID (Linux)
+
+# Linux packages for this fork. The upstream "Build ArduDeck" workflow runs
+# `pnpm package`, whose fetch-engine step needs the upstream's private
+# orchestrator release; this one builds everything from source instead, so
+# (as in the Windows builds) multi-vehicle mode is not bundled.
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Tag to build and attach the packages to (e.g. v0.1.2-0.3). Drafts work too.'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag }}
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libudev-dev libusb-1.0-0-dev
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build sim-engine binary
+        run: |
+          cargo build --release --manifest-path crates/ardudeck-sim-engine/Cargo.toml
+          mkdir -p apps/desktop/sim-engine-bin
+          cp crates/ardudeck-sim-engine/target/release/ardudeck-sim-engine apps/desktop/sim-engine-bin/ardudeck-sim-engine
+          chmod +x apps/desktop/sim-engine-bin/ardudeck-sim-engine
+
+      - name: Fetch mediamtx (linux x64)
+        run: node tools/fetch-mediamtx.mjs linux x64
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Package Linux x64
+        working-directory: apps/desktop
+        run: |
+          node scripts/stage-frame.mjs
+          pnpm exec electron-builder --linux --x64 --publish never
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: STOHID-linux
+          path: |
+            apps/desktop/release/*.AppImage
+            apps/desktop/release/*.deb
+            apps/desktop/release/latest-linux.yml
+
+      - name: Attach to release
+        working-directory: apps/desktop
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          shopt -s nullglob
+          files=(release/*.AppImage release/*.deb release/latest-linux.yml)
+          if [ ${#files[@]} -eq 0 ]; then echo "No release files produced"; exit 1; fi
+          printf 'uploading: %s\n' "${files[@]}"
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber "${files[@]}"
