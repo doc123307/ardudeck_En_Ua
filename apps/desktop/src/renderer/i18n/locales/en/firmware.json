@@ -96,6 +96,7 @@
       "advanced": "Advanced",
       "reset": "Reset",
       "connectedTo": "Connected to",
+      "connectedToBoard": "Connected to the board",
       "flashingRequiresDisconnectingFromTheBoard": "Flashing requires disconnecting from the board first. The board will reboot into bootloader mode for flashing.",
       "boardInfoAutoDetectedFromActive": "Board info auto-detected from active connection",
       "currentlyRunning": "Currently running:",

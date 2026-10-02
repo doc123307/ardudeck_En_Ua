@@ -38,6 +38,8 @@ interface ConsoleStore {
   setSize: (size: number) => void;
 }
 
+let nextEntryId = 0;
+
 export const useConsoleStore = create<ConsoleStore>((set) => ({
   logs: [],
   isExpanded: false,
@@ -50,8 +52,11 @@ export const useConsoleStore = create<ConsoleStore>((set) => ({
     if ((entry.level === 'debug' || entry.level === 'packet') && !useSettingsStore.getState().showDebugLogs) {
       return;
     }
+    // Entries come from several main-process sources (the MAVLink log, the unified
+    // logger, the flashers, MSP), each numbering its own from 1. Those ids collide,
+    // and the list is keyed by id, so number the entries here, in arrival order.
     set((state) => ({
-      logs: [...state.logs.slice(-(MAX_LOG_ENTRIES - 1)), entry],
+      logs: [...state.logs.slice(-(MAX_LOG_ENTRIES - 1)), { ...entry, id: ++nextEntryId }],
     }));
   },
 

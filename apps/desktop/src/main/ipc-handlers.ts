@@ -2984,7 +2984,9 @@ function parseTelemetry(mainWindow: BrowserWindow, packet: MAVLinkPacket): void 
       // Payload offset for battery: voltage_battery at offset 14 (uint16 mV), current_battery at 16 (int16 cA), battery_remaining at 30 (int8 %)
       const voltage = readUint16(payload, 14) / 1000; // mV to V
       const current = readInt16(payload, 16) / 100;   // cA to A
-      const remaining = payload[30] === 255 ? -1 : payload[30]!; // -1 if unknown
+      // battery_remaining is the last byte: v2 trims it when it is 0 (empty battery).
+      const remainingRaw = padTo(payload, 31)[30]!;
+      const remaining = remainingRaw === 255 ? -1 : remainingRaw; // -1 if unknown
 
       const battery: BatteryData = { voltage, current, remaining };
       const sensorHealth = {
@@ -3064,8 +3066,11 @@ function parseTelemetry(mainWindow: BrowserWindow, packet: MAVLinkPacket): void 
       const alt = readInt32(payload, 16) / 1000; // mm to m
       const hdop = readUint16(payload, 20) / 100; // eph = hdop * 100
       const vdop = readUint16(payload, 22) / 100; // epv = vdop * 100
-      const fixType = payload[28]!;
-      const satellites = payload[29]!;
+      // v2 zero-truncation: a receiver with no satellites sends the frame without
+      // these trailing bytes, so read them from a padded copy (0 sats, not undefined).
+      const gpsTail = padTo(payload, 30);
+      const fixType = gpsTail[28]!;
+      const satellites = gpsTail[29]!;
 
       const gps: GpsData = { fixType, satellites, hdop, vdop, lat, lon, alt };
       // Cache for the NTRIP client's GGA uploads (issue #60)

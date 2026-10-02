@@ -302,7 +302,7 @@ export default function ArduPilotSitlTab() {
 
   // Switch connection panel to TCP when SITL starts
   useEffect(() => {
-    if (isRunning) {
+    if (isRunning && !useConnectionStore.getState().connectionState.isConnected) {
       setPendingSitlSwitch(true);
     }
   }, [isRunning, setPendingSitlSwitch]);

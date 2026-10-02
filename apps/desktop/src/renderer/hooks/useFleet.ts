@@ -83,7 +83,8 @@ export function useFleetVehicles(): FleetVehicle[] {
   return Object.values(knownVehicles).map((v) => {
     const tel = byVehicle[v.key];
     const armed = tel?.flight?.armed ?? false;
-    const batteryPct = tel?.battery ? tel.battery.remaining : null;
+    // remaining is -1 when the vehicle has no capacity estimate: that is "unknown", not -1%.
+    const batteryPct = tel?.battery && tel.battery.remaining >= 0 ? tel.battery.remaining : null;
     const gpsFix = tel?.gps?.fixType;
     const hasFix = (gpsFix ?? 0) >= 2 && !!tel?.gps && tel.gps.lat !== 0 && tel.gps.lon !== 0;
     return {

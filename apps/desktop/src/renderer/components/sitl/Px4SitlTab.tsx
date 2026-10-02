@@ -170,7 +170,7 @@ export default function Px4SitlTab() {
   // When PX4 SITL comes up, flag the connection panel to switch to UDP 14550 and
   // auto-connect, matching how the ArduPilot tab hands off to TCP 5760.
   useEffect(() => {
-    if (isRunning) setPendingSitlSwitch(true);
+    if (isRunning && !useConnectionStore.getState().connectionState.isConnected) setPendingSitlSwitch(true);
   }, [isRunning, setPendingSitlSwitch]);
 
   // Auto-scroll console output to the bottom.

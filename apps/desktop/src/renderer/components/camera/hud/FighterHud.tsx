@@ -349,9 +349,10 @@ export const FighterHud = memo(function FighterHud({ v: raw, config, profile = '
 
         {w.battery && (
           <Movable id="battery" width={260} height={80} anchorRight>
-            <g stroke="none" fill={v.batteryPercent < 20 ? WARN : C} textAnchor="end">
+            {/* A negative percentage means the vehicle has no capacity estimate: show the voltage alone. */}
+            <g stroke="none" fill={v.batteryPercent >= 0 && v.batteryPercent < 20 ? WARN : C} textAnchor="end">
               <text x={0} y={0} fontSize={32} fontWeight="bold">{v.batteryVoltage.toFixed(1)}V</text>
-              <text x={0} y={32} fontSize={24}>{v.batteryPercent.toFixed(0)}%</text>
+              {v.batteryPercent >= 0 && <text x={0} y={32} fontSize={24}>{v.batteryPercent.toFixed(0)}%</text>}
             </g>
           </Movable>
         )}

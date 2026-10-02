@@ -15,6 +15,7 @@ import { execFile } from 'node:child_process';
 import pkg from 'electron-updater';
 const { autoUpdater } = pkg;
 import { IPC_CHANNELS, type AppUpdateInfo } from '../shared/ipc-channels.js';
+import { updateErrorMessage } from './update-error';
 
 let mainWindow: BrowserWindow | null = null;
 let canAutoUpdate = true;
@@ -63,6 +64,9 @@ export async function initAutoUpdater(win: BrowserWindow): Promise<void> {
     console.log('[Updater] App is not code-signed, auto-download disabled (will open release page instead)');
   }
 
+  // The error event below reports failures; the default logger would also dump
+  // every one of them, stack trace and all, into the in-app console.
+  autoUpdater.logger = null;
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = true;
 
@@ -107,7 +111,7 @@ export async function initAutoUpdater(win: BrowserWindow): Promise<void> {
   autoUpdater.on('error', (err) => {
     sendStatus({
       status: 'error',
-      error: err.message,
+      error: updateErrorMessage(err.message),
     });
   });
 

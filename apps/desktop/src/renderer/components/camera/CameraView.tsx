@@ -164,9 +164,10 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
         />
       </div>
 
-      {/* Digital zoom: wheel or these buttons; only blows pixels up, so HD gives the most to zoom into. */}
+      {/* Digital zoom: wheel or these buttons; only blows pixels up, so HD gives the most to zoom into.
+          Bottom centre: the four corners belong to the OSD readouts. */}
       <div
-        className={`absolute bottom-1 left-1 z-10 flex items-center gap-0.5 rounded bg-black/60 px-1 py-0.5 text-[10px] text-white transition-opacity ${zoom ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+        className={`absolute bottom-1 left-1/2 -translate-x-1/2 z-10 flex items-center whitespace-nowrap gap-0.5 rounded bg-black/60 px-1 py-0.5 text-[10px] text-white transition-opacity ${zoom ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
         onClick={(e) => e.stopPropagation()}
         onPointerDown={(e) => e.stopPropagation()}
       >

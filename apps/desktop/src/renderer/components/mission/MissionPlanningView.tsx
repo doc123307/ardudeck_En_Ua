@@ -632,10 +632,11 @@ export function MissionPlanningView() {
       {/* Status bar */}
       <MissionStatusBar />
 
-      {/* Toast notification - positioned at top center */}
+      {/* Toast notification - bottom left, above the status bar. At the top it sat on the
+          map search, the layers button and the dock tabs; it never takes clicks. */}
       {toast && (
-        <div className="absolute top-12 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
-          <div className={`px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 pointer-events-auto ${
+        <div className="absolute bottom-10 left-4 z-[1000] pointer-events-none max-w-[90%]">
+          <div className={`px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 ${
             toast.type === 'success' ? 'bg-emerald-900/90 border border-emerald-500/50 text-emerald-300' :
             toast.type === 'error' ? 'bg-red-900/90 border border-red-500/50 text-red-300' :
             'bg-blue-900/90 border border-blue-500/50 text-blue-300'

@@ -127,6 +127,19 @@ export function GlobalTooltip() {
     };
   }, []);
 
+  // The host can disappear without any mouse event (a view switch, a panel closing
+  // itself): no mouse-out fires then, so drop the tooltip once its host is gone.
+  useEffect(() => {
+    if (!tip) return;
+    const id = window.setInterval(() => {
+      if (!elRef.current?.isConnected) {
+        elRef.current = null;
+        setTip(null);
+      }
+    }, 250);
+    return () => window.clearInterval(id);
+  }, [tip]);
+
   if (!tip) return null;
 
   return createPortal(

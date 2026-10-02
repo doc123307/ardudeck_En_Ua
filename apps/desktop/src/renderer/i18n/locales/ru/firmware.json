@@ -96,6 +96,7 @@
       "advanced": "Дополнительно",
       "reset": "Сбросить",
       "connectedTo": "Подключено к",
+      "connectedToBoard": "Подключено к плате",
       "flashingRequiresDisconnectingFromTheBoard": "Для прошивки сначала нужно отключиться от платы. Плата перезагрузится в режим загрузчика для прошивки.",
       "boardInfoAutoDetectedFromActive": "Данные платы определены автоматически по активному подключению",
       "currentlyRunning": "Сейчас работает:",

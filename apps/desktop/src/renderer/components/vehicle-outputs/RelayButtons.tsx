@@ -4,7 +4,8 @@
  * for confirmation, and says so when the vehicle did not confirm or has no such relay.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Car, ChevronDown, ChevronUp, Eye, Flashlight, Lightbulb, Plus, Power, Settings2, Siren, Sun, Trash2, Zap,
 } from 'lucide-react';
@@ -19,7 +20,8 @@ const ICONS: Record<RelayIcon, typeof Power> = {
 
 /** Lit look per colour: background, text and glow. IR is shown violet since it is invisible. */
 const LIT: Record<RelayColor, string> = {
-  white: 'bg-white text-slate-900 shadow-[0_0_12px_rgba(255,255,255,0.7)]',
+  // The ring keeps a lit white button (and its swatch) visible on the light theme's white panels.
+  white: 'bg-white text-slate-900 shadow-[0_0_12px_rgba(255,255,255,0.7)] ring-1 ring-slate-400/70',
   amber: 'bg-amber-400 text-slate-900 shadow-[0_0_12px_rgba(251,191,36,0.7)]',
   red: 'bg-red-500 text-white shadow-[0_0_12px_rgba(239,68,68,0.7)]',
   ir: 'bg-violet-500 text-white shadow-[0_0_12px_rgba(139,92,246,0.7)]',
@@ -41,7 +43,8 @@ export function RelayButtons({ vehicleKey, compact = false }: { vehicleKey: stri
   const pending = useRelayStore((s) => s.pending);
   const failed = useRelayStore((s) => s.failed);
   const setRelay = useRelayStore((s) => s.setRelay);
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState<DOMRect | null>(null);
+  const gearRef = useRef<HTMLButtonElement>(null);
   // Re-evaluate staleness and expired failures even when no message arrives.
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
@@ -90,27 +93,42 @@ export function RelayButtons({ vehicleKey, compact = false }: { vehicleKey: stri
         );
       })}
       <button
+        ref={gearRef}
         type="button"
-        onClick={() => setEditing((v) => !v)}
+        onClick={() => setEditing((v) => (v ? null : gearRef.current?.getBoundingClientRect() ?? null))}
         data-tip={t('vehicle_outputs.RelayButtons.configure')}
         className="flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:bg-surface-raised hover:text-content"
       >
         <Settings2 className="h-3.5 w-3.5" />
       </button>
-      {editing && <RelayButtonsEditor onClose={() => setEditing(false)} />}
+      {editing && <RelayButtonsEditor anchor={editing} onClose={() => setEditing(null)} />}
     </div>
   );
 }
 
 const COLORS: RelayColor[] = ['white', 'amber', 'red', 'ir', 'green', 'blue'];
 
-function RelayButtonsEditor({ onClose }: { onClose: () => void }) {
+const EDITOR_WIDTH = 416;
+const EDGE = 8;
+
+/**
+ * Rendered in a body-level portal: inside the dock panel it would be cut by the
+ * panel's own scroll box. Opens above the gear when the gear is in the lower half
+ * of the window, below it otherwise, and never leaves the window.
+ */
+function RelayButtonsEditor({ anchor, onClose }: { anchor: DOMRect; onClose: () => void }) {
   const { buttons, addButton, updateButton, removeButton, moveButton } = useRelayStore();
+  const width = Math.min(EDITOR_WIDTH, window.innerWidth - 2 * EDGE);
+  const left = Math.max(EDGE, Math.min(anchor.left, window.innerWidth - width - EDGE));
+  const above = anchor.top > window.innerHeight / 2;
+  const place: React.CSSProperties = above
+    ? { left, width, bottom: window.innerHeight - anchor.top + EDGE, maxHeight: anchor.top - 2 * EDGE }
+    : { left, width, top: anchor.bottom + EDGE, maxHeight: window.innerHeight - anchor.bottom - 2 * EDGE };
   const field = 'min-w-0 rounded bg-surface-input px-1.5 py-0.5 text-[11px] text-content';
-  return (
+  return createPortal(
     <>
-      <div className="fixed inset-0 z-30" onClick={onClose} />
-      <div className="absolute bottom-full left-0 z-40 mb-2 w-[26rem] max-w-[calc(100vw-1rem)] rounded-xl border border-default bg-surface-solid p-3 shadow-xl">
+      <div className="fixed inset-0 z-[60]" onClick={onClose} />
+      <div style={place} className="fixed z-[61] overflow-y-auto rounded-xl border border-default bg-surface-solid p-3 shadow-xl">
         <div className="mb-1 text-[10px] font-medium uppercase tracking-wider text-content-secondary">
           {t('vehicle_outputs.RelayButtons.outputs')}
         </div>
@@ -155,7 +173,7 @@ function RelayButtonsEditor({ onClose }: { onClose: () => void }) {
                   {COLORS.map((c) => (
                     <button key={c} onClick={() => updateButton(b.id, { color: c })}
                       data-tip={t(`vehicle_outputs.RelayButtons.color_${c}`)}
-                      className={`h-4 w-4 rounded-full ${LIT[c].split(' ')[0]} ${b.color === c ? 'ring-2 ring-blue-400 ring-offset-1 ring-offset-surface-solid' : ''}`} />
+                      className={`h-4 w-4 rounded-full ${LIT[c].split(' ')[0]} ${b.color === c ? 'ring-2 ring-blue-400 ring-offset-1 ring-offset-surface-solid' : c === 'white' ? 'ring-1 ring-slate-400/70' : ''}`} />
                   ))}
                 </div>
               </div>
@@ -166,6 +184,7 @@ function RelayButtonsEditor({ onClose }: { onClose: () => void }) {
           <Plus className="h-3.5 w-3.5" />{t('vehicle_outputs.RelayButtons.addOutput')}
         </button>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }

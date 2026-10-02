@@ -197,6 +197,7 @@
     "mission_store": {
       "noWaypointsOnFc": "На FC нет путевых точек",
       "vehicleMission": "Миссия аппарата @ {{stamp}}",
+      "fromVehicleGroupName": "С борта @ {{stamp}}",
       "downloadedWaypointsFromFcInto": "Загружено точек с FC в «{{name}}»: {{length}}",
       "uploadedWaypointsToFc": "Выгружено точек на FC: {{length}}",
       "uploadedWaypointsToVehicle": "Выгружено точек на аппарат: {{length}}",

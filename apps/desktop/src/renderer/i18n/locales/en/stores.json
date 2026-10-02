@@ -197,6 +197,7 @@
     "mission_store": {
       "noWaypointsOnFc": "No waypoints on FC",
       "vehicleMission": "Vehicle mission @ {{stamp}}",
+      "fromVehicleGroupName": "From vehicle @ {{stamp}}",
       "downloadedWaypointsFromFcInto": "Downloaded {{length}} waypoints from FC into \"{{name}}\"",
       "uploadedWaypointsToFc": "Uploaded {{length}} waypoints to FC",
       "uploadedWaypointsToVehicle": "Uploaded {{length}} waypoints to vehicle",

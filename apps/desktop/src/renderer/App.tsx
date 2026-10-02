@@ -1086,8 +1086,9 @@ function App() {
       }
       // Default welcome screen for telemetry
       return (
-        <div className="h-full flex items-center justify-center p-8">
-          <div className="text-center max-w-2xl">
+        <div className="h-full flex overflow-y-auto p-8">
+          {/* m-auto centres the block and, unlike justify-center, keeps its top reachable in a short window */}
+          <div className="text-center max-w-2xl m-auto">
             {/* Logo */}
             <div className="mx-auto w-48 h-48 mb-6 rounded-3xl overflow-hidden">
               <img src={logoImage} alt={t('brand.name')} className="w-full h-full object-cover" />

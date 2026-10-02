@@ -95,6 +95,13 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 | Desktop tests on Windows: `trainer-locator` joins paths in the style of the base path; the SITL relaunch test is skipped on Windows. | yes |
 | `afterPack.cjs` hard-coded `@ardudeckdesktop` and `ArduDeck.app`; it now takes both names from the packager. | only when renamed |
 | Text that doubled as an identifier was translated: the "Pilot cockpit" instrument preset, compass fit verdict, custom-frame "Physical" group, default log chart. Preset names are ids again; the UI shows a separate `label`. | fork only |
+| **Leaving the Stick Test tab force-disarmed the vehicle.** The unmount cleanup of `StickTestPanel` sent `rcOverrideRelease` and a forced DISARM even when the test had never been started, so opening Parameters → Servo outputs and leaving it disarmed a vehicle that was driving or flying. It now only undoes what the test itself did, and also restores `ARMING_CHECK` when the test fails half-way. | yes |
+| **`GPS_RAW_INT` / `SYS_STATUS` read past a zero-trimmed MAVLink 2 frame** in the main telemetry path: with no satellites the header showed `SAT undefined`, and an empty battery gave an undefined percentage. The trailing bytes are now read from a padded copy (as the fleet path already did). | yes |
+| Battery "unknown" (`-1`) was printed as `-1%` in the video OSD and the HUD. | yes |
+| Visiting the SITL view while already connected left the "switch to SITL" flag set: the next disconnect tried to reconnect and showed "SITL process failed to start". | yes |
+| Console entries from different main-process sources reused the same ids, giving duplicate React keys in the debug console. Entries are numbered on arrival. | yes |
+| A failed update check (no `latest.yml`, e.g. a draft release) dumped the HTTP error and a stack trace into the About page and the console. It is now one plain sentence. | fork only |
+| Layout at small window sizes (1024–1366 px wide): telemetry header values wrapped under their labels, the Parameters header squeezed its buttons, the mission map tools ran off the map, the welcome logo was cut off, the OSD editor's profile tabs and a select were clipped, the mission toast covered the map search and dock tabs, a tooltip could outlive its host. | yes |
 
 ### 5. Build and packaging
 - **Windows.** `nsis` installer plus a portable exe. Build with `pnpm exec electron-builder` (not `npx`) so
@@ -181,6 +188,20 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 - **`afterPack.cjs`.** Більше не має жорстко прописаних назв `@ardudeckdesktop` і `ArduDeck.app`.
 - **Перекладені ідентифікатори.** Набір приладів «Pilot cockpit» (через нього був порожній головний екран),
   оцінка калібрування компаса, блок гвинтів власної рами, графік журналу за замовчуванням. Лише у форку.
+- **Примусовий DISARM під час виходу з вкладки «Тест стіків».** Вкладка «Параметри → Виходи
+  сервоприводів» під час закриття надсилала примусовий DISARM і скидала RC override, навіть якщо тест
+  не запускали: апарат, що їхав або летів, роззброювався. Тепер скасовується лише те, що зробив сам тест;
+  `ARMING_CHECK` повертається й тоді, коли тест обірвався на півдорозі. Стосується й оригіналу.
+- **`SAT undefined` і невизначений відсоток батареї.** MAVLink 2 обрізає нульові байти в кінці пакета;
+  `GPS_RAW_INT` і `SYS_STATUS` читалися за межами обрізаного пакета. Стосується й оригіналу.
+- **`-1%` батареї** в накладці на відео й HUD, коли борт не повідомляє залишок. Стосується й оригіналу.
+- **Хибне «Процес SITL не запустився»** після відключення, якщо перед тим відкривали екран SITL.
+  Стосується й оригіналу.
+- **Однакові номери записів у консолі** з різних джерел головного процесу. Стосується й оригіналу.
+- **Помилка перевірки оновлень** для чернеткового випуску: замість HTTP-дампу — одне зрозуміле речення.
+- **Верстка в невеликому вікні (1024–1366 px):** шапка телеметрії, шапка «Параметрів», інструменти на
+  карті місії, логотип на стартовому екрані, ліва панель редактора OSD, сповіщення на екрані місії,
+  «завислі» підказки. Стосується й оригіналу.
 
 ### 5. Збирання
 - **Windows:** інсталятор і портативний exe.

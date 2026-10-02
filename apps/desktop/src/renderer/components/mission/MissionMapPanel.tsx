@@ -1509,8 +1509,10 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
         </div>
       )}
 
-      {/* Bottom controls - mode-specific floating tools */}
-      <div className="absolute bottom-3 left-3 z-[1000] flex items-center gap-2">
+      {/* Bottom controls - mode-specific floating tools. On a narrow map the tools that do
+          not fit move to a row above instead of squeezing their labels or running off the
+          edge; the strip itself lets map clicks through (right-20 clears the attribution). */}
+      <div className="absolute bottom-3 left-3 right-20 z-[1000] flex flex-wrap-reverse items-center gap-2 pointer-events-none [&>*]:pointer-events-auto [&>*]:shrink-0 [&>*]:whitespace-nowrap">
         {/* === MISSION MODE TOOLS === */}
         {activeMode === 'mission' && (
           <>
@@ -1530,7 +1532,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
                 className={`px-2.5 py-1.5 rounded text-xs font-medium transition-colors flex items-center gap-1.5 ${
                   isAddingWaypoint
                     ? 'bg-blue-600 text-white'
-                    : 'bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm'
+                    : 'bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm'
                 }`}
                 title={isAddingWaypoint ? tr('mission.MissionMapPanel.clickOnMapToAddWaypoints') : tr('mission.MissionMapPanel.enterWaypointAddingMode')}
               >
@@ -1551,7 +1553,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
             {waypoints.length > 0 && (
               <button
                 onClick={() => setFitTrigger(t => t + 1)}
-                className="px-2.5 py-1.5 rounded text-xs font-medium bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm transition-colors flex items-center gap-1.5"
+                className="px-2.5 py-1.5 rounded text-xs font-medium bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm transition-colors flex items-center gap-1.5"
                 title={tr('mission.MissionMapPanel.fitMapToShowAllWaypoints')}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1564,7 +1566,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
             {/* Center on Vehicle button */}
             <button
               onClick={() => setCenterOnVehicleTrigger(t => t + 1)}
-              className="px-2.5 py-1.5 rounded text-xs font-medium bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm transition-colors flex items-center gap-1.5"
+              className="px-2.5 py-1.5 rounded text-xs font-medium bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm transition-colors flex items-center gap-1.5"
               title={tr('mission.MissionMapPanel.centerMapOnVehicleGpsPosition')}
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1583,7 +1585,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
                     ? 'bg-emerald-600 text-white'
                     : homePosition
                       ? 'bg-emerald-600/80 text-white'
-                      : 'bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm'
+                      : 'bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm'
                 }`}
                 title={isSettingHome ? tr('mission.MissionMapPanel.clickOnMapToSetHome') : homePosition ? tr('mission.MissionMapPanel.clickToChangeHomePosition') : tr('mission.MissionMapPanel.setHomePositionByClickingOn')}
               >
@@ -1601,7 +1603,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
                 if (fp.isActive) fp.close();
                 else fp.open();
               }}
-              className="px-2.5 py-1.5 rounded text-xs font-medium bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm transition-colors flex items-center gap-1.5"
+              className="px-2.5 py-1.5 rounded text-xs font-medium bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm transition-colors flex items-center gap-1.5"
               data-tip={tr('mission.MissionMapPanel.previewTheFlightAGizmoFlies')}
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1704,7 +1706,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
                   className={`px-2.5 py-1.5 rounded text-xs font-medium transition-colors flex items-center gap-1.5 ${
                     isPolygonActive
                       ? `${activeColor} text-white`
-                      : 'bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm'
+                      : 'bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm'
                   }`}
                   title={tr('mission.MissionMapPanel.drawPolygon', { v1: fenceInclusionMode ? 'inclusion' : 'exclusion' })}
                 >
@@ -1727,7 +1729,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
                   className={`px-2.5 py-1.5 rounded text-xs font-medium transition-colors flex items-center gap-1.5 ${
                     isCircleActive
                       ? `${activeColor} text-white`
-                      : 'bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm'
+                      : 'bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm'
                   }`}
                   title={tr('mission.MissionMapPanel.drawCircle', { v1: fenceInclusionMode ? 'inclusion' : 'exclusion' })}
                 >
@@ -1745,7 +1747,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
               className={`px-2.5 py-1.5 rounded text-xs font-medium transition-colors flex items-center gap-1.5 ${
                 fenceDrawMode === 'return-point'
                   ? 'bg-amber-600 text-white'
-                  : 'bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm'
+                  : 'bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm'
               }`}
               title={tr('mission.MissionMapPanel.setFenceReturnPointWhereVehicle')}
             >
@@ -1778,7 +1780,7 @@ function MissionMapPanel2D({ readOnly = false }: MissionMapPanelProps) {
               className={`px-2.5 py-1.5 rounded text-xs font-medium transition-colors flex items-center gap-1.5 ${
                 rallyAddMode
                   ? 'bg-orange-600 text-white'
-                  : 'bg-surface border border-subtle text-content hover:bg-surface-raised shadow-sm'
+                  : 'bg-surface-solid border border-subtle text-content hover:brightness-125 shadow-sm'
               }`}
               title={tr('mission.MissionMapPanel.addRallyPointsByClickingOn')}
             >

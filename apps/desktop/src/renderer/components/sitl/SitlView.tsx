@@ -158,7 +158,9 @@ export default function SitlView() {
 
   // Switch connection panel to TCP when SITL starts
   useEffect(() => {
-    if (isRunning) {
+    // Only a simulator we are not linked to yet needs the hand-off: a flag left set
+    // while connected would fire a reconnect on the next disconnect.
+    if (isRunning && !useConnectionStore.getState().connectionState.isConnected) {
       // Set flag to tell ConnectionPanel to switch to TCP
       setPendingSitlSwitch(true);
     }

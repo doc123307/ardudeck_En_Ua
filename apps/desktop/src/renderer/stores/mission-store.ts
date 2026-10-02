@@ -768,7 +768,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
         const importedGroup = createImportedGroup({
           importedFrom: 'fc',
           sourceLabel: t('stores.mission_store.vehicleMission', { stamp }),
-          name: `From vehicle @ ${stamp}`,
+          name: t('stores.mission_store.fromVehicleGroupName', { stamp }),
           color: nextGroupColor(groups),
           order: -1,
         });
@@ -1715,7 +1715,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
     const importedGroup = createImportedGroup({
       importedFrom: 'fc',
       sourceLabel: t('stores.mission_store.vehicleMission', { stamp }),
-      name: `From vehicle @ ${stamp}`,
+      name: t('stores.mission_store.fromVehicleGroupName', { stamp }),
       color: nextGroupColor(keptGroups),
       // Place at order = -1 then renumber so the imported group sits at
       // the top of the table. The user can drag-reorder later.

@@ -616,9 +616,10 @@ export const MavlinkConfigView: React.FC = () => {
     <div className="h-full flex flex-col bg-surface-base">
       {/* Header */}
       <div className="shrink-0 px-6 py-4 border-b border-subtle bg-gradient-to-r from-surface to-surface">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+        {/* In a narrow window the action buttons drop to their own row instead of squeezing the labels. */}
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <div className="flex items-center gap-4 whitespace-nowrap">
+            <div className="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
               <Cpu className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -643,7 +644,7 @@ export const MavlinkConfigView: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 whitespace-nowrap">
             <VaultSyncBadge variant="button" />
             {isLoading && (
               <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border-blue-500/30 rounded-lg">

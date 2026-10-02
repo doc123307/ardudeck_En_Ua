@@ -403,6 +403,12 @@ export function ConnectionPanel() {
 
   // Respond to SITL starting - switch to TCP and auto-connect with retry
   useEffect(() => {
+    // Already linked: the hand-off is done. Left set, the flag would fire a
+    // reconnect (and a false "SITL failed to start") on the next disconnect.
+    if (pendingSitlSwitch && connectionState.isConnected) {
+      setPendingSitlSwitch(false);
+      return;
+    }
     if (pendingSitlSwitch && !connectionState.isConnected) {
       // Which SITL flavour started decides the transport: ArduPilot / iNav offer
       // MAVLink/MSP over TCP 5760, PX4 offers MAVLink over UDP 14550 (we listen,

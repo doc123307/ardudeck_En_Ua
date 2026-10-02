@@ -85,12 +85,13 @@ export function HudPanel() {
       {/* Vehicle profile: two independent arrangements, one HUD */}
       <Section title={t('osd.HudPanel.vehicleProfile')} icon={designGround ? Car : Plane}>
         <div className="px-2 pb-1">
-          <div className="inline-flex w-full items-center rounded-lg border border-subtle overflow-hidden bg-surface">
+          {/* Side by side when the panel is wide enough, stacked when it is not: never clipped. */}
+          <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(6.5rem,1fr))] rounded-lg border border-subtle overflow-hidden bg-surface">
             {([['air', 'Aircraft', Plane], ['ground', 'Ground', Car]] as const).map(([key, , Icon]) => (
               <button
                 key={key}
                 onClick={() => setDesignGround(key === 'ground')}
-                className={`flex flex-1 items-center justify-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium transition-colors ${
+                className={`flex min-w-0 items-center justify-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap transition-colors ${
                   (key === 'ground') === designGround ? 'bg-blue-600/80 text-white' : 'text-content-secondary hover:text-content hover:bg-surface-raised'
                 }`}
               >
@@ -103,7 +104,7 @@ export function HudPanel() {
         <p className="px-2 pb-1 text-[10px] leading-snug text-content-tertiary">
           {t('osd.HudPanel.youAreEditingThe')} {designGround ? t('osd.HudPanel.groundVehicleRoverBoat') : t('osd.HudPanel.aircraft')} {t('osd.HudPanel.arrangementEachKeepsItsOwnInstruments')}
         </p>
-        <Row label={t('osd.HudPanel.liveOverlayUses')}>
+        <Row stacked label={t('osd.HudPanel.liveOverlayUses')}>
           <select
             value={config.profile}
             onChange={(e) => setProfile(e.target.value as HudProfile)}
@@ -130,8 +131,8 @@ export function HudPanel() {
               <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${on ? 'bg-blue-500/15 text-blue-400' : 'bg-surface-raised text-content-tertiary'}`}>
                 {Icon && <Icon className="h-3.5 w-3.5" />}
               </span>
-              <span className="flex-1 truncate">{wdef.label}</span>
-              {wdef.movable && <span className="text-[9px] uppercase tracking-wide text-content-tertiary">{t('osd.HudPanel.drag')}</span>}
+              <span className="min-w-0 flex-1 truncate">{wdef.label}</span>
+              {wdef.movable && <span className="shrink-0 text-[9px] uppercase tracking-wide text-content-tertiary">{t('osd.HudPanel.drag')}</span>}
               <span className={`h-3.5 w-3.5 shrink-0 rounded-[4px] border transition-colors ${on ? 'border-blue-500 bg-blue-500' : 'border-strong bg-surface-input'} flex items-center justify-center`}>
                 {on && <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6L9 17l-5-5" /></svg>}
               </span>
@@ -149,8 +150,8 @@ export function HudPanel() {
               <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${on ? 'bg-blue-500/15 text-blue-400' : 'bg-surface-raised text-content-tertiary'}`}>
                 <Puzzle className="h-3.5 w-3.5" />
               </span>
-              <span className="flex-1 truncate">{inst.label}</span>
-              <span className="text-[9px] uppercase tracking-wide text-content-tertiary">{t('osd.HudPanel.module')}</span>
+              <span className="min-w-0 flex-1 truncate">{inst.label}</span>
+              <span className="shrink-0 text-[9px] uppercase tracking-wide text-content-tertiary">{t('osd.HudPanel.module')}</span>
               <span className={`h-3.5 w-3.5 shrink-0 rounded-[4px] border transition-colors ${on ? 'border-blue-500 bg-blue-500' : 'border-strong bg-surface-input'} flex items-center justify-center`}>
                 {on && <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6L9 17l-5-5" /></svg>}
               </span>
@@ -181,7 +182,7 @@ export function HudPanel() {
                     <span className={`flex h-5 min-w-[2.75rem] shrink-0 items-center justify-center rounded px-1.5 font-mono text-[10px] ${on ? 'bg-indigo-500/15 text-indigo-300' : 'bg-surface-raised text-content-tertiary'}`}>
                       {r.label}
                     </span>
-                    <span className="flex-1 truncate">{r.description}</span>
+                    <span className="min-w-0 flex-1 truncate">{r.description}</span>
                     <span className={`h-3.5 w-3.5 shrink-0 rounded-[4px] border transition-colors ${on ? 'border-indigo-500 bg-indigo-500' : 'border-strong bg-surface-input'} flex items-center justify-center`}>
                       {on && <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6L9 17l-5-5" /></svg>}
                     </span>
@@ -272,7 +273,16 @@ function Section({ title, icon: Icon, children }: { title: string; icon: LucideI
   );
 }
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+/** `stacked` puts the control under its label: for a long label that cannot share a line with it in this narrow panel. */
+function Row({ label, stacked = false, children }: { label: string; stacked?: boolean; children: React.ReactNode }) {
+  if (stacked) {
+    return (
+      <div className="flex flex-col gap-1 px-2 py-1.5">
+        <span className="text-[11px] text-content-secondary">{label}</span>
+        <div className="flex min-w-0 [&>*]:w-full">{children}</div>
+      </div>
+    );
+  }
   return (
     <div className="flex items-center justify-between gap-2 px-2 py-1.5">
       <span className="text-[11px] text-content-secondary shrink-0">{label}</span>

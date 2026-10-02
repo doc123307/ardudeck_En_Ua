@@ -78,6 +78,10 @@ export const StickTestPanel: React.FC = () => {
   // it during the test because RC_CHANNELS_OVERRIDE doesn't satisfy ArduPilot's
   // "RC found" pre-arm gate even with force=21196.
   const savedArmingCheckRef = useRef<number | null>(null);
+  // True from the first thing the test changes on the vehicle until Release has
+  // undone it. The unmount cleanup only acts when this is set: opening and
+  // leaving this tab must never disarm a vehicle that is driving or flying.
+  const engagedRef = useRef(false);
 
   const parameters = useParameterStore((s) => s.parameters);
   const setParameter = useParameterStore((s) => s.setParameter);
@@ -131,6 +135,13 @@ export const StickTestPanel: React.FC = () => {
     return () => clearInterval(id);
   }, [active, sendOverride]);
 
+  const restoreArmingCheck = useCallback(async () => {
+    const saved = savedArmingCheckRef.current;
+    if (saved === null) return;
+    savedArmingCheckRef.current = null;
+    await setParameter('ARMING_CHECK', saved);
+  }, [setParameter]);
+
   const start = useCallback(async () => {
     setBusy(true);
     setError(null);
@@ -141,13 +152,13 @@ export const StickTestPanel: React.FC = () => {
       //    to relax it for the duration of the test. Restored on Release.
       const currentCheck = parameters.get('ARMING_CHECK')?.value;
       if (currentCheck !== undefined && currentCheck !== 0) {
-        savedArmingCheckRef.current = currentCheck;
         const ok = await setParameter('ARMING_CHECK', 0);
         if (!ok) {
           setError(tr('mavlink_config.StickTestPanel.failedToRelaxArmingCheck'));
           setBusy(false);
           return;
         }
+        savedArmingCheckRef.current = currentCheck;
       }
 
       // 2. Set mode to MANUAL so the mixer just passes sticks through with no
@@ -156,6 +167,7 @@ export const StickTestPanel: React.FC = () => {
       if (!modeOk) {
         setError(tr('mavlink_config.StickTestPanel.failedToSetManualMode'));
         setBusy(false);
+        await restoreArmingCheck();
         return;
       }
 
@@ -169,12 +181,15 @@ export const StickTestPanel: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // 4. Force-arm.
+      engagedRef.current = true;
       const armOk = await window.electronAPI?.mavlinkArmDisarm?.(true, true);
       if (!armOk) {
+        engagedRef.current = false;
         setError(tr('mavlink_config.StickTestPanel.failedToArmVehicleCheckMessages'));
         setBusy(false);
         if (preArmInterval) clearInterval(preArmInterval);
         void window.electronAPI?.rcOverrideRelease?.();
+        await restoreArmingCheck();
         return;
       }
 
@@ -184,11 +199,12 @@ export const StickTestPanel: React.FC = () => {
     } catch (e) {
       if (preArmInterval) clearInterval(preArmInterval);
       void window.electronAPI?.rcOverrideRelease?.();
+      void restoreArmingCheck();
       setError(e instanceof Error ? e.message : tr('mavlink_config.StickTestPanel.unknownError'));
     } finally {
       setBusy(false);
     }
-  }, [parameters, setParameter, sendOverride, throttleNeutral]);
+  }, [parameters, setParameter, sendOverride, throttleNeutral, restoreArmingCheck]);
 
   const release = useCallback(async () => {
     setBusy(true);
@@ -200,29 +216,27 @@ export const StickTestPanel: React.FC = () => {
     try {
       await window.electronAPI?.rcOverrideRelease?.();
       await window.electronAPI?.mavlinkArmDisarm?.(false, true);
+      engagedRef.current = false;
       // Restore ARMING_CHECK if we changed it.
-      if (savedArmingCheckRef.current !== null) {
-        await setParameter('ARMING_CHECK', savedArmingCheckRef.current);
-        savedArmingCheckRef.current = null;
-      }
+      await restoreArmingCheck();
     } finally {
       setBusy(false);
     }
-  }, [setParameter, isRover]);
+  }, [restoreArmingCheck, isRover]);
 
   // Safety: release on unmount so we don't leave the FC armed with overrides
   // and ARMING_CHECK relaxed if the user navigates away or closes the app.
+  // Disarm only what this test armed.
   useEffect(() => {
     return () => {
-      void window.electronAPI?.rcOverrideRelease?.();
-      void window.electronAPI?.mavlinkArmDisarm?.(false, true);
-      const saved = savedArmingCheckRef.current;
-      if (saved !== null) {
-        void setParameter('ARMING_CHECK', saved);
-        savedArmingCheckRef.current = null;
+      if (engagedRef.current) {
+        engagedRef.current = false;
+        void window.electronAPI?.rcOverrideRelease?.();
+        void window.electronAPI?.mavlinkArmDisarm?.(false, true);
       }
+      void restoreArmingCheck();
     };
-  }, [setParameter]);
+  }, [restoreArmingCheck]);
 
   if (category === 'copter') {
     return (
