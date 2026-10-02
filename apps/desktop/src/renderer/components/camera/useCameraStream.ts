@@ -234,7 +234,10 @@ export function useCameraStream(
       if (cancelled || !stalled || !video) return;
       reconnectAttempts += 1;
       try {
-        if (!whepUrl || reconnectAttempts % RECHECK_SESSION_EVERY === 0) {
+        // Ask the engine on the first attempt too, not only every Nth: if the hub lost this
+        // feed's path (it restarted, another view closed the feed), replaying the old URL
+        // can never work, and the engine rebuilds the session in a second or two.
+        if (!whepUrl || reconnectAttempts === 1 || reconnectAttempts % RECHECK_SESSION_EVERY === 0) {
           const result = await window.electronAPI.cameraStart(source, resolved);
           if (cancelled) return;
           if (result.ok && result.session?.playback.kind === 'webrtc') whepUrl = result.session.playback.whepUrl;

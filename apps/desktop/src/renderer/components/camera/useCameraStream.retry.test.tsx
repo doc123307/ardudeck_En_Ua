@@ -120,7 +120,9 @@ describe('useCameraStream retry and first-frame gating', () => {
 
     await act(async () => { await vi.advanceTimersByTimeAsync(RECONNECT_MS); });
     expect(vi.mocked(playWhep)).toHaveBeenCalledTimes(2);
-    expect(api.cameraStart).toHaveBeenCalledTimes(1);
+    // The first reconnect asks the engine whether the session still stands (it hands the live
+    // one back untouched): a hub that lost the path must be noticed now, not ten tries later.
+    expect(api.cameraStart).toHaveBeenCalledTimes(2);
 
     await act(async () => { showFrame(); });
     expect(status).toBe('live');
@@ -142,7 +144,8 @@ describe('useCameraStream retry and first-frame gating', () => {
     await act(async () => { await vi.advanceTimersByTimeAsync(RECONNECT_MS * RECHECK_SESSION_EVERY); });
     // One attempt per second, no growing backoff.
     expect(vi.mocked(playWhep)).toHaveBeenCalledTimes(1 + RECHECK_SESSION_EVERY);
-    expect(api.cameraStart).toHaveBeenCalledTimes(2);
+    // The initial start, the check on the first reconnect, and the periodic one.
+    expect(api.cameraStart).toHaveBeenCalledTimes(3);
     expect(status).toBe('stalled');
     expect(api.cameraStop).not.toHaveBeenCalled();
   });

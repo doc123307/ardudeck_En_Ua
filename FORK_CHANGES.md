@@ -119,6 +119,8 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 | Visiting the SITL view while already connected left the "switch to SITL" flag set: the next disconnect tried to reconnect and showed "SITL process failed to start". | yes |
 | Console entries from different main-process sources reused the same ids, giving duplicate React keys in the debug console. Entries are numbered on arrival. | yes |
 | A failed update check (no `latest.yml`, e.g. a draft release) dumped the HTTP error and a stack trace into the About page and the console. It is now one plain sentence. | fork only |
+| **With two cameras on screen, starting or re-pointing one feed killed the other.** Two feeds opening together each launched the media hub (`ensureHub` had no single-flight). The second hub could not bind and exited, clearing the engine's handle to the first; from then on every feed start launched another doomed hub and rewrote `mediamtx.yml`, which the running hub hot-reloads, dropping every path added over the API. Now: one hub start at a time, the config file is written only when it changes, an exiting process clears the state only if it is the hub in use, a hub left by a killed run is reused, and a "live" session whose hub path has vanished is rebuilt (the player asks on its first reconnect). | yes |
+| **Closed feeds kept being pulled.** Hub paths were removed with `POST …/delete/…`; MediaMTX wants `DELETE` and answered 404, so every feed ever opened kept streaming from the vehicle until the app closed. Stop and start of the same feed are now ordered, so the removal cannot overtake the re-add. Code: `src/main/media/hub-api.ts`. | yes |
 | **Video recordings were empty files on Windows.** Recording was stopped by killing ffmpeg, which on Windows is immediate, so the MP4 never got its index (48-byte files). Recordings are now fragmented MP4 (playable even when cut short), stopped by asking ffmpeg to quit, named by date, time and camera, and a recording that cannot start is reported instead of shown as running. Code: `src/main/media/recording.ts`. | yes |
 | Layout at small window sizes (1024–1366 px wide): telemetry header values wrapped under their labels, the Parameters header squeezed its buttons, the mission map tools ran off the map, the welcome logo was cut off, the OSD editor's profile tabs and a select were clipped, the mission toast covered the map search and dock tabs, a tooltip could outlive its host. | yes |
 
@@ -232,6 +234,13 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   Стосується й оригіналу.
 - **Однакові номери записів у консолі** з різних джерел головного процесу. Стосується й оригіналу.
 - **Помилка перевірки оновлень** для чернеткового випуску: замість HTTP-дампу — одне зрозуміле речення.
+- **Дві камери на екрані: запуск або перемикання однієї зупиняло іншу.** Під час одночасного старту двох
+  потоків відеохаб запускався двічі; другий падав, після чого кожен запуск потоку переписував файл
+  конфігурації хаба, а той, перечитавши його, втрачав усі додані потоки. Тепер хаб стартує один раз,
+  конфігурація не переписується без потреби, а «живий» потік, який хаб втратив, відновлюється сам.
+  Стосується й оригіналу.
+- **Закриті потоки продовжували тягнутися з борту** (хаб не приймав команду видалення потоку) — зайвий
+  трафік. Виправлено. Стосується й оригіналу.
 - **Порожні файли запису відео під Windows.** Запис зупинявся «вбивством» ffmpeg, і MP4 лишався без
   індексу (48 байтів). Тепер це фрагментований MP4 (відтворюється навіть після обриву), зупинка коректна,
   назва файлу — дата, час і камера; якщо запис не почався, про це сказано. Стосується й оригіналу.

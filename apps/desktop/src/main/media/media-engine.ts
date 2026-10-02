@@ -20,7 +20,7 @@
 
 import { spawn, type ChildProcess, spawnSync } from 'node:child_process';
 import { join } from 'node:path';
-import { existsSync, mkdirSync, writeFileSync, statSync, unlinkSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, statSync, unlinkSync } from 'node:fs';
 import { networkInterfaces } from 'node:os';
 import { app } from 'electron';
 import { mediaBinariesDownloader } from './media-binaries-downloader.js';
@@ -28,6 +28,7 @@ import { buildWfbngSdp, buildWfbngFfmpegArgs, wfbngPort, wfbngShouldTranscode } 
 import { needsH264Relay, buildH264RelayArgs, encoderChain } from './h264-relay.js';
 import { wfbngReceiver } from './wfbng-receiver.js';
 import { recordArgs, recordingFileName, stopRecording } from './recording.js';
+import { HubApi } from './hub-api.js';
 import type {
   CameraSourceConfig,
   CameraStartResult,
@@ -82,6 +83,14 @@ export class MediaEngine {
   /** In-flight start() per source id, so concurrent starts of the same feed
       (Vision panel + OSD backdrop + grid tile all mount at once) run once. */
   private starting = new Map<string, Promise<CameraStartResult>>();
+  /** In-flight stop() per source id: a start for the same feed waits for it, so the hub
+      never sees "add path" overtaken by the "remove path" of the session it replaces. */
+  private stopping = new Map<string, Promise<void>>();
+  private readonly hubApi = new HubApi(`http://${HOST}:${API_PORT}`);
+  /** In-flight hub start, shared by every feed that needs the hub at that moment. */
+  private hubStarting: Promise<boolean> | null = null;
+  /** The hub in use was not started by this run (left over from a killed one). */
+  private hubAdopted = false;
   private ffmpegPath: string | null = null;
   private mediamtxPath: string | null = null;
   private hubReady = false;
@@ -161,11 +170,44 @@ export class MediaEngine {
     };
   }
 
-  /** Start MediaMTX if not already running. Resolves once the API answers. */
+  /**
+   * Start MediaMTX if not already running. Resolves once the API answers.
+   *
+   * One start at a time: two feeds opening together (a camera grid, the operator
+   * screen) used to launch two hubs. The second could not bind its ports and died,
+   * taking the engine's handle with it, and from then on every feed start launched
+   * another doomed hub and rewrote the config file - which the surviving hub
+   * hot-reloads, dropping every path added over the API. The visible result: with
+   * two cameras, starting or re-pointing one killed the other.
+   */
   private async ensureHub(): Promise<boolean> {
     if (this.hubReady && this.hub) return true;
+    if (this.hubReady && this.hubAdopted) {
+      if (await this.hubAlive()) return true;
+      this.hubReady = false;
+      this.hubAdopted = false;
+    }
+    this.hubStarting ??= this.startHub().finally(() => { this.hubStarting = null; });
+    return this.hubStarting;
+  }
+
+  private async startHub(): Promise<boolean> {
     this.resolveBinaries();
     if (!this.mediamtxPath) return false;
+
+    // A hub is already answering on our ports: left behind by a run that was killed.
+    // A second one cannot bind, so use this one - without touching its config file -
+    // after clearing the feeds the previous run left it pulling.
+    if (await this.hubAlive()) {
+      this.hubAdopted = true;
+      this.hubReady = true;
+      for (const name of await this.hubApi.configuredPaths()) {
+        if (name.startsWith('cam_')) await this.hubApi.removePath(name);
+      }
+      this.logSink?.('warn', 'Video hub from a previous run is still running; using it');
+      return true;
+    }
+    this.hubAdopted = false;
 
     // MediaMTX watches the DIRECTORY of its config file for hot-reload. The
     // userData root contains Electron's SingletonSocket (a unix socket) which
@@ -174,7 +216,9 @@ export class MediaEngine {
     const cfgDir = join(app.getPath('userData'), 'media-engine');
     if (!existsSync(cfgDir)) mkdirSync(cfgDir, { recursive: true });
     const cfgPath = join(cfgDir, 'mediamtx.yml');
-    writeFileSync(cfgPath, this.hubConfig(), 'utf8');
+    // Written only when it differs: a rewrite is a hot-reload signal to any hub watching it.
+    const config = this.hubConfig();
+    if (!existsSync(cfgPath) || readFileSync(cfgPath, 'utf8') !== config) writeFileSync(cfgPath, config, 'utf8');
 
     this.lastHubError = null;
     // Keep a rolling tail of mediamtx output so both a startup failure (port
@@ -182,12 +226,15 @@ export class MediaEngine {
     // surface a real reason instead of a generic message.
     this.hubLog = '';
     const append = (d: Buffer) => { this.hubLog = (this.hubLog + d.toString()).slice(-4000); };
-    this.hub = spawn(this.mediamtxPath, [cfgPath], {
+    const hub = spawn(this.mediamtxPath, [cfgPath], {
       stdio: ['ignore', 'pipe', 'pipe'],
     });
-    this.hub.stderr?.on('data', append);
-    this.hub.stdout?.on('data', append);
-    this.hub.on('exit', (code) => {
+    this.hub = hub;
+    hub.stderr?.on('data', append);
+    hub.stdout?.on('data', append);
+    hub.on('exit', (code) => {
+      // Only the hub in use may clear the state: an older process finishing late must not.
+      if (this.hub !== hub) return;
       this.hubReady = false;
       this.hub = null;
       const errLine = this.hubLog.split('\n').reverse().find((l) => /ERR|error|panic/i.test(l));
@@ -197,6 +244,7 @@ export class MediaEngine {
     // Poll the API until it answers (or give up after ~5s).
     for (let i = 0; i < 25; i++) {
       await delay(200);
+      if (this.hub !== hub) return false; // it exited: could not bind, bad config
       if (await this.hubAlive()) {
         this.hubReady = true;
         return true;
@@ -205,13 +253,8 @@ export class MediaEngine {
     return false;
   }
 
-  private async hubAlive(): Promise<boolean> {
-    try {
-      const res = await fetch(`http://${HOST}:${API_PORT}/v3/paths/list`);
-      return res.ok;
-    } catch {
-      return false;
-    }
+  private hubAlive(): Promise<boolean> {
+    return this.hubApi.alive();
   }
 
   private hubConfig(): string {
@@ -252,38 +295,12 @@ export class MediaEngine {
     ].join('\n');
   }
 
-  /**
-   * Register a pull-source path with the hub. Uses `replace` (not `add`) so it
-   * is idempotent — re-running for the same source id (a retry, a transport
-   * switch, or a dev StrictMode remount) upserts instead of failing with
-   * "path already exists".
-   */
-  private async addHubPath(name: string, source: string, rtspTransport: 'automatic' | 'tcp' | 'udp' = 'automatic'): Promise<boolean> {
-    try {
-      const res = await fetch(`http://${HOST}:${API_PORT}/v3/config/paths/replace/${encodeURIComponent(name)}`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          source,
-          sourceOnDemand: false,
-          // 'automatic' (default) negotiates UDP then falls back to TCP. The
-          // operator can override per source. Forcing 'udp' silently fails
-          // against TCP-only sources, so it's an explicit opt-in only.
-          rtspTransport,
-        }),
-      });
-      return res.ok;
-    } catch {
-      return false;
-    }
+  private addHubPath(name: string, source: string, rtspTransport: 'automatic' | 'tcp' | 'udp' = 'automatic'): Promise<boolean> {
+    return this.hubApi.setPath(name, source, rtspTransport);
   }
 
-  private async removeHubPath(name: string): Promise<void> {
-    try {
-      await fetch(`http://${HOST}:${API_PORT}/v3/config/paths/delete/${encodeURIComponent(name)}`, { method: 'POST' });
-    } catch {
-      /* best-effort */
-    }
+  private removeHubPath(name: string): Promise<void> {
+    return this.hubApi.removePath(name);
   }
 
   /**
@@ -404,8 +421,14 @@ export class MediaEngine {
    * dongle claim-storm from multiple render surfaces).
    */
   async start(source: CameraSourceConfig, resolvedUrl?: string): Promise<CameraStartResult> {
+    // A feed being re-pointed (HD/SD, a new URL) stops and starts back to back: let the stop finish.
+    await this.stopping.get(source.id);
     const live = this.sessions.get(source.id);
-    if (live && live.session.status === 'live') return { ok: true, session: live.session };
+    if (live && live.session.status === 'live') {
+      if (await this.sessionUsable(live, source, resolvedUrl)) return { ok: true, session: live.session };
+      // Its hub path is gone (the hub restarted or reloaded) or it points elsewhere: build it again.
+      await this.stop(source.id);
+    }
     const inflight = this.starting.get(source.id);
     if (inflight) return inflight;
     const p = this.doStart(source, resolvedUrl).finally(() => { this.starting.delete(source.id); });
@@ -633,7 +656,29 @@ export class MediaEngine {
     }, WATCHDOG_TICK_MS);
   }
 
-  async stop(sourceId: string): Promise<void> {
+  /**
+   * True when the live session can simply be handed back: same stream as asked for, and
+   * the hub still has its path. "Live" in our map says nothing about the hub, which
+   * forgets its paths when it restarts.
+   */
+  private async sessionUsable(active: ActiveSession, source: CameraSourceConfig, resolvedUrl?: string): Promise<boolean> {
+    const wanted = resolvedUrl ?? source.url;
+    const current = active.resolvedUrl ?? active.source?.url;
+    if (active.source && (wanted !== current || source.rtspTransport !== active.source.rtspTransport)) return false;
+    if (!active.configuredPath) return true;
+    // null = the hub does not answer: rebuilding goes through ensureHub, which restarts it.
+    return (await this.hubApi.hasPath(active.configuredPath)) === true;
+  }
+
+  stop(sourceId: string): Promise<void> {
+    const running = this.stopping.get(sourceId);
+    if (running) return running;
+    const p = this.doStop(sourceId).finally(() => { this.stopping.delete(sourceId); });
+    this.stopping.set(sourceId, p);
+    return p;
+  }
+
+  private async doStop(sourceId: string): Promise<void> {
     const active = this.sessions.get(sourceId);
     if (!active) return;
     active.session.status = 'stopped';
@@ -842,6 +887,7 @@ export class MediaEngine {
     if (this.hub) killProc(this.hub);
     this.hub = null;
     this.hubReady = false;
+    this.hubAdopted = false;
   }
 }
 
