@@ -43,7 +43,15 @@
       "pitch": "Pitch",
       "tiltTip": "Amber from {{warn}}°, red from {{limit}}°: the vehicle may tip over",
       "linkLost": "Link lost {{seconds}} s",
-      "recording": "REC"
+      "recording": "REC",
+      "hdop": "HDOP",
+      "hdopTip": "GPS accuracy: the lower the better (under 2 is good)",
+      "current": "Current",
+      "ampere": "A",
+      "heading": "Heading",
+      "altitude": "Altitude",
+      "throttle": "Throttle",
+      "clock": "Time"
     },
     "modes": {
       "Manual": "Manual",
@@ -63,7 +71,11 @@
     },
     "OperatorCameras": {
       "noCameras": "No cameras are set up. Ask the administrator to add them.",
-      "makeMain": "Make \"{{name}}\" the main camera"
+      "makeMain": "Make \"{{name}}\" the main camera",
+      "allPoppedOut": "Every camera is open in a window of its own. Close one of those windows to bring it back here.",
+      "cameraGone": "This camera is no longer set up.",
+      "dragTip": "Drag to move; pull the corner to resize",
+      "popOut": "Open in a separate window (for another monitor)"
     },
     "OperatorMiniMap": {
       "map": "Map",
@@ -117,7 +129,8 @@
       "layoutPipTip": "One camera full size, the others as thumbnails",
       "thumbSizeTip": "Thumbnail size",
       "cameraControls": "Camera controls",
-      "pinControlsTip": "Keep day/night, light and HD/SD on screen. Otherwise they show when the pointer is over the video."
+      "pinControlsTip": "Keep day/night, light and HD/SD on screen. Otherwise they show when the pointer is over the video.",
+      "resetArrangementTip": "Put the windows back where they started"
     },
     "OperatorShell": {
       "linkUp": "Vehicle connected",
@@ -171,7 +184,22 @@
       "newPassword": "New password",
       "changePassword": "Change",
       "passwordSaved": "Password saved.",
-      "passwordReset": "A forgotten password is reset by support: the file \"operator-admin.json\" is removed from the app data folder, after which a new password can be created."
+      "passwordReset": "A forgotten password is reset by support: the file \"operator-admin.json\" is removed from the app data folder, after which a new password can be created.",
+      "statusFields": "Status strip",
+      "statusFieldsHint": "The telemetry values across the top of the operator screen, in this order. Armed state and the recording indicator are always there.",
+      "noFields": "No values selected: the strip shows the armed state only.",
+      "moveLeft": "Earlier in the strip",
+      "moveRight": "Later in the strip",
+      "removeField": "Remove from the strip",
+      "elements": "Screen elements",
+      "elementsHint": "Switch off what the operator does not need. STOP is always there.",
+      "element_map": "Map",
+      "element_infoBlock": "Heading / altitude / speed / time block",
+      "element_outputs": "Vehicle output buttons (lights…)",
+      "element_record": "Record button",
+      "element_layoutSwitch": "Grid / one large switch",
+      "element_cameraControls": "Camera controls (day/night, light, HD/SD, PTZ)",
+      "element_popOut": "Opening a camera or the map in a separate window"
     }
   }
 }

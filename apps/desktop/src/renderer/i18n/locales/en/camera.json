@@ -108,7 +108,17 @@
       "saveAndCheck": "Save and check",
       "notSavedYet": "not saved yet",
       "title": "Camera feeds",
-      "close": "Close"
+      "close": "Close",
+      "controlHttp": "Custom HTTP commands",
+      "onvifHint": "ONVIF must be switched on in the camera's own settings, with an ONVIF user. Port: the camera's web port (usually 80).",
+      "dahuaHint": "Dahua and cameras on Dahua firmware. Port: the camera's web port (usually 80).",
+      "httpHint": "For a control service of your own: each button sends one HTTP request. The address is a full URL or a path on the host above.",
+      "commandLabel": "Button text",
+      "commandUrl": "/path or http://host:port/path",
+      "commandBody": "Request body (optional)",
+      "commandAdd": "+ Add a command",
+      "commandRemove": "Remove the command",
+      "save": "Save"
     },
     "CameraSourceSwitch": {
       "show": "Show {{label}}"
@@ -248,7 +258,13 @@
       "customWebrtcWhep": "Custom WebRTC (WHEP)",
       "aWhepEndpointPublishedByA": "A WHEP endpoint published by a companion computer. Lowest latency, played directly.",
       "usbHdmiCaptureDevice": "USB / HDMI capture device",
-      "analogFpvToUsbDongleOr": "Analog-FPV-to-USB dongle or capture card on this machine. Played locally: the only path suitable for piloting."
+      "analogFpvToUsbDongleOr": "Analog-FPV-to-USB dongle or capture card on this machine. Played locally: the only path suitable for piloting.",
+      "ipHikvision": "IP camera: Hikvision",
+      "ipDahua": "IP camera: Dahua",
+      "ipUniview": "IP camera: Uniview (UNV)",
+      "ipAjax": "IP camera: Ajax",
+      "ipCameraNote": "Replace user, password and the address with the camera's own. HD/SD then switches between its main and sub stream.",
+      "ipAjaxNote": "The path is the camera's MAC address in lower case without colons, then -0_m (main) or -0_s (SD). RTSP must be enabled for the camera in the Ajax app."
     },
     "hud_config": {
       "groundSpeedBox": "Ground speed box",
@@ -339,7 +355,24 @@
       "lightMixed": "Mixed",
       "lightOff": "Off",
       "controlUnavailable": "Camera control unavailable",
-      "retry": "Retry"
+      "retry": "Retry",
+      "lightAuto": "Auto",
+      "lightOn": "On",
+      "ptz": "Turn",
+      "ptzLeft": "Turn left (hold)",
+      "ptzRight": "Turn right (hold)",
+      "ptzUp": "Tilt up (hold)",
+      "ptzDown": "Tilt down (hold)",
+      "ptzZoomIn": "Zoom in (hold)",
+      "ptzZoomOut": "Zoom out (hold)",
+      "preset": "Preset…",
+      "presetTip": "Stored camera positions",
+      "presetGo": "Go",
+      "presetRemove": "Remove the selected preset",
+      "presetName": "Preset name",
+      "presetSave": "Store",
+      "presetSaveTip": "Store the camera's current position as a preset",
+      "commandFailed": "Command failed"
     }
   }
 }

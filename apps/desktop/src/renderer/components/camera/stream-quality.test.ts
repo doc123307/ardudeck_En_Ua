@@ -34,6 +34,24 @@ describe('stream quality (main vs sub stream)', () => {
     expect(withStreamQuality('rtsp://h/Streaming/Channels/101', 'sd')).toBe('rtsp://h/Streaming/Channels/102');
   });
 
+  it('switches Uniview streams, in both url styles', () => {
+    expect(streamQuality('rtsp://u:p@192.168.1.13:554/media/video1')).toBe('hd');
+    expect(withStreamQuality('rtsp://u:p@192.168.1.13:554/media/video1', 'sd')).toBe('rtsp://u:p@192.168.1.13:554/media/video2');
+    expect(withStreamQuality('rtsp://h/media/video2', 'hd')).toBe('rtsp://h/media/video1');
+    // a third stream is neither HD nor SD
+    expect(streamQuality('rtsp://h/media/video3')).toBeNull();
+    expect(streamQuality('rtsp://h/unicast/c1/s1/live')).toBe('sd');
+    expect(withStreamQuality('rtsp://h/unicast/c1/s1/live', 'hd')).toBe('rtsp://h/unicast/c1/s0/live');
+  });
+
+  it('switches Ajax streams, named by the camera MAC', () => {
+    expect(streamQuality('rtsp://u:p@192.168.4.103:8554/9c756e3db512-0_m')).toBe('hd');
+    expect(withStreamQuality('rtsp://u:p@192.168.4.103:8554/9c756e3db512-0_m', 'sd')).toBe('rtsp://u:p@192.168.4.103:8554/9c756e3db512-0_s');
+    expect(withStreamQuality('rtsp://h:8554/849459C162A6-0_s', 'hd')).toBe('rtsp://h:8554/849459C162A6-0_m');
+    // not a MAC: left alone
+    expect(streamQuality('rtsp://h:8554/stream_m')).toBeNull();
+  });
+
   it('leaves urls that do not name their stream alone', () => {
     expect(streamQuality('rtsp://h:8554/live')).toBeNull();
     expect(withStreamQuality('rtsp://h:8554/live', 'sd')).toBe('rtsp://h:8554/live');

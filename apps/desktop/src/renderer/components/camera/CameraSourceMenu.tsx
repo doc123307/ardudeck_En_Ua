@@ -11,7 +11,7 @@ import { CAMERA_PRESETS, presetById } from './camera-presets';
 import { WfbngSetupGuide } from './WfbngSetupGuide';
 import { CameraControlBar } from './CameraControlBar';
 import { useCameraControlStore } from '../../stores/camera-control-store';
-import type { CameraSourceConfig, GimbalControlMode } from '../../../shared/camera-types';
+import type { CameraSourceConfig, GimbalControlMode, CameraControlVendor, CameraHttpCommand } from '../../../shared/camera-types';
 import { DEFAULT_GIMBAL_CONFIG } from '../../../shared/camera-types';
 import { t } from '../../i18n';
 
@@ -279,6 +279,28 @@ function SourceRow({ source, selected, onSelect, onChange, onRemove }: {
  * The fields edit a draft; the camera is only contacted on "Save and check". Logging in on
  * every keystroke sent half-typed passwords, and cameras lock the account after a few of those.
  */
+/**
+ * What the installer picks in "Camera control". Several makes share one protocol
+ * (ONVIF); the make is kept so the list shows what was picked.
+ */
+const CONTROL_CHOICES: Array<{ value: string; vendor: CameraControlVendor; brand?: string; label: string }> = [
+  { value: 'hikvision', vendor: 'hikvision', label: 'Hikvision (ISAPI)' },
+  { value: 'dahua', vendor: 'dahua', label: 'Dahua (HTTP API)' },
+  { value: 'onvif', vendor: 'onvif', label: 'ONVIF' },
+  { value: 'onvif:unv', vendor: 'onvif', brand: 'unv', label: 'Uniview / UNV (ONVIF)' },
+  { value: 'onvif:bitrek', vendor: 'onvif', brand: 'bitrek', label: 'Bitrek (ONVIF)' },
+  { value: 'onvif:ajax', vendor: 'onvif', brand: 'ajax', label: 'Ajax (ONVIF)' },
+  { value: 'http', vendor: 'http', get label() { return t('camera.CameraSourceMenu.controlHttp'); } },
+];
+
+function controlChoice(control: CameraSourceConfig['control']): string {
+  if (!control) return 'none';
+  const withBrand = `${control.vendor}:${control.brand ?? ''}`;
+  return CONTROL_CHOICES.some((c) => c.value === withBrand) ? withBrand : control.vendor;
+}
+
+const HTTP_METHODS = ['GET', 'POST', 'PUT'] as const;
+
 function ControlSettings({ source, onChange }: {
   source: CameraSourceConfig;
   onChange: (patch: Partial<CameraSourceConfig>) => void;
@@ -299,24 +321,41 @@ function ControlSettings({ source, onChange }: {
     if (draft) void refresh({ ...source, control: draft });
   };
   const field = 'min-w-0 rounded bg-surface-input px-1.5 py-1 text-[11px] text-content';
+  const isHttp = draft?.vendor === 'http';
+  const commands = draft?.commands ?? [];
+  const setCommand = (id: string, p: Partial<CameraHttpCommand>) =>
+    patch({ commands: commands.map((c) => (c.id === id ? { ...c, ...p } : c)) });
 
   return (
     <div className="mt-1.5 border-t border-subtle pt-1.5 text-[10px] text-content-secondary">
       <label className="flex items-center gap-1" title={t('camera.CameraSourceMenu.cameraControlTip')}>
         {t('camera.CameraSourceMenu.cameraControl')}
         <select
-          value={draft?.vendor ?? 'none'}
+          value={controlChoice(draft)}
           onChange={(e) => {
-            if (e.target.value === 'hikvision') { patch({}); return; }
-            setDraft(undefined);
-            onChange({ control: undefined }); // switching control off needs no check
+            const choice = CONTROL_CHOICES.find((c) => c.value === e.target.value);
+            if (!choice) {
+              setDraft(undefined);
+              onChange({ control: undefined }); // switching control off needs no check
+              return;
+            }
+            // Address and account carry over between protocols; the make and the buttons do not.
+            setDraft((d) => ({
+              host: d?.host, port: d?.port, https: d?.https, username: d?.username, password: d?.password, channel: d?.channel,
+              vendor: choice.vendor,
+              ...(choice.brand ? { brand: choice.brand } : {}),
+              ...(choice.vendor === 'http' ? { commands: d?.commands ?? [] } : {}),
+            }));
           }}
           className={field}
         >
           <option value="none">{t('camera.CameraSourceMenu.cameraControlNone')}</option>
-          <option value="hikvision">Hikvision (ISAPI)</option>
+          {CONTROL_CHOICES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
         </select>
       </label>
+      {draft?.vendor === 'onvif' && <p className="mt-1 leading-snug text-content-tertiary">{t('camera.CameraSourceMenu.onvifHint')}</p>}
+      {draft?.vendor === 'dahua' && <p className="mt-1 leading-snug text-content-tertiary">{t('camera.CameraSourceMenu.dahuaHint')}</p>}
+      {isHttp && <p className="mt-1 leading-snug text-content-tertiary">{t('camera.CameraSourceMenu.httpHint')}</p>}
       {draft && (
         <>
           <div className="mt-1 grid grid-cols-[1fr_4.5rem_3.5rem] gap-1">
@@ -335,15 +374,17 @@ function ControlSettings({ source, onChange }: {
               title={t('camera.CameraSourceMenu.httpPort')}
               className={field}
             />
-            <input
-              type="number"
-              min={1}
-              value={draft.channel ?? ''}
-              onChange={(e) => patch({ channel: e.target.value ? Number(e.target.value) : undefined })}
-              placeholder="1"
-              title={t('camera.CameraSourceMenu.cameraChannel')}
-              className={field}
-            />
+            {isHttp ? <span /> : (
+              <input
+                type="number"
+                min={1}
+                value={draft.channel ?? ''}
+                onChange={(e) => patch({ channel: e.target.value ? Number(e.target.value) : undefined })}
+                placeholder="1"
+                title={t('camera.CameraSourceMenu.cameraChannel')}
+                className={field}
+              />
+            )}
           </div>
           <div className="mt-1 grid grid-cols-2 gap-1">
             <input
@@ -363,17 +404,46 @@ function ControlSettings({ source, onChange }: {
               autoComplete="new-password"
             />
           </div>
+
+          {isHttp && (
+            <div className="mt-1.5 flex flex-col gap-1">
+              {commands.map((c) => (
+                <div key={c.id} className="rounded border border-subtle p-1">
+                  <div className="grid grid-cols-[1fr_4rem_1.25rem] items-center gap-1">
+                    <input value={c.label} onChange={(e) => setCommand(c.id, { label: e.target.value })}
+                      placeholder={t('camera.CameraSourceMenu.commandLabel')} className={field} />
+                    <select value={c.method} onChange={(e) => setCommand(c.id, { method: e.target.value as CameraHttpCommand['method'] })} className={field}>
+                      {HTTP_METHODS.map((m) => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                    <button onClick={() => patch({ commands: commands.filter((x) => x.id !== c.id) })}
+                      className="text-content-tertiary hover:text-red-400" aria-label={t('camera.CameraSourceMenu.commandRemove')}>✕</button>
+                  </div>
+                  <input value={c.url} onChange={(e) => setCommand(c.id, { url: e.target.value })}
+                    placeholder={t('camera.CameraSourceMenu.commandUrl')} className={`${field} mt-1 w-full font-mono`} />
+                  {c.method !== 'GET' && (
+                    <input value={c.body ?? ''} onChange={(e) => setCommand(c.id, { body: e.target.value || undefined })}
+                      placeholder={t('camera.CameraSourceMenu.commandBody')} className={`${field} mt-1 w-full font-mono`} />
+                  )}
+                </div>
+              ))}
+              <button
+                onClick={() => patch({ commands: [...commands, { id: crypto.randomUUID(), label: '', method: 'POST', url: '' }] })}
+                className="self-start rounded border border-subtle px-2 py-0.5 text-[11px] text-content-secondary hover:text-content"
+              >{t('camera.CameraSourceMenu.commandAdd')}</button>
+            </div>
+          )}
+
           <div className="mt-1.5 flex items-center gap-2">
             <button
               onClick={save}
               disabled={!dirty}
               className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-blue-500 disabled:opacity-40"
-            >{t('camera.CameraSourceMenu.saveAndCheck')}</button>
+            >{isHttp ? t('camera.CameraSourceMenu.save') : t('camera.CameraSourceMenu.saveAndCheck')}</button>
             {dirty && <span className="text-amber-400">{t('camera.CameraSourceMenu.notSavedYet')}</span>}
           </div>
           {saved && !dirty && (
             <div className="mt-1.5">
-              <CameraControlBar source={source} />
+              <CameraControlBar source={source} editable />
             </div>
           )}
         </>

@@ -87,6 +87,9 @@ export class MediaEngine {
       never sees "add path" overtaken by the "remove path" of the session it replaces. */
   private stopping = new Map<string, Promise<void>>();
   private readonly hubApi = new HubApi(`http://${HOST}:${API_PORT}`);
+  /** Which windows are showing each feed (webContents ids). A feed popped out to a second
+      monitor is watched by two windows; it stops when the last of them lets go. */
+  private viewers = new Map<string, Set<number>>();
   /** In-flight hub start, shared by every feed that needs the hub at that moment. */
   private hubStarting: Promise<boolean> | null = null;
   /** The hub in use was not started by this run (left over from a killed one). */
@@ -420,7 +423,12 @@ export class MediaEngine {
    * in-flight attempt (prevents duplicate ffmpeg bridges and, for wfbng, a
    * dongle claim-storm from multiple render surfaces).
    */
-  async start(source: CameraSourceConfig, resolvedUrl?: string): Promise<CameraStartResult> {
+  async start(source: CameraSourceConfig, resolvedUrl?: string, viewer?: number): Promise<CameraStartResult> {
+    if (viewer !== undefined) {
+      const set = this.viewers.get(source.id) ?? new Set<number>();
+      set.add(viewer);
+      this.viewers.set(source.id, set);
+    }
     // A feed being re-pointed (HD/SD, a new URL) stops and starts back to back: let the stop finish.
     await this.stopping.get(source.id);
     const live = this.sessions.get(source.id);
@@ -670,12 +678,29 @@ export class MediaEngine {
     return (await this.hubApi.hasPath(active.configuredPath)) === true;
   }
 
-  stop(sourceId: string): Promise<void> {
+  /**
+   * Stop a feed. With `viewer`, that window lets go of it, and the feed only stops when no
+   * other window is still showing it. Without, it stops outright (rebuild, shutdown).
+   */
+  stop(sourceId: string, viewer?: number): Promise<void> {
+    if (viewer !== undefined) {
+      const set = this.viewers.get(sourceId);
+      set?.delete(viewer);
+      if (set && set.size > 0) return Promise.resolve();
+      this.viewers.delete(sourceId);
+    }
     const running = this.stopping.get(sourceId);
     if (running) return running;
     const p = this.doStop(sourceId).finally(() => { this.stopping.delete(sourceId); });
     this.stopping.set(sourceId, p);
     return p;
+  }
+
+  /** A window went away without closing its feeds (closed, crashed, reloaded). */
+  releaseViewer(viewer: number): void {
+    for (const [sourceId, set] of this.viewers) {
+      if (set.has(viewer)) void this.stop(sourceId, viewer);
+    }
   }
 
   private async doStop(sourceId: string): Promise<void> {

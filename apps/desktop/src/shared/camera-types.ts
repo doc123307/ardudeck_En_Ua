@@ -74,12 +74,38 @@ export interface CameraSourceConfig {
 }
 
 /**
- * Where and how to reach an IP camera's control API. Hikvision speaks ISAPI over
- * HTTP with digest auth; host and credentials default to the ones in the RTSP url,
- * since that is the same camera and usually the same account.
+ * How an IP camera is controlled:
+ *  - 'hikvision': ISAPI over HTTP with digest auth
+ *  - 'dahua': the Dahua HTTP API (configManager.cgi / ptz.cgi) with digest auth
+ *  - 'onvif': the ONVIF SOAP services (imaging, PTZ, presets) - any ONVIF camera
+ *  - 'http': buttons the administrator defines, each sending one HTTP request
+ */
+export type CameraControlVendor = 'hikvision' | 'dahua' | 'onvif' | 'http';
+
+export const CAMERA_CONTROL_VENDORS: readonly CameraControlVendor[] = ['hikvision', 'dahua', 'onvif', 'http'];
+
+/** One administrator-defined button of the 'http' vendor. */
+export interface CameraHttpCommand {
+  id: string;
+  label: string;
+  method: 'GET' | 'POST' | 'PUT';
+  /** Absolute, or a path on the control host ("/front/ir/on"). */
+  url: string;
+  body?: string;
+}
+
+/**
+ * Where and how to reach an IP camera's control API. Host and credentials default
+ * to the ones in the RTSP url, since that is the same camera and usually the same
+ * account.
  */
 export interface CameraControlConfig {
-  vendor: 'hikvision';
+  vendor: CameraControlVendor;
+  /**
+   * The make the installer picked, when it is controlled through a shared protocol
+   * (a Uniview or Bitrek camera over ONVIF). Shown in the settings only.
+   */
+  brand?: string;
   /** Defaults to the RTSP url's host (a port-forward may need another one). */
   host?: string;
   /** HTTP port of the camera's web API, 80 by default. */
@@ -90,15 +116,24 @@ export interface CameraControlConfig {
   password?: string;
   /** Video input channel; 1 for a single-sensor camera. */
   channel?: number;
+  /** 'http' vendor: the buttons. */
+  commands?: CameraHttpCommand[];
 }
 
 export type DayNightMode = 'auto' | 'day' | 'night';
 
 /**
- * Supplement light modes as ISAPI names them. Which ones a camera offers depends on
- * the model (a plain IR camera has irLight/close, a ColorVu one adds white light).
+ * Supplement light modes. Hikvision names (irLight, colorVuWhiteLight, ...) are passed
+ * through as the camera reports them; other protocols use 'auto' | 'on' | 'close'.
+ * Which ones a camera offers depends on the model.
  */
-export type SupplementLightMode = 'irLight' | 'colorVuWhiteLight' | 'eventIntelligence' | 'mixed' | 'close' | (string & {});
+export type SupplementLightMode = 'irLight' | 'colorVuWhiteLight' | 'eventIntelligence' | 'mixed' | 'close' | 'auto' | 'on' | (string & {});
+
+/** A stored camera position (PTZ preset). */
+export interface CameraPtzPreset {
+  id: string;
+  name: string;
+}
 
 /** What the camera reported; a missing field means the camera does not offer that control. */
 export interface CameraControlState {
@@ -110,11 +145,28 @@ export interface CameraControlState {
   dayNightOptions?: DayNightMode[];
   light?: SupplementLightMode;
   lightOptions?: SupplementLightMode[];
+  /** Present on a camera that can be steered. */
+  ptz?: { move: boolean; zoom: boolean };
+  presets?: CameraPtzPreset[];
+  /** 'http' vendor: the administrator's buttons. */
+  commands?: Array<{ id: string; label: string }>;
 }
 
 export type CameraControlAction =
   | { kind: 'dayNight'; mode: DayNightMode }
-  | { kind: 'light'; mode: SupplementLightMode };
+  | { kind: 'light'; mode: SupplementLightMode }
+  /** Continuous move, each axis -1..1; all zeros stops. */
+  | { kind: 'ptz'; pan: number; tilt: number; zoom: number }
+  | { kind: 'preset-goto'; id: string }
+  /** Store the current position; without an id the camera picks a free slot. */
+  | { kind: 'preset-save'; id?: string; name: string }
+  | { kind: 'preset-remove'; id: string }
+  | { kind: 'command'; id: string };
+
+/** Actions that move or trigger something but leave the reported settings as they were. */
+export function isMomentaryControl(action: CameraControlAction): boolean {
+  return action.kind === 'ptz' || action.kind === 'preset-goto' || action.kind === 'command';
+}
 
 /** wfb-ng dongle receiver state, rendered as plain-language chips in the UI. */
 export interface WfbngStatus {

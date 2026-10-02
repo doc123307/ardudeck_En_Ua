@@ -1,18 +1,25 @@
 /**
- * The fold-out map in the bottom-left corner of the operator screen: where the vehicle
- * is and which way it points. It follows the vehicle; nothing on it can be edited.
+ * The operator's map: where the vehicle is and which way it points. It follows the
+ * vehicle; nothing on it can be edited. Shown in a movable window on the operator
+ * screen, or in a window of its own on another monitor.
  */
 
 import { useEffect, useMemo } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Map as MapIcon, Maximize2, Minimize2, X } from 'lucide-react';
+import { ExternalLink, Map as MapIcon, X } from 'lucide-react';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useEditModeStore } from '../../stores/edit-mode-store';
-import { useOperatorUiStore } from '../../stores/operator-ui-store';
+import { MAP_FLOAT_KEY, useOperatorUiStore } from '../../stores/operator-ui-store';
+import { useIsDetached } from '../../stores/workspace-store';
 import { MAP_LAYERS } from '../../../shared/map-layers';
+import { FloatingWindow } from './FloatingWindow';
+import { defaultMapRect, type Size } from './float-layout';
 import { t } from '../../i18n';
+
+/** Component id of the map popped out into its own window (see detached/component-registry). */
+export const OPERATOR_MAP_WINDOW = 'operator-map';
 
 /** Shown until the vehicle reports a position. */
 const FALLBACK_CENTER: [number, number] = [50.45, 30.52];
@@ -44,11 +51,8 @@ function Follow({ position }: { position: [number, number] | null }) {
   return null;
 }
 
-export function OperatorMiniMap() {
-  const open = useOperatorUiStore((s) => s.mapOpen);
-  const large = useOperatorUiStore((s) => s.mapLarge);
-  const setOpen = useOperatorUiStore((s) => s.setMapOpen);
-  const setLarge = useOperatorUiStore((s) => s.setMapLarge);
+/** The map itself, filling whatever it is put in. */
+export function OperatorMap() {
   const gps = useTelemetryStore((s) => s.gps);
   const heading = useTelemetryStore((s) => s.vfrHud.heading);
   const layerKey = useEditModeStore((s) => s.mapLayer);
@@ -60,12 +64,42 @@ export function OperatorMiniMap() {
   const lon = hasFix ? Number(gps.lon.toFixed(6)) : null;
   const position = useMemo<[number, number] | null>(() => (lat !== null && lon !== null ? [lat, lon] : null), [lat, lon]);
   const icon = useMemo(() => vehicleIcon(Math.round(heading)), [heading]);
+  const info = MAP_LAYERS[layer] as { maxZoom: number; maxNativeZoom?: number };
 
+  return (
+    <div className="relative h-full w-full bg-surface-solid">
+      <MapContainer center={position ?? FALLBACK_CENTER} zoom={17} className="h-full w-full" zoomControl={false} attributionControl={false}>
+        <TileLayer key={layer} url={`tile-cache://${layer}/{z}/{x}/{y}.png`} maxZoom={info.maxZoom} maxNativeZoom={info.maxNativeZoom ?? info.maxZoom} />
+        <Follow position={position} />
+        {position && <Marker position={position} icon={icon} interactive={false} />}
+      </MapContainer>
+      {!position && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[500] bg-black/70 px-2 py-1 text-center text-xs text-amber-300">
+          {t('operator.OperatorMiniMap.noPosition')}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const HEADER_BTN = 'flex h-5 w-5 items-center justify-center rounded text-content-secondary hover:bg-surface-raised hover:text-content';
+
+/** The map as a movable, resizable window over the cameras; a button when it is hidden. */
+export function OperatorMiniMap({ area, allowPopOut = true }: { area: Size; allowPopOut?: boolean }) {
+  const open = useOperatorUiStore((s) => s.mapOpen);
+  const setOpen = useOperatorUiStore((s) => s.setMapOpen);
+  const rect = useOperatorUiStore((s) => s.floats[MAP_FLOAT_KEY]);
+  const setFloat = useOperatorUiStore((s) => s.setFloat);
+  const front = useOperatorUiStore((s) => s.front);
+  const bringToFront = useOperatorUiStore((s) => s.bringToFront);
+  const poppedOut = useIsDetached(OPERATOR_MAP_WINDOW);
+
+  if (poppedOut) return null;
   if (!open) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="pointer-events-auto flex items-center gap-2 rounded-lg border border-white/20 bg-black/70 px-3 py-2 text-sm font-medium text-white hover:bg-black/85"
+        className="absolute bottom-3 left-3 z-[15] flex items-center gap-2 rounded-lg border border-white/20 bg-black/70 px-3 py-2 text-sm font-medium text-white hover:bg-black/85"
       >
         <MapIcon className="h-4 w-4" />
         {t('operator.OperatorMiniMap.map')}
@@ -73,39 +107,36 @@ export function OperatorMiniMap() {
     );
   }
 
-  const info = MAP_LAYERS[layer] as { maxZoom: number; maxNativeZoom?: number };
   return (
-    <div
-      className="pointer-events-auto relative overflow-hidden rounded-xl border border-white/25 bg-surface-solid shadow-xl"
-      style={large ? { width: 'min(46vw, 760px)', height: 'min(56vh, 560px)' } : { width: 300, height: 210 }}
-    >
-      <MapContainer center={position ?? FALLBACK_CENTER} zoom={17} className="h-full w-full" zoomControl={false} attributionControl={false}>
-        <TileLayer key={layer} url={`tile-cache://${layer}/{z}/{x}/{y}.png`} maxZoom={info.maxZoom} maxNativeZoom={info.maxNativeZoom ?? info.maxZoom} />
-        <Follow position={position} />
-        {position && <Marker position={position} icon={icon} interactive={false} />}
-      </MapContainer>
-
-      {!position && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[500] bg-black/70 px-2 py-1 text-center text-xs text-amber-300">
-          {t('operator.OperatorMiniMap.noPosition')}
-        </div>
+    <FloatingWindow
+      area={area}
+      rect={rect}
+      fallback={defaultMapRect(area)}
+      onChange={(next) => setFloat(MAP_FLOAT_KEY, next)}
+      onFocus={() => bringToFront(MAP_FLOAT_KEY)}
+      front={front === MAP_FLOAT_KEY}
+      title={t('operator.OperatorMiniMap.map')}
+      tip={t('operator.OperatorCameras.dragTip')}
+      actions={(
+        <>
+          {allowPopOut && <button
+            onClick={() => void window.electronAPI.openDetachedWindow({
+              componentId: OPERATOR_MAP_WINDOW,
+              title: t('operator.OperatorMiniMap.map'),
+              initialBounds: { width: 900, height: 700 },
+            })}
+            className={HEADER_BTN}
+            data-tip={t('operator.OperatorCameras.popOut')}
+          >
+            <ExternalLink className="h-3 w-3" />
+          </button>}
+          <button onClick={() => setOpen(false)} className={HEADER_BTN} data-tip={t('operator.OperatorMiniMap.hide')}>
+            <X className="h-3 w-3" />
+          </button>
+        </>
       )}
-      <div className="absolute right-1.5 top-1.5 z-[500] flex gap-1">
-        <button
-          onClick={() => setLarge(!large)}
-          data-tip={large ? t('operator.OperatorMiniMap.smaller') : t('operator.OperatorMiniMap.larger')}
-          className="flex h-7 w-7 items-center justify-center rounded bg-black/70 text-white hover:bg-black/90"
-        >
-          {large ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
-        </button>
-        <button
-          onClick={() => setOpen(false)}
-          data-tip={t('operator.OperatorMiniMap.hide')}
-          className="flex h-7 w-7 items-center justify-center rounded bg-black/70 text-white hover:bg-black/90"
-        >
-          <X className="h-3.5 w-3.5" />
-        </button>
-      </div>
-    </div>
+    >
+      <OperatorMap />
+    </FloatingWindow>
   );
 }

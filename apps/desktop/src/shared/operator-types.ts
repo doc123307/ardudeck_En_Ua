@@ -21,6 +21,16 @@ export const ROVER_MODE_NUMBER: Record<OperatorModeButton, number> = {
   smartRtl: 12,
 };
 
+/** Values the status strip can show; the administrator picks which, and in what order. */
+export const OPERATOR_STATUS_FIELDS = [
+  'mode', 'satellites', 'hdop', 'battery', 'current', 'uptime', 'speed', 'heading', 'altitude', 'throttle', 'roll', 'pitch', 'clock',
+] as const;
+export type OperatorStatusField = (typeof OPERATOR_STATUS_FIELDS)[number];
+
+/** Parts of the operator screen the administrator can switch off. */
+export const OPERATOR_ELEMENTS = ['map', 'infoBlock', 'outputs', 'record', 'layoutSwitch', 'cameraControls', 'popOut'] as const;
+export type OperatorElement = (typeof OPERATOR_ELEMENTS)[number];
+
 export interface OperatorConfig {
   /** False lets a development or service PC open straight into the full UI. */
   startInOperatorMode: boolean;
@@ -41,6 +51,10 @@ export interface OperatorConfig {
   supportContact: string;
   /** Minutes without input after which the full UI closes again. 0 = never. */
   autoLockMinutes: number;
+  /** Status strip values, left to right. */
+  statusFields: OperatorStatusField[];
+  /** Screen parts that are switched off (everything else is shown). */
+  hiddenElements: OperatorElement[];
 }
 
 export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
@@ -54,6 +68,8 @@ export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
   recordAllCameras: true,
   supportContact: '@stohid_support_bot',
   autoLockMinutes: 15,
+  statusFields: ['mode', 'satellites', 'battery', 'uptime', 'speed', 'roll', 'pitch'],
+  hiddenElements: [],
 };
 
 export const ADMIN_PASSWORD_MIN_LENGTH = 6;
@@ -92,6 +108,10 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     ? (r.connection as ConnectOptions)
     : null;
   const tiltWarnDeg = num(r.tiltWarnDeg, d.tiltWarnDeg, 5, 85);
+  // Known names only, each once, in the order given.
+  const known = <T extends string>(value: unknown, all: readonly T[], fallback: T[]): T[] => (Array.isArray(value)
+    ? [...new Set(value.filter((v): v is T => (all as readonly unknown[]).includes(v)))]
+    : fallback);
   return {
     startInOperatorMode: bool(r.startInOperatorMode, d.startInOperatorMode),
     autoConnect: bool(r.autoConnect, d.autoConnect),
@@ -103,5 +123,7 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     recordAllCameras: bool(r.recordAllCameras, d.recordAllCameras),
     supportContact: typeof r.supportContact === 'string' ? r.supportContact.trim().slice(0, 120) : d.supportContact,
     autoLockMinutes: Math.round(num(r.autoLockMinutes, d.autoLockMinutes, 0, 240)),
+    statusFields: known(r.statusFields, OPERATOR_STATUS_FIELDS, [...d.statusFields]),
+    hiddenElements: known(r.hiddenElements, OPERATOR_ELEMENTS, []),
   };
 }

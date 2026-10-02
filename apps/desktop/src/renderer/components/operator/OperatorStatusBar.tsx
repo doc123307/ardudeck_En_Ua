@@ -1,7 +1,8 @@
 /**
  * The strip across the top of the operator screen: what the vehicle is doing right now,
- * in large type. Roll and pitch change colour as they near the angle at which the
- * vehicle may tip over.
+ * in large type. Which values it shows, and in what order, is the administrator's choice
+ * (Settings → Operator workspace). Roll and pitch change colour as they near the angle
+ * at which the vehicle may tip over.
  */
 
 import { useEffect, useState, type ReactNode } from 'react';
@@ -10,7 +11,8 @@ import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { useOperatorStore } from '../../stores/operator-store';
 import { useSettingsStore } from '../../stores/settings-store';
-import { formatSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
+import { formatAltitudeFromMeters, formatSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
+import type { OperatorStatusField } from '../../../shared/operator-types';
 import { fixKind, formatDuration, tiltLevel, type TiltLevel } from './operator-logic';
 import { t } from '../../i18n';
 
@@ -18,6 +20,11 @@ import { t } from '../../i18n';
 export function modeLabel(mode: string): string {
   const key = `operator.modes.${mode.replace(/[^A-Za-z0-9]/g, '')}`;
   return i18n.exists(key) ? t(key) : mode;
+}
+
+/** Name of a status value, for the strip and for the administrator's list. */
+export function statusFieldLabel(field: OperatorStatusField): string {
+  return t(`operator.OperatorStatusBar.${field}`);
 }
 
 const TILT_STYLE: Record<TiltLevel, string> = {
@@ -40,27 +47,72 @@ export function OperatorStatusBar({ recordingSince }: { recordingSince: number |
   const gps = useTelemetryStore((s) => s.gps);
   const battery = useTelemetryStore((s) => s.battery);
   const attitude = useTelemetryStore((s) => s.attitude);
-  const groundspeed = useTelemetryStore((s) => s.vfrHud.groundspeed);
+  const vfrHud = useTelemetryStore((s) => s.vfrHud);
   const connectionState = useConnectionStore((s) => s.connectionState);
   const speedUnit = useSettingsStore((s) => s.unitPreferences.speed);
+  const altitudeUnit = useSettingsStore((s) => s.unitPreferences.altitude);
+  const fields = useOperatorStore((s) => s.config.statusFields);
   const warnDeg = useOperatorStore((s) => s.config.tiltWarnDeg);
   const limitDeg = useOperatorStore((s) => s.config.tiltLimitDeg);
   const connected = connectionState.isConnected;
 
-  // The recording clock ticks on its own; telemetry may be silent.
+  // The clocks tick on their own; telemetry may be silent.
+  const wantsClock = fields.includes('clock');
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    if (recordingSince === null && !connectionState.isStale) return;
+    if (recordingSince === null && !connectionState.isStale && !wantsClock) return;
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
-  }, [recordingSince, connectionState.isStale]);
+  }, [recordingSince, connectionState.isStale, wantsClock]);
 
   const dash = '--';
+  const plain = (text: string) => <span className={connected ? 'text-content' : 'text-content-tertiary'}>{connected ? text : dash}</span>;
+  const tilt = (deg: number) => (
+    <span className={connected ? TILT_STYLE[tiltLevel(deg, warnDeg, limitDeg)] : 'text-content-tertiary'}>
+      {connected ? `${deg.toFixed(0)}°` : dash}
+    </span>
+  );
+  const tiltTip = t('operator.OperatorStatusBar.tiltTip', { warn: warnDeg, limit: limitDeg });
+
   const fix = fixKind(gps.fixType);
   const fixColor = !connected ? 'text-content-tertiary' : fix === 'none' ? 'text-red-400' : fix === '2d' ? 'text-amber-400' : 'text-emerald-400';
   const batteryColor = !connected || battery.remaining < 0
     ? 'text-content'
     : battery.remaining > 30 ? 'text-emerald-400' : battery.remaining > 15 ? 'text-amber-400' : 'text-red-400';
+
+  const render: Record<OperatorStatusField, () => { value: ReactNode; tip?: string }> = {
+    mode: () => ({ value: plain(modeLabel(flight.mode)) }),
+    satellites: () => ({
+      value: (
+        <span className={fixColor}>
+          {connected ? gps.satellites : dash}
+          <span className="ml-1.5 text-xs font-medium">{connected ? t(`operator.OperatorStatusBar.fix_${fix}`) : ''}</span>
+        </span>
+      ),
+    }),
+    hdop: () => ({ value: plain(gps.hdop > 0 && gps.hdop < 99 ? gps.hdop.toFixed(1) : dash), tip: t('operator.OperatorStatusBar.hdopTip') }),
+    battery: () => ({
+      value: (
+        <span className={batteryColor}>
+          {connected ? `${battery.voltage.toFixed(1)} ${t('operator.OperatorStatusBar.volt')}` : dash}
+          {connected && battery.remaining >= 0 && <span className="ml-1.5 text-sm">{battery.remaining.toFixed(0)}%</span>}
+        </span>
+      ),
+    }),
+    current: () => ({ value: plain(`${battery.current.toFixed(1)} ${t('operator.OperatorStatusBar.ampere')}`) }),
+    uptime: () => ({
+      value: <span className="text-content">{connected && attitude.bootMs !== undefined ? formatDuration(attitude.bootMs) : dash}</span>,
+      tip: t('operator.OperatorStatusBar.uptimeTip'),
+    }),
+    speed: () => ({ value: plain(formatSpeedFromMetersPerSecond(vfrHud.groundspeed, speedUnit)) }),
+    heading: () => ({ value: plain(`${vfrHud.heading.toFixed(0)}°`) }),
+    altitude: () => ({ value: plain(formatAltitudeFromMeters(vfrHud.alt, altitudeUnit)) }),
+    throttle: () => ({ value: plain(`${vfrHud.throttle.toFixed(0)}%`) }),
+    roll: () => ({ value: tilt(attitude.roll), tip: tiltTip }),
+    pitch: () => ({ value: tilt(attitude.pitch), tip: tiltTip }),
+    clock: () => ({ value: <span className="text-content">{new Date(now).toLocaleTimeString([], { hour12: false })}</span> }),
+  };
+
   const staleSeconds = connectionState.isStale && connectionState.staleSince
     ? Math.max(0, Math.floor((now - connectionState.staleSince) / 1000))
     : 0;
@@ -75,43 +127,10 @@ export function OperatorStatusBar({ recordingSince }: { recordingSince: number |
         {!connected ? t('operator.OperatorStatusBar.noLink') : flight.armed ? t('operator.OperatorStatusBar.armed') : t('operator.OperatorStatusBar.disarmed')}
       </span>
 
-      <Stat label={t('operator.OperatorStatusBar.mode')}>
-        <span className={connected ? 'text-content' : 'text-content-tertiary'}>{connected ? modeLabel(flight.mode) : dash}</span>
-      </Stat>
-
-      <Stat label={t('operator.OperatorStatusBar.satellites')}>
-        <span className={fixColor}>
-          {connected ? gps.satellites : dash}
-          <span className="ml-1.5 text-xs font-medium">{connected ? t(`operator.OperatorStatusBar.fix_${fix}`) : ''}</span>
-        </span>
-      </Stat>
-
-      <Stat label={t('operator.OperatorStatusBar.battery')}>
-        <span className={batteryColor}>
-          {connected ? `${battery.voltage.toFixed(1)} ${t('operator.OperatorStatusBar.volt')}` : dash}
-          {connected && battery.remaining >= 0 && <span className="ml-1.5 text-sm">{battery.remaining.toFixed(0)}%</span>}
-        </span>
-      </Stat>
-
-      <Stat label={t('operator.OperatorStatusBar.uptime')} tip={t('operator.OperatorStatusBar.uptimeTip')}>
-        <span className="text-content">{connected && attitude.bootMs !== undefined ? formatDuration(attitude.bootMs) : dash}</span>
-      </Stat>
-
-      <Stat label={t('operator.OperatorStatusBar.speed')}>
-        <span className="text-content">{connected ? formatSpeedFromMetersPerSecond(groundspeed, speedUnit) : dash}</span>
-      </Stat>
-
-      <Stat label={t('operator.OperatorStatusBar.roll')} tip={t('operator.OperatorStatusBar.tiltTip', { warn: warnDeg, limit: limitDeg })}>
-        <span className={connected ? TILT_STYLE[tiltLevel(attitude.roll, warnDeg, limitDeg)] : 'text-content-tertiary'}>
-          {connected ? `${attitude.roll.toFixed(0)}°` : dash}
-        </span>
-      </Stat>
-
-      <Stat label={t('operator.OperatorStatusBar.pitch')} tip={t('operator.OperatorStatusBar.tiltTip', { warn: warnDeg, limit: limitDeg })}>
-        <span className={connected ? TILT_STYLE[tiltLevel(attitude.pitch, warnDeg, limitDeg)] : 'text-content-tertiary'}>
-          {connected ? `${attitude.pitch.toFixed(0)}°` : dash}
-        </span>
-      </Stat>
+      {fields.map((field) => {
+        const { value, tip } = render[field]();
+        return <Stat key={field} label={statusFieldLabel(field)} tip={tip}>{value}</Stat>;
+      })}
 
       <div className="flex-1" />
 

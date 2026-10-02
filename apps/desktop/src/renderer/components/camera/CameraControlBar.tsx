@@ -1,12 +1,14 @@
 /**
- * Image controls for one IP camera: day/night, supplement light (IR / white) and
- * HD/SD stream. Only the controls the camera actually reports are shown, so an IR-only
- * camera never offers a white light it does not have.
+ * Controls for one IP camera: HD/SD stream, day/night, supplement light, pan/tilt/zoom,
+ * presets, and the administrator's own HTTP commands. Only what the camera actually
+ * reports is shown, so an IR-only fixed camera never offers a white light or arrows.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { controlKey, useCameraControlStore } from '../../stores/camera-control-store';
-import { Loader2, Moon, Sun, SunMoon } from 'lucide-react';
+import {
+  ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Loader2, Moon, Save, Sun, SunMoon, Trash2, ZoomIn, ZoomOut,
+} from 'lucide-react';
 import type {
   CameraControlAction, CameraControlState, CameraSourceConfig, DayNightMode, SupplementLightMode,
 } from '../../../shared/camera-types';
@@ -20,7 +22,7 @@ export function dayNightLabel(mode: DayNightMode): string {
   return t(`camera.CameraControlBar.dayNight_${mode}`);
 }
 
-/** Readable name for an ISAPI supplement light mode; unknown modes show as the camera names them. */
+/** Readable name for a supplement light mode; unknown modes show as the camera names them. */
 export function lightLabel(mode: SupplementLightMode): string {
   const known: Record<string, string> = {
     irLight: t('camera.CameraControlBar.lightIr'),
@@ -28,22 +30,34 @@ export function lightLabel(mode: SupplementLightMode): string {
     eventIntelligence: t('camera.CameraControlBar.lightSmart'),
     mixed: t('camera.CameraControlBar.lightMixed'),
     close: t('camera.CameraControlBar.lightOff'),
+    auto: t('camera.CameraControlBar.lightAuto'),
+    on: t('camera.CameraControlBar.lightOn'),
   };
   return known[mode] ?? mode;
 }
 
 /** True when the feed has anything to control: a camera API, or an url that names its HD/SD stream. */
 export function hasCameraControls(source: CameraSourceConfig): boolean {
-  return source.control?.vendor === 'hikvision' || (source.kind === 'rtsp' && streamQuality(source.url) !== null);
+  return !!source.control || (source.kind === 'rtsp' && streamQuality(source.url) !== null);
 }
+
+/** Speed of a button-driven move, as a share of the camera's maximum. */
+const PTZ_SPEED = 0.5;
 
 const BTN = 'px-2 py-0.5 text-[11px] transition-colors disabled:opacity-40';
 const ON = 'bg-blue-600 text-white';
 const OFF = 'text-content-secondary hover:bg-surface-raised';
 
-export function CameraControlBar({ source, compact = false }: { source: CameraSourceConfig; compact?: boolean }) {
+interface CameraControlBarProps {
+  source: CameraSourceConfig;
+  compact?: boolean;
+  /** Also offer storing and removing presets (the source settings; not the operator screen). */
+  editable?: boolean;
+}
+
+export function CameraControlBar({ source, compact = false, editable = false }: CameraControlBarProps) {
   const updateSource = useCameraStore((s) => s.updateSource);
-  const hasControl = source.control?.vendor === 'hikvision';
+  const hasControl = !!source.control;
   const quality = source.kind === 'rtsp' ? streamQuality(source.url) : null;
   // Shared with every other view of this camera, so it is asked once, not once per widget.
   const key = controlKey(source);
@@ -54,6 +68,12 @@ export function CameraControlBar({ source, compact = false }: { source: CameraSo
   const ensure = useCameraControlStore((s) => s.ensure);
   const refresh = useCameraControlStore((s) => s.refresh);
   const applyAction = useCameraControlStore((s) => s.apply);
+  const sendAction = useCameraControlStore((s) => s.send);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const [done, setDone] = useState<string | null>(null);
+  const [presetName, setPresetName] = useState('');
+  const [presetId, setPresetId] = useState('');
+  const moving = useRef(false);
 
   useEffect(() => {
     if (hasControl) ensure(source);
@@ -62,11 +82,51 @@ export function CameraControlBar({ source, compact = false }: { source: CameraSo
 
   const apply = (action: CameraControlAction) => applyAction(source, action);
 
+  /** A momentary action: nothing to re-read, only a failure worth showing. */
+  const send = async (action: CameraControlAction, mark?: string) => {
+    const result = await sendAction(source, action);
+    setSendError(result.ok ? null : result.error ?? t('camera.CameraControlBar.controlUnavailable'));
+    if (result.ok && mark) {
+      setDone(mark);
+      setTimeout(() => setDone((d) => (d === mark ? null : d)), 1200);
+    }
+  };
+
+  const stopMove = () => {
+    if (!moving.current) return;
+    moving.current = false;
+    void send({ kind: 'ptz', pan: 0, tilt: 0, zoom: 0 });
+  };
+  // A button released outside the window, or the bar going away mid-move, must still stop the camera.
+  useEffect(() => {
+    window.addEventListener('blur', stopMove);
+    return () => {
+      window.removeEventListener('blur', stopMove);
+      stopMove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+
+  /** Moves while the button is held. */
+  const hold = (pan: number, tilt: number, zoom: number) => ({
+    onPointerDown: (e: React.PointerEvent) => {
+      if (e.button !== 0) return;
+      moving.current = true;
+      void send({ kind: 'ptz', pan: pan * PTZ_SPEED, tilt: tilt * PTZ_SPEED, zoom: zoom * PTZ_SPEED });
+    },
+    onPointerUp: stopMove,
+    onPointerLeave: stopMove,
+    onPointerCancel: stopMove,
+  });
+
   const setQuality = (q: StreamQuality) => {
     if (source.url && q !== quality) updateSource(source.id, { url: withStreamQuality(source.url, q) });
   };
 
   if (!hasControl && !quality) return null;
+
+  const ok = hasControl && state?.ok === true;
+  const presets = ok ? state.presets ?? [] : [];
 
   return (
     <div
@@ -86,7 +146,7 @@ export function CameraControlBar({ source, compact = false }: { source: CameraSo
         </Segment>
       )}
 
-      {hasControl && state?.ok && state.dayNightOptions && (
+      {ok && state.dayNightOptions && (
         <Segment compact={compact} label={t('camera.CameraControlBar.dayNight')}>
           {state.dayNightOptions.map((m) => {
             const Icon = DAY_NIGHT_ICON[m];
@@ -106,7 +166,7 @@ export function CameraControlBar({ source, compact = false }: { source: CameraSo
         </Segment>
       )}
 
-      {hasControl && state?.ok && state.lightOptions && state.lightOptions.length > 0 && (
+      {ok && state.lightOptions && state.lightOptions.length > 0 && (
         <Segment compact={compact} label={t('camera.CameraControlBar.light')}>
           {state.lightOptions.map((m) => (
             <button
@@ -119,7 +179,94 @@ export function CameraControlBar({ source, compact = false }: { source: CameraSo
         </Segment>
       )}
 
+      {ok && state.ptz && (
+        <Segment compact={compact} label={t('camera.CameraControlBar.ptz')}>
+          {state.ptz.move && ([
+            [ArrowLeft, -1, 0, 'ptzLeft'], [ArrowUp, 0, 1, 'ptzUp'], [ArrowDown, 0, -1, 'ptzDown'], [ArrowRight, 1, 0, 'ptzRight'],
+          ] as const).map(([Icon, pan, tilt, tip]) => (
+            <button key={tip} {...hold(pan, tilt, 0)} className={`${BTN} ${OFF} select-none`} data-tip={t(`camera.CameraControlBar.${tip}`)}>
+              <Icon className="h-3.5 w-3.5" />
+            </button>
+          ))}
+          {state.ptz.zoom && (
+            <>
+              <button {...hold(0, 0, -1)} className={`${BTN} ${OFF} select-none`} data-tip={t('camera.CameraControlBar.ptzZoomOut')}>
+                <ZoomOut className="h-3.5 w-3.5" />
+              </button>
+              <button {...hold(0, 0, 1)} className={`${BTN} ${OFF} select-none`} data-tip={t('camera.CameraControlBar.ptzZoomIn')}>
+                <ZoomIn className="h-3.5 w-3.5" />
+              </button>
+            </>
+          )}
+        </Segment>
+      )}
+
+      {ok && state.ptz && (presets.length > 0 || editable) && (
+        <div className="flex items-center gap-1">
+          <select
+            value={presetId}
+            onChange={(e) => {
+              const id = e.target.value;
+              // On the operator screen picking a preset goes there at once; in the settings it is picked first.
+              if (editable) { setPresetId(id); return; }
+              if (id) void send({ kind: 'preset-goto', id });
+            }}
+            className="max-w-[9rem] rounded-md border border-subtle bg-surface-input px-1 py-0.5 text-[11px] text-content"
+            data-tip={t('camera.CameraControlBar.presetTip')}
+          >
+            <option value="">{t('camera.CameraControlBar.preset')}</option>
+            {presets.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+          {editable && (
+            <>
+              <button
+                disabled={!presetId}
+                onClick={() => void send({ kind: 'preset-goto', id: presetId })}
+                className="rounded border border-subtle px-1.5 py-0.5 text-[11px] text-content-secondary hover:text-content disabled:opacity-40"
+              >{t('camera.CameraControlBar.presetGo')}</button>
+              <button
+                disabled={!presetId || busy}
+                onClick={() => { void apply({ kind: 'preset-remove', id: presetId }); setPresetId(''); }}
+                className="rounded border border-subtle p-1 text-content-tertiary hover:text-red-400 disabled:opacity-40"
+                data-tip={t('camera.CameraControlBar.presetRemove')}
+              ><Trash2 className="h-3 w-3" /></button>
+              <input
+                value={presetName}
+                onChange={(e) => setPresetName(e.target.value)}
+                placeholder={t('camera.CameraControlBar.presetName')}
+                className="w-28 rounded-md border border-subtle bg-surface-input px-1.5 py-0.5 text-[11px] text-content"
+              />
+              <button
+                disabled={busy || !presetName.trim()}
+                onClick={() => { void apply({ kind: 'preset-save', name: presetName.trim() }); setPresetName(''); }}
+                className="flex items-center gap-1 rounded border border-subtle px-1.5 py-0.5 text-[11px] text-content-secondary hover:text-content disabled:opacity-40"
+                data-tip={t('camera.CameraControlBar.presetSaveTip')}
+              ><Save className="h-3 w-3" />{t('camera.CameraControlBar.presetSave')}</button>
+            </>
+          )}
+        </div>
+      )}
+
+      {ok && state.commands && state.commands.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1">
+          {state.commands.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => void send({ kind: 'command', id: c.id }, c.id)}
+              className={`rounded-md border px-2 py-0.5 text-[11px] transition-colors ${
+                done === c.id ? 'border-emerald-500/60 bg-emerald-600/30 text-emerald-200' : 'border-subtle text-content-secondary hover:bg-surface-raised hover:text-content'
+              }`}
+            >{c.label}</button>
+          ))}
+        </div>
+      )}
+
       {hasControl && busy && <Loader2 className="h-3.5 w-3.5 animate-spin text-content-tertiary" />}
+      {ok && sendError && (
+        <span className="max-w-full select-text text-[10px] text-amber-400" title={sendError}>
+          {compact ? t('camera.CameraControlBar.commandFailed') : sendError}
+        </span>
+      )}
       {hasControl && state && !state.ok && (
         <>
           <span className="max-w-full select-text text-[10px] text-amber-400" title={state.error}>

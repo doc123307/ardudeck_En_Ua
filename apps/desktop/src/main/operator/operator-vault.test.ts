@@ -126,3 +126,23 @@ describe('administrator only', () => {
     expect(new OperatorVault(dir, now).state().mode).toBe('admin');
   });
 });
+
+describe('operator screen layout settings', () => {
+  it('keeps only known status values and elements, each once, in the order given', () => {
+    const vault = new OperatorVault(dir, now);
+    vault.createPassword(PASSWORD);
+    vault.setConfig({ statusFields: ['speed', 'mode', 'bogus', 'speed', 'clock'], hiddenElements: ['map', 'nope', 'map'] });
+    const config = new OperatorVault(dir, now).state().config;
+    expect(config.statusFields).toEqual(['speed', 'mode', 'clock']);
+    expect(config.hiddenElements).toEqual(['map']);
+  });
+
+  it('lets the administrator empty the status strip, and falls back to the default on a damaged value', () => {
+    const vault = new OperatorVault(dir, now);
+    vault.createPassword(PASSWORD);
+    vault.setConfig({ statusFields: [] });
+    expect(vault.state().config.statusFields).toEqual([]);
+    writeFileSync(join(dir, 'operator.json'), JSON.stringify({ statusFields: 'everything' }));
+    expect(new OperatorVault(dir, now).state().config.statusFields).toEqual(['mode', 'satellites', 'battery', 'uptime', 'speed', 'roll', 'pitch']);
+  });
+});

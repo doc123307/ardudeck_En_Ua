@@ -74,7 +74,30 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - In operator mode the window menu (Reload, Developer Tools) is removed.
   - Settings → "Operator workspace": start-up mode, auto-lock, operator link, buttons, tilt limits, support
     contact, password.
+  - Movable windows: every camera but the main one, and the map, is a window the operator drags, resizes
+    freely and can pop out into its own OS window for a second monitor; closing that window brings it
+    back. In the grid, the dividers between cameras are draggable. Places are stored as fractions of the
+    screen, so they survive a resized window.
+  - The administrator picks the status-strip values and their order (13 to choose from) and can switch
+    screen elements off.
   - Code: `src/main/operator/`, `src/renderer/components/operator/`, `src/shared/operator-types.ts`.
+- **More camera control protocols, PTZ and presets.** Besides Hikvision ISAPI:
+  - **ONVIF** (any ONVIF camera: Uniview, Bitrek, Ajax and others): day/night through the imaging service,
+    continuous pan/tilt/zoom, presets (recall, store, remove). The camera's clock is read first, because
+    the password digest covers a timestamp; service addresses the camera reports are re-based onto the
+    reachable host, so it works through a port-forward. Code: `src/main/media/onvif.ts`.
+  - **Dahua HTTP API** (`configManager.cgi`, `ptz.cgi`): day/night, light, PTZ, presets.
+    Code: `src/main/media/dahua-cgi.ts`.
+  - **Hikvision**: PTZ and presets added to the existing image controls.
+  - **Custom HTTP commands**: the administrator defines buttons, each sending one HTTP request - for a
+    control service of the integrator's own.
+  - PTZ arrows and zoom move while held and always send a stop; presets are a drop-down on the feed.
+  - Stream url presets for Hikvision, Dahua, Uniview and Ajax cameras, and HD/SD switching for the
+    Uniview (`/media/video1|2`, `/unicast/c1/s0|s1`) and Ajax (`<mac>-0_m|_s`) url styles.
+  - Only the Hikvision driver has been run against real cameras; ONVIF and Dahua are covered by tests
+    against protocol-shaped fakes.
+- **A feed can be shown in several windows.** The media engine counts the windows showing each feed and
+  stops it when the last one lets go; camera settings are kept in step between windows.
 - **Multi-camera view for one vehicle.** "All cameras" in the Vision panel tiles every feed of the vehicle side
   by side (1-4 columns). Clicking a tile makes it the main feed, which is the one used for snapshot, recording
   and click-to-point. The existing vehicle grid is unchanged.
@@ -202,6 +225,19 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - Повний інтерфейс закривається після 15 хв бездіяльності (налаштовується) або кнопкою в шапці.
   - Налаштування → «Простір пілота»: режим запуску, автовихід, підключення оператора, кнопки, межі
     нахилу, контакт підтримки, пароль.
+  - Рухомі вікна: кожну камеру, крім основної, і карту можна перетягувати, довільно змінювати в розмірі
+    й виносити в окреме вікно на інший монітор. У сітці камер роздільники перетягуються.
+  - Адміністратор вибирає значення смуги стану та їхній порядок і може вимикати елементи екрана.
+- **Нові протоколи керування камерами, PTZ і пресети.** Крім Hikvision ISAPI:
+  - **ONVIF** (будь-яка камера з ONVIF: Uniview, Bitrek, Ajax та інші): день/ніч, поворот і зум, пресети.
+    Працює й через проброс порту та з камерою, на якій не виставлено годинник.
+  - **Dahua (HTTP API):** день/ніч, підсвітка, PTZ, пресети.
+  - **Hikvision:** додано PTZ і пресети.
+  - **Власні HTTP-команди:** адміністратор задає кнопки, кожна надсилає один HTTP-запит — для власного
+    сервісу керування.
+  - Шаблони RTSP-адрес для Hikvision, Dahua, Uniview та Ajax; перемикач HD/SD розуміє адреси Uniview й Ajax.
+  - На справжніх камерах перевірено лише Hikvision; ONVIF і Dahua перевірено тестами на імітаторах.
+- **Камеру можна показувати в кількох вікнах одночасно.**
 - **Кілька камер одного апарата одночасно.** Режим «Усі камери» в панелі «Бачення» показує всі джерела
   апарата поруч (1-4 стовпці). Клік по плитці робить камеру основною: для знімка, запису й наведення підвісу.
 - **Керування IP-камерою Hikvision (ISAPI):**

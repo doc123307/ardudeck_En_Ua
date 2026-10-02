@@ -151,7 +151,8 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
-      title={isPrimary ? t('camera.CameraView.clickToPointGimbalAtTarget') : t('camera.CameraView.clickToMakeActive')}
+      // A hint only where a click does something: a view that is neither primary nor selectable has none.
+      title={isPrimary ? t('camera.CameraView.clickToPointGimbalAtTarget') : onActivate ? t('camera.CameraView.clickToMakeActive') : undefined}
     >
       <div className="h-full w-full" style={{ transform: zoomTransform(zoom), transformOrigin: 'center' }}>
         <video

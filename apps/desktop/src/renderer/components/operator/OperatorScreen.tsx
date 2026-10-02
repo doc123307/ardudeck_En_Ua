@@ -4,14 +4,14 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Circle, Columns2, LayoutGrid, OctagonX, PictureInPicture2, Pin, Scaling } from 'lucide-react';
+import { Circle, Columns2, LayoutGrid, OctagonX, PictureInPicture2, Pin, RotateCcw } from 'lucide-react';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
 import { useMessagesStore } from '../../stores/messages-store';
 import { useOperatorStore } from '../../stores/operator-store';
 import { useOperatorUiStore } from '../../stores/operator-ui-store';
-import { ROVER_MODE_NUMBER, type OperatorModeButton } from '../../../shared/operator-types';
+import { ROVER_MODE_NUMBER, type OperatorElement, type OperatorModeButton } from '../../../shared/operator-types';
 import { extractPreArmReason, isPreArmMessage } from '../../../shared/prearm-checks';
 import { RelayButtons } from '../vehicle-outputs/RelayButtons';
 import { OperatorStatusBar } from './OperatorStatusBar';
@@ -21,6 +21,7 @@ import { OperatorInfoBlock } from './OperatorInfoBlock';
 import { HoldButton } from './HoldButton';
 import { useOperatorFeeds, useOperatorRecording } from './useOperatorFeeds';
 import { isRoverLike } from './operator-logic';
+import type { Size } from './float-layout';
 import { t } from '../../i18n';
 
 /** How long the vehicle gets to act on a command before the operator is told it did not. */
@@ -38,9 +39,24 @@ export function OperatorScreen() {
   const vehicleKey = useActiveVehicleStore((s) => s.activeVehicleKey);
   const allowArm = useOperatorStore((s) => s.config.allowArm);
   const modeButtons = useOperatorStore((s) => s.config.modeButtons);
+  const hidden = useOperatorStore((s) => s.config.hiddenElements);
+  const shows = (element: OperatorElement) => !hidden.includes(element);
   const ui = useOperatorUiStore();
   const feeds = useOperatorFeeds();
   const recording = useOperatorRecording(feeds.sources, feeds.main);
+
+  // The camera area in px: movable windows are placed and clamped against it.
+  const areaRef = useRef<HTMLDivElement>(null);
+  const [area, setArea] = useState<Size>({ width: 0, height: 0 });
+  useEffect(() => {
+    const el = areaRef.current;
+    if (!el) return;
+    const measure = () => setArea({ width: el.clientWidth, height: el.clientHeight });
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const [toast, setToast] = useState<Toast | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -113,17 +129,18 @@ export function OperatorScreen() {
   const several = feeds.sources.length > 1;
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-surface-base">
+    <div className="flex h-full min-h-0 select-none flex-col bg-surface-base">
       <OperatorStatusBar recordingSince={recording.since} />
 
-      <div className="relative min-h-0 flex-1">
-        <OperatorCameras feeds={feeds} />
-
-        {/* Corner blocks float over the video; the strip between them lets clicks through. */}
-        <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex items-end justify-between gap-3">
-          <OperatorMiniMap />
-          <OperatorInfoBlock />
-        </div>
+      <div ref={areaRef} className="relative min-h-0 flex-1 overflow-hidden">
+        {/* Nothing is placed until the area has a size: a window laid out against 0x0 would jump. */}
+        {area.width > 0 && <OperatorCameras feeds={feeds} area={area} allowPopOut={shows('popOut')} controls={shows('cameraControls')} />}
+        {area.width > 0 && shows('map') && <OperatorMiniMap area={area} allowPopOut={shows('popOut')} />}
+        {shows('infoBlock') && (
+          <div className="pointer-events-none absolute bottom-3 right-3 z-[14]">
+            <OperatorInfoBlock />
+          </div>
+        )}
 
         {toast && (
           <div className={`pointer-events-none absolute left-1/2 top-14 z-30 max-w-[80%] -translate-x-1/2 rounded-lg px-4 py-2 text-center text-sm font-medium shadow-xl ${
@@ -136,10 +153,10 @@ export function OperatorScreen() {
 
       {/* Action bar */}
       <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-t border-subtle bg-surface px-4 py-2.5">
-        <RelayButtons vehicleKey={connected ? vehicleKey : null} editable={false} />
+        {shows('outputs') && <RelayButtons vehicleKey={connected ? vehicleKey : null} editable={false} />}
 
         <div className="flex flex-wrap items-center gap-2">
-          {several && (
+          {several && shows('layoutSwitch') && (
             <button
               onClick={() => ui.setLayout(ui.layout === 'pip' ? 'grid' : 'pip')}
               data-tip={ui.layout === 'pip' ? t('operator.OperatorScreen.layoutGridTip') : t('operator.OperatorScreen.layoutPipTip')}
@@ -149,21 +166,18 @@ export function OperatorScreen() {
               <span className="whitespace-nowrap">{ui.layout === 'pip' ? t('operator.OperatorScreen.layoutGrid') : t('operator.OperatorScreen.layoutPip')}</span>
             </button>
           )}
-          {several && ui.layout === 'pip' && (
-            <button onClick={ui.cycleThumbSize} data-tip={t('operator.OperatorScreen.thumbSizeTip')} className={TOOL_BTN}>
-              <Scaling className="h-4 w-4" />
-              <span className="uppercase">{ui.thumbSize}</span>
-            </button>
-          )}
-          <button
+          <button onClick={ui.resetArrangement} data-tip={t('operator.OperatorScreen.resetArrangementTip')} className={`${TOOL_BTN} px-2.5`}>
+            <RotateCcw className="h-4 w-4" />
+          </button>
+          {shows('cameraControls') && <button
             onClick={() => ui.setControlsPinned(!ui.controlsPinned)}
             data-tip={t('operator.OperatorScreen.pinControlsTip')}
             className={`${TOOL_BTN} ${ui.controlsPinned ? TOOL_ON : ''}`}
           >
             {ui.controlsPinned ? <Pin className="h-4 w-4" /> : <Columns2 className="h-4 w-4" />}
             <span className="whitespace-nowrap">{t('operator.OperatorScreen.cameraControls')}</span>
-          </button>
-          <button
+          </button>}
+          {shows('record') && <button
             onClick={() => void toggleRecording()}
             disabled={recording.busy || !feeds.main}
             data-tip={recording.since !== null ? t('operator.OperatorScreen.stopRecordingTip') : t('operator.OperatorScreen.recordTip')}
@@ -171,7 +185,7 @@ export function OperatorScreen() {
           >
             <Circle className={`h-3.5 w-3.5 ${recording.since !== null ? 'fill-current text-red-400' : ''}`} />
             <span className="whitespace-nowrap">{recording.since !== null ? t('operator.OperatorScreen.stopRecording') : t('operator.OperatorScreen.record')}</span>
-          </button>
+          </button>}
         </div>
 
         <div className="flex-1" />

@@ -2,47 +2,65 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { FloatRect } from '../components/operator/float-layout';
 
-/** `pip`: one camera full size, the others as thumbnails. `grid`: all cameras side by side. */
+/** `pip`: one camera full size, the others as movable windows. `grid`: all cameras side by side. */
 export type OperatorCameraLayout = 'pip' | 'grid';
-export type OperatorThumbSize = 's' | 'm' | 'l';
-export const THUMB_SIZES: readonly OperatorThumbSize[] = ['s', 'm', 'l'];
+
+/** Key of a camera's movable window. */
+export const cameraFloatKey = (sourceId: string) => `cam:${sourceId}`;
+export const MAP_FLOAT_KEY = 'map';
 
 interface OperatorUiStore {
   layout: OperatorCameraLayout;
-  thumbSize: OperatorThumbSize;
   /** The camera shown full size; null follows the feed selected in the full UI. */
   mainSourceId: string | null;
   mapOpen: boolean;
-  mapLarge: boolean;
   /** Camera image controls stay on screen instead of showing on hover only. */
   controlsPinned: boolean;
+  /** Where each movable window was left (camera thumbnails, the map). */
+  floats: Record<string, FloatRect>;
+  /** Column and row sizes of the camera grid, as left by the dividers. */
+  gridCols: number[];
+  gridRows: number[];
+  /** The window touched last, drawn above the others. Not remembered. */
+  front: string | null;
 
   setLayout: (layout: OperatorCameraLayout) => void;
-  cycleThumbSize: () => void;
   setMainSource: (id: string) => void;
   setMapOpen: (open: boolean) => void;
-  setMapLarge: (large: boolean) => void;
   setControlsPinned: (pinned: boolean) => void;
+  setFloat: (key: string, rect: FloatRect) => void;
+  setGridTracks: (axis: 'cols' | 'rows', tracks: number[]) => void;
+  bringToFront: (key: string) => void;
+  /** Back to the default arrangement. */
+  resetArrangement: () => void;
 }
 
 export const useOperatorUiStore = create<OperatorUiStore>()(
   persist(
     (set) => ({
       layout: 'pip',
-      thumbSize: 'm',
       mainSourceId: null,
       mapOpen: true,
-      mapLarge: false,
       controlsPinned: false,
+      floats: {},
+      gridCols: [],
+      gridRows: [],
+      front: null,
 
       setLayout: (layout) => set({ layout }),
-      cycleThumbSize: () => set((s) => ({ thumbSize: THUMB_SIZES[(THUMB_SIZES.indexOf(s.thumbSize) + 1) % THUMB_SIZES.length]! })),
       setMainSource: (id) => set({ mainSourceId: id }),
       setMapOpen: (open) => set({ mapOpen: open }),
-      setMapLarge: (large) => set({ mapLarge: large }),
       setControlsPinned: (pinned) => set({ controlsPinned: pinned }),
+      setFloat: (key, rect) => set((s) => ({ floats: { ...s.floats, [key]: rect } })),
+      setGridTracks: (axis, tracks) => set(axis === 'cols' ? { gridCols: tracks } : { gridRows: tracks }),
+      bringToFront: (key) => set({ front: key }),
+      resetArrangement: () => set({ floats: {}, gridCols: [], gridRows: [], mapOpen: true }),
     }),
-    { name: 'stohid-operator-ui' },
+    {
+      name: 'stohid-operator-ui',
+      partialize: ({ front: _front, ...rest }) => rest,
+    },
   ),
 );

@@ -9,7 +9,7 @@
 
 import { createHash, randomBytes } from 'node:crypto';
 import type {
-  CameraControlAction, CameraControlState, CameraSourceConfig, DayNightMode,
+  CameraControlAction, CameraControlState, CameraPtzPreset, CameraSourceConfig, DayNightMode,
 } from '../../shared/camera-types.js';
 import { mt } from '../i18n';
 
@@ -98,7 +98,7 @@ export function digestHeader(
 
 /** One ISAPI request, answering a digest (or basic) challenge when the camera sends one. */
 export async function isapiRequest(
-  target: IsapiTarget, method: 'GET' | 'PUT', path: string, body?: string,
+  target: IsapiTarget, method: 'GET' | 'PUT' | 'DELETE', path: string, body?: string,
 ): Promise<{ status: number; text: string }> {
   const url = target.base + path;
   const send = (authorization?: string) => fetch(url, {
@@ -170,6 +170,21 @@ function networkError(target: IsapiTarget, err: unknown): string {
 
 const ircutPath = (ch: number) => `/ISAPI/Image/channels/${ch}/IrcutFilter`;
 const lightPath = (ch: number) => `/ISAPI/Image/channels/${ch}/supplementLight`;
+const ptzPath = (ch: number) => `/ISAPI/PTZCtrl/channels/${ch}`;
+
+/** `<PTZPreset><id>1</id><presetName>Gate</presetName></PTZPreset>` entries of a presets document. */
+export function parsePresets(xml: string): CameraPtzPreset[] {
+  const out: CameraPtzPreset[] = [];
+  for (const m of xml.matchAll(/<PTZPreset(?:\s[^>]*)?>([\s\S]*?)<\/PTZPreset>/g)) {
+    const id = xmlValue(m[1]!, 'id');
+    // A camera lists every slot; the ones in use are marked enabled (older firmware omits the flag).
+    if (id && xmlValue(m[1]!, 'enabled') !== 'false') out.push({ id, name: xmlValue(m[1]!, 'presetName') || `#${id}` });
+  }
+  return out;
+}
+
+/** -1..1 -> the -100..100 ISAPI takes. */
+const isapiSpeed = (v: number) => Math.round(Math.min(1, Math.max(-1, v)) * 100);
 
 /** Current day/night and supplement light settings, plus what the camera allows. */
 export async function getControlState(source: CameraSourceConfig): Promise<CameraControlState> {
@@ -203,7 +218,14 @@ export async function getControlState(source: CameraSourceConfig): Promise<Camer
     } else {
       missing.push(refusal('supplementLight', light.status, light.text));
     }
-    if (!state.dayNight && !state.light) {
+    // A fixed camera answers the PTZ endpoint with 403/404: it simply has nothing to steer.
+    const ptz = await isapiRequest(target, 'GET', `${ptzPath(target.channel)}/capabilities`).catch(() => null);
+    if (ptz?.status === 200) {
+      state.ptz = { move: true, zoom: true };
+      const presets = await isapiRequest(target, 'GET', `${ptzPath(target.channel)}/presets`).catch(() => null);
+      state.presets = presets?.status === 200 ? parsePresets(presets.text) : [];
+    }
+    if (!state.dayNight && !state.light && !state.ptz) {
       return { ok: false, error: `${mt('main.media_hikvision.noImageControls')} (${missing.join('; ')})` };
     }
     return state;
@@ -216,6 +238,8 @@ export async function getControlState(source: CameraSourceConfig): Promise<Camer
 export async function applyControl(source: CameraSourceConfig, action: CameraControlAction): Promise<CameraControlState> {
   const target = resolveTarget(source);
   if (!target) return { ok: false, error: mt('main.media_hikvision.noAddress') };
+  if (action.kind === 'command') return { ok: false, error: mt('main.media_control.notSupported') };
+  if (action.kind !== 'dayNight' && action.kind !== 'light') return applyPtz(source, target, action);
   const [path, tag] = action.kind === 'dayNight'
     ? [ircutPath(target.channel), 'IrcutFilterType']
     : [lightPath(target.channel), 'supplementLightMode'];
@@ -237,4 +261,44 @@ export async function applyControl(source: CameraSourceConfig, action: CameraCon
     return { ok: false, error: networkError(target, err) };
   }
   return getControlState(source);
+}
+
+type PtzAction = Exclude<CameraControlAction, { kind: 'dayNight' } | { kind: 'light' } | { kind: 'command' }>;
+
+/** Steering and presets. A move or a recall answers at once; a stored or removed preset re-reads the list. */
+async function applyPtz(source: CameraSourceConfig, target: IsapiTarget, action: PtzAction): Promise<CameraControlState> {
+  const base = ptzPath(target.channel);
+  const done = (res: { status: number; text: string }, reread: boolean): CameraControlState | Promise<CameraControlState> => {
+    if (res.status === 401) return authFailure(res.text);
+    if (res.status !== 200) {
+      return { ok: false, error: mt('main.media_hikvision.cameraRefused', { status: res.status, reason: xmlValue(res.text, 'subStatusCode') ?? xmlValue(res.text, 'statusString') ?? '' }) };
+    }
+    return reread ? getControlState(source) : { ok: true };
+  };
+  try {
+    switch (action.kind) {
+      case 'ptz':
+        return await done(await isapiRequest(target, 'PUT', `${base}/continuous`,
+          `<PTZData><pan>${isapiSpeed(action.pan)}</pan><tilt>${isapiSpeed(action.tilt)}</tilt><zoom>${isapiSpeed(action.zoom)}</zoom></PTZData>`), false);
+      case 'preset-goto':
+        return await done(await isapiRequest(target, 'PUT', `${base}/presets/${encodeURIComponent(action.id)}/goto`), false);
+      case 'preset-remove':
+        return await done(await isapiRequest(target, 'DELETE', `${base}/presets/${encodeURIComponent(action.id)}`), true);
+      case 'preset-save': {
+        let id = action.id;
+        if (!id) {
+          const list = await isapiRequest(target, 'GET', `${base}/presets`);
+          const used = new Set(list.status === 200 ? parsePresets(list.text).map((p) => Number(p.id)) : []);
+          let free = 1;
+          while (used.has(free)) free += 1;
+          id = String(free);
+        }
+        const name = (action.name.trim() || `Preset ${id}`).replace(/[<>&]/g, ' ');
+        return await done(await isapiRequest(target, 'PUT', `${base}/presets/${encodeURIComponent(id)}`,
+          `<PTZPreset><id>${id}</id><presetName>${name}</presetName></PTZPreset>`), true);
+      }
+    }
+  } catch (err) {
+    return { ok: false, error: networkError(target, err) };
+  }
 }

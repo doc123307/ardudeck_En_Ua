@@ -6,9 +6,12 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useOperatorStore } from '../../stores/operator-store';
 import { useSettingsStore } from '../../stores/settings-store';
+import { ArrowDown, ArrowUp, Plus, X } from 'lucide-react';
 import {
-  ADMIN_PASSWORD_MIN_LENGTH, OPERATOR_MODE_BUTTONS, type AdminAuthResult, type OperatorConfig, type OperatorModeButton,
+  ADMIN_PASSWORD_MIN_LENGTH, OPERATOR_ELEMENTS, OPERATOR_MODE_BUTTONS, OPERATOR_STATUS_FIELDS,
+  type AdminAuthResult, type OperatorConfig, type OperatorElement, type OperatorModeButton, type OperatorStatusField,
 } from '../../../shared/operator-types';
+import { statusFieldLabel } from './OperatorStatusBar';
 import { connectOptionsFromMemory, describeConnection } from './operator-logic';
 import { authErrorText } from './AdminUnlockDialog';
 import { t } from '../../i18n';
@@ -66,6 +69,44 @@ function NumberField({ value, min, max, onCommit, label, unit }: {
       />
       <span className="text-content-secondary">{unit}</span>
     </label>
+  );
+}
+
+/** The status strip: which values, in which order. */
+function StatusFieldsCard({ fields, onChange }: { fields: OperatorStatusField[]; onChange: (next: OperatorStatusField[]) => void }) {
+  const unused = OPERATOR_STATUS_FIELDS.filter((f) => !fields.includes(f));
+  const move = (index: number, by: number) => {
+    const next = [...fields];
+    const [item] = next.splice(index, 1);
+    next.splice(index + by, 0, item!);
+    onChange(next);
+  };
+  const icon = 'flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:bg-surface-raised hover:text-content disabled:opacity-30';
+  return (
+    <Card title={t('operator.OperatorWorkspaceSettings.statusFields')} hint={t('operator.OperatorWorkspaceSettings.statusFieldsHint')}>
+      <div className="flex flex-col gap-1">
+        {fields.map((f, i) => (
+          <div key={f} className="flex max-w-md items-center gap-1 rounded-lg border border-subtle bg-surface-raised px-2 py-1">
+            <span className="w-5 text-xs tabular-nums text-content-tertiary">{i + 1}</span>
+            <span className="min-w-0 flex-1 truncate text-sm text-content">{statusFieldLabel(f)}</span>
+            <button onClick={() => move(i, -1)} disabled={i === 0} className={icon} data-tip={t('operator.OperatorWorkspaceSettings.moveLeft')}><ArrowUp className="h-3.5 w-3.5" /></button>
+            <button onClick={() => move(i, 1)} disabled={i === fields.length - 1} className={icon} data-tip={t('operator.OperatorWorkspaceSettings.moveRight')}><ArrowDown className="h-3.5 w-3.5" /></button>
+            <button onClick={() => onChange(fields.filter((x) => x !== f))} className={`${icon} hover:text-red-400`} data-tip={t('operator.OperatorWorkspaceSettings.removeField')}><X className="h-3.5 w-3.5" /></button>
+          </div>
+        ))}
+        {fields.length === 0 && <p className="text-xs text-content-tertiary">{t('operator.OperatorWorkspaceSettings.noFields')}</p>}
+      </div>
+      {unused.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {unused.map((f) => (
+            <button key={f} onClick={() => onChange([...fields, f])}
+              className="flex items-center gap-1 rounded-lg border border-dashed border-subtle px-2 py-1 text-xs text-content-secondary hover:border-blue-500/60 hover:text-content">
+              <Plus className="h-3 w-3" />{statusFieldLabel(f)}
+            </button>
+          ))}
+        </div>
+      )}
+    </Card>
   );
 }
 
@@ -194,6 +235,21 @@ export function OperatorWorkspaceSettings() {
         <div className="flex flex-wrap gap-x-6 gap-y-2">
           {OPERATOR_MODE_BUTTONS.filter((m) => m !== 'hold').map((m) => (
             <Toggle key={m} checked={config.modeButtons.includes(m)} onChange={(v) => toggleMode(m, v)} label={t(`operator.OperatorScreen.mode_${m}`)} />
+          ))}
+        </div>
+      </Card>
+
+      <StatusFieldsCard fields={config.statusFields} onChange={(statusFields) => save({ statusFields })} />
+
+      <Card title={t('operator.OperatorWorkspaceSettings.elements')} hint={t('operator.OperatorWorkspaceSettings.elementsHint')}>
+        <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+          {OPERATOR_ELEMENTS.map((el: OperatorElement) => (
+            <Toggle
+              key={el}
+              checked={!config.hiddenElements.includes(el)}
+              onChange={(on) => save({ hiddenElements: OPERATOR_ELEMENTS.filter((x) => (x === el ? !on : config.hiddenElements.includes(x))) })}
+              label={t(`operator.OperatorWorkspaceSettings.element_${el}`)}
+            />
           ))}
         </div>
       </Card>

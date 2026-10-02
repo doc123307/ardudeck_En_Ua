@@ -208,7 +208,7 @@ import { sitlProcess } from './sitl/sitl-process.js';
 import { simEngineProcess } from './sim/sim-engine-process.js';
 import { mediaEngine } from './media/media-engine.js';
 import { CANVAS_STREAM_PATHS, type CameraControlAction, type CanvasStreamSnapshot, type VisionStreamOpenOptions } from '../shared/camera-types.js';
-import { applyControl, getControlState } from './media/hikvision-isapi.js';
+import { applyCameraControl, getCameraControlState } from './media/camera-control.js';
 import { registerOperatorHandlers } from './operator/operator-ipc.js';
 import { openVisionStreamWindow, closeVisionStreamWindow, reportVisionStream, visionStreamSnapshot } from './media/vision-stream-window.js';
 import { ardupilotSitlProcess, swarmSitlProcess, ardupilotSitlDownloader, ardupilotRcSender } from './sitl/index.js';
@@ -4913,8 +4913,19 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
   });
 
   // ==================== Camera / video ====================
-  ipcMain.handle(IPC_CHANNELS.CAMERA_START, async (_, source: CameraSourceConfig, resolvedUrl?: string) => {
-    const result = await mediaEngine.start(source, resolvedUrl);
+  // Feeds are held per window: a camera shown in the main window and in a pop-out stops
+  // only when both have let go. A window that dies without saying so is released here.
+  const cameraViewers = new Set<number>();
+  ipcMain.handle(IPC_CHANNELS.CAMERA_START, async (event, source: CameraSourceConfig, resolvedUrl?: string) => {
+    const viewer = event.sender.id;
+    if (!cameraViewers.has(viewer)) {
+      cameraViewers.add(viewer);
+      event.sender.once('destroyed', () => {
+        cameraViewers.delete(viewer);
+        mediaEngine.releaseViewer(viewer);
+      });
+    }
+    const result = await mediaEngine.start(source, resolvedUrl, viewer);
     // A feed that fails in the field is reported by screenshot, so the reason
     // and the hub's own log lines go to the console where they can be read.
     if (!result.ok) {
@@ -4935,8 +4946,8 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
     }
     return result;
   });
-  ipcMain.handle(IPC_CHANNELS.CAMERA_STOP, async (_, sourceId: string) => {
-    await mediaEngine.stop(sourceId);
+  ipcMain.handle(IPC_CHANNELS.CAMERA_STOP, async (event, sourceId: string) => {
+    await mediaEngine.stop(sourceId, event.sender.id);
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_SNAPSHOT, async (_, sourceId: string) => {
     return mediaEngine.snapshot(sourceId);
@@ -4948,10 +4959,10 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
     return mediaEngine.diagnostics();
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_CONTROL_STATE, async (_, source: CameraSourceConfig) => {
-    return getControlState(source);
+    return getCameraControlState(source);
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_CONTROL_SET, async (_, source: CameraSourceConfig, action: CameraControlAction) => {
-    return applyControl(source, action);
+    return applyCameraControl(source, action);
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_ENGINE_STATUS, async () => {
     return mediaEngine.getStatus();
@@ -13272,7 +13283,7 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
   initAutoUpdater(mainWindow);
 
   // Operator mode (administrator password, operator screen settings)
-  registerOperatorHandlers(mainWindow);
+  registerOperatorHandlers();
 
   // Companion computer (agent WebSocket)
   registerCompanionIpcHandlers(mainWindow);

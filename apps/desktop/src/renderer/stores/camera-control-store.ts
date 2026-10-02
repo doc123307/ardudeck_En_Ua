@@ -1,6 +1,6 @@
 /**
- * What each IP camera reported about its image controls, shared by every place that
- * shows the same camera (tile, footer, source menu).
+ * What each IP camera reported about its controls, shared by every place that shows
+ * the same camera (tile, footer, source menu, operator screen).
  *
  * One login per camera, not one per widget: cameras lock an account after a handful of
  * failed logins, so three widgets retrying a wrong password would lock it three times
@@ -24,7 +24,13 @@ interface CameraControlStore {
   ensure: (source: CameraSourceConfig) => void;
   /** Read again on request (Retry, or saved settings). */
   refresh: (source: CameraSourceConfig) => Promise<void>;
+  /** Change a setting; the camera's answer becomes the new state. */
   apply: (source: CameraSourceConfig, action: CameraControlAction) => Promise<void>;
+  /**
+   * A move, a preset recall or a custom command: nothing to re-read, so the state stays
+   * as it is and only the outcome comes back.
+   */
+  send: (source: CameraSourceConfig, action: CameraControlAction) => Promise<CameraControlState>;
 }
 
 /** Changes when the camera to talk to changes: its control settings or the RTSP host it defaults to. */
@@ -52,11 +58,18 @@ export const useCameraControlStore = create<CameraControlStore>((set, get) => {
   return {
     entries: {},
     ensure: (source) => {
-      if (source.control?.vendor !== 'hikvision') return;
+      if (!source.control) return;
       if (get().entries[source.id]?.key === controlKey(source)) return;
       void read(source, () => window.electronAPI.cameraControlState(source));
     },
     refresh: (source) => read(source, () => window.electronAPI.cameraControlState(source)),
     apply: (source, action) => read(source, () => window.electronAPI.cameraControlSet(source, action)),
+    send: async (source, action) => {
+      try {
+        return await window.electronAPI.cameraControlSet(source, action);
+      } catch (err) {
+        return { ok: false, error: err instanceof Error ? err.message : String(err) };
+      }
+    },
   };
 });

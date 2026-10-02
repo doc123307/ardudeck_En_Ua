@@ -291,3 +291,13 @@ export function osdBackdropSource(
   if (!id) return null;
   return state.sources[id] ?? null;
 }
+
+// Every window (main, pop-outs) has its own copy of this store over one shared
+// localStorage entry. Without this a change made in one window - a feed switched to SD
+// in a pop-out - would be overwritten by the next write from another. The browser
+// tells the OTHER windows when the entry changes; they reload it.
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'ardudeck-camera') void useCameraStore.persist.rehydrate();
+  });
+}

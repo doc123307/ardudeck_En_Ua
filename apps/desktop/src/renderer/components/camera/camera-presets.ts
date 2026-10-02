@@ -54,6 +54,36 @@ export const CAMERA_PRESETS: CameraPreset[] = [
     url: 'udp://127.0.0.1:5600',
     get note() { return t('camera.camera_presets.enableVideoForwardingToLocalNetwork'); },
   },
+  // IP cameras by make: the stream url each one uses, main stream first. The HD/SD switch
+  // (stream-quality.ts) recognises every one of these patterns.
+  {
+    id: 'ip-hikvision',
+    get label() { return t('camera.camera_presets.ipHikvision'); },
+    kind: 'rtsp',
+    url: 'rtsp://admin:password@192.168.1.64:554/Streaming/Channels/101',
+    get note() { return t('camera.camera_presets.ipCameraNote'); },
+  },
+  {
+    id: 'ip-dahua',
+    get label() { return t('camera.camera_presets.ipDahua'); },
+    kind: 'rtsp',
+    url: 'rtsp://admin:password@192.168.1.108:554/cam/realmonitor?channel=1&subtype=0',
+    get note() { return t('camera.camera_presets.ipCameraNote'); },
+  },
+  {
+    id: 'ip-uniview',
+    get label() { return t('camera.camera_presets.ipUniview'); },
+    kind: 'rtsp',
+    url: 'rtsp://admin:password@192.168.1.13:554/media/video1',
+    get note() { return t('camera.camera_presets.ipCameraNote'); },
+  },
+  {
+    id: 'ip-ajax',
+    get label() { return t('camera.camera_presets.ipAjax'); },
+    kind: 'rtsp',
+    url: 'rtsp://user:password@192.168.1.50:8554/aabbccddeeff-0_m',
+    get note() { return t('camera.camera_presets.ipAjaxNote'); },
+  },
   {
     id: 'rtsp',
     get label() { return t('camera.camera_presets.customRtspUrl'); },

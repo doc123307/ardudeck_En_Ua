@@ -32,6 +32,7 @@ import { CameraPanel } from '../components/camera/CameraPanel';
 import { VisionStreamWindow } from '../components/camera/VisionStream';
 import { SafetyMonitorPanel } from '../components/panels/SafetyMonitorPanel';
 import { NtripPanel } from '../components/panels/NtripPanel';
+import { OperatorCameraWindow, OperatorMapWindow } from '../components/operator/OperatorWindows';
 
 export interface DetachedComponentDef {
   /** React component to render. Receives `props` as-is from the URL. */
@@ -62,6 +63,9 @@ export const COMPONENT_REGISTRY: Record<string, DetachedComponentDef> = {
   'vision-stream': { Component: VisionStreamWindow as ComponentType<Record<string, unknown>>, defaultBounds: { width: 1280, height: 720 } },
   'safety-monitor': { Component: SafetyMonitorPanel as ComponentType<Record<string, unknown>>, defaultBounds: { width: 420, height: 520 } },
   rtk: { Component: NtripPanel as ComponentType<Record<string, unknown>>, defaultBounds: { width: 420, height: 560 } },
+  // Operator screen pop-outs, for a second monitor.
+  'operator-camera': { Component: OperatorCameraWindow as ComponentType<Record<string, unknown>>, defaultBounds: { width: 960, height: 600 } },
+  'operator-map': { Component: OperatorMapWindow as ComponentType<Record<string, unknown>>, defaultBounds: { width: 900, height: 700 } },
 };
 
 export function getDetachedComponent(componentId: string): DetachedComponentDef | undefined {

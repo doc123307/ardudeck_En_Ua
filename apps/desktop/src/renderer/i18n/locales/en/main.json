@@ -601,6 +601,12 @@
     },
     "updater": {
       "noUpdateFeed": "No updates are published for this build. New versions are handed out separately."
+    },
+    "media_control": {
+      "nothingToControl": "The camera answers, but offers nothing this app can control.",
+      "notSupported": "The camera does not support this action.",
+      "onvifDisabled": "ONVIF is switched off on the camera: enable it in the camera settings (and add an ONVIF user).",
+      "noCommands": "No commands yet: add them in the feed settings."
     }
   }
 }
