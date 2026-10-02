@@ -5,6 +5,7 @@
 
 import type { CameraSourceConfig } from '../../shared/camera-types.js';
 import { digestHeader, pickChallenge } from './hikvision-isapi.js';
+import { controlBase } from './control-address.js';
 import { mt } from '../i18n';
 
 export const CONTROL_TIMEOUT_MS = 5000;
@@ -33,13 +34,10 @@ export function resolveControlTarget(source: CameraSourceConfig): ControlTarget 
   } catch {
     rtsp = null;
   }
-  const host = control.host?.trim() || rtsp?.hostname;
-  if (!host) return null;
-  const scheme = control.https ? 'https' : 'http';
-  const defaultPort = control.https ? 443 : 80;
-  const port = control.port ?? defaultPort;
+  const base = controlBase(control.host, control.port, control.https, rtsp?.hostname);
+  if (!base) return null;
   return {
-    base: `${scheme}://${host.includes(':') && !host.startsWith('[') ? `[${host}]` : host}${port === defaultPort ? '' : `:${port}`}`,
+    base,
     username: control.username ?? decodeURIComponent(rtsp?.username ?? ''),
     password: control.password ?? decodeURIComponent(rtsp?.password ?? ''),
     channel: control.channel ?? 1,

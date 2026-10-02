@@ -12,6 +12,7 @@ import type {
   CameraControlAction, CameraControlState, CameraPtzPreset, CameraSourceConfig, DayNightMode,
 } from '../../shared/camera-types.js';
 import { mt } from '../i18n';
+import { controlBase } from './control-address.js';
 
 const TIMEOUT_MS = 5000;
 const DAY_NIGHT_MODES: DayNightMode[] = ['auto', 'day', 'night'];
@@ -38,13 +39,10 @@ export function resolveTarget(source: CameraSourceConfig): IsapiTarget | null {
   } catch {
     rtsp = null;
   }
-  const host = control.host?.trim() || rtsp?.hostname;
-  if (!host) return null;
-  const scheme = control.https ? 'https' : 'http';
-  const port = control.port ?? (control.https ? 443 : 80);
-  const defaultPort = control.https ? 443 : 80;
+  const base = controlBase(control.host, control.port, control.https, rtsp?.hostname);
+  if (!base) return null;
   return {
-    base: `${scheme}://${host.includes(':') && !host.startsWith('[') ? `[${host}]` : host}${port === defaultPort ? '' : `:${port}`}`,
+    base,
     username: control.username ?? decodeURIComponent(rtsp?.username ?? ''),
     password: control.password ?? decodeURIComponent(rtsp?.password ?? ''),
     channel: control.channel ?? 1,

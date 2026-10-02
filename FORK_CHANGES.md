@@ -94,6 +94,8 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - PTZ arrows and zoom move while held and always send a stop; presets are a drop-down on the feed.
   - Stream url presets for Hikvision, Dahua, Uniview and Ajax cameras, and HD/SD switching for the
     Uniview (`/media/video1|2`, `/unicast/c1/s0|s1`) and Ajax (`<mac>-0_m|_s`) url styles.
+  - The camera address field takes a bare host, `host:port` or a url pasted from the browser; the separate
+    port field, when filled, wins.
   - Only the Hikvision driver has been run against real cameras; ONVIF and Dahua are covered by tests
     against protocol-shaped fakes.
 - **A feed can be shown in several windows.** The media engine counts the windows showing each feed and
@@ -236,6 +238,8 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - **Власні HTTP-команди:** адміністратор задає кнопки, кожна надсилає один HTTP-запит — для власного
     сервісу керування.
   - Шаблони RTSP-адрес для Hikvision, Dahua, Uniview та Ajax; перемикач HD/SD розуміє адреси Uniview й Ajax.
+  - Поле адреси камери приймає просто адресу, `адреса:порт` або посилання, скопійоване з браузера; якщо
+    заповнено окреме поле порту, воно має перевагу.
   - На справжніх камерах перевірено лише Hikvision; ONVIF і Dahua перевірено тестами на імітаторах.
 - **Камеру можна показувати в кількох вікнах одночасно.**
 - **Кілька камер одного апарата одночасно.** Режим «Усі камери» в панелі «Бачення» показує всі джерела
