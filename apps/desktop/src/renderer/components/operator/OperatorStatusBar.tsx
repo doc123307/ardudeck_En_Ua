@@ -14,6 +14,8 @@ import { useSettingsStore } from '../../stores/settings-store';
 import { formatAltitudeFromMeters, formatSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
 import type { OperatorStatusField } from '../../../shared/operator-types';
 import { fixKind, formatDuration, tiltLevel, type TiltLevel } from './operator-logic';
+import { useOperatorRcStore } from '../../stores/operator-rc-store';
+import type { OperatorRecording } from './useOperatorFeeds';
 import { t } from '../../i18n';
 
 /** The flight controller names its modes in English; the common ones are shown translated. */
@@ -42,7 +44,9 @@ function Stat({ label, children, tip }: { label: string; children: ReactNode; ti
   );
 }
 
-export function OperatorStatusBar({ recordingSince }: { recordingSince: number | null }) {
+export function OperatorStatusBar({ recording }: { recording: OperatorRecording }) {
+  const recordingSince = recording.writingSince;
+  const reverse = useOperatorRcStore((s) => s.state.reverse);
   const flight = useTelemetryStore((s) => s.flight);
   const gps = useTelemetryStore((s) => s.gps);
   const battery = useTelemetryStore((s) => s.battery);
@@ -140,11 +144,36 @@ export function OperatorStatusBar({ recordingSince }: { recordingSince: number |
         </span>
       )}
 
-      {recordingSince !== null && (
-        <span className="flex items-center gap-2 whitespace-nowrap rounded bg-red-600/20 px-2.5 py-1 text-sm font-semibold text-red-300">
+      {reverse && (
+        <span className="whitespace-nowrap rounded bg-amber-500 px-2.5 py-1 text-sm font-bold uppercase tracking-wide text-black" data-tip={t('operator.OperatorRcBar.reverseTip')}>
+          {t('operator.OperatorStatusBar.reverse')}
+        </span>
+      )}
+
+      {recording.wanted > 0 && recordingSince !== null && (
+        <span
+          className="flex items-center gap-2 whitespace-nowrap rounded bg-red-600/20 px-2.5 py-1 text-sm font-semibold text-red-300"
+          data-tip={t('operator.OperatorStatusBar.recordingTip', { n: recording.writing, of: recording.wanted, dir: recording.dir })}
+        >
           <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
           {t('operator.OperatorStatusBar.recording')} {formatDuration(now - recordingSince)}
+          {recording.writing < recording.wanted && <span className="text-amber-300">{recording.writing}/{recording.wanted}</span>}
         </span>
+      )}
+      {recording.wanted > 0 && recordingSince === null && (
+        recording.blocked ? (
+          <span className="whitespace-nowrap rounded bg-red-600 px-2.5 py-1 text-sm font-semibold text-white" data-tip={recording.dir}>
+            {t(recording.blocked === 'no-space' ? 'operator.OperatorStatusBar.recordNoSpace' : 'operator.OperatorStatusBar.recordNoFfmpeg')}
+          </span>
+        ) : (
+          <span
+            className="flex items-center gap-2 whitespace-nowrap rounded bg-amber-500/20 px-2.5 py-1 text-sm font-semibold text-amber-300"
+            data-tip={t('operator.OperatorStatusBar.recordWaitingTip')}
+          >
+            <span className="h-2.5 w-2.5 rounded-full border-2 border-amber-400" />
+            {t('operator.OperatorStatusBar.recordWaiting')}
+          </span>
+        )
       )}
     </div>
   );

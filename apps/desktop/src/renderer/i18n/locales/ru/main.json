@@ -382,7 +382,8 @@
       "snapshotFailed": "Не удалось сделать снимок",
       "noLiveStreamToRecord": "Нет живого потока для записи",
       "ffmpegRequiredForRecording": "Для записи нужен ffmpeg",
-      "recordingDidNotStart": "Запись не началась: не удалось открыть видеопоток."
+      "recordingDidNotStart": "Запись не началась: не удалось открыть видеопоток.",
+      "recordFolderUnusable": "Папку записей «{{v1}}» использовать не удалось (нет диска или нет права на запись); записи идут в папку по умолчанию."
     },
     "media_vision_stream_window": {
       "streamRendererStopped": "Рендерер потока остановлен ({{reason}})"

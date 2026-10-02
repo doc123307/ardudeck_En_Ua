@@ -382,7 +382,8 @@
       "snapshotFailed": "Не вдалося зробити знімок",
       "noLiveStreamToRecord": "Немає живого потоку для запису",
       "ffmpegRequiredForRecording": "Для запису потрібен ffmpeg",
-      "recordingDidNotStart": "Запис не розпочався: не вдалося відкрити відеопотік."
+      "recordingDidNotStart": "Запис не розпочався: не вдалося відкрити відеопотік.",
+      "recordFolderUnusable": "Теку записів «{{v1}}» використати не вдалося (немає диска або немає права на запис); записи йдуть у типову теку."
     },
     "media_vision_stream_window": {
       "streamRendererStopped": "Рендерер потоку зупинено ({{reason}})"

@@ -12,9 +12,12 @@ import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
 import { useFleetVehicles } from '../../hooks/useFleet';
 import { plainOsd } from './OperatorCameras';
 import { OperatorMap } from './OperatorMiniMap';
+import { useOperatorGamepadFeed } from './useOperatorRc';
 import { t } from '../../i18n';
 
 export function OperatorCameraWindow({ sourceId }: { sourceId?: unknown }) {
+  // The joystick is read by whichever window is in front; this one must be able to be it.
+  useOperatorGamepadFeed();
   const source = useCameraStore((s) => (typeof sourceId === 'string' ? s.sources[sourceId] : undefined));
   const osd = useCameraStore((s) => s.osd);
   const activeKey = useActiveVehicleStore((s) => s.activeVehicleKey);
@@ -45,5 +48,6 @@ export function OperatorCameraWindow({ sourceId }: { sourceId?: unknown }) {
 }
 
 export function OperatorMapWindow() {
+  useOperatorGamepadFeed();
   return <OperatorMap />;
 }

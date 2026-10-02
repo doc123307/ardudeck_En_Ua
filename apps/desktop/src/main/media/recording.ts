@@ -10,6 +10,7 @@
  */
 
 import type { ChildProcess } from 'node:child_process';
+import { join } from 'node:path';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -44,6 +45,27 @@ export function recordArgs(rtspUrl: string, filePath: string): string[] {
     '-c', 'copy',
     '-movflags', '+frag_keyframe+empty_moov+default_base_moof',
     '-f', 'mp4', filePath,
+  ];
+}
+
+/**
+ * ffmpeg arguments for a recording cut into files of `segmentSeconds`, each named by the
+ * moment it starts ("2026-10-02_09-11-00_Front.mp4"). Every file is a fragmented MP4, so the
+ * one being written when the power goes is playable too.
+ */
+export function segmentRecordArgs(rtspUrl: string, dir: string, part: string, segmentSeconds: number): string[] {
+  // The name is a strftime pattern: a "%" in the camera name has to be doubled.
+  const pattern = join(dir, `%Y-%m-%d_%H-%M-%S_${part.replace(/%/g, '%%')}.mp4`);
+  return [
+    '-rtsp_transport', 'tcp', '-i', rtspUrl,
+    '-c', 'copy',
+    '-f', 'segment',
+    '-segment_time', String(Math.max(10, Math.round(segmentSeconds))),
+    '-segment_format', 'mp4',
+    '-segment_format_options', 'movflags=+frag_keyframe+empty_moov+default_base_moof',
+    '-reset_timestamps', '1',
+    '-strftime', '1',
+    pattern,
   ];
 }
 

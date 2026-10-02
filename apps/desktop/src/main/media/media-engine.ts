@@ -20,7 +20,8 @@
 
 import { spawn, type ChildProcess, spawnSync } from 'node:child_process';
 import { join } from 'node:path';
-import { existsSync, mkdirSync, readFileSync, writeFileSync, statSync, unlinkSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, statSync, unlinkSync, accessSync, statfsSync, constants as fsConstants } from 'node:fs';
+import { isAbsolute } from 'node:path';
 import { networkInterfaces } from 'node:os';
 import { app } from 'electron';
 import { mediaBinariesDownloader } from './media-binaries-downloader.js';
@@ -28,12 +29,14 @@ import { buildWfbngSdp, buildWfbngFfmpegArgs, wfbngPort, wfbngShouldTranscode } 
 import { needsH264Relay, buildH264RelayArgs, encoderChain } from './h264-relay.js';
 import { wfbngReceiver } from './wfbng-receiver.js';
 import { recordArgs, recordingFileName, stopRecording } from './recording.js';
+import { ArmedRecorder } from './recorder.js';
 import { HubApi } from './hub-api.js';
 import type {
   CameraSourceConfig,
   CameraStartResult,
   CameraStreamSession,
   CameraMediaActionResult,
+  CameraRecordStatus,
   MediaEngineStatus,
   CanvasStreamStartResult,
   CanvasStreamStatus,
@@ -117,6 +120,29 @@ export class MediaEngine {
    */
   private webrtcSeen = new Map<string, string>();
   logSink?: (level: 'info' | 'warn' | 'error', msg: string) => void;
+  /** The administrator's recording folder and file length; set by the operator-mode side. */
+  recordSettings?: () => { dir: string; segmentMinutes: number };
+  private readonly recorder = new ArmedRecorder({
+    ffmpegPath: () => this.ffmpegPath,
+    streamUrl: (sourceId) => {
+      const active = this.sessions.get(sourceId);
+      return active?.session.path && active.session.status !== 'stopped' ? this.rtspUrl(active.session.path) : null;
+    },
+    label: (sourceId) => this.sessions.get(sourceId)?.source?.label ?? this.recordLabels.get(sourceId),
+    dir: () => this.resolveMediaDir(),
+    segmentSeconds: () => (this.recordSettings?.().segmentMinutes ?? 15) * 60,
+    freeBytes: (dir) => {
+      try {
+        const s = statfsSync(dir);
+        return s.bavail * s.bsize;
+      } catch {
+        return null;
+      }
+    },
+    log: (level, message) => this.logSink?.(level, message),
+  });
+  /** Camera names by id, for a recording asked for before the camera's stream exists. */
+  private recordLabels = new Map<string, string>();
 
   /** Resolve binaries; idempotent. Called lazily on first use. */
   private resolveBinaries(): void {
@@ -709,6 +735,7 @@ export class MediaEngine {
     active.session.status = 'stopped';
     if (active.restartTimer) clearTimeout(active.restartTimer);
     if (active.record) stopRecording(active.record);
+    this.recorder.streamGone(sourceId);
     if (active.ingest) killProc(active.ingest);
     if (active.configuredPath) await this.removeHubPath(active.configuredPath);
     this.sessions.delete(sourceId);
@@ -741,6 +768,8 @@ export class MediaEngine {
    */
   async toggleRecord(sourceId: string, want?: boolean): Promise<CameraMediaActionResult> {
     const active = this.sessions.get(sourceId);
+    // Already being recorded for the operator screen: that recording is not this button's to stop.
+    if (this.recorder.has(sourceId)) return { ok: true };
     if (want === false && !active?.record) return { ok: true };
     if (!active?.session.path) return { ok: false, error: mt('main.media_media_engine.noLiveStreamToRecord') };
     if (want === true && active.record) return { ok: true, ...(active.recordPath ? { filePath: active.recordPath } : {}) };
@@ -783,10 +812,51 @@ export class MediaEngine {
     return { ok: true, filePath };
   }
 
+  /**
+   * Where recordings and snapshots go: the administrator's folder, else "STOHID" in the
+   * user's Videos folder. A folder that cannot be created or written to (a drive that is
+   * not plugged in) must not cost the recording, so the default stands in and says so.
+   */
+  resolveMediaDir(): { path: string; error?: string } {
+    const usable = (dir: string): boolean => {
+      try {
+        mkdirSync(dir, { recursive: true });
+        accessSync(dir, fsConstants.W_OK);
+        return true;
+      } catch {
+        return false;
+      }
+    };
+    const custom = this.recordSettings?.().dir.trim() ?? '';
+    if (custom && isAbsolute(custom) && usable(custom)) return { path: custom };
+    const error = custom ? mt('main.media_media_engine.recordFolderUnusable', { v1: custom }) : undefined;
+    let fallback: string;
+    try {
+      fallback = join(app.getPath('videos'), 'STOHID');
+    } catch {
+      fallback = '';
+    }
+    if (!fallback || !usable(fallback)) {
+      fallback = join(app.getPath('userData'), 'camera-media');
+      mkdirSync(fallback, { recursive: true });
+    }
+    return { path: fallback, ...(error ? { error } : {}) };
+  }
+
   private mediaDir(): string {
-    const dir = join(app.getPath('userData'), 'camera-media');
-    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-    return dir;
+    return this.resolveMediaDir().path;
+  }
+
+  /** The cameras to keep recording, video or no video (see recorder.ts). */
+  setRecordWanted(sources: { id: string; label?: string }[]): CameraRecordStatus {
+    this.resolveBinaries();
+    this.recordLabels = new Map(sources.flatMap((s) => (s.label ? [[s.id, s.label] as const] : [])));
+    this.recorder.setWanted(sources.map((s) => s.id));
+    return this.recorder.status();
+  }
+
+  recordStatus(): CameraRecordStatus {
+    return this.recorder.status();
   }
 
   /**
@@ -908,6 +978,7 @@ export class MediaEngine {
   /** Tear everything down — called on app quit. */
   shutdown(): void {
     if (this.watchdog) { clearInterval(this.watchdog); this.watchdog = null; }
+    this.recorder.shutdown();
     for (const [id] of this.sessions) void this.stop(id);
     if (this.hub) killProc(this.hub);
     this.hub = null;

@@ -210,6 +210,7 @@ import { mediaEngine } from './media/media-engine.js';
 import { CANVAS_STREAM_PATHS, type CameraControlAction, type CanvasStreamSnapshot, type VisionStreamOpenOptions } from '../shared/camera-types.js';
 import { applyCameraControl, getCameraControlState } from './media/camera-control.js';
 import { registerOperatorHandlers } from './operator/operator-ipc.js';
+import { armStandInChannels, simulatorIdleThrottle } from './arm-rc-stand-in.js';
 import { openVisionStreamWindow, closeVisionStreamWindow, reportVisionStream, visionStreamSnapshot } from './media/vision-stream-window.js';
 import { ardupilotSitlProcess, swarmSitlProcess, ardupilotSitlDownloader, ardupilotRcSender } from './sitl/index.js';
 import { px4SitlProcess, px4SitlDownloader } from './sitl/index.js';
@@ -4955,6 +4956,26 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
   ipcMain.handle(IPC_CHANNELS.CAMERA_RECORD_TOGGLE, async (_, sourceId: string, want?: boolean) => {
     return mediaEngine.toggleRecord(sourceId, typeof want === 'boolean' ? want : undefined);
   });
+  // The operator screen says which cameras to keep recording. A window that goes away
+  // without saying so (closed, crashed, reloaded) must not leave them recording for ever.
+  const recordOwners = new Set<number>();
+  ipcMain.handle(IPC_CHANNELS.CAMERA_RECORD_WANTED, async (event, sources: unknown) => {
+    const owner = event.sender.id;
+    if (!recordOwners.has(owner)) {
+      recordOwners.add(owner);
+      event.sender.once('destroyed', () => {
+        recordOwners.delete(owner);
+        mediaEngine.setRecordWanted([]);
+      });
+    }
+    const list = (Array.isArray(sources) ? sources : [])
+      .filter((s): s is { id: string; label?: string } => !!s && typeof s === 'object' && typeof (s as { id?: unknown }).id === 'string')
+      .map((s) => ({ id: s.id, ...(typeof s.label === 'string' ? { label: s.label } : {}) }));
+    return mediaEngine.setRecordWanted(list);
+  });
+  ipcMain.handle(IPC_CHANNELS.CAMERA_RECORD_STATUS, async () => {
+    return mediaEngine.recordStatus();
+  });
   ipcMain.handle(IPC_CHANNELS.CAMERA_DIAGNOSTICS, async () => {
     return mediaEngine.diagnostics();
   });
@@ -8359,8 +8380,13 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
       // When arming without a transmitter, ArduPilot needs RC input.
       // Auto-start the SITL RC sender if SITL is running so ArduPilot
       // gets continuous 50Hz RC input and doesn't trigger RC failsafe.
+      // What "idle" means depends on the vehicle: throttle low for an aircraft, throttle at
+      // the centre for a ground vehicle or a boat, where 1000 is full reverse.
+      const activeKey = connectionRegistry.getActiveVehicleKey();
+      const armMavType = (activeKey ? connectionRegistry.getVehicleByKey(activeKey)?.mavType : undefined) ?? connectionState.mavType;
       if (arm && ardupilotSitlProcess.isRunning && !ardupilotRcSender.isRunning
           && !ardupilotRcSender.hasExternalSource) {
+        ardupilotRcSender.setState({ throttle: simulatorIdleThrottle(armMavType) });
         ardupilotRcSender.start();
         sendLog(mainWindow, 'info', 'Auto-started RC sender for SITL arming');
         // Give ArduPilot time to see RC input before arm command
@@ -8375,13 +8401,14 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
       // override would OUTRANK it and freeze the sticks at centre/idle the moment we armed.
       if (arm && !ardupilotRcSender.hasExternalSource) {
         const IGNORE = 65535;
+        const [standIn1, standIn2, standIn3, standIn4] = armStandInChannels(armMavType);
         const rcPayload = serializeRcChannelsOverride({
           targetSystem: target.sysid,
           targetComponent: 1,
-          chan1Raw: 1500, // Roll center
-          chan2Raw: 1500, // Pitch center
-          chan3Raw: 1000, // Throttle low
-          chan4Raw: 1500, // Yaw center
+          chan1Raw: standIn1, // Roll / steering centre
+          chan2Raw: standIn2, // Pitch centre (aircraft only)
+          chan3Raw: standIn3, // Throttle: low for aircraft, centre for ground vehicles
+          chan4Raw: standIn4, // Yaw centre (aircraft only)
           chan5Raw: IGNORE, chan6Raw: IGNORE, chan7Raw: IGNORE, chan8Raw: IGNORE,
           chan9Raw: IGNORE, chan10Raw: IGNORE, chan11Raw: IGNORE, chan12Raw: IGNORE,
           chan13Raw: IGNORE, chan14Raw: IGNORE, chan15Raw: IGNORE, chan16Raw: IGNORE,
@@ -13282,8 +13309,31 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
   // Initialize auto-updater (handles auto-check on its own schedule)
   initAutoUpdater(mainWindow);
 
-  // Operator mode (administrator password, operator screen settings)
-  registerOperatorHandlers();
+  // Operator mode (administrator password, operator screen settings) and the operator's RC
+  // control, which puts its frames on the current link. Values go out as given: besides
+  // microseconds a frame carries "ignore" (65535) and "release" (0 / 65534), which the
+  // joystick handler above would clamp away.
+  registerOperatorHandlers({
+    linkUp: () => !!currentTransport?.isOpen && connectionState.isConnected
+      && connectionState.protocol === 'mavlink' && !isTrainerSessionActive(),
+    send: async (channels) => {
+      const transport = currentTransport;
+      if (!transport?.isOpen) return;
+      const ch = (i: number): number => channels[i] ?? 65535;
+      const payload = serializeRcChannelsOverride({
+        targetSystem: connectionState.systemId ?? 1,
+        targetComponent: 1,
+        chan1Raw: ch(0), chan2Raw: ch(1), chan3Raw: ch(2), chan4Raw: ch(3),
+        chan5Raw: ch(4), chan6Raw: ch(5), chan7Raw: ch(6), chan8Raw: ch(7),
+        chan9Raw: ch(8), chan10Raw: ch(9), chan11Raw: ch(10), chan12Raw: ch(11),
+        chan13Raw: ch(12), chan14Raw: ch(13), chan15Raw: ch(14), chan16Raw: ch(15),
+        chan17Raw: ch(16), chan18Raw: ch(17),
+      });
+      const packet = await sendMavlinkPacket(RC_CHANNELS_OVERRIDE_ID, payload, RC_CHANNELS_OVERRIDE_CRC_EXTRA);
+      await transport.write(packet);
+      connectionState.packetsSent++;
+    },
+  });
 
   // Companion computer (agent WebSocket)
   registerCompanionIpcHandlers(mainWindow);

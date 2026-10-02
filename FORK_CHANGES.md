@@ -80,7 +80,37 @@ The whole UI can be switched between **English** (unchanged, still the default) 
     screen, so they survive a resized window.
   - The administrator picks the status-strip values and their order (13 to choose from) and can switch
     screen elements off.
+  - Mode switching: the administrator picks which Rover modes the operator may switch to (Manual, Acro,
+    Steering, Loiter, Auto, RTL, SmartRTL, Guided, Follow, Simple, Circle, Dock). Up to three are buttons;
+    more fold into one "Mode" list.
   - Code: `src/main/operator/`, `src/renderer/components/operator/`, `src/shared/operator-types.ts`.
+- **Operator RC control over `RC_CHANNELS_OVERRIDE`.** All of it is set up by the administrator and runs in
+  the main process, so the operator screen can be spread over several windows.
+  - **Joystick driving.** A USB joystick or gamepad (Gamepad API) drives steering and throttle: axes,
+    direction, dead zone, expo, channel numbers, PWM range and a throttle limit are configurable, with a
+    live read-out. The operator takes control with a button, each session, and only with the stick
+    centred. If the joystick stops being read (no window of the app in front, cable out) the vehicle gets
+    neutral, then the channels are released; control resumes only after the stick is seen centred.
+  - **Cruise control.** Holds the throttle. With the joystick it takes over the throttle held at that
+    moment; pushing further adds, pulling the stick back cancels. `+` / `−` step it. STOP, disarming and a
+    lost link cancel it. It holds the throttle position, not ground speed.
+  - **Reverse driving.** A switch: forward on the stick drives the vehicle tail-first, steering mirrored
+    (optional, depends on `PILOT_STEER_TYPE`), and the rear camera takes the main view. Switches only at
+    a standstill.
+  - **Custom functions.** Buttons (latching or momentary), three-position switches (staying, or returning
+    to the centre) and sliders (staying, or sprung to minimum, centre or maximum), each on its own RC
+    channel with its own PWM values, worked from the screen and, when assigned, from joystick buttons or
+    axes ("press the control to assign"). A channel is left alone until the operator first uses its
+    control, unless set to "send from connection"; a channel no longer driven is released (0 for
+    channels 1-8, 65534 above), not left frozen.
+  - Code: `src/shared/operator-rc.ts` (rules), `src/main/operator/operator-rc-engine.ts` (20 Hz sender),
+    `OperatorRcBar.tsx`, `OperatorRcSettings.tsx`.
+- **Recording that does not depend on the video being there.** The administrator chooses: always, while
+  armed, or by the operator's button. The app keeps the chosen cameras recording: a camera with no picture
+  is waited for, the recording starts by itself when video appears and resumes after every dropout. Files
+  go to `Videos\STOHID` (or a folder the administrator picks; an unusable folder falls back to the default
+  and says so), are cut every N minutes (15 by default), and recording stops before the disk fills up.
+  Code: `src/main/media/recorder.ts`.
 - **More camera control protocols, PTZ and presets.** Besides Hikvision ISAPI:
   - **ONVIF** (any ONVIF camera: Uniview, Bitrek, Ajax and others): day/night through the imaging service,
     continuous pan/tilt/zoom, presets (recall, store, remove). The camera's clock is read first, because
@@ -147,6 +177,8 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 | **With two cameras on screen, starting or re-pointing one feed killed the other.** Two feeds opening together each launched the media hub (`ensureHub` had no single-flight). The second hub could not bind and exited, clearing the engine's handle to the first; from then on every feed start launched another doomed hub and rewrote `mediamtx.yml`, which the running hub hot-reloads, dropping every path added over the API. Now: one hub start at a time, the config file is written only when it changes, an exiting process clears the state only if it is the hub in use, a hub left by a killed run is reused, and a "live" session whose hub path has vanished is rebuilt (the player asks on its first reconnect). | yes |
 | **Closed feeds kept being pulled.** Hub paths were removed with `POST …/delete/…`; MediaMTX wants `DELETE` and answered 404, so every feed ever opened kept streaming from the vehicle until the app closed. Stop and start of the same feed are now ordered, so the removal cannot overtake the re-add. Code: `src/main/media/hub-api.ts`. | yes |
 | **Video recordings were empty files on Windows.** Recording was stopped by killing ffmpeg, which on Windows is immediate, so the MP4 never got its index (48-byte files). Recordings are now fragmented MP4 (playable even when cut short), stopped by asking ffmpeg to quit, named by date, time and camera, and a recording that cannot start is reported instead of shown as running. Code: `src/main/media/recording.ts`. | yes |
+| **Arming from the app told a ground vehicle "full reverse".** With no RC transmitter, ARM sends one `RC_CHANNELS_OVERRIDE` frame as a stand-in, with channel 3 at 1000: "throttle low" for an aircraft, but full reverse for a rover or a boat, held until the override times out (`RC_OVERRIDE_TIME`, 3 s by default). In SITL the built-in stand-in transmitter did the same continuously: an armed rover in Manual drove backwards at full speed. Ground vehicles and boats now get neutral (1500) on the steering and throttle channels only. Code: `src/main/arm-rc-stand-in.ts`. | yes |
+| "The vehicle did not switch to mode X" was shown for a mode the operator had already replaced with another one. | fork only |
 | Layout at small window sizes (1024–1366 px wide): telemetry header values wrapped under their labels, the Parameters header squeezed its buttons, the mission map tools ran off the map, the welcome logo was cut off, the OSD editor's profile tabs and a select were clipped, the mission toast covered the map search and dock tabs, a tooltip could outlive its host. | yes |
 
 ### 5. Build and packaging
@@ -230,6 +262,31 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - Рухомі вікна: кожну камеру, крім основної, і карту можна перетягувати, довільно змінювати в розмірі
     й виносити в окреме вікно на інший монітор. У сітці камер роздільники перетягуються.
   - Адміністратор вибирає значення смуги стану та їхній порядок і може вимикати елементи екрана.
+  - Перемикання режимів: адміністратор вибирає, у які режими Rover оператор може перемикати борт (Manual,
+    Acro, Steering, Loiter, Auto, RTL, SmartRTL, Guided, Follow, Simple, Circle, Dock). До трьох режимів —
+    кнопками, більше — списком «Режим».
+- **RC-керування оператора через `RC_CHANNELS_OVERRIDE`.** Усе налаштовує адміністратор.
+  - **Керування з джойстика.** USB-джойстик або геймпад керує кермом і газом: осі, напрямок, мертва зона,
+    експонента, номери каналів, межі PWM і обмеження газу налаштовуються, з живим показом. Оператор бере
+    керування кнопкою, щосесії, і лише з ручкою в центрі. Якщо джойстик перестає зчитуватися (жодне вікно
+    програми не активне, від'єднано кабель), борт отримує нейтраль, потім канали відпускаються; керування
+    повертається лише після того, як ручка побувала в центрі.
+  - **Круїз-контроль.** Тримає газ. З джойстиком підхоплює поточний газ; ручка від себе додає, на себе —
+    вимикає. Кнопки `+` / `−` змінюють крок за кроком. СТОП, DISARM і втрата зв'язку вимикають круїз.
+    Тримає положення газу, а не швидкість за GPS.
+  - **Реверсивне керування.** Перемикач: ручка від себе веде борт задом наперед, кермо дзеркалиться (за
+    бажанням, залежить від `PILOT_STEER_TYPE`), задня камера стає основною. Перемикається лише на місці.
+  - **Власні функції.** Кнопки (з фіксацією або без), перемикачі на три позиції (що лишаються в позиції або
+    повертаються в центр) і повзунки (що лишаються на місці або підпружинені до мінімуму, центру чи
+    максимуму). Кожна — на своєму RC-каналі зі своїми значеннями PWM, працює з екрана і, якщо призначити,
+    з кнопок чи осей джойстика («натисніть елемент, щоб призначити»). Канал не чіпається, доки оператор
+    уперше не скористається елементом (або ввімкнено «передавати від моменту підключення»); канал, яким
+    більше не керують, відпускається, а не «застигає».
+- **Запис, що не залежить від наявності відео.** Адміністратор вибирає: завжди, доки борт армовано, або за
+  кнопкою оператора. Програма сама тримає запис вибраних камер: камеру без зображення чекає, запис
+  починається сам, щойно з'явиться відео, і відновлюється після кожного обриву. Файли йдуть у
+  `Відео\STOHID` (або в теку, яку вибере адміністратор; якщо тека недоступна, береться типова і про це
+  сказано), діляться кожні N хвилин (типово 15), а запис зупиняється до того, як диск заповниться.
 - **Нові протоколи керування камерами, PTZ і пресети.** Крім Hikvision ISAPI:
   - **ONVIF** (будь-яка камера з ONVIF: Uniview, Bitrek, Ajax та інші): день/ніч, поворот і зум, пресети.
     Працює й через проброс порту та з камерою, на якій не виставлено годинник.
@@ -284,6 +341,13 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 - **Порожні файли запису відео під Windows.** Запис зупинявся «вбивством» ffmpeg, і MP4 лишався без
   індексу (48 байтів). Тепер це фрагментований MP4 (відтворюється навіть після обриву), зупинка коректна,
   назва файлу — дата, час і камера; якщо запис не почався, про це сказано. Стосується й оригіналу.
+- **ARM із програми давав наземному борту команду «повний назад».** Коли немає пульта RC, перед ARM
+  надсилається один кадр `RC_CHANNELS_OVERRIDE` із каналом 3 на 1000: для літального апарата це «газ
+  унизу», а для ровера чи човна — повний задній хід, доки override не згасне (`RC_OVERRIDE_TIME`, типово
+  3 с). У симуляторі вбудований «пульт» робив те саме безперервно: армований ровер у ручному режимі їхав
+  назад на повному газу. Тепер наземні борти й човни отримують нейтраль (1500), і лише на каналах керма
+  й газу. Стосується й оригіналу.
+- **Хибне «Борт не перейшов у режим…»** для режиму, який оператор уже замінив іншим.
 - **Верстка в невеликому вікні (1024–1366 px):** шапка телеметрії, шапка «Параметрів», інструменти на
   карті місії, логотип на стартовому екрані, ліва панель редактора OSD, сповіщення на екрані місії,
   «завислі» підказки. Стосується й оригіналу.

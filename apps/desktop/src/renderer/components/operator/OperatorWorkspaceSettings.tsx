@@ -3,72 +3,88 @@
  * Reachable only from the full UI; the main process refuses these changes otherwise.
  */
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { useOperatorStore } from '../../stores/operator-store';
 import { useSettingsStore } from '../../stores/settings-store';
-import { ArrowDown, ArrowUp, Plus, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, FolderOpen, Plus, X } from 'lucide-react';
 import {
-  ADMIN_PASSWORD_MIN_LENGTH, OPERATOR_ELEMENTS, OPERATOR_MODE_BUTTONS, OPERATOR_STATUS_FIELDS,
+  ADMIN_PASSWORD_MIN_LENGTH, OPERATOR_ELEMENTS, OPERATOR_MODE_BUTTONS, OPERATOR_RECORD_MODES, OPERATOR_STATUS_FIELDS,
   type AdminAuthResult, type OperatorConfig, type OperatorElement, type OperatorModeButton, type OperatorStatusField,
 } from '../../../shared/operator-types';
+import type { CameraRecordStatus } from '../../../shared/camera-types';
 import { statusFieldLabel } from './OperatorStatusBar';
+import { modeButtonLabel } from './OperatorModeMenu';
+import { OperatorRcSettings } from './OperatorRcSettings';
+import { BTN, Card, FIELD, NumberField, Toggle } from './OperatorSettingsParts';
 import { connectOptionsFromMemory, describeConnection } from './operator-logic';
 import { authErrorText } from './AdminUnlockDialog';
 import { t } from '../../i18n';
 
-const FIELD = 'rounded-lg border border-subtle bg-surface-input px-3 py-1.5 text-sm text-content focus:border-blue-500 focus:outline-none';
-const BTN = 'rounded-lg border border-subtle bg-surface-raised px-3 py-1.5 text-sm text-content hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40';
-
-function Card({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
-  return (
-    <section className="mt-4 rounded-xl border border-subtle bg-surface p-5">
-      <h3 className="text-sm font-semibold text-content">{title}</h3>
-      {hint && <p className="mt-1 text-xs leading-snug text-content-secondary">{hint}</p>}
-      <div className="mt-3 flex flex-col gap-3">{children}</div>
-    </section>
-  );
+/** "12.3 GB" / "850 MB": how much room the recording folder's disk has. */
+export function formatBytes(bytes: number): string {
+  const gb = bytes / 1024 ** 3;
+  return gb >= 1 ? `${gb.toFixed(1)} GB` : `${Math.round(bytes / 1024 ** 2)} MB`;
 }
 
-function Toggle({ checked, onChange, label, hint }: { checked: boolean; onChange: (v: boolean) => void; label: string; hint?: string }) {
-  return (
-    <label className="flex cursor-pointer items-start gap-3">
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-blue-500" />
-      <span className="min-w-0">
-        <span className="block text-sm text-content">{label}</span>
-        {hint && <span className="block text-xs leading-snug text-content-secondary">{hint}</span>}
-      </span>
-    </label>
-  );
-}
+/** When video is recorded and where the files go. */
+function RecordingCard({ config, save }: { config: OperatorConfig; save: (patch: Partial<OperatorConfig>) => void }) {
+  const [status, setStatus] = useState<CameraRecordStatus | null>(null);
+  useEffect(() => {
+    let alive = true;
+    void window.electronAPI.cameraRecordStatus().then((s) => { if (alive) setStatus(s); }).catch(() => {});
+    return () => { alive = false; };
+  }, [config.recordDir]);
 
-/** A number that is saved when the field is left, so half-typed values never reach the screen. */
-function NumberField({ value, min, max, onCommit, label, unit }: {
-  value: number; min: number; max: number; onCommit: (v: number) => void; label: string; unit: string;
-}) {
-  const [draft, setDraft] = useState(String(value));
-  useEffect(() => setDraft(String(value)), [value]);
-  const commit = () => {
-    const n = Number(draft);
-    if (draft.trim() === '' || !Number.isFinite(n)) { setDraft(String(value)); return; }
-    const next = Math.min(max, Math.max(min, Math.round(n)));
-    setDraft(String(next));
-    if (next !== value) onCommit(next);
+  const pick = async () => {
+    const dir = await window.electronAPI.operatorPickRecordDir();
+    if (dir) save({ recordDir: dir });
   };
+
   return (
-    <label className="flex flex-wrap items-center gap-2 text-sm text-content">
-      <span className="min-w-[14rem]">{label}</span>
-      <input
-        type="number"
-        value={draft}
-        min={min}
-        max={max}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={commit}
-        onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-        className={`${FIELD} w-24`}
+    <Card title={t('operator.OperatorWorkspaceSettings.video')} hint={t('operator.OperatorWorkspaceSettings.videoHint')}>
+      <div className="flex flex-col gap-2">
+        {OPERATOR_RECORD_MODES.map((mode) => (
+          <label key={mode} className="flex cursor-pointer items-start gap-3">
+            <input type="radio" name="record-mode" checked={config.recordMode === mode} onChange={() => save({ recordMode: mode })} className="mt-0.5 h-4 w-4 shrink-0 accent-blue-500" />
+            <span className="min-w-0">
+              <span className="block text-sm text-content">{t(`operator.OperatorWorkspaceSettings.recordMode_${mode}`)}</span>
+              <span className="block text-xs leading-snug text-content-secondary">{t(`operator.OperatorWorkspaceSettings.recordModeHint_${mode}`)}</span>
+            </span>
+          </label>
+        ))}
+      </div>
+      <Toggle
+        checked={config.recordAllCameras}
+        onChange={(v) => save({ recordAllCameras: v })}
+        label={t('operator.OperatorWorkspaceSettings.recordAll')}
       />
-      <span className="text-content-secondary">{unit}</span>
-    </label>
+      <NumberField
+        value={config.recordSegmentMinutes}
+        min={0}
+        max={240}
+        onCommit={(v) => save({ recordSegmentMinutes: v })}
+        label={t('operator.OperatorWorkspaceSettings.recordSegment')}
+        unit={t('operator.OperatorWorkspaceSettings.recordSegmentUnit')}
+      />
+      <div className="flex flex-col gap-2">
+        <span className="text-sm text-content">{t('operator.OperatorWorkspaceSettings.recordDir')}</span>
+        <code className="max-w-full select-text break-all rounded-lg border border-subtle bg-surface-input px-3 py-1.5 text-xs text-content">
+          {status?.dir ?? '…'}
+        </code>
+        <span className="text-xs text-content-secondary">
+          {config.recordDir ? t('operator.OperatorWorkspaceSettings.recordDirCustom') : t('operator.OperatorWorkspaceSettings.recordDirDefault')}
+          {status && status.freeBytes !== null && ` ${t('operator.OperatorWorkspaceSettings.recordDirFree', { free: formatBytes(status.freeBytes) })}`}
+        </span>
+        {status?.dirError && <span className="text-xs text-amber-400">{status.dirError}</span>}
+        <div className="flex flex-wrap gap-2">
+          <button onClick={() => void pick()} className={BTN}>{t('operator.OperatorWorkspaceSettings.recordDirPick')}</button>
+          <button onClick={() => save({ recordDir: '' })} disabled={!config.recordDir} className={BTN}>{t('operator.OperatorWorkspaceSettings.recordDirReset')}</button>
+          <button onClick={() => void window.electronAPI.operatorOpenRecordDir()} className={`${BTN} flex items-center gap-1.5`}>
+            <FolderOpen className="h-3.5 w-3.5" />{t('operator.OperatorWorkspaceSettings.recordDirOpen')}
+          </button>
+        </div>
+      </div>
+    </Card>
   );
 }
 
@@ -232,12 +248,17 @@ export function OperatorWorkspaceSettings() {
           label={t('operator.OperatorWorkspaceSettings.allowArm')}
           hint={t('operator.OperatorWorkspaceSettings.allowArmHint')}
         />
-        <div className="flex flex-wrap gap-x-6 gap-y-2">
+      </Card>
+
+      <Card title={t('operator.OperatorWorkspaceSettings.modes')} hint={t('operator.OperatorWorkspaceSettings.modesHint')}>
+        <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
           {OPERATOR_MODE_BUTTONS.filter((m) => m !== 'hold').map((m) => (
-            <Toggle key={m} checked={config.modeButtons.includes(m)} onChange={(v) => toggleMode(m, v)} label={t(`operator.OperatorScreen.mode_${m}`)} />
+            <Toggle key={m} checked={config.modeButtons.includes(m)} onChange={(v) => toggleMode(m, v)} label={modeButtonLabel(m)} />
           ))}
         </div>
       </Card>
+
+      <OperatorRcSettings rc={config.rc} onChange={(rc) => save({ rc })} />
 
       <StatusFieldsCard fields={config.statusFields} onChange={(statusFields) => save({ statusFields })} />
 
@@ -261,13 +282,7 @@ export function OperatorWorkspaceSettings() {
           label={t('operator.OperatorWorkspaceSettings.tiltLimit')} unit="°" />
       </Card>
 
-      <Card title={t('operator.OperatorWorkspaceSettings.video')} hint={t('operator.OperatorWorkspaceSettings.videoHint')}>
-        <Toggle
-          checked={config.recordAllCameras}
-          onChange={(v) => save({ recordAllCameras: v })}
-          label={t('operator.OperatorWorkspaceSettings.recordAll')}
-        />
-      </Card>
+      <RecordingCard config={config} save={save} />
 
       <Card title={t('operator.OperatorWorkspaceSettings.support')} hint={t('operator.OperatorWorkspaceSettings.supportHint')}>
         <input

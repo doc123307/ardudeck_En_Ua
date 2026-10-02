@@ -227,6 +227,22 @@ export interface CameraMediaActionResult {
   error?: string;
 }
 
+/**
+ * A camera that is to be recorded: being written, waiting for its video to appear, or
+ * held back (disk full, no ffmpeg).
+ */
+export type CameraRecordState = 'recording' | 'waiting' | 'no-space' | 'no-ffmpeg';
+
+export interface CameraRecordStatus {
+  /** The folder recordings and snapshots go to. */
+  dir: string;
+  /** The administrator's folder could not be used, so `dir` is the default one. */
+  dirError?: string;
+  freeBytes: number | null;
+  /** By camera id; `since` is when recording was asked for. */
+  sources: Record<string, { state: CameraRecordState; since: number }>;
+}
+
 /** Engine availability, surfaced so the UI can guide setup when binaries are absent. */
 export interface MediaEngineStatus {
   /** MediaMTX sidecar reachable. */

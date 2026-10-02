@@ -14,7 +14,11 @@ import { useOperatorUiStore } from '../../stores/operator-ui-store';
 import { ROVER_MODE_NUMBER, type OperatorElement, type OperatorModeButton } from '../../../shared/operator-types';
 import { extractPreArmReason, isPreArmMessage } from '../../../shared/prearm-checks';
 import { RelayButtons } from '../vehicle-outputs/RelayButtons';
-import { OperatorStatusBar } from './OperatorStatusBar';
+import { useOperatorRcStore } from '../../stores/operator-rc-store';
+import { OperatorStatusBar, modeLabel } from './OperatorStatusBar';
+import { OperatorModeMenu, modeButtonLabel } from './OperatorModeMenu';
+import { OperatorRcBar } from './OperatorRcBar';
+import { useOperatorRc } from './useOperatorRc';
 import { OperatorCameras } from './OperatorCameras';
 import { OperatorMiniMap } from './OperatorMiniMap';
 import { OperatorInfoBlock } from './OperatorInfoBlock';
@@ -44,6 +48,7 @@ export function OperatorScreen() {
   const ui = useOperatorUiStore();
   const feeds = useOperatorFeeds();
   const recording = useOperatorRecording(feeds.sources, feeds.main);
+  useOperatorRc(feeds.sources, feeds.main?.id ?? null, feeds.selectMain);
 
   // The camera area in px: movable windows are placed and clamped against it.
   const areaRef = useRef<HTMLDivElement>(null);
@@ -72,18 +77,26 @@ export function OperatorScreen() {
   const canDrive = connected && rover;
 
   // ---- Vehicle commands ---------------------------------------------------
+  const lastModeAsked = useRef<number | null>(null);
   const setMode = useCallback(async (button: OperatorModeButton) => {
     if (!canDrive) return;
     const wanted = ROVER_MODE_NUMBER[button];
+    lastModeAsked.current = wanted;
     const sent = await window.electronAPI.mavlinkSetMode(wanted);
-    const label = t(`operator.OperatorScreen.mode_${button}`);
+    const label = modeButtonLabel(button);
     if (!sent) { say(t('operator.OperatorScreen.commandNotSent'), 'error'); return; }
     setTimeout(() => {
+      // A mode asked for since then has replaced this one: its own check speaks for it.
+      if (lastModeAsked.current !== wanted) return;
       if (useTelemetryStore.getState().flight.modeNum !== wanted) say(t('operator.OperatorScreen.modeRefused', { mode: label }), 'error');
     }, COMMAND_SETTLE_MS);
   }, [canDrive, say]);
 
-  const stop = useCallback(() => { void setMode('hold'); }, [setMode]);
+  const stop = useCallback(() => {
+    // Nothing may keep the throttle open once STOP is pressed.
+    useOperatorRcStore.getState().stop();
+    void setMode('hold');
+  }, [setMode]);
 
   const armDisarm = useCallback(async (arm: boolean) => {
     if (!connected) return;
@@ -117,12 +130,9 @@ export function OperatorScreen() {
     return () => window.removeEventListener('keydown', onKey, true);
   }, [stop]);
 
-  const toggleRecording = async () => {
-    const r = await recording.toggle();
-    if (r.stopped > 0) say(t('operator.OperatorScreen.recordingSaved'));
-    else if (r.started > 0 && r.failed === 0) say(t('operator.OperatorScreen.recordingStarted', { n: r.started }));
-    else if (r.started > 0) say(t('operator.OperatorScreen.recordingPartly', { n: r.started, failed: r.failed }), 'error');
-    else say(t('operator.OperatorScreen.recordingFailed', { reason: r.error ?? '' }), 'error');
+  const toggleRecording = () => {
+    say(recording.on ? t('operator.OperatorScreen.recordingSaved', { dir: recording.dir }) : t('operator.OperatorScreen.recordingOn'));
+    recording.toggle();
   };
 
   const holding = connected && flight.modeNum === ROVER_MODE_NUMBER.hold;
@@ -130,7 +140,7 @@ export function OperatorScreen() {
 
   return (
     <div className="flex h-full min-h-0 select-none flex-col bg-surface-base">
-      <OperatorStatusBar recordingSince={recording.since} />
+      <OperatorStatusBar recording={recording} />
 
       <div ref={areaRef} className="relative min-h-0 flex-1 overflow-hidden">
         {/* Nothing is placed until the area has a size: a window laid out against 0x0 would jump. */}
@@ -150,6 +160,8 @@ export function OperatorScreen() {
           </div>
         )}
       </div>
+
+      <OperatorRcBar connected={connected} onRefused={(text) => say(text, 'error')} />
 
       {/* Action bar */}
       <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-t border-subtle bg-surface px-4 py-2.5">
@@ -177,14 +189,15 @@ export function OperatorScreen() {
             {ui.controlsPinned ? <Pin className="h-4 w-4" /> : <Columns2 className="h-4 w-4" />}
             <span className="whitespace-nowrap">{t('operator.OperatorScreen.cameraControls')}</span>
           </button>}
-          {shows('record') && <button
-            onClick={() => void toggleRecording()}
-            disabled={recording.busy || !feeds.main}
-            data-tip={recording.since !== null ? t('operator.OperatorScreen.stopRecordingTip') : t('operator.OperatorScreen.recordTip')}
-            className={`${TOOL_BTN} ${recording.since !== null ? 'border-red-500/60 bg-red-600/30 text-red-200' : ''}`}
+          {/* The button exists only where recording is the operator's to start; otherwise the status strip shows it. */}
+          {shows('record') && recording.mode === 'manual' && <button
+            onClick={toggleRecording}
+            disabled={!feeds.main}
+            data-tip={recording.on ? t('operator.OperatorScreen.stopRecordingTip') : t('operator.OperatorScreen.recordTip')}
+            className={`${TOOL_BTN} ${recording.on ? 'border-red-500/60 bg-red-600/30 text-red-200' : ''}`}
           >
-            <Circle className={`h-3.5 w-3.5 ${recording.since !== null ? 'fill-current text-red-400' : ''}`} />
-            <span className="whitespace-nowrap">{recording.since !== null ? t('operator.OperatorScreen.stopRecording') : t('operator.OperatorScreen.record')}</span>
+            <Circle className={`h-3.5 w-3.5 ${recording.on ? 'fill-current text-red-400' : ''}`} />
+            <span className="whitespace-nowrap">{recording.on ? t('operator.OperatorScreen.stopRecording') : t('operator.OperatorScreen.record')}</span>
           </button>}
         </div>
 
@@ -194,16 +207,13 @@ export function OperatorScreen() {
           {connected && !rover && (
             <span className="max-w-[16rem] text-xs leading-snug text-amber-300">{t('operator.OperatorScreen.notRover')}</span>
           )}
-          {modeButtons.map((m) => (
-            <button
-              key={m}
-              onClick={() => void setMode(m)}
-              disabled={!canDrive}
-              className={`${TOOL_BTN} h-12 px-4 ${connected && flight.modeNum === ROVER_MODE_NUMBER[m] ? TOOL_ON : ''}`}
-            >
-              <span className="whitespace-nowrap">{t(`operator.OperatorScreen.mode_${m}`)}</span>
-            </button>
-          ))}
+          <OperatorModeMenu
+            modes={modeButtons}
+            modeNum={connected ? flight.modeNum : null}
+            currentLabel={modeLabel(flight.mode)}
+            disabled={!canDrive}
+            onPick={(m) => void setMode(m)}
+          />
 
           {allowArm && (
             <HoldButton

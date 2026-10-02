@@ -11,7 +11,10 @@ import { useCameraStore } from '../../stores/camera-store';
 import { useFleetVehicles, type FleetVehicle } from '../../hooks/useFleet';
 import { useOperatorStore } from '../../stores/operator-store';
 import { useOperatorUiStore } from '../../stores/operator-ui-store';
-import type { CameraSourceConfig } from '../../../shared/camera-types';
+import { useTelemetryStore } from '../../stores/telemetry-store';
+import { useConnectionStore } from '../../stores/connection-store';
+import type { CameraRecordStatus, CameraSourceConfig } from '../../../shared/camera-types';
+import type { OperatorRecordMode } from '../../../shared/operator-types';
 
 export interface OperatorFeeds {
   sources: CameraSourceConfig[];
@@ -61,40 +64,70 @@ export function useOperatorFeeds(): OperatorFeeds {
 }
 
 export interface OperatorRecording {
-  /** When the current recording started; null when not recording. */
-  since: number | null;
-  busy: boolean;
-  toggle: () => Promise<{ started: number; failed: number; stopped: number; error?: string }>;
+  mode: OperatorRecordMode;
+  /** Cameras that are to be recorded right now, and how many of them are being written. */
+  wanted: number;
+  writing: number;
+  /** Since when something is actually being written; null while nothing is. */
+  writingSince: number | null;
+  /** Why nothing is written although it should be: the disk is full, ffmpeg is missing. */
+  blocked: 'no-space' | 'no-ffmpeg' | null;
+  /** The folder the files go to. */
+  dir: string;
+  /** "By button" mode: the button's state and the button itself. */
+  on: boolean;
+  toggle: () => void;
 }
 
-/** One button records the main camera or, when the administrator set it so, every camera. */
+/** The cameras to record: every one, or just the main one. */
+export function recordTargets(sources: CameraSourceConfig[], main: CameraSourceConfig | null, recordAll: boolean): CameraSourceConfig[] {
+  return recordAll ? sources : main ? [main] : [];
+}
+
+/** Whether recording should be running, by the administrator's rule. */
+export function recordingWanted(mode: OperatorRecordMode, state: { armed: boolean; buttonOn: boolean }): boolean {
+  return mode === 'always' || (mode === 'armed' && state.armed) || (mode === 'manual' && state.buttonOn);
+}
+
+const POLL_MS = 1000;
+
+/**
+ * Recording as the administrator set it: all the time, while armed, or by the button.
+ * This hook only says WHICH cameras are to be recorded; the main process keeps them
+ * recording, waiting for a camera that has no picture and resuming after a dropout.
+ */
 export function useOperatorRecording(sources: CameraSourceConfig[], main: CameraSourceConfig | null): OperatorRecording {
+  const mode = useOperatorStore((s) => s.config.recordMode);
   const recordAll = useOperatorStore((s) => s.config.recordAllCameras);
-  const [recordingIds, setRecordingIds] = useState<string[]>([]);
-  const [since, setSince] = useState<number | null>(null);
-  const [busy, setBusy] = useState(false);
+  const armed = useTelemetryStore((s) => s.flight.armed);
+  const connected = useConnectionStore((s) => s.connectionState.isConnected);
+  const [buttonOn, setButtonOn] = useState(false);
+  const [status, setStatus] = useState<CameraRecordStatus | null>(null);
+  const [writingSince, setWritingSince] = useState<number | null>(null);
 
-  const toggle = useCallback(async () => {
-    setBusy(true);
-    try {
-      if (recordingIds.length > 0) {
-        await Promise.all(recordingIds.map((id) => window.electronAPI.cameraRecordToggle(id, false)));
-        const stopped = recordingIds.length;
-        setRecordingIds([]);
-        setSince(null);
-        return { started: 0, failed: 0, stopped };
-      }
-      const targets = recordAll ? sources : main ? [main] : [];
-      const results = await Promise.all(targets.map(async (s) => ({ id: s.id, r: await window.electronAPI.cameraRecordToggle(s.id, true) })));
-      const started = results.filter((x) => x.r.ok).map((x) => x.id);
-      const error = results.find((x) => !x.r.ok)?.r.error;
-      setRecordingIds(started);
-      setSince(started.length > 0 ? Date.now() : null);
-      return { started: started.length, failed: results.length - started.length, stopped: 0, error };
-    } finally {
-      setBusy(false);
-    }
-  }, [recordingIds, recordAll, sources, main]);
+  const targets = recordingWanted(mode, { armed: connected && armed, buttonOn }) ? recordTargets(sources, main, recordAll) : [];
+  // Ids and names as one string: the effect below must not re-run on every render.
+  const key = JSON.stringify(targets.map((s) => [s.id, s.label ?? '']));
 
-  return { since, busy, toggle };
+  useEffect(() => {
+    const list = (JSON.parse(key) as [string, string][]).map(([id, label]) => ({ id, ...(label ? { label } : {}) }));
+    let alive = true;
+    const adopt = (next: CameraRecordStatus) => { if (alive) setStatus(next); };
+    void window.electronAPI.cameraRecordWanted(list).then(adopt).catch(() => {});
+    if (list.length === 0) return () => { alive = false; };
+    const timer = setInterval(() => { void window.electronAPI.cameraRecordStatus().then(adopt).catch(() => {}); }, POLL_MS);
+    return () => { alive = false; clearInterval(timer); };
+  }, [key]);
+  // Leaving the operator screen ends its recordings (the files are closed properly).
+  useEffect(() => () => { void window.electronAPI.cameraRecordWanted([]).catch(() => {}); }, []);
+
+  const states = targets.map((s) => status?.sources[s.id]?.state);
+  const writing = states.filter((s) => s === 'recording').length;
+  const blocked = states.includes('no-space') ? 'no-space' : states.includes('no-ffmpeg') ? 'no-ffmpeg' : null;
+  useEffect(() => {
+    setWritingSince((since) => (writing > 0 ? since ?? Date.now() : null));
+  }, [writing]);
+
+  const toggle = useCallback(() => setButtonOn((on) => !on), []);
+  return { mode, wanted: targets.length, writing, writingSince, blocked, dir: status?.dir ?? '', on: buttonOn, toggle };
 }

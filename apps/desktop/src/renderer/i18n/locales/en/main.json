@@ -382,7 +382,8 @@
       "snapshotFailed": "Snapshot failed",
       "noLiveStreamToRecord": "No live stream to record",
       "ffmpegRequiredForRecording": "ffmpeg required for recording",
-      "recordingDidNotStart": "The recording did not start: the video stream could not be opened."
+      "recordingDidNotStart": "The recording did not start: the video stream could not be opened.",
+      "recordFolderUnusable": "The recordings folder \"{{v1}}\" cannot be used (missing drive or no permission to write); the default folder is used instead."
     },
     "media_vision_stream_window": {
       "streamRendererStopped": "Stream renderer stopped ({{reason}})"

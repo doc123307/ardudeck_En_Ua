@@ -938,6 +938,10 @@ export const IPC_CHANNELS = {
   CAMERA_SNAPSHOT: 'camera:snapshot',
   /** Renderer → main: toggle recording for a source. */
   CAMERA_RECORD_TOGGLE: 'camera:record-toggle',
+  /** Renderer → main: the cameras to keep recording, video or no video; returns CameraRecordStatus. */
+  CAMERA_RECORD_WANTED: 'camera:record-wanted',
+  /** Renderer → main: CameraRecordStatus (what is being written, what waits, the folder). */
+  CAMERA_RECORD_STATUS: 'camera:record-status',
   /** Renderer → main: query MediaEngineStatus. */
   CAMERA_ENGINE_STATUS: 'camera:engine-status',
   /** Renderer → main: one pasteable block explaining a video failure. */
@@ -960,6 +964,28 @@ export const IPC_CHANNELS = {
   OPERATOR_CHANGE_PASSWORD: 'operator:change-password',
   OPERATOR_LOCK: 'operator:lock',
   OPERATOR_SET_CONFIG: 'operator:set-config',
+  /** Renderer → main (administrator): choose the recording folder; returns the path or null. */
+  OPERATOR_PICK_RECORD_DIR: 'operator:pick-record-dir',
+  /** Renderer → main (administrator): open the recording folder in the file manager. */
+  OPERATOR_OPEN_RECORD_DIR: 'operator:open-record-dir',
+  // Operator RC: joystick driving, cruise, reverse driving and custom RC functions (see shared/operator-rc.ts).
+  /** Renderer → main: RcEngineState. */
+  OPERATOR_RC_STATE: 'operator-rc:state',
+  /** Main → every window: RcEngineState, when it changes. */
+  OPERATOR_RC_STATE_EVENT: 'operator-rc:state-event',
+  /** Renderer → main: the operator screen is up (true) or gone (false). */
+  OPERATOR_RC_ATTACH: 'operator-rc:attach',
+  /** Renderer → main, fire-and-forget: one joystick reading from the window in front. */
+  OPERATOR_RC_GAMEPAD: 'operator-rc:gamepad',
+  /** Renderer → main: set a function's position (id, value); returns RcActionResult. */
+  OPERATOR_RC_FUNCTION: 'operator-rc:function',
+  /** Renderer → main: take or drop joystick control; returns RcActionResult. */
+  OPERATOR_RC_DRIVE: 'operator-rc:drive',
+  OPERATOR_RC_REVERSE: 'operator-rc:reverse',
+  /** Renderer → main: { on?: boolean, adjust?: 1 | -1 }; returns RcActionResult. */
+  OPERATOR_RC_CRUISE: 'operator-rc:cruise',
+  /** Renderer → main: STOP was pressed, the vehicle disarmed: nothing holds the throttle. */
+  OPERATOR_RC_STOP: 'operator-rc:stop',
   /** Renderer → main: read an IP camera's image controls (CameraSourceConfig → CameraControlState). */
   CAMERA_CONTROL_STATE: 'camera:control-state',
   /** Renderer → main: change one image control (day/night, supplement light); returns the new state. */

@@ -4,22 +4,42 @@
  */
 
 import type { ConnectOptions } from './ipc-channels';
+import { DEFAULT_RC_CONFIG, normalizeRcConfig, type OperatorRcConfig } from './operator-rc';
 
 export type AppMode = 'operator' | 'admin';
 
-/** Mode buttons the administrator can put on the operator screen (ArduPilot Rover / boat modes). */
-export type OperatorModeButton = 'manual' | 'hold' | 'rtl' | 'smartRtl' | 'auto';
+/** Modes the administrator can offer on the operator screen (ArduPilot Rover / boat modes). */
+export type OperatorModeButton =
+  | 'manual' | 'acro' | 'steering' | 'hold' | 'loiter' | 'auto' | 'rtl' | 'smartRtl' | 'guided' | 'follow' | 'simple' | 'circle' | 'dock';
 
-export const OPERATOR_MODE_BUTTONS: readonly OperatorModeButton[] = ['manual', 'hold', 'rtl', 'smartRtl', 'auto'];
+/** In the order they are listed for the operator. */
+export const OPERATOR_MODE_BUTTONS: readonly OperatorModeButton[] = [
+  'manual', 'acro', 'steering', 'hold', 'loiter', 'auto', 'rtl', 'smartRtl', 'guided', 'follow', 'simple', 'circle', 'dock',
+];
 
 /** ArduPilot Rover custom_mode numbers behind the mode buttons. */
 export const ROVER_MODE_NUMBER: Record<OperatorModeButton, number> = {
   manual: 0,
+  acro: 1,
+  steering: 3,
   hold: 4,
+  loiter: 5,
+  follow: 6,
+  simple: 7,
+  dock: 8,
+  circle: 9,
   auto: 10,
   rtl: 11,
   smartRtl: 12,
+  guided: 15,
 };
+
+/** When video is recorded: all the time, while the vehicle is armed, or by the operator's button. */
+export type OperatorRecordMode = 'always' | 'armed' | 'manual';
+export const OPERATOR_RECORD_MODES: readonly OperatorRecordMode[] = ['always', 'armed', 'manual'];
+
+/** Settings written by this version. Older files get the newer defaults where the meaning changed. */
+export const OPERATOR_CONFIG_SCHEMA = 2;
 
 /** Values the status strip can show; the administrator picks which, and in what order. */
 export const OPERATOR_STATUS_FIELDS = [
@@ -32,6 +52,7 @@ export const OPERATOR_ELEMENTS = ['map', 'infoBlock', 'outputs', 'record', 'layo
 export type OperatorElement = (typeof OPERATOR_ELEMENTS)[number];
 
 export interface OperatorConfig {
+  schema: number;
   /** False lets a development or service PC open straight into the full UI. */
   startInOperatorMode: boolean;
   /** Connect to the vehicle as soon as the operator screen opens, and keep retrying. */
@@ -45,8 +66,15 @@ export interface OperatorConfig {
   /** Roll / pitch (degrees) from which the readout turns amber, then red. */
   tiltWarnDeg: number;
   tiltLimitDeg: number;
-  /** The record button records every camera, not just the main one. */
+  /** Every camera is recorded, not just the main one. */
   recordAllCameras: boolean;
+  recordMode: OperatorRecordMode;
+  /** Folder for recordings and snapshots; empty = "STOHID" in the user's Videos folder. */
+  recordDir: string;
+  /** A recording is cut into files of this many minutes; 0 = one file per recording. */
+  recordSegmentMinutes: number;
+  /** Joystick driving, cruise, reverse driving and the administrator's own RC functions. */
+  rc: OperatorRcConfig;
   /** Shown on the operator's About page. */
   supportContact: string;
   /** Minutes without input after which the full UI closes again. 0 = never. */
@@ -58,14 +86,19 @@ export interface OperatorConfig {
 }
 
 export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
+  schema: OPERATOR_CONFIG_SCHEMA,
   startInOperatorMode: true,
   autoConnect: true,
   connection: null,
   allowArm: true,
-  modeButtons: ['manual'],
+  modeButtons: ['manual', 'acro', 'steering', 'loiter', 'auto', 'rtl', 'smartRtl', 'guided'],
   tiltWarnDeg: 25,
   tiltLimitDeg: 35,
   recordAllCameras: true,
+  recordMode: 'always',
+  recordDir: '',
+  recordSegmentMinutes: 15,
+  rc: DEFAULT_RC_CONFIG,
   supportContact: '@stohid_support_bot',
   autoLockMinutes: 15,
   statusFields: ['mode', 'satellites', 'battery', 'uptime', 'speed', 'roll', 'pitch'],
@@ -100,7 +133,10 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
   const bool = (v: unknown, fallback: boolean) => (typeof v === 'boolean' ? v : fallback);
   const num = (v: unknown, fallback: number, min: number, max: number) =>
     (typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback);
-  const modes = Array.isArray(r.modeButtons)
+  // Before schema 2 the operator had "Manual" alone unless the administrator added more; mode
+  // switching is now on the screen by default, so an older file takes the new list.
+  const current = typeof r.schema === 'number' && r.schema >= OPERATOR_CONFIG_SCHEMA;
+  const modes = current && Array.isArray(r.modeButtons)
     ? OPERATOR_MODE_BUTTONS.filter((m) => (r.modeButtons as unknown[]).includes(m) && m !== 'hold')
     : d.modeButtons;
   const connection = r.connection && typeof r.connection === 'object'
@@ -113,6 +149,7 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     ? [...new Set(value.filter((v): v is T => (all as readonly unknown[]).includes(v)))]
     : fallback);
   return {
+    schema: OPERATOR_CONFIG_SCHEMA,
     startInOperatorMode: bool(r.startInOperatorMode, d.startInOperatorMode),
     autoConnect: bool(r.autoConnect, d.autoConnect),
     connection,
@@ -121,6 +158,10 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     tiltWarnDeg,
     tiltLimitDeg: Math.max(tiltWarnDeg, num(r.tiltLimitDeg, d.tiltLimitDeg, 5, 89)),
     recordAllCameras: bool(r.recordAllCameras, d.recordAllCameras),
+    recordMode: OPERATOR_RECORD_MODES.includes(r.recordMode as OperatorRecordMode) ? (r.recordMode as OperatorRecordMode) : d.recordMode,
+    recordDir: typeof r.recordDir === 'string' ? r.recordDir.trim().slice(0, 400) : d.recordDir,
+    recordSegmentMinutes: Math.round(num(r.recordSegmentMinutes, d.recordSegmentMinutes, 0, 240)),
+    rc: normalizeRcConfig(r.rc),
     supportContact: typeof r.supportContact === 'string' ? r.supportContact.trim().slice(0, 120) : d.supportContact,
     autoLockMinutes: Math.round(num(r.autoLockMinutes, d.autoLockMinutes, 0, 240)),
     statusFields: known(r.statusFields, OPERATOR_STATUS_FIELDS, [...d.statusFields]),

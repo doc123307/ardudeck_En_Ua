@@ -9,6 +9,8 @@ import type { SigningAuditSnapshot } from '../shared/signing-audit-types.js';
 import type { StreamDiagnosis, ElrsModuleInfo, ElrsSetModeResult, ElrsProgressEvent } from '../shared/link-doctor-types.js';
 import type { WfbngStatus, CanvasStreamStartResult, CanvasStreamStatus, CanvasStreamSnapshot, VisionStreamOpenOptions, CameraControlAction, CameraControlState } from '../shared/camera-types.js';
 import type { AdminAuthResult, OperatorConfig, OperatorState } from '../shared/operator-types.js';
+import type { RcActionResult, RcEngineState, RcPad } from '../shared/operator-rc.js';
+import type { CameraRecordStatus } from '../shared/camera-types.js';
 import type { VehicleFlightHistory } from '../shared/fleet-log-types.js';
 import type { DetachedWindowInfo, OpenDetachedRequest } from '../shared/window-types.js';
 import type { ExportArea } from '../shared/kml-export.js';
@@ -222,6 +224,28 @@ const api = {
   operatorLock: (): Promise<OperatorState> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_LOCK),
   operatorSetConfig: (patch: Partial<OperatorConfig>): Promise<AdminAuthResult> =>
     ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_SET_CONFIG, patch),
+  operatorPickRecordDir: (): Promise<string | null> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_PICK_RECORD_DIR),
+  operatorOpenRecordDir: (): Promise<boolean> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_OPEN_RECORD_DIR),
+  /** The cameras to keep recording, whether or not their video is there at the moment. */
+  cameraRecordWanted: (sources: { id: string; label?: string }[]): Promise<CameraRecordStatus> =>
+    ipcRenderer.invoke(IPC_CHANNELS.CAMERA_RECORD_WANTED, sources),
+  cameraRecordStatus: (): Promise<CameraRecordStatus> => ipcRenderer.invoke(IPC_CHANNELS.CAMERA_RECORD_STATUS),
+  // Operator RC: joystick driving, cruise, reverse driving, custom RC functions.
+  operatorRcState: (): Promise<RcEngineState> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_RC_STATE),
+  operatorRcAttach: (on: boolean): Promise<RcEngineState> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_RC_ATTACH, on),
+  operatorRcGamepad: (pad: RcPad): void => ipcRenderer.send(IPC_CHANNELS.OPERATOR_RC_GAMEPAD, pad),
+  operatorRcFunction: (id: string, value: number): Promise<RcActionResult> =>
+    ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_RC_FUNCTION, id, value),
+  operatorRcDrive: (on: boolean): Promise<RcActionResult> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_RC_DRIVE, on),
+  operatorRcReverse: (on: boolean): Promise<RcActionResult> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_RC_REVERSE, on),
+  operatorRcCruise: (request: { on?: boolean; adjust?: number }): Promise<RcActionResult> =>
+    ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_RC_CRUISE, request),
+  operatorRcStop: (): Promise<void> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_RC_STOP),
+  onOperatorRcState: (callback: (state: RcEngineState) => void) => {
+    const handler = (_: unknown, state: RcEngineState) => callback(state);
+    ipcRenderer.on(IPC_CHANNELS.OPERATOR_RC_STATE_EVENT, handler);
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.OPERATOR_RC_STATE_EVENT, handler);
+  },
   cameraControlState: (source: CameraSourceConfig): Promise<CameraControlState> =>
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CONTROL_STATE, source),
   cameraControlSet: (source: CameraSourceConfig, action: CameraControlAction): Promise<CameraControlState> =>
