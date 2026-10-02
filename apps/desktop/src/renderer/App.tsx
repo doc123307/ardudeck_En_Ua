@@ -74,6 +74,9 @@ import { ProfileApplyOverlay } from './components/settings/vehicle-profile/Profi
 import { ParameterCompareModalRoot } from './components/parameters/ParameterCompareModalRoot';
 import { GlobalTooltip } from './components/GlobalTooltip';
 import { ActivityIndicator } from './components/ui/ActivityIndicator';
+import { OperatorShell } from './components/operator/OperatorShell';
+import { useAdminAutoLock } from './components/operator/useAdminAutoLock';
+import { useOperatorStore } from './stores/operator-store';
 import type { ElectronAPI } from '../main/preload';
 import type { LegacyStreamConsentRequest } from '../shared/ipc-channels';
 import logoImage from './assets/logo.png';
@@ -442,6 +445,12 @@ function App() {
   // Experience level dialog state
   const [showExperienceDialog, setShowExperienceDialog] = useState(false);
 
+  // Operator mode: the simplified screen by default, the full UI for the administrator.
+  const operatorReady = useOperatorStore((s) => s.ready);
+  const appMode = useOperatorStore((s) => s.mode);
+  useEffect(() => { void useOperatorStore.getState().load(); }, []);
+  useAdminAutoLock();
+
   // Get active vehicle profile type
   const activeVehicle = vehicles.find(v => v.id === activeVehicleId);
   const profileType = activeVehicle?.type || 'copter';
@@ -565,6 +574,8 @@ function App() {
   // Show experience level dialog on first launch or version change
   useEffect(() => {
     if (!useSettingsStore.getState()._isInitialized) return;
+    // The operator is never asked: this choice belongs to whoever uses the full UI.
+    if (appMode !== 'admin') { setShowExperienceDialog(false); return; }
     (async () => {
       const currentVersion = await window.electronAPI?.getAppVersion();
       if (!currentVersion) return;
@@ -572,7 +583,7 @@ function App() {
         setShowExperienceDialog(true);
       }
     })();
-  }, [experienceLevel, experienceLevelVersion]);
+  }, [experienceLevel, experienceLevelVersion, appMode]);
 
   const handleExperienceLevelSelect = async (level: ExperienceLevel) => {
     const currentVersion = await window.electronAPI?.getAppVersion();
@@ -1186,6 +1197,26 @@ function App() {
         return <TelemetryDashboard />;
     }
   };
+
+  // Nothing mode-dependent is drawn until the main process has said which mode this is:
+  // the full UI must not flash up on an operator's screen.
+  if (!operatorReady) return <div className="h-screen bg-surface-base" />;
+
+  if (appMode === 'operator') {
+    return (
+      <ModuleRuntime>
+        <GlobalTooltip />
+        <OperatorShell />
+        {legacyStreamRequest && (
+          <LegacyStreamConsentDialog
+            request={legacyStreamRequest}
+            onAllow={() => void answerLegacyStreamConsent(true)}
+            onDecline={() => void answerLegacyStreamConsent(false)}
+          />
+        )}
+      </ModuleRuntime>
+    );
+  }
 
   return (
     <ModuleRuntime>

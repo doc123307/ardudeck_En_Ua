@@ -381,7 +381,8 @@
       "ffmpegRequiredForSnapshots": "Для снимков нужен ffmpeg",
       "snapshotFailed": "Не удалось сделать снимок",
       "noLiveStreamToRecord": "Нет живого потока для записи",
-      "ffmpegRequiredForRecording": "Для записи нужен ffmpeg"
+      "ffmpegRequiredForRecording": "Для записи нужен ffmpeg",
+      "recordingDidNotStart": "Запись не началась: не удалось открыть видеопоток."
     },
     "media_vision_stream_window": {
       "streamRendererStopped": "Рендерер потока остановлен ({{reason}})"

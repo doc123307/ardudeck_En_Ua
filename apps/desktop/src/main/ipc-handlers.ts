@@ -209,6 +209,7 @@ import { simEngineProcess } from './sim/sim-engine-process.js';
 import { mediaEngine } from './media/media-engine.js';
 import { CANVAS_STREAM_PATHS, type CameraControlAction, type CanvasStreamSnapshot, type VisionStreamOpenOptions } from '../shared/camera-types.js';
 import { applyControl, getControlState } from './media/hikvision-isapi.js';
+import { registerOperatorHandlers } from './operator/operator-ipc.js';
 import { openVisionStreamWindow, closeVisionStreamWindow, reportVisionStream, visionStreamSnapshot } from './media/vision-stream-window.js';
 import { ardupilotSitlProcess, swarmSitlProcess, ardupilotSitlDownloader, ardupilotRcSender } from './sitl/index.js';
 import { px4SitlProcess, px4SitlDownloader } from './sitl/index.js';
@@ -3107,7 +3108,9 @@ function parseTelemetry(mainWindow: BrowserWindow, packet: MAVLinkPacket): void 
       const pitchSpeed = readFloat(payload, 20) * (180 / Math.PI);
       const yawSpeed = readFloat(payload, 24) * (180 / Math.PI);
 
-      const attitude: AttitudeData = { roll, pitch, yaw, rollSpeed, pitchSpeed, yawSpeed };
+      // time_boot_ms: how long the flight controller has been running (the operator's "uptime").
+      const bootMs = readUint32(payload, 0);
+      const attitude: AttitudeData = { roll, pitch, yaw, rollSpeed, pitchSpeed, yawSpeed, bootMs };
       lastAttitudeAtMs = Date.now();
       queueMavlinkTelemetry(mainWindow, { attitude });
       break;
@@ -4938,8 +4941,8 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
   ipcMain.handle(IPC_CHANNELS.CAMERA_SNAPSHOT, async (_, sourceId: string) => {
     return mediaEngine.snapshot(sourceId);
   });
-  ipcMain.handle(IPC_CHANNELS.CAMERA_RECORD_TOGGLE, async (_, sourceId: string) => {
-    return mediaEngine.toggleRecord(sourceId);
+  ipcMain.handle(IPC_CHANNELS.CAMERA_RECORD_TOGGLE, async (_, sourceId: string, want?: boolean) => {
+    return mediaEngine.toggleRecord(sourceId, typeof want === 'boolean' ? want : undefined);
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_DIAGNOSTICS, async () => {
     return mediaEngine.diagnostics();
@@ -13267,6 +13270,9 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
 
   // Initialize auto-updater (handles auto-check on its own schedule)
   initAutoUpdater(mainWindow);
+
+  // Operator mode (administrator password, operator screen settings)
+  registerOperatorHandlers(mainWindow);
 
   // Companion computer (agent WebSocket)
   registerCompanionIpcHandlers(mainWindow);

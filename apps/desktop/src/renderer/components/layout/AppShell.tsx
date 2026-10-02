@@ -12,6 +12,7 @@ import { UpdateBanner } from './UpdateBanner';
 import { ArmDisarmButton } from './ArmDisarmButton';
 import { ScriptHealthBadge } from '../script-installer/ScriptHealthBadge';
 import { QuickLaunchMenu } from './QuickLaunchMenu';
+import { returnToOperatorMode } from '../operator/useAdminAutoLock';
 import iconImage from '../../assets/icon.png';
 
 interface AppShellProps {
@@ -118,7 +119,7 @@ export function AppShell({ children }: AppShellProps) {
               ) : (
                 <div className="status-dot status-dot-connected group-hover:bg-red-400" />
               )}
-              <span className={`text-sm font-medium transition-colors ${
+              <span className={`text-sm font-medium transition-colors truncate max-w-[13rem] xl:max-w-none ${
                 connectionState.isStale ? 'text-yellow-300' : 'text-content-secondary group-hover:text-red-300'
               }`}>
                 {connectionState.isStale ? t('header.staleLabel', { seconds: staleSeconds }) : connectionState.transport}
@@ -160,6 +161,19 @@ export function AppShell({ children }: AppShellProps) {
 
           {/* Quick Launch: open self-contained tools in their own window. */}
           <QuickLaunchMenu />
+
+          {/* Leave the full UI: back to the operator screen, which the app normally opens on. */}
+          <button
+            onClick={() => void returnToOperatorMode()}
+            data-tip={t('operator.OperatorShell.toOperatorModeTip')}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-subtle text-sm font-medium text-content-secondary hover:text-content hover:border-rose-500/50 transition-colors whitespace-nowrap"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+            {/* Icon only on a narrow window: the header is already full there. */}
+            <span className="hidden xl:inline">{t('operator.OperatorShell.toOperatorMode')}</span>
+          </button>
         </div>
       </header>
 

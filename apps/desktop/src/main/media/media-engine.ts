@@ -20,13 +20,14 @@
 
 import { spawn, type ChildProcess, spawnSync } from 'node:child_process';
 import { join } from 'node:path';
-import { existsSync, mkdirSync, writeFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync, statSync, unlinkSync } from 'node:fs';
 import { networkInterfaces } from 'node:os';
 import { app } from 'electron';
 import { mediaBinariesDownloader } from './media-binaries-downloader.js';
 import { buildWfbngSdp, buildWfbngFfmpegArgs, wfbngPort, wfbngShouldTranscode } from './wfbng.js';
 import { needsH264Relay, buildH264RelayArgs, encoderChain } from './h264-relay.js';
 import { wfbngReceiver } from './wfbng-receiver.js';
+import { recordArgs, recordingFileName, stopRecording } from './recording.js';
 import type {
   CameraSourceConfig,
   CameraStartResult,
@@ -50,6 +51,8 @@ const RECONNECT_BASE_MS = 1000;
 const RECONNECT_MAX_MS = 5000;
 const RTP_STALL_MS = 4000;
 const WATCHDOG_TICK_MS = 2000;
+/** How long a recording must survive before it is reported as started. */
+const RECORD_START_CHECK_MS = 1500;
 
 interface ActiveSession {
   session: CameraStreamSession;
@@ -635,7 +638,7 @@ export class MediaEngine {
     if (!active) return;
     active.session.status = 'stopped';
     if (active.restartTimer) clearTimeout(active.restartTimer);
-    if (active.record) killProc(active.record);
+    if (active.record) stopRecording(active.record);
     if (active.ingest) killProc(active.ingest);
     if (active.configuredPath) await this.removeHubPath(active.configuredPath);
     this.sessions.delete(sourceId);
@@ -662,25 +665,51 @@ export class MediaEngine {
     });
   }
 
-  /** Toggle recording for a session. Returns the file when recording starts. */
-  async toggleRecord(sourceId: string): Promise<CameraMediaActionResult> {
+  /**
+   * Start or stop recording a session; returns the file. With `want` the caller says which
+   * it means: a recording that ended by itself must not be "stopped" into a new one.
+   */
+  async toggleRecord(sourceId: string, want?: boolean): Promise<CameraMediaActionResult> {
     const active = this.sessions.get(sourceId);
+    if (want === false && !active?.record) return { ok: true };
     if (!active?.session.path) return { ok: false, error: mt('main.media_media_engine.noLiveStreamToRecord') };
+    if (want === true && active.record) return { ok: true, ...(active.recordPath ? { filePath: active.recordPath } : {}) };
     if (active.record) {
-      killProc(active.record);
+      stopRecording(active.record);
       const filePath = active.recordPath;
       delete active.record;
       delete active.recordPath;
       return { ok: true, ...(filePath ? { filePath } : {}) };
     }
     if (!this.ffmpegPath) return { ok: false, error: mt('main.media_media_engine.ffmpegRequiredForRecording') };
-    const filePath = join(this.mediaDir(), `recording_${stamp()}.mp4`);
-    const p = spawn(this.ffmpegPath, [
-      '-rtsp_transport', 'tcp', '-i', this.rtspUrl(active.session.path),
-      '-c', 'copy', '-f', 'mp4', filePath,
-    ], { stdio: ['pipe', 'ignore', 'ignore'] });
+    const dir = this.mediaDir();
+    const filePath = join(dir, recordingFileName(active.source?.label, new Date(), (name) => existsSync(join(dir, name))));
+    // Claim the name now: a second camera started in the same second must not pick it too.
+    writeFileSync(filePath, '');
+    const p = spawn(this.ffmpegPath, ['-y', ...recordArgs(this.rtspUrl(active.session.path), filePath)], { stdio: ['pipe', 'ignore', 'ignore'] });
+    // ffmpeg ending by itself (source gone, disk full) must not leave the session "recording",
+    // nor an empty file behind.
+    p.once('exit', () => {
+      if (active.record === p) {
+        delete active.record;
+        delete active.recordPath;
+      }
+      try {
+        if (statSync(filePath).size === 0) unlinkSync(filePath);
+      } catch {
+        /* already gone */
+      }
+    });
     active.record = p;
     active.recordPath = filePath;
+    // A stream ffmpeg cannot open fails within a moment: say so instead of "recording".
+    const failed = await new Promise<boolean>((resolve) => {
+      const timer = setTimeout(() => resolve(false), RECORD_START_CHECK_MS);
+      const fail = () => { clearTimeout(timer); resolve(true); };
+      p.once('exit', fail);
+      p.once('error', fail);
+    });
+    if (failed) return { ok: false, error: mt('main.media_media_engine.recordingDidNotStart') };
     return { ok: true, filePath };
   }
 

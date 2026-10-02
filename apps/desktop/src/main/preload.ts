@@ -8,6 +8,7 @@ import { IPC_CHANNELS, type ConnectOptions, type ConnectionState, type ConsoleLo
 import type { SigningAuditSnapshot } from '../shared/signing-audit-types.js';
 import type { StreamDiagnosis, ElrsModuleInfo, ElrsSetModeResult, ElrsProgressEvent } from '../shared/link-doctor-types.js';
 import type { WfbngStatus, CanvasStreamStartResult, CanvasStreamStatus, CanvasStreamSnapshot, VisionStreamOpenOptions, CameraControlAction, CameraControlState } from '../shared/camera-types.js';
+import type { AdminAuthResult, OperatorConfig, OperatorState } from '../shared/operator-types.js';
 import type { VehicleFlightHistory } from '../shared/fleet-log-types.js';
 import type { DetachedWindowInfo, OpenDetachedRequest } from '../shared/window-types.js';
 import type { ExportArea } from '../shared/kml-export.js';
@@ -189,8 +190,9 @@ const api = {
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_STOP, sourceId),
   cameraSnapshot: (sourceId: string): Promise<CameraMediaActionResult> =>
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_SNAPSHOT, sourceId),
-  cameraRecordToggle: (sourceId: string): Promise<CameraMediaActionResult> =>
-    ipcRenderer.invoke(IPC_CHANNELS.CAMERA_RECORD_TOGGLE, sourceId),
+  /** `want` true/false starts/stops explicitly; left out, it toggles. */
+  cameraRecordToggle: (sourceId: string, want?: boolean): Promise<CameraMediaActionResult> =>
+    ipcRenderer.invoke(IPC_CHANNELS.CAMERA_RECORD_TOGGLE, sourceId, want),
   cameraDiagnostics: (): Promise<string> =>
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_DIAGNOSTICS),
   cameraEngineStatus: (): Promise<MediaEngineStatus> =>
@@ -211,6 +213,15 @@ const api = {
     ipcRenderer.on(IPC_CHANNELS.RELAY_STATUS, handler);
     return () => ipcRenderer.removeListener(IPC_CHANNELS.RELAY_STATUS, handler);
   },
+  operatorState: (): Promise<OperatorState> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_STATE),
+  operatorUnlock: (password: string): Promise<AdminAuthResult> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_UNLOCK, password),
+  operatorCreatePassword: (password: string): Promise<AdminAuthResult> =>
+    ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_CREATE_PASSWORD, password),
+  operatorChangePassword: (current: string, next: string): Promise<AdminAuthResult> =>
+    ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_CHANGE_PASSWORD, current, next),
+  operatorLock: (): Promise<OperatorState> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_LOCK),
+  operatorSetConfig: (patch: Partial<OperatorConfig>): Promise<AdminAuthResult> =>
+    ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_SET_CONFIG, patch),
   cameraControlState: (source: CameraSourceConfig): Promise<CameraControlState> =>
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CONTROL_STATE, source),
   cameraControlSet: (source: CameraSourceConfig, action: CameraControlAction): Promise<CameraControlState> =>

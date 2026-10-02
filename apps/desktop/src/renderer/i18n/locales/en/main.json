@@ -381,7 +381,8 @@
       "ffmpegRequiredForSnapshots": "ffmpeg required for snapshots",
       "snapshotFailed": "Snapshot failed",
       "noLiveStreamToRecord": "No live stream to record",
-      "ffmpegRequiredForRecording": "ffmpeg required for recording"
+      "ffmpegRequiredForRecording": "ffmpeg required for recording",
+      "recordingDidNotStart": "The recording did not start: the video stream could not be opened."
     },
     "media_vision_stream_window": {
       "streamRendererStopped": "Stream renderer stopped ({{reason}})"

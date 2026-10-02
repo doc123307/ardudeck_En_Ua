@@ -12,6 +12,8 @@ export interface AttitudeData {
   rollSpeed: number; // deg/s
   pitchSpeed: number;
   yawSpeed: number;
+  /** Milliseconds since the flight controller booted (ATTITUDE.time_boot_ms), when known. */
+  bootMs?: number;
 }
 
 export interface PositionData {

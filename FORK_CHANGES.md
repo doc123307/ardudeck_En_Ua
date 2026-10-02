@@ -57,6 +57,24 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - the radio widget folder.
 
 ### 3. Added features
+- **Operator mode.** The app opens on a simplified operator screen; the full UI (everything upstream has)
+  is for the administrator and sits behind a password.
+  - Operator screen: a status strip (armed state, mode, satellites and fix, battery, uptime, speed, roll and
+    pitch with a tip-over warning, recording), the cameras (one large with thumbnails, or a grid), camera
+    image controls, video recording, vehicle output buttons, a fold-out map, heading/altitude/speed/clock,
+    STOP (Hold mode, also the Space key), optional mode buttons, and ARM/DISARM by holding the button.
+  - The operator has no connection panel: the screen connects by itself to the link the administrator chose
+    and keeps retrying.
+  - Administrator sign-in: the operator's About page, the product logo held down for two seconds. On a
+    fresh install the first sign-in creates the password.
+  - The password is stored as a salted scrypt hash in `operator-admin.json`; wrong attempts are rate
+    limited. Settings (`operator.json`) change only while the administrator is in: the main process
+    refuses them otherwise, and it holds the unlocked state, so reloading the window does not open the UI.
+  - The full UI closes again after 15 minutes without input (configurable), or by the header button.
+  - In operator mode the window menu (Reload, Developer Tools) is removed.
+  - Settings → "Operator workspace": start-up mode, auto-lock, operator link, buttons, tilt limits, support
+    contact, password.
+  - Code: `src/main/operator/`, `src/renderer/components/operator/`, `src/shared/operator-types.ts`.
 - **Multi-camera view for one vehicle.** "All cameras" in the Vision panel tiles every feed of the vehicle side
   by side (1-4 columns). Clicking a tile makes it the main feed, which is the one used for snapshot, recording
   and click-to-point. The existing vehicle grid is unchanged.
@@ -101,6 +119,7 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 | Visiting the SITL view while already connected left the "switch to SITL" flag set: the next disconnect tried to reconnect and showed "SITL process failed to start". | yes |
 | Console entries from different main-process sources reused the same ids, giving duplicate React keys in the debug console. Entries are numbered on arrival. | yes |
 | A failed update check (no `latest.yml`, e.g. a draft release) dumped the HTTP error and a stack trace into the About page and the console. It is now one plain sentence. | fork only |
+| **Video recordings were empty files on Windows.** Recording was stopped by killing ffmpeg, which on Windows is immediate, so the MP4 never got its index (48-byte files). Recordings are now fragmented MP4 (playable even when cut short), stopped by asking ffmpeg to quit, named by date, time and camera, and a recording that cannot start is reported instead of shown as running. Code: `src/main/media/recording.ts`. | yes |
 | Layout at small window sizes (1024–1366 px wide): telemetry header values wrapped under their labels, the Parameters header squeezed its buttons, the mission map tools ran off the map, the welcome logo was cut off, the OSD editor's profile tabs and a select were clipped, the mission toast covered the map search and dock tabs, a tooltip could outlive its host. | yes |
 
 ### 5. Build and packaging
@@ -167,6 +186,20 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - тека віджета пульта.
 
 ### 3. Нові можливості
+- **Режим оператора.** Програма відкривається на спрощеному екрані оператора; повний інтерфейс — для
+  адміністратора, за паролем.
+  - Екран оператора: смуга стану (ARM, режим, супутники, АКБ, час роботи, швидкість, крен і тангаж із
+    попередженням про перекидання, запис), камери (одна велика з мініатюрами або сітка), керування
+    камерами, запис відео, кнопки виходів борту, розкривна карта, курс/висота/швидкість/час, СТОП
+    (режим Hold, також Пробіл), кнопки режимів на вибір, ARM/DISARM утриманням.
+  - Панелі підключення в оператора немає: екран сам підключається до зв'язку, який вибрав адміністратор.
+  - Вхід адміністратора: сторінка «Про програму», логотип, утриманий дві секунди. На новій установці
+    перший вхід створює пароль.
+  - Пароль зберігається як хеш (scrypt із сіллю) у файлі `operator-admin.json`; невдалі спроби
+    обмежуються. Налаштування змінюються лише в режимі адміністратора — це перевіряє головний процес.
+  - Повний інтерфейс закривається після 15 хв бездіяльності (налаштовується) або кнопкою в шапці.
+  - Налаштування → «Простір пілота»: режим запуску, автовихід, підключення оператора, кнопки, межі
+    нахилу, контакт підтримки, пароль.
 - **Кілька камер одного апарата одночасно.** Режим «Усі камери» в панелі «Бачення» показує всі джерела
   апарата поруч (1-4 стовпці). Клік по плитці робить камеру основною: для знімка, запису й наведення підвісу.
 - **Керування IP-камерою Hikvision (ISAPI):**
@@ -199,6 +232,9 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   Стосується й оригіналу.
 - **Однакові номери записів у консолі** з різних джерел головного процесу. Стосується й оригіналу.
 - **Помилка перевірки оновлень** для чернеткового випуску: замість HTTP-дампу — одне зрозуміле речення.
+- **Порожні файли запису відео під Windows.** Запис зупинявся «вбивством» ffmpeg, і MP4 лишався без
+  індексу (48 байтів). Тепер це фрагментований MP4 (відтворюється навіть після обриву), зупинка коректна,
+  назва файлу — дата, час і камера; якщо запис не почався, про це сказано. Стосується й оригіналу.
 - **Верстка в невеликому вікні (1024–1366 px):** шапка телеметрії, шапка «Параметрів», інструменти на
   карті місії, логотип на стартовому екрані, ліва панель редактора OSD, сповіщення на екрані місії,
   «завислі» підказки. Стосується й оригіналу.

@@ -28,7 +28,7 @@ import { StallSpeedCalcButton } from './vehicle-profile/StallSpeedCalcButton';
 import { inferProfileFromParams } from '../../lib/vehicle-templates/import';
 import { saveParmToFile } from '../../lib/vehicle-templates/export-parm';
 import { getTemplate, defaultTemplateForType } from '../../lib/vehicle-templates/registry';
-import { Download, ArrowRight, Gauge, SlidersHorizontal, Map as MapIcon, FlaskConical, Info, type LucideIcon } from 'lucide-react';
+import { Download, ArrowRight, Gauge, SlidersHorizontal, Map as MapIcon, FlaskConical, Info, MonitorPlay, type LucideIcon } from 'lucide-react';
 import { isWeatherBriefingAvailable, ADVISOR_CARGO_SLUG, useCargoEnabled } from '../../modules/capabilities';
 import type { VehicleTemplate } from '../../lib/vehicle-templates/types';
 import {
@@ -61,6 +61,7 @@ import {
 } from '../../../shared/user-units.js';
 import { t as tr } from '../../i18n';
 import { PROJECT_REPO, PROJECT_URL, UPSTREAM_URL } from '../../../shared/brand';
+import { OperatorWorkspaceSettings } from '../operator/OperatorWorkspaceSettings';
 
 // Display unit conversion helpers - storage stays in each field's native unit.
 function fmtWeight(g: number, unit: WeightUnit): string {
@@ -1109,13 +1110,14 @@ function ArduPilotFlightStats() {
 /**
  * Settings View - App-level configuration with cool visualizations
  */
-type SettingsCategoryId = 'vehicle' | 'configuration' | 'maps' | 'advanced' | 'about';
+type SettingsCategoryId = 'vehicle' | 'configuration' | 'maps' | 'advanced' | 'operator' | 'about';
 
 const SETTINGS_CATEGORIES: { id: SettingsCategoryId; label: string; icon: LucideIcon }[] = [
   { id: 'vehicle', get label() { return tr('settings.SettingsView.vehicle'); }, icon: Gauge },
   { id: 'configuration', get label() { return tr('settings.SettingsView.configuration'); }, icon: SlidersHorizontal },
   { id: 'maps', get label() { return tr('settings.SettingsView.maps'); }, icon: MapIcon },
   { id: 'advanced', get label() { return tr('settings.SettingsView.advanced'); }, icon: FlaskConical },
+  { id: 'operator', get label() { return tr('operator.OperatorWorkspaceSettings.tab'); }, icon: MonitorPlay },
   { id: 'about', get label() { return tr('settings.SettingsView.about'); }, icon: Info },
 ];
 
@@ -1127,6 +1129,7 @@ const CATEGORY_COLORS: Record<SettingsCategoryId, { active: string; icon: string
   configuration: { active: 'bg-purple-500/20 text-purple-400 border-purple-500/30',  icon: 'text-purple-400' },
   maps:          { active: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', icon: 'text-emerald-400' },
   advanced:      { active: 'bg-orange-500/20 text-orange-400 border-orange-500/30',   icon: 'text-orange-400' },
+  operator:      { active: 'bg-rose-500/20 text-rose-400 border-rose-500/30',         icon: 'text-rose-400' },
   about:         { active: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',         icon: 'text-cyan-400' },
 };
 
@@ -1361,7 +1364,7 @@ export function SettingsView() {
 
       {/* Category tabs */}
       <div className="shrink-0 px-4 py-2 border-b border-subtle bg-surface-overlay-subtle overflow-x-auto">
-        <div className="max-w-6xl mx-auto flex gap-1">
+        <div className="max-w-6xl mx-auto flex flex-wrap gap-1">
           {SETTINGS_CATEGORIES.map((cat) => {
             const isActive = selectedCategory === cat.id;
             const Icon = cat.icon;
@@ -2022,6 +2025,8 @@ export function SettingsView() {
           </>
         )}
 
+        {selectedCategory === 'operator' && <OperatorWorkspaceSettings />}
+
         {selectedCategory === 'about' && <AboutSection />}
         </div>
       </div>
@@ -2588,7 +2593,8 @@ function GraphicsStatus() {
   );
 }
 
-function AboutSection() {
+/** Also the body of the operator's About page (components/operator/OperatorAbout.tsx). */
+export function AboutSection() {
   const { t } = useTranslation();
   const {
     currentVersion,
@@ -2819,7 +2825,7 @@ function AboutSection() {
         {notesState === 'error' && (
           <p className="text-sm text-content-tertiary">
             {tr('settings.SettingsView.couldnTReachGithubForRelease')}{' '}
-            <a href="https://github.com/rubenCodeforges/ardudeck/releases" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400">
+            <a href={`${PROJECT_URL}/releases`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400">
               {tr('settings.SettingsView.viewOnGithub')}
             </a>
           </p>

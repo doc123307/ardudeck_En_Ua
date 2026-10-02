@@ -37,7 +37,8 @@ function stateTip(state: RelayButtonState): string {
   return t(`vehicle_outputs.RelayButtons.state_${state}`);
 }
 
-export function RelayButtons({ vehicleKey, compact = false }: { vehicleKey: string | null; compact?: boolean }) {
+/** `editable` off hides the button editor: on the operator screen the set of buttons is the administrator's. */
+export function RelayButtons({ vehicleKey, compact = false, editable = true }: { vehicleKey: string | null; compact?: boolean; editable?: boolean }) {
   const buttons = useRelayStore((s) => s.buttons);
   const status = useRelayStore((s) => s.status);
   const pending = useRelayStore((s) => s.pending);
@@ -92,7 +93,7 @@ export function RelayButtons({ vehicleKey, compact = false }: { vehicleKey: stri
           </button>
         );
       })}
-      <button
+      {editable && <button
         ref={gearRef}
         type="button"
         onClick={() => setEditing((v) => (v ? null : gearRef.current?.getBoundingClientRect() ?? null))}
@@ -100,7 +101,7 @@ export function RelayButtons({ vehicleKey, compact = false }: { vehicleKey: stri
         className="flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:bg-surface-raised hover:text-content"
       >
         <Settings2 className="h-3.5 w-3.5" />
-      </button>
+      </button>}
       {editing && <RelayButtonsEditor anchor={editing} onClose={() => setEditing(null)} />}
     </div>
   );

@@ -952,6 +952,14 @@ export const IPC_CHANNELS = {
   CAMERA_CAMERA_COMMAND: 'camera:camera-command',
   /** Main → renderer: RELAY_STATUS from the flight controller ({ vehicleKey, on, present } bitmasks). */
   RELAY_STATUS: 'vehicle:relay-status',
+
+  // Operator mode: the simplified screen by default, the full UI behind the administrator password.
+  OPERATOR_STATE: 'operator:state',
+  OPERATOR_UNLOCK: 'operator:unlock',
+  OPERATOR_CREATE_PASSWORD: 'operator:create-password',
+  OPERATOR_CHANGE_PASSWORD: 'operator:change-password',
+  OPERATOR_LOCK: 'operator:lock',
+  OPERATOR_SET_CONFIG: 'operator:set-config',
   /** Renderer → main: read an IP camera's image controls (CameraSourceConfig → CameraControlState). */
   CAMERA_CONTROL_STATE: 'camera:control-state',
   /** Renderer → main: change one image control (day/night, supplement light); returns the new state. */
