@@ -54,7 +54,7 @@ export const OPERATOR_STATUS_FIELDS = [
 export type OperatorStatusField = (typeof OPERATOR_STATUS_FIELDS)[number];
 
 /** Parts of the operator screen the administrator can switch off. */
-export const OPERATOR_ELEMENTS = ['map', 'infoBlock', 'cameraControls', 'popOut'] as const;
+export const OPERATOR_ELEMENTS = ['map', 'infoBlock', 'attitude', 'messages', 'cameraControls', 'popOut'] as const;
 export type OperatorElement = (typeof OPERATOR_ELEMENTS)[number];
 
 export interface OperatorConfig {
@@ -85,6 +85,11 @@ export interface OperatorConfig {
   padCalibration: RcPadCalibration | null;
   /** Shown on the operator's About page. */
   supportContact: string;
+  /** More ways to reach the supplier, shown with it: web site, phone, e-mail, a free line. */
+  supportSite: string;
+  supportPhone: string;
+  supportEmail: string;
+  supportNote: string;
   /** Minutes without input after which the full UI closes again. 0 = never. */
   autoLockMinutes: number;
   /** Status strip values, left to right: built-in names (OPERATOR_STATUS_FIELDS) and `v:<id>` of `values`. */
@@ -119,6 +124,10 @@ export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
   rc: DEFAULT_RC_CONFIG,
   padCalibration: null,
   supportContact: '@stohid_support_bot',
+  supportSite: 'https://www.stohid.com/',
+  supportPhone: '',
+  supportEmail: '',
+  supportNote: '',
   autoLockMinutes: 15,
   statusFields: ['mode', 'satellites', 'battery', 'uptime', 'speed', 'roll', 'pitch'],
   values: [],
@@ -208,6 +217,10 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     rc: normalizeRcConfig(r.rc),
     padCalibration: normalizePadCalibration(r.padCalibration),
     supportContact: typeof r.supportContact === 'string' ? r.supportContact.trim().slice(0, 120) : d.supportContact,
+    supportSite: typeof r.supportSite === 'string' ? r.supportSite.trim().slice(0, 200) : d.supportSite,
+    supportPhone: typeof r.supportPhone === 'string' ? r.supportPhone.trim().slice(0, 60) : d.supportPhone,
+    supportEmail: typeof r.supportEmail === 'string' ? r.supportEmail.trim().slice(0, 120) : d.supportEmail,
+    supportNote: typeof r.supportNote === 'string' ? r.supportNote.trim().slice(0, 300) : d.supportNote,
     autoLockMinutes: Math.round(num(r.autoLockMinutes, d.autoLockMinutes, 0, 240)),
     statusFields,
     values,

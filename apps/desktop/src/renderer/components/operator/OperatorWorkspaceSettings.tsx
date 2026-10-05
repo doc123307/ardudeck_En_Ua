@@ -140,6 +140,25 @@ function PasswordCard() {
   );
 }
 
+/** One line of the supplier's contacts: kept when the field is left. */
+function ContactField({ label, value, placeholder, onCommit }: { label: string; value: string; placeholder: string; onCommit: (v: string) => void }) {
+  const [text, setText] = useState(value);
+  useEffect(() => setText(value), [value]);
+  return (
+    <label className="flex flex-col gap-1 text-xs text-content-secondary">
+      {label}
+      <input
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={() => { if (text.trim() !== value) onCommit(text.trim()); }}
+        onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
+        placeholder={placeholder}
+        className={FIELD}
+      />
+    </label>
+  );
+}
+
 const SECTIONS = ['panel', 'values', 'driving', 'pad', 'screen', 'video', 'general'] as const;
 type Section = (typeof SECTIONS)[number];
 const SECTION_KEY = 'stohid-operator-settings-section';
@@ -148,8 +167,6 @@ export function OperatorWorkspaceSettings() {
   const config = useOperatorStore((s) => s.config);
   const saveConfig = useOperatorStore((s) => s.saveConfig);
   const memory = useSettingsStore((s) => s.connectionMemory);
-  const [support, setSupport] = useState(config.supportContact);
-  useEffect(() => setSupport(config.supportContact), [config.supportContact]);
 
   const save = (patch: Partial<OperatorConfig>) => { void saveConfig(patch); };
   const [section, setSection] = useState<Section>(() => {
@@ -270,14 +287,15 @@ export function OperatorWorkspaceSettings() {
             />
           </Card>
           <Card title={t('operator.OperatorWorkspaceSettings.support')} hint={t('operator.OperatorWorkspaceSettings.supportHint')}>
-            <input
-              value={support}
-              onChange={(e) => setSupport(e.target.value)}
-              onBlur={() => { if (support.trim() !== config.supportContact) save({ supportContact: support }); }}
-              onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-              placeholder="@stohid_support_bot"
-              className={`${FIELD} max-w-md`}
-            />
+            <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
+              <ContactField label={t('operator.OperatorWorkspaceSettings.supportSite')} value={config.supportSite} placeholder="https://www.stohid.com/" onCommit={(supportSite) => save({ supportSite })} />
+              <ContactField label={t('operator.OperatorWorkspaceSettings.supportTelegram')} value={config.supportContact} placeholder="@stohid_support_bot" onCommit={(supportContact) => save({ supportContact })} />
+              <ContactField label={t('operator.OperatorWorkspaceSettings.supportPhone')} value={config.supportPhone} placeholder="+380…" onCommit={(supportPhone) => save({ supportPhone })} />
+              <ContactField label={t('operator.OperatorWorkspaceSettings.supportEmail')} value={config.supportEmail} placeholder="support@…" onCommit={(supportEmail) => save({ supportEmail })} />
+              <div className="sm:col-span-2">
+                <ContactField label={t('operator.OperatorWorkspaceSettings.supportNote')} value={config.supportNote} placeholder="" onCommit={(supportNote) => save({ supportNote })} />
+              </div>
+            </div>
           </Card>
         <PasswordCard />
       </>

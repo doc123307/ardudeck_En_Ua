@@ -21,7 +21,11 @@
     "OperatorAbout": {
       "back": "Back to the operator screen",
       "support": "Support",
-      "supportHint": "If something does not work, write to support:"
+      "supportHint": "If something does not work, contact the supplier:",
+      "contactSite": "Site",
+      "contactTelegram": "Telegram",
+      "contactPhone": "Phone",
+      "contactEmail": "E-mail"
     },
     "OperatorStatusBar": {
       "noLink": "No link",
@@ -105,8 +109,7 @@
     },
     "OperatorScreen": {
       "stop": "Stop",
-      "stopped": "Stopped",
-      "stopTip": "Stops the vehicle at once (Hold mode). The Space key does the same.",
+      "stopTip": "Stops the vehicle at once (Hold mode); the Space key does the same. Pressed again, the button lets the vehicle go on.",
       "spaceKey": "Space",
       "arm": "Arm (hold)",
       "disarm": "Disarm (hold)",
@@ -149,7 +152,10 @@
       "modeMenuTip": "Switch the vehicle's mode",
       "recordingOn": "Recording switched on.",
       "padConnected": "Transmitter connected: {{name}}",
-      "padDisconnected": "Transmitter disconnected: {{name}}"
+      "padDisconnected": "Transmitter disconnected: {{name}}",
+      "resume": "Go on",
+      "resumeTip": "The vehicle is stopped (Hold). Press to return to the mode it was driven in; take joystick control again if you were driving from it.",
+      "resumeRefused": "The vehicle did not leave Hold"
     },
     "OperatorShell": {
       "linkUp": "Vehicle connected",
@@ -197,8 +203,8 @@
       "video": "Video recording",
       "videoHint": "Recordings are saved on this computer. A camera with no picture is waited for: recording starts by itself when video appears and resumes after every dropout.",
       "recordAll": "Record every camera, not just the main one",
-      "support": "Support contact",
-      "supportHint": "Shown to the operator on the About page. A Telegram name such as @name becomes a link.",
+      "support": "Supplier contacts",
+      "supportHint": "Shown to the operator on the «About» page. Empty lines are not shown. A Telegram name like @name and the site become links.",
       "password": "Administrator password",
       "passwordHint": "Opens the full interface from the operator's About page. At least {{n}} characters. Kept only as a hash.",
       "currentPassword": "Current password",
@@ -244,7 +250,14 @@
       "section_screen": "Screen",
       "section_video": "Video",
       "section_general": "General",
-      "section_pad": "Transmitter"
+      "section_pad": "Transmitter",
+      "supportSite": "Web site",
+      "supportTelegram": "Telegram or another contact",
+      "supportPhone": "Phone",
+      "supportEmail": "E-mail",
+      "supportNote": "Extra line (working hours, address…)",
+      "element_attitude": "Roll and pitch drawings",
+      "element_messages": "Vehicle messages (line at the bottom)"
     },
     "OperatorRcBar": {
       "refused_disabled": "This control is switched off.",
@@ -361,7 +374,14 @@
       "servoHint": "The output is set directly and held by the flight controller until changed. Only for outputs whose SERVOx_FUNCTION is 0 (Disabled).",
       "startCenter": "Start in the middle position",
       "startCenterHint": "When the program starts the switch stands in the middle, so servos or a mechanism on the channel are not sent to an end position.",
-      "padTabPointer": "Device choice, check and calibration are on the «Transmitter» tab."
+      "padTabPointer": "Device choice, check and calibration are on the «Transmitter» tab.",
+      "invertThrottle": "Swap forward and back",
+      "invertThrottleHint": "The stick pushed forward drives the vehicle tail-first. Switch off if reverse is done by its own channels below.",
+      "reverseSteerChannel": "Steering channel in reverse",
+      "reverseThrottleChannel": "Throttle channel in reverse",
+      "reverseSameChannel": "the same (channel {{n}})",
+      "channelN": "channel {{n}}",
+      "reverseChannelsHint": "In reverse the sticks are used exactly as when driving forward; only what goes to the vehicle changes: the direction and, if set, the channels. The channels used when driving forward are let go while reverse is on."
     },
     "OperatorPanelSettings": {
       "icon": "Icon",
@@ -469,6 +489,20 @@
       "ask_ry": "RIGHT stick - push it UP (away from you) all the way",
       "letGo": "Got it. Now let the stick go back.",
       "skip": "Skip (no such stick)"
+    },
+    "OperatorMessages": {
+      "title": "Messages",
+      "empty": "No messages from the vehicle yet",
+      "show": "Show all messages from the vehicle",
+      "hide": "Hide the list",
+      "clear": "Clear the list",
+      "tone_danger": "error",
+      "tone_warn": "warning",
+      "tone_info": "info"
+    },
+    "OperatorTilt": {
+      "roll": "Roll",
+      "pitch": "Pitch"
     }
   }
 }

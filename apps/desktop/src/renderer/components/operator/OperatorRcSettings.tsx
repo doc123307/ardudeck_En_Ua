@@ -236,6 +236,19 @@ export function FunctionEditor({ fn, pad, conflict, onChange }: {
   );
 }
 
+/** The RC channel a drive function goes out on in reverse: the forward one, or its own. */
+function ReverseChannel({ value, forward, label, onChange }: { value: number | null; forward: number; label: string; onChange: (v: number | null) => void }) {
+  return (
+    <label className="flex flex-col gap-1 text-xs text-content-secondary">
+      {label}
+      <select value={value ?? ''} onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)} className={`${FIELD} py-1`}>
+        <option value="">{t('operator.OperatorRcSettings.reverseSameChannel', { n: forward })}</option>
+        {Array.from({ length: RC_MAX_CHANNEL }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{t('operator.OperatorRcSettings.channelN', { n })}</option>)}
+      </select>
+    </label>
+  );
+}
+
 /** Settings → Operator workspace → driving: the joystick, cruise and reverse driving. */
 export function OperatorRcSettings({ rc, calibration, onChange }: { rc: OperatorRcConfig; calibration: RcPadCalibration | null; onChange: (next: OperatorRcConfig) => void }) {
   const { pad } = useJoystick(rc.padId, calibration);
@@ -306,8 +319,17 @@ export function OperatorRcSettings({ rc, calibration, onChange }: { rc: Operator
         <Toggle checked={rc.reverse.enabled} onChange={(enabled) => reverse({ enabled })} label={t('operator.OperatorRcSettings.reverseEnabled')} />
         {rc.reverse.enabled && (
           <>
+            <Toggle checked={rc.reverse.invertThrottle} onChange={(invertThrottle) => reverse({ invertThrottle })}
+              label={t('operator.OperatorRcSettings.invertThrottle')} hint={t('operator.OperatorRcSettings.invertThrottleHint')} />
             <Toggle checked={rc.reverse.invertSteering} onChange={(invertSteering) => reverse({ invertSteering })}
               label={t('operator.OperatorRcSettings.invertSteering')} hint={t('operator.OperatorRcSettings.invertSteeringHint')} />
+            <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
+              <ReverseChannel value={rc.reverse.steerChannel} forward={rc.drive.steerChannel} label={t('operator.OperatorRcSettings.reverseSteerChannel')}
+                onChange={(steerChannel) => reverse({ steerChannel })} />
+              <ReverseChannel value={rc.reverse.throttleChannel} forward={rc.drive.throttleChannel} label={t('operator.OperatorRcSettings.reverseThrottleChannel')}
+                onChange={(throttleChannel) => reverse({ throttleChannel })} />
+            </div>
+            <p className="text-xs leading-snug text-content-tertiary">{t('operator.OperatorRcSettings.reverseChannelsHint')}</p>
             <Toggle checked={rc.reverse.switchCamera} onChange={(switchCamera) => reverse({ switchCamera })}
               label={t('operator.OperatorRcSettings.switchCamera')} />
             {rc.reverse.switchCamera && (

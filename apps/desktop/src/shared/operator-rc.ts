@@ -127,6 +127,11 @@ export interface RcReverseConfig {
   enabled: boolean;
   /** Steering is mirrored too, so "right" on the stick is right in the rear camera. */
   invertSteering: boolean;
+  /** Forward on the stick drives the vehicle tail-first. Off for a vehicle that turns its own drive round. */
+  invertThrottle: boolean;
+  /** RC channels used while driving in reverse; null = the same as when driving forward. */
+  steerChannel: number | null;
+  throttleChannel: number | null;
   /** Reverse driving puts the rear camera on the main view. */
   switchCamera: boolean;
   /** The rear camera; empty = found by its name. */
@@ -163,7 +168,7 @@ export const DEFAULT_RC_CONFIG: OperatorRcConfig = {
     engageButton: null,
   },
   cruise: { enabled: true, stepPercent: 5, toggleButton: null, upButton: null, downButton: null },
-  reverse: { enabled: true, invertSteering: true, switchCamera: true, cameraSourceId: '', toggleButton: null },
+  reverse: { enabled: true, invertSteering: true, invertThrottle: true, steerChannel: null, throttleChannel: null, switchCamera: true, cameraSourceId: '', toggleButton: null },
   // One of each kind, on channels a rover leaves free, so the feature can be seen and tried.
   // Nothing is sent on them until the operator touches the control.
   functions: [
@@ -248,6 +253,9 @@ function normalizeFunction(raw: unknown, takenIds: Set<string>): OperatorRcFunct
 }
 
 /** Keeps only known fields with sane values; anything missing takes its default. */
+const reverseChannel = (v: unknown): number | null =>
+  (typeof v === 'number' && Number.isInteger(v) && v >= 1 && v <= RC_MAX_CHANNEL ? v : null);
+
 export function normalizeRcConfig(raw: unknown): OperatorRcConfig {
   const d = DEFAULT_RC_CONFIG;
   if (!isObject(raw)) return structuredClone(d);
@@ -291,6 +299,9 @@ export function normalizeRcConfig(raw: unknown): OperatorRcConfig {
     reverse: {
       enabled: bool(reverse.enabled, d.reverse.enabled),
       invertSteering: bool(reverse.invertSteering, d.reverse.invertSteering),
+      invertThrottle: bool(reverse.invertThrottle, d.reverse.invertThrottle),
+      steerChannel: reverseChannel(reverse.steerChannel),
+      throttleChannel: reverseChannel(reverse.throttleChannel),
       switchCamera: bool(reverse.switchCamera, d.reverse.switchCamera),
       cameraSourceId: typeof reverse.cameraSourceId === 'string' ? reverse.cameraSourceId.slice(0, 80) : '',
       toggleButton: buttonIndex(reverse.toggleButton),
@@ -301,11 +312,29 @@ export function normalizeRcConfig(raw: unknown): OperatorRcConfig {
 
 /** RC channels claimed twice: a function on a driving channel, or two functions on one channel. */
 export function rcChannelConflicts(config: OperatorRcConfig): number[] {
-  const seen = new Map<number, number>();
-  const count = (channel: number) => seen.set(channel, (seen.get(channel) ?? 0) + 1);
-  if (config.drive.enabled) { count(config.drive.steerChannel); count(config.drive.throttleChannel); }
-  for (const f of config.functions) if (f.output === 'rc') count(f.channel);
-  return [...seen].filter(([, n]) => n > 1).map(([channel]) => channel).sort((a, b) => a - b);
+  const clash = new Set<number>();
+  // Forward and reverse driving are never on at once, so each is checked against the functions on its own.
+  for (const reverse of [false, true]) {
+    if (reverse && !config.reverse.enabled) continue;
+    const seen = new Map<number, number>();
+    const count = (channel: number) => seen.set(channel, (seen.get(channel) ?? 0) + 1);
+    if (config.drive.enabled) {
+      const drive = driveChannels(config, reverse);
+      count(drive.steer);
+      count(drive.throttle);
+    }
+    for (const f of config.functions) if (f.output === 'rc') count(f.channel);
+    for (const [channel, n] of seen) if (n > 1) clash.add(channel);
+  }
+  return [...clash].sort((a, b) => a - b);
+}
+
+/** The RC channels steering and throttle go out on, driving forward or in reverse. */
+export function driveChannels(config: OperatorRcConfig, reverse: boolean): { steer: number; throttle: number } {
+  return {
+    steer: (reverse ? config.reverse.steerChannel : null) ?? config.drive.steerChannel,
+    throttle: (reverse ? config.reverse.throttleChannel : null) ?? config.drive.throttleChannel,
+  };
 }
 
 /** Servo outputs set by two functions at once. */
@@ -596,7 +625,7 @@ export interface DriveCommand {
  */
 export function driveCommand(
   sticks: DriveSticks,
-  options: { reverse: boolean; invertSteering: boolean; cruiseOn: boolean; cruiseValue: number },
+  options: { reverse: boolean; invertSteering: boolean; invertThrottle?: boolean; cruiseOn: boolean; cruiseValue: number },
 ): DriveCommand {
   let throttle = sticks.throttle;
   let cruiseCancelled = false;
@@ -606,7 +635,7 @@ export function driveCommand(
   }
   let steer = sticks.steer;
   if (options.reverse) {
-    throttle = -throttle;
+    if (options.invertThrottle !== false) throttle = -throttle;
     if (options.invertSteering) steer = -steer;
   }
   return { steer: steer || 0, throttle: throttle || 0, cruiseCancelled };
@@ -739,6 +768,7 @@ export function composeChannels(
   config: OperatorRcConfig,
   functions: ReadonlyMap<string, RcFunctionRuntime>,
   drive: { steerPwm?: number; throttlePwm?: number },
+  reverse = false,
 ): number[] {
   const out = new Array<number>(RC_CHANNEL_SLOTS).fill(RC_IGNORE);
   for (const fn of config.functions) {
@@ -746,8 +776,9 @@ export function composeChannels(
     const runtime = functions.get(fn.id);
     if (runtime?.active) out[fn.channel - 1] = clamp(functionPwm(fn, runtime.value), RC_PWM_MIN, RC_PWM_MAX);
   }
-  if (drive.steerPwm !== undefined) out[config.drive.steerChannel - 1] = clamp(drive.steerPwm, RC_PWM_MIN, RC_PWM_MAX);
-  if (drive.throttlePwm !== undefined) out[config.drive.throttleChannel - 1] = clamp(drive.throttlePwm, RC_PWM_MIN, RC_PWM_MAX);
+  const channels = driveChannels(config, reverse);
+  if (drive.steerPwm !== undefined) out[channels.steer - 1] = clamp(drive.steerPwm, RC_PWM_MIN, RC_PWM_MAX);
+  if (drive.throttlePwm !== undefined) out[channels.throttle - 1] = clamp(drive.throttlePwm, RC_PWM_MIN, RC_PWM_MAX);
   return out;
 }
 

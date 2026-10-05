@@ -6,6 +6,7 @@ import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { useSettingsStore } from '../../stores/settings-store';
 import { formatAltitudeFromMeters, formatSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
+import { OperatorTilt } from './OperatorTilt';
 import { t } from '../../i18n';
 
 /** 0..360 -> one of eight compass points, as a translation key suffix. */
@@ -23,7 +24,7 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function OperatorInfoBlock() {
+export function OperatorInfoBlock({ tilt = true }: { tilt?: boolean }) {
   const connected = useConnectionStore((s) => s.connectionState.isConnected);
   const heading = useTelemetryStore((s) => s.vfrHud.heading);
   const groundspeed = useTelemetryStore((s) => s.vfrHud.groundspeed);
@@ -40,6 +41,7 @@ export function OperatorInfoBlock() {
   const dash = '--';
   return (
     <div className="pointer-events-auto flex items-center gap-4 rounded-xl border border-white/25 bg-black/70 px-4 py-3 shadow-xl">
+      {tilt && <OperatorTilt />}
       <div className="flex flex-col items-center">
         <div className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-white/40">
           <span className="absolute -top-0.5 text-[10px] font-bold text-red-400">{t('operator.OperatorInfoBlock.point_n')}</span>

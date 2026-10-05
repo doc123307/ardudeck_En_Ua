@@ -4,7 +4,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Hand, OctagonX } from 'lucide-react';
+import { Hand, OctagonX, Play } from 'lucide-react';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
@@ -21,6 +21,7 @@ import { useOperatorRc } from './useOperatorRc';
 import { OperatorCameras } from './OperatorCameras';
 import { OperatorMiniMap } from './OperatorMiniMap';
 import { OperatorInfoBlock } from './OperatorInfoBlock';
+import { OperatorMessages } from './OperatorMessages';
 import { HoldButton } from './HoldButton';
 import { useOperatorFeeds, useOperatorRecording } from './useOperatorFeeds';
 import { isRoverLike } from './operator-logic';
@@ -100,11 +101,28 @@ export function OperatorScreen() {
     }, COMMAND_SETTLE_MS);
   }, [canDrive, say]);
 
+  // The mode the vehicle was in when STOP was pressed: the same button gives it back.
+  const modeBeforeStop = useRef<number | null>(null);
   const stop = useCallback(() => {
     // Nothing may keep the throttle open once STOP is pressed.
     useOperatorRcStore.getState().stop();
+    const now = useTelemetryStore.getState().flight.modeNum;
+    if (now !== ROVER_MODE_NUMBER.hold) modeBeforeStop.current = now;
     void setMode('hold');
   }, [setMode]);
+
+  /** STOP pressed again: back to the mode driven in before, Manual if that is not known. */
+  const resume = useCallback(async () => {
+    if (!canDrive) return;
+    const wanted = modeBeforeStop.current ?? ROVER_MODE_NUMBER.manual;
+    lastModeAsked.current = wanted;
+    const sent = await window.electronAPI.mavlinkSetMode(wanted);
+    if (!sent) { say(t('operator.OperatorScreen.commandNotSent'), 'error'); return; }
+    setTimeout(() => {
+      if (lastModeAsked.current !== wanted) return;
+      if (useTelemetryStore.getState().flight.modeNum !== wanted) say(t('operator.OperatorScreen.resumeRefused'), 'error');
+    }, COMMAND_SETTLE_MS);
+  }, [canDrive, say]);
 
   const armDisarm = useCallback(async (arm: boolean) => {
     if (!connected) return;
@@ -156,7 +174,7 @@ export function OperatorScreen() {
         {area.width > 0 && shows('map') && <OperatorMiniMap area={area} allowPopOut={shows('popOut')} />}
         {shows('infoBlock') && (
           <div className="pointer-events-none absolute bottom-3 right-3 z-[14]">
-            <OperatorInfoBlock />
+            <OperatorInfoBlock tilt={shows('attitude')} />
           </div>
         )}
 
@@ -168,6 +186,8 @@ export function OperatorScreen() {
           </div>
         )}
       </div>
+
+      {shows('messages') && <OperatorMessages />}
 
       {/* One compact bar: the administrator's controls on the left, mode / ARM / STOP on the right. */}
       <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-subtle bg-surface px-2 py-1.5">
@@ -209,17 +229,18 @@ export function OperatorScreen() {
             </HoldButton>
           )}
 
+          {/* Stopped: the same button lets the vehicle go again. The Space key only ever stops. */}
           <button
-            onClick={stop}
+            onClick={holding ? () => void resume() : stop}
             disabled={!canDrive}
-            data-tip={t('operator.OperatorScreen.stopTip')}
+            data-tip={holding ? t('operator.OperatorScreen.resumeTip') : t('operator.OperatorScreen.stopTip')}
             className={`flex h-9 min-w-[8.5rem] items-center justify-center gap-1.5 rounded-md px-3 text-sm font-extrabold uppercase tracking-wide text-white shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-              holding ? 'bg-red-900 ring-2 ring-red-400' : 'bg-red-600 hover:bg-red-500'
+              holding ? 'bg-amber-600 ring-2 ring-amber-300 hover:bg-amber-500' : 'bg-red-600 hover:bg-red-500'
             }`}
           >
-            <OctagonX className="h-5 w-5" />
-            <span className="whitespace-nowrap">{holding ? t('operator.OperatorScreen.stopped') : t('operator.OperatorScreen.stop')}</span>
-            <kbd className="rounded bg-black/30 px-1.5 py-0.5 text-[10px] font-semibold normal-case tracking-normal">{t('operator.OperatorScreen.spaceKey')}</kbd>
+            {holding ? <Play className="h-5 w-5" /> : <OctagonX className="h-5 w-5" />}
+            <span className="whitespace-nowrap">{holding ? t('operator.OperatorScreen.resume') : t('operator.OperatorScreen.stop')}</span>
+            {!holding && <kbd className="rounded bg-black/30 px-1.5 py-0.5 text-[10px] font-semibold normal-case tracking-normal">{t('operator.OperatorScreen.spaceKey')}</kbd>}
           </button>
         </div>
       </div>

@@ -4,7 +4,7 @@ import {
 } from './operator-types';
 import {
   DEFAULT_RC_CONFIG, NO_STICKS, detectStickAxis, stickPositions, sticksAtRest, calibrateAxis, calibratePad, calibrationFinish, calibrationGrow, calibrationStart, normalizePadCalibration, pickPad,
-  rcAssignmentClashes, rcAssignments,
+  rcAssignmentClashes, rcAssignments, composeChannels, driveChannels, driveCommand, normalizeRcConfig, rcChannelConflicts,
 } from './operator-rc';
 
 describe('operator settings', () => {
@@ -174,5 +174,48 @@ describe('what the joystick controls are assigned to', () => {
     rc.cruise.enabled = false;
     expect(rcAssignmentClashes(rc).map((g) => g.map((a) => a.role))).toEqual([['steer', 'fn:aux9']]);
     expect(rcAssignmentClashes(DEFAULT_RC_CONFIG)).toEqual([]);
+  });
+});
+
+describe('driving in reverse', () => {
+  const rc = () => structuredClone(DEFAULT_RC_CONFIG);
+  const sticks = { steer: 0.5, throttle: 1 };
+
+  it('swaps forward and back and mirrors the steering unless told not to', () => {
+    expect(driveCommand(sticks, { reverse: true, invertSteering: true, cruiseOn: false, cruiseValue: 0 })).toMatchObject({ steer: -0.5, throttle: -1 });
+    expect(driveCommand(sticks, { reverse: true, invertSteering: false, invertThrottle: false, cruiseOn: false, cruiseValue: 0 })).toMatchObject({ steer: 0.5, throttle: 1 });
+    expect(driveCommand(sticks, { reverse: false, invertSteering: true, invertThrottle: true, cruiseOn: false, cruiseValue: 0 })).toMatchObject({ steer: 0.5, throttle: 1 });
+  });
+
+  it('goes out on its own channels when they are set', () => {
+    const config = rc();
+    expect(driveChannels(config, true)).toEqual({ steer: 1, throttle: 3 });
+    config.reverse.steerChannel = 5;
+    config.reverse.throttleChannel = 6;
+    expect(driveChannels(config, false)).toEqual({ steer: 1, throttle: 3 });
+    expect(driveChannels(config, true)).toEqual({ steer: 5, throttle: 6 });
+    const forward = composeChannels(config, new Map(), { steerPwm: 1600, throttlePwm: 1700 });
+    const reverse = composeChannels(config, new Map(), { steerPwm: 1600, throttlePwm: 1700 }, true);
+    expect([forward[0], forward[2], forward[4], forward[5]]).toEqual([1600, 1700, 65535, 65535]);
+    expect([reverse[0], reverse[2], reverse[4], reverse[5]]).toEqual([65535, 65535, 1600, 1700]);
+  });
+
+  it('is checked for channels shared with a function, and cleaned when stored', () => {
+    const config = rc();
+    config.reverse.throttleChannel = 9;
+    expect(rcChannelConflicts(config)).toEqual([9]);
+    config.reverse.enabled = false;
+    expect(rcChannelConflicts(config)).toEqual([]);
+    const stored = normalizeRcConfig({ reverse: { steerChannel: 99, throttleChannel: 7, invertThrottle: false } });
+    expect(stored.reverse).toMatchObject({ steerChannel: null, throttleChannel: 7, invertThrottle: false, invertSteering: true });
+    expect(normalizeRcConfig({}).reverse).toMatchObject({ steerChannel: null, throttleChannel: null, invertThrottle: true });
+  });
+});
+
+describe('supplier contacts', () => {
+  it('start with the site and are kept trimmed', () => {
+    expect(normalizeOperatorConfig({})).toMatchObject({ supportSite: 'https://www.stohid.com/', supportPhone: '', supportEmail: '', supportNote: '' });
+    expect(normalizeOperatorConfig({ supportSite: ' example.org ', supportPhone: ' +380 00 000 00 00 ', supportEmail: 5 }))
+      .toMatchObject({ supportSite: 'example.org', supportPhone: '+380 00 000 00 00', supportEmail: '' });
   });
 });

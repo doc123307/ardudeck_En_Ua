@@ -281,6 +281,7 @@ export class OperatorRcEngine {
       const command = driveCommand(this.sticks, {
         reverse: this.reverse,
         invertSteering: this.config.reverse.invertSteering,
+        invertThrottle: this.config.reverse.invertThrottle,
         cruiseOn: this.cruiseOn,
         cruiseValue: this.cruiseValue,
       });
@@ -298,7 +299,7 @@ export class OperatorRcEngine {
 
     this.sendServos();
 
-    const frame = composeChannels(this.config, this.attached ? this.functions : new Map(), out);
+    const frame = composeChannels(this.config, this.attached ? this.functions : new Map(), out, this.reverse);
     let anything = false;
     for (let i = 0; i < RC_CHANNEL_SLOTS; i++) {
       const active = frame[i] !== RC_IGNORE;

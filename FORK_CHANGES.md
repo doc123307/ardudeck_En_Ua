@@ -138,6 +138,17 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   (the name shows in the tooltip); every built-in control (joystick, reverse, cruise, recording, layout…) can
   be deleted from the panel and added back. Camera controls in the camera window are small icon buttons with
   tooltips.
+- **Vehicle messages on the operator screen.** A line above the control bar shows the latest message from
+  the flight controller and opens into the list (severity, repeat count, time); new warnings and errors are
+  counted on the line. Code: `src/renderer/components/operator/OperatorMessages.tsx`.
+- **Roll and pitch drawn.** Next to the compass the vehicle is drawn from behind (roll) and from the side
+  (pitch); the drawings lean with the vehicle and take the warning and limit colours of the numbers.
+- **STOP lets go.** Pressed while the vehicle is stopped, the STOP button (now "Go on") returns the mode the
+  vehicle was driven in. The Space key still only stops.
+- **Reverse driving: direction and channels.** Reverse can swap forward/back (or not) and send steering and
+  throttle on channels of their own; the sticks are used exactly as when driving forward.
+- **Supplier contacts.** The About page shows a site (https://www.stohid.com/ by default), Telegram, phone,
+  e-mail and a free line instead of one contact.
 - **Activation: one copy, one PC.** An installed copy shows the computer's code (a fingerprint of the
   operating system's machine id and the board model) and asks once for a key. A key is an Ed25519-signed
   record of that code, the owner and the vehicles' serial numbers; it has no expiry date and does not fit
@@ -380,6 +391,17 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   перемикачами (назва — у підказці); будь-який вбудований елемент (джойстик, реверс, круїз, запис, розкладка…)
   можна видалити з панелі й додати назад. Керування камерою у вікні камери — маленькі кнопки-значки з
   підказками.
+- **Повідомлення борту на екрані оператора.** Рядок над панеллю керування показує останнє повідомлення
+  польотного контролера й розгортається у список (важливість, кількість повторів, час); нові попередження й
+  помилки рахуються на рядку.
+- **Крен і тангаж малюнком.** Поруч із компасом борт намальовано ззаду (крен) і збоку (тангаж); малюнки
+  нахиляються разом із бортом і набувають кольорів попередження й межі, як і числа.
+- **«СТОП» відпускає.** Якщо борт зупинено, та сама кнопка (тепер «Продовжити») повертає режим, у якому
+  їхали. Клавіша Пробіл, як і раніше, лише зупиняє.
+- **Реверс: напрямок і канали.** У реверсі можна міняти (або не міняти) «вперед/назад» і слати кермо й газ
+  власними каналами; стіками користуються так само, як під час руху вперед.
+- **Контакти постачальника.** На сторінці «Про програму» замість одного контакту — сайт (типово
+  https://www.stohid.com/), Telegram, телефон, пошта й довільний рядок.
 - **Активація: одна копія — один комп'ютер.** Встановлена копія показує код комп'ютера (відбиток
   ідентифікатора системи й моделі плати) і один раз просить ключ. Ключ — це підписаний (Ed25519) запис із
   цим кодом, власником і серійними номерами бортів; він не має терміну дії й не підходить до іншого
