@@ -226,6 +226,15 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
 
+  apps/keygen:
+    devDependencies:
+      electron:
+        specifier: 44.4.3
+        version: 44.4.3
+      electron-builder:
+        specifier: ^26.7.0
+        version: 26.7.0(electron-builder-squirrel-windows@24.13.3)
+
   apps/sim-engine:
     dependencies:
       '@ardudeck/sim-physics':

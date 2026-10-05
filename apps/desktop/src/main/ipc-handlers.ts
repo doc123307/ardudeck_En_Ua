@@ -210,6 +210,7 @@ import { mediaEngine } from './media/media-engine.js';
 import { CANVAS_STREAM_PATHS, type CameraControlAction, type CanvasStreamSnapshot, type VisionStreamOpenOptions } from '../shared/camera-types.js';
 import { applyCameraControl, getCameraControlState } from './media/camera-control.js';
 import { registerOperatorHandlers } from './operator/operator-ipc.js';
+import { isLicensed, registerLicenseHandlers } from './license/license-ipc.js';
 import { armStandInChannels, simulatorIdleThrottle } from './arm-rc-stand-in.js';
 import { openVisionStreamWindow, closeVisionStreamWindow, reportVisionStream, visionStreamSnapshot } from './media/vision-stream-window.js';
 import { ardupilotSitlProcess, swarmSitlProcess, ardupilotSitlDownloader, ardupilotRcSender } from './sitl/index.js';
@@ -6229,6 +6230,11 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
 
   // Connect to a device
   ipcMain.handle(IPC_CHANNELS.COMMS_CONNECT, async (_, options: ConnectOptions): Promise<boolean> => {
+    // A copy that has not been activated on this PC does not talk to a vehicle.
+    if (!isLicensed()) {
+      sendLog(mainWindow, 'error', 'Not activated', 'Enter the licence key for this PC first');
+      return false;
+    }
     // Claim this connect attempt. Any older attempt still in flight will see a
     // newer generation at its next checkpoint and abandon itself, so we never
     // end up with two sockets racing to the same target.
@@ -13308,6 +13314,8 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
 
   // Initialize auto-updater (handles auto-check on its own schedule)
   initAutoUpdater(mainWindow);
+
+  registerLicenseHandlers();
 
   // Operator mode (administrator password, operator screen settings) and the operator's RC
   // control, which puts its frames on the current link. Values go out as given: besides

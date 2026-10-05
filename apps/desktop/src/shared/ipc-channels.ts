@@ -957,6 +957,12 @@ export const IPC_CHANNELS = {
   /** Main → renderer: RELAY_STATUS from the flight controller ({ vehicleKey, on, present } bitmasks). */
   RELAY_STATUS: 'vehicle:relay-status',
 
+  // Activation (see shared/license-types.ts): one copy works on one PC.
+  /** Renderer → main: LicenseStatus. */
+  LICENSE_STATUS: 'license:status',
+  /** Renderer → main: enter a key; returns LicenseActivateResult. */
+  LICENSE_ACTIVATE: 'license:activate',
+
   // Operator mode: the simplified screen by default, the full UI behind the administrator password.
   OPERATOR_STATE: 'operator:state',
   OPERATOR_UNLOCK: 'operator:unlock',

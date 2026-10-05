@@ -2,7 +2,7 @@
   "trainer": {
     "NewRegionDialog": {
       "theRegionCouldNotBeBuilt": "Не вдалося побудувати регіон.",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустіть «Стохід», якщо Тренажер щойно оновився.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустіть «Тунель», якщо Тренажер щойно оновився.",
       "newRegion": "Новий регіон",
       "anywhereOnEarthBuiltFromOpen": "Будь-де на Землі. Будується з відкритих даних висот, знімків і карт.",
       "gettingStarted": "Початок",
@@ -59,7 +59,7 @@
       "newRegion": "Новий регіон",
       "askingTheTrainerWhatItHas": "Запит до Тренажера про наявні регіони…",
       "couldNotDeleteThatRegion": "Не вдалося видалити регіон.",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустіть «Стохід», якщо Тренажер щойно оновився.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустіть «Тунель», якщо Тренажер щойно оновився.",
       "readyToFly": "Готово до польоту",
       "unfinished": "Незавершено",
       "ground": "Поверхня",
@@ -75,7 +75,7 @@
     },
     "TrainerVehicleStep": {
       "vehicle": "Апарат",
-      "theFrameComesFromTheFlight": "Рама береться з польотного контролера, запущеного в «Стохід».",
+      "theFrameComesFromTheFlight": "Рама береться з польотного контролера, запущеного в «Тунель».",
       "goggles": "Окуляри",
       "theTrainerSOwn": "Власний",
       "lens": "Об'єктив",
@@ -94,7 +94,7 @@
       "timeWeatherAndWind": "Час, погода й вітер",
       "vehicle": "Апарат",
       "cameraAndFrame": "Камера й рама",
-      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустіть «Стохід», якщо Тренажер щойно оновився.",
+      "restartArdudeckIfTheTrainerWas": "{{message}}. Перезапустіть «Тунель», якщо Тренажер щойно оновився.",
       "theTrainerDidNotStart": "Тренажер не запустився.",
       "readyToFly": "Готово до польоту",
       "checking": "Перевірка…",

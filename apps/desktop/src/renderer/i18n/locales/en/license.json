@@ -1,0 +1,20 @@
+{
+  "license": {
+    "title": "Activation",
+    "intro": "This copy is not activated on this computer yet. Send the computer's code to the supplier, enter the key you get back, and the program opens. It is asked for once.",
+    "machineCode": "Computer code",
+    "copy": "Copy",
+    "copied": "Copied",
+    "key": "Key",
+    "activate": "Activate",
+    "fromFile": "From a file",
+    "error_malformed": "This is not a key. Paste it whole, from STOHID1 to the end.",
+    "error_signature": "The key is not genuine or was altered. Ask the supplier for it again.",
+    "error_machine": "This key was made for another computer. Send the supplier the code shown above.",
+    "aboutTitle": "Licence",
+    "aboutOwner": "Issued to",
+    "aboutVehicles": "Vehicles",
+    "aboutNumber": "Key number",
+    "aboutDev": "Development run: no key is asked for."
+  }
+}

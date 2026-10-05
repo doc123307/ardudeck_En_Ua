@@ -4,10 +4,10 @@
       "unknownComponent": "Неизвестный компонент",
       "missing": "(отсутствует)",
       "isNotRegistered": "не зарегистрирован.",
-      "closeThisWindowAndReturnTo": "Закрыть это окно и вернуться в «Стохід»",
+      "closeThisWindowAndReturnTo": "Закрыть это окно и вернуться в «Тунель»",
       "dockBack": "Вернуть обратно",
       "pinnedOnTopClickToUnpin": "Закреплено поверх, щёлкните, чтобы открепить",
-      "keepThisWindowOnTopOf": "Держать это окно поверх «Стохід»",
+      "keepThisWindowOnTopOf": "Держать это окно поверх «Тунель»",
       "toggleAlwaysOnTop": "Переключить «поверх всех окон»"
     }
   }

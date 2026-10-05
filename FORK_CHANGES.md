@@ -6,7 +6,7 @@
 
 ## English
 
-**STOHID** («Стохід», ground robotic systems) is a fork of
+**STOHID** («Тунель» in the Ukrainian interface; ground robotic systems) is a fork of
 [ArduDeck](https://github.com/rubenCodeforges/ardudeck) by rubenCodeforges.
 This page lists everything the fork changes, so the differences from the original are easy to see.
 
@@ -40,7 +40,7 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - the on-radio EdgeTX widget text.
 
 ### 2. Branding
-- **Name.** The product name is **STOHID** in English and «Стохід» in Ukrainian. It is shown in the window
+- **Name.** The product name is **STOHID** in English and «Тунель» (by STOHID) in Ukrainian. It is shown in the window
   title, header, installer, splash screen and the EdgeTX radio widget. `src/shared/brand.ts` holds the
   names and links.
 - **Artwork.** New icons (`png`/`ico`/`icns`), a splash screen with logo and tagline, the welcome-screen
@@ -138,6 +138,24 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   (the name shows in the tooltip); every built-in control (joystick, reverse, cruise, recording, layout…) can
   be deleted from the panel and added back. Camera controls in the camera window are small icon buttons with
   tooltips.
+- **Activation: one copy, one PC.** An installed copy shows the computer's code (a fingerprint of the
+  operating system's machine id and the board model) and asks once for a key. A key is an Ed25519-signed
+  record of that code, the owner and the vehicles' serial numbers; it has no expiry date and does not fit
+  another computer. Without it the program shows only the activation screen and refuses to open a vehicle
+  link. A development run asks for nothing. Code: `src/main/license/`,
+  `src/renderer/components/license/LicenseGate.tsx`.
+  - **Key generator** (`apps/keygen`, Windows and Linux): the vendor's own small program. It holds the
+    private signing key, makes a key for a computer code, keeps the list of issued keys (owner, computer,
+    vehicles, note) and reads the vehicle list from a Google Sheet shared by link (serial number, status,
+    customer name and hand-over date only). The private key is never part of this repository; the program
+    carries only the public key (`src/main/license/public-key.ts`).
+  - This protects honest use, not the code: the source is open, so a build made without the check is
+    possible for anyone who compiles it.
+- **Stick set-up with two circles.** The Transmitter tab draws the two sticks as circles and asks the user
+  to push each stick right and up once: the program learns which axis is which stick, which way it counts,
+  and the real travel. Steering then goes to the right stick and throttle to the left one (changeable).
+  A transmitter that has not been set up is announced; plugging one in or out is said on the operator
+  screen.
 - **Transmitter tab** ("Operator workspace → Transmitter"): the device in use, a live check of every axis and
   button with what each is assigned to, a two-step calibration of the sticks' real travel (kept per device,
   for the station rather than per vehicle), and all joystick assignments in one place with a warning when a
@@ -249,7 +267,7 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 
 ## Українська
 
-**«Стохід»** (STOHID, наземні роботизовані комплекси) — форк
+**«Тунель»** (STOHID, наземні роботизовані комплекси) — форк
 [ArduDeck](https://github.com/rubenCodeforges/ardudeck) автора rubenCodeforges.
 Тут перелічено все, що змінено у форку, щоб відмінності від оригіналу було легко побачити.
 
@@ -279,7 +297,7 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - текст віджета на самому пульті EdgeTX.
 
 ### 2. Брендування
-- **Назва.** STOHID / «Стохід» у заголовку вікна, шапці, інсталяторі, заставці та віджеті пульта.
+- **Назва.** «Тунель» (виробник — STOHID; англійською програма зветься STOHID) у заголовку вікна, шапці, інсталяторі, заставці та віджеті пульта.
   `src/shared/brand.ts` містить назви й посилання.
 - **Графіка.** Нові іконки, заставка з логотипом і підписом, логотип на стартовій сторінці та в HUD пульта.
 - **Голос під час запуску.** «Welcome to STOHID».
@@ -362,6 +380,22 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   перемикачами (назва — у підказці); будь-який вбудований елемент (джойстик, реверс, круїз, запис, розкладка…)
   можна видалити з панелі й додати назад. Керування камерою у вікні камери — маленькі кнопки-значки з
   підказками.
+- **Активація: одна копія — один комп'ютер.** Встановлена копія показує код комп'ютера (відбиток
+  ідентифікатора системи й моделі плати) і один раз просить ключ. Ключ — це підписаний (Ed25519) запис із
+  цим кодом, власником і серійними номерами бортів; він не має терміну дії й не підходить до іншого
+  комп'ютера. Без ключа програма показує лише екран активації й не відкриває зв'язок із бортом. Запуск для
+  розробки нічого не просить.
+  - **Генератор ключів** (`apps/keygen`, Windows і Linux): окрема невелика програма постачальника. Зберігає
+    закритий ключ підпису, робить ключ за кодом комп'ютера, веде список виданих ключів (власник, комп'ютер,
+    борти, примітка) і читає список бортів із таблиці Google, відкритої за посиланням (лише серійний номер,
+    статус, ім'я замовника й дата передачі). Закритого ключа в репозиторії немає; у програмі — лише відкритий.
+  - Це захист від простого копіювання, а не від зламу: код відкритий, тож зібрати програму без перевірки
+    може кожен, хто вміє її компілювати.
+- **Налаштування стіків із двома колами.** Вкладка «Пульт» малює два стіки як кола й просить по разу
+  відхилити кожен стік вправо й угору: програма дізнається, яка вісь якому стіку відповідає, в який бік
+  вона рахує і який у стіків справжній хід. Після цього кермо стає на правий стік, газ — на лівий (можна
+  змінити). Про неналаштований пульт програма повідомляє сама; підключення й відключення пульта видно на
+  екрані оператора.
 - **Вкладка «Пульт»** («Простір пілота → Пульт»): який пристрій зчитується, жива перевірка кожної осі й
   кнопки з підписом, до чого вона призначена, калібрування справжнього ходу стіків у два кроки (зберігається
   для пристрою й для станції, а не для борту) та всі призначення джойстика в одному місці з попередженням,

@@ -398,7 +398,7 @@
       "startingInavSitl": "Запуск iNav SITL...\n",
       "xPlaneIsNowControlledBy": "X-Plane теперь управляется iNav SITL.\n",
       "makeSureXPlaneDataOutput": "Убедитесь, что Data Output в X-Plane отправляет на 127.0.0.1:49000\n",
-      "connectArdudeckToTcp1270": "Подключите «Стохід» к TCP 127.0.0.1:5760, чтобы получить телеметрию.\n",
+      "connectArdudeckToTcp1270": "Подключите «Тунель» к TCP 127.0.0.1:5760, чтобы получить телеметрию.\n",
       "flightgearIsNotInstalledSetA": "FlightGear не установлен. Укажите свой путь или установите FlightGear.",
       "flightgearIsNotInstalledPleaseInstall": "FlightGear не установлен. Установите его или укажите свой путь.\n",
       "waitingForFlightgearToInitialize15": "Ожидание инициализации FlightGear (15–30 секунд)...\n",

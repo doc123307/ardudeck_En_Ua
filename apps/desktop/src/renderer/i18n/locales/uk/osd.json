@@ -1,7 +1,7 @@
 {
   "osd": {
     "HudDestinationBar": {
-      "ardudeckScreenOverlay": "Накладка на екран «Стохід»",
+      "ardudeckScreenOverlay": "Накладка на екран «Тунель»",
       "videoFeed": "Відеопотік",
       "hudOverlay": "Накладка HUD",
       "yourDisplay": "Ваш екран",
@@ -11,7 +11,7 @@
     },
     "HudPanel": {
       "hudOverlay": "Накладка HUD",
-      "drawnByArdudeckOverYourVideo": "Малюється «Стохід» поверх відеопотоку",
+      "drawnByArdudeckOverYourVideo": "Малюється «Тунель» поверх відеопотоку",
       "vehicleProfile": "Профіль апарата",
       "youAreEditingThe": "Ви редагуєте розкладку для",
       "groundVehicleRoverBoat": "наземного апарата (ровер/човен)",
@@ -158,10 +158,10 @@
       "dragToResize": "Тягніть, щоб змінити розмір",
       "linkDemo": "КАНАЛ (демо)",
       "osdTool": "Редактор OSD",
-      "graphicalOverlayArdudeckDrawsOverYour": "Графічна накладка, яку «Стохід» малює поверх відео. У польотний контролер не завантажується.",
+      "graphicalOverlayArdudeckDrawsOverYour": "Графічна накладка, яку «Тунель» малює поверх відео. У польотний контролер не завантажується.",
       "textOsd": "Текстовий OSD",
       "characterOsdThatLivesInThe": "Символьний OSD, що зберігається в польотному контролері (аналог / Betaflight) або малюється цифровими окулярами.",
-      "osdDrawnByRubyfpvOnIts": "OSD, який малює RubyFPV на наземному блоці. Створюється тут, доставляється на плату через «Стохід» Agent.",
+      "osdDrawnByRubyfpvOnIts": "OSD, який малює RubyFPV на наземному блоці. Створюється тут, доставляється на плату через «Тунель» Agent.",
       "demo": "Демо",
       "live": "Наживо",
       "liveOffline": "Наживо (офлайн)",
@@ -184,7 +184,7 @@
     "RubyOsdDestinationBar": {
       "rubyfpvGroundOsd": "Наземний OSD RubyFPV",
       "authorHere": "Створюється тут",
-      "ardudeckAgent": "«Стохід» Agent",
+      "ardudeckAgent": "«Тунель» Agent",
       "rubyfpvGroundBoard": "Наземна плата RubyFPV",
       "drawnOverVideo": "Малюється поверх відео",
       "saveARubyfpvV12OsdBlock": "Зберегти блок OSD RubyFPV v12 (саме той текст, що вставляється в ctrl-N.mdl). Пряме надсилання на пов'язану плату через Agent з'явиться згодом.",

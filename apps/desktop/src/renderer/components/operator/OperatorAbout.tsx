@@ -10,6 +10,7 @@ import { AboutSection } from '../settings/SettingsView';
 import { AdminUnlockDialog } from './AdminUnlockDialog';
 import { useOperatorStore } from '../../stores/operator-store';
 import logoImage from '../../assets/logo.png';
+import { LicenseInfo } from '../license/LicenseGate';
 import { t } from '../../i18n';
 
 /** How long the logo must be held before the administrator sign-in opens. */
@@ -85,6 +86,8 @@ export function OperatorAbout({ onBack }: { onBack: () => void }) {
             </div>
           </section>
         )}
+
+        <LicenseInfo />
 
         <AboutSection />
       </div>

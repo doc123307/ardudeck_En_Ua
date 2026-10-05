@@ -299,7 +299,7 @@
       "clearAll": "Очистити все",
       "missionSavedToLibrary": "Місію збережено в бібліотеку",
       "openThePanel": "Відкрити панель «{{title}}»",
-      "theWholePlanInArdudeckWaypoint": "Увесь план в «Стохід»: групи точок, усі ділянки зйомки з налаштуваннями — усе можна редагувати пізніше",
+      "theWholePlanInArdudeckWaypoint": "Увесь план в «Тунель»: групи точок, усі ділянки зйомки з налаштуваннями — усе можна редагувати пізніше",
       "qgcWplArdupilotMissionPlanner": "QGC WPL · ArduPilot / Mission Planner{{v1}}",
       "djiFlyWaypointMissionPlainWaypoints": "Місія DJI Fly · лише прості точки"
     },

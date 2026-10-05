@@ -11,6 +11,7 @@ import type { WfbngStatus, CanvasStreamStartResult, CanvasStreamStatus, CanvasSt
 import type { AdminAuthResult, OperatorConfig, OperatorState } from '../shared/operator-types.js';
 import type { RcActionResult, RcEngineState, RcPad } from '../shared/operator-rc.js';
 import type { VehiclePreset, VehiclesResult, VehiclesState } from '../shared/vehicle-presets.js';
+import type { LicenseActivateResult, LicenseStatus } from '../shared/license-types.js';
 import type { CameraRecordStatus } from '../shared/camera-types.js';
 import type { VehicleFlightHistory } from '../shared/fleet-log-types.js';
 import type { DetachedWindowInfo, OpenDetachedRequest } from '../shared/window-types.js';
@@ -216,6 +217,8 @@ const api = {
     ipcRenderer.on(IPC_CHANNELS.RELAY_STATUS, handler);
     return () => ipcRenderer.removeListener(IPC_CHANNELS.RELAY_STATUS, handler);
   },
+  licenseStatus: (): Promise<LicenseStatus> => ipcRenderer.invoke(IPC_CHANNELS.LICENSE_STATUS),
+  licenseActivate: (key: string): Promise<LicenseActivateResult> => ipcRenderer.invoke(IPC_CHANNELS.LICENSE_ACTIVATE, key),
   operatorState: (): Promise<OperatorState> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_STATE),
   operatorUnlock: (password: string): Promise<AdminAuthResult> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_UNLOCK, password),
   operatorCreatePassword: (password: string): Promise<AdminAuthResult> =>

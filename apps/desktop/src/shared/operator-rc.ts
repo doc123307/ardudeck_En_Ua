@@ -378,6 +378,69 @@ export interface RcPadCalibration {
   pad: string;
   /** Per axis; null = not calibrated, read raw. */
   axes: (RcAxisCalibration | null)[];
+  /** Which axis is which stick direction, as the user showed it. */
+  sticks: RcStickLayout;
+}
+
+/** The four directions of the two sticks: left/right stick, horizontal/vertical. */
+export type RcStickKey = 'lx' | 'ly' | 'rx' | 'ry';
+export const RC_STICK_KEYS: readonly RcStickKey[] = ['lx', 'ly', 'rx', 'ry'];
+
+/** An axis of the device as one stick direction. `invert`: the device reads "right" or "up" as negative. */
+export interface RcStickAxis {
+  axis: number;
+  invert: boolean;
+}
+export type RcStickLayout = Record<RcStickKey, RcStickAxis | null>;
+export const NO_STICKS: RcStickLayout = { lx: null, ly: null, rx: null, ry: null };
+
+function normalizeSticks(raw: unknown): RcStickLayout {
+  const out: RcStickLayout = { ...NO_STICKS };
+  if (!isObject(raw)) return out;
+  const used = new Set<number>();
+  for (const key of RC_STICK_KEYS) {
+    const s = raw[key];
+    if (!isObject(s) || !Number.isInteger(s.axis) || (s.axis as number) < 0 || (s.axis as number) >= RC_MAX_AXES || used.has(s.axis as number)) continue;
+    used.add(s.axis as number);
+    out[key] = { axis: s.axis as number, invert: s.invert === true };
+  }
+  return out;
+}
+
+/** How far a stick must be pushed from rest to count as "this is the one". */
+export const STICK_DETECT_TRAVEL = 0.5;
+
+/**
+ * The user was asked to push one stick right (or up) all the way: which axis moved, and
+ * does the device read that direction as negative. Axes already given to a stick are out.
+ */
+export function detectStickAxis(rest: readonly number[], now: readonly number[], taken: readonly number[]): RcStickAxis | null {
+  let best: RcStickAxis | null = null;
+  let bestTravel = STICK_DETECT_TRAVEL;
+  now.forEach((value, axis) => {
+    if (taken.includes(axis)) return;
+    const delta = value - (rest[axis] ?? 0);
+    if (Math.abs(delta) > bestTravel) { best = { axis, invert: delta < 0 }; bestTravel = Math.abs(delta); }
+  });
+  return best;
+}
+
+/** Are the sticks back where they rested: the next question can be asked. */
+export function sticksAtRest(rest: readonly number[], now: readonly number[]): boolean {
+  return now.every((value, axis) => Math.abs(value - (rest[axis] ?? 0)) < 0.2);
+}
+
+export interface StickPositions {
+  /** x: -1 left .. 1 right, y: -1 down .. 1 up; null while that stick is not known. */
+  left: { x: number; y: number } | null;
+  right: { x: number; y: number } | null;
+}
+
+/** Where the two sticks are, for drawing them. `axes` are calibrated readings. */
+export function stickPositions(axes: readonly number[], sticks: RcStickLayout): StickPositions {
+  const read = (s: RcStickAxis | null) => (s ? (axes[s.axis] ?? 0) * (s.invert ? -1 : 1) || 0 : 0);
+  const stick = (x: RcStickAxis | null, y: RcStickAxis | null) => (x || y ? { x: read(x), y: read(y) } : null);
+  return { left: stick(sticks.lx, sticks.ly), right: stick(sticks.rx, sticks.ry) };
 }
 
 export const RC_MAX_AXES = 16;
@@ -393,7 +456,9 @@ export function normalizePadCalibration(raw: unknown): RcPadCalibration | null {
     const c = { min: min as number, center: center as number, max: max as number };
     return c.max - c.min >= CALIBRATION_MIN_SPAN && c.center >= c.min && c.center <= c.max ? c : null;
   });
-  return axes.some(Boolean) ? { pad: raw.pad.trim().slice(0, 200), axes } : null;
+  const sticks = normalizeSticks(raw.sticks);
+  // Nothing calibrated and no stick shown: there is nothing to keep.
+  return axes.some(Boolean) || RC_STICK_KEYS.some((k) => sticks[k]) ? { pad: raw.pad.trim().slice(0, 200), axes, sticks } : null;
 }
 
 /** A raw reading stretched so that the calibrated ends give -1 and 1 and the rest position gives 0. */
@@ -413,13 +478,14 @@ export function calibratePad(pad: RcPad, calibration: RcPadCalibration | null): 
 
 /** Step 1 of calibrating: the sticks are let go, this is where they rest. */
 export function calibrationStart(pad: RcPad): RcPadCalibration {
-  return { pad: pad.id, axes: pad.axes.slice(0, RC_MAX_AXES).map((a) => ({ min: a, center: a, max: a })) };
+  return { pad: pad.id, axes: pad.axes.slice(0, RC_MAX_AXES).map((a) => ({ min: a, center: a, max: a })), sticks: { ...NO_STICKS } };
 }
 
 /** Step 2, for every reading while the sticks are moved to their ends: the ends grow. */
 export function calibrationGrow(c: RcPadCalibration, pad: RcPad): RcPadCalibration {
   return {
     pad: c.pad,
+    sticks: c.sticks,
     axes: c.axes.map((a, i) => {
       const v = pad.axes[i];
       return a && typeof v === 'number' ? { min: Math.min(a.min, v), center: a.center, max: Math.max(a.max, v) } : a;
@@ -429,7 +495,7 @@ export function calibrationGrow(c: RcPadCalibration, pad: RcPad): RcPadCalibrati
 
 /** Done: axes that were not moved stay uncalibrated. */
 export function calibrationFinish(c: RcPadCalibration): RcPadCalibration | null {
-  return normalizePadCalibration({ pad: c.pad, axes: c.axes.map((a) => (a && a.max - a.min >= CALIBRATION_MIN_SPAN ? a : null)) });
+  return normalizePadCalibration({ pad: c.pad, sticks: c.sticks, axes: c.axes.map((a) => (a && a.max - a.min >= CALIBRATION_MIN_SPAN ? a : null)) });
 }
 
 // ---- What is assigned to what -----------------------------------------------------

@@ -3,7 +3,7 @@ import {
   DEFAULT_OPERATOR_CONFIG, OPERATOR_CONFIG_SCHEMA, OPERATOR_MODE_BUTTONS, ROVER_MODE_NUMBER, normalizeOperatorConfig,
 } from './operator-types';
 import {
-  DEFAULT_RC_CONFIG, calibrateAxis, calibratePad, calibrationFinish, calibrationGrow, calibrationStart, normalizePadCalibration, pickPad,
+  DEFAULT_RC_CONFIG, NO_STICKS, detectStickAxis, stickPositions, sticksAtRest, calibrateAxis, calibratePad, calibrationFinish, calibrationGrow, calibrationStart, normalizePadCalibration, pickPad,
   rcAssignmentClashes, rcAssignments,
 } from './operator-rc';
 
@@ -113,7 +113,7 @@ describe('transmitter calibration', () => {
   });
 
   it('applies only to the device it was made on', () => {
-    const calibration = { pad: 'Radiomaster TX12 Joystick', axes: [{ min: -0.5, center: 0, max: 0.5 }, null] };
+    const calibration = { pad: 'Radiomaster TX12 Joystick', axes: [{ min: -0.5, center: 0, max: 0.5 }, null], sticks: NO_STICKS };
     expect(calibratePad(pad([0.25, 0.25]), calibration).axes).toEqual([0.5, 0.25]);
     expect(calibratePad(pad([0.25, 0.25], 'Xbox Controller'), calibration).axes).toEqual([0.25, 0.25]);
     expect(calibratePad(pad([0.25]), null).axes).toEqual([0.25]);
@@ -121,11 +121,42 @@ describe('transmitter calibration', () => {
 
   it('is cleaned when stored, and survives in the operator settings', () => {
     expect(normalizePadCalibration({ pad: 'X', axes: [{ min: -1, center: 0, max: 1 }, { min: 0.4, center: 0.45, max: 0.5 }, 'junk', { min: 1, center: 0, max: -1 }] }))
-      .toEqual({ pad: 'X', axes: [{ min: -1, center: 0, max: 1 }, null, null, null] });
+      .toEqual({ pad: 'X', axes: [{ min: -1, center: 0, max: 1 }, null, null, null], sticks: NO_STICKS });
     expect(normalizePadCalibration({ pad: '', axes: [{ min: -1, center: 0, max: 1 }] })).toBeNull();
     expect(normalizePadCalibration({ pad: 'X', axes: [null] })).toBeNull();
     expect(normalizeOperatorConfig({ padCalibration: { pad: 'X', axes: [{ min: -1, center: 0, max: 1 }] } }).padCalibration?.pad).toBe('X');
     expect(normalizeOperatorConfig({}).padCalibration).toBeNull();
+  });
+});
+
+describe('showing the program which stick is which', () => {
+  const rest = [0.02, -0.01, 0, 0.03, -1];
+
+  it('finds the axis that was pushed and which way the device counts it', () => {
+    expect(detectStickAxis(rest, [0.02, -0.01, 0, 0.95, -1], [])).toEqual({ axis: 3, invert: false });
+    // "Up" reads negative on most devices.
+    expect(detectStickAxis(rest, [0.02, -0.9, 0, 0.03, -1], [])).toEqual({ axis: 1, invert: true });
+    // Not far enough, or an axis that already belongs to another stick: nothing yet.
+    expect(detectStickAxis(rest, [0.4, -0.01, 0, 0.03, -1], [])).toBeNull();
+    expect(detectStickAxis(rest, [0.02, -0.9, 0, 0.03, -1], [1])).toBeNull();
+    // The one moved furthest wins when a neighbour was nudged too.
+    expect(detectStickAxis(rest, [0.7, -0.9, 0, 0.03, -1], [])).toEqual({ axis: 1, invert: true });
+  });
+
+  it('waits for the sticks to come back before the next question', () => {
+    expect(sticksAtRest(rest, [0.1, -0.1, 0, 0.03, -1])).toBe(true);
+    expect(sticksAtRest(rest, [0.5, -0.01, 0, 0.03, -1])).toBe(false);
+  });
+
+  it('draws the sticks from the layout, right and up positive', () => {
+    const sticks = { lx: { axis: 3, invert: false }, ly: { axis: 2, invert: true }, rx: { axis: 0, invert: false }, ry: null };
+    expect(stickPositions([0.5, 0, -1, -0.25], sticks)).toEqual({ left: { x: -0.25, y: 1 }, right: { x: 0.5, y: 0 } });
+    expect(stickPositions([1, 1], NO_STICKS)).toEqual({ left: null, right: null });
+  });
+
+  it('is kept with the calibration, one axis per direction', () => {
+    const kept = normalizePadCalibration({ pad: 'X', axes: [], sticks: { lx: { axis: 3, invert: false }, ly: { axis: 3, invert: true }, rx: { axis: 99 }, ry: { axis: 1, invert: true } } });
+    expect(kept).toEqual({ pad: 'X', axes: [], sticks: { lx: { axis: 3, invert: false }, ly: null, rx: null, ry: { axis: 1, invert: true } } });
   });
 });
 

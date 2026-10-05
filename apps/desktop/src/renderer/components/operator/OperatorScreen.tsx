@@ -13,6 +13,7 @@ import { useOperatorStore } from '../../stores/operator-store';
 import { ROVER_MODE_NUMBER, type OperatorElement, type OperatorModeButton } from '../../../shared/operator-types';
 import { extractPreArmReason, isPreArmMessage } from '../../../shared/prearm-checks';
 import { useOperatorRcStore } from '../../stores/operator-rc-store';
+import { isController } from '../../../shared/operator-rc';
 import { OperatorStatusBar, modeLabel } from './OperatorStatusBar';
 import { OperatorModeMenu, modeButtonLabel } from './OperatorModeMenu';
 import { OperatorControls } from './OperatorControlBar';
@@ -66,6 +67,18 @@ export function OperatorScreen() {
     toastTimer.current = setTimeout(() => setToast(null), TOAST_MS);
   }, []);
   useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current); }, []);
+
+  // A transmitter plugged in or pulled out is said aloud: the operator must know who is driving.
+  useEffect(() => {
+    const on = (e: GamepadEvent) => { if (isController(e.gamepad)) say(t('operator.OperatorScreen.padConnected', { name: e.gamepad.id })); };
+    const off = (e: GamepadEvent) => { if (isController(e.gamepad)) say(t('operator.OperatorScreen.padDisconnected', { name: e.gamepad.id }), 'error'); };
+    window.addEventListener('gamepadconnected', on);
+    window.addEventListener('gamepaddisconnected', off);
+    return () => {
+      window.removeEventListener('gamepadconnected', on);
+      window.removeEventListener('gamepaddisconnected', off);
+    };
+  }, [say]);
 
   const connected = connectionState.isConnected && connectionState.protocol === 'mavlink';
   const rover = isRoverLike(connectionState.mavType);

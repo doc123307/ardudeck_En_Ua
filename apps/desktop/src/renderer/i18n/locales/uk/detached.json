@@ -4,10 +4,10 @@
       "unknownComponent": "Невідомий компонент",
       "missing": "(відсутній)",
       "isNotRegistered": "не зареєстровано.",
-      "closeThisWindowAndReturnTo": "Закрити це вікно й повернутися в «Стохід»",
+      "closeThisWindowAndReturnTo": "Закрити це вікно й повернутися в «Тунель»",
       "dockBack": "Повернути назад",
       "pinnedOnTopClickToUnpin": "Закріплено поверх, клацніть, щоб відкріпити",
-      "keepThisWindowOnTopOf": "Тримати це вікно поверх «Стохід»",
+      "keepThisWindowOnTopOf": "Тримати це вікно поверх «Тунель»",
       "toggleAlwaysOnTop": "Перемкнути «поверх усіх вікон»"
     }
   }

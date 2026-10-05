@@ -7,7 +7,7 @@
       "upDownHistory": "Вверх/Вниз: история",
       "ctrlCCopyAbort": "Ctrl+C: копировать/прервать",
       "ctrlVPaste": "Ctrl+V: вставить",
-      "ardudeckCliTerminal": "  {{Y}}Терминал CLI «Стохід»{{R}}",
+      "ardudeckCliTerminal": "  {{Y}}Терминал CLI «Тунель»{{R}}",
       "typeHelpForAvailableCommands": "  Введите {{G}}help{{R}}, чтобы увидеть доступные команды",
       "typeDumpForFullConfigAutocomplete": "  Введите {{G}}dump{{R}} для полной конфигурации (автодополнение)",
       "pressTabForCommandCompletion": "  Нажмите {{M}}Tab{{R}} для дополнения команды",

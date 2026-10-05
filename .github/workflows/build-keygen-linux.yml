@@ -1,0 +1,45 @@
+name: Build key generator (Linux)
+
+# The vendor's key generator as a Linux AppImage. It is not attached to any release: the
+# file is kept as a workflow artifact for the vendor to download. It holds no signing key -
+# that is imported on the vendor's own PC.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Commit or branch to build.'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build-keygen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --filter @stohid/keygen...
+
+      - name: Build AppImage
+        working-directory: apps/keygen
+        run: pnpm exec electron-builder --linux AppImage --x64 --publish never
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stohid-keygen-linux
+          path: apps/keygen/release/*.AppImage
+          if-no-files-found: error
+          retention-days: 30

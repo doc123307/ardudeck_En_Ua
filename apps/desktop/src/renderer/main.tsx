@@ -5,6 +5,7 @@ import './i18n';
 import { LanguageRoot } from './i18n/LanguageRoot';
 import App from './App';
 import { DetachedRoot } from './detached/DetachedRoot';
+import { LicenseGate } from './components/license/LicenseGate';
 // Subpath, not the barrel: the barrel re-exports core/signing.js (node:crypto),
 // which Vite externalizes in the renderer.
 import { registerArduDeckDialect } from '@ardudeck/mavlink-ts/dialect';
@@ -32,7 +33,7 @@ initPseudoTx();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <LanguageRoot>{isDetached ? <DetachedRoot /> : <App />}</LanguageRoot>
+    <LanguageRoot><LicenseGate>{isDetached ? <DetachedRoot /> : <App />}</LicenseGate></LanguageRoot>
   </React.StrictMode>,
 );
 

@@ -1,0 +1,40 @@
+{
+  "name": "@stohid/keygen",
+  "version": "1.0.0",
+  "private": true,
+  "description": "STOHID licence key generator (vendor tool)",
+  "author": "STOHID",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win portable --x64 --publish never",
+    "dist:linux": "electron-builder --linux AppImage --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "44.4.3",
+    "electron-builder": "^26.7.0"
+  },
+  "build": {
+    "appId": "ua.stohid.keygen",
+    "productName": "STOHID-Keygen",
+    "artifactName": "STOHID-Keygen-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "lib/**",
+      "ui/**"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "../desktop/resources/icon.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Utility",
+      "icon": "../desktop/resources/icon.png"
+    }
+  }
+}
