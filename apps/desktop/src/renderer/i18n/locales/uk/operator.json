@@ -239,7 +239,9 @@
       "section_driving": "Рух і режими",
       "section_screen": "Екран",
       "section_video": "Відео",
-      "section_general": "Загальне"
+      "section_general": "Загальне",
+      "operatorEditsVehicles": "Оператор може додавати, змінювати й видаляти борти",
+      "operatorEditsVehiclesHint": "Вибирати борт зі списку можна завжди. Панель борту (канали, кнопки, значення) налаштовується лише тут."
     },
     "OperatorRcBar": {
       "refused_disabled": "Цю функцію вимкнено.",
@@ -355,7 +357,9 @@
       "output_rc": "RC-канал (RC_CHANNELS_OVERRIDE)",
       "output_servo": "Вихід серво (DO_SET_SERVO)",
       "servoOutput": "Вихід серво",
-      "servoHint": "Вихід виставляється напряму й тримається польотним контролером до наступної зміни. Лише для виходів із SERVOx_FUNCTION = 0 (Disabled)."
+      "servoHint": "Вихід виставляється напряму й тримається польотним контролером до наступної зміни. Лише для виходів із SERVOx_FUNCTION = 0 (Disabled).",
+      "startCenter": "На старті — середня позиція",
+      "startCenterHint": "Під час запуску програми перемикач стоїть посередині, тож сервоприводи чи механізм на цьому каналі не їдуть у крайнє положення."
     },
     "OperatorPanelSettings": {
       "icon": "Значок",

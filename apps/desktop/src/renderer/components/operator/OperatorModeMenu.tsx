@@ -77,7 +77,7 @@ export function OperatorModeMenu({ modes, modeNum, currentLabel, disabled, onPic
         <ChevronUp className={`h-4 w-4 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div className="absolute bottom-full right-0 z-40 mb-2 flex min-w-full flex-col gap-1 rounded-xl border border-subtle bg-surface-nav p-1.5 shadow-2xl">
+        <div className="absolute bottom-full right-0 z-40 mb-2 flex min-w-full flex-col gap-1 rounded-xl border border-subtle bg-surface-solid p-1.5 shadow-2xl">
           {modes.map((m) => (
             <button
               key={m}

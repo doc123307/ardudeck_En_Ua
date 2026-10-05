@@ -14,6 +14,7 @@ import { OperatorScreen } from './OperatorScreen';
 import { OperatorAbout } from './OperatorAbout';
 import { useOperatorConnection } from './useOperatorConnection';
 import { describeConnection } from './operator-logic';
+import { OperatorVehiclePicker } from './OperatorVehiclePicker';
 import iconImage from '../../assets/icon.png';
 import { t } from '../../i18n';
 
@@ -49,13 +50,11 @@ export function OperatorShell() {
         <h1 className="whitespace-nowrap text-lg font-bold uppercase tracking-wide text-content">{t('brand.name')}</h1>
 
         <div className="ml-auto flex min-w-0 items-center gap-2">
-          <div
-            className="flex h-9 min-w-0 items-center gap-2.5 rounded-full border border-subtle bg-surface px-3"
-            data-tip={options ? describeConnection(options) : t('operator.OperatorShell.linkNotSetTip')}
-          >
-            <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${dot}`} />
-            <span className="truncate text-sm font-medium text-content-secondary">{linkText}</span>
-          </div>
+          <OperatorVehiclePicker
+            linkText={linkText}
+            dot={dot}
+            tip={options ? describeConnection(options) : t('operator.OperatorShell.linkNotSetTip')}
+          />
 
           {linkUp || busy ? (
             <button onClick={disconnectNow} className={HEADER_BTN} data-tip={t('operator.OperatorShell.disconnectTip')}>

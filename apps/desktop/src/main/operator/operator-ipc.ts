@@ -5,6 +5,8 @@ import type { RcActionResult, RcPad } from '../../shared/operator-rc.js';
 import { mediaEngine } from '../media/media-engine.js';
 import { OperatorVault } from './operator-vault.js';
 import { OperatorRcEngine, type RcEngineDeps } from './operator-rc-engine.js';
+import { VehiclesStore } from './vehicles-store.js';
+import { pickPanel, samePresetPart, type VehiclePreset, type VehiclesResult } from '../../shared/vehicle-presets.js';
 
 let vault: OperatorVault | null = null;
 
@@ -79,8 +81,57 @@ export function registerOperatorHandlers(link: OperatorRcLink): void {
   ipcMain.handle(IPC_CHANNELS.OPERATOR_LOCK, () => withMenus(getVault().lock()));
   ipcMain.handle(IPC_CHANNELS.OPERATOR_SET_CONFIG, (_, patch: unknown) => {
     const result = getVault().setConfig(patch);
-    if (result.ok) rc.setConfig(result.state.config.rc);
+    if (result.ok) {
+      rc.setConfig(result.state.config.rc);
+      // What the administrator sets up belongs to the vehicle in use.
+      const { config } = result.state;
+      vehicles.updateActive({ panel: pickPanel(config), ...(config.connection ? { connection: config.connection } : {}) });
+    }
     return result;
+  });
+
+  // ---- Vehicles --------------------------------------------------------------------
+  const vehicles = new VehiclesStore(app.getPath('userData'));
+  const answer = (ok: boolean, error?: VehiclesResult['error']): VehiclesResult =>
+    ({ ok, ...(error ? { error } : {}), vehicles: vehicles.state(), operator: getVault().state() });
+  /** The administrator, or an operator the administrator let manage the list. */
+  const mayEdit = () => {
+    const state = getVault().state();
+    return state.mode === 'admin' || state.config.operatorEditsVehicles;
+  };
+  /** Puts a vehicle's own settings in force. */
+  const applyVehicle = (preset: VehiclePreset) => {
+    const state = getVault().applyVehicle({ ...preset.panel, ...(preset.connection ? { connection: preset.connection } : {}) });
+    if (state) rc.setConfig(state.config.rc);
+    return state !== null;
+  };
+  ipcMain.handle(IPC_CHANNELS.VEHICLES_STATE, () => vehicles.state());
+  ipcMain.handle(IPC_CHANNELS.VEHICLES_SAVE, (_, raw: unknown): VehiclesResult => {
+    if (!mayEdit()) return answer(false, 'not-allowed');
+    const saved = vehicles.save(raw);
+    if (!saved) return answer(false, 'storage');
+    // A change to the vehicle in use (its link, say) takes effect at once.
+    if (vehicles.state().activeId === saved.id) applyVehicle(saved);
+    return answer(true);
+  });
+  ipcMain.handle(IPC_CHANNELS.VEHICLES_DELETE, (_, id: unknown): VehiclesResult => {
+    if (!mayEdit()) return answer(false, 'not-allowed');
+    return answer(vehicles.remove(text(id)), 'not-found');
+  });
+  ipcMain.handle(IPC_CHANNELS.VEHICLES_ACTIVATE, (_, id: unknown): VehiclesResult => {
+    const preset = vehicles.setActive(text(id));
+    if (!preset) return answer(false, 'not-found');
+    return applyVehicle(preset) ? answer(true) : answer(false, 'storage');
+  });
+  ipcMain.handle(IPC_CHANNELS.VEHICLES_SYNC, (_, part: unknown) => {
+    const p = (part && typeof part === 'object' ? part : {}) as { cameras?: unknown; relays?: unknown };
+    const active = vehicles.active();
+    if (!active) return vehicles.state();
+    const next = { ...active };
+    if (Array.isArray(p.cameras)) next.cameras = p.cameras as VehiclePreset['cameras'];
+    if (Array.isArray(p.relays)) next.relays = p.relays as VehiclePreset['relays'];
+    if (!samePresetPart(next.cameras, active.cameras) || !samePresetPart(next.relays, active.relays)) vehicles.save(next);
+    return vehicles.state();
   });
 
   // The recording folder: the administrator's to choose and to look into.

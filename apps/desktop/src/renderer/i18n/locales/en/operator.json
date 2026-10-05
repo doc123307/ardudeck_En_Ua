@@ -239,7 +239,9 @@
       "section_driving": "Driving and modes",
       "section_screen": "Screen",
       "section_video": "Video",
-      "section_general": "General"
+      "section_general": "General",
+      "operatorEditsVehicles": "The operator may add, change and delete vehicles",
+      "operatorEditsVehiclesHint": "Choosing a vehicle from the list is always allowed. A vehicle's panel (channels, buttons, values) is set up only here."
     },
     "OperatorRcBar": {
       "refused_disabled": "This control is switched off.",
@@ -355,7 +357,9 @@
       "output_rc": "RC channel (RC_CHANNELS_OVERRIDE)",
       "output_servo": "Servo output (DO_SET_SERVO)",
       "servoOutput": "Servo output",
-      "servoHint": "The output is set directly and held by the flight controller until changed. Only for outputs whose SERVOx_FUNCTION is 0 (Disabled)."
+      "servoHint": "The output is set directly and held by the flight controller until changed. Only for outputs whose SERVOx_FUNCTION is 0 (Disabled).",
+      "startCenter": "Start in the middle position",
+      "startCenterHint": "When the program starts the switch stands in the middle, so servos or a mechanism on the channel are not sent to an end position."
     },
     "OperatorPanelSettings": {
       "icon": "Icon",

@@ -10,6 +10,7 @@ import type { StreamDiagnosis, ElrsModuleInfo, ElrsSetModeResult, ElrsProgressEv
 import type { WfbngStatus, CanvasStreamStartResult, CanvasStreamStatus, CanvasStreamSnapshot, VisionStreamOpenOptions, CameraControlAction, CameraControlState } from '../shared/camera-types.js';
 import type { AdminAuthResult, OperatorConfig, OperatorState } from '../shared/operator-types.js';
 import type { RcActionResult, RcEngineState, RcPad } from '../shared/operator-rc.js';
+import type { VehiclePreset, VehiclesResult, VehiclesState } from '../shared/vehicle-presets.js';
 import type { CameraRecordStatus } from '../shared/camera-types.js';
 import type { VehicleFlightHistory } from '../shared/fleet-log-types.js';
 import type { DetachedWindowInfo, OpenDetachedRequest } from '../shared/window-types.js';
@@ -224,6 +225,13 @@ const api = {
   operatorLock: (): Promise<OperatorState> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_LOCK),
   operatorSetConfig: (patch: Partial<OperatorConfig>): Promise<AdminAuthResult> =>
     ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_SET_CONFIG, patch),
+  // Vehicles: each vehicle's link, cameras, outputs and panel (shared/vehicle-presets.ts).
+  vehiclesState: (): Promise<VehiclesState> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_STATE),
+  vehiclesSave: (preset: VehiclePreset): Promise<VehiclesResult> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_SAVE, preset),
+  vehiclesDelete: (id: string): Promise<VehiclesResult> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_DELETE, id),
+  vehiclesActivate: (id: string): Promise<VehiclesResult> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_ACTIVATE, id),
+  vehiclesSync: (part: { cameras?: unknown[]; relays?: unknown[] }): Promise<VehiclesState> =>
+    ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_SYNC, part),
   operatorPickRecordDir: (): Promise<string | null> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_PICK_RECORD_DIR),
   operatorOpenRecordDir: (): Promise<boolean> => ipcRenderer.invoke(IPC_CHANNELS.OPERATOR_OPEN_RECORD_DIR),
   /** The cameras to keep recording, whether or not their video is there at the moment. */

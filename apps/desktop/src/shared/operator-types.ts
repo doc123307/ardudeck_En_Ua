@@ -93,6 +93,8 @@ export interface OperatorConfig {
   controlOrder: string[];
   /** Controls taken off the bottom bar. */
   hiddenControls: string[];
+  /** The operator may add, change and remove vehicles in the vehicle list (choosing one is always allowed). */
+  operatorEditsVehicles: boolean;
   /** Screen parts that are switched off (everything else is shown). */
   hiddenElements: OperatorElement[];
 }
@@ -117,6 +119,7 @@ export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
   values: [],
   controlOrder: [],
   hiddenControls: [],
+  operatorEditsVehicles: true,
   hiddenElements: [],
 };
 
@@ -203,6 +206,7 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     values,
     controlOrder: controlKeys(r.controlOrder),
     hiddenControls: [...new Set(hiddenControls)],
+    operatorEditsVehicles: bool(r.operatorEditsVehicles, d.operatorEditsVehicles),
     hiddenElements: known(r.hiddenElements, OPERATOR_ELEMENTS, []),
   };
 }

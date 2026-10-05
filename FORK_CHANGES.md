@@ -122,6 +122,20 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - **Look:** the operator's controls are one compact bar instead of two rows: same-sized chips, an icon and
     a short name each, filled with the control's colour when on, thin dividers between groups; mode, ARM and
     STOP stay at the right end.
+- **Vehicle list instead of the multi-vehicle orchestrator.** Upstream's "Multiple vehicles" tab needs a
+  private orchestrator; this fork replaces it with its own vehicle list ("Vehicles" tab of the connection
+  panel, and a vehicle switch in the operator screen's header).
+  - Each vehicle is a preset: its link (UDP client/server, TCP, serial), its cameras, its vehicle outputs and
+    its operator panel (RC functions, joystick mapping, values, modes, ARM permission).
+  - Choosing a vehicle puts all of that in place and connects; the one chosen last comes back and connects by
+    itself at the next start. Settings changed while a vehicle is in use are stored with that vehicle.
+  - Vehicles can be added (from the current setup), changed, copied and deleted; the operator may do so too
+    unless the administrator switches it off. Switching away from an armed vehicle is refused.
+  - The first start of this version turns the current setup into the first vehicle.
+  - Code: `src/shared/vehicle-presets.ts`, `src/main/operator/vehicles-store.ts`,
+    `src/renderer/stores/vehicles-store.ts`, `src/renderer/components/vehicles/VehicleList.tsx`.
+- **Three-position switches start in the middle** by default ("start in the middle position"), so servos or a
+  mechanism on the channel are not sent to an end position when the program starts.
 - **Recording that does not depend on the video being there.** The administrator chooses: always, while
   armed, or by the operator's button. The app keeps the chosen cameras recording: a camera with no picture
   is waited for, the recording starts by itself when video appears and resumes after every dropout. Files
@@ -315,6 +329,18 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - **Вигляд:** елементи керування оператора — одна компактна панель замість двох рядів: однакові «чіпи» зі
     значком і короткою назвою, заливка кольором, коли увімкнено, тонкі роздільники між групами; режим, ARM і
     СТОП — праворуч.
+- **Список бортів замість оркестратора кількох апаратів.** Вкладка оригіналу «Кілька апаратів» потребує
+  закритого оркестратора; у форку замість неї власний список бортів (вкладка «Борти» в панелі підключення
+  та перемикач борту в шапці екрана оператора).
+  - Кожен борт — пресет: зв'язок (UDP клієнт/сервер, TCP, послідовний порт), камери, виходи борту й панель
+    оператора (RC-функції, джойстик, значення, режими, дозвіл ARM).
+  - Вибір борту ставить усе це на місце й підключається; останній вибраний борт сам повертається й
+    підключається під час наступного запуску. Налаштування, змінені поки борт активний, зберігаються з ним.
+  - Борти можна додавати (з поточних налаштувань), змінювати, копіювати й видаляти; оператор теж, якщо
+    адміністратор цього не вимкнув. Перемкнутися з армованого борту не можна.
+  - Під час першого запуску цієї версії поточні налаштування стають першим бортом.
+- **Перемикач на 3 позиції стартує з середньої позиції** (галочка «На старті — середня позиція», типово
+  ввімкнена), тож сервоприводи чи механізм на каналі не їдуть у крайнє положення під час запуску програми.
 - **Запис, що не залежить від наявності відео.** Адміністратор вибирає: завжди, доки борт армовано, або за
   кнопкою оператора. Програма сама тримає запис вибраних камер: камеру без зображення чекає, запис
   починається сам, щойно з'явиться відео, і відновлюється після кожного обриву. Файли йдуть у

@@ -260,7 +260,7 @@ describe('OperatorRcEngine', () => {
     next.functions = next.functions.filter((f) => f.id !== 'aux9');
     next.functions[1]!.label = 'Lift';
     engine.setConfig(next);
-    expect(engine.state().functions).toEqual({ aux10: { value: -1, active: false }, aux11: { value: 0.4, active: true } });
+    expect(engine.state().functions).toEqual({ aux10: { value: 0, active: false }, aux11: { value: 0.4, active: true } });
   });
 
   it('tells the screen when something changes, and only then', () => {

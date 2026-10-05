@@ -35,7 +35,7 @@ export function ColorPicker({ value, onChange }: { value: OperatorColor; onChang
 /** A row of tabs at the top of a settings page. */
 export function SectionTabs<T extends string>({ tabs, value, onChange }: { tabs: { id: T; label: string }[]; value: T; onChange: (id: T) => void }) {
   return (
-    <div className="sticky top-0 z-10 -mx-1 flex flex-wrap gap-1 rounded-xl border border-subtle bg-surface p-1 shadow-sm">
+    <div className="sticky top-0 z-10 -mx-1 flex flex-wrap gap-1 rounded-xl border border-subtle bg-surface-solid p-1 shadow-md">
       {tabs.map((tab) => (
         <button key={tab.id} type="button" onClick={() => onChange(tab.id)}
           className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${value === tab.id ? 'bg-blue-600 text-white' : 'text-content-secondary hover:bg-surface-raised hover:text-content'}`}>

@@ -207,6 +207,10 @@ export function FunctionEditor({ fn, pad, conflict, onChange }: {
           <Toggle checked={fn.springCenter} onChange={(springCenter) => onChange({ ...fn, springCenter })}
             label={t('operator.OperatorRcSettings.springCenter')} hint={t('operator.OperatorRcSettings.springCenterHint')} />
         )}
+        {fn.kind === 'switch3' && !fn.springCenter && (
+          <Toggle checked={fn.startCenter} onChange={(startCenter) => onChange({ ...fn, startCenter })}
+            label={t('operator.OperatorRcSettings.startCenter')} hint={t('operator.OperatorRcSettings.startCenterHint')} />
+        )}
         {fn.kind === 'slider' && (
           <label className="flex items-center gap-2 text-sm text-content">
             {t('operator.OperatorRcSettings.spring')}

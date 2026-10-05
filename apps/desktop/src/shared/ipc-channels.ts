@@ -968,6 +968,16 @@ export const IPC_CHANNELS = {
   OPERATOR_PICK_RECORD_DIR: 'operator:pick-record-dir',
   /** Renderer → main (administrator): open the recording folder in the file manager. */
   OPERATOR_OPEN_RECORD_DIR: 'operator:open-record-dir',
+  // Vehicles (see shared/vehicle-presets.ts): each vehicle's link, cameras, outputs and panel.
+  /** Renderer → main: VehiclesState. */
+  VEHICLES_STATE: 'vehicles:state',
+  /** Renderer → main: add or replace a vehicle; returns VehiclesResult. */
+  VEHICLES_SAVE: 'vehicles:save',
+  VEHICLES_DELETE: 'vehicles:delete',
+  /** Renderer → main: make a vehicle the one in use; its settings take effect. Returns VehiclesResult. */
+  VEHICLES_ACTIVATE: 'vehicles:activate',
+  /** Renderer → main: the live cameras and outputs, written back into the vehicle in use. */
+  VEHICLES_SYNC: 'vehicles:sync',
   // Operator RC: joystick driving, cruise, reverse driving and custom RC functions (see shared/operator-rc.ts).
   /** Renderer → main: RcEngineState. */
   OPERATOR_RC_STATE: 'operator-rc:state',

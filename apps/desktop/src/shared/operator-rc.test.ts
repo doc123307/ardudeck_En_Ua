@@ -8,7 +8,7 @@ import {
 const pad = (axes: number[] = [], buttons: boolean[] = []): RcPad => ({ id: 'test pad', axes, buttons });
 const common = (input: RcInput) => ({ id: 'f', label: 'F', channel: 9, output: 'rc' as const, input, sendOnConnect: false, icon: 'power' as const, color: 'green' as const });
 const button = (latching: boolean, input: RcInput): RcButtonFunction => ({ ...common(input), kind: 'button', latching, offPwm: 1000, onPwm: 2000 });
-const switch3 = (springCenter: boolean, input: RcInput): RcSwitchFunction => ({ ...common(input), kind: 'switch3', springCenter, lowPwm: 1000, midPwm: 1500, highPwm: 2000 });
+const switch3 = (springCenter: boolean, input: RcInput, startCenter = false): RcSwitchFunction => ({ ...common(input), kind: 'switch3', springCenter, startCenter, lowPwm: 1000, midPwm: 1500, highPwm: 2000 });
 const slider = (spring: RcSliderFunction['spring'], input: RcInput): RcSliderFunction => ({ ...common(input), kind: 'slider', spring, minPwm: 1000, maxPwm: 2000 });
 
 /** Feeds readings one after another, the way the joystick does, and returns the final position. */
@@ -132,6 +132,8 @@ describe('functions', () => {
     expect(functionInitial(button(true, { kind: 'none' }))).toBe(0);
     expect(functionInitial(switch3(true, { kind: 'none' }))).toBe(0);
     expect(functionInitial(switch3(false, { kind: 'none' }))).toBe(-1);
+    // "Start in the middle": a switch that stays put still begins at the centre.
+    expect(functionInitial(switch3(false, { kind: 'none' }, true))).toBe(0);
     expect(functionInitial(slider('center', { kind: 'none' }))).toBe(0.5);
     expect(functionInitial(slider('max', { kind: 'none' }))).toBe(1);
     expect(functionInitial(slider('none', { kind: 'none' }))).toBe(0);
@@ -298,6 +300,17 @@ describe('the frame', () => {
     expect(rcChannelConflicts(config)).toEqual([]);
     expect(servoConflicts(config)).toEqual([3]);
     expect(config.functions[0]).toMatchObject({ output: 'servo', label: 'SERVO 3', icon: 'power', color: 'green' });
+  });
+
+  it('starts a three-position switch in the middle unless told otherwise', () => {
+    const [made, stored, old] = normalizeRcConfig({ functions: [
+      { id: 'a', kind: 'switch3', startCenter: false },
+      { id: 'b', kind: 'switch3', startCenter: true },
+      { id: 'c', kind: 'switch3' },
+    ] }).functions as RcSwitchFunction[];
+    expect([made!.startCenter, stored!.startCenter, old!.startCenter]).toEqual([false, true, true]);
+    expect((newRcFunction('switch3', DEFAULT_RC_CONFIG) as RcSwitchFunction).startCenter).toBe(true);
+    expect(functionInitial(old!)).toBe(0);
   });
 
   it('keeps a function\'s icon and colour, and gives unknown ones the defaults', () => {

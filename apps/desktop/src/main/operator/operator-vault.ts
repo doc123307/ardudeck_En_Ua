@@ -151,6 +151,21 @@ export class OperatorVault {
     return this.state();
   }
 
+  /**
+   * A vehicle from the vehicle list puts its own settings in place. Allowed from the operator
+   * screen too: the vehicles were set up by the administrator, the operator only picks one.
+   */
+  applyVehicle(patch: Partial<OperatorConfig>): OperatorState | null {
+    const next = normalizeOperatorConfig({ ...this.config, ...patch });
+    try {
+      writeJson(this.configPath, next);
+    } catch {
+      return null;
+    }
+    this.config = next;
+    return this.state();
+  }
+
   /** Operator screen settings: administrator only. */
   setConfig(patch: unknown): AdminAuthResult {
     if (!this.unlocked) return this.result(false, { error: 'not-allowed' });

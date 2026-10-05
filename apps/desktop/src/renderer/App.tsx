@@ -77,6 +77,7 @@ import { ActivityIndicator } from './components/ui/ActivityIndicator';
 import { OperatorShell } from './components/operator/OperatorShell';
 import { useAdminAutoLock } from './components/operator/useAdminAutoLock';
 import { useOperatorStore } from './stores/operator-store';
+import { startVehicles } from './stores/vehicles-store';
 import type { ElectronAPI } from '../main/preload';
 import type { LegacyStreamConsentRequest } from '../shared/ipc-channels';
 import logoImage from './assets/logo.png';
@@ -450,6 +451,21 @@ function App() {
   const appMode = useOperatorStore((s) => s.mode);
   useEffect(() => { void useOperatorStore.getState().load(); }, []);
   useAdminAutoLock();
+
+  // The vehicle list: the vehicle chosen last comes back by itself. Started once both the
+  // operator settings and the app settings (the last link) are known.
+  const settingsReady = useSettingsStore((s) => s._isInitialized);
+  useEffect(() => {
+    if (!operatorReady || !settingsReady) return;
+    let stop: (() => void) | null = null;
+    let cancelled = false;
+    void startVehicles({
+      defaultName: t('vehicles.VehicleList.defaultName'),
+      // The operator screen connects by itself; the full UI is asked to here.
+      connectAtStart: useOperatorStore.getState().mode === 'admin',
+    }).then((off) => { if (cancelled) off(); else stop = off; }).catch(() => {});
+    return () => { cancelled = true; stop?.(); };
+  }, [operatorReady, settingsReady]);
 
   // Get active vehicle profile type
   const activeVehicle = vehicles.find(v => v.id === activeVehicleId);

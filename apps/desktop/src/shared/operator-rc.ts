@@ -66,6 +66,11 @@ export interface RcButtonFunction extends RcFunctionCommon {
 export interface RcSwitchFunction extends RcFunctionCommon {
   kind: 'switch3';
   springCenter: boolean;
+  /**
+   * The switch starts in the middle when the program starts, not at the bottom: whatever is
+   * on the channel (a servo, a mechanism) is not sent to an end position by a start-up.
+   */
+  startCenter: boolean;
   lowPwm: number;
   midPwm: number;
   highPwm: number;
@@ -163,7 +168,7 @@ export const DEFAULT_RC_CONFIG: OperatorRcConfig = {
   // Nothing is sent on them until the operator touches the control.
   functions: [
     { id: 'aux9', label: 'AUX 9', channel: 9, output: 'rc', kind: 'button', latching: true, offPwm: 1000, onPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'power', color: 'green' },
-    { id: 'aux10', label: 'AUX 10', channel: 10, output: 'rc', kind: 'switch3', springCenter: false, lowPwm: 1000, midPwm: 1500, highPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'arrowUpDown', color: 'blue' },
+    { id: 'aux10', label: 'AUX 10', channel: 10, output: 'rc', kind: 'switch3', springCenter: false, startCenter: true, lowPwm: 1000, midPwm: 1500, highPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'arrowUpDown', color: 'blue' },
     { id: 'aux11', label: 'AUX 11', channel: 11, output: 'rc', kind: 'slider', spring: 'none', minPwm: 1000, maxPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'gauge', color: 'amber' },
   ],
 };
@@ -185,7 +190,7 @@ export function newRcFunction(kind: RcFunctionKind, existing: OperatorRcConfig, 
     sendOnConnect: false, icon: RC_KIND_ICON[kind], color: 'green' as OperatorColor,
   };
   if (kind === 'button') return { ...common, kind, latching: true, offPwm: 1000, onPwm: 2000 };
-  if (kind === 'switch3') return { ...common, kind, springCenter: false, lowPwm: 1000, midPwm: 1500, highPwm: 2000 };
+  if (kind === 'switch3') return { ...common, kind, springCenter: false, startCenter: true, lowPwm: 1000, midPwm: 1500, highPwm: 2000 };
   return { ...common, kind, spring: 'none', minPwm: 1000, maxPwm: 2000 };
 }
 
@@ -231,7 +236,7 @@ function normalizeFunction(raw: unknown, takenIds: Set<string>): OperatorRcFunct
   }
   if (raw.kind === 'switch3') {
     return {
-      ...common, kind: 'switch3', springCenter: bool(raw.springCenter, false),
+      ...common, kind: 'switch3', springCenter: bool(raw.springCenter, false), startCenter: bool(raw.startCenter, true),
       lowPwm: pwm(raw.lowPwm, 1000), midPwm: pwm(raw.midPwm, 1500), highPwm: pwm(raw.highPwm, 2000),
     };
   }
@@ -436,7 +441,7 @@ export function sliderRest(spring: RcSliderSpring): number | null {
 /** Position before anyone has touched the control. */
 export function functionInitial(fn: OperatorRcFunction): number {
   if (fn.kind === 'button') return 0;
-  if (fn.kind === 'switch3') return fn.springCenter ? 0 : -1;
+  if (fn.kind === 'switch3') return fn.springCenter || fn.startCenter ? 0 : -1;
   return sliderRest(fn.spring) ?? 0;
 }
 

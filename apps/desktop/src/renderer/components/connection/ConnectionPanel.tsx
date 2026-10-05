@@ -14,7 +14,8 @@ import { DriverAssistant } from './DriverAssistant';
 import { RecentConnectionsButton } from './RecentConnectionsButton';
 import type { SavedConnection } from '../../stores/settings-store';
 import { MessagesPanel } from '../panels/MessagesPanel';
-import { MultiVehiclePanel } from './MultiVehiclePanel';
+import { VehicleList } from '../vehicles/VehicleList';
+import { useVehiclesStore } from '../../stores/vehicles-store';
 import { RadioSetupWizard } from './RadioSetupWizard';
 import { RadioPreflightCard } from './RadioPreflightCard';
 import type { StreamDiagnosis } from '../../../shared/link-doctor-types';
@@ -36,7 +37,10 @@ export function ConnectionPanel() {
   const { connectionState, isConnecting, error, connect, disconnect, setError } = useConnectionStore();
   const { connectionMemory, updateConnectionMemory, removeRecentConnection } = useSettingsStore();
   const settingsInitialized = useSettingsStore((s) => s._isInitialized);
-  const [connectionTab, setConnectionTab] = useState<'single' | 'multi'>('single');
+  // STOHID: the vehicle list takes the place of upstream's multi-vehicle orchestrator, which this fork does not ship.
+  const [connectionTab, setConnectionTab] = useState<'vehicles' | 'single'>(
+    () => (useVehiclesStore.getState().state.presets.length > 0 ? 'vehicles' : 'single'),
+  );
   const [ports, setPorts] = useState<SerialPortInfo[]>([]);
   const [isRefreshingPorts, setIsRefreshingPorts] = useState(false);
   const [selectedPort, setSelectedPort] = useState('');
@@ -676,24 +680,23 @@ export function ConnectionPanel() {
 
       {/* Single vs multi-vehicle tabs */}
       <div className="flex items-center gap-1 px-3 pt-3 border-b border-subtle">
-        {(['single', 'multi'] as const).map((tab) => (
+        {(['vehicles', 'single'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setConnectionTab(tab)}
-            {...(tab === 'multi' ? { 'data-tour': 'connection-multi-tab' } : {})}
             className={`px-3 py-2 text-xs font-medium rounded-t-lg border-b-2 transition-colors ${
               connectionTab === tab
                 ? 'border-cyan-400 text-content'
                 : 'border-transparent text-content-secondary hover:text-content'
             }`}
           >
-            {tab === 'single' ? t('connection.ConnectionPanel.singleVehicle') : t('connection.ConnectionPanel.multiVehicle')}
+            {tab === 'single' ? t('vehicles.VehicleList.manualTab') : t('vehicles.VehicleList.title')}
           </button>
         ))}
       </div>
 
       <div className="flex-1 overflow-y-auto p-5 space-y-5">
-        {connectionTab === 'multi' && <MultiVehiclePanel />}
+        {connectionTab === 'vehicles' && <VehicleList canEdit />}
 
         {connectionTab === 'single' && <>
         {/* SITL Quick Start - only show when not connected */}
