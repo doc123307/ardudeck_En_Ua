@@ -34,7 +34,25 @@ function iconSvg(size) {
 </svg>`;
 }
 
-/** An .ico file whose entries are PNG images (valid since Windows Vista). */
+/**
+ * One size as a classic icon bitmap: 32-bit BGRA rows from the bottom up, then an (empty)
+ * 1-bit mask. Every tool that reads icons knows this form; PNG entries are kept for 256 only.
+ */
+function dib(size, bgra) {
+  const header = Buffer.alloc(40);
+  header.writeUInt32LE(40, 0);
+  header.writeInt32LE(size, 4);
+  header.writeInt32LE(size * 2, 8);
+  header.writeUInt16LE(1, 12);
+  header.writeUInt16LE(32, 14);
+  header.writeUInt32LE(size * size * 4, 20);
+  const pixels = Buffer.alloc(size * size * 4);
+  for (let y = 0; y < size; y++) bgra.copy(pixels, (size - 1 - y) * size * 4, y * size * 4, (y + 1) * size * 4);
+  const maskRow = Math.ceil(size / 32) * 4;
+  return Buffer.concat([header, pixels, Buffer.alloc(maskRow * size)]);
+}
+
+/** An .ico file: bitmaps for the small sizes, PNG for 256. */
 function ico(images) {
   const header = Buffer.alloc(6);
   header.writeUInt16LE(0, 0);
@@ -42,7 +60,10 @@ function ico(images) {
   header.writeUInt16LE(images.length, 4);
   const entries = [];
   let offset = 6 + images.length * 16;
-  for (const { size, png } of images) {
+  for (const image of images) {
+    const { size } = image;
+    const png = size >= 256 ? image.png : dib(size, image.bgra);
+    image.data = png;
     const e = Buffer.alloc(16);
     e[0] = size >= 256 ? 0 : size;
     e[1] = size >= 256 ? 0 : size;
@@ -53,7 +74,7 @@ function ico(images) {
     offset += png.length;
     entries.push(e);
   }
-  return Buffer.concat([header, ...entries, ...images.map((i) => i.png)]);
+  return Buffer.concat([header, ...entries, ...images.map((i) => i.data)]);
 }
 
 /** One hidden window draws every size: the page is rewritten and captured in turn. */
@@ -64,7 +85,8 @@ async function render(win, page, size) {
   await new Promise((r) => setTimeout(r, 250));
   const image = await win.webContents.capturePage({ x: 0, y: 0, width: size, height: size });
   // The capture follows the display's scale factor; bring it to the exact size asked for.
-  return image.resize({ width: size, height: size, quality: 'best' }).toPNG();
+  const exact = image.resize({ width: size, height: size, quality: 'best' });
+  return { png: exact.toPNG(), bgra: exact.toBitmap() };
 }
 
 async function main() {
@@ -73,8 +95,8 @@ async function main() {
   const win = new BrowserWindow({ width: 1024, height: 1024, show: false, frame: false, transparent: true, useContentSize: true, webPreferences: { offscreen: true } });
   const sizes = [16, 24, 32, 48, 64, 128, 256];
   const images = [];
-  for (const size of sizes) images.push({ size, png: await render(win, page, size) });
-  const big = await render(win, page, 1024);
+  for (const size of sizes) images.push({ size, ...(await render(win, page, size)) });
+  const big = (await render(win, page, 1024)).png;
   fs.writeFileSync(path.join(resources, 'icon.ico'), ico(images));
   fs.writeFileSync(path.join(resources, 'icon.png'), big);
   const preview = process.argv.indexOf('--preview');
