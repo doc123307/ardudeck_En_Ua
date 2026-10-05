@@ -6,20 +6,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import {
-  Car, ChevronDown, ChevronUp, Eye, Flashlight, Lightbulb, Plus, Power, Settings2, Siren, Sun, Trash2, Zap,
-} from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus, Settings2, Trash2 } from 'lucide-react';
 import {
   relayButtonState, useRelayStore, type RelayButton, type RelayButtonState, type RelayColor, type RelayIcon,
 } from '../../stores/relay-store';
+import { ICON_COMPONENTS as ICONS } from '../operator/operator-look';
 import { t } from '../../i18n';
 
-const ICONS: Record<RelayIcon, typeof Power> = {
-  lightbulb: Lightbulb, car: Car, sun: Sun, flashlight: Flashlight, eye: Eye, siren: Siren, zap: Zap, power: Power,
-};
-
 /** Lit look per colour: background, text and glow. IR is shown violet since it is invisible. */
-const LIT: Record<RelayColor, string> = {
+export const LIT: Record<RelayColor, string> = {
   // The ring keeps a lit white button (and its swatch) visible on the light theme's white panels.
   white: 'bg-white text-slate-900 shadow-[0_0_12px_rgba(255,255,255,0.7)] ring-1 ring-slate-400/70',
   amber: 'bg-amber-400 text-slate-900 shadow-[0_0_12px_rgba(251,191,36,0.7)]',
@@ -33,7 +28,7 @@ const LIT: Record<RelayColor, string> = {
 const STATUS_INTERVAL_US = 1_000_000;
 const RELAY_STATUS_ID = 376;
 
-function stateTip(state: RelayButtonState): string {
+export function stateTip(state: RelayButtonState): string {
   return t(`vehicle_outputs.RelayButtons.state_${state}`);
 }
 

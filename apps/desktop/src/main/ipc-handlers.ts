@@ -13333,6 +13333,11 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
       await transport.write(packet);
       connectionState.packetsSent++;
     },
+    setServo: async (servo, pwm) => {
+      // MAV_CMD_DO_SET_SERVO: the flight controller holds the output until told otherwise.
+      const sent = await sendCommandLongToVehicle(null, 183, { param1: servo, param2: pwm });
+      if (!sent) throw new Error(mt('main.ipc_handlers.notConnected'));
+    },
   });
 
   // Companion computer (agent WebSocket)

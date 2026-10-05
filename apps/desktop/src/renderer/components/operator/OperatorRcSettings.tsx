@@ -1,25 +1,25 @@
 /**
- * Settings → "Operator workspace": the operator's driving controls. Which joystick drives,
- * cruise, reverse driving, and the administrator's own RC functions (buttons, switches,
- * sliders) with the joystick controls that work them.
+ * Settings → "Operator workspace": the operator's driving controls (which joystick drives,
+ * cruise, reverse driving), and the editor of one RC function with the joystick control
+ * that works it. The functions themselves are listed in the panel editor.
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { Plus, Trash2, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import {
-  RC_MAX_CHANNEL, RC_FUNCTION_KINDS, RC_MAX_FUNCTIONS, RC_PWM_MAX, RC_PWM_MIN, RC_SLIDER_SPRINGS,
-  driveSticks, newRcFunction, pickPad, rcChannelConflicts,
-  type OperatorRcConfig, type OperatorRcFunction, type RcFunctionKind, type RcInput, type RcPad, type RcSliderSpring,
+  RC_FUNCTION_OUTPUTS, RC_MAX_CHANNEL, RC_PWM_MAX, RC_PWM_MIN, RC_SLIDER_SPRINGS,
+  driveSticks, pickPad, rcChannelConflicts,
+  type OperatorRcConfig, type OperatorRcFunction, type RcFunctionOutput, type RcInput, type RcPad, type RcSliderSpring,
 } from '../../../shared/operator-rc';
 import { useCameraStore } from '../../stores/camera-store';
-import { BTN, Card, FIELD, SmallNumber, Toggle } from './OperatorSettingsParts';
+import { BTN, Card, ColorPicker, FIELD, IconPicker, SmallNumber, TextField, Toggle } from './OperatorSettingsParts';
 import { t } from '../../i18n';
 
 const POLL_MS = 60;
 const LEARN_TIMEOUT_MS = 8000;
 
 /** The joysticks plugged in, and a live reading of the one in use. */
-function useJoystick(padId: string): { names: string[]; pad: RcPad | null } {
+export function useJoystick(padId: string): { names: string[]; pad: RcPad | null } {
   const [state, setState] = useState<{ names: string[]; pad: RcPad | null }>({ names: [], pad: null });
   useEffect(() => {
     if (typeof navigator.getGamepads !== 'function') return;
@@ -121,7 +121,7 @@ function Percent({ value, onCommit, label, max = 100 }: { value: number; onCommi
 
 const INPUT_KINDS: RcInput['kind'][] = ['none', 'button', 'buttons', 'axis'];
 
-function InputEditor({ input, pad, onChange }: { input: RcInput; pad: RcPad | null; onChange: (next: RcInput) => void }) {
+export function InputEditor({ input, pad, onChange }: { input: RcInput; pad: RcPad | null; onChange: (next: RcInput) => void }) {
   const setKind = (kind: RcInput['kind']) => {
     if (kind === input.kind) return;
     if (kind === 'none') onChange({ kind });
@@ -156,30 +156,25 @@ function InputEditor({ input, pad, onChange }: { input: RcInput; pad: RcPad | nu
   );
 }
 
-function FunctionEditor({ fn, pad, conflict, onChange, onRemove }: {
-  fn: OperatorRcFunction; pad: RcPad | null; conflict: boolean; onChange: (next: OperatorRcFunction) => void; onRemove: () => void;
+/** Everything about one of the administrator's buttons, switches or sliders. */
+export function FunctionEditor({ fn, pad, conflict, onChange }: {
+  fn: OperatorRcFunction; pad: RcPad | null; conflict: boolean; onChange: (next: OperatorRcFunction) => void;
 }) {
-  const [label, setLabel] = useState(fn.label);
-  useEffect(() => setLabel(fn.label), [fn.label]);
   const pwm = (value: number, set: (v: number) => void, name: string) => (
     <SmallNumber value={value} min={RC_PWM_MIN} max={RC_PWM_MAX} onCommit={set} label={name} />
   );
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-subtle bg-surface-raised p-3">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-end gap-3">
+        <TextField value={fn.label} label={t('operator.OperatorRcSettings.name')} onCommit={(label) => { if (label) onChange({ ...fn, label }); }} />
         <label className="flex flex-col gap-1 text-xs text-content-secondary">
-          {t('operator.OperatorRcSettings.name')}
-          <input
-            value={label}
-            maxLength={24}
-            onChange={(e) => setLabel(e.target.value)}
-            onBlur={() => { if (label.trim() && label.trim() !== fn.label) onChange({ ...fn, label: label.trim() }); else setLabel(fn.label); }}
-            onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-            className={`${FIELD} w-40`}
-          />
+          {t('operator.OperatorRcSettings.output')}
+          <select value={fn.output} onChange={(e) => onChange({ ...fn, output: e.target.value as RcFunctionOutput })} className={`${FIELD} py-1`}>
+            {RC_FUNCTION_OUTPUTS.map((o) => <option key={o} value={o}>{t(`operator.OperatorRcSettings.output_${o}`)}</option>)}
+          </select>
         </label>
-        <span className="rounded bg-surface px-2 py-1.5 text-sm text-content">{t(`operator.OperatorRcSettings.kind_${fn.kind}`)}</span>
-        <SmallNumber value={fn.channel} min={1} max={RC_MAX_CHANNEL} onCommit={(channel) => onChange({ ...fn, channel })} label={t('operator.OperatorRcSettings.channel')} />
+        <SmallNumber value={fn.channel} min={1} max={RC_MAX_CHANNEL} onCommit={(channel) => onChange({ ...fn, channel })}
+          label={fn.output === 'rc' ? t('operator.OperatorRcSettings.channel') : t('operator.OperatorRcSettings.servoOutput')} />
         {fn.kind === 'button' && (
           <>
             {pwm(fn.offPwm, (offPwm) => onChange({ ...fn, offPwm }), t('operator.OperatorRcSettings.pwmOff'))}
@@ -199,11 +194,8 @@ function FunctionEditor({ fn, pad, conflict, onChange, onRemove }: {
             {pwm(fn.maxPwm, (maxPwm) => onChange({ ...fn, maxPwm }), t('operator.OperatorRcSettings.pwmMax'))}
           </>
         )}
-        <button type="button" onClick={onRemove} className={`${BTN} ml-auto flex items-center gap-1.5 hover:text-red-400`}>
-          <Trash2 className="h-3.5 w-3.5" />{t('operator.OperatorRcSettings.remove')}
-        </button>
       </div>
-
+      {fn.output === 'servo' && <p className="text-xs leading-snug text-content-tertiary">{t('operator.OperatorRcSettings.servoHint')}</p>}
       {conflict && <p className="text-xs text-amber-400">{t('operator.OperatorRcSettings.channelConflict', { n: fn.channel })}</p>}
 
       <div className="flex flex-wrap items-start gap-x-6 gap-y-2">
@@ -219,7 +211,7 @@ function FunctionEditor({ fn, pad, conflict, onChange, onRemove }: {
           <label className="flex items-center gap-2 text-sm text-content">
             {t('operator.OperatorRcSettings.spring')}
             <select value={fn.spring} onChange={(e) => onChange({ ...fn, spring: e.target.value as RcSliderSpring })} className={`${FIELD} py-1`}>
-              {RC_SLIDER_SPRINGS.map((s) => <option key={s} value={s}>{t(`operator.OperatorRcSettings.spring_${s}`)}</option>)}
+              {RC_SLIDER_SPRINGS.map((sp) => <option key={sp} value={sp}>{t(`operator.OperatorRcSettings.spring_${sp}`)}</option>)}
             </select>
           </label>
         )}
@@ -227,11 +219,17 @@ function FunctionEditor({ fn, pad, conflict, onChange, onRemove }: {
           label={t('operator.OperatorRcSettings.sendOnConnect')} hint={t('operator.OperatorRcSettings.sendOnConnectHint')} />
       </div>
 
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <span className="flex items-center gap-2 text-xs text-content-secondary">{t('operator.OperatorPanelSettings.icon')}<IconPicker value={fn.icon} onChange={(icon) => onChange({ ...fn, icon })} /></span>
+        <span className="flex items-center gap-2 text-xs text-content-secondary">{t('operator.OperatorPanelSettings.color')}<ColorPicker value={fn.color} onChange={(color) => onChange({ ...fn, color })} /></span>
+      </div>
+
       <InputEditor input={fn.input} pad={pad} onChange={(input) => onChange({ ...fn, input })} />
     </div>
   );
 }
 
+/** Settings → Operator workspace → driving: the joystick, cruise and reverse driving. */
 export function OperatorRcSettings({ rc, onChange }: { rc: OperatorRcConfig; onChange: (next: OperatorRcConfig) => void }) {
   const { names, pad } = useJoystick(rc.padId);
   const sources = useCameraStore((s) => s.sources);
@@ -241,12 +239,6 @@ export function OperatorRcSettings({ rc, onChange }: { rc: OperatorRcConfig; onC
   const drive = (patch: Partial<OperatorRcConfig['drive']>) => onChange({ ...rc, drive: { ...rc.drive, ...patch } });
   const cruise = (patch: Partial<OperatorRcConfig['cruise']>) => onChange({ ...rc, cruise: { ...rc.cruise, ...patch } });
   const reverse = (patch: Partial<OperatorRcConfig['reverse']>) => onChange({ ...rc, reverse: { ...rc.reverse, ...patch } });
-  const setFunction = (index: number, next: OperatorRcFunction | null) => {
-    const functions = [...rc.functions];
-    if (next) functions[index] = next; else functions.splice(index, 1);
-    onChange({ ...rc, functions });
-  };
-  const add = (kind: RcFunctionKind) => onChange({ ...rc, functions: [...rc.functions, newRcFunction(kind, rc)] });
 
   return (
     <>
@@ -331,26 +323,6 @@ export function OperatorRcSettings({ rc, onChange }: { rc: OperatorRcConfig; onC
         )}
       </Card>
 
-      <Card title={t('operator.OperatorRcSettings.functions')} hint={t('operator.OperatorRcSettings.functionsHint')}>
-        {rc.functions.map((fn, i) => (
-          <FunctionEditor
-            key={fn.id}
-            fn={fn}
-            pad={pad}
-            conflict={conflicts.includes(fn.channel)}
-            onChange={(next) => setFunction(i, next)}
-            onRemove={() => setFunction(i, null)}
-          />
-        ))}
-        {rc.functions.length === 0 && <p className="text-xs text-content-tertiary">{t('operator.OperatorRcSettings.noFunctions')}</p>}
-        <div className="flex flex-wrap gap-2">
-          {RC_FUNCTION_KINDS.map((kind) => (
-            <button key={kind} type="button" onClick={() => add(kind)} disabled={rc.functions.length >= RC_MAX_FUNCTIONS} className={`${BTN} flex items-center gap-1.5`}>
-              <Plus className="h-3.5 w-3.5" />{t(`operator.OperatorRcSettings.kind_${kind}`)}
-            </button>
-          ))}
-        </div>
-      </Card>
     </>
   );
 }

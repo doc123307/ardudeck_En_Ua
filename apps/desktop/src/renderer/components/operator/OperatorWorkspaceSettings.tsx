@@ -3,19 +3,20 @@
  * Reachable only from the full UI; the main process refuses these changes otherwise.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useOperatorStore } from '../../stores/operator-store';
 import { useSettingsStore } from '../../stores/settings-store';
-import { ArrowDown, ArrowUp, FolderOpen, Plus, X } from 'lucide-react';
+import { FolderOpen } from 'lucide-react';
 import {
-  ADMIN_PASSWORD_MIN_LENGTH, OPERATOR_ELEMENTS, OPERATOR_MODE_BUTTONS, OPERATOR_RECORD_MODES, OPERATOR_STATUS_FIELDS,
-  type AdminAuthResult, type OperatorConfig, type OperatorElement, type OperatorModeButton, type OperatorStatusField,
+  ADMIN_PASSWORD_MIN_LENGTH, OPERATOR_ELEMENTS, OPERATOR_MODE_BUTTONS, OPERATOR_RECORD_MODES,
+  type AdminAuthResult, type OperatorConfig, type OperatorElement, type OperatorModeButton,
 } from '../../../shared/operator-types';
 import type { CameraRecordStatus } from '../../../shared/camera-types';
-import { statusFieldLabel } from './OperatorStatusBar';
 import { modeButtonLabel } from './OperatorModeMenu';
 import { OperatorRcSettings } from './OperatorRcSettings';
-import { BTN, Card, FIELD, NumberField, Toggle } from './OperatorSettingsParts';
+import { OperatorPanelSettings } from './OperatorPanelSettings';
+import { OperatorValuesSettings } from './OperatorValuesSettings';
+import { BTN, Card, FIELD, NumberField, SectionTabs, Toggle } from './OperatorSettingsParts';
 import { connectOptionsFromMemory, describeConnection } from './operator-logic';
 import { authErrorText } from './AdminUnlockDialog';
 import { t } from '../../i18n';
@@ -88,44 +89,6 @@ function RecordingCard({ config, save }: { config: OperatorConfig; save: (patch:
   );
 }
 
-/** The status strip: which values, in which order. */
-function StatusFieldsCard({ fields, onChange }: { fields: OperatorStatusField[]; onChange: (next: OperatorStatusField[]) => void }) {
-  const unused = OPERATOR_STATUS_FIELDS.filter((f) => !fields.includes(f));
-  const move = (index: number, by: number) => {
-    const next = [...fields];
-    const [item] = next.splice(index, 1);
-    next.splice(index + by, 0, item!);
-    onChange(next);
-  };
-  const icon = 'flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:bg-surface-raised hover:text-content disabled:opacity-30';
-  return (
-    <Card title={t('operator.OperatorWorkspaceSettings.statusFields')} hint={t('operator.OperatorWorkspaceSettings.statusFieldsHint')}>
-      <div className="flex flex-col gap-1">
-        {fields.map((f, i) => (
-          <div key={f} className="flex max-w-md items-center gap-1 rounded-lg border border-subtle bg-surface-raised px-2 py-1">
-            <span className="w-5 text-xs tabular-nums text-content-tertiary">{i + 1}</span>
-            <span className="min-w-0 flex-1 truncate text-sm text-content">{statusFieldLabel(f)}</span>
-            <button onClick={() => move(i, -1)} disabled={i === 0} className={icon} data-tip={t('operator.OperatorWorkspaceSettings.moveLeft')}><ArrowUp className="h-3.5 w-3.5" /></button>
-            <button onClick={() => move(i, 1)} disabled={i === fields.length - 1} className={icon} data-tip={t('operator.OperatorWorkspaceSettings.moveRight')}><ArrowDown className="h-3.5 w-3.5" /></button>
-            <button onClick={() => onChange(fields.filter((x) => x !== f))} className={`${icon} hover:text-red-400`} data-tip={t('operator.OperatorWorkspaceSettings.removeField')}><X className="h-3.5 w-3.5" /></button>
-          </div>
-        ))}
-        {fields.length === 0 && <p className="text-xs text-content-tertiary">{t('operator.OperatorWorkspaceSettings.noFields')}</p>}
-      </div>
-      {unused.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {unused.map((f) => (
-            <button key={f} onClick={() => onChange([...fields, f])}
-              className="flex items-center gap-1 rounded-lg border border-dashed border-subtle px-2 py-1 text-xs text-content-secondary hover:border-blue-500/60 hover:text-content">
-              <Plus className="h-3 w-3" />{statusFieldLabel(f)}
-            </button>
-          ))}
-        </div>
-      )}
-    </Card>
-  );
-}
-
 function PasswordCard() {
   const hasPassword = useOperatorStore((s) => s.hasPassword);
   const changePassword = useOperatorStore((s) => s.changePassword);
@@ -176,6 +139,10 @@ function PasswordCard() {
   );
 }
 
+const SECTIONS = ['panel', 'values', 'driving', 'screen', 'video', 'general'] as const;
+type Section = (typeof SECTIONS)[number];
+const SECTION_KEY = 'stohid-operator-settings-section';
+
 export function OperatorWorkspaceSettings() {
   const config = useOperatorStore((s) => s.config);
   const saveConfig = useOperatorStore((s) => s.saveConfig);
@@ -184,118 +151,145 @@ export function OperatorWorkspaceSettings() {
   useEffect(() => setSupport(config.supportContact), [config.supportContact]);
 
   const save = (patch: Partial<OperatorConfig>) => { void saveConfig(patch); };
+  const [section, setSection] = useState<Section>(() => {
+    try {
+      const saved = localStorage.getItem(SECTION_KEY) as Section | null;
+      return saved && SECTIONS.includes(saved) ? saved : 'panel';
+    } catch {
+      return 'panel';
+    }
+  });
+  const pickSection = (next: Section) => {
+    setSection(next);
+    try { localStorage.setItem(SECTION_KEY, next); } catch { /* the tab is only a convenience */ }
+  };
   const lastUsed = connectOptionsFromMemory(memory);
   const toggleMode = (mode: OperatorModeButton, on: boolean) => {
     const next = OPERATOR_MODE_BUTTONS.filter((m) => (m === mode ? on : config.modeButtons.includes(m)));
     save({ modeButtons: next });
   };
 
+  const sections: { id: Section; label: string }[] = [
+    { id: 'panel', label: t('operator.OperatorWorkspaceSettings.section_panel') },
+    { id: 'values', label: t('operator.OperatorWorkspaceSettings.section_values') },
+    { id: 'driving', label: t('operator.OperatorWorkspaceSettings.section_driving') },
+    { id: 'screen', label: t('operator.OperatorWorkspaceSettings.section_screen') },
+    { id: 'video', label: t('operator.OperatorWorkspaceSettings.section_video') },
+    { id: 'general', label: t('operator.OperatorWorkspaceSettings.section_general') },
+  ];
+  const pages: Record<Section, ReactNode> = {
+    panel: <OperatorPanelSettings config={config} save={save} />,
+    values: <OperatorValuesSettings config={config} save={save} />,
+    driving: (
+      <>
+          <Card title={t('operator.OperatorWorkspaceSettings.actions')} hint={t('operator.OperatorWorkspaceSettings.actionsHint')}>
+            <Toggle
+              checked={config.allowArm}
+              onChange={(v) => save({ allowArm: v })}
+              label={t('operator.OperatorWorkspaceSettings.allowArm')}
+              hint={t('operator.OperatorWorkspaceSettings.allowArmHint')}
+            />
+          </Card>
+          <Card title={t('operator.OperatorWorkspaceSettings.modes')} hint={t('operator.OperatorWorkspaceSettings.modesHint')}>
+            <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+              {OPERATOR_MODE_BUTTONS.filter((m) => m !== 'hold').map((m) => (
+                <Toggle key={m} checked={config.modeButtons.includes(m)} onChange={(v) => toggleMode(m, v)} label={modeButtonLabel(m)} />
+              ))}
+            </div>
+          </Card>
+        <OperatorRcSettings rc={config.rc} onChange={(rc) => save({ rc })} />
+      </>
+    ),
+    screen: (
+      <>
+          <Card title={t('operator.OperatorWorkspaceSettings.elements')} hint={t('operator.OperatorWorkspaceSettings.elementsHint')}>
+            <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+              {OPERATOR_ELEMENTS.map((el: OperatorElement) => (
+                <Toggle
+                  key={el}
+                  checked={!config.hiddenElements.includes(el)}
+                  onChange={(on) => save({ hiddenElements: OPERATOR_ELEMENTS.filter((x) => (x === el ? !on : config.hiddenElements.includes(x))) })}
+                  label={t(`operator.OperatorWorkspaceSettings.element_${el}`)}
+                />
+              ))}
+            </div>
+          </Card>
+          <Card title={t('operator.OperatorWorkspaceSettings.tilt')} hint={t('operator.OperatorWorkspaceSettings.tiltHint')}>
+            <NumberField value={config.tiltWarnDeg} min={5} max={85} onCommit={(v) => save({ tiltWarnDeg: v })}
+              label={t('operator.OperatorWorkspaceSettings.tiltWarn')} unit="°" />
+            <NumberField value={config.tiltLimitDeg} min={5} max={89} onCommit={(v) => save({ tiltLimitDeg: v })}
+              label={t('operator.OperatorWorkspaceSettings.tiltLimit')} unit="°" />
+          </Card>
+      </>
+    ),
+    video: <RecordingCard config={config} save={save} />,
+    general: (
+      <>
+          <Card title={t('operator.OperatorWorkspaceSettings.startup')}>
+            <Toggle
+              checked={config.startInOperatorMode}
+              onChange={(v) => save({ startInOperatorMode: v })}
+              label={t('operator.OperatorWorkspaceSettings.startInOperatorMode')}
+              hint={t('operator.OperatorWorkspaceSettings.startInOperatorModeHint')}
+            />
+            <NumberField
+              value={config.autoLockMinutes}
+              min={0}
+              max={240}
+              onCommit={(v) => save({ autoLockMinutes: v })}
+              label={t('operator.OperatorWorkspaceSettings.autoLock')}
+              unit={t('operator.OperatorWorkspaceSettings.minutes')}
+            />
+          </Card>
+          <Card title={t('operator.OperatorWorkspaceSettings.connection')} hint={t('operator.OperatorWorkspaceSettings.connectionHint')}>
+            <p className="text-sm text-content">
+              {config.connection
+                ? t('operator.OperatorWorkspaceSettings.connectionFixed', { link: describeConnection(config.connection) })
+                : lastUsed
+                  ? t('operator.OperatorWorkspaceSettings.connectionLast', { link: describeConnection(lastUsed) })
+                  : t('operator.OperatorWorkspaceSettings.connectionNone')}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button onClick={() => save({ connection: lastUsed })} disabled={!lastUsed} className={BTN}>
+                {lastUsed
+                  ? t('operator.OperatorWorkspaceSettings.pinConnection', { link: describeConnection(lastUsed) })
+                  : t('operator.OperatorWorkspaceSettings.pinConnectionNone')}
+              </button>
+              <button onClick={() => save({ connection: null })} disabled={!config.connection} className={BTN}>
+                {t('operator.OperatorWorkspaceSettings.unpinConnection')}
+              </button>
+            </div>
+            <Toggle
+              checked={config.autoConnect}
+              onChange={(v) => save({ autoConnect: v })}
+              label={t('operator.OperatorWorkspaceSettings.autoConnect')}
+              hint={t('operator.OperatorWorkspaceSettings.autoConnectHint')}
+            />
+          </Card>
+          <Card title={t('operator.OperatorWorkspaceSettings.support')} hint={t('operator.OperatorWorkspaceSettings.supportHint')}>
+            <input
+              value={support}
+              onChange={(e) => setSupport(e.target.value)}
+              onBlur={() => { if (support.trim() !== config.supportContact) save({ supportContact: support }); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
+              placeholder="@stohid_support_bot"
+              className={`${FIELD} max-w-md`}
+            />
+          </Card>
+        <PasswordCard />
+      </>
+    ),
+  };
+
   return (
     <div className="mt-8">
-      <div className="mb-4 flex items-center gap-2">
+      <div className="mb-2 flex items-center gap-2">
         <div className="h-5 w-1.5 rounded-full bg-content-secondary" />
         <h2 className="text-sm font-medium uppercase tracking-wider text-content">{t('operator.OperatorWorkspaceSettings.title')}</h2>
       </div>
-      <p className="text-sm leading-relaxed text-content-secondary">{t('operator.OperatorWorkspaceSettings.intro')}</p>
-
-      <Card title={t('operator.OperatorWorkspaceSettings.startup')}>
-        <Toggle
-          checked={config.startInOperatorMode}
-          onChange={(v) => save({ startInOperatorMode: v })}
-          label={t('operator.OperatorWorkspaceSettings.startInOperatorMode')}
-          hint={t('operator.OperatorWorkspaceSettings.startInOperatorModeHint')}
-        />
-        <NumberField
-          value={config.autoLockMinutes}
-          min={0}
-          max={240}
-          onCommit={(v) => save({ autoLockMinutes: v })}
-          label={t('operator.OperatorWorkspaceSettings.autoLock')}
-          unit={t('operator.OperatorWorkspaceSettings.minutes')}
-        />
-      </Card>
-
-      <Card title={t('operator.OperatorWorkspaceSettings.connection')} hint={t('operator.OperatorWorkspaceSettings.connectionHint')}>
-        <p className="text-sm text-content">
-          {config.connection
-            ? t('operator.OperatorWorkspaceSettings.connectionFixed', { link: describeConnection(config.connection) })
-            : lastUsed
-              ? t('operator.OperatorWorkspaceSettings.connectionLast', { link: describeConnection(lastUsed) })
-              : t('operator.OperatorWorkspaceSettings.connectionNone')}
-        </p>
-        <div className="flex flex-wrap gap-2">
-          <button onClick={() => save({ connection: lastUsed })} disabled={!lastUsed} className={BTN}>
-            {lastUsed
-              ? t('operator.OperatorWorkspaceSettings.pinConnection', { link: describeConnection(lastUsed) })
-              : t('operator.OperatorWorkspaceSettings.pinConnectionNone')}
-          </button>
-          <button onClick={() => save({ connection: null })} disabled={!config.connection} className={BTN}>
-            {t('operator.OperatorWorkspaceSettings.unpinConnection')}
-          </button>
-        </div>
-        <Toggle
-          checked={config.autoConnect}
-          onChange={(v) => save({ autoConnect: v })}
-          label={t('operator.OperatorWorkspaceSettings.autoConnect')}
-          hint={t('operator.OperatorWorkspaceSettings.autoConnectHint')}
-        />
-      </Card>
-
-      <Card title={t('operator.OperatorWorkspaceSettings.actions')} hint={t('operator.OperatorWorkspaceSettings.actionsHint')}>
-        <Toggle
-          checked={config.allowArm}
-          onChange={(v) => save({ allowArm: v })}
-          label={t('operator.OperatorWorkspaceSettings.allowArm')}
-          hint={t('operator.OperatorWorkspaceSettings.allowArmHint')}
-        />
-      </Card>
-
-      <Card title={t('operator.OperatorWorkspaceSettings.modes')} hint={t('operator.OperatorWorkspaceSettings.modesHint')}>
-        <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
-          {OPERATOR_MODE_BUTTONS.filter((m) => m !== 'hold').map((m) => (
-            <Toggle key={m} checked={config.modeButtons.includes(m)} onChange={(v) => toggleMode(m, v)} label={modeButtonLabel(m)} />
-          ))}
-        </div>
-      </Card>
-
-      <OperatorRcSettings rc={config.rc} onChange={(rc) => save({ rc })} />
-
-      <StatusFieldsCard fields={config.statusFields} onChange={(statusFields) => save({ statusFields })} />
-
-      <Card title={t('operator.OperatorWorkspaceSettings.elements')} hint={t('operator.OperatorWorkspaceSettings.elementsHint')}>
-        <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
-          {OPERATOR_ELEMENTS.map((el: OperatorElement) => (
-            <Toggle
-              key={el}
-              checked={!config.hiddenElements.includes(el)}
-              onChange={(on) => save({ hiddenElements: OPERATOR_ELEMENTS.filter((x) => (x === el ? !on : config.hiddenElements.includes(x))) })}
-              label={t(`operator.OperatorWorkspaceSettings.element_${el}`)}
-            />
-          ))}
-        </div>
-      </Card>
-
-      <Card title={t('operator.OperatorWorkspaceSettings.tilt')} hint={t('operator.OperatorWorkspaceSettings.tiltHint')}>
-        <NumberField value={config.tiltWarnDeg} min={5} max={85} onCommit={(v) => save({ tiltWarnDeg: v })}
-          label={t('operator.OperatorWorkspaceSettings.tiltWarn')} unit="°" />
-        <NumberField value={config.tiltLimitDeg} min={5} max={89} onCommit={(v) => save({ tiltLimitDeg: v })}
-          label={t('operator.OperatorWorkspaceSettings.tiltLimit')} unit="°" />
-      </Card>
-
-      <RecordingCard config={config} save={save} />
-
-      <Card title={t('operator.OperatorWorkspaceSettings.support')} hint={t('operator.OperatorWorkspaceSettings.supportHint')}>
-        <input
-          value={support}
-          onChange={(e) => setSupport(e.target.value)}
-          onBlur={() => { if (support.trim() !== config.supportContact) save({ supportContact: support }); }}
-          onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-          placeholder="@stohid_support_bot"
-          className={`${FIELD} max-w-md`}
-        />
-      </Card>
-
-      <PasswordCard />
+      <p className="mb-3 text-sm leading-relaxed text-content-secondary">{t('operator.OperatorWorkspaceSettings.intro')}</p>
+      <SectionTabs tabs={sections} value={section} onChange={pickSection} />
+      {pages[section]}
     </div>
   );
 }

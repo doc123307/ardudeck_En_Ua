@@ -5,6 +5,8 @@
  * is unit-tested; the engine that runs them is main/operator/operator-rc-engine.ts.
  */
 
+import { isOperatorColor, isOperatorIcon, type OperatorColor, type OperatorIcon } from './operator-panel';
+
 export const RC_CHANNEL_SLOTS = 18;
 /** The highest channel a function or a stick may use: ArduPilot takes overrides on channels 1-16. */
 export const RC_MAX_CHANNEL = 16;
@@ -28,14 +30,28 @@ export type RcInput =
   | { kind: 'buttons'; down: number; up: number }
   | { kind: 'axis'; index: number; reverse: boolean };
 
+/**
+ * How a function reaches the vehicle:
+ * - `rc`: an RC channel (RC_CHANNELS_OVERRIDE), sent continuously; the flight controller
+ *   decides what the channel does (RCx_OPTION, a servo set to pass it through);
+ * - `servo`: a servo output set directly (MAV_CMD_DO_SET_SERVO), sent when it changes and
+ *   held by the flight controller; for outputs whose SERVOx_FUNCTION is 0 (disabled).
+ */
+export type RcFunctionOutput = 'rc' | 'servo';
+export const RC_FUNCTION_OUTPUTS: readonly RcFunctionOutput[] = ['rc', 'servo'];
+
 interface RcFunctionCommon {
   id: string;
   label: string;
-  /** RC channel, 1-18. */
+  /** RC channel or servo output number, 1-16. */
   channel: number;
+  output: RcFunctionOutput;
   input: RcInput;
   /** Sent from the moment the vehicle connects; otherwise only once the operator has used it. */
   sendOnConnect: boolean;
+  icon: OperatorIcon;
+  /** Colour of the control when it is on. */
+  color: OperatorColor;
 }
 
 /** A button: latching (press on, press off) or momentary (on while held). */
@@ -146,20 +162,28 @@ export const DEFAULT_RC_CONFIG: OperatorRcConfig = {
   // One of each kind, on channels a rover leaves free, so the feature can be seen and tried.
   // Nothing is sent on them until the operator touches the control.
   functions: [
-    { id: 'aux9', label: 'AUX 9', channel: 9, kind: 'button', latching: true, offPwm: 1000, onPwm: 2000, input: { kind: 'none' }, sendOnConnect: false },
-    { id: 'aux10', label: 'AUX 10', channel: 10, kind: 'switch3', springCenter: false, lowPwm: 1000, midPwm: 1500, highPwm: 2000, input: { kind: 'none' }, sendOnConnect: false },
-    { id: 'aux11', label: 'AUX 11', channel: 11, kind: 'slider', spring: 'none', minPwm: 1000, maxPwm: 2000, input: { kind: 'none' }, sendOnConnect: false },
+    { id: 'aux9', label: 'AUX 9', channel: 9, output: 'rc', kind: 'button', latching: true, offPwm: 1000, onPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'power', color: 'green' },
+    { id: 'aux10', label: 'AUX 10', channel: 10, output: 'rc', kind: 'switch3', springCenter: false, lowPwm: 1000, midPwm: 1500, highPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'arrowUpDown', color: 'blue' },
+    { id: 'aux11', label: 'AUX 11', channel: 11, output: 'rc', kind: 'slider', spring: 'none', minPwm: 1000, maxPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'gauge', color: 'amber' },
   ],
 };
 
+/** The icon a new function of a kind starts with. */
+export const RC_KIND_ICON: Record<RcFunctionKind, OperatorIcon> = { button: 'power', switch3: 'arrowUpDown', slider: 'gauge' };
+
 /** A new function of the given kind on the first channel nothing else uses. */
-export function newRcFunction(kind: RcFunctionKind, existing: OperatorRcConfig): OperatorRcFunction {
-  const used = new Set([existing.drive.steerChannel, existing.drive.throttleChannel, ...existing.functions.map((f) => f.channel)]);
+export function newRcFunction(kind: RcFunctionKind, existing: OperatorRcConfig, output: RcFunctionOutput = 'rc'): OperatorRcFunction {
+  const used = new Set(output === 'rc'
+    ? [existing.drive.steerChannel, existing.drive.throttleChannel, ...existing.functions.filter((f) => f.output === 'rc').map((f) => f.channel)]
+    : existing.functions.filter((f) => f.output === 'servo').map((f) => f.channel));
   let channel = 5;
   while (channel < RC_MAX_CHANNEL && used.has(channel)) channel++;
   let n = existing.functions.length + 1;
   while (existing.functions.some((f) => f.id === `fn${n}`)) n++;
-  const common = { id: `fn${n}`, label: `AUX ${channel}`, channel, input: { kind: 'none' } as RcInput, sendOnConnect: false };
+  const common = {
+    id: `fn${n}`, label: output === 'rc' ? `AUX ${channel}` : `SERVO ${channel}`, channel, output, input: { kind: 'none' } as RcInput,
+    sendOnConnect: false, icon: RC_KIND_ICON[kind], color: 'green' as OperatorColor,
+  };
   if (kind === 'button') return { ...common, kind, latching: true, offPwm: 1000, onPwm: 2000 };
   if (kind === 'switch3') return { ...common, kind, springCenter: false, lowPwm: 1000, midPwm: 1500, highPwm: 2000 };
   return { ...common, kind, spring: 'none', minPwm: 1000, maxPwm: 2000 };
@@ -190,12 +214,17 @@ function normalizeFunction(raw: unknown, takenIds: Set<string>): OperatorRcFunct
   const id = typeof raw.id === 'string' && /^[\w-]{1,32}$/.test(raw.id) && !takenIds.has(raw.id) ? raw.id : null;
   if (!id) return null;
   const channel = int(raw.channel, 9, 1, RC_MAX_CHANNEL);
+  const output: RcFunctionOutput = raw.output === 'servo' ? 'servo' : 'rc';
+  const kind = raw.kind as RcFunctionKind;
   const common = {
     id,
-    label: (typeof raw.label === 'string' ? raw.label.trim().slice(0, 24) : '') || `AUX ${channel}`,
+    label: (typeof raw.label === 'string' ? raw.label.trim().slice(0, 24) : '') || `${output === 'rc' ? 'AUX' : 'SERVO'} ${channel}`,
     channel,
+    output,
     input: normalizeInput(raw.input),
     sendOnConnect: bool(raw.sendOnConnect, false),
+    icon: isOperatorIcon(raw.icon) ? raw.icon : RC_KIND_ICON[kind],
+    color: isOperatorColor(raw.color) ? raw.color : 'green' as OperatorColor,
   };
   if (raw.kind === 'button') {
     return { ...common, kind: 'button', latching: bool(raw.latching, true), offPwm: pwm(raw.offPwm, 1000), onPwm: pwm(raw.onPwm, 2000) };
@@ -265,13 +294,20 @@ export function normalizeRcConfig(raw: unknown): OperatorRcConfig {
   };
 }
 
-/** Channels claimed twice: a function on a driving channel, or two functions on one channel. */
+/** RC channels claimed twice: a function on a driving channel, or two functions on one channel. */
 export function rcChannelConflicts(config: OperatorRcConfig): number[] {
   const seen = new Map<number, number>();
   const count = (channel: number) => seen.set(channel, (seen.get(channel) ?? 0) + 1);
   if (config.drive.enabled) { count(config.drive.steerChannel); count(config.drive.throttleChannel); }
-  for (const f of config.functions) count(f.channel);
+  for (const f of config.functions) if (f.output === 'rc') count(f.channel);
   return [...seen].filter(([, n]) => n > 1).map(([channel]) => channel).sort((a, b) => a - b);
+}
+
+/** Servo outputs set by two functions at once. */
+export function servoConflicts(config: OperatorRcConfig): number[] {
+  const seen = new Map<number, number>();
+  for (const f of config.functions) if (f.output === 'servo') seen.set(f.channel, (seen.get(f.channel) ?? 0) + 1);
+  return [...seen].filter(([, n]) => n > 1).map(([servo]) => servo).sort((a, b) => a - b);
 }
 
 /** Does anything in this configuration listen to a joystick? */
@@ -504,6 +540,7 @@ export function composeChannels(
 ): number[] {
   const out = new Array<number>(RC_CHANNEL_SLOTS).fill(RC_IGNORE);
   for (const fn of config.functions) {
+    if (fn.output !== 'rc') continue;
     const runtime = functions.get(fn.id);
     if (runtime?.active) out[fn.channel - 1] = clamp(functionPwm(fn, runtime.value), RC_PWM_MIN, RC_PWM_MAX);
   }

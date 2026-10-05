@@ -103,8 +103,25 @@ The whole UI can be switched between **English** (unchanged, still the default) 
     axes ("press the control to assign"). A channel is left alone until the operator first uses its
     control, unless set to "send from connection"; a channel no longer driven is released (0 for
     channels 1-8, 65534 above), not left frozen.
+  - Functions reach the vehicle either as an RC channel or as a servo output set directly
+    (`MAV_CMD_DO_SET_SERVO`, sent once per change and held by the flight controller).
   - Code: `src/shared/operator-rc.ts` (rules), `src/main/operator/operator-rc-engine.ts` (20 Hz sender),
-    `OperatorRcBar.tsx`, `OperatorRcSettings.tsx`.
+    `OperatorControlBar.tsx`, `OperatorRcSettings.tsx`.
+- **Operator panel builder.** Settings → "Operator workspace" is split into tabs (control panel, values,
+  driving and modes, screen, video, general).
+  - **Control panel:** every control on the operator's bottom bar in one list - built-in ones (joystick,
+    reverse, cruise, record, view tools), vehicle outputs (relays) and the administrator's own buttons,
+    switches and sliders. Each can be moved, hidden, set up (name, icon, colour, channel or output, PWM
+    values, behaviour, joystick binding) and, if not built in, removed; outputs and functions are added
+    here. A live preview shows the bar as the operator will see it.
+  - **Values:** besides the built-in ones, ANY value of the vehicle can be put on the status strip: a field
+    of any MAVLink message it sends (picked from a live list with current values), a NAMED_VALUE_FLOAT/INT
+    from a Lua script or companion computer, or a flight controller parameter, each with a name, unit,
+    decimals, scale/offset and amber/red limits. Code: `src/shared/operator-panel.ts`,
+    `src/renderer/stores/operator-values.ts`.
+  - **Look:** the operator's controls are one compact bar instead of two rows: same-sized chips, an icon and
+    a short name each, filled with the control's colour when on, thin dividers between groups; mode, ARM and
+    STOP stay at the right end.
 - **Recording that does not depend on the video being there.** The administrator chooses: always, while
   armed, or by the operator's button. The app keeps the chosen cameras recording: a camera with no picture
   is waited for, the recording starts by itself when video appears and resumes after every dropout. Files
@@ -282,6 +299,22 @@ The whole UI can be switched between **English** (unchanged, still the default) 
     з кнопок чи осей джойстика («натисніть елемент, щоб призначити»). Канал не чіпається, доки оператор
     уперше не скористається елементом (або ввімкнено «передавати від моменту підключення»); канал, яким
     більше не керують, відпускається, а не «застигає».
+  - Функція передається на борт або як RC-канал, або як вихід серво напряму (`MAV_CMD_DO_SET_SERVO`:
+    надсилається раз на зміну, польотний контролер тримає вихід).
+- **Конструктор панелі оператора.** Налаштування → «Простір пілота» поділено на вкладки (панель керування,
+  значення, рух і режими, екран, відео, загальне).
+  - **Панель керування:** усі елементи нижньої панелі оператора одним списком — вбудовані (джойстик, реверс,
+    круїз, запис, інструменти вигляду), виходи борту (реле) й власні кнопки, перемикачі та повзунки
+    адміністратора. Кожен можна переставити, сховати, налаштувати (назва, значок, колір, канал чи вихід,
+    значення PWM, поведінка, кнопка джойстика) і, якщо він не вбудований, видалити; виходи й функції
+    додаються тут же. Попередній вигляд показує панель так, як її побачить оператор.
+  - **Значення:** крім вбудованих, у смугу стану можна вивести БУДЬ-ЯКЕ значення борту: поле будь-якого
+    MAVLink-повідомлення (вибір із живого списку з поточними значеннями), іменоване значення NAMED_VALUE
+    зі скрипта Lua чи бортового комп'ютера або параметр польотного контролера — з назвою, одиницею,
+    кількістю знаків, множником/зсувом і жовтою/червоною межами.
+  - **Вигляд:** елементи керування оператора — одна компактна панель замість двох рядів: однакові «чіпи» зі
+    значком і короткою назвою, заливка кольором, коли увімкнено, тонкі роздільники між групами; режим, ARM і
+    СТОП — праворуч.
 - **Запис, що не залежить від наявності відео.** Адміністратор вибирає: завжди, доки борт армовано, або за
   кнопкою оператора. Програма сама тримає запис вибраних камер: камеру без зображення чекає, запис
   починається сам, щойно з'явиться відео, і відновлюється після кожного обриву. Файли йдуть у

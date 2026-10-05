@@ -5,6 +5,7 @@
 
 import type { ConnectOptions } from './ipc-channels';
 import { DEFAULT_RC_CONFIG, normalizeRcConfig, type OperatorRcConfig } from './operator-rc';
+import { OPERATOR_MAX_VALUES, controlKind, normalizeValue, type OperatorValue } from './operator-panel';
 
 export type AppMode = 'operator' | 'admin';
 
@@ -39,16 +40,21 @@ export type OperatorRecordMode = 'always' | 'armed' | 'manual';
 export const OPERATOR_RECORD_MODES: readonly OperatorRecordMode[] = ['always', 'armed', 'manual'];
 
 /** Settings written by this version. Older files get the newer defaults where the meaning changed. */
-export const OPERATOR_CONFIG_SCHEMA = 2;
+export const OPERATOR_CONFIG_SCHEMA = 3;
+/** Files from before this schema had "Manual" as the only mode button by default. */
+const MODE_LIST_SCHEMA = 2;
 
-/** Values the status strip can show; the administrator picks which, and in what order. */
+/**
+ * Values the status strip shows out of the box; the administrator picks which, and in what
+ * order, and adds any other value from the vehicle (`v:<id>`, see operator-panel.ts).
+ */
 export const OPERATOR_STATUS_FIELDS = [
   'mode', 'satellites', 'hdop', 'battery', 'current', 'uptime', 'speed', 'heading', 'altitude', 'throttle', 'roll', 'pitch', 'clock',
 ] as const;
 export type OperatorStatusField = (typeof OPERATOR_STATUS_FIELDS)[number];
 
 /** Parts of the operator screen the administrator can switch off. */
-export const OPERATOR_ELEMENTS = ['map', 'infoBlock', 'outputs', 'record', 'layoutSwitch', 'cameraControls', 'popOut'] as const;
+export const OPERATOR_ELEMENTS = ['map', 'infoBlock', 'cameraControls', 'popOut'] as const;
 export type OperatorElement = (typeof OPERATOR_ELEMENTS)[number];
 
 export interface OperatorConfig {
@@ -79,8 +85,14 @@ export interface OperatorConfig {
   supportContact: string;
   /** Minutes without input after which the full UI closes again. 0 = never. */
   autoLockMinutes: number;
-  /** Status strip values, left to right. */
-  statusFields: OperatorStatusField[];
+  /** Status strip values, left to right: built-in names (OPERATOR_STATUS_FIELDS) and `v:<id>` of `values`. */
+  statusFields: string[];
+  /** The administrator's own values: any MAVLink field, named value or parameter of the vehicle. */
+  values: OperatorValue[];
+  /** Controls of the bottom bar in the administrator's order (see arrangeControls). */
+  controlOrder: string[];
+  /** Controls taken off the bottom bar. */
+  hiddenControls: string[];
   /** Screen parts that are switched off (everything else is shown). */
   hiddenElements: OperatorElement[];
 }
@@ -102,6 +114,9 @@ export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
   supportContact: '@stohid_support_bot',
   autoLockMinutes: 15,
   statusFields: ['mode', 'satellites', 'battery', 'uptime', 'speed', 'roll', 'pitch'],
+  values: [],
+  controlOrder: [],
+  hiddenControls: [],
   hiddenElements: [],
 };
 
@@ -135,8 +150,8 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     (typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback);
   // Before schema 2 the operator had "Manual" alone unless the administrator added more; mode
   // switching is now on the screen by default, so an older file takes the new list.
-  const current = typeof r.schema === 'number' && r.schema >= OPERATOR_CONFIG_SCHEMA;
-  const modes = current && Array.isArray(r.modeButtons)
+  const schema = typeof r.schema === 'number' ? r.schema : 1;
+  const modes = schema >= MODE_LIST_SCHEMA && Array.isArray(r.modeButtons)
     ? OPERATOR_MODE_BUTTONS.filter((m) => (r.modeButtons as unknown[]).includes(m) && m !== 'hold')
     : d.modeButtons;
   const connection = r.connection && typeof r.connection === 'object'
@@ -148,6 +163,26 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
   const known = <T extends string>(value: unknown, all: readonly T[], fallback: T[]): T[] => (Array.isArray(value)
     ? [...new Set(value.filter((v): v is T => (all as readonly unknown[]).includes(v)))]
     : fallback);
+  const valueIds = new Set<string>();
+  const values: OperatorValue[] = [];
+  for (const item of Array.isArray(r.values) ? r.values : []) {
+    if (values.length >= OPERATOR_MAX_VALUES) break;
+    const value = normalizeValue(item, valueIds);
+    if (value) { valueIds.add(value.id); values.push(value); }
+  }
+  const statusFields = Array.isArray(r.statusFields)
+    ? [...new Set(r.statusFields.filter((f): f is string => typeof f === 'string'
+      && ((OPERATOR_STATUS_FIELDS as readonly string[]).includes(f) || (f.startsWith('v:') && valueIds.has(f.slice(2))))))]
+    : [...d.statusFields];
+  const controlKeys = (value: unknown): string[] => (Array.isArray(value)
+    ? [...new Set(value.filter((k): k is string => typeof k === 'string' && controlKind(k) !== null))].slice(0, 100)
+    : []);
+  const hiddenControls = controlKeys(r.hiddenControls);
+  // Before schema 3 the record button and the layout switch were "screen elements".
+  if (schema < 3 && Array.isArray(r.hiddenElements)) {
+    if (r.hiddenElements.includes('record')) hiddenControls.push('record');
+    if (r.hiddenElements.includes('layoutSwitch')) hiddenControls.push('layout');
+  }
   return {
     schema: OPERATOR_CONFIG_SCHEMA,
     startInOperatorMode: bool(r.startInOperatorMode, d.startInOperatorMode),
@@ -164,7 +199,10 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     rc: normalizeRcConfig(r.rc),
     supportContact: typeof r.supportContact === 'string' ? r.supportContact.trim().slice(0, 120) : d.supportContact,
     autoLockMinutes: Math.round(num(r.autoLockMinutes, d.autoLockMinutes, 0, 240)),
-    statusFields: known(r.statusFields, OPERATOR_STATUS_FIELDS, [...d.statusFields]),
+    statusFields,
+    values,
+    controlOrder: controlKeys(r.controlOrder),
+    hiddenControls: [...new Set(hiddenControls)],
     hiddenElements: known(r.hiddenElements, OPERATOR_ELEMENTS, []),
   };
 }

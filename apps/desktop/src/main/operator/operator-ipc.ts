@@ -31,7 +31,7 @@ function applyMenus(state: OperatorState): void {
 }
 
 /** How the RC engine reaches the vehicle; the link itself lives in ipc-handlers.ts. */
-export type OperatorRcLink = Pick<RcEngineDeps, 'linkUp' | 'send'>;
+export type OperatorRcLink = Pick<RcEngineDeps, 'linkUp' | 'send' | 'setServo'>;
 
 /** A reading from the renderer, trusted no further than its shape. */
 function readPad(raw: unknown): RcPad | null {

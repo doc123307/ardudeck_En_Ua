@@ -272,6 +272,36 @@ describe('OperatorRcEngine', () => {
     expect(states[0]!.functions.aux10).toEqual({ value: 1, active: true });
   });
 
+  it('sets a servo-output function once per change, never in the RC frame', () => {
+    engine.dispose();
+    const servos: [number, number][] = [];
+    engine = new OperatorRcEngine({ linkUp: () => linkUp, send: (f) => { frames.push([...f]); }, setServo: (s, p) => { servos.push([s, p]); } });
+    engine.setConfig(normalizeRcConfig({ functions: [
+      { id: 'lamp', kind: 'button', output: 'servo', channel: 9, latching: true },
+      { id: 'tilt', kind: 'slider', output: 'servo', channel: 10 },
+    ] }));
+    engine.attach();
+    vi.advanceTimersByTime(500);
+    expect(servos).toEqual([]);
+    engine.setFunction('lamp', 1);
+    vi.advanceTimersByTime(500);
+    expect(servos).toEqual([[9, 2000]]);
+    expect(frames).toHaveLength(0);
+    // A dragged slider: no more than one command per 150 ms, and the last position always lands.
+    for (let i = 1; i <= 10; i++) { engine.setFunction('tilt', i / 10); vi.advanceTimersByTime(20); }
+    vi.advanceTimersByTime(500);
+    const tilt = servos.filter(([s]) => s === 10);
+    expect(tilt.length).toBeLessThan(5);
+    expect(tilt.at(-1)).toEqual([10, 2000]);
+    // After a dropped link the outputs are set again: the vehicle may have rebooted.
+    linkUp = false;
+    vi.advanceTimersByTime(200);
+    linkUp = true;
+    servos.length = 0;
+    vi.advanceTimersByTime(200);
+    expect(servos).toEqual(expect.arrayContaining([[9, 2000], [10, 2000]]));
+  });
+
   it('reports why a frame did not go out', async () => {
     engine.dispose();
     engine = new OperatorRcEngine({ linkUp: () => true, send: () => { throw new Error('port closed'); } });

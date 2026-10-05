@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import {
   DEFAULT_RC_CONFIG, RC_IGNORE, composeChannels, driveCommand, driveSticks, functionFromPad, functionInitial, functionPwm,
-  functionRest, newRcFunction, normalizeRcConfig, rcChannelConflicts, rcReleaseValue, rcUsesJoystick, shapeStick, stickPwm,
+  functionRest, newRcFunction, normalizeRcConfig, rcChannelConflicts, rcReleaseValue, rcUsesJoystick, servoConflicts, shapeStick, stickPwm,
   type OperatorRcFunction, type RcButtonFunction, type RcInput, type RcPad, type RcSliderFunction, type RcSwitchFunction,
 } from './operator-rc';
 
 const pad = (axes: number[] = [], buttons: boolean[] = []): RcPad => ({ id: 'test pad', axes, buttons });
-const common = (input: RcInput) => ({ id: 'f', label: 'F', channel: 9, input, sendOnConnect: false });
+const common = (input: RcInput) => ({ id: 'f', label: 'F', channel: 9, output: 'rc' as const, input, sendOnConnect: false, icon: 'power' as const, color: 'green' as const });
 const button = (latching: boolean, input: RcInput): RcButtonFunction => ({ ...common(input), kind: 'button', latching, offPwm: 1000, onPwm: 2000 });
 const switch3 = (springCenter: boolean, input: RcInput): RcSwitchFunction => ({ ...common(input), kind: 'switch3', springCenter, lowPwm: 1000, midPwm: 1500, highPwm: 2000 });
 const slider = (spring: RcSliderFunction['spring'], input: RcInput): RcSliderFunction => ({ ...common(input), kind: 'slider', spring, minPwm: 1000, maxPwm: 2000 });
@@ -284,6 +284,29 @@ describe('the frame', () => {
   it('lets driving win a channel a function also claims', () => {
     const config = normalizeRcConfig({ functions: [{ id: 'a', kind: 'button', channel: 3 }] });
     expect(composeChannels(config, new Map([['a', { value: 1, active: true }]]), { throttlePwm: 1500 })[2]).toBe(1500);
+  });
+
+  it('leaves servo-output functions out of the RC frame and checks their outputs apart', () => {
+    const config = normalizeRcConfig({ functions: [
+      { id: 'a', kind: 'button', output: 'servo', channel: 3 },
+      { id: 'b', kind: 'button', output: 'servo', channel: 3 },
+      { id: 'c', kind: 'button', output: 'rc', channel: 9 },
+    ] });
+    const frame = composeChannels(config, new Map([['a', { value: 1, active: true }], ['c', { value: 1, active: true }]]), {});
+    expect(frame[2]).toBe(RC_IGNORE);
+    expect(frame[8]).toBe(2000);
+    expect(rcChannelConflicts(config)).toEqual([]);
+    expect(servoConflicts(config)).toEqual([3]);
+    expect(config.functions[0]).toMatchObject({ output: 'servo', label: 'SERVO 3', icon: 'power', color: 'green' });
+  });
+
+  it('keeps a function\'s icon and colour, and gives unknown ones the defaults', () => {
+    const [ok, odd] = normalizeRcConfig({ functions: [
+      { id: 'a', kind: 'slider', icon: 'fan', color: 'ir' },
+      { id: 'b', kind: 'switch3', icon: 'rocket', color: 'pink' },
+    ] }).functions;
+    expect(ok).toMatchObject({ icon: 'fan', color: 'ir', output: 'rc' });
+    expect(odd).toMatchObject({ icon: 'arrowUpDown', color: 'green' });
   });
 
   it('releases low channels with 0 and high ones with 65534', () => {

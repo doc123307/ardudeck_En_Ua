@@ -12,10 +12,11 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { t } from '../i18n';
+import type { OperatorColor, OperatorIcon } from '../../shared/operator-panel';
 
 export type RelayButtonKind = 'toggle' | 'momentary';
-export type RelayIcon = 'lightbulb' | 'car' | 'sun' | 'flashlight' | 'eye' | 'siren' | 'zap' | 'power';
-export type RelayColor = 'white' | 'amber' | 'red' | 'ir' | 'green' | 'blue';
+export type RelayIcon = OperatorIcon;
+export type RelayColor = OperatorColor;
 
 export interface RelayButton {
   id: string;

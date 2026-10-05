@@ -16,7 +16,7 @@
 
 import {
   DEFAULT_RC_CONFIG, RC_CHANNEL_SLOTS, RC_IGNORE,
-  buttonEdge, clampFunctionValue, composeChannels, driveCommand, driveSticks, functionFromPad, functionInitial,
+  buttonEdge, clampFunctionValue, composeChannels, driveCommand, driveSticks, functionFromPad, functionInitial, functionPwm,
   rcReleaseValue, stickPwm, sticksCentred,
   type DriveSticks, type OperatorRcConfig, type RcActionResult, type RcEngineState, type RcFunctionRuntime, type RcPad,
 } from '../../shared/operator-rc.js';
@@ -28,12 +28,16 @@ const PAD_FRESH_MS = 400;
 const NEUTRAL_FRAMES = 5;
 /** Release frames per channel: the link may drop one. */
 const RELEASE_FRAMES = 3;
+/** A servo output set from a dragged slider is sent at most this often. */
+const SERVO_MIN_INTERVAL_MS = 150;
 
 export interface RcEngineDeps {
   /** A MAVLink vehicle is connected and may be commanded. */
   linkUp: () => boolean;
   /** Sends one frame of 18 raw channel values. */
   send: (channels: number[]) => Promise<void> | void;
+  /** Sets one servo output (MAV_CMD_DO_SET_SERVO), for functions that drive a servo output directly. */
+  setServo?: (servo: number, pwm: number) => Promise<void> | void;
   onState?: (state: RcEngineState) => void;
   now?: () => number;
 }
@@ -56,6 +60,8 @@ export class OperatorRcEngine {
   private wasActive = new Array<boolean>(RC_CHANNEL_SLOTS).fill(false);
   private releaseLeft = new Array<number>(RC_CHANNEL_SLOTS).fill(0);
   private lastFrame: number[] = [];
+  /** What each servo-output function last set, keyed by function and output, so a change is sent once. */
+  private servoSent = new Map<string, { pwm: number; at: number }>();
   private error: string | null = null;
   private timer: ReturnType<typeof setInterval> | null = null;
   private lastEmitted = '';
@@ -247,6 +253,8 @@ export class OperatorRcEngine {
       this.cruiseOn = false;
       this.lastFrame = [];
       this.error = null;
+      // A vehicle that comes back may have rebooted: its servo outputs are set again.
+      this.servoSent.clear();
       if (this.driveLive || this.driveEngaged) { this.driveLive = false; this.needCentre = this.driveEngaged; }
       this.stopTimerIfIdle();
       this.emit();
@@ -288,6 +296,8 @@ export class OperatorRcEngine {
       out.throttlePwm = stickPwm(this.cruiseValue * limit, drive.pwmMin, drive.pwmTrim, drive.pwmMax);
     }
 
+    this.sendServos();
+
     const frame = composeChannels(this.config, this.attached ? this.functions : new Map(), out);
     let anything = false;
     for (let i = 0; i < RC_CHANNEL_SLOTS; i++) {
@@ -320,6 +330,29 @@ export class OperatorRcEngine {
       this.stopTimerIfIdle();
     }
     this.emit();
+  }
+
+  /** Servo-output functions are set once per change (the flight controller holds the output). */
+  private sendServos(): void {
+    if (!this.attached || !this.deps.setServo) return;
+    const now = this.now();
+    for (const fn of this.config.functions) {
+      if (fn.output !== 'servo') continue;
+      const runtime = this.functions.get(fn.id);
+      if (!runtime?.active) continue;
+      const pwm = functionPwm(fn, runtime.value);
+      const key = `${fn.id}:${fn.channel}`;
+      const last = this.servoSent.get(key);
+      if (last?.pwm === pwm || (last && now - last.at < SERVO_MIN_INTERVAL_MS)) continue;
+      this.servoSent.set(key, { pwm, at: now });
+      const failed = (e: unknown) => { this.error = e instanceof Error ? e.message : String(e); this.servoSent.delete(key); };
+      try {
+        const sent = this.deps.setServo(fn.channel, pwm);
+        if (sent) sent.then(undefined, failed);
+      } catch (e) {
+        failed(e);
+      }
+    }
   }
 
   private stopTimerIfIdle(): void {

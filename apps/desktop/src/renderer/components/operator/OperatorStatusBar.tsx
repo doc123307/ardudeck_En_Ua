@@ -12,7 +12,11 @@ import { useConnectionStore } from '../../stores/connection-store';
 import { useOperatorStore } from '../../stores/operator-store';
 import { useSettingsStore } from '../../stores/settings-store';
 import { formatAltitudeFromMeters, formatSpeedFromMetersPerSecond } from '../../../shared/user-units.js';
-import type { OperatorStatusField } from '../../../shared/operator-types';
+import { OPERATOR_STATUS_FIELDS, type OperatorStatusField } from '../../../shared/operator-types';
+import {
+  describeSource, formatValue, scaledValue, valueFieldKey, valueLevel, type OperatorValue, type ValueLevel,
+} from '../../../shared/operator-panel';
+import { useOperatorValues, type LiveValue } from '../../stores/operator-values';
 import { fixKind, formatDuration, tiltLevel, type TiltLevel } from './operator-logic';
 import { useOperatorRcStore } from '../../stores/operator-rc-store';
 import type { OperatorRecording } from './useOperatorFeeds';
@@ -24,9 +28,28 @@ export function modeLabel(mode: string): string {
   return i18n.exists(key) ? t(key) : mode;
 }
 
-/** Name of a status value, for the strip and for the administrator's list. */
+/** Name of a built-in status value, for the strip and for the administrator's list. */
 export function statusFieldLabel(field: OperatorStatusField): string {
   return t(`operator.OperatorStatusBar.${field}`);
+}
+
+export const isBuiltinField = (field: string): field is OperatorStatusField => (OPERATOR_STATUS_FIELDS as readonly string[]).includes(field);
+
+const LEVEL_STYLE: Record<ValueLevel, string> = {
+  ok: 'text-content',
+  warn: 'text-amber-400',
+  danger: 'rounded bg-red-600 px-1.5 text-white animate-pulse',
+};
+
+/** One of the administrator's own values, as the strip shows it. */
+export function ValueText({ value, live }: { value: OperatorValue; live: LiveValue | undefined }) {
+  const shown = live?.raw === null || live?.raw === undefined ? null : scaledValue(value, live.raw);
+  const level = shown === null ? 'ok' : valueLevel(value, shown);
+  return (
+    <span className={shown === null || live?.stale ? 'text-content-tertiary' : LEVEL_STYLE[level]}>
+      {formatValue(value, shown)}
+    </span>
+  );
 }
 
 const TILT_STYLE: Record<TiltLevel, string> = {
@@ -56,6 +79,9 @@ export function OperatorStatusBar({ recording }: { recording: OperatorRecording 
   const speedUnit = useSettingsStore((s) => s.unitPreferences.speed);
   const altitudeUnit = useSettingsStore((s) => s.unitPreferences.altitude);
   const fields = useOperatorStore((s) => s.config.statusFields);
+  const values = useOperatorStore((s) => s.config.values);
+  const shownValues = values.filter((v) => fields.includes(valueFieldKey(v.id)));
+  const live = useOperatorValues(shownValues);
   const warnDeg = useOperatorStore((s) => s.config.tiltWarnDeg);
   const limitDeg = useOperatorStore((s) => s.config.tiltLimitDeg);
   const connected = connectionState.isConnected;
@@ -73,7 +99,7 @@ export function OperatorStatusBar({ recording }: { recording: OperatorRecording 
   const plain = (text: string) => <span className={connected ? 'text-content' : 'text-content-tertiary'}>{connected ? text : dash}</span>;
   const tilt = (deg: number) => (
     <span className={connected ? TILT_STYLE[tiltLevel(deg, warnDeg, limitDeg)] : 'text-content-tertiary'}>
-      {connected ? `${deg.toFixed(0)}°` : dash}
+      {connected ? `${Math.round(deg) || 0}°` : dash}
     </span>
   );
   const tiltTip = t('operator.OperatorStatusBar.tiltTip', { warn: warnDeg, limit: limitDeg });
@@ -132,8 +158,17 @@ export function OperatorStatusBar({ recording }: { recording: OperatorRecording 
       </span>
 
       {fields.map((field) => {
-        const { value, tip } = render[field]();
-        return <Stat key={field} label={statusFieldLabel(field)} tip={tip}>{value}</Stat>;
+        if (isBuiltinField(field)) {
+          const { value, tip } = render[field]();
+          return <Stat key={field} label={statusFieldLabel(field)} tip={tip}>{value}</Stat>;
+        }
+        const own = values.find((v) => valueFieldKey(v.id) === field);
+        if (!own) return null;
+        return (
+          <Stat key={field} label={own.label} tip={describeSource(own.source)}>
+            <ValueText value={own} live={live[own.id]} />
+          </Stat>
+        );
       })}
 
       <div className="flex-1" />

@@ -4,20 +4,18 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Circle, Columns2, LayoutGrid, OctagonX, PictureInPicture2, Pin, RotateCcw } from 'lucide-react';
+import { Hand, OctagonX } from 'lucide-react';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
 import { useMessagesStore } from '../../stores/messages-store';
 import { useOperatorStore } from '../../stores/operator-store';
-import { useOperatorUiStore } from '../../stores/operator-ui-store';
 import { ROVER_MODE_NUMBER, type OperatorElement, type OperatorModeButton } from '../../../shared/operator-types';
 import { extractPreArmReason, isPreArmMessage } from '../../../shared/prearm-checks';
-import { RelayButtons } from '../vehicle-outputs/RelayButtons';
 import { useOperatorRcStore } from '../../stores/operator-rc-store';
 import { OperatorStatusBar, modeLabel } from './OperatorStatusBar';
 import { OperatorModeMenu, modeButtonLabel } from './OperatorModeMenu';
-import { OperatorRcBar } from './OperatorRcBar';
+import { OperatorControls } from './OperatorControlBar';
 import { useOperatorRc } from './useOperatorRc';
 import { OperatorCameras } from './OperatorCameras';
 import { OperatorMiniMap } from './OperatorMiniMap';
@@ -34,8 +32,6 @@ const TOAST_MS = 5000;
 
 type Toast = { text: string; tone: 'info' | 'error' };
 
-const TOOL_BTN = 'flex h-10 items-center gap-2 rounded-lg border border-subtle bg-surface-raised px-3 text-sm font-medium text-content transition-colors hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40';
-const TOOL_ON = 'border-blue-500/60 bg-blue-600/30';
 
 export function OperatorScreen() {
   const connectionState = useConnectionStore((s) => s.connectionState);
@@ -45,7 +41,6 @@ export function OperatorScreen() {
   const modeButtons = useOperatorStore((s) => s.config.modeButtons);
   const hidden = useOperatorStore((s) => s.config.hiddenElements);
   const shows = (element: OperatorElement) => !hidden.includes(element);
-  const ui = useOperatorUiStore();
   const feeds = useOperatorFeeds();
   const recording = useOperatorRecording(feeds.sources, feeds.main);
   useOperatorRc(feeds.sources, feeds.main?.id ?? null, feeds.selectMain);
@@ -161,51 +156,19 @@ export function OperatorScreen() {
         )}
       </div>
 
-      <OperatorRcBar connected={connected} onRefused={(text) => say(text, 'error')} />
+      {/* One compact bar: the administrator's controls on the left, mode / ARM / STOP on the right. */}
+      <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-t border-subtle bg-surface px-3 py-2">
+        <OperatorControls
+          connected={connected}
+          vehicleKey={vehicleKey}
+          severalCameras={several}
+          recording={{ mode: recording.mode, on: recording.on, toggle: toggleRecording }}
+          onRefused={(text) => say(text, 'error')}
+        />
 
-      {/* Action bar */}
-      <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-t border-subtle bg-surface px-4 py-2.5">
-        {shows('outputs') && <RelayButtons vehicleKey={connected ? vehicleKey : null} editable={false} />}
-
-        <div className="flex flex-wrap items-center gap-2">
-          {several && shows('layoutSwitch') && (
-            <button
-              onClick={() => ui.setLayout(ui.layout === 'pip' ? 'grid' : 'pip')}
-              data-tip={ui.layout === 'pip' ? t('operator.OperatorScreen.layoutGridTip') : t('operator.OperatorScreen.layoutPipTip')}
-              className={TOOL_BTN}
-            >
-              {ui.layout === 'pip' ? <LayoutGrid className="h-4 w-4" /> : <PictureInPicture2 className="h-4 w-4" />}
-              <span className="whitespace-nowrap">{ui.layout === 'pip' ? t('operator.OperatorScreen.layoutGrid') : t('operator.OperatorScreen.layoutPip')}</span>
-            </button>
-          )}
-          <button onClick={ui.resetArrangement} data-tip={t('operator.OperatorScreen.resetArrangementTip')} className={`${TOOL_BTN} px-2.5`}>
-            <RotateCcw className="h-4 w-4" />
-          </button>
-          {shows('cameraControls') && <button
-            onClick={() => ui.setControlsPinned(!ui.controlsPinned)}
-            data-tip={t('operator.OperatorScreen.pinControlsTip')}
-            className={`${TOOL_BTN} ${ui.controlsPinned ? TOOL_ON : ''}`}
-          >
-            {ui.controlsPinned ? <Pin className="h-4 w-4" /> : <Columns2 className="h-4 w-4" />}
-            <span className="whitespace-nowrap">{t('operator.OperatorScreen.cameraControls')}</span>
-          </button>}
-          {/* The button exists only where recording is the operator's to start; otherwise the status strip shows it. */}
-          {shows('record') && recording.mode === 'manual' && <button
-            onClick={toggleRecording}
-            disabled={!feeds.main}
-            data-tip={recording.on ? t('operator.OperatorScreen.stopRecordingTip') : t('operator.OperatorScreen.recordTip')}
-            className={`${TOOL_BTN} ${recording.on ? 'border-red-500/60 bg-red-600/30 text-red-200' : ''}`}
-          >
-            <Circle className={`h-3.5 w-3.5 ${recording.on ? 'fill-current text-red-400' : ''}`} />
-            <span className="whitespace-nowrap">{recording.on ? t('operator.OperatorScreen.stopRecording') : t('operator.OperatorScreen.record')}</span>
-          </button>}
-        </div>
-
-        <div className="flex-1" />
-
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div className="ml-auto flex flex-wrap items-center justify-end gap-1.5">
           {connected && !rover && (
-            <span className="max-w-[16rem] text-xs leading-snug text-amber-300">{t('operator.OperatorScreen.notRover')}</span>
+            <span className="max-w-[16rem] text-xs leading-snug text-amber-400">{t('operator.OperatorScreen.notRover')}</span>
           )}
           <OperatorModeMenu
             modes={modeButtons}
@@ -221,13 +184,15 @@ export function OperatorScreen() {
               disabled={!connected}
               tip={t('operator.OperatorScreen.holdTip')}
               fillClassName={flight.armed ? 'bg-emerald-400/40' : 'bg-red-400/50'}
-              className={`h-12 min-w-[9rem] rounded-lg border px-4 text-sm font-bold uppercase tracking-wide ${
+              className={`h-9 min-w-[6.5rem] rounded-md border px-3 text-[13px] font-bold uppercase tracking-wide ${
                 connected && flight.armed
-                  ? 'border-emerald-500/60 bg-emerald-600/20 text-emerald-200'
-                  : 'border-red-500/60 bg-red-600/20 text-red-200'
+                  ? 'border-emerald-500/70 bg-emerald-500/15 text-emerald-400'
+                  : 'border-red-500/70 bg-red-500/10 text-red-400'
               }`}
             >
-              <span className="whitespace-nowrap">{connected && flight.armed ? t('operator.OperatorScreen.disarm') : t('operator.OperatorScreen.arm')}</span>
+              {/* "Hold" is said by the hand and the filling bar; the tooltip spells it out. */}
+              <Hand className="h-4 w-4 shrink-0" />
+              <span className="whitespace-nowrap">{connected && flight.armed ? 'DISARM' : 'ARM'}</span>
             </HoldButton>
           )}
 
@@ -235,7 +200,7 @@ export function OperatorScreen() {
             onClick={stop}
             disabled={!canDrive}
             data-tip={t('operator.OperatorScreen.stopTip')}
-            className={`flex h-12 min-w-[11rem] items-center justify-center gap-2 rounded-lg px-5 text-base font-extrabold uppercase tracking-wide text-white shadow-lg transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+            className={`flex h-10 min-w-[9.5rem] items-center justify-center gap-2 rounded-md px-4 text-[15px] font-extrabold uppercase tracking-wide text-white shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
               holding ? 'bg-red-900 ring-2 ring-red-400' : 'bg-red-600 hover:bg-red-500'
             }`}
           >
