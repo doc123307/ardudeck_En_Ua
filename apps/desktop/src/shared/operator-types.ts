@@ -5,7 +5,7 @@
 
 import type { ConnectOptions } from './ipc-channels';
 import { DEFAULT_RC_CONFIG, normalizePadCalibration, normalizeRcConfig, type OperatorRcConfig, type RcPadCalibration } from './operator-rc';
-import { OPERATOR_MAX_VALUES, controlKind, normalizeValue, type OperatorValue } from './operator-panel';
+import { OPERATOR_MAX_VALUES, controlKind, normalizeRelays, normalizeValue, type OperatorValue, type StoredRelay } from './operator-panel';
 
 export type AppMode = 'operator' | 'admin';
 
@@ -102,6 +102,8 @@ export interface OperatorConfig {
   hiddenControls: string[];
   /** Built-in controls deleted from the panel altogether (they can be added back). */
   removedControls: string[];
+  /** Vehicle outputs deleted from the panel, kept whole so they can be put back. */
+  removedRelays: StoredRelay[];
   /** The bar shows icons only; names are in the tooltips. For a panel with many controls. */
   panelIconsOnly: boolean;
   /** Screen parts that are switched off (everything else is shown). */
@@ -134,6 +136,7 @@ export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
   controlOrder: [],
   hiddenControls: [],
   removedControls: [],
+  removedRelays: [],
   panelIconsOnly: false,
   hiddenElements: [],
 };
@@ -227,6 +230,7 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     controlOrder: controlKeys(r.controlOrder),
     hiddenControls: [...new Set(hiddenControls)],
     removedControls: controlKeys(r.removedControls).filter((k) => controlKind(k) === 'builtin'),
+    removedRelays: normalizeRelays(r.removedRelays, 12),
     panelIconsOnly: bool(r.panelIconsOnly, d.panelIconsOnly),
     hiddenElements: known(r.hiddenElements, OPERATOR_ELEMENTS, []),
   };

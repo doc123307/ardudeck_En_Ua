@@ -20,6 +20,37 @@ export type OperatorColor = (typeof OPERATOR_COLORS)[number];
 export const isOperatorIcon = (v: unknown): v is OperatorIcon => (OPERATOR_ICONS as readonly unknown[]).includes(v);
 export const isOperatorColor = (v: unknown): v is OperatorColor => (OPERATOR_COLORS as readonly unknown[]).includes(v);
 
+/** A vehicle output button as it is stored (the renderer's relay-store shape). */
+export interface StoredRelay {
+  id: string;
+  label: string;
+  /** ArduPilot relay instance, 0-based (RELAY1 = 0). */
+  instance: number;
+  kind: 'toggle' | 'momentary';
+  icon: OperatorIcon;
+  color: OperatorColor;
+}
+
+export function normalizeRelays(raw: unknown, max = 16): StoredRelay[] {
+  if (!Array.isArray(raw)) return [];
+  const out: StoredRelay[] = [];
+  for (const r of raw) {
+    if (!r || typeof r !== 'object' || Array.isArray(r)) continue;
+    const o = r as Record<string, unknown>;
+    if (typeof o.id !== 'string' || !/^[\w-]{1,64}$/.test(o.id) || out.some((x) => x.id === o.id)) continue;
+    const instance = typeof o.instance === 'number' && Number.isInteger(o.instance) ? Math.min(15, Math.max(0, o.instance)) : 0;
+    out.push({
+      id: o.id,
+      label: (typeof o.label === 'string' ? o.label.trim().slice(0, 32) : '') || `RELAY${instance + 1}`,
+      instance,
+      kind: o.kind === 'momentary' ? 'momentary' : 'toggle',
+      icon: isOperatorIcon(o.icon) ? o.icon : 'power',
+      color: isOperatorColor(o.color) ? o.color : 'green',
+    });
+  }
+  return out.slice(0, max);
+}
+
 // ---- Controls on the bottom bar ------------------------------------------------------
 
 /**

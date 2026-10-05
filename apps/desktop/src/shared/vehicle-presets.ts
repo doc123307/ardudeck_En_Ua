@@ -10,24 +10,26 @@
 import type { ConnectOptions } from './ipc-channels';
 import type { CameraSourceConfig } from './camera-types';
 import { normalizeOperatorConfig, type OperatorConfig, type OperatorState } from './operator-types';
-import { isOperatorColor, isOperatorIcon, type OperatorColor, type OperatorIcon } from './operator-panel';
+import { normalizeRelays, type StoredRelay } from './operator-panel';
 
 /** The operator settings that belong to a vehicle rather than to the computer. */
 export const VEHICLE_PANEL_FIELDS = [
-  'rc', 'controlOrder', 'hiddenControls', 'removedControls', 'panelIconsOnly', 'values', 'statusFields', 'modeButtons', 'allowArm',
+  'rc', 'controlOrder', 'hiddenControls', 'removedControls', 'removedRelays', 'panelIconsOnly', 'values', 'statusFields', 'modeButtons', 'allowArm',
+] as const;
+/**
+ * The operator settings that belong to the computer and stay when the vehicle is changed.
+ * Every setting is in one list or the other; a test holds both to that.
+ */
+export const STATION_FIELDS = [
+  'schema', 'startInOperatorMode', 'autoConnect', 'connection', 'tiltWarnDeg', 'tiltLimitDeg', 'recordAllCameras', 'recordMode', 'recordDir',
+  'recordSegmentMinutes', 'padCalibration', 'supportContact', 'supportSite', 'supportPhone', 'supportEmail', 'supportNote', 'autoLockMinutes',
+  'hiddenElements',
 ] as const;
 export type VehiclePanelField = (typeof VEHICLE_PANEL_FIELDS)[number];
 export type VehiclePanel = Pick<OperatorConfig, VehiclePanelField>;
 
-/** A vehicle output button as a preset keeps it (the renderer's relay-store shape). */
-export interface PresetRelay {
-  id: string;
-  label: string;
-  instance: number;
-  kind: 'toggle' | 'momentary';
-  icon: OperatorIcon;
-  color: OperatorColor;
-}
+/** A vehicle output button as a preset keeps it. */
+export type PresetRelay = StoredRelay;
 
 export interface VehiclePreset {
   id: string;
@@ -51,7 +53,7 @@ export const MAX_VEHICLES = 50;
 /** What a change to the vehicle list answers: the list, and the operator settings now in force. */
 export interface VehiclesResult {
   ok: boolean;
-  error?: 'not-allowed' | 'not-found' | 'storage';
+  error?: 'not-allowed' | 'not-found' | 'storage' | 'in-use';
   vehicles: VehiclesState;
   operator: OperatorState;
 }
@@ -81,24 +83,6 @@ function normalizeCameras(raw: unknown): CameraSourceConfig[] {
   return raw.filter((c): c is CameraSourceConfig => isObject(c) && validId(c.id) && typeof c.kind === 'string' && typeof c.vehicleKey === 'string')
     .filter((c) => (seen.has(c.id) ? false : (seen.add(c.id), true)))
     .slice(0, 16);
-}
-
-function normalizeRelays(raw: unknown): PresetRelay[] {
-  if (!Array.isArray(raw)) return [];
-  const out: PresetRelay[] = [];
-  for (const r of raw) {
-    if (!isObject(r) || !validId(r.id) || out.some((x) => x.id === r.id)) continue;
-    const instance = typeof r.instance === 'number' && Number.isInteger(r.instance) ? Math.min(15, Math.max(0, r.instance)) : 0;
-    out.push({
-      id: r.id,
-      label: text(r.label, 32) || `RELAY${instance + 1}`,
-      instance,
-      kind: r.kind === 'momentary' ? 'momentary' : 'toggle',
-      icon: isOperatorIcon(r.icon) ? r.icon : 'power',
-      color: isOperatorColor(r.color) ? r.color : 'green',
-    });
-  }
-  return out.slice(0, 16);
 }
 
 export function normalizePreset(raw: unknown, takenIds: Set<string> = new Set()): VehiclePreset | null {

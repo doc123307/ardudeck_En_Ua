@@ -87,9 +87,15 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
   const relays = useRelayStore((s) => s.buttons);
   const addRelay = useRelayStore((s) => s.addButton);
   const removeRelay = useRelayStore((s) => s.removeButton);
-  const removedRelays = useRelayStore((s) => s.removed ?? []);
-  const restoreRelay = useRelayStore((s) => s.restoreButton);
-  const forgetRelay = useRelayStore((s) => s.forgetButton);
+  // Deleted outputs wait in the vehicle's own settings, so each vehicle offers back only its own.
+  const removedRelays = config.removedRelays;
+  const restoreRelay = (id: string) => {
+    const back = removedRelays.find((r) => r.id === id);
+    if (!back || relays.some((r) => r.id === id)) return;
+    addRelay(back as Partial<RelayButton>);
+    save({ removedRelays: removedRelays.filter((r) => r.id !== id) });
+  };
+  const forgetRelay = (id: string) => save({ removedRelays: removedRelays.filter((r) => r.id !== id) });
   const { pad } = useJoystick(config.rc.padId, config.padCalibration);
   const [open, setOpen] = useState<string | null>(null);
   const { rc } = config;
@@ -118,8 +124,10 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
     // Deleted outputs and functions are kept whole: the "Add" row offers them back by name.
     const panel = { controlOrder: arranged.filter((k) => k !== key), hiddenControls: config.hiddenControls.filter((k) => k !== key) };
     if (controlKind(key) === 'relay') {
-      removeRelay(key.slice('relay:'.length));
-      save(panel);
+      const id = key.slice('relay:'.length);
+      const gone = relays.find((r) => r.id === id);
+      removeRelay(id);
+      save({ ...panel, removedRelays: gone ? [gone, ...removedRelays.filter((r) => r.id !== id)].slice(0, 12) : removedRelays });
     } else {
       const gone = rc.functions.find((f) => `fn:${f.id}` === key);
       save({

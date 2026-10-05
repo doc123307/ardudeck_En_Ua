@@ -7,7 +7,7 @@
 
 import { create } from 'zustand';
 import {
-  newVehicleId, nextVehicleName, pickPanel, presetCameraMap,
+  newVehicleId, nextVehicleName, pickPanel, presetCameraMap, samePresetPart,
   type VehiclePreset, type VehiclesResult, type VehiclesState,
 } from '../../shared/vehicle-presets';
 import type { ConnectOptions } from '../../shared/ipc-channels';
@@ -117,7 +117,6 @@ export const useVehiclesStore = create<VehiclesStore>((set, get) => ({
   },
 }));
 
-const SEEDED_KEY = 'stohid-vehicles-seeded';
 const SYNC_DELAY_MS = 800;
 
 /**
@@ -129,18 +128,28 @@ export async function startVehicles(options: { defaultName: string; connectAtSta
   const store = useVehiclesStore.getState();
   let state = await store.load();
 
-  let seeded = false;
-  try { seeded = localStorage.getItem(SEEDED_KEY) === '1'; } catch { /* treat as not seeded */ }
-  if (state.presets.length === 0 && !seeded) {
-    const first = store.fromCurrent(nextVehicleName([], options.defaultName));
-    const saved = await window.electronAPI.vehiclesSave(first);
-    if (saved.ok) {
-      const activated = await window.electronAPI.vehiclesActivate(first.id);
-      state = activated.vehicles;
-      useVehiclesStore.setState({ state });
+  // A vehicle is always in use. On a first start - and on a list an older version left with
+  // none chosen - the settings in force become a vehicle of their own. The main process does
+  // it whatever the mode: the operator cannot add vehicles, yet must not be left without one.
+  if (!state.activeId) {
+    const made = await window.electronAPI.vehiclesEnsure(store.fromCurrent(nextVehicleName(state.presets, options.defaultName)));
+    state = made.vehicles;
+    useVehiclesStore.setState({ state });
+  }
+
+  // The vehicle in use is the source of truth. Cameras and outputs kept by this window that do
+  // not match it (a switch that was cut short, a list edited elsewhere) give way to the
+  // vehicle's own, instead of being written back over them.
+  const inUse = state.presets.find((p) => p.id === state.activeId);
+  if (inUse) {
+    const liveCameras = Object.values(useCameraStore.getState().sources);
+    const liveRelays = useRelayStore.getState().buttons;
+    if (!samePresetPart(liveCameras, inUse.cameras) || !samePresetPart(liveRelays, inUse.relays)) {
+      switching = true;
+      applyLiveParts(inUse);
+      setTimeout(() => { switching = false; }, 1500);
     }
   }
-  try { localStorage.setItem(SEEDED_KEY, '1'); } catch { /* nothing to remember it in */ }
 
   // The vehicle chosen last comes back by itself. The operator screen connects on its own;
   // the full UI is asked to here.

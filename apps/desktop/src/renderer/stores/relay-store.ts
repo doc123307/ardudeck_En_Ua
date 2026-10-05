@@ -41,8 +41,6 @@ interface VehicleRelays { on: number; present: number; at: number }
 
 interface RelayStoreState {
   buttons: RelayButton[];
-  /** Deleted outputs, kept whole so they can be put back. */
-  removed: RelayButton[];
   /** Live RELAY_STATUS per vehicle. */
   status: Record<string, VehicleRelays>;
   /** `${vehicleKey}:${instance}` -> requested state and when. */
@@ -53,10 +51,6 @@ interface RelayStoreState {
   addButton: (button?: Partial<RelayButton>) => void;
   updateButton: (id: string, patch: Partial<RelayButton>) => void;
   removeButton: (id: string) => void;
-  /** Puts a deleted output back as it was. */
-  restoreButton: (id: string) => void;
-  /** Forgets a deleted output for good. */
-  forgetButton: (id: string) => void;
   moveButton: (id: string, delta: -1 | 1) => void;
   recordStatus: (vehicleKey: string, on: number, present: number) => void;
   /** Sends the command; resolves when the vehicle confirmed or the wait ran out. */
@@ -77,7 +71,6 @@ export const useRelayStore = create<RelayStoreState>()(
   persist(
     (set, get) => ({
       buttons: defaultButtons(),
-      removed: [],
       status: {},
       pending: {},
       failed: {},
@@ -99,19 +92,7 @@ export const useRelayStore = create<RelayStoreState>()(
         };
       }),
       updateButton: (id, patch) => set((s) => ({ buttons: s.buttons.map((b) => (b.id === id ? { ...b, ...patch } : b)) })),
-      removeButton: (id) => set((s) => {
-        const gone = s.buttons.find((b) => b.id === id);
-        return {
-          buttons: s.buttons.filter((b) => b.id !== id),
-          removed: gone ? [gone, ...(s.removed ?? []).filter((b) => b.id !== id)].slice(0, 12) : s.removed ?? [],
-        };
-      }),
-      restoreButton: (id) => set((s) => {
-        const back = (s.removed ?? []).find((b) => b.id === id);
-        if (!back || s.buttons.some((b) => b.id === id)) return s;
-        return { buttons: [...s.buttons, back], removed: (s.removed ?? []).filter((b) => b.id !== id) };
-      }),
-      forgetButton: (id) => set((s) => ({ removed: (s.removed ?? []).filter((b) => b.id !== id) })),
+      removeButton: (id) => set((s) => ({ buttons: s.buttons.filter((b) => b.id !== id) })),
       moveButton: (id, delta) => set((s) => {
         const i = s.buttons.findIndex((b) => b.id === id);
         const j = i + delta;
@@ -159,7 +140,7 @@ export const useRelayStore = create<RelayStoreState>()(
     {
       name: 'stohid-relay-buttons',
       storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({ buttons: s.buttons, removed: s.removed }),
+      partialize: (s) => ({ buttons: s.buttons }),
     },
   ),
 );

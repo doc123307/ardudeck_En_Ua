@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { STATION_FIELDS, VEHICLE_PANEL_FIELDS } from './vehicle-presets';
 import {
   DEFAULT_OPERATOR_CONFIG, OPERATOR_CONFIG_SCHEMA, OPERATOR_MODE_BUTTONS, ROVER_MODE_NUMBER, normalizeOperatorConfig,
 } from './operator-types';
@@ -230,5 +231,20 @@ describe('deleted functions', () => {
     const runtime = new Map([[fn.id, { value: 1, active: true }]]);
     expect(composeChannels(stored, runtime as never, {})[fn.channel - 1]).toBe(65535);
     expect(normalizeRcConfig({}).removedFunctions).toEqual([]);
+  });
+});
+
+describe('where each setting lives', () => {
+  it('is decided for every one: with the vehicle or with the computer, never both, never neither', () => {
+    const all = Object.keys(DEFAULT_OPERATOR_CONFIG).sort();
+    const placed = [...VEHICLE_PANEL_FIELDS, ...STATION_FIELDS];
+    expect(new Set(placed).size).toBe(placed.length);
+    expect([...placed].sort()).toEqual(all);
+  });
+
+  it('keeps deleted vehicle outputs with the vehicle, cleaned', () => {
+    const c = normalizeOperatorConfig({ removedRelays: [{ id: 'lamp', label: ' Фара ', instance: 99, icon: 'nope' }, { id: 'lamp' }, { id: 'bad id' }, 7] });
+    expect(c.removedRelays).toEqual([{ id: 'lamp', label: 'Фара', instance: 15, kind: 'toggle', icon: 'power', color: 'green' }]);
+    expect(normalizeOperatorConfig({}).removedRelays).toEqual([]);
   });
 });

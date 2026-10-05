@@ -232,6 +232,7 @@ const api = {
   vehiclesState: (): Promise<VehiclesState> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_STATE),
   vehiclesSave: (preset: VehiclePreset): Promise<VehiclesResult> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_SAVE, preset),
   vehiclesDelete: (id: string): Promise<VehiclesResult> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_DELETE, id),
+  vehiclesEnsure: (preset: VehiclePreset): Promise<VehiclesResult> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_ENSURE, preset),
   vehiclesActivate: (id: string): Promise<VehiclesResult> => ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_ACTIVATE, id),
   vehiclesSync: (part: { cameras?: unknown[]; relays?: unknown[] }): Promise<VehiclesState> =>
     ipcRenderer.invoke(IPC_CHANNELS.VEHICLES_SYNC, part),

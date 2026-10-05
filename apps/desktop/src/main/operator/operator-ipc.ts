@@ -113,7 +113,15 @@ export function registerOperatorHandlers(link: OperatorRcLink): void {
   });
   ipcMain.handle(IPC_CHANNELS.VEHICLES_DELETE, (_, id: unknown): VehiclesResult => {
     if (!mayEdit()) return answer(false, 'not-allowed');
-    return answer(vehicles.remove(text(id)), 'not-found');
+    const outcome = vehicles.remove(text(id));
+    return outcome === 'ok' ? answer(true) : answer(false, outcome);
+  });
+  // Allowed in operator mode too: it only happens when nothing is in use, and it changes no setting.
+  ipcMain.handle(IPC_CHANNELS.VEHICLES_ENSURE, (_, raw: unknown): VehiclesResult => {
+    if (vehicles.active()) return answer(true);
+    // The panel is taken from the settings in force, not from the caller.
+    const candidate = raw && typeof raw === 'object' ? { ...(raw as object), panel: pickPanel(getVault().state().config) } : null;
+    return vehicles.ensureActive(candidate) ? answer(true) : answer(false, 'storage');
   });
   ipcMain.handle(IPC_CHANNELS.VEHICLES_ACTIVATE, (_, id: unknown): VehiclesResult => {
     const preset = vehicles.setActive(text(id));

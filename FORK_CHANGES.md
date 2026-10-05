@@ -150,6 +150,11 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 - **Deleted panel elements come back.** A button, switch, slider or vehicle output deleted from the operator
   panel is kept whole and offered in the "Add" row under its own name; one click puts it back with all its
   settings (the cross forgets it for good). Built-in controls were already restorable.
+- **A vehicle is always in use.** On a first start the program itself makes the first vehicle out of the
+  settings in force, in operator mode too (before, a copy first started in operator mode was left with "no
+  vehicle chosen" while its buttons came from defaults that belonged to nothing). The vehicle in use cannot
+  be deleted. At start the vehicle in use is the source of truth for cameras and outputs. A test holds every
+  operator setting to exactly one home: with the vehicle or with the computer.
 - **Supplier contacts.** The About page shows a site (https://www.stohid.com/ by default), Telegram, phone,
   e-mail and a free line instead of one contact.
 - **Activation: one copy, one PC.** An installed copy shows the computer's code (a fingerprint of the
@@ -406,6 +411,11 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 - **Видалені елементи панелі повертаються.** Видалена з панелі оператора кнопка, перемикач, повзунок чи
   вихід борту зберігається цілком і пропонується в рядку «Додати» під своєю назвою; один клік повертає її з
   усіма налаштуваннями (хрестик забуває назавжди). Вбудовані елементи поверталися й раніше.
+- **Борт завжди вибрано.** Під час першого запуску програма сама створює перший борт із чинних
+  налаштувань — і в режимі оператора теж (раніше копія, вперше запущена в режимі оператора, лишалася з
+  написом «Борт не вибрано», а її кнопки бралися з типових налаштувань, які нічому не належали). Борт, що в
+  роботі, видалити не можна. Під час запуску джерелом правди для камер і виходів є борт у роботі. Тест
+  стежить, щоб кожне налаштування оператора мало рівно одне місце: з бортом або з комп'ютером.
 - **Контакти постачальника.** На сторінці «Про програму» замість одного контакту — сайт (типово
   https://www.stohid.com/), Telegram, телефон, пошта й довільний рядок.
 - **Активація: одна копія — один комп'ютер.** Встановлена копія показує код комп'ютера (відбиток

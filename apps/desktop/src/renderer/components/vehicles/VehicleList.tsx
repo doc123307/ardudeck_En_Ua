@@ -187,7 +187,10 @@ export function VehicleList({ canEdit, onPicked }: { canEdit: boolean; onPicked?
                     onClick={() => void store({ ...structuredClone(p), id: newVehicleId(state.presets), name: `${p.name} (${t('vehicles.VehicleList.copySuffix')})` })}>
                     <Copy className="h-3.5 w-3.5" />
                   </button>
-                  <button type="button" className={`${ICON_BTN} hover:text-red-400`} onClick={() => setConfirm({ id: p.id, kind: 'delete' })} data-tip={t('vehicles.VehicleList.remove')}><Trash2 className="h-3.5 w-3.5" /></button>
+                  {/* The vehicle in use is not deleted: the settings on screen are its settings. */}
+                  <button type="button" disabled={active} className={`${ICON_BTN} hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-content-tertiary`}
+                    onClick={() => setConfirm({ id: p.id, kind: 'delete' })}
+                    data-tip={active ? t('vehicles.VehicleList.removeInUse') : t('vehicles.VehicleList.remove')}><Trash2 className="h-3.5 w-3.5" /></button>
                 </>
               )}
               </div>
@@ -196,7 +199,11 @@ export function VehicleList({ canEdit, onPicked }: { canEdit: boolean; onPicked?
               <div className="flex flex-wrap items-center gap-2 border-t border-subtle bg-surface px-3 py-2 text-xs text-content">
                 <span className="flex-1">{confirm.kind === 'switch' ? t('vehicles.VehicleList.confirmSwitch', { name: p.name }) : t('vehicles.VehicleList.confirmDelete', { name: p.name })}</span>
                 <button type="button" className={`${BTN} ${confirm.kind === 'delete' ? 'border-red-500 bg-red-600 text-white' : 'border-blue-500 bg-blue-600 text-white'}`}
-                  onClick={() => { if (confirm.kind === 'switch') void pick(p.id); else { setConfirm(null); void remove(p.id); } }}>
+                  onClick={() => {
+                    if (confirm.kind === 'switch') { void pick(p.id); return; }
+                    setConfirm(null);
+                    void remove(p.id).then((r) => { if (!r.ok) setNote(t(r.error === 'in-use' ? 'vehicles.VehicleList.removeInUse' : 'vehicles.VehicleList.failed')); });
+                  }}>
                   {confirm.kind === 'switch' ? t('vehicles.VehicleList.yesSwitch') : t('vehicles.VehicleList.yesDelete')}
                 </button>
                 <button type="button" className={BTN} onClick={() => setConfirm(null)}>{t('vehicles.VehicleList.cancel')}</button>

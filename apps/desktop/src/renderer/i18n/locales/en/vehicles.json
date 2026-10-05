@@ -41,7 +41,8 @@
       "port": "Port",
       "serialPort": "Port",
       "baud": "Baud rate",
-      "panelNote": "The vehicle also keeps its cameras and its operator panel: buttons, switches, channels, outputs, values and modes. Cameras are set up in the camera settings, the panel in Settings → «Operator workspace» - while this vehicle is in use; they come back whenever it is chosen."
+      "panelNote": "The vehicle also keeps its cameras and its operator panel: buttons, switches, channels, outputs, values and modes. Cameras are set up in the camera settings, the panel in Settings → «Operator workspace» - while this vehicle is in use; they come back whenever it is chosen.",
+      "removeInUse": "The vehicle in use cannot be deleted. Choose another one first."
     }
   }
 }

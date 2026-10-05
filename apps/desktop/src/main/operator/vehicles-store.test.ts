@@ -43,21 +43,41 @@ describe('VehiclesStore', () => {
     store.save({ ...preset('a', 'Розвідник'), cameras: [] });
     expect(store.state().presets.map((p) => `${p.id}:${p.name}:${p.cameras.length}`)).toEqual(['a:Розвідник:0', 'b:Борт 2:2']);
     expect(new VehiclesStore(dir).state().presets).toHaveLength(2);
-    expect(store.remove('a')).toBe(true);
-    expect(store.remove('nope')).toBe(false);
+    expect(store.remove('a')).toBe('ok');
+    expect(store.remove('nope')).toBe('not-found');
     expect(store.state().presets.map((p) => p.id)).toEqual(['b']);
   });
 
-  it('remembers the vehicle in use, and forgets it when it is deleted', () => {
+  it('remembers the vehicle in use, and does not let it be deleted', () => {
     store.save(preset('a', 'A'));
     store.save(preset('b', 'B'));
     expect(store.setActive('b')?.name).toBe('B');
     expect(new VehiclesStore(dir).state().activeId).toBe('b');
     expect(store.setActive('ghost')).toBeNull();
     expect(store.state().activeId).toBe('b');
-    store.remove('b');
-    expect(store.state().activeId).toBeNull();
-    expect(store.active()).toBeNull();
+    // The settings on screen are this vehicle's: with it gone they would belong to nothing.
+    expect(store.remove('b')).toBe('in-use');
+    expect(store.state().activeId).toBe('b');
+    expect(store.remove('a')).toBe('ok');
+    expect(store.state().presets.map((p) => p.id)).toEqual(['b']);
+  });
+
+  it('makes a vehicle of the settings in force when none is in use, and only then', () => {
+    // A first start: nothing in the list.
+    expect(store.ensureActive(preset('first', 'Борт 1'))?.id).toBe('first');
+    expect(store.state()).toMatchObject({ activeId: 'first' });
+    // Something is in use already: nothing is added.
+    expect(store.ensureActive(preset('second', 'Борт 2'))).toBeNull();
+    expect(store.state().presets.map((p) => p.id)).toEqual(['first']);
+    // A list left by an older version with vehicles but none chosen: the current settings are
+    // kept as a vehicle of their own rather than overwritten by one from the list.
+    writeFileSync(join(dir, 'vehicles.json'), JSON.stringify({ activeId: null, presets: [preset('old', 'Старий')] }));
+    const reopened = new VehiclesStore(dir);
+    expect(reopened.active()).toBeNull();
+    expect(reopened.ensureActive(preset('now', 'Борт 2'))?.id).toBe('now');
+    expect(reopened.state()).toMatchObject({ activeId: 'now' });
+    expect(reopened.state().presets.map((p) => p.id)).toEqual(['old', 'now']);
+    expect(reopened.ensureActive(null)).toBeNull();
   });
 
   it('writes changes back into the vehicle in use only', () => {
@@ -113,7 +133,7 @@ describe('vehicle presets', () => {
   it('keep exactly the operator settings that belong to a vehicle', () => {
     const config = normalizeOperatorConfig({ allowArm: false, recordMode: 'manual', supportContact: '@x' });
     const panel = pickPanel(config);
-    expect(Object.keys(panel).sort()).toEqual(['allowArm', 'controlOrder', 'hiddenControls', 'modeButtons', 'panelIconsOnly', 'rc', 'removedControls', 'statusFields', 'values']);
+    expect(Object.keys(panel).sort()).toEqual(['allowArm', 'controlOrder', 'hiddenControls', 'modeButtons', 'panelIconsOnly', 'rc', 'removedControls', 'removedRelays', 'statusFields', 'values']);
     expect(panel.allowArm).toBe(false);
     // A copy, not the live object.
     panel.rc.functions.pop();

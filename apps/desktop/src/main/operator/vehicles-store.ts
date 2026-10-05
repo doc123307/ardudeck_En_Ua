@@ -57,12 +57,26 @@ export class VehiclesStore {
     return this.write({ ...this.current, presets }) ? preset : null;
   }
 
-  remove(id: string): boolean {
-    if (!this.current.presets.some((p) => p.id === id)) return false;
-    return this.write({
-      activeId: this.current.activeId === id ? null : this.current.activeId,
-      presets: this.current.presets.filter((p) => p.id !== id),
-    });
+  /**
+   * Deletes a vehicle that is not in use. The one in use stays: the settings on screen are
+   * its settings, and with it gone they would belong to nothing.
+   */
+  remove(id: string): 'ok' | 'not-found' | 'in-use' | 'storage' {
+    if (!this.current.presets.some((p) => p.id === id)) return 'not-found';
+    if (this.current.activeId === id) return 'in-use';
+    return this.write({ ...this.current, presets: this.current.presets.filter((p) => p.id !== id) }) ? 'ok' : 'storage';
+  }
+
+  /**
+   * No vehicle is in use (a first start, or a list left without one by an older version):
+   * the settings in force become a vehicle of their own and it is the one in use. Null when
+   * there is nothing to do or it cannot be stored.
+   */
+  ensureActive(raw: unknown): VehiclePreset | null {
+    if (this.active()) return null;
+    const saved = this.save(raw);
+    if (!saved) return null;
+    return this.setActive(saved.id);
   }
 
   setActive(id: string | null): VehiclePreset | null {

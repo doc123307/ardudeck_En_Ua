@@ -980,6 +980,8 @@ export const IPC_CHANNELS = {
   /** Renderer → main: add or replace a vehicle; returns VehiclesResult. */
   VEHICLES_SAVE: 'vehicles:save',
   VEHICLES_DELETE: 'vehicles:delete',
+  /** Renderer → main, any mode: no vehicle is in use, so the current settings become one; returns VehiclesResult. */
+  VEHICLES_ENSURE: 'vehicles:ensure',
   /** Renderer → main: make a vehicle the one in use; its settings take effect. Returns VehiclesResult. */
   VEHICLES_ACTIVATE: 'vehicles:activate',
   /** Renderer → main: the live cameras and outputs, written back into the vehicle in use. */
