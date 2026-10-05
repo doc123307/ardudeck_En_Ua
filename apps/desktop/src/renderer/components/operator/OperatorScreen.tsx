@@ -20,7 +20,7 @@ import { OperatorControls } from './OperatorControlBar';
 import { useOperatorRc } from './useOperatorRc';
 import { OperatorCameras } from './OperatorCameras';
 import { OperatorMiniMap } from './OperatorMiniMap';
-import { OperatorInfoBlock } from './OperatorInfoBlock';
+import { OperatorInfoDock } from './OperatorInfoDock';
 import { OperatorMessages } from './OperatorMessages';
 import { HoldButton } from './HoldButton';
 import { useOperatorFeeds, useOperatorRecording } from './useOperatorFeeds';
@@ -172,11 +172,7 @@ export function OperatorScreen() {
         {/* Nothing is placed until the area has a size: a window laid out against 0x0 would jump. */}
         {area.width > 0 && <OperatorCameras feeds={feeds} area={area} allowPopOut={shows('popOut')} controls={shows('cameraControls')} />}
         {area.width > 0 && shows('map') && <OperatorMiniMap area={area} allowPopOut={shows('popOut')} />}
-        {shows('infoBlock') && (
-          <div className="pointer-events-none absolute bottom-3 right-3 z-[14]">
-            <OperatorInfoBlock tilt={shows('attitude')} />
-          </div>
-        )}
+        {area.width > 0 && shows('infoBlock') && <OperatorInfoDock area={area} tilt={shows('attitude')} />}
 
         {toast && (
           <div className={`pointer-events-none absolute left-1/2 top-14 z-30 max-w-[80%] -translate-x-1/2 rounded-lg px-4 py-2 text-center text-sm font-medium shadow-xl ${

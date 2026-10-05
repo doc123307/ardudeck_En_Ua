@@ -505,6 +505,13 @@
     "OperatorTilt": {
       "roll": "Roll",
       "pitch": "Pitch"
+    },
+    "OperatorInfoDock": {
+      "unlock": "Unlock to move the block or change its size",
+      "lock": "Lock: the block stays where it is and as it is",
+      "smaller": "Smaller",
+      "larger": "Larger",
+      "dragHint": "drag"
     }
   }
 }

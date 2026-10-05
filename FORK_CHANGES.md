@@ -149,6 +149,10 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   counted on the line. Code: `src/renderer/components/operator/OperatorMessages.tsx`.
 - **Roll and pitch drawn.** Next to the compass the vehicle is drawn from behind (roll) and from the side
   (pitch); the drawings lean with the vehicle and take the warning and limit colours of the numbers.
+- **The information block can be sized, moved and locked.** The block in the corner (tilt, heading,
+  altitude, speed, time) starts smaller on narrow screens; unlocked, it is dragged and resized (50-150%),
+  and locked again it stays where it was put. It is held to the bottom-right corner, so resizing the
+  window does not shift it. Code: `src/renderer/components/operator/OperatorInfoDock.tsx`.
 - **STOP lets go.** Pressed while the vehicle is stopped, the STOP button (now "Go on") returns the mode the
   vehicle was driven in. The Space key still only stops.
 - **Reverse driving: direction and channels.** Reverse can swap forward/back (or not) and send steering and
@@ -415,6 +419,10 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   помилки рахуються на рядку.
 - **Крен і тангаж малюнком.** Поруч із компасом борт намальовано ззаду (крен) і збоку (тангаж); малюнки
   нахиляються разом із бортом і набувають кольорів попередження й межі, як і числа.
+- **Інформаційний блок можна зменшити, пересунути й закріпити.** Блок у кутку (крен, тангаж, курс,
+  висота, швидкість, час) на вузьких екранах одразу менший; розблокований, він перетягується й змінює
+  розмір (50–150%), а закріплений лишається там, де його поставили. Він прив'язаний до правого нижнього
+  кута, тож зміна розміру вікна його не зсуває.
 - **«СТОП» відпускає.** Якщо борт зупинено, та сама кнопка (тепер «Продовжити») повертає режим, у якому
   їхали. Клавіша Пробіл, як і раніше, лише зупиняє.
 - **Реверс: напрямок і канали.** У реверсі можна міняти (або не міняти) «вперед/назад» і слати кермо й газ
