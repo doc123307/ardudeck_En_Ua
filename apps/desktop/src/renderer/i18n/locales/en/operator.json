@@ -412,7 +412,9 @@
       "add": "Add:",
       "addRelay": "Vehicle output (relay)",
       "iconsOnly": "Icons only on the panel",
-      "iconsOnlyHint": "For a panel with many controls: the names move into the tooltips."
+      "iconsOnlyHint": "For a panel with many controls: the names move into the tooltips.",
+      "restoreTip": "Put the deleted element back with all its settings",
+      "forgetTip": "Forget it for good"
     },
     "OperatorValuesSettings": {
       "hint": "Values across the top of the operator screen, in this order. Besides the built-in ones, any value the vehicle has can be added: a field of any MAVLink message, a named value (NAMED_VALUE from a Lua script or a companion computer) or a flight controller parameter, with a unit, a scale and limits at which it turns amber and red.",

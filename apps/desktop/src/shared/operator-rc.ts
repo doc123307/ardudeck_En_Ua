@@ -91,6 +91,8 @@ export type OperatorRcFunction = RcButtonFunction | RcSwitchFunction | RcSliderF
 export type RcFunctionKind = OperatorRcFunction['kind'];
 export const RC_FUNCTION_KINDS: readonly RcFunctionKind[] = ['button', 'switch3', 'slider'];
 export const RC_MAX_FUNCTIONS = 16;
+/** How many deleted functions are remembered; the oldest go first. */
+export const RC_MAX_REMOVED = 12;
 
 export interface RcDriveConfig {
   /** The operator may drive from a joystick. Taking control is still a deliberate press, every session. */
@@ -146,6 +148,8 @@ export interface OperatorRcConfig {
   cruise: RcCruiseConfig;
   reverse: RcReverseConfig;
   functions: OperatorRcFunction[];
+  /** Functions deleted from the panel, kept whole so they can be put back. Nothing is sent for them. */
+  removedFunctions: OperatorRcFunction[];
 }
 
 export const DEFAULT_RC_CONFIG: OperatorRcConfig = {
@@ -176,6 +180,7 @@ export const DEFAULT_RC_CONFIG: OperatorRcConfig = {
     { id: 'aux10', label: 'AUX 10', channel: 10, output: 'rc', kind: 'switch3', springCenter: false, startCenter: true, lowPwm: 1000, midPwm: 1500, highPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'arrowUpDown', color: 'blue' },
     { id: 'aux11', label: 'AUX 11', channel: 11, output: 'rc', kind: 'slider', spring: 'none', minPwm: 1000, maxPwm: 2000, input: { kind: 'none' }, sendOnConnect: false, icon: 'gauge', color: 'amber' },
   ],
+  removedFunctions: [],
 };
 
 /** The icon a new function of a kind starts with. */
@@ -189,7 +194,7 @@ export function newRcFunction(kind: RcFunctionKind, existing: OperatorRcConfig, 
   let channel = 5;
   while (channel < RC_MAX_CHANNEL && used.has(channel)) channel++;
   let n = existing.functions.length + 1;
-  while (existing.functions.some((f) => f.id === `fn${n}`)) n++;
+  while ([...existing.functions, ...existing.removedFunctions].some((f) => f.id === `fn${n}`)) n++;
   const common = {
     id: `fn${n}`, label: output === 'rc' ? `AUX ${channel}` : `SERVO ${channel}`, channel, output, input: { kind: 'none' } as RcInput,
     sendOnConnect: false, icon: RC_KIND_ICON[kind], color: 'green' as OperatorColor,
@@ -271,6 +276,12 @@ export function normalizeRcConfig(raw: unknown): OperatorRcConfig {
     const fn = normalizeFunction(item, ids);
     if (fn) { ids.add(fn.id); functions.push(fn); }
   }
+  const removedFunctions: OperatorRcFunction[] = [];
+  for (const item of Array.isArray(raw.removedFunctions) ? raw.removedFunctions : []) {
+    if (removedFunctions.length >= RC_MAX_REMOVED) break;
+    const fn = normalizeFunction(item, ids);
+    if (fn) { ids.add(fn.id); removedFunctions.push(fn); }
+  }
   return {
     padId: typeof raw.padId === 'string' ? raw.padId.trim().slice(0, 120) : '',
     drive: {
@@ -307,6 +318,7 @@ export function normalizeRcConfig(raw: unknown): OperatorRcConfig {
       toggleButton: buttonIndex(reverse.toggleButton),
     },
     functions,
+    removedFunctions,
   };
 }
 

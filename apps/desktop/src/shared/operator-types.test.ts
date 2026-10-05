@@ -219,3 +219,16 @@ describe('supplier contacts', () => {
       .toMatchObject({ supportSite: 'example.org', supportPhone: '+380 00 000 00 00', supportEmail: '' });
   });
 });
+
+describe('deleted functions', () => {
+  it('are kept whole to be put back, without clashing ids, and send nothing', () => {
+    const fn = DEFAULT_RC_CONFIG.functions[0]!;
+    const stored = normalizeRcConfig({ functions: DEFAULT_RC_CONFIG.functions.slice(1), removedFunctions: [fn, fn, { ...DEFAULT_RC_CONFIG.functions[1]!, label: 'copy' }, 'junk'] });
+    expect(stored.functions.map((f) => f.id)).toEqual(['aux10', 'aux11']);
+    // The duplicate and the one whose id is in use are dropped.
+    expect(stored.removedFunctions).toEqual([fn]);
+    const runtime = new Map([[fn.id, { value: 1, active: true }]]);
+    expect(composeChannels(stored, runtime as never, {})[fn.channel - 1]).toBe(65535);
+    expect(normalizeRcConfig({}).removedFunctions).toEqual([]);
+  });
+});

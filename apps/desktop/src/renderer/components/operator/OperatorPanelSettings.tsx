@@ -9,6 +9,7 @@ import { useState } from 'react';
 import {
   ArrowLeftRight, ChevronDown, ChevronUp, Circle, Columns2, Eye, EyeOff, Gamepad2, Gauge, LayoutGrid, OctagonX, Pencil,
   Plus, RotateCcw, Trash2, type LucideIcon,
+  X,
 } from 'lucide-react';
 import { useOperatorStore } from '../../stores/operator-store';
 import { useRelayStore, type RelayButton } from '../../stores/relay-store';
@@ -16,7 +17,7 @@ import {
   arrangeControls, controlKind, defaultControlOrder, moveControl, type BuiltinControl,
 } from '../../../shared/operator-panel';
 import {
-  RC_FUNCTION_KINDS, RC_MAX_FUNCTIONS, newRcFunction, rcChannelConflicts, servoConflicts,
+  RC_FUNCTION_KINDS, RC_MAX_FUNCTIONS, RC_MAX_REMOVED, newRcFunction, rcChannelConflicts, servoConflicts,
   type OperatorRcFunction, type RcFunctionKind,
 } from '../../../shared/operator-rc';
 import type { OperatorConfig } from '../../../shared/operator-types';
@@ -67,10 +68,28 @@ function RelayEditor({ button }: { button: RelayButton }) {
   );
 }
 
+/** A deleted element in the "Add" row: one click puts it back as it was, the cross forgets it for good. */
+function RestoreChip({ name, disabled, onRestore, onForget }: { name: string; disabled: boolean; onRestore: () => void; onForget: () => void }) {
+  return (
+    <span className="flex items-center rounded-lg border border-dashed border-subtle text-sm text-content-secondary hover:border-blue-500/60">
+      <button type="button" onClick={onRestore} disabled={disabled} data-tip={t('operator.OperatorPanelSettings.restoreTip')}
+        className="flex items-center gap-1.5 py-1.5 pl-2.5 pr-1 hover:text-content disabled:cursor-not-allowed disabled:opacity-40">
+        <Plus className="h-3.5 w-3.5" />{name}
+      </button>
+      <button type="button" onClick={onForget} data-tip={t('operator.OperatorPanelSettings.forgetTip')} className="px-1.5 py-1.5 text-content-tertiary hover:text-red-400">
+        <X className="h-3 w-3" />
+      </button>
+    </span>
+  );
+}
+
 export function OperatorPanelSettings({ config, save }: { config: OperatorConfig; save: (patch: Partial<OperatorConfig>) => void }) {
   const relays = useRelayStore((s) => s.buttons);
   const addRelay = useRelayStore((s) => s.addButton);
   const removeRelay = useRelayStore((s) => s.removeButton);
+  const removedRelays = useRelayStore((s) => s.removed ?? []);
+  const restoreRelay = useRelayStore((s) => s.restoreButton);
+  const forgetRelay = useRelayStore((s) => s.forgetButton);
   const { pad } = useJoystick(config.rc.padId, config.padCalibration);
   const [open, setOpen] = useState<string | null>(null);
   const { rc } = config;
@@ -96,11 +115,30 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
       if (open === key) setOpen(null);
       return;
     }
-    if (controlKind(key) === 'relay') removeRelay(key.slice('relay:'.length));
-    else save({ rc: { ...rc, functions: rc.functions.filter((f) => `fn:${f.id}` !== key) } });
-    save({ controlOrder: arranged.filter((k) => k !== key), hiddenControls: config.hiddenControls.filter((k) => k !== key) });
+    // Deleted outputs and functions are kept whole: the "Add" row offers them back by name.
+    const panel = { controlOrder: arranged.filter((k) => k !== key), hiddenControls: config.hiddenControls.filter((k) => k !== key) };
+    if (controlKind(key) === 'relay') {
+      removeRelay(key.slice('relay:'.length));
+      save(panel);
+    } else {
+      const gone = rc.functions.find((f) => `fn:${f.id}` === key);
+      save({
+        ...panel,
+        rc: {
+          ...rc,
+          functions: rc.functions.filter((f) => `fn:${f.id}` !== key),
+          removedFunctions: gone ? [gone, ...rc.removedFunctions].slice(0, RC_MAX_REMOVED) : rc.removedFunctions,
+        },
+      });
+    }
     if (open === key) setOpen(null);
   };
+  const restoreFunction = (id: string) => {
+    const back = rc.removedFunctions.find((f) => f.id === id);
+    if (!back) return;
+    save({ rc: { ...rc, functions: [...rc.functions, back], removedFunctions: rc.removedFunctions.filter((f) => f.id !== id) } });
+  };
+  const forgetFunction = (id: string) => save({ rc: { ...rc, removedFunctions: rc.removedFunctions.filter((f) => f.id !== id) } });
   const addOutput = () => {
     addRelay();
     const added = useRelayStore.getState().buttons.at(-1);
@@ -197,6 +235,14 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
           <button type="button" onClick={addOutput} disabled={relays.length >= 16} className={`${BTN} flex items-center gap-1.5`}>
             <Plus className="h-3.5 w-3.5" />{t('operator.OperatorPanelSettings.addRelay')}
           </button>
+          {rc.removedFunctions.map((fn) => (
+            <RestoreChip key={`fn:${fn.id}`} name={fn.label} disabled={rc.functions.length >= RC_MAX_FUNCTIONS}
+              onRestore={() => restoreFunction(fn.id)} onForget={() => forgetFunction(fn.id)} />
+          ))}
+          {removedRelays.map((relay) => (
+            <RestoreChip key={`relay:${relay.id}`} name={relay.label} disabled={relays.length >= 16}
+              onRestore={() => restoreRelay(relay.id)} onForget={() => forgetRelay(relay.id)} />
+          ))}
           {config.removedControls.map((key) => {
             const Icon = BUILTIN_ICON[key as BuiltinControl];
             return (

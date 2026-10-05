@@ -147,6 +147,9 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   vehicle was driven in. The Space key still only stops.
 - **Reverse driving: direction and channels.** Reverse can swap forward/back (or not) and send steering and
   throttle on channels of their own; the sticks are used exactly as when driving forward.
+- **Deleted panel elements come back.** A button, switch, slider or vehicle output deleted from the operator
+  panel is kept whole and offered in the "Add" row under its own name; one click puts it back with all its
+  settings (the cross forgets it for good). Built-in controls were already restorable.
 - **Supplier contacts.** The About page shows a site (https://www.stohid.com/ by default), Telegram, phone,
   e-mail and a free line instead of one contact.
 - **Activation: one copy, one PC.** An installed copy shows the computer's code (a fingerprint of the
@@ -400,6 +403,9 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   їхали. Клавіша Пробіл, як і раніше, лише зупиняє.
 - **Реверс: напрямок і канали.** У реверсі можна міняти (або не міняти) «вперед/назад» і слати кермо й газ
   власними каналами; стіками користуються так само, як під час руху вперед.
+- **Видалені елементи панелі повертаються.** Видалена з панелі оператора кнопка, перемикач, повзунок чи
+  вихід борту зберігається цілком і пропонується в рядку «Додати» під своєю назвою; один клік повертає її з
+  усіма налаштуваннями (хрестик забуває назавжди). Вбудовані елементи поверталися й раніше.
 - **Контакти постачальника.** На сторінці «Про програму» замість одного контакту — сайт (типово
   https://www.stohid.com/), Telegram, телефон, пошта й довільний рядок.
 - **Активація: одна копія — один комп'ютер.** Встановлена копія показує код комп'ютера (відбиток
