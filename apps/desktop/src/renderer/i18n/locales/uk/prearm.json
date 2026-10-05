@@ -10,7 +10,7 @@
       "issue": "проблем",
       "ready": "Готово",
       "recheck": "Перевірити знову",
-      "readyToArm": "Готово до армування"
+      "readyToArm": "Готово до ARM"
     },
     "SafetyConfigCard": {
       "doNotFly": "Не літайте",

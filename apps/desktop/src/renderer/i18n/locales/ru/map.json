@@ -56,7 +56,7 @@
       "return": "Возврат",
       "takingOffTo": "Взлёт до {{v1}}...",
       "pressAgainToConfirm": "Нажмите ещё раз для подтверждения",
-      "disarmMotors": "Дизармить моторы",
+      "disarmMotors": "Сделать DISARM моторы",
       "armMotors": "Армить моторы",
       "changeFlightMode": "Сменить полётный режим",
       "abortTo": "Прервать в {{abortLabel}}",

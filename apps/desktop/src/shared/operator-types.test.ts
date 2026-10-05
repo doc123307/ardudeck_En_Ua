@@ -54,11 +54,24 @@ describe('operator settings', () => {
 });
 
 describe('choosing the joystick', () => {
-  const pads = [null, { id: 'Xbox Controller' }, { id: 'Thrustmaster T.16000M' }];
+  const axes = (n: number) => new Array<number>(n).fill(0);
+  const pads = [null, { id: 'Xbox Controller', axes: axes(4) }, { id: 'Thrustmaster T.16000M', axes: axes(4) }];
 
-  it('takes the first one unless the administrator named one', () => {
+  it('takes the first real controller unless the administrator named one', () => {
     expect(pickPad(pads, '')?.id).toBe('Xbox Controller');
     expect(pickPad(pads, 'thrustmaster')?.id).toBe('Thrustmaster T.16000M');
+  });
+
+  it('never takes a headset for the joystick, and prefers a transmitter', () => {
+    // What Chromium listed on the user's PC: the headset first, the transmitter second.
+    const seen = [
+      { id: 'USB Audio2.0 (Vendor: 10d6 Product: b011)', axes: axes(0) },
+      { id: 'Radiomaster TX12 Joystick (Vendor: 1209 Product: 4f54)', axes: axes(8) },
+    ];
+    expect(pickPad(seen, '')?.id).toContain('Radiomaster TX12');
+    expect(pickPad([{ id: 'Generic USB pad', axes: axes(6) }, { id: 'EdgeTX Radio', axes: axes(4) }], '')?.id).toBe('EdgeTX Radio');
+    expect(pickPad([{ id: 'USB Audio2.0', axes: axes(0) }], '')).toBeNull();
+    expect(pickPad([{ id: 'Logitech Headset with 2 axes', axes: axes(2) }], '')).toBeNull();
   });
 
   it('does not swap a named joystick that is unplugged for another one', () => {

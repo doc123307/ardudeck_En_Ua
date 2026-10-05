@@ -113,7 +113,7 @@ describe('vehicle presets', () => {
   it('keep exactly the operator settings that belong to a vehicle', () => {
     const config = normalizeOperatorConfig({ allowArm: false, recordMode: 'manual', supportContact: '@x' });
     const panel = pickPanel(config);
-    expect(Object.keys(panel).sort()).toEqual(['allowArm', 'controlOrder', 'hiddenControls', 'modeButtons', 'rc', 'statusFields', 'values']);
+    expect(Object.keys(panel).sort()).toEqual(['allowArm', 'controlOrder', 'hiddenControls', 'modeButtons', 'panelIconsOnly', 'rc', 'removedControls', 'statusFields', 'values']);
     expect(panel.allowArm).toBe(false);
     // A copy, not the live object.
     panel.rc.functions.pop();

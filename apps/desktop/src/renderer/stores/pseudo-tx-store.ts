@@ -34,6 +34,7 @@ import {
   type RcFunctionMap,
 } from '../utils/pseudo-tx';
 import { packOverrideChannels } from '../utils/rc-vehicle-override';
+import { pickPad } from '../../shared/operator-rc';
 import {
   claimRcOverride,
   releaseRcOverride,
@@ -133,7 +134,9 @@ function readGamepad(
   if (typeof navigator === 'undefined' || !navigator.getGamepads) return null;
   const pads = Array.from(navigator.getGamepads()).filter((p): p is Gamepad => p != null);
   if (pads.length === 0) return null;
-  const pad = (index != null && pads.find((p) => p.index === index)) || pads[0]!;
+  // STOHID: not simply the first "gamepad": a USB headset is often listed ahead of the transmitter.
+  const pad = (index != null && pads.find((p) => p.index === index)) || pickPad(pads, '');
+  if (!pad) return null;
   return {
     dev: { axes: Array.from(pad.axes), buttons: pad.buttons.map((b) => b.pressed) },
     id: pad.id,

@@ -55,8 +55,8 @@
       "max": "Макс",
       "fastestUpdatesForFastLinksLike": "Самые быстрые обновления, для быстрых каналов вроде USB или WiFi",
       "noLink": "Нет связи",
-      "armed": "Армирован",
-      "disarmed": "Дизармирован",
+      "armed": "ARMED",
+      "disarmed": "DISARMED",
       "notConnected": "Не подключено",
       "copied": "Скопировано",
       "couldNotShare": "Не удалось поделиться"

@@ -28,7 +28,7 @@
       "current": "Струм",
       "used": "Витрачено",
       "status": "Стан",
-      "armed": "Заармлено",
+      "armed": "ARMED",
       "cpuLoad": "Завантаження CPU",
       "cycleTime": "Час циклу",
       "fix": "Фікс",

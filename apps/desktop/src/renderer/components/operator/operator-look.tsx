@@ -32,7 +32,7 @@ export const SWATCH: Record<OperatorColor, string> = {
   white: 'bg-white ring-1 ring-slate-400/70', amber: 'bg-amber-400', red: 'bg-red-500', ir: 'bg-violet-500', green: 'bg-emerald-500', blue: 'bg-sky-500',
 };
 
-const CHIP = 'relative inline-flex h-9 shrink-0 select-none items-center gap-1.5 rounded-md border px-2 text-[13px] font-medium leading-none transition-colors disabled:cursor-not-allowed disabled:opacity-40';
+const CHIP = 'relative inline-flex h-8 shrink-0 select-none items-center gap-1 rounded-md border px-1.5 text-xs font-medium leading-none transition-colors disabled:cursor-not-allowed disabled:opacity-40';
 const OFF = 'border-subtle bg-surface-raised text-content-secondary hover:border-content-tertiary/60 hover:text-content';
 export const WARN_STYLE = 'border-amber-400 bg-amber-400/20 text-amber-500 animate-pulse';
 
@@ -54,20 +54,21 @@ type ChipProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 /** One control on the bar. */
 export const Chip = forwardRef<HTMLButtonElement, ChipProps>(function Chip({ tone = 'off', icon: Icon, label, square, className = '', children, ...rest }, ref) {
   return (
-    <button ref={ref} type="button" {...rest} className={chipClass(tone, `${square ? 'w-9 justify-center px-0' : ''} ${className}`)}>
-      {Icon && <Icon className="h-4 w-4 shrink-0" />}
-      {label !== undefined && <span className="max-w-[9rem] truncate">{label}</span>}
+    <button ref={ref} type="button" {...rest} className={chipClass(tone, `${square ? 'w-8 justify-center px-0' : ''} ${className}`)}>
+      {Icon && <Icon className="h-3.5 w-3.5 shrink-0" />}
+      {label !== undefined && <span className="max-w-[7rem] truncate">{label}</span>}
       {children}
     </button>
   );
 });
 
 /** A frame that holds a label and its own small buttons (a 3-position switch, a slider, cruise +/-). */
-export function ChipFrame({ icon: Icon, label, tip, children, active }: { icon?: LucideIcon; label: ReactNode; tip?: string; children: ReactNode; active?: boolean }) {
+/** `label` null: icon only (the tooltip names it). */
+export function ChipFrame({ icon: Icon, label, tip, children, active }: { icon?: LucideIcon; label: ReactNode | null; tip?: string; children: ReactNode; active?: boolean }) {
   return (
-    <div data-tip={tip} className={`${CHIP} ${OFF} gap-1 py-1 pl-2 pr-1 hover:border-subtle hover:text-content-secondary`}>
-      {Icon && <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-emerald-400' : ''}`} />}
-      <span className="mr-1 max-w-[8rem] truncate">{label}</span>
+    <div data-tip={tip} className={`${CHIP} ${OFF} gap-0.5 py-0.5 pl-1.5 pr-0.5 hover:border-subtle hover:text-content-secondary`}>
+      {Icon && <Icon className={`h-3.5 w-3.5 shrink-0 ${active ? 'text-emerald-400' : ''}`} />}
+      {label !== null && <span className="mr-0.5 max-w-[7rem] truncate">{label}</span>}
       {children}
     </div>
   );
@@ -79,7 +80,7 @@ export function Segment({ on, tone = 'green', className = '', ...rest }: ButtonH
     <button
       type="button"
       {...rest}
-      className={`flex h-7 w-7 items-center justify-center rounded transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+      className={`flex h-6 w-6 items-center justify-center rounded transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
         on ? ON_STYLE[tone] : 'text-content-tertiary hover:bg-surface hover:text-content'
       } ${className}`}
     />
@@ -88,5 +89,5 @@ export function Segment({ on, tone = 'green', className = '', ...rest }: ButtonH
 
 /** The thin line between groups of controls. */
 export function Divider() {
-  return <span aria-hidden className="mx-0.5 h-6 shrink-0 border-l border-subtle" />;
+  return <span aria-hidden className="mx-0.5 h-5 shrink-0 border-l border-subtle" />;
 }

@@ -78,7 +78,7 @@
       "glitch": "Збій",
       "injectAHorizontalPositionOffsetSim": "Внести горизонтальне зміщення позиції (SIM_GPS1_GLTCH_X/Y), щоб перевірити відкидання збоїв / відлітання",
       "sats": "Супутн.",
-      "reportedSatelliteCountSimGps1Numsats": "Кількість супутників (SIM_GPS1_NUMSATS); опустіть нижче мінімуму для армування, щоб погіршити фікс",
+      "reportedSatelliteCountSimGps1Numsats": "Кількість супутників (SIM_GPS1_NUMSATS); опустіть нижче мінімуму для ARM, щоб погіршити фікс",
       "sensors": "Сенсори",
       "baro": "Баро",
       "compass1": "Компас 1",

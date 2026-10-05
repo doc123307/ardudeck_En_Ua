@@ -1,13 +1,12 @@
 /**
  * The operator's vehicle switch, in the header: the vehicle in use and its link state at a
- * glance; a click opens the vehicle list to choose another (and, when the administrator
- * allows it, to add, change or remove vehicles).
+ * glance; a click opens the vehicle list to choose another. Vehicles are added and changed
+ * only in the full UI.
  */
 
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Truck } from 'lucide-react';
 import { useVehiclesStore } from '../../stores/vehicles-store';
-import { useOperatorStore } from '../../stores/operator-store';
 import { VehicleList } from '../vehicles/VehicleList';
 import { t } from '../../i18n';
 
@@ -15,7 +14,6 @@ export function OperatorVehiclePicker({ linkText, dot, tip }: { linkText: string
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const state = useVehiclesStore((s) => s.state);
-  const canEdit = useOperatorStore((s) => s.config.operatorEditsVehicles);
   const active = state.presets.find((p) => p.id === state.activeId);
 
   useEffect(() => {
@@ -50,7 +48,8 @@ export function OperatorVehiclePicker({ linkText, dot, tip }: { linkText: string
       {open && (
         <div className="absolute right-0 top-full z-[60] mt-2 max-h-[75vh] w-[min(32rem,calc(100vw-2rem))] overflow-y-auto rounded-xl border border-subtle bg-surface-solid p-3 shadow-2xl">
           <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-content-secondary">{t('vehicles.VehicleList.title')}</div>
-          <VehicleList canEdit={canEdit} onPicked={() => setOpen(false)} />
+          {/* The operator chooses; adding and changing vehicles is the administrator's. */}
+          <VehicleList canEdit={false} onPicked={() => setOpen(false)} />
         </div>
       )}
     </div>

@@ -27,7 +27,7 @@
       "drones": "дронів"
     },
     "FleetCoordination": {
-      "everyConnectedVehicleArmsAndClimbs": "Кожен підключений апарат армується й разом набирає {{alt}} м",
+      "everyConnectedVehicleArmsAndClimbs": "Кожен підключений апарат отримує ARM і разом набирає {{alt}} м",
       "takeOffAll": "Зліт усіх",
       "takeoffAltitudeM": "Висота зльоту (м)",
       "latestReportFromTheCoordinationEngine": "Останній звіт рушія координації (груповий зліт / старт місії)",
@@ -36,7 +36,7 @@
       "collapseFleet": "Згорнути флот",
       "expandFleet": "Розгорнути флот",
       "fleet": "Флот",
-      "armAndClimbOnlySFleet": "Заармити й підняти лише флот {{label}} на {{alt}} м",
+      "armAndClimbOnlySFleet": "ARM і набір висоти лише для флоту {{label}} на {{alt}} м",
       "takeOff": "Зліт",
       "reFormSFleet": "Перешикувати флот {{label}}: {{label2}}",
       "fliesItsUploadedMissionInAuto": "{{label}} виконує завантажену місію в AUTO; ведені тримають стрій і йдуть слідом",
@@ -55,15 +55,15 @@
       "clear": "Очистити",
       "confirm": "Підтвердити",
       "cancel": "Скасувати",
-      "arm": "Армувати",
-      "disarm": "Дизармувати",
+      "arm": "ARM",
+      "disarm": "DISARM",
       "start": "Старт",
       "sendHomeRtl": "Відправити додому (RTL) {{length}} {{noun}}?",
       "startMissionOn": "Почати місію на {{length}} {{noun}}?",
       "vehicle": "апарат",
       "vehicles": "апарат(и)",
-      "armVehicles": "Армувати {{length}} {{noun}}?",
-      "disarmVehicles": "Дизармувати {{length}} {{noun}}?"
+      "armVehicles": "ARM для {{length}} {{noun}}?",
+      "disarmVehicles": "DISARM для {{length}} {{noun}}?"
     },
     "FleetStrip": {
       "clickToDeselect": "{{label}} — клацніть, щоб зняти вибір",

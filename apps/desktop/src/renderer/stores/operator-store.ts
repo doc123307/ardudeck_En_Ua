@@ -7,6 +7,7 @@
 import { create } from 'zustand';
 import {
   DEFAULT_OPERATOR_CONFIG,
+  normalizeOperatorConfig,
   type AdminAuthResult,
   type AppMode,
   type OperatorConfig,
@@ -28,7 +29,13 @@ interface OperatorStore {
   saveConfig: (patch: Partial<OperatorConfig>) => Promise<boolean>;
 }
 
-const adopt = (state: OperatorState) => ({ ready: true, mode: state.mode, hasPassword: state.hasPassword, config: state.config });
+/**
+ * The settings are cleaned here too: a field the screen expects is never missing, even if the
+ * other side of the IPC is a different build (a development run, a half-finished update).
+ */
+export const adopt = (state: OperatorState) => ({
+  ready: true, mode: state.mode, hasPassword: state.hasPassword, config: normalizeOperatorConfig(state.config),
+});
 
 export const useOperatorStore = create<OperatorStore>((set) => {
   const applied = async (call: Promise<AdminAuthResult>): Promise<AdminAuthResult> => {

@@ -157,7 +157,7 @@ export function OperatorScreen() {
       </div>
 
       {/* One compact bar: the administrator's controls on the left, mode / ARM / STOP on the right. */}
-      <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-t border-subtle bg-surface px-3 py-2">
+      <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-subtle bg-surface px-2 py-1.5">
         <OperatorControls
           connected={connected}
           vehicleKey={vehicleKey}
@@ -184,14 +184,14 @@ export function OperatorScreen() {
               disabled={!connected}
               tip={t('operator.OperatorScreen.holdTip')}
               fillClassName={flight.armed ? 'bg-emerald-400/40' : 'bg-red-400/50'}
-              className={`h-9 min-w-[6.5rem] rounded-md border px-3 text-[13px] font-bold uppercase tracking-wide ${
+              className={`h-8 min-w-[5.5rem] rounded-md border px-2.5 text-xs font-bold uppercase tracking-wide ${
                 connected && flight.armed
                   ? 'border-emerald-500/70 bg-emerald-500/15 text-emerald-400'
                   : 'border-red-500/70 bg-red-500/10 text-red-400'
               }`}
             >
               {/* "Hold" is said by the hand and the filling bar; the tooltip spells it out. */}
-              <Hand className="h-4 w-4 shrink-0" />
+              <Hand className="h-3.5 w-3.5 shrink-0" />
               <span className="whitespace-nowrap">{connected && flight.armed ? 'DISARM' : 'ARM'}</span>
             </HoldButton>
           )}
@@ -200,7 +200,7 @@ export function OperatorScreen() {
             onClick={stop}
             disabled={!canDrive}
             data-tip={t('operator.OperatorScreen.stopTip')}
-            className={`flex h-10 min-w-[9.5rem] items-center justify-center gap-2 rounded-md px-4 text-[15px] font-extrabold uppercase tracking-wide text-white shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+            className={`flex h-9 min-w-[8.5rem] items-center justify-center gap-1.5 rounded-md px-3 text-sm font-extrabold uppercase tracking-wide text-white shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
               holding ? 'bg-red-900 ring-2 ring-red-400' : 'bg-red-600 hover:bg-red-500'
             }`}
           >

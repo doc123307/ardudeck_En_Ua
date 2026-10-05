@@ -93,8 +93,10 @@ export interface OperatorConfig {
   controlOrder: string[];
   /** Controls taken off the bottom bar. */
   hiddenControls: string[];
-  /** The operator may add, change and remove vehicles in the vehicle list (choosing one is always allowed). */
-  operatorEditsVehicles: boolean;
+  /** Built-in controls deleted from the panel altogether (they can be added back). */
+  removedControls: string[];
+  /** The bar shows icons only; names are in the tooltips. For a panel with many controls. */
+  panelIconsOnly: boolean;
   /** Screen parts that are switched off (everything else is shown). */
   hiddenElements: OperatorElement[];
 }
@@ -119,7 +121,8 @@ export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
   values: [],
   controlOrder: [],
   hiddenControls: [],
-  operatorEditsVehicles: true,
+  removedControls: [],
+  panelIconsOnly: false,
   hiddenElements: [],
 };
 
@@ -206,7 +209,8 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     values,
     controlOrder: controlKeys(r.controlOrder),
     hiddenControls: [...new Set(hiddenControls)],
-    operatorEditsVehicles: bool(r.operatorEditsVehicles, d.operatorEditsVehicles),
+    removedControls: controlKeys(r.removedControls).filter((k) => controlKind(k) === 'builtin'),
+    panelIconsOnly: bool(r.panelIconsOnly, d.panelIconsOnly),
     hiddenElements: known(r.hiddenElements, OPERATOR_ELEMENTS, []),
   };
 }

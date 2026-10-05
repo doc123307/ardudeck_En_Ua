@@ -28,7 +28,7 @@
       "current": "Ток",
       "used": "Израсходовано",
       "status": "Состояние",
-      "armed": "Заармлен",
+      "armed": "ARMED",
       "cpuLoad": "Загрузка CPU",
       "cycleTime": "Время цикла",
       "fix": "Фикс",

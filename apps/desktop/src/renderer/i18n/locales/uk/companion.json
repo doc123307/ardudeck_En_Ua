@@ -199,7 +199,7 @@
       "transparentPacketSize": "Розмір прозорого пакета",
       "serialTimeoutMs": "Тайм-аут порту (мс)",
       "ltmFramesPacket": "Кадрів LTM у пакеті",
-      "disableRadioOnArm": "Вимикати радіо при армуванні",
+      "disableRadioOnArm": "Вимикати радіо при ARM",
       "rssiFormat": "Формат RSSI",
       "saving": "Збереження...",
       "saveAndReboot": "Зберегти й перезавантажити"

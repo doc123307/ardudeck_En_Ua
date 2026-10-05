@@ -23,7 +23,7 @@ import type { OperatorConfig } from '../../../shared/operator-types';
 import { ICON_COMPONENTS } from './operator-look';
 import { OperatorControls } from './OperatorControlBar';
 import { FunctionEditor, useJoystick } from './OperatorRcSettings';
-import { BTN, Card, ColorPicker, FIELD, IconPicker, SmallNumber, TextField } from './OperatorSettingsParts';
+import { BTN, Card, ColorPicker, FIELD, IconPicker, SmallNumber, TextField, Toggle } from './OperatorSettingsParts';
 import { t } from '../../i18n';
 
 const BUILTIN_ICON: Record<BuiltinControl, LucideIcon> = {
@@ -78,7 +78,8 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
   const servoClashes = servoConflicts(rc);
 
   const all = defaultControlOrder(relays.map((r) => r.id), rc.functions.map((f) => f.id));
-  const arranged = arrangeControls(config.controlOrder, all);
+  // Deleted built-ins leave the list; they come back through "Add".
+  const arranged = arrangeControls(config.controlOrder, all).filter((key) => !config.removedControls.includes(key));
 
   const setHidden = (key: string, hide: boolean) => save({
     hiddenControls: hide ? [...new Set([...config.hiddenControls, key])] : config.hiddenControls.filter((k) => k !== key),
@@ -90,6 +91,11 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
     setOpen(`fn:${fn.id}`);
   };
   const remove = (key: string) => {
+    if (controlKind(key) === 'builtin') {
+      save({ removedControls: [...new Set([...config.removedControls, key])], hiddenControls: config.hiddenControls.filter((k) => k !== key) });
+      if (open === key) setOpen(null);
+      return;
+    }
     if (controlKind(key) === 'relay') removeRelay(key.slice('relay:'.length));
     else save({ rc: { ...rc, functions: rc.functions.filter((f) => `fn:${f.id}` !== key) } });
     save({ controlOrder: arranged.filter((k) => k !== key), hiddenControls: config.hiddenControls.filter((k) => k !== key) });
@@ -120,12 +126,14 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
   return (
     <>
       <Card title={t('operator.OperatorPanelSettings.preview')} hint={t('operator.OperatorPanelSettings.previewHint')}>
+        <Toggle checked={config.panelIconsOnly} onChange={(panelIconsOnly) => save({ panelIconsOnly })}
+          label={t('operator.OperatorPanelSettings.iconsOnly')} hint={t('operator.OperatorPanelSettings.iconsOnlyHint')} />
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-subtle bg-surface-base p-2">
           <OperatorControls preview connected vehicleKey={null} severalCameras recording={{ mode: config.recordMode, on: false, toggle: () => {} }} onRefused={() => {}} />
           <div className="pointer-events-none ml-auto flex items-center gap-1.5">
-            <span className="flex h-9 items-center rounded-md border border-subtle bg-surface-raised px-3 text-[13px] text-content-secondary">{t('operator.OperatorScreen.modeMenu')}</span>
-            {config.allowArm && <span className="flex h-9 items-center rounded-md border border-red-500/70 bg-red-500/10 px-3 text-[13px] font-bold uppercase text-red-400">ARM</span>}
-            <span className="flex h-10 items-center gap-2 rounded-md bg-red-600 px-4 text-[15px] font-extrabold uppercase text-white"><OctagonX className="h-5 w-5" />{t('operator.OperatorScreen.stop')}</span>
+            <span className="flex h-8 items-center rounded-md border border-subtle bg-surface-raised px-2.5 text-xs text-content-secondary">{t('operator.OperatorScreen.modeMenu')}</span>
+            {config.allowArm && <span className="flex h-8 items-center rounded-md border border-red-500/70 bg-red-500/10 px-2.5 text-xs font-bold uppercase text-red-400">ARM</span>}
+            <span className="flex h-9 items-center gap-1.5 rounded-md bg-red-600 px-3 text-sm font-extrabold uppercase text-white"><OctagonX className="h-5 w-5" />{t('operator.OperatorScreen.stop')}</span>
           </div>
         </div>
       </Card>
@@ -158,17 +166,15 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
                       <ChevronDown className="h-4 w-4" />
                     </button>
                     {/* Built-in controls have nothing to set up here: keep the columns aligned. */}
-                    {!d.editable && <span className="w-14" aria-hidden />}
+                    {!d.editable && <span className="w-7" aria-hidden />}
                     {d.editable && (
                       <button type="button" className={`${ROW_BTN} ${isOpen ? 'bg-blue-600 text-white hover:bg-blue-600 hover:text-white' : ''}`} onClick={() => setOpen(isOpen ? null : key)} data-tip={t('operator.OperatorPanelSettings.edit')}>
                         <Pencil className="h-3.5 w-3.5" />
                       </button>
                     )}
-                    {d.editable && (
-                      <button type="button" className={`${ROW_BTN} hover:text-red-400`} onClick={() => remove(key)} data-tip={t('operator.OperatorRcSettings.remove')}>
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    )}
+                    <button type="button" className={`${ROW_BTN} hover:text-red-400`} onClick={() => remove(key)} data-tip={t('operator.OperatorRcSettings.remove')}>
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
                   </span>
                 </div>
                 {isOpen && (
@@ -191,6 +197,15 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
           <button type="button" onClick={addOutput} disabled={relays.length >= 16} className={`${BTN} flex items-center gap-1.5`}>
             <Plus className="h-3.5 w-3.5" />{t('operator.OperatorPanelSettings.addRelay')}
           </button>
+          {config.removedControls.map((key) => {
+            const Icon = BUILTIN_ICON[key as BuiltinControl];
+            return (
+              <button key={key} type="button" onClick={() => save({ removedControls: config.removedControls.filter((k) => k !== key) })}
+                className="flex items-center gap-1.5 rounded-lg border border-dashed border-subtle px-2.5 py-1.5 text-sm text-content-secondary hover:border-blue-500/60 hover:text-content">
+                <Plus className="h-3.5 w-3.5" />{Icon && <Icon className="h-3.5 w-3.5" />}{t(`operator.OperatorPanelSettings.builtin_${key}`)}
+              </button>
+            );
+          })}
         </div>
         <p className="text-xs leading-snug text-content-tertiary">{t('operator.OperatorRcSettings.functionsHint')}</p>
       </Card>

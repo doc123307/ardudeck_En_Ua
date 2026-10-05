@@ -14,7 +14,7 @@ import type { ConnectOptions } from '../../shared/ipc-channels';
 import type { CameraSourceConfig } from '../../shared/camera-types';
 import { useCameraStore } from './camera-store';
 import { useRelayStore, type RelayButton } from './relay-store';
-import { useOperatorStore } from './operator-store';
+import { adopt as adoptOperator, useOperatorStore } from './operator-store';
 import { useOperatorUiStore } from './operator-ui-store';
 import { useConnectionStore } from './connection-store';
 import { useSettingsStore } from './settings-store';
@@ -42,8 +42,7 @@ export function currentConnection(): ConnectOptions | null {
 
 function adopt(set: (s: Partial<VehiclesStore>) => void, result: VehiclesResult): VehiclesResult {
   set({ state: result.vehicles });
-  const op = result.operator;
-  useOperatorStore.setState({ ready: true, mode: op.mode, hasPassword: op.hasPassword, config: op.config });
+  useOperatorStore.setState(adoptOperator(result.operator));
   return result;
 }
 

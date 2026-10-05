@@ -82,7 +82,7 @@
       "active": "Активний",
       "ready": "Готово",
       "armModeIsNotConfigured": "Режим ARM не налаштовано!",
-      "withoutArmModeYouWonT": "Без режиму ARM апарат не вдасться заармити. Поверніться й призначте ARM на перемикач.",
+      "withoutArmModeYouWonT": "Без режиму ARM апарат не вдасться перевести в ARM. Поверніться й призначте ARM на перемикач.",
       "failedToSave": "Не вдалося зберегти",
       "configurationSaved": "Налаштування збережено!",
       "yourModeConfigurationHasBeenWritten": "Налаштування режимів записано в польотний контролер.",
@@ -174,7 +174,7 @@
       "additionalSwitch": "Додатковий перемикач",
       "additionalChannelKnobSlider": "Додатковий канал (крутилка/повзунок)",
       "additionalChannel": "Додатковий канал",
-      "safetySwitchArmsDisarmsYourAircraft": "ЗАПОБІЖНИК — армує/дизармує апарат. ЗАВЖДИ ставте його на окремий перемикач! Після армування пропелери можуть закрутитися будь-якої миті.",
+      "safetySwitchArmsDisarmsYourAircraft": "ЗАПОБІЖНИК — ARM / DISARM апарата. ЗАВЖДИ ставте його на окремий перемикач! Після ARM пропелери можуть закрутитися будь-якої миті.",
       "beginnerModeYourAircraftWillAutomatically": "РЕЖИМ ДЛЯ ПОЧАТКІВЦІВ — апарат сам вирівнюється, коли ви відпускаєте стіки. Максимальний кут нахилу обмежено. Ідеально для навчання!",
       "intermediateModeSelfLevelsNearCenter": "ПРОМІЖНИЙ РЕЖИМ — вирівнюється біля центру стіка, як ANGLE, але дозволяє фліпи й бочки на повному стіку. Місток між ANGLE і ACRO.",
       "advancedKeepsFullStickAuthorityEven": "ДЛЯ ДОСВІДЧЕНИХ — повне керування навіть на нульовому газі. Необхідно для фристайл-трюків і фліпів. Зазвичай увімкнено постійно.",
@@ -187,7 +187,7 @@
       "automaticLaunchSequenceForFixedWing": "Автоматичний запуск літака. Киньте літак — він сам набере безпечну висоту.",
       "allowGroundControlStationToSend": "Дозволити наземній станції надсилати навігаційні команди («летіти сюди» тощо).",
       "finderMakesYourAircraftBeepLoudly": "ПОШУК — апарат голосно пищить, щоб його було легше знайти після падіння. Дуже корисно у високій траві!",
-      "emergencyTriggersFailsafeBehaviorUsuallyLanding": "АВАРІЙНИЙ — запускає failsafe (зазвичай посадку або дизарм). Зазвичай вмикається автоматично при втраті сигналу.",
+      "emergencyTriggersFailsafeBehaviorUsuallyLanding": "АВАРІЙНИЙ — запускає failsafe (зазвичай посадку або DISARM). Зазвичай вмикається автоматично при втраті сигналу.",
       "loggingRecordsFlightDataToThe": "ЖУРНАЛ — записує польотні дані на SD-картку для аналізу. Корисно для налаштування PID і розбору аварій.",
       "keepsGimbalTiltAxisLevelRegardless": "Тримає вісь нахилу підвісу рівно незалежно від положення апарата. Корисно для стабілізації камери.",
       "directServoMotorControlWithoutStabilization": "Пряме керування сервами/моторами без стабілізації. Лише для досвідчених пілотів!",
@@ -196,7 +196,7 @@
       "setsCurrentPositionAsNewHome": "Задає поточну позицію новою точкою дому. Використовуйте, якщо змінили місце під час сесії.",
       "enableInFlightWaypointPlanningVia": "Увімкнути планування точок у польоті командами стіків.",
       "maintainsCurrentMagneticHeadingUsefulFor": "Тримає поточний магнітний курс. Корисно для польоту по прямій.",
-      "safetySwitchMustBeEnabledBefore": "Запобіжник — має бути ввімкнений перед армуванням. Запобігає випадковому армуванню.",
+      "safetySwitchMustBeEnabledBefore": "Запобіжник — має бути ввімкнений перед ARM. Запобігає випадковому ARM.",
       "flipCrashedAircraftBackOverUsing": "Перевертає апарат після падіння обертанням моторів. Лише для мультироторів."
     }
   }

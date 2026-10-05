@@ -76,7 +76,7 @@ function useRelease(onRelease: () => void) {
   return held;
 }
 
-function FunctionControl({ fn, runtime, onSet }: { fn: OperatorRcFunction; runtime: RcFunctionRuntime | undefined; onSet: (value: number) => void }) {
+function FunctionControl({ fn, runtime, onSet, iconsOnly }: { fn: OperatorRcFunction; runtime: RcFunctionRuntime | undefined; onSet: (value: number) => void; iconsOnly: boolean }) {
   const value = runtime?.value ?? functionInitial(fn);
   const rest = functionRest(fn);
   const held = useRelease(() => { if (rest !== null) onSet(rest); });
@@ -94,7 +94,8 @@ function FunctionControl({ fn, runtime, onSet }: { fn: OperatorRcFunction; runti
       <Chip
         tone={value ? fn.color : 'off'}
         icon={Icon}
-        label={fn.label}
+        label={iconsOnly ? undefined : fn.label}
+        square={iconsOnly}
         data-tip={tip}
         {...(fn.latching ? { onClick: () => onSet(value ? 0 : 1) } : { onPointerDown: press(1) })}
       >
@@ -105,12 +106,12 @@ function FunctionControl({ fn, runtime, onSet }: { fn: OperatorRcFunction; runti
 
   if (fn.kind === 'switch3') {
     const positions = [
-      { v: -1, icon: <ChevronDown className="h-4 w-4" /> },
-      { v: 0, icon: <Minus className="h-3.5 w-3.5" /> },
-      { v: 1, icon: <ChevronUp className="h-4 w-4" /> },
+      { v: -1, icon: <ChevronDown className="h-3.5 w-3.5" /> },
+      { v: 0, icon: <Minus className="h-3 w-3" /> },
+      { v: 1, icon: <ChevronUp className="h-3.5 w-3.5" /> },
     ];
     return (
-      <ChipFrame icon={Icon} label={fn.label} tip={tip} active={!!runtime?.active}>
+      <ChipFrame icon={Icon} label={iconsOnly ? null : fn.label} tip={tip} active={!!runtime?.active}>
         {positions.map((p) => (
           <Segment
             key={p.v}
@@ -125,11 +126,11 @@ function FunctionControl({ fn, runtime, onSet }: { fn: OperatorRcFunction; runti
     );
   }
 
-  return <SliderControl fn={fn} value={value} active={!!runtime?.active} rest={rest} tip={tip} onSet={onSet} />;
+  return <SliderControl fn={fn} value={value} active={!!runtime?.active} rest={rest} tip={tip} onSet={onSet} iconsOnly={iconsOnly} />;
 }
 
-function SliderControl({ fn, value, active, rest, tip, onSet }: {
-  fn: OperatorRcFunction; value: number; active: boolean; rest: number | null; tip: string; onSet: (value: number) => void;
+function SliderControl({ fn, value, active, rest, tip, onSet, iconsOnly }: {
+  fn: OperatorRcFunction; value: number; active: boolean; rest: number | null; tip: string; onSet: (value: number) => void; iconsOnly: boolean;
 }) {
   // While dragging, the thumb follows the pointer, not the echo coming back from the engine.
   const [drag, setDrag] = useState<number | null>(null);
@@ -162,7 +163,7 @@ function SliderControl({ fn, value, active, rest, tip, onSet }: {
   const shown = drag ?? value;
   const Icon = ICON_COMPONENTS[fn.icon];
   return (
-    <ChipFrame icon={Icon} label={fn.label} tip={tip} active={active}>
+    <ChipFrame icon={Icon} label={iconsOnly ? null : fn.label} tip={tip} active={active}>
       <input
         type="range"
         min={0}
@@ -172,14 +173,14 @@ function SliderControl({ fn, value, active, rest, tip, onSet }: {
         aria-label={fn.label}
         onChange={(e) => { const v = Number(e.target.value) / 100; setDrag(v); send(v); }}
         onKeyUp={() => finish.current()}
-        className="h-1.5 w-20 cursor-pointer accent-emerald-500"
+        className="h-1.5 w-16 cursor-pointer accent-emerald-500"
       />
-      <span className="w-9 pr-1 text-right font-mono text-xs tabular-nums">{Math.round(shown * 100)}%</span>
+      <span className="w-8 pr-0.5 text-right font-mono text-[11px] tabular-nums">{Math.round(shown * 100)}%</span>
     </ChipFrame>
   );
 }
 
-function RelayControl({ button, vehicleKey, now, preview }: { button: RelayButton; vehicleKey: string | null; now: number; preview: boolean }) {
+function RelayControl({ button, vehicleKey, now, preview, iconsOnly }: { button: RelayButton; vehicleKey: string | null; now: number; preview: boolean; iconsOnly: boolean }) {
   const status = useRelayStore((s) => s.status);
   const pending = useRelayStore((s) => s.pending);
   const failed = useRelayStore((s) => s.failed);
@@ -195,7 +196,8 @@ function RelayControl({ button, vehicleKey, now, preview }: { button: RelayButto
     <Chip
       tone={lit ? button.color : 'off'}
       icon={ICON_COMPONENTS[button.icon]}
-      label={button.label}
+      label={iconsOnly ? undefined : button.label}
+      square={iconsOnly}
       disabled={!vehicleKey && !preview}
       data-tip={`${button.label}: ${stateTip(state)} · RELAY${button.instance + 1}`}
       className={preview ? '' : `${state === 'pending' ? 'animate-pulse' : ''} ${state === 'failed' || state === 'absent' ? 'ring-1 ring-red-500' : ''} ${state === 'unknown' && !lit ? 'border-dashed' : ''}`}
@@ -249,7 +251,9 @@ export function OperatorControls({ connected, vehicleKey, severalCameras, record
     if (key === 'pin') return !config.hiddenElements.includes('cameraControls');
     return true;
   });
-  const shown = arrangeControls(config.controlOrder, available).filter((key) => !config.hiddenControls.includes(key));
+  const shown = arrangeControls(config.controlOrder, available)
+    .filter((key) => !config.hiddenControls.includes(key) && !config.removedControls.includes(key));
+  const iconsOnly = config.panelIconsOnly;
 
   const { drive, cruise, reverse } = rc;
   const paused = drive.engaged && !drive.live;
@@ -264,7 +268,7 @@ export function OperatorControls({ connected, vehicleKey, severalCameras, record
               : t('operator.OperatorRcBar.joystickOffTip', { name: rc.padName });
         return (
           <Chip tone={drive.live ? 'green' : paused ? 'warn' : 'off'} icon={Gamepad2} data-tip={tip} onClick={() => tell(actions.setDrive(!drive.engaged))}
-            label={paused ? t('operator.OperatorRcBar.joystickPaused') : t('operator.OperatorRcBar.joystick')}>
+            label={iconsOnly ? undefined : paused ? t('operator.OperatorRcBar.joystickPaused') : t('operator.OperatorRcBar.joystick')}>
             <StickDot steer={rc.padLive ? drive.steer : 0} throttle={rc.padLive ? drive.throttle : 0} live={rc.padLive} />
           </Chip>
         );
@@ -272,24 +276,24 @@ export function OperatorControls({ connected, vehicleKey, severalCameras, record
       case 'reverse':
         return (
           <Chip tone={reverse ? 'amber' : 'off'} icon={ArrowLeftRight} data-tip={t('operator.OperatorRcBar.reverseTip')}
-            label={reverse ? t('operator.OperatorRcBar.reverseOn') : t('operator.OperatorRcBar.reverse')}
+            label={iconsOnly ? undefined : reverse ? t('operator.OperatorRcBar.reverseOn') : t('operator.OperatorRcBar.reverse')} square={iconsOnly}
             onClick={() => tell(actions.setReverse(!reverse))} />
         );
       case 'cruise':
         return cruise.on ? (
-          <ChipFrame icon={Gauge} active label={<span className="font-mono tabular-nums">{t('operator.OperatorRcBar.cruise')} {Math.round(cruise.value * 100)}%</span>} tip={t('operator.OperatorRcBar.cruiseTip')}>
-            <Segment onClick={() => tell(actions.adjustCruise(-1))} data-tip={t('operator.OperatorRcBar.cruiseSlower')}><Minus className="h-4 w-4" /></Segment>
-            <Segment onClick={() => tell(actions.adjustCruise(1))} data-tip={t('operator.OperatorRcBar.cruiseFaster')}><Plus className="h-4 w-4" /></Segment>
-            <Segment onClick={() => tell(actions.setCruise(false))} data-tip={t('operator.OperatorRcBar.cruiseOff')}><X className="h-4 w-4" /></Segment>
+          <ChipFrame icon={Gauge} active label={<span className="font-mono tabular-nums">{iconsOnly ? '' : `${t('operator.OperatorRcBar.cruise')} `}{Math.round(cruise.value * 100)}%</span>} tip={t('operator.OperatorRcBar.cruiseTip')}>
+            <Segment onClick={() => tell(actions.adjustCruise(-1))} data-tip={t('operator.OperatorRcBar.cruiseSlower')}><Minus className="h-3.5 w-3.5" /></Segment>
+            <Segment onClick={() => tell(actions.adjustCruise(1))} data-tip={t('operator.OperatorRcBar.cruiseFaster')}><Plus className="h-3.5 w-3.5" /></Segment>
+            <Segment onClick={() => tell(actions.setCruise(false))} data-tip={t('operator.OperatorRcBar.cruiseOff')}><X className="h-3.5 w-3.5" /></Segment>
           </ChipFrame>
         ) : (
-          <Chip icon={Gauge} label={t('operator.OperatorRcBar.cruise')} disabled={!connected && !preview} data-tip={t('operator.OperatorRcBar.cruiseTip')}
+          <Chip icon={Gauge} label={iconsOnly ? undefined : t('operator.OperatorRcBar.cruise')} square={iconsOnly} disabled={!connected && !preview} data-tip={t('operator.OperatorRcBar.cruiseTip')}
             onClick={() => tell(actions.setCruise(true))} />
         );
       case 'record':
         return (
-          <Chip tone={recording.on ? 'red' : 'off'} icon={Circle} onClick={recording.toggle}
-            label={recording.on ? t('operator.OperatorScreen.stopRecording') : t('operator.OperatorScreen.record')}
+          <Chip tone={recording.on ? 'red' : 'off'} icon={Circle} onClick={recording.toggle} square={iconsOnly}
+            label={iconsOnly ? undefined : recording.on ? t('operator.OperatorScreen.stopRecording') : t('operator.OperatorScreen.record')}
             data-tip={recording.on ? t('operator.OperatorScreen.stopRecordingTip') : t('operator.OperatorScreen.recordTip')} />
         );
       case 'layout':
@@ -308,10 +312,10 @@ export function OperatorControls({ connected, vehicleKey, severalCameras, record
         const kind = controlKind(key);
         if (kind === 'relay') {
           const button = relays.find((r) => `relay:${r.id}` === key);
-          return button ? <RelayControl button={button} vehicleKey={connected ? vehicleKey : null} now={now} preview={preview} /> : null;
+          return button ? <RelayControl button={button} vehicleKey={connected ? vehicleKey : null} now={now} preview={preview} iconsOnly={iconsOnly} /> : null;
         }
         const fn = rcConfig.functions.find((f) => `fn:${f.id}` === key);
-        return fn ? <FunctionControl fn={fn} runtime={rc.functions[fn.id]} onSet={(value) => { void actions.setFunction(fn.id, value); }} /> : null;
+        return fn ? <FunctionControl fn={fn} runtime={rc.functions[fn.id]} iconsOnly={iconsOnly} onSet={(value) => { void actions.setFunction(fn.id, value); }} /> : null;
       }
     }
   };

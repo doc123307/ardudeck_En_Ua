@@ -491,7 +491,7 @@
     "script_installer_preflight": {
       "mavlinkFtpAvailable": "MAVLink FTP доступен",
       "scriptSlots": "Слоты скриптов",
-      "vehicleDisarmed": "Аппарат дизармирован"
+      "vehicleDisarmed": "Аппарат в состоянии DISARM"
     },
     "sim_sim_engine_process": {
       "noPreviousSimEngineOptionsTo": "нет предыдущих параметров движка симуляции для перезапуска",

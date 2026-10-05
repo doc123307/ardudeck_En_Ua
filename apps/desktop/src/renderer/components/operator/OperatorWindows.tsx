@@ -40,7 +40,7 @@ export function OperatorCameraWindow({ sourceId }: { sourceId?: unknown }) {
       </div>
       {hasCameraControls(source) && (
         <div className="flex shrink-0 justify-center border-t border-subtle bg-surface px-2 py-1.5">
-          <CameraControlBar source={source} />
+          <CameraControlBar source={source} compact />
         </div>
       )}
     </div>

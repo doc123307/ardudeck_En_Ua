@@ -7,7 +7,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { controlKey, useCameraControlStore } from '../../stores/camera-control-store';
 import {
-  ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Loader2, Moon, Save, Sun, SunMoon, Trash2, ZoomIn, ZoomOut,
+  ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Eye, Layers, Lightbulb, Loader2, Moon, Power, PowerOff, Save, Sparkles, Sun,
+  SunMoon, Trash2, Wand2, ZoomIn, ZoomOut, type LucideIcon,
 } from 'lucide-react';
 import type {
   CameraControlAction, CameraControlState, CameraSourceConfig, DayNightMode, SupplementLightMode,
@@ -17,6 +18,11 @@ import { streamQuality, withStreamQuality, type StreamQuality } from './stream-q
 import { t } from '../../i18n';
 
 const DAY_NIGHT_ICON: Record<DayNightMode, typeof Sun> = { auto: SunMoon, day: Sun, night: Moon };
+
+/** Light modes as icons, for the compact bar on the video; the name is in the tooltip. */
+const LIGHT_ICON: Record<string, LucideIcon> = {
+  irLight: Eye, colorVuWhiteLight: Lightbulb, eventIntelligence: Sparkles, mixed: Layers, close: PowerOff, auto: Wand2, on: Power,
+};
 
 export function dayNightLabel(mode: DayNightMode): string {
   return t(`camera.CameraControlBar.dayNight_${mode}`);
@@ -45,6 +51,8 @@ export function hasCameraControls(source: CameraSourceConfig): boolean {
 const PTZ_SPEED = 0.5;
 
 const BTN = 'px-2 py-0.5 text-[11px] transition-colors disabled:opacity-40';
+/** The compact bar on the video: small, icons where there are icons. */
+const BTN_COMPACT = 'flex h-6 min-w-6 items-center justify-center px-1 text-[10px] font-semibold transition-colors disabled:opacity-40';
 const ON = 'bg-blue-600 text-white';
 const OFF = 'text-content-secondary hover:bg-surface-raised';
 
@@ -139,7 +147,7 @@ export function CameraControlBar({ source, compact = false, editable = false }: 
             <button
               key={q}
               onClick={() => setQuality(q)}
-              className={`${BTN} ${quality === q ? ON : OFF}`}
+              className={`${compact ? BTN_COMPACT : BTN} ${quality === q ? ON : OFF}`}
               data-tip={q === 'hd' ? t('camera.CameraControlBar.hdTip') : t('camera.CameraControlBar.sdTip')}
             >{q.toUpperCase()}</button>
           ))}
@@ -155,7 +163,7 @@ export function CameraControlBar({ source, compact = false, editable = false }: 
                 key={m}
                 disabled={busy}
                 onClick={() => void apply({ kind: 'dayNight', mode: m })}
-                className={`${BTN} flex items-center gap-1 ${state.dayNight === m ? ON : OFF}`}
+                className={`${compact ? BTN_COMPACT : BTN} flex items-center gap-1 ${state.dayNight === m ? ON : OFF}`}
                 data-tip={dayNightLabel(m)}
               >
                 <Icon className="h-3 w-3" />
@@ -173,8 +181,9 @@ export function CameraControlBar({ source, compact = false, editable = false }: 
               key={m}
               disabled={busy}
               onClick={() => void apply({ kind: 'light', mode: m })}
-              className={`${BTN} ${state.light === m ? ON : OFF}`}
-            >{lightLabel(m)}</button>
+              className={`${compact ? BTN_COMPACT : BTN} ${state.light === m ? ON : OFF}`}
+              data-tip={lightLabel(m)}
+            >{compact && LIGHT_ICON[m] ? (() => { const Icon = LIGHT_ICON[m]!; return <Icon className="h-3 w-3" />; })() : lightLabel(m)}</button>
           ))}
         </Segment>
       )}
@@ -184,16 +193,16 @@ export function CameraControlBar({ source, compact = false, editable = false }: 
           {state.ptz.move && ([
             [ArrowLeft, -1, 0, 'ptzLeft'], [ArrowUp, 0, 1, 'ptzUp'], [ArrowDown, 0, -1, 'ptzDown'], [ArrowRight, 1, 0, 'ptzRight'],
           ] as const).map(([Icon, pan, tilt, tip]) => (
-            <button key={tip} {...hold(pan, tilt, 0)} className={`${BTN} ${OFF} select-none`} data-tip={t(`camera.CameraControlBar.${tip}`)}>
+            <button key={tip} {...hold(pan, tilt, 0)} className={`${compact ? BTN_COMPACT : BTN} ${OFF} select-none`} data-tip={t(`camera.CameraControlBar.${tip}`)}>
               <Icon className="h-3.5 w-3.5" />
             </button>
           ))}
           {state.ptz.zoom && (
             <>
-              <button {...hold(0, 0, -1)} className={`${BTN} ${OFF} select-none`} data-tip={t('camera.CameraControlBar.ptzZoomOut')}>
+              <button {...hold(0, 0, -1)} className={`${compact ? BTN_COMPACT : BTN} ${OFF} select-none`} data-tip={t('camera.CameraControlBar.ptzZoomOut')}>
                 <ZoomOut className="h-3.5 w-3.5" />
               </button>
-              <button {...hold(0, 0, 1)} className={`${BTN} ${OFF} select-none`} data-tip={t('camera.CameraControlBar.ptzZoomIn')}>
+              <button {...hold(0, 0, 1)} className={`${compact ? BTN_COMPACT : BTN} ${OFF} select-none`} data-tip={t('camera.CameraControlBar.ptzZoomIn')}>
                 <ZoomIn className="h-3.5 w-3.5" />
               </button>
             </>

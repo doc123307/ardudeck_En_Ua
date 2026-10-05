@@ -332,15 +332,32 @@ export interface RcPad {
   buttons: boolean[];
 }
 
+/** Devices Windows hands the browser as "gamepads" that are nothing of the kind: headsets, keyboards. */
+const NOT_A_CONTROLLER = /audio|headset|headphone|speaker|microphone|webcam|camera|keyboard|mouse|consumer control/i;
+/** RC transmitters in USB joystick mode, and devices that call themselves joysticks. */
+const TRANSMITTER = /edgetx|opentx|radiomaster|jumper|frsky|flysky|taranis|horus|tx16|tx12|boxer|zorro|pocket|mt12|joystick/i;
+
+const axisCount = (p: { axes?: ArrayLike<number> }) => p.axes?.length ?? 0;
+
+/** Can this device drive anything: a stick with at least two axes, not a headset's volume buttons. */
+export function isController(p: { id: string; axes?: ArrayLike<number> }): boolean {
+  return axisCount(p) >= 2 && !NOT_A_CONTROLLER.test(p.id);
+}
+
 /**
- * The joystick to read among those plugged in: the first one, unless the administrator named
- * one. A named joystick that is not there is not replaced by whatever else is plugged in.
+ * The joystick to read among those plugged in. Unless the administrator named one, it is the
+ * best real controller: a transmitter first, then the one with the most axes. A USB headset
+ * shows up as the first "gamepad" on many PCs (seen on the user's: "USB Audio2.0", no axes,
+ * ahead of the Radiomaster TX12) and must never be taken for the joystick. A named joystick
+ * that is not there is not replaced by whatever else is plugged in.
  */
-export function pickPad<T extends { id: string }>(pads: readonly (T | null | undefined)[], padId: string): T | null {
+export function pickPad<T extends { id: string; axes?: ArrayLike<number> }>(pads: readonly (T | null | undefined)[], padId: string): T | null {
   const present = pads.filter((p): p is T => !!p);
   const wanted = padId.trim().toLowerCase();
-  if (!wanted) return present[0] ?? null;
-  return present.find((p) => p.id.toLowerCase().includes(wanted)) ?? null;
+  if (wanted) return present.find((p) => p.id.toLowerCase().includes(wanted)) ?? null;
+  const controllers = present.filter(isController);
+  controllers.sort((a, b) => Number(TRANSMITTER.test(b.id)) - Number(TRANSMITTER.test(a.id)) || axisCount(b) - axisCount(a));
+  return controllers[0] ?? null;
 }
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));

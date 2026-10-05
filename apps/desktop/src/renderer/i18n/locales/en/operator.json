@@ -161,7 +161,9 @@
       "disconnectTip": "Drop the link to the vehicle. It will not reconnect until you press Connect.",
       "about": "About",
       "toOperatorMode": "Operator mode",
-      "toOperatorModeTip": "Close the full interface and return to the operator screen"
+      "toOperatorModeTip": "Close the full interface and return to the operator screen",
+      "dayTheme": "Day theme (light)",
+      "nightTheme": "Night theme (dark)"
     },
     "OperatorWorkspaceSettings": {
       "tab": "Operator workspace",
@@ -239,9 +241,7 @@
       "section_driving": "Driving and modes",
       "section_screen": "Screen",
       "section_video": "Video",
-      "section_general": "General",
-      "operatorEditsVehicles": "The operator may add, change and delete vehicles",
-      "operatorEditsVehiclesHint": "Choosing a vehicle from the list is always allowed. A vehicle's panel (channels, buttons, values) is set up only here."
+      "section_general": "General"
     },
     "OperatorRcBar": {
       "refused_disabled": "This control is switched off.",
@@ -388,7 +388,9 @@
       "moveDown": "Move right",
       "edit": "Settings",
       "add": "Add:",
-      "addRelay": "Vehicle output (relay)"
+      "addRelay": "Vehicle output (relay)",
+      "iconsOnly": "Icons only on the panel",
+      "iconsOnlyHint": "For a panel with many controls: the names move into the tooltips."
     },
     "OperatorValuesSettings": {
       "hint": "Values across the top of the operator screen, in this order. Besides the built-in ones, any value the vehicle has can be added: a field of any MAVLink message, a named value (NAMED_VALUE from a Lua script or a companion computer) or a flight controller parameter, with a unit, a scale and limits at which it turns amber and red.",

@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import {
   RC_FUNCTION_OUTPUTS, RC_MAX_CHANNEL, RC_PWM_MAX, RC_PWM_MIN, RC_SLIDER_SPRINGS,
-  driveSticks, pickPad, rcChannelConflicts,
+  driveSticks, isController, pickPad, rcChannelConflicts,
   type OperatorRcConfig, type OperatorRcFunction, type RcFunctionOutput, type RcInput, type RcPad, type RcSliderSpring,
 } from '../../../shared/operator-rc';
 import { useCameraStore } from '../../stores/camera-store';
@@ -27,7 +27,8 @@ export function useJoystick(padId: string): { names: string[]; pad: RcPad | null
       const pads = Array.from(navigator.getGamepads()).filter((p): p is Gamepad => !!p);
       const picked = pickPad(pads, padId);
       setState({
-        names: pads.map((p) => p.id),
+        // Only real controllers: a headset's volume keys also show up as a "gamepad".
+        names: pads.filter(isController).map((p) => p.id),
         pad: picked ? { id: picked.id, axes: Array.from(picked.axes), buttons: picked.buttons.map((b) => b.pressed) } : null,
       });
     };

@@ -211,7 +211,7 @@
       "andExpo": "и экспо,",
       "tuning": "настройка",
       "presetsAnd": "шаблоны, а",
-      "setUpWithoutHuntingForIts": "настраивается без поиска его параметров. AutoTune не разрешает изменений, пока аппарат заармлен.",
+      "setUpWithoutHuntingForIts": "настраивается без поиска его параметров. AutoTune не разрешает изменений, пока аппарат в состоянии ARM.",
       "steeringAndSpeedControllerGains": "Коэффициенты регуляторов руля и скорости,",
       "speedSteering": "Скорость и руль",
       "limitsAnd": "ограничения и",

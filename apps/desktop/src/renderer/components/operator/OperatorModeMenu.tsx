@@ -11,7 +11,7 @@ import { t } from '../../i18n';
 /** Up to this many modes are shown as separate buttons. */
 const INLINE_MODES = 3;
 
-const BTN = 'flex h-9 items-center gap-2 rounded-md border border-subtle bg-surface-raised px-3 text-[13px] font-medium text-content transition-colors hover:border-content-tertiary/60 disabled:cursor-not-allowed disabled:opacity-40';
+const BTN = 'flex h-8 items-center gap-1.5 rounded-md border border-subtle bg-surface-raised px-2.5 text-xs font-medium text-content transition-colors hover:border-content-tertiary/60 disabled:cursor-not-allowed disabled:opacity-40';
 const ON = 'border-blue-500/60 bg-blue-600/30';
 
 export const modeButtonLabel = (mode: OperatorModeButton) => t(`operator.OperatorScreen.mode_${mode}`);
@@ -64,7 +64,7 @@ export function OperatorModeMenu({ modes, modeNum, currentLabel, disabled, onPic
         onClick={() => setOpen((o) => !o)}
         disabled={disabled}
         data-tip={t('operator.OperatorScreen.modeMenuTip')}
-        className={`${BTN} min-w-[9.5rem] justify-between ${open ? ON : ''}`}
+        className={`${BTN} min-w-[8rem] justify-between ${open ? ON : ''}`}
       >
         <span className="flex min-w-0 items-center gap-2">
           <Navigation className="h-4 w-4 shrink-0" />

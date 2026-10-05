@@ -13,7 +13,9 @@ import { normalizeOperatorConfig, type OperatorConfig, type OperatorState } from
 import { isOperatorColor, isOperatorIcon, type OperatorColor, type OperatorIcon } from './operator-panel';
 
 /** The operator settings that belong to a vehicle rather than to the computer. */
-export const VEHICLE_PANEL_FIELDS = ['rc', 'controlOrder', 'hiddenControls', 'values', 'statusFields', 'modeButtons', 'allowArm'] as const;
+export const VEHICLE_PANEL_FIELDS = [
+  'rc', 'controlOrder', 'hiddenControls', 'removedControls', 'panelIconsOnly', 'values', 'statusFields', 'modeButtons', 'allowArm',
+] as const;
 export type VehiclePanelField = (typeof VEHICLE_PANEL_FIELDS)[number];
 export type VehiclePanel = Pick<OperatorConfig, VehiclePanelField>;
 

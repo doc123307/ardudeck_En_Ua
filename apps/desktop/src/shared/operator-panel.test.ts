@@ -116,6 +116,13 @@ describe('operator settings, schema 3', () => {
     expect(c.hiddenControls).toEqual(['pin', 'relay:abc']);
   });
 
+  it('let built-in controls be deleted (and only built-ins: outputs and functions are deleted themselves)', () => {
+    const c = normalizeOperatorConfig({ schema: 3, removedControls: ['reverse', 'cruise', 'fn:aux9', 'relay:x', 'bogus'], panelIconsOnly: true });
+    expect(c.removedControls).toEqual(['reverse', 'cruise']);
+    expect(c.panelIconsOnly).toBe(true);
+    expect(normalizeOperatorConfig(null)).toMatchObject({ removedControls: [], panelIconsOnly: false });
+  });
+
   it('move the old "record button" and "layout switch" elements onto the panel list', () => {
     const c = normalizeOperatorConfig({ schema: 2, modeButtons: ['manual'], hiddenElements: ['record', 'layoutSwitch', 'map', 'outputs'] });
     expect(c.schema).toBe(OPERATOR_CONFIG_SCHEMA);

@@ -94,11 +94,8 @@ export function registerOperatorHandlers(link: OperatorRcLink): void {
   const vehicles = new VehiclesStore(app.getPath('userData'));
   const answer = (ok: boolean, error?: VehiclesResult['error']): VehiclesResult =>
     ({ ok, ...(error ? { error } : {}), vehicles: vehicles.state(), operator: getVault().state() });
-  /** The administrator, or an operator the administrator let manage the list. */
-  const mayEdit = () => {
-    const state = getVault().state();
-    return state.mode === 'admin' || state.config.operatorEditsVehicles;
-  };
+  /** The vehicle list is the administrator's: the operator only chooses from it. */
+  const mayEdit = () => getVault().state().mode === 'admin';
   /** Puts a vehicle's own settings in force. */
   const applyVehicle = (preset: VehiclePreset) => {
     const state = getVault().applyVehicle({ ...preset.panel, ...(preset.connection ? { connection: preset.connection } : {}) });

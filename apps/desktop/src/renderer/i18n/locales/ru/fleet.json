@@ -36,7 +36,7 @@
       "collapseFleet": "Свернуть флот",
       "expandFleet": "Развернуть флот",
       "fleet": "Флот",
-      "armAndClimbOnlySFleet": "Заармить и поднять только флот {{label}} на {{alt}} м",
+      "armAndClimbOnlySFleet": "ARM и набор высоты только для флота {{label}} на {{alt}} м",
       "takeOff": "Взлёт",
       "reFormSFleet": "Перестроить флот {{label}}: {{label2}}",
       "fliesItsUploadedMissionInAuto": "{{label}} выполняет загруженную миссию в AUTO; ведомые держат строй и следуют за ним",
@@ -56,14 +56,14 @@
       "confirm": "Подтвердить",
       "cancel": "Отмена",
       "arm": "Армить",
-      "disarm": "Дизармить",
+      "disarm": "Сделать DISARM",
       "start": "Старт",
       "sendHomeRtl": "Отправить домой (RTL) {{length}} {{noun}}?",
       "startMissionOn": "Начать миссию на {{length}} {{noun}}?",
       "vehicle": "аппарат",
       "vehicles": "аппарат(а/ов)",
-      "armVehicles": "Армировать {{length}} {{noun}}?",
-      "disarmVehicles": "Дизармировать {{length}} {{noun}}?"
+      "armVehicles": "ARM для {{length}} {{noun}}?",
+      "disarmVehicles": "Сделать DISARM {{length}} {{noun}}?"
     },
     "FleetStrip": {
       "clickToDeselect": "{{label}} — щёлкните, чтобы снять выбор",

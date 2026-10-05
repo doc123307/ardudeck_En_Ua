@@ -9,7 +9,7 @@
       "connectToTheSitlFirst": "Спершу підключіться до SITL",
       "charging": "Заряджання...",
       "recharge": "Зарядити",
-      "rebootTheSimulatedVehicleBackOn": "Перезапустити симульований апарат: знову на землі в точці Home, дизармлений",
+      "rebootTheSimulatedVehicleBackOn": "Перезапустити симульований апарат: знову на землі в точці Home, у стані DISARM",
       "respawning": "Перезапуск...",
       "respawn": "Перезапустити",
       "failedToDownloadArdupilotBinary": "Не вдалося завантажити бінарник ArduPilot {{ardupilotVehicleType}}: {{detail}}",

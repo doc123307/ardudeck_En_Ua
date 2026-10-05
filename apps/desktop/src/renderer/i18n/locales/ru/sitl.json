@@ -340,7 +340,7 @@
       "roll": "Крен",
       "pitch": "Тангаж",
       "yaw": "Рыскание",
-      "setArmAux4HighThrottleLow": "Армировать (AUX4 вверху + газ внизу)",
+      "setArmAux4HighThrottleLow": "ARM (AUX4 вверху + газ внизу)",
       "gpsMspSender": "Отправитель GPS через MSP",
       "sendFlightgearPositionViaMspSet": "Отправлять позицию FlightGear через MSP (установите",
       "sitlIsRunning": "SITL работает!",

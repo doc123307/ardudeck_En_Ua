@@ -129,11 +129,21 @@ The whole UI can be switched between **English** (unchanged, still the default) 
     its operator panel (RC functions, joystick mapping, values, modes, ARM permission).
   - Choosing a vehicle puts all of that in place and connects; the one chosen last comes back and connects by
     itself at the next start. Settings changed while a vehicle is in use are stored with that vehicle.
-  - Vehicles can be added (from the current setup), changed, copied and deleted; the operator may do so too
-    unless the administrator switches it off. Switching away from an armed vehicle is refused.
+  - Vehicles are added (from the current setup), changed, copied and deleted by the administrator only; the
+    operator just chooses one. Switching away from an armed vehicle is refused.
   - The first start of this version turns the current setup into the first vehicle.
   - Code: `src/shared/vehicle-presets.ts`, `src/main/operator/vehicles-store.ts`,
     `src/renderer/stores/vehicles-store.ts`, `src/renderer/components/vehicles/VehicleList.tsx`.
+- **Compact operator bar.** Smaller chips (32 px) and an "icons only" option for a bar with many switches
+  (the name shows in the tooltip); every built-in control (joystick, reverse, cruise, recording, layout…) can
+  be deleted from the panel and added back. Camera controls in the camera window are small icon buttons with
+  tooltips.
+- **Day / night theme** button in the operator screen's header.
+- **Transmitter detection.** A USB headset or other non-controller listed by the system before the
+  transmitter (EdgeTX/OpenTX in joystick mode, e.g. Radiomaster TX12) was taken as the joystick and the
+  transmitter was never read. Devices without sticks are now skipped and a transmitter is preferred. Code:
+  `pickPad` in `src/shared/operator-rc.ts`.
+- **ARM / DISARM stay in English** in the Ukrainian interface instead of transliterations.
 - **Three-position switches start in the middle** by default ("start in the middle position"), so servos or a
   mechanism on the channel are not sent to an end position when the program starts.
 - **Recording that does not depend on the video being there.** The administrator chooses: always, while
@@ -336,12 +346,21 @@ The whole UI can be switched between **English** (unchanged, still the default) 
     оператора (RC-функції, джойстик, значення, режими, дозвіл ARM).
   - Вибір борту ставить усе це на місце й підключається; останній вибраний борт сам повертається й
     підключається під час наступного запуску. Налаштування, змінені поки борт активний, зберігаються з ним.
-  - Борти можна додавати (з поточних налаштувань), змінювати, копіювати й видаляти; оператор теж, якщо
-    адміністратор цього не вимкнув. Перемкнутися з армованого борту не можна.
+  - Борти додає (з поточних налаштувань), змінює, копіює й видаляє лише адміністратор; оператор тільки
+    вибирає борт. Перемкнутися з борту в стані ARM не можна.
   - Під час першого запуску цієї версії поточні налаштування стають першим бортом.
+- **Компактна панель оператора.** Менші кнопки (32 px) і варіант «лише значки» для панелі з багатьма
+  перемикачами (назва — у підказці); будь-який вбудований елемент (джойстик, реверс, круїз, запис, розкладка…)
+  можна видалити з панелі й додати назад. Керування камерою у вікні камери — маленькі кнопки-значки з
+  підказками.
+- **Денна / нічна тема** — кнопка в шапці екрана оператора.
+- **Визначення пульта.** USB-гарнітуру чи інший пристрій без стіків, який система показувала раніше за пульт
+  (EdgeTX/OpenTX у режимі джойстика, напр. Radiomaster TX12), програма брала за джойстик, і пульт не
+  зчитувався. Тепер пристрої без стіків пропускаються, а пульт має перевагу.
+- **ARM / DISARM — англійською** в українському інтерфейсі замість транслітерацій.
 - **Перемикач на 3 позиції стартує з середньої позиції** (галочка «На старті — середня позиція», типово
   ввімкнена), тож сервоприводи чи механізм на каналі не їдуть у крайнє положення під час запуску програми.
-- **Запис, що не залежить від наявності відео.** Адміністратор вибирає: завжди, доки борт армовано, або за
+- **Запис, що не залежить від наявності відео.** Адміністратор вибирає: завжди, доки борт у стані ARM, або за
   кнопкою оператора. Програма сама тримає запис вибраних камер: камеру без зображення чекає, запис
   починається сам, щойно з'явиться відео, і відновлюється після кожного обриву. Файли йдуть у
   `Відео\STOHID` (або в теку, яку вибере адміністратор; якщо тека недоступна, береться типова і про це
@@ -403,7 +422,7 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 - **ARM із програми давав наземному борту команду «повний назад».** Коли немає пульта RC, перед ARM
   надсилається один кадр `RC_CHANNELS_OVERRIDE` із каналом 3 на 1000: для літального апарата це «газ
   унизу», а для ровера чи човна — повний задній хід, доки override не згасне (`RC_OVERRIDE_TIME`, типово
-  3 с). У симуляторі вбудований «пульт» робив те саме безперервно: армований ровер у ручному режимі їхав
+  3 с). У симуляторі вбудований «пульт» робив те саме безперервно: ровер у стані ARM у ручному режимі їхав
   назад на повному газу. Тепер наземні борти й човни отримують нейтраль (1500), і лише на каналах керма
   й газу. Стосується й оригіналу.
 - **Хибне «Борт не перейшов у режим…»** для режиму, який оператор уже замінив іншим.

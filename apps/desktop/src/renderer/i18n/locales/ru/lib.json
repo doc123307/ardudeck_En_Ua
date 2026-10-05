@@ -2,7 +2,7 @@
   "lib": {
     "apply": {
       "noVehicleConnected": "Аппарат не подключён",
-      "vehicleIsArmedDisarmBeforeApplying": "Аппарат заармлен, дизармьте перед применением",
+      "vehicleIsArmedDisarmBeforeApplying": "Аппарат в состоянии ARM, сделайте DISARM перед применением",
       "parametersNotLoadedYetFetchThem": "Параметры ещё не загружены, сначала считайте их",
       "expectedSitlButConnectionIsA": "Ожидался SITL, но подключён настоящий FC",
       "expectedARealFcButConnection": "Ожидался настоящий FC, но подключён SITL",

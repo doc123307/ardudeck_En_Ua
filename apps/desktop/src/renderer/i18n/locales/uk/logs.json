@@ -361,7 +361,7 @@
       "deadReckoningFailsafe": "Failsafe числення шляху",
       "gpsGlitch": "Збій GPS",
       "lossOfControl": "втрата керування",
-      "autoArmed": "Автоармування",
+      "autoArmed": "Авто-ARM",
       "landCompleteMaybe": "Посадку завершено (можливо)",
       "landComplete": "Посадку завершено",
       "lostGps": "Втрачено GPS",

@@ -45,7 +45,7 @@
       "aircraftRollBankAngleInDegrees": "Кут крену в градусах",
       "compassHeadingInDegrees": "Курс за компасом у градусах",
       "graphicalCompassHeadingTape": "Графічна стрічка курсу",
-      "timeSinceArming": "Час від армування",
+      "timeSinceArming": "Час від ARM",
       "timeSincePowerOn": "Час від увімкнення",
       "realTimeClockCurrentTime": "Годинник реального часу (поточний час)",
       "estimatedRemainingFlightTime": "Орієнтовний залишок часу польоту",

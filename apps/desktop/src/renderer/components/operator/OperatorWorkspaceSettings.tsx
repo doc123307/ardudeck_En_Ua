@@ -265,12 +265,6 @@ export function OperatorWorkspaceSettings() {
               label={t('operator.OperatorWorkspaceSettings.autoConnect')}
               hint={t('operator.OperatorWorkspaceSettings.autoConnectHint')}
             />
-            <Toggle
-              checked={config.operatorEditsVehicles}
-              onChange={(v) => save({ operatorEditsVehicles: v })}
-              label={t('operator.OperatorWorkspaceSettings.operatorEditsVehicles')}
-              hint={t('operator.OperatorWorkspaceSettings.operatorEditsVehiclesHint')}
-            />
           </Card>
           <Card title={t('operator.OperatorWorkspaceSettings.support')} hint={t('operator.OperatorWorkspaceSettings.supportHint')}>
             <input

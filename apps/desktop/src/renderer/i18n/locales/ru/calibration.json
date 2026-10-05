@@ -311,7 +311,7 @@
       "loadCalibrationFromFile": "Загрузить калибровку из файла",
       "restoreAccMagCalibrationFromA": "Восстановление калибровки ACC / MAG из файла .param. Перед записью ID датчиков исходной платы сверяются с этим FC.",
       "open": "Открыть",
-      "ensureYourVehicleIsDisarmedAnd": "Перед калибровкой убедитесь, что аппарат дизармлен и находится в безопасном месте.",
+      "ensureYourVehicleIsDisarmedAnd": "Перед калибровкой убедитесь, что аппарат в состоянии DISARM и находится в безопасном месте.",
       "forBestResultsDisconnectMotors": " Для лучшего результата отсоедините моторы.",
       "accelerometer": "Акселерометр",
       "accCalibration": "Калибровка акселерометра",
@@ -335,7 +335,7 @@
       "done": "Готово",
       "motorsWillSpinRemoveThePropellers": "Моторы будут вращаться. Снимите пропеллеры и закрепите аппарат.",
       "removeThePropellersBeforeStarting": "Снимите пропеллеры перед началом.",
-      "theVehicleMustBeDisarmed": "Аппарат должен быть дизармирован.",
+      "theVehicleMustBeDisarmed": "Аппарат должен быть в состоянии DISARM.",
       "putTheVehicleDownAndKeep": "Поставьте аппарат и держите неподвижно.",
       "useASurfaceYouKnowTo": "Используйте поверхность, которая точно ровная."
     },
