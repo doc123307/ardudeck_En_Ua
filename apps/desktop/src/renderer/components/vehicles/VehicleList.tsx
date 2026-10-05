@@ -6,14 +6,13 @@
  */
 
 import { useState } from 'react';
-import { Camera, Check, Copy, Pencil, Plus, Power, Trash2, Wifi, X } from 'lucide-react';
+import { Check, Copy, Pencil, Plus, Power, Trash2, Wifi } from 'lucide-react';
 import { useVehiclesStore, currentConnection } from '../../stores/vehicles-store';
 import { useConnectionStore } from '../../stores/connection-store';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { describeConnection } from '../operator/operator-logic';
 import { nextVehicleName, newVehicleId, type VehiclePreset } from '../../../shared/vehicle-presets';
 import type { ConnectOptions } from '../../../shared/ipc-channels';
-import type { CameraSourceConfig } from '../../../shared/camera-types';
 import { t } from '../../i18n';
 
 const FIELD = 'min-w-0 rounded-md border border-subtle bg-surface-input px-2 py-1 text-sm text-content focus:border-blue-500 focus:outline-none';
@@ -96,30 +95,6 @@ function LinkEditor({ value, onChange }: { value: ConnectOptions | null; onChang
   );
 }
 
-function CamerasEditor({ preset, onChange }: { preset: VehiclePreset; onChange: (cameras: CameraSourceConfig[]) => void }) {
-  const key = preset.cameras[0]?.vehicleKey ?? `${preset.id}:1.1`;
-  const update = (id: string, patch: Partial<CameraSourceConfig>) => onChange(preset.cameras.map((c) => (c.id === id ? { ...c, ...patch } : c)));
-  return (
-    <div className="flex flex-col gap-1.5">
-      {preset.cameras.map((c) => (
-        <div key={c.id} className="flex flex-wrap items-center gap-1.5">
-          <Camera className="h-3.5 w-3.5 shrink-0 text-content-tertiary" />
-          <input className={`${FIELD} w-36`} value={c.label} placeholder={t('vehicles.VehicleList.cameraName')} onChange={(e) => update(c.id, { label: e.target.value })} />
-          <input className={`${FIELD} min-w-[12rem] flex-1 font-mono text-xs`} value={c.url ?? ''} placeholder="rtsp://…" disabled={c.kind !== 'rtsp' && !c.url}
-            onChange={(e) => update(c.id, { url: e.target.value.trim() })} />
-          <button type="button" className={ICON_BTN} onClick={() => onChange(preset.cameras.filter((x) => x.id !== c.id))} data-tip={t('vehicles.VehicleList.removeCamera')}>
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-      ))}
-      <button type="button" className={`${BTN} self-start`}
-        onClick={() => onChange([...preset.cameras, { id: crypto.randomUUID(), vehicleKey: key, kind: 'rtsp', label: t('vehicles.VehicleList.cameraN', { n: preset.cameras.length + 1 }), url: '' }])}>
-        <Plus className="h-3.5 w-3.5" />{t('vehicles.VehicleList.addCamera')}
-      </button>
-    </div>
-  );
-}
-
 function VehicleEditor({ initial, onSave, onCancel }: { initial: VehiclePreset; onSave: (p: VehiclePreset) => void; onCancel: () => void }) {
   const [draft, setDraft] = useState<VehiclePreset>(initial);
   return (
@@ -130,10 +105,6 @@ function VehicleEditor({ initial, onSave, onCancel }: { initial: VehiclePreset; 
       <div>
         <div className="mb-1 text-[11px] font-medium uppercase tracking-wider text-content-tertiary">{t('vehicles.VehicleList.link')}</div>
         <LinkEditor value={draft.connection} onChange={(connection) => setDraft({ ...draft, connection })} />
-      </div>
-      <div>
-        <div className="mb-1 text-[11px] font-medium uppercase tracking-wider text-content-tertiary">{t('vehicles.VehicleList.cameras')}</div>
-        <CamerasEditor preset={draft} onChange={(cameras) => setDraft({ ...draft, cameras })} />
       </div>
       <p className="text-[11px] leading-snug text-content-tertiary">{t('vehicles.VehicleList.panelNote')}</p>
       <div className="flex gap-2">

@@ -14,6 +14,7 @@ import {
 import type { CameraRecordStatus } from '../../../shared/camera-types';
 import { modeButtonLabel } from './OperatorModeMenu';
 import { OperatorRcSettings } from './OperatorRcSettings';
+import { OperatorPadSettings } from './OperatorPadSettings';
 import { OperatorPanelSettings } from './OperatorPanelSettings';
 import { OperatorValuesSettings } from './OperatorValuesSettings';
 import { BTN, Card, FIELD, NumberField, SectionTabs, Toggle } from './OperatorSettingsParts';
@@ -139,7 +140,7 @@ function PasswordCard() {
   );
 }
 
-const SECTIONS = ['panel', 'values', 'driving', 'screen', 'video', 'general'] as const;
+const SECTIONS = ['panel', 'values', 'driving', 'pad', 'screen', 'video', 'general'] as const;
 type Section = (typeof SECTIONS)[number];
 const SECTION_KEY = 'stohid-operator-settings-section';
 
@@ -173,6 +174,7 @@ export function OperatorWorkspaceSettings() {
     { id: 'panel', label: t('operator.OperatorWorkspaceSettings.section_panel') },
     { id: 'values', label: t('operator.OperatorWorkspaceSettings.section_values') },
     { id: 'driving', label: t('operator.OperatorWorkspaceSettings.section_driving') },
+    { id: 'pad', label: t('operator.OperatorWorkspaceSettings.section_pad') },
     { id: 'screen', label: t('operator.OperatorWorkspaceSettings.section_screen') },
     { id: 'video', label: t('operator.OperatorWorkspaceSettings.section_video') },
     { id: 'general', label: t('operator.OperatorWorkspaceSettings.section_general') },
@@ -197,9 +199,10 @@ export function OperatorWorkspaceSettings() {
               ))}
             </div>
           </Card>
-        <OperatorRcSettings rc={config.rc} onChange={(rc) => save({ rc })} />
+        <OperatorRcSettings rc={config.rc} calibration={config.padCalibration} onChange={(rc) => save({ rc })} />
       </>
     ),
+    pad: <OperatorPadSettings config={config} save={save} />,
     screen: (
       <>
           <Card title={t('operator.OperatorWorkspaceSettings.elements')} hint={t('operator.OperatorWorkspaceSettings.elementsHint')}>

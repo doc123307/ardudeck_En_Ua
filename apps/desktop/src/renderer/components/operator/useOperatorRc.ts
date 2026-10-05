@@ -8,7 +8,7 @@ import { useOperatorUiStore } from '../../stores/operator-ui-store';
 import { followOperatorRc, useOperatorRcStore } from '../../stores/operator-rc-store';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useConnectionStore } from '../../stores/connection-store';
-import { pickPad, rcUsesJoystick } from '../../../shared/operator-rc';
+import { calibratePad, pickPad, rcUsesJoystick } from '../../../shared/operator-rc';
 import type { CameraSourceConfig } from '../../../shared/camera-types';
 
 /** 40 readings a second: smooth for driving, well inside what the link carries. */
@@ -25,6 +25,7 @@ export function useOperatorGamepadFeed(): void {
   const ready = useOperatorStore((s) => s.ready);
   const wanted = useOperatorStore((s) => rcUsesJoystick(s.config.rc));
   const padId = useOperatorStore((s) => s.config.rc.padId);
+  const calibration = useOperatorStore((s) => s.config.padCalibration);
 
   // A pop-out is its own renderer and has not read the operator settings yet.
   useEffect(() => { if (!ready) void useOperatorStore.getState().load(); }, [ready]);
@@ -35,10 +36,11 @@ export function useOperatorGamepadFeed(): void {
       if (!document.hasFocus()) return;
       const pad = pickPad(Array.from(navigator.getGamepads()), padId);
       if (!pad) return;
-      window.electronAPI.operatorRcGamepad({ id: pad.id, axes: Array.from(pad.axes), buttons: pad.buttons.map((b) => b.pressed) });
+      // The engine works with calibrated sticks: centre is 0 and the ends are -1 and 1 whatever the device reports.
+      window.electronAPI.operatorRcGamepad(calibratePad({ id: pad.id, axes: Array.from(pad.axes), buttons: pad.buttons.map((b) => b.pressed) }, calibration));
     }, PAD_POLL_MS);
     return () => clearInterval(timer);
-  }, [wanted, padId]);
+  }, [wanted, padId, calibration]);
 }
 
 /** Which camera looks backwards: the administrator's choice, else the one named like it. */

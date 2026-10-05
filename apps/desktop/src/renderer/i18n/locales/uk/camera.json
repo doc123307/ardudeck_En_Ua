@@ -134,7 +134,8 @@
       "noUrl": "немає URL",
       "zoomIn": "Наблизити (або коліщатко миші)",
       "zoomOut": "Віддалити",
-      "zoomReset": "Повернутися до всього кадру"
+      "zoomReset": "Повернутися до всього кадру",
+      "retryingByItself": "Повторюємо автоматично…"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "Підвіс керується з RC, керуйте ним з пульта",

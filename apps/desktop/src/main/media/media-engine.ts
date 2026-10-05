@@ -44,11 +44,14 @@ import type {
 import { HUB_HOST, HUB_RTSP_PORT, HUB_WEBRTC_PORT, HUB_SRT_PORT } from '../../shared/camera-types.js';
 import { mt } from '../i18n';
 
-const API_PORT = 9997;
-const RTSP_PORT = HUB_RTSP_PORT;
-const WEBRTC_PORT = HUB_WEBRTC_PORT;
-const WEBRTC_UDP_PORT = 8189;
-const SRT_PORT = HUB_SRT_PORT;
+// A second copy of the app on the same machine (a bench copy next to the one in use) must not
+// share the hub: STOHID_HUB_PORT_OFFSET moves every hub port by that much.
+const PORT_OFFSET = Number(process.env['STOHID_HUB_PORT_OFFSET']) || 0;
+const API_PORT = 9997 + PORT_OFFSET;
+const RTSP_PORT = HUB_RTSP_PORT + PORT_OFFSET;
+const WEBRTC_PORT = HUB_WEBRTC_PORT + PORT_OFFSET;
+const WEBRTC_UDP_PORT = 8189 + PORT_OFFSET;
+const SRT_PORT = HUB_SRT_PORT + PORT_OFFSET;
 const HOST = HUB_HOST;
 /** Bridged-ingest reconnect: base backoff, ceiling, and the wfb-rx rtp-stall window. */
 const RECONNECT_BASE_MS = 1000;

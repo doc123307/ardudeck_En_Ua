@@ -241,7 +241,8 @@
       "section_driving": "Driving and modes",
       "section_screen": "Screen",
       "section_video": "Video",
-      "section_general": "General"
+      "section_general": "General",
+      "section_pad": "Transmitter"
     },
     "OperatorRcBar": {
       "refused_disabled": "This control is switched off.",
@@ -316,8 +317,6 @@
       "sendOnConnectHint": "Otherwise the channel is left alone until the operator first uses the control.",
       "joystick": "Joystick driving",
       "joystickHint": "A USB joystick or gamepad drives steering and throttle over RC_CHANNELS_OVERRIDE. The operator takes control with the «Joystick» button every session, with the stick at the centre. If the joystick stops being read, the vehicle gets neutral and the channels go back to the RC transmitter.",
-      "device": "Joystick:",
-      "deviceFirst": "the first one found",
       "joystickFound": "Reading: {{name}}",
       "noJoystick": "No joystick seen. Plug it in and press any button on it.",
       "driveEnabled": "The operator may drive from the joystick",
@@ -359,7 +358,8 @@
       "servoOutput": "Servo output",
       "servoHint": "The output is set directly and held by the flight controller until changed. Only for outputs whose SERVOx_FUNCTION is 0 (Disabled).",
       "startCenter": "Start in the middle position",
-      "startCenterHint": "When the program starts the switch stands in the middle, so servos or a mechanism on the channel are not sent to an end position."
+      "startCenterHint": "When the program starts the switch stands in the middle, so servos or a mechanism on the channel are not sent to an end position.",
+      "padTabPointer": "Device choice, check and calibration are on the «Transmitter» tab."
     },
     "OperatorPanelSettings": {
       "icon": "Icon",
@@ -415,6 +415,41 @@
       "warnAbove": "Amber above",
       "dangerAbove": "Red above",
       "scaleHint": "Source: {{source}}. Shown = value × scale + offset (e.g. millivolts to volts: × 0.001). Empty limits are not checked."
+    },
+    "OperatorPadSettings": {
+      "device": "Transmitter or joystick",
+      "deviceHint": "The USB device the station reads: an RC transmitter in joystick mode (EdgeTX / OpenTX: USB Joystick (HID)), a joystick or a gamepad. Headsets and keyboards are skipped.",
+      "deviceAuto": "Automatically (a transmitter first)",
+      "found": "{{name}} · axes: {{axes}}, buttons: {{buttons}}",
+      "notFound": "No transmitter is seen",
+      "notFoundHint": "Plug the transmitter in over USB, choose «USB Joystick (HID)» on its screen, then move a stick or press a button: the system shows a device only after its first movement.",
+      "check": "Check",
+      "checkHint": "Move every stick, slider and switch: the bar and the number follow it. The thin mark is the raw reading, the bar is the value after calibration. Green names show what the control is assigned to.",
+      "buttonFree": "Not assigned",
+      "result": "What the vehicle gets:",
+      "calibration": "Calibration",
+      "calibrationHint": "Teaches the station the real travel of the sticks: the rest position becomes 0 and the ends become 100%. It is kept for this device and stays when the vehicle is changed.",
+      "calibrate": "Calibrate",
+      "calibrationReset": "Reset",
+      "calibrated": "Calibrated, axes: {{n}}",
+      "calibratedOther": "The saved calibration is for another device ({{name}}); this one reads raw.",
+      "notCalibrated": "Not calibrated: raw readings are used",
+      "stepCenter": "Step 1 of 2. Let go of the sticks so they rest (a throttle stick without a spring: put it in the middle), then press «Next».",
+      "stepEnds": "Step 2 of 2. Move every stick and slider to both ends several times - the blue band shows the travel seen - then press «Done». Controls you do not move stay uncalibrated.",
+      "next": "Next",
+      "done": "Done",
+      "cancel": "Cancel",
+      "assign": "Assignments",
+      "assignHint": "What each stick and button does. Click a control's button here, then move the stick or press the button on the transmitter.",
+      "clash": "{{control}} is used twice: {{list}}",
+      "cruise": "Cruise:",
+      "role_steer": "Steering",
+      "role_throttle": "Throttle",
+      "role_engage": "Take control",
+      "role_cruiseToggle": "Cruise on/off",
+      "role_cruiseUp": "Cruise faster",
+      "role_cruiseDown": "Cruise slower",
+      "role_reverseToggle": "Reverse"
     }
   }
 }

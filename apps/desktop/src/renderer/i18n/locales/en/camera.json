@@ -134,7 +134,8 @@
       "noUrl": "no url",
       "zoomIn": "Zoom in (or mouse wheel)",
       "zoomOut": "Zoom out",
-      "zoomReset": "Back to the whole picture"
+      "zoomReset": "Back to the whole picture",
+      "retryingByItself": "Retrying by itself…"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "RC-driven mount, control it from your transmitter",

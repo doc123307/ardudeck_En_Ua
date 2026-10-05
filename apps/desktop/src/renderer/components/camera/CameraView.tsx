@@ -218,6 +218,10 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
           ) : (
             <>
               <div className="text-sm text-red-300">{t('camera.CameraView.noVideo')}</div>
+              <div className="flex items-center gap-2 text-[11px] text-white/60">
+                <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/20 border-t-white/70" />
+                {t('camera.CameraView.retryingByItself')}
+              </div>
               <ReconnectButton sourceId={source.id} />
               {/* The reason is the only diagnostic a field user can report, and
                   they report it by screenshot. Small grey text did not survive

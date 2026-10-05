@@ -138,6 +138,15 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   (the name shows in the tooltip); every built-in control (joystick, reverse, cruise, recording, layout…) can
   be deleted from the panel and added back. Camera controls in the camera window are small icon buttons with
   tooltips.
+- **Transmitter tab** ("Operator workspace → Transmitter"): the device in use, a live check of every axis and
+  button with what each is assigned to, a two-step calibration of the sticks' real travel (kept per device,
+  for the station rather than per vehicle), and all joystick assignments in one place with a warning when a
+  control is given to two uses. Code: `calibratePad`, `rcAssignments` in `src/shared/operator-rc.ts`,
+  `src/renderer/components/operator/OperatorPadSettings.tsx`.
+- **Video comes back at once when the network does.** A feed that is not showing video restarts immediately
+  when the system reports the network back or the vehicle link recovers, instead of waiting out its retry
+  delay; the "no video" tile says that it keeps retrying by itself.
+- **Cameras are edited in the camera settings only**; the vehicle list no longer has a camera editor.
 - **Day / night theme** button in the operator screen's header.
 - **Transmitter detection.** A USB headset or other non-controller listed by the system before the
   transmitter (EdgeTX/OpenTX in joystick mode, e.g. Radiomaster TX12) was taken as the joystick and the
@@ -353,6 +362,14 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   перемикачами (назва — у підказці); будь-який вбудований елемент (джойстик, реверс, круїз, запис, розкладка…)
   можна видалити з панелі й додати назад. Керування камерою у вікні камери — маленькі кнопки-значки з
   підказками.
+- **Вкладка «Пульт»** («Простір пілота → Пульт»): який пристрій зчитується, жива перевірка кожної осі й
+  кнопки з підписом, до чого вона призначена, калібрування справжнього ходу стіків у два кроки (зберігається
+  для пристрою й для станції, а не для борту) та всі призначення джойстика в одному місці з попередженням,
+  коли один елемент призначено двічі.
+- **Відео повертається одразу, коли повертається мережа.** Потік без зображення перезапускається негайно,
+  щойно система повідомляє про мережу або відновлюється зв'язок із бортом, а не чекає своєї паузи між
+  спробами; плитка «немає відео» показує, що повтор іде автоматично.
+- **Камери редагуються лише в налаштуваннях камер**; у списку бортів редактора камер більше немає.
 - **Денна / нічна тема** — кнопка в шапці екрана оператора.
 - **Визначення пульта.** USB-гарнітуру чи інший пристрій без стіків, який система показувала раніше за пульт
   (EdgeTX/OpenTX у режимі джойстика, напр. Radiomaster TX12), програма брала за джойстик, і пульт не

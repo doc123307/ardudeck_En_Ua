@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import {
   RC_FUNCTION_OUTPUTS, RC_MAX_CHANNEL, RC_PWM_MAX, RC_PWM_MIN, RC_SLIDER_SPRINGS,
-  driveSticks, isController, pickPad, rcChannelConflicts,
-  type OperatorRcConfig, type OperatorRcFunction, type RcFunctionOutput, type RcInput, type RcPad, type RcSliderSpring,
+  calibratePad, driveSticks, isController, pickPad, rcChannelConflicts,
+  type OperatorRcConfig, type OperatorRcFunction, type RcFunctionOutput, type RcInput, type RcPad, type RcPadCalibration, type RcSliderSpring,
 } from '../../../shared/operator-rc';
 import { useCameraStore } from '../../stores/camera-store';
 import { BTN, Card, ColorPicker, FIELD, IconPicker, SmallNumber, TextField, Toggle } from './OperatorSettingsParts';
@@ -18,24 +18,26 @@ import { t } from '../../i18n';
 const POLL_MS = 60;
 const LEARN_TIMEOUT_MS = 8000;
 
-/** The joysticks plugged in, and a live reading of the one in use. */
-export function useJoystick(padId: string): { names: string[]; pad: RcPad | null } {
-  const [state, setState] = useState<{ names: string[]; pad: RcPad | null }>({ names: [], pad: null });
+/** The joysticks plugged in, and a live reading of the one in use: as it is used (calibrated) and raw. */
+export function useJoystick(padId: string, calibration: RcPadCalibration | null = null): { names: string[]; pad: RcPad | null; raw: RcPad | null } {
+  const [state, setState] = useState<{ names: string[]; pad: RcPad | null; raw: RcPad | null }>({ names: [], pad: null, raw: null });
   useEffect(() => {
     if (typeof navigator.getGamepads !== 'function') return;
     const read = () => {
       const pads = Array.from(navigator.getGamepads()).filter((p): p is Gamepad => !!p);
       const picked = pickPad(pads, padId);
+      const raw = picked ? { id: picked.id, axes: Array.from(picked.axes), buttons: picked.buttons.map((b) => b.pressed) } : null;
       setState({
         // Only real controllers: a headset's volume keys also show up as a "gamepad".
         names: pads.filter(isController).map((p) => p.id),
-        pad: picked ? { id: picked.id, axes: Array.from(picked.axes), buttons: picked.buttons.map((b) => b.pressed) } : null,
+        pad: raw ? calibratePad(raw, calibration) : null,
+        raw,
       });
     };
     read();
     const timer = setInterval(read, POLL_MS);
     return () => clearInterval(timer);
-  }, [padId]);
+  }, [padId, calibration]);
   return state;
 }
 
@@ -55,7 +57,7 @@ function movedControl(baseline: RcPad, now: RcPad, want: 'button' | 'axis'): num
 }
 
 /** "Button 3 [change] [x]": click, then press the joystick control to assign. */
-function Learn({ pad, want, value, onChange, label, clearable = true }: {
+export function Learn({ pad, want, value, onChange, label, clearable = true }: {
   pad: RcPad | null; want: 'button' | 'axis'; value: number | null; onChange: (v: number | null) => void; label: string; clearable?: boolean;
 }) {
   const [baseline, setBaseline] = useState<RcPad | null>(null);
@@ -102,7 +104,7 @@ function Learn({ pad, want, value, onChange, label, clearable = true }: {
 }
 
 /** A bar showing a -1..1 value around its middle. */
-function Meter({ value, label }: { value: number; label: string }) {
+export function Meter({ value, label }: { value: number; label: string }) {
   const half = Math.min(1, Math.abs(value)) * 50;
   return (
     <span className="flex items-center gap-2 text-xs text-content-secondary">
@@ -235,8 +237,8 @@ export function FunctionEditor({ fn, pad, conflict, onChange }: {
 }
 
 /** Settings → Operator workspace → driving: the joystick, cruise and reverse driving. */
-export function OperatorRcSettings({ rc, onChange }: { rc: OperatorRcConfig; onChange: (next: OperatorRcConfig) => void }) {
-  const { names, pad } = useJoystick(rc.padId);
+export function OperatorRcSettings({ rc, calibration, onChange }: { rc: OperatorRcConfig; calibration: RcPadCalibration | null; onChange: (next: OperatorRcConfig) => void }) {
+  const { pad } = useJoystick(rc.padId, calibration);
   const sources = useCameraStore((s) => s.sources);
   const conflicts = rcChannelConflicts(rc);
   const sticks = driveSticks(rc.drive, pad);
@@ -248,16 +250,10 @@ export function OperatorRcSettings({ rc, onChange }: { rc: OperatorRcConfig; onC
   return (
     <>
       <Card title={t('operator.OperatorRcSettings.joystick')} hint={t('operator.OperatorRcSettings.joystickHint')}>
-        <div className="flex flex-wrap items-center gap-2 text-sm text-content">
-          <span>{t('operator.OperatorRcSettings.device')}</span>
-          <select value={rc.padId} onChange={(e) => onChange({ ...rc, padId: e.target.value })} className={`${FIELD} max-w-md py-1`}>
-            <option value="">{t('operator.OperatorRcSettings.deviceFirst')}</option>
-            {[...new Set([...(rc.padId ? [rc.padId] : []), ...names])].map((n) => <option key={n} value={n}>{n}</option>)}
-          </select>
-          <span className={`text-xs ${pad ? 'text-emerald-400' : 'text-amber-400'}`}>
-            {pad ? t('operator.OperatorRcSettings.joystickFound', { name: pad.id }) : t('operator.OperatorRcSettings.noJoystick')}
-          </span>
-        </div>
+        <p className={`text-xs ${pad ? 'text-emerald-400' : 'text-amber-400'}`}>
+          {pad ? t('operator.OperatorRcSettings.joystickFound', { name: pad.id }) : t('operator.OperatorRcSettings.noJoystick')}
+          {' '}<span className="text-content-tertiary">{t('operator.OperatorRcSettings.padTabPointer')}</span>
+        </p>
 
         <Toggle checked={rc.drive.enabled} onChange={(enabled) => drive({ enabled })}
           label={t('operator.OperatorRcSettings.driveEnabled')} hint={t('operator.OperatorRcSettings.driveEnabledHint')} />

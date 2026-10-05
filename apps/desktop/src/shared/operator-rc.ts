@@ -360,6 +360,120 @@ export function pickPad<T extends { id: string; axes?: ArrayLike<number> }>(pads
   return controllers[0] ?? null;
 }
 
+// ---- Calibration ------------------------------------------------------------------
+
+/** Where one axis really rests and ends, in raw readings (-1..1). */
+export interface RcAxisCalibration {
+  min: number;
+  center: number;
+  max: number;
+}
+
+/**
+ * The calibration of one transmitter. It belongs to the station, not to a vehicle, and is
+ * applied only to the device it was made on: another joystick plugged in reads raw.
+ */
+export interface RcPadCalibration {
+  /** The device's name as the system reports it. */
+  pad: string;
+  /** Per axis; null = not calibrated, read raw. */
+  axes: (RcAxisCalibration | null)[];
+}
+
+export const RC_MAX_AXES = 16;
+/** A span shorter than this is not a moved stick: such an axis is left raw. */
+export const CALIBRATION_MIN_SPAN = 0.2;
+
+export function normalizePadCalibration(raw: unknown): RcPadCalibration | null {
+  if (!isObject(raw) || typeof raw.pad !== 'string' || !raw.pad.trim() || !Array.isArray(raw.axes)) return null;
+  const axes = raw.axes.slice(0, RC_MAX_AXES).map((a): RcAxisCalibration | null => {
+    if (!isObject(a)) return null;
+    const { min, center, max } = a as Record<string, unknown>;
+    if (![min, center, max].every((v) => typeof v === 'number' && Number.isFinite(v) && Math.abs(v) <= 1.01)) return null;
+    const c = { min: min as number, center: center as number, max: max as number };
+    return c.max - c.min >= CALIBRATION_MIN_SPAN && c.center >= c.min && c.center <= c.max ? c : null;
+  });
+  return axes.some(Boolean) ? { pad: raw.pad.trim().slice(0, 200), axes } : null;
+}
+
+/** A raw reading stretched so that the calibrated ends give -1 and 1 and the rest position gives 0. */
+export function calibrateAxis(raw: number, c: RcAxisCalibration | null | undefined): number {
+  if (!c) return raw;
+  const span = raw >= c.center ? c.max - c.center : c.center - c.min;
+  // A stick that rests at one end (a throttle without a spring) has no travel on that side.
+  if (span < 0.02) return 0;
+  return Math.min(1, Math.max(-1, (raw - c.center) / span)) || 0;
+}
+
+/** The reading with the station's calibration applied, when it was made on this very device. */
+export function calibratePad(pad: RcPad, calibration: RcPadCalibration | null): RcPad {
+  if (!calibration || calibration.pad !== pad.id) return pad;
+  return { ...pad, axes: pad.axes.map((a, i) => calibrateAxis(a, calibration.axes[i])) };
+}
+
+/** Step 1 of calibrating: the sticks are let go, this is where they rest. */
+export function calibrationStart(pad: RcPad): RcPadCalibration {
+  return { pad: pad.id, axes: pad.axes.slice(0, RC_MAX_AXES).map((a) => ({ min: a, center: a, max: a })) };
+}
+
+/** Step 2, for every reading while the sticks are moved to their ends: the ends grow. */
+export function calibrationGrow(c: RcPadCalibration, pad: RcPad): RcPadCalibration {
+  return {
+    pad: c.pad,
+    axes: c.axes.map((a, i) => {
+      const v = pad.axes[i];
+      return a && typeof v === 'number' ? { min: Math.min(a.min, v), center: a.center, max: Math.max(a.max, v) } : a;
+    }),
+  };
+}
+
+/** Done: axes that were not moved stay uncalibrated. */
+export function calibrationFinish(c: RcPadCalibration): RcPadCalibration | null {
+  return normalizePadCalibration({ pad: c.pad, axes: c.axes.map((a) => (a && a.max - a.min >= CALIBRATION_MIN_SPAN ? a : null)) });
+}
+
+// ---- What is assigned to what -----------------------------------------------------
+
+/** One use of a joystick control: `role` names a built-in use, or `fn:<id>` one of the functions. */
+export interface RcAssignment {
+  role: string;
+  control: 'axis' | 'button';
+  index: number;
+}
+
+/** Everything the configuration reads from the joystick, in the order it is set up. */
+export function rcAssignments(rc: OperatorRcConfig): RcAssignment[] {
+  const out: RcAssignment[] = [];
+  const button = (role: string, index: number | null) => { if (index !== null) out.push({ role, control: 'button', index }); };
+  if (rc.drive.enabled) {
+    out.push({ role: 'steer', control: 'axis', index: rc.drive.steerAxis }, { role: 'throttle', control: 'axis', index: rc.drive.throttleAxis });
+    button('engage', rc.drive.engageButton);
+  }
+  if (rc.cruise.enabled) {
+    button('cruiseToggle', rc.cruise.toggleButton);
+    button('cruiseUp', rc.cruise.upButton);
+    button('cruiseDown', rc.cruise.downButton);
+  }
+  if (rc.reverse.enabled) button('reverseToggle', rc.reverse.toggleButton);
+  for (const fn of rc.functions) {
+    const role = `fn:${fn.id}`;
+    if (fn.input.kind === 'button') button(role, fn.input.index);
+    else if (fn.input.kind === 'buttons') { button(role, fn.input.down); button(role, fn.input.up); }
+    else if (fn.input.kind === 'axis') out.push({ role, control: 'axis', index: fn.input.index });
+  }
+  return out;
+}
+
+/** Controls given to more than one use: pressing one would do two things at once. */
+export function rcAssignmentClashes(rc: OperatorRcConfig): RcAssignment[][] {
+  const groups = new Map<string, RcAssignment[]>();
+  for (const a of rcAssignments(rc)) {
+    const key = `${a.control}:${a.index}`;
+    groups.set(key, [...(groups.get(key) ?? []), a]);
+  }
+  return [...groups.values()].filter((g) => new Set(g.map((a) => a.role)).size > 1);
+}
+
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 const axisOf = (pad: RcPad | null, index: number) => clamp(pad?.axes[index] ?? 0, -1, 1);
 const pressed = (pad: RcPad | null, index: number | null) => (index === null ? false : pad?.buttons[index] ?? false);

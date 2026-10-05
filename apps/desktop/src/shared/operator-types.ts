@@ -4,7 +4,7 @@
  */
 
 import type { ConnectOptions } from './ipc-channels';
-import { DEFAULT_RC_CONFIG, normalizeRcConfig, type OperatorRcConfig } from './operator-rc';
+import { DEFAULT_RC_CONFIG, normalizePadCalibration, normalizeRcConfig, type OperatorRcConfig, type RcPadCalibration } from './operator-rc';
 import { OPERATOR_MAX_VALUES, controlKind, normalizeValue, type OperatorValue } from './operator-panel';
 
 export type AppMode = 'operator' | 'admin';
@@ -81,6 +81,8 @@ export interface OperatorConfig {
   recordSegmentMinutes: number;
   /** Joystick driving, cruise, reverse driving and the administrator's own RC functions. */
   rc: OperatorRcConfig;
+  /** The station's transmitter calibration; it stays when the vehicle is changed. */
+  padCalibration: RcPadCalibration | null;
   /** Shown on the operator's About page. */
   supportContact: string;
   /** Minutes without input after which the full UI closes again. 0 = never. */
@@ -115,6 +117,7 @@ export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
   recordDir: '',
   recordSegmentMinutes: 15,
   rc: DEFAULT_RC_CONFIG,
+  padCalibration: null,
   supportContact: '@stohid_support_bot',
   autoLockMinutes: 15,
   statusFields: ['mode', 'satellites', 'battery', 'uptime', 'speed', 'roll', 'pitch'],
@@ -203,6 +206,7 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     recordDir: typeof r.recordDir === 'string' ? r.recordDir.trim().slice(0, 400) : d.recordDir,
     recordSegmentMinutes: Math.round(num(r.recordSegmentMinutes, d.recordSegmentMinutes, 0, 240)),
     rc: normalizeRcConfig(r.rc),
+    padCalibration: normalizePadCalibration(r.padCalibration),
     supportContact: typeof r.supportContact === 'string' ? r.supportContact.trim().slice(0, 120) : d.supportContact,
     autoLockMinutes: Math.round(num(r.autoLockMinutes, d.autoLockMinutes, 0, 240)),
     statusFields,

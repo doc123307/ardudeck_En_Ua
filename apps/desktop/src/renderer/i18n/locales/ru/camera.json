@@ -134,7 +134,8 @@
       "noUrl": "нет URL",
       "zoomIn": "Приблизить (или колесо мыши)",
       "zoomOut": "Отдалить",
-      "zoomReset": "Вернуться ко всему кадру"
+      "zoomReset": "Вернуться ко всему кадру",
+      "retryingByItself": "Повторяем автоматически…"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "Подвес управляется с RC, управляйте им с пульта",

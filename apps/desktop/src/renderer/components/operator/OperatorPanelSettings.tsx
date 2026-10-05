@@ -71,7 +71,7 @@ export function OperatorPanelSettings({ config, save }: { config: OperatorConfig
   const relays = useRelayStore((s) => s.buttons);
   const addRelay = useRelayStore((s) => s.addButton);
   const removeRelay = useRelayStore((s) => s.removeButton);
-  const { pad } = useJoystick(config.rc.padId);
+  const { pad } = useJoystick(config.rc.padId, config.padCalibration);
   const [open, setOpen] = useState<string | null>(null);
   const { rc } = config;
   const rcConflicts = rcChannelConflicts(rc);

@@ -12,6 +12,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import type { CameraSourceConfig } from '../../../shared/camera-types';
 import { useCameraStore } from '../../stores/camera-store';
+import { useConnectionStore } from '../../stores/connection-store';
 import { playWhep } from './whep';
 import { createStallTracker, nextRetryDelayMs, FIRST_FRAME_TIMEOUT_MS, RECONNECT_MS, RECHECK_SESSION_EVERY } from './stream-stall';
 import { sampleFromReport, healthBetween, type StreamHealth, type StreamSample } from './stream-health';
@@ -82,6 +83,25 @@ export function useCameraStream(
   const reconnectRequest = useCameraStore((s) => s.reconnectRequests[source.id] ?? 0);
   // A manual reconnect starts fresh: no inherited backoff.
   useEffect(() => { retryAttemptRef.current = 0; }, [reconnectRequest]);
+
+  // The network is back (the system says so, or the vehicle link has just recovered): a feed
+  // that is not showing video starts over at once instead of waiting out its backoff, and the
+  // hub session is rebuilt from scratch rather than replayed.
+  const statusRef = useRef(status);
+  statusRef.current = status;
+  const linkFresh = useConnectionStore((s) => s.connectionState.isConnected && !s.connectionState.isStale);
+  const linkWasFresh = useRef(linkFresh);
+  useEffect(() => {
+    const kick = () => {
+      if (statusRef.current === 'live' || statusRef.current === 'starting') return;
+      retryAttemptRef.current = 0;
+      setRestartNonce((n) => n + 1);
+    };
+    if (linkFresh && !linkWasFresh.current) kick();
+    linkWasFresh.current = linkFresh;
+    window.addEventListener('online', kick);
+    return () => window.removeEventListener('online', kick);
+  }, [linkFresh]);
 
   useEffect(() => {
     let pc: RTCPeerConnection | null = null;
