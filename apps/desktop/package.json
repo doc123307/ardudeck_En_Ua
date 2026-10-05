@@ -181,7 +181,10 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "perMachine": false,
-      "createDesktopShortcut": true
+      "createDesktopShortcut": true,
+      "shortcutName": "ТУНЕЛЬ",
+      "uninstallDisplayName": "ТУНЕЛЬ ${version}",
+      "include": "installer.nsh"
     },
     "portable": {
       "artifactName": "${productName}-${version}-win-${arch}-portable.${ext}"
@@ -209,7 +212,13 @@
       "target": [
         "AppImage",
         "deb"
-      ]
+      ],
+      "desktop": {
+        "entry": {
+          "Name": "ТУНЕЛЬ",
+          "Comment": "STOHID"
+        }
+      }
     }
   }
 }

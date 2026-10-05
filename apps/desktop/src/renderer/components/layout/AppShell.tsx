@@ -13,7 +13,7 @@ import { ArmDisarmButton } from './ArmDisarmButton';
 import { ScriptHealthBadge } from '../script-installer/ScriptHealthBadge';
 import { QuickLaunchMenu } from './QuickLaunchMenu';
 import { returnToOperatorMode } from '../operator/useAdminAutoLock';
-import iconImage from '../../assets/icon.png';
+import { BrandMark } from '../ui/BrandMark';
 
 interface AppShellProps {
   children: ReactNode;
@@ -57,11 +57,7 @@ export function AppShell({ children }: AppShellProps) {
     <div className="h-screen flex flex-col bg-surface-base">
       {/* Header */}
       <header className="h-14 border-b border-subtle bg-surface-nav backdrop-blur-sm flex items-center shrink-0 relative z-50">
-        {/* Logo sits in a nav-rail-width slot so it lines up with the sidebar icons */}
-        <div className="w-14 flex items-center justify-center shrink-0">
-          <img src={iconImage} alt={t('brand.name')} className="h-8 w-8 rounded-md object-cover" />
-        </div>
-        <h1 className="text-lg font-bold tracking-wide uppercase text-content">{t('brand.name')}</h1>
+        <h1 className="flex shrink-0 items-center pl-4 text-content"><BrandMark className="h-6" /></h1>
 
         <div className="ml-auto flex items-center gap-4 pr-6">
           {/* Voice alerts mute */}

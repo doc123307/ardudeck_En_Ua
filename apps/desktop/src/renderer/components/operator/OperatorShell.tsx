@@ -15,7 +15,7 @@ import { OperatorAbout } from './OperatorAbout';
 import { useOperatorConnection } from './useOperatorConnection';
 import { describeConnection } from './operator-logic';
 import { OperatorVehiclePicker } from './OperatorVehiclePicker';
-import iconImage from '../../assets/icon.png';
+import { BrandMark } from '../ui/BrandMark';
 import { t } from '../../i18n';
 
 type OperatorPage = 'screen' | 'about';
@@ -47,10 +47,7 @@ export function OperatorShell() {
   return (
     <div className="flex h-screen flex-col bg-surface-base">
       <header className="relative z-50 flex h-14 shrink-0 items-center gap-3 border-b border-subtle bg-surface-nav pr-4">
-        <div className="flex w-14 shrink-0 items-center justify-center">
-          <img src={iconImage} alt="" className="h-8 w-8 rounded-md object-cover" />
-        </div>
-        <h1 className="whitespace-nowrap text-lg font-bold uppercase tracking-wide text-content">{t('brand.name')}</h1>
+        <h1 className="flex shrink-0 items-center pl-4 text-content"><BrandMark className="h-6" /></h1>
 
         <div className="ml-auto flex min-w-0 items-center gap-2">
           <OperatorVehiclePicker

@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Check, Copy, FileKey, KeyRound } from 'lucide-react';
 import type { LicenseError, LicenseStatus } from '../../../shared/license-types';
-import iconImage from '../../assets/icon.png';
+import { BrandMark } from '../ui/BrandMark';
 import { t } from '../../i18n';
 
 const BTN_SHAPE = 'flex h-10 items-center justify-center gap-2 rounded-lg border px-4 text-sm font-medium transition-colors hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40';
@@ -49,12 +49,9 @@ function ActivationScreen({ status, onActivated }: { status: LicenseStatus; onAc
   return (
     <div className="flex h-screen items-center justify-center bg-surface-base p-6">
       <div className="flex w-full max-w-xl flex-col gap-5 rounded-2xl border border-subtle bg-surface p-8 shadow-2xl">
-        <div className="flex items-center gap-3">
-          <img src={iconImage} alt="" className="h-12 w-12 rounded-lg object-cover" />
-          <div>
-            <h1 className="text-xl font-bold uppercase tracking-wide text-content">{t('brand.name')}</h1>
-            <p className="text-sm text-content-secondary">{t('license.title')}</p>
-          </div>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-content"><BrandMark className="h-8" /></h1>
+          <p className="text-sm text-content-secondary">{t('license.title')}</p>
         </div>
 
         <p className="text-sm leading-relaxed text-content-secondary">{t('license.intro')}</p>

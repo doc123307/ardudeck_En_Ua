@@ -43,6 +43,12 @@ The whole UI can be switched between **English** (unchanged, still the default) 
 - **Name.** The product name is **STOHID** in English and «Тунель» (by STOHID) in Ukrainian. It is shown in the window
   title, header, installer, splash screen and the EdgeTX radio widget. `src/shared/brand.ts` holds the
   names and links.
+- **Wordmark and icon (0.1.2-0.18).** The header of the operator screen, of the full UI and of the
+  activation screen shows the wordmark «ТУНЕЛЬ», drawn in even straight strokes after a tunnel portal
+  (`src/renderer/components/ui/BrandMark.tsx`), instead of a small picture. The application icon is the
+  portal with the letter «Т»; `scripts/make-icons.cjs` draws `icon.png` and `icon.ico`. The shortcut, the
+  entry in the list of installed programs and the Linux menu entry are called «ТУНЕЛЬ»; file and folder
+  names stay STOHID, so an update keeps the settings and the licence. The About page is unchanged.
 - **Artwork.** New icons (`png`/`ico`/`icns`), a splash screen with logo and tagline, the welcome-screen
   logo and the radio HUD logos.
 - **Startup voice.** It now says "Welcome to STOHID".
@@ -316,6 +322,11 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - текст віджета на самому пульті EdgeTX.
 
 ### 2. Брендування
+- **Напис та іконка (0.1.2-0.18).** У шапці екрана оператора, повного інтерфейсу й екрана активації замість
+  маленької картинки — напис «ТУНЕЛЬ», намальований рівними прямими штрихами, з порталом тунелю перед ним.
+  Іконка програми — портал із літерою «Т». Ярлик, запис у списку встановлених програм і пункт меню в Linux
+  називаються «ТУНЕЛЬ»; назви файлів і тек лишаються STOHID, тож оновлення зберігає налаштування й ліцензію.
+  Сторінку «Про програму» не змінено.
 - **Назва.** «Тунель» (виробник — STOHID; англійською програма зветься STOHID) у заголовку вікна, шапці, інсталяторі, заставці та віджеті пульта.
   `src/shared/brand.ts` містить назви й посилання.
 - **Графіка.** Нові іконки, заставка з логотипом і підписом, логотип на стартовій сторінці та в HUD пульта.
