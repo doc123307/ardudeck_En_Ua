@@ -94,6 +94,8 @@ export class UdpTransport extends BaseTransport {
   private _isOpen = false;
 
   private _explicitRemote: boolean;
+  /** The user gave the address to send to (client mode), and it is not an ELRS backpack's port. */
+  private _dialled: boolean;
 
   // Metered send queue: an ELRS transmitter's 1 KB FIFO corrupts frames on overflow.
   private _queue: QueuedFrame[] = [];
@@ -109,8 +111,26 @@ export class UdpTransport extends BaseTransport {
     this._remoteHost = options.remoteHost;
     this._remotePort = options.remotePort;
     this._explicitRemote = !!options.remoteHost && !!options.remotePort;
+    this._dialled = this._explicitRemote && options.remotePort !== ELRS_UPLINK_PORT;
     this.readTimeout = options.readTimeout ?? 5000;
     this.writeTimeout = options.writeTimeout ?? 5000;
+  }
+
+  /**
+   * Is another socket already bound to this UDP port? The transport binds with reuseAddr,
+   * so a second ground station on the same port (QGroundControl listens on 14550 by default)
+   * does not fail: the system simply hands each datagram to one of the two, and both see a
+   * link that comes and goes. Asking first lets the caller say so.
+   */
+  static portHeldElsewhere(port: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      const probe = createSocket({ type: 'udp4', reuseAddr: false });
+      probe.once('error', (err: NodeJS.ErrnoException) => {
+        try { probe.close(); } catch { /* never bound */ }
+        resolve(err.code === 'EADDRINUSE' || err.code === 'EACCES');
+      });
+      probe.bind(port, () => probe.close(() => resolve(false)));
+    });
   }
 
   /** True once there is somewhere to send to: a UDP link that has not heard
@@ -165,7 +185,11 @@ export class UdpTransport extends BaseTransport {
       this.socket = null;
     }
 
-    this._provenWide = false;
+    // The 40 B/s budget is for an ELRS backpack, which is listened to and never dialled.
+    // A link the user dialled (a router, a companion computer, a modem) is an IP link:
+    // metering it would hold stream requests, parameter reads and the operator's RC
+    // override to about one frame a second for as long as the vehicle streams little.
+    this._provenWide = this._dialled;
     this._inboundBytes = 0;
 
     return new Promise((resolve, reject) => {
@@ -310,7 +334,9 @@ export class UdpTransport extends BaseTransport {
         resolve();
       });
       // The backpack listens on 14555 only; a closed extra port drops silently.
-      if (port !== ELRS_UPLINK_PORT) {
+      // A dialled link is not a backpack: a second copy of every frame to a port nobody
+      // opened only doubles the uplink and draws ICMP rejections from the far router.
+      if (port !== ELRS_UPLINK_PORT && !this._dialled) {
         socket.send(Buffer.from(data), ELRS_UPLINK_PORT, host, () => { /* best effort */ });
       }
     });

@@ -153,6 +153,7 @@
       "recordingOn": "Recording switched on.",
       "padConnected": "Transmitter connected: {{name}}",
       "padDisconnected": "Transmitter disconnected: {{name}}",
+      "portShared": "UDP port {{port}} is open in another program (QGroundControl?). The link will keep dropping: close it or change the port.",
       "resume": "Go on",
       "resumeTip": "The vehicle is stopped (Hold). Press to return to the mode it was driven in; take joystick control again if you were driving from it.",
       "resumeRefused": "The vehicle did not leave Hold"

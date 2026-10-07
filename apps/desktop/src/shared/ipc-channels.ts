@@ -491,6 +491,8 @@ export const IPC_CHANNELS = {
   MSP_GET_BOX_NAMES: 'msp:get-box-names',       // Get mode names (dynamic, from FC)
   MSP_GET_BOX_IDS: 'msp:get-box-ids',           // Get permanent box IDs (dynamic, from FC)
 
+  /** Main → renderer: the UDP port (number) of the link being opened is also held by another program. */
+  CONNECTION_PORT_SHARED: 'connection:port-shared',
   // Reconnection control (for expected reboots)
   RECONNECT_CANCEL: 'reconnect:cancel',
 

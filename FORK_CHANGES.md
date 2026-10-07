@@ -149,6 +149,22 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   counted on the line. Code: `src/renderer/components/operator/OperatorMessages.tsx`.
 - **Roll and pitch drawn.** Next to the compass the vehicle is drawn from behind (roll) and from the side
   (pitch); the drawings lean with the vehicle and take the warning and limit colours of the numbers.
+- **UDP link to a router or companion computer (0.1.2-0.19).** Three faults of the dialled ("client") UDP
+  link, all present upstream:
+  - After a dropout the automatic reconnect only listened. A vehicle-side endpoint that had forgotten the
+    station (router restarted, modem re-registered) was never spoken to again, and the link stayed down
+    until a manual reconnect. The ground-station heartbeat now goes out once a second during a reconnect
+    as it does on the first connect, and a reconnect waits 4 s for the answer.
+  - Every UDP link was held to 40 B/s of uplink (a budget meant for an ELRS backpack) until the vehicle
+    streamed more than 3 KB/s, and each frame was sent a second time to port 14555. On a vehicle that
+    streams little this kept stream requests, parameter reads, mode changes and the operator's RC override
+    to about one frame a second. A dialled link is no longer metered or doubled; a listened-to link and a
+    backpack dialled on 14555 behave as before.
+  - The UDP port is opened shared, so a second ground station on the same port (QGroundControl listens on
+    14550) silently took part of the vehicle's packets and both saw a link that kept dropping. The program
+    now checks the port first and warns - in the console and on the operator screen.
+  Code: `packages/comms/src/transports/udp-transport.ts`, `startUdpClientHeartbeat` in
+  `src/main/ipc-handlers.ts`.
 - **Cameras are set up without a link to the vehicle (0.1.2-0.19).** "Operator workspace → Video" has the
   camera editor (feeds, camera control, gimbal) that used to open only from the video panel of a connected
   vehicle. With no vehicle connected the feeds are filed under the vehicle set up last, or under a stand-in
@@ -428,6 +444,19 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   помилки рахуються на рядку.
 - **Крен і тангаж малюнком.** Поруч із компасом борт намальовано ззаду (крен) і збоку (тангаж); малюнки
   нахиляються разом із бортом і набувають кольорів попередження й межі, як і числа.
+- **Зв'язок UDP із роутером чи бортовим комп'ютером (0.1.2-0.19).** Три вади з'єднання в режимі «клієнт»,
+  усі з оригіналу:
+  - Після обриву автоматичне перепідключення лише слухало. Якщо бортовий кінець «забув» станцію (роутер
+    перезапустився, модем перереєструвався), до нього більше ніхто не звертався, і зв'язок лишався
+    розірваним до ручного перепідключення. Тепер heartbeat наземної станції йде щосекунди й під час
+    перепідключення, а відповідь чекається 4 с.
+  - Будь-яке UDP-з'єднання мало обмеження 40 байт/с на вихід (розраховане на ELRS), доки борт не слав
+    понад 3 КБ/с, і кожен пакет дублювався на порт 14555. На борті з невеликим потоком телеметрії запити,
+    перемикання режимів і керування з джойстика йшли приблизно по пакету на секунду. Для з'єднання
+    «клієнт» обмеження й дубль прибрано; для режиму «слухати» й ELRS усе як було.
+  - UDP-порт відкривається спільним, тож друга наземна станція на тому самому порту (QGroundControl
+    слухає 14550) мовчки забирала частину пакетів, і обидві бачили зв'язок, що пропадає. Тепер програма
+    перевіряє порт і попереджає — у консолі й на екрані оператора.
 - **Камери налаштовуються без зв'язку з бортом (0.1.2-0.19).** У «Простір пілота → Відео» є редактор
   камер (потоки, керування камерою, підвіс), який раніше відкривався лише з панелі відео підключеного
   борту. Без борту потоки записуються за бортом, налаштованим останнім, або за тимчасовим, який забирає

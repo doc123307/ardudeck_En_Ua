@@ -582,6 +582,13 @@ const api = {
     return () => ipcRenderer.removeListener('scan:progress', handler);
   },
 
+  /** The UDP port of the link being opened is also held by another program (a second ground station). */
+  onConnectionPortShared: (callback: (port: number) => void) => {
+    const handler = (_: unknown, port: number) => callback(port);
+    ipcRenderer.on(IPC_CHANNELS.CONNECTION_PORT_SHARED, handler);
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.CONNECTION_PORT_SHARED, handler);
+  },
+
   onConnectionError: (callback: (error: string) => void) => {
     const handler = (_: unknown, error: string) => callback(error);
     ipcRenderer.on('connection:error', handler);

@@ -109,6 +109,49 @@ describe('UdpTransport reply detection', () => {
   });
 });
 
+describe('UdpTransport on a dialled link (client mode)', () => {
+  const cleanup: (() => unknown)[] = [];
+  afterEach(async () => {
+    for (const c of cleanup.splice(0)) await c();
+  });
+
+  it('is not metered: a link the user dialled is not an ELRS backpack', async () => {
+    const vehicle = await peer();
+    cleanup.push(() => vehicle.socket.close());
+    const transport = new UdpTransport({ localPort: transportPort(), remoteHost: '127.0.0.1', remotePort: vehicle.port });
+    await transport.open();
+    cleanup.push(() => transport.close());
+    expect(transport.narrowUplink).toBe(false);
+
+    // Five frames that the 40 B/s budget would spread over three seconds arrive at once.
+    for (let i = 0; i < 4; i++) void transport.write(paramRead(i));
+    void transport.write(arm());
+    await sleep(150);
+    expect(vehicle.received.length).toBe(5);
+  });
+
+  it('keeps the budget for a backpack dialled on its own port', async () => {
+    const transport = new UdpTransport({ localPort: transportPort(), remoteHost: '127.0.0.1', remotePort: 14555 });
+    await transport.open();
+    cleanup.push(() => transport.close());
+    expect(transport.narrowUplink).toBe(true);
+  });
+
+  it('tells when another program already holds the port', async () => {
+    const port = transportPort();
+    expect(await UdpTransport.portHeldElsewhere(port)).toBe(false);
+    const other = createSocket({ type: 'udp4', reuseAddr: true });
+    await new Promise<void>((resolve) => other.bind(port, resolve));
+    cleanup.push(() => other.close());
+    expect(await UdpTransport.portHeldElsewhere(port)).toBe(true);
+    // The transport still opens beside it (that is the silent sharing the warning is about).
+    const transport = new UdpTransport({ localPort: port });
+    await transport.open();
+    cleanup.push(() => transport.close());
+    expect(transport.isOpen).toBe(true);
+  });
+});
+
 describe('UdpTransport metered uplink', () => {
   const cleanup: (() => unknown)[] = [];
   afterEach(async () => {

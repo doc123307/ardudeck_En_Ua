@@ -69,6 +69,13 @@ export function OperatorScreen() {
   }, []);
   useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current); }, []);
 
+  // Another ground station on the same UDP port takes part of the vehicle's packets: say it, or
+  // the operator only sees a link that keeps dropping.
+  useEffect(() => {
+    const off = window.electronAPI.onConnectionPortShared((port) => say(t('operator.OperatorScreen.portShared', { port }), 'error'));
+    return () => { off(); };
+  }, [say]);
+
   // A transmitter plugged in or pulled out is said aloud: the operator must know who is driving.
   useEffect(() => {
     const on = (e: GamepadEvent) => { if (isController(e.gamepad)) say(t('operator.OperatorScreen.padConnected', { name: e.gamepad.id })); };

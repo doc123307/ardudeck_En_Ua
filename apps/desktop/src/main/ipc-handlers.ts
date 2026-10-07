@@ -5652,7 +5652,39 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
    * Attempt MAVLink reconnection: set up parser/pipeline and wait for heartbeat.
    * Returns true if heartbeat received and connection restored.
    */
-  const attemptMavlinkReconnect = async (transportDesc: string): Promise<boolean> => {
+  /**
+   * A dialled UDP link has no return path until this side speaks: the router or companion
+   * computer on the vehicle sends to whoever wrote to it last. So from the moment the socket
+   * is open a ground-station heartbeat goes out once a second - on the first connect and on
+   * every reconnect after a dropout alike. When the vehicle's heartbeat arrives, the regular
+   * heartbeat (which knows the vehicle's ids) takes this interval's place.
+   */
+  const startUdpClientHeartbeat = (): void => {
+    const send = () => {
+      if (!currentTransport?.isOpen) return;
+      try {
+        const hbPayload = serializeHeartbeat({
+          type: 6, // MAV_TYPE_GCS
+          autopilot: 8, // MAV_AUTOPILOT_INVALID
+          baseMode: 0,
+          customMode: 0,
+          systemStatus: 4, // MAV_STATE_ACTIVE
+          mavlinkVersion: 3,
+        });
+        // sendMavlinkPacket defaults sysid=255 compid=190 (standard GCS).
+        sendMavlinkPacket(HEARTBEAT_ID, hbPayload, HEARTBEAT_CRC_EXTRA)
+          .then(pkt => currentTransport?.write(pkt))
+          .catch(() => { /* a failed UDP write is retried on the next tick */ });
+      } catch {
+        // One tick lost; the interval keeps trying.
+      }
+    };
+    send();
+    if (gcsHeartbeatInterval) clearInterval(gcsHeartbeatInterval);
+    gcsHeartbeatInterval = setInterval(send, 1000);
+  };
+
+  const attemptMavlinkReconnect = async (transportDesc: string, waitMs = 2500): Promise<boolean> => {
     // Clean up old MAVLink state
     cleanupTransportListeners();
     mavlinkParser = new MAVLinkParser();
@@ -5765,7 +5797,7 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
       setTimeout(() => {
         clearInterval(checkInterval);
         resolve(false);
-      }, 2500);
+      }, waitMs);
     });
 
     if (heartbeatReceived) {
@@ -5989,10 +6021,20 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
           : `UDP :${o.udpPort ?? 14550}`;
 
         if (pendingReconnect.protocol === 'mavlink') {
-          const connected = await attemptMavlinkReconnect(name);
+          // Before this the reconnect only listened: a vehicle-side endpoint that had
+          // forgotten this station (router restarted, modem re-registered, VPN path
+          // changed) was never spoken to again, and the link stayed down until the
+          // operator reconnected by hand. A mobile link also gets longer to answer.
+          const client = o.udpMode === 'client';
+          if (client) startUdpClientHeartbeat();
+          const connected = await attemptMavlinkReconnect(name, client ? 4000 : 2500);
           if (connected) {
             pendingReconnect = null;
             return;
+          }
+          if (client && gcsHeartbeatInterval) {
+            clearInterval(gcsHeartbeatInterval);
+            gcsHeartbeatInterval = null;
           }
         } else {
           const mspInfo = await tryMspDetection(currentTransport, mainWindow);
@@ -6322,6 +6364,14 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
           transportName = `TCP ${options.host}:${options.tcpPort}`;
           break;
         case 'udp':
+          // Two ground stations on one UDP port split the vehicle's packets between them:
+          // each sees a link that keeps dropping. The port is shared silently, so say it.
+          if (await UdpTransport.portHeldElsewhere(options.udpMode === 'client' ? (options.udpClientLocalPort ?? 14550) : (options.udpPort ?? 14550))) {
+            const busyPort = options.udpMode === 'client' ? (options.udpClientLocalPort ?? 14550) : (options.udpPort ?? 14550);
+            sendLog(mainWindow, 'warn', `UDP port ${busyPort} is already open in another program`,
+              'QGroundControl, Mission Planner or a second copy of this program. Packets from the vehicle are split between the two and the link will keep dropping: close the other program or change the local port.');
+            safeSend(mainWindow, IPC_CHANNELS.CONNECTION_PORT_SHARED, busyPort);
+          }
           if (options.udpMode === 'client') {
             if (!options.udpRemoteHost || !options.udpRemotePort) throw new Error(mt('main.ipc_handlers.remoteHostAndPortRequiredFor'));
             // Bind to a fixed local port (default 14550). ArduPilot UDPIN
@@ -6659,32 +6709,7 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
       // heartbeat arrives, the handler at sendGcsHeartbeat clears
       // gcsHeartbeatInterval and reinstalls its own (with sysid/compid
       // captured from the FC) — same variable, seamless handover.
-      if (options.type === 'udp' && options.udpMode === 'client') {
-        const sendEarlyGcsHeartbeat = () => {
-          if (!currentTransport?.isOpen) return;
-          try {
-            const hbPayload = serializeHeartbeat({
-              type: 6, // MAV_TYPE_GCS
-              autopilot: 8, // MAV_AUTOPILOT_INVALID
-              baseMode: 0,
-              customMode: 0,
-              systemStatus: 4, // MAV_STATE_ACTIVE
-              mavlinkVersion: 3,
-            });
-            // sendMavlinkPacket defaults sysid=255 compid=190 (standard GCS),
-            // so we don't need a discovered FC sysid to send this.
-            sendMavlinkPacket(HEARTBEAT_ID, hbPayload, HEARTBEAT_CRC_EXTRA)
-              .then(pkt => currentTransport?.write(pkt))
-              .catch(() => { /* UDP write failures are non-fatal — next tick will retry */ });
-          } catch {
-            // Non-critical: serialize failure on a single tick is harmless,
-            // the interval keeps trying.
-          }
-        };
-        sendEarlyGcsHeartbeat();
-        if (gcsHeartbeatInterval) clearInterval(gcsHeartbeatInterval);
-        gcsHeartbeatInterval = setInterval(sendEarlyGcsHeartbeat, 1000);
-      }
+      if (options.type === 'udp' && options.udpMode === 'client') startUdpClientHeartbeat();
 
       // Set state to waiting for heartbeat (NOT connected yet)
       connectionState = {
