@@ -36,7 +36,7 @@ describe('osdBackdropSource', () => {
   });
 });
 
-import { useCameraStore } from './camera-store';
+import { OFFLINE_VEHICLE_KEY, offlineVehicleKey, useCameraStore } from './camera-store';
 
 describe('adoptLiveVehicles', () => {
   it('rebinds sources, selection, gimbal, and lock from stale transport keys', () => {
@@ -79,5 +79,32 @@ describe('adoptLiveVehicles', () => {
     });
     useCameraStore.getState().adoptLiveVehicles([live]);
     expect(useCameraStore.getState().sources['cam']!.vehicleKey).toBe(live);
+  });
+});
+
+describe('cameras set up without a vehicle', () => {
+  it('are filed under the vehicle worked with last, or a stand-in when there is none', () => {
+    expect(offlineVehicleKey({})).toBe(OFFLINE_VEHICLE_KEY);
+    expect(offlineVehicleKey({ a: src('a', 'old:5.1'), b: src('b', 'other:7.1') })).toBe('old:5.1');
+    // The vehicle whose feed is the chosen one wins over the order of the list.
+    expect(offlineVehicleKey({ a: src('a', 'old:5.1'), b: src('b', 'other:7.1') }, { 'other:7.1': 'b' })).toBe('other:7.1');
+  });
+
+  it('go to the vehicle that connects: by system id, or to the only vehicle there is', () => {
+    const set = () => useCameraStore.setState({
+      sources: { cam: src('cam', OFFLINE_VEHICLE_KEY) }, selectedByVehicle: { [OFFLINE_VEHICLE_KEY]: 'cam' }, gimbalByVehicle: {}, lockedVehicleKey: null,
+    });
+    set();
+    useCameraStore.getState().adoptLiveVehicles(['udp-1:1.1']);
+    expect(useCameraStore.getState().sources['cam']!.vehicleKey).toBe('udp-1:1.1');
+    expect(useCameraStore.getState().selectedByVehicle['udp-1:1.1']).toBe('cam');
+    // A vehicle whose system id is not 1 still gets them when it is the only one.
+    set();
+    useCameraStore.getState().adoptLiveVehicles(['udp-1:42.1']);
+    expect(useCameraStore.getState().sources['cam']!.vehicleKey).toBe('udp-1:42.1');
+    // With several vehicles and no match they are left for the user to place.
+    set();
+    useCameraStore.getState().adoptLiveVehicles(['a:5.1', 'b:6.1']);
+    expect(useCameraStore.getState().sources['cam']!.vehicleKey).toBe(OFFLINE_VEHICLE_KEY);
   });
 });

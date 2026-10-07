@@ -110,6 +110,19 @@ export function clampZoom(zoom: CameraZoom): CameraZoom | null {
   return { z, cx: Math.min(1 - half, Math.max(half, zoom.cx)), cy: Math.min(1 - half, Math.max(half, zoom.cy)) };
 }
 
+/**
+ * The vehicle key cameras are filed under while no vehicle is connected. Feeds already set
+ * up keep their key; with none, a stand-in is used whose "1.1" (system 1, component 1) is
+ * what adoptLiveVehicles matches when the vehicle does connect, so the feeds move to it.
+ */
+export const OFFLINE_VEHICLE_KEY = 'offline:1.1';
+export function offlineVehicleKey(sources: Record<string, CameraSourceConfig>, selectedByVehicle: Record<string, string> = {}): string {
+  const all = Object.values(sources);
+  // The vehicle whose feed is the chosen one first: it is the one last worked with.
+  const chosen = all.find((s) => selectedByVehicle[s.vehicleKey] === s.id);
+  return (chosen ?? all[0])?.vehicleKey ?? OFFLINE_VEHICLE_KEY;
+}
+
 export const useCameraStore = create<CameraState>()(
   persist(
     (set, get) => ({
@@ -152,6 +165,8 @@ export const useCameraStore = create<CameraState>()(
           for (const stale of staleKeys) {
             const matches = liveKeys.filter((lk) => suffix(lk) === suffix(stale));
             if (matches.length === 1) rebind.set(stale, matches[0]!);
+            // Feeds set up with no vehicle connected belong to the only vehicle there is, whatever its system id.
+            else if (stale === OFFLINE_VEHICLE_KEY && matches.length === 0 && liveKeys.length === 1) rebind.set(stale, liveKeys[0]!);
           }
           if (rebind.size === 0) return {};
           const mapKey = (k: string) => rebind.get(k) ?? k;

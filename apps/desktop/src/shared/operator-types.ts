@@ -40,7 +40,7 @@ export type OperatorRecordMode = 'always' | 'armed' | 'manual';
 export const OPERATOR_RECORD_MODES: readonly OperatorRecordMode[] = ['always', 'armed', 'manual'];
 
 /** Settings written by this version. Older files get the newer defaults where the meaning changed. */
-export const OPERATOR_CONFIG_SCHEMA = 3;
+export const OPERATOR_CONFIG_SCHEMA = 4;
 /** Files from before this schema had "Manual" as the only mode button by default. */
 const MODE_LIST_SCHEMA = 2;
 
@@ -120,7 +120,8 @@ export const DEFAULT_OPERATOR_CONFIG: OperatorConfig = {
   tiltWarnDeg: 25,
   tiltLimitDeg: 35,
   recordAllCameras: true,
-  recordMode: 'always',
+  // Recording starts when the operator says so; "always" and "while armed" are the administrator's to choose.
+  recordMode: 'manual',
   recordDir: '',
   recordSegmentMinutes: 15,
   rc: DEFAULT_RC_CONFIG,
@@ -214,7 +215,10 @@ export function normalizeOperatorConfig(raw: unknown): OperatorConfig {
     tiltWarnDeg,
     tiltLimitDeg: Math.max(tiltWarnDeg, num(r.tiltLimitDeg, d.tiltLimitDeg, 5, 89)),
     recordAllCameras: bool(r.recordAllCameras, d.recordAllCameras),
-    recordMode: OPERATOR_RECORD_MODES.includes(r.recordMode as OperatorRecordMode) ? (r.recordMode as OperatorRecordMode) : d.recordMode,
+    // Before schema 4 "always" was simply the default nobody had chosen: it gives way to the new default once.
+    recordMode: OPERATOR_RECORD_MODES.includes(r.recordMode as OperatorRecordMode) && !(schema < 4 && r.recordMode === 'always')
+      ? (r.recordMode as OperatorRecordMode)
+      : d.recordMode,
     recordDir: typeof r.recordDir === 'string' ? r.recordDir.trim().slice(0, 400) : d.recordDir,
     recordSegmentMinutes: Math.round(num(r.recordSegmentMinutes, d.recordSegmentMinutes, 0, 240)),
     rc: normalizeRcConfig(r.rc),

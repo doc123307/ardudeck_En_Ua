@@ -15,6 +15,8 @@ import type { CameraRecordStatus } from '../../../shared/camera-types';
 import { modeButtonLabel } from './OperatorModeMenu';
 import { OperatorRcSettings } from './OperatorRcSettings';
 import { OperatorPadSettings } from './OperatorPadSettings';
+import { CameraSourceEditor } from '../camera/CameraSourceMenu';
+import { useActiveVehicleStore } from '../../stores/active-vehicle-store';
 import { OperatorPanelSettings } from './OperatorPanelSettings';
 import { OperatorValuesSettings } from './OperatorValuesSettings';
 import { BTN, Card, FIELD, NumberField, SectionTabs, Toggle } from './OperatorSettingsParts';
@@ -169,6 +171,8 @@ export function OperatorWorkspaceSettings() {
   const memory = useSettingsStore((s) => s.connectionMemory);
 
   const save = (patch: Partial<OperatorConfig>) => { void saveConfig(patch); };
+  // Cameras are set up here whether or not the vehicle is connected.
+  const activeVehicleKey = useActiveVehicleStore((s) => s.activeVehicleKey);
   const [section, setSection] = useState<Section>(() => {
     try {
       const saved = localStorage.getItem(SECTION_KEY) as Section | null;
@@ -242,7 +246,14 @@ export function OperatorWorkspaceSettings() {
           </Card>
       </>
     ),
-    video: <RecordingCard config={config} save={save} />,
+    video: (
+      <>
+        <Card title={t('operator.OperatorWorkspaceSettings.cameras')} hint={t('operator.OperatorWorkspaceSettings.camerasHint')}>
+          <div className="max-w-xl"><CameraSourceEditor vehicleKey={activeVehicleKey} /></div>
+        </Card>
+        <RecordingCard config={config} save={save} />
+      </>
+    ),
     general: (
       <>
           <Card title={t('operator.OperatorWorkspaceSettings.startup')}>

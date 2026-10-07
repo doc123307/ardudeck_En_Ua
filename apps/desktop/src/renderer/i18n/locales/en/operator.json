@@ -176,7 +176,7 @@
     "OperatorWorkspaceSettings": {
       "tab": "Operator workspace",
       "title": "Operator workspace",
-      "intro": "The app opens on the operator screen: cameras, the vehicle's state and a few actions. Here you set what the operator sees and may do, tab by tab. The cameras themselves are set up in the «Video» panel of the telemetry screen.",
+      "intro": "The program opens on the operator screen: cameras, vehicle state and a few actions. Here, tab by tab, is what the operator sees and may do. Cameras are set up on the «Video» tab, with or without a link to the vehicle.",
       "startup": "Start-up",
       "startInOperatorMode": "Open the app in operator mode",
       "startInOperatorModeHint": "Switch off only on a service or development computer: the app then opens straight into the full interface, without a password.",
@@ -257,7 +257,9 @@
       "supportEmail": "E-mail",
       "supportNote": "Extra line (working hours, address…)",
       "element_attitude": "Roll and pitch drawings",
-      "element_messages": "Vehicle messages (line at the bottom)"
+      "element_messages": "Vehicle messages (line at the bottom)",
+      "cameras": "Cameras",
+      "camerasHint": "Video feeds of the vehicle in use and their camera control. They can be set up without a link to the vehicle; they are kept with the vehicle in the list."
     },
     "OperatorRcBar": {
       "refused_disabled": "This control is switched off.",

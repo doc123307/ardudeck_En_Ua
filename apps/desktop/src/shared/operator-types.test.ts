@@ -13,7 +13,7 @@ describe('operator settings', () => {
     const c = normalizeOperatorConfig(null);
     expect(c).toEqual(DEFAULT_OPERATOR_CONFIG);
     expect(c.modeButtons.length).toBeGreaterThan(3);
-    expect(c.recordMode).toBe('always');
+    expect(c.recordMode).toBe('manual');
     expect(c.recordDir).toBe('');
     expect(c.rc.drive.enabled && c.rc.cruise.enabled && c.rc.reverse.enabled).toBe(true);
     expect(c.rc.functions.map((f) => f.kind)).toEqual(['button', 'switch3', 'slider']);
@@ -40,8 +40,8 @@ describe('operator settings', () => {
     expect(normalizeOperatorConfig(once)).toEqual(once);
   });
 
-  it('fall back to recording always on an unknown mode', () => {
-    expect(normalizeOperatorConfig({ recordMode: 'sometimes' }).recordMode).toBe('always');
+  it('fall back to recording by the operator button on an unknown mode', () => {
+    expect(normalizeOperatorConfig({ recordMode: 'sometimes' }).recordMode).toBe('manual');
   });
 
   it('carry the RC settings through, cleaned', () => {
@@ -246,5 +246,15 @@ describe('where each setting lives', () => {
     const c = normalizeOperatorConfig({ removedRelays: [{ id: 'lamp', label: ' Фара ', instance: 99, icon: 'nope' }, { id: 'lamp' }, { id: 'bad id' }, 7] });
     expect(c.removedRelays).toEqual([{ id: 'lamp', label: 'Фара', instance: 15, kind: 'toggle', icon: 'power', color: 'green' }]);
     expect(normalizeOperatorConfig({}).removedRelays).toEqual([]);
+  });
+});
+
+describe('recording', () => {
+  it('waits for the operator by default, and an old "always" nobody chose gives way once', () => {
+    expect(normalizeOperatorConfig({}).recordMode).toBe('manual');
+    expect(normalizeOperatorConfig({ schema: 3, recordMode: 'always' }).recordMode).toBe('manual');
+    expect(normalizeOperatorConfig({ schema: 3, recordMode: 'armed' }).recordMode).toBe('armed');
+    // Chosen by the administrator after the change: kept.
+    expect(normalizeOperatorConfig({ schema: OPERATOR_CONFIG_SCHEMA, recordMode: 'always' }).recordMode).toBe('always');
   });
 });

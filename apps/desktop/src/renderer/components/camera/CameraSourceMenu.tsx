@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useCameraStore, sourcesForVehicle } from '../../stores/camera-store';
+import { useCameraStore, sourcesForVehicle, offlineVehicleKey } from '../../stores/camera-store';
 import { CAMERA_PRESETS, presetById } from './camera-presets';
 import { WfbngSetupGuide } from './WfbngSetupGuide';
 import { CameraControlBar } from './CameraControlBar';
@@ -20,10 +20,25 @@ interface CameraSourceMenuProps {
   onClose: () => void;
 }
 
+/** The pop-over: the editor in a panel over the screen. */
 export function CameraSourceMenu({ vehicleKey, onClose }: CameraSourceMenuProps) {
+  return (
+    <Shell onClose={onClose}>
+      <CameraSourceEditor vehicleKey={vehicleKey} />
+    </Shell>
+  );
+}
+
+/**
+ * The feeds of a vehicle: add, edit, choose, remove. It needs no link: with no vehicle
+ * connected the feeds are filed under the one set up last (or a stand-in), and they are
+ * the connected vehicle's as soon as it appears.
+ */
+export function CameraSourceEditor({ vehicleKey: liveKey }: { vehicleKey: string | null }) {
   const store = useCameraStore();
-  const sources = vehicleKey ? sourcesForVehicle(store, vehicleKey) : [];
-  const selectedId = vehicleKey ? store.selectedByVehicle[vehicleKey] : undefined;
+  const vehicleKey = liveKey ?? offlineVehicleKey(store.sources, store.selectedByVehicle);
+  const sources = sourcesForVehicle(store, vehicleKey);
+  const selectedId = store.selectedByVehicle[vehicleKey];
   const [presetId, setPresetId] = useState(CAMERA_PRESETS[0]?.id ?? 'mavlink');
   const [uvcDevices, setUvcDevices] = useState<MediaDeviceInfo[]>([]);
 
@@ -35,14 +50,6 @@ export function CameraSourceMenu({ vehicleKey, onClose }: CameraSourceMenuProps)
       setUvcDevices(d.filter((x) => x.kind === 'videoinput')),
     );
   }, [preset?.kind]);
-
-  if (!vehicleKey) {
-    return (
-      <Shell onClose={onClose}>
-        <p className="text-xs text-content-secondary">{t('camera.CameraSourceMenu.selectAVehicleToConfigureIts')}</p>
-      </Shell>
-    );
-  }
 
   const addFromPreset = (deviceId?: string) => {
     if (!preset) return;
@@ -61,7 +68,8 @@ export function CameraSourceMenu({ vehicleKey, onClose }: CameraSourceMenuProps)
   };
 
   return (
-    <Shell onClose={onClose}>
+    <>
+      {!liveKey && <p className="mb-3 rounded border border-subtle bg-surface-raised px-2 py-1.5 text-[11px] leading-snug text-content-secondary">{t('camera.CameraSourceMenu.offlineNote')}</p>}
       {/* Add new */}
       <div className="mb-3">
         <div className="mb-1 text-[10px] font-medium uppercase tracking-wider text-content-secondary">{t('camera.CameraSourceMenu.addAFeed')}</div>
@@ -110,7 +118,7 @@ export function CameraSourceMenu({ vehicleKey, onClose }: CameraSourceMenuProps)
       </div>
 
       <GimbalSection vehicleKey={vehicleKey} />
-    </Shell>
+    </>
   );
 }
 

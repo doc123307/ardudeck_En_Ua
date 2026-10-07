@@ -149,6 +149,15 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   counted on the line. Code: `src/renderer/components/operator/OperatorMessages.tsx`.
 - **Roll and pitch drawn.** Next to the compass the vehicle is drawn from behind (roll) and from the side
   (pitch); the drawings lean with the vehicle and take the warning and limit colours of the numbers.
+- **Cameras are set up without a link to the vehicle (0.1.2-0.19).** "Operator workspace → Video" has the
+  camera editor (feeds, camera control, gimbal) that used to open only from the video panel of a connected
+  vehicle. With no vehicle connected the feeds are filed under the vehicle set up last, or under a stand-in
+  that the first vehicle to connect takes over; they are saved with the vehicle in the list either way.
+  Code: `CameraSourceEditor` in `src/renderer/components/camera/CameraSourceMenu.tsx`,
+  `offlineVehicleKey` in `src/renderer/stores/camera-store.ts`.
+- **Recording waits for the operator by default (0.1.2-0.19).** The default record mode is "by the
+  operator's button" instead of "always"; settings saved by earlier versions with "always" (then simply the
+  default) are switched once. "Always" and "while armed" remain the administrator's choice.
 - **The information block can be sized, moved and locked.** The block in the corner (tilt, heading,
   altitude, speed, time) starts smaller on narrow screens; unlocked, it is dragged and resized (50-150%),
   and locked again it stays where it was put. It is held to the bottom-right corner, so resizing the
@@ -419,6 +428,13 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   помилки рахуються на рядку.
 - **Крен і тангаж малюнком.** Поруч із компасом борт намальовано ззаду (крен) і збоку (тангаж); малюнки
   нахиляються разом із бортом і набувають кольорів попередження й межі, як і числа.
+- **Камери налаштовуються без зв'язку з бортом (0.1.2-0.19).** У «Простір пілота → Відео» є редактор
+  камер (потоки, керування камерою, підвіс), який раніше відкривався лише з панелі відео підключеного
+  борту. Без борту потоки записуються за бортом, налаштованим останнім, або за тимчасовим, який забирає
+  перший підключений борт; у будь-якому разі вони зберігаються з бортом у списку.
+- **Запис типово чекає на оператора (0.1.2-0.19).** Типовий режим запису — «за кнопкою оператора» замість
+  «завжди»; налаштування попередніх версій із «завжди» (тоді це було просто типове значення) перемикаються
+  один раз. «Завжди» й «доки ARM» лишаються на вибір адміністратора.
 - **Інформаційний блок можна зменшити, пересунути й закріпити.** Блок у кутку (крен, тангаж, курс,
   висота, швидкість, час) на вузьких екранах одразу менший; розблокований, він перетягується й змінює
   розмір (50–150%), а закріплений лишається там, де його поставили. Він прив'язаний до правого нижнього

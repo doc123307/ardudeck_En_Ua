@@ -57,7 +57,6 @@
       "recordingStarted": "Recording…"
     },
     "CameraSourceMenu": {
-      "selectAVehicleToConfigureIts": "Select a vehicle to configure its camera feeds.",
       "addAFeed": "Add a feed",
       "add": "Add",
       "noCaptureDevicesDetected": "No capture devices detected.",
@@ -118,7 +117,8 @@
       "commandBody": "Request body (optional)",
       "commandAdd": "+ Add a command",
       "commandRemove": "Remove the command",
-      "save": "Save"
+      "save": "Save",
+      "offlineNote": "No vehicle is connected: the cameras are saved and become this vehicle's as soon as it connects. A camera reachable on the network can be checked right now."
     },
     "CameraSourceSwitch": {
       "show": "Show {{label}}"
