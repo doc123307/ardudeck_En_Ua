@@ -37,6 +37,13 @@ export interface CameraSourceConfig {
   label: string;
   /** Network sources: rtsp:// udp:// srt:// or a WHEP https url for webrtc. */
   url?: string;
+  /**
+   * RTSP sources: the main (HD) and sub (SD) stream urls typed by hand, for a camera or
+   * relay whose paths do not follow a known naming (cam1hd / cam1sd). With both set the
+   * HD/SD switch swaps `url` between them instead of rewriting it.
+   */
+  hdUrl?: string;
+  sdUrl?: string;
   /** UVC sources: MediaDeviceInfo.deviceId. */
   deviceId?: string;
   /** Optics — needed for click-to-point geolocation and the footprint overlay. */

@@ -24,6 +24,34 @@ const AJAX = /(\/[0-9a-f]{12}-\d+_)([ms])(?=$|[?#])/i;
 // Last path segment ending in main/sub, before any query: rtsp://host:8554/frontsub
 const RELAY_PAIR = /^(rtsp:\/\/[^/]+\/(?:[^?#]*\/)?[^/?#]*?)(main|sub)(?=$|[?#])/i;
 
+/** A feed as far as its streams go: the url in use and the pair typed by hand, if any. */
+export interface StreamUrls {
+  url?: string;
+  hdUrl?: string;
+  sdUrl?: string;
+}
+
+/** The hand-typed pair, when both streams are given and differ. */
+function manualPair(source: StreamUrls): { hd: string; sd: string } | null {
+  const hd = source.hdUrl?.trim();
+  const sd = source.sdUrl?.trim();
+  return hd && sd && hd !== sd ? { hd, sd } : null;
+}
+
+/** The quality a feed plays: by its hand-typed pair first, by the naming of its url otherwise. */
+export function sourceQuality(source: StreamUrls): StreamQuality | null {
+  const pair = manualPair(source);
+  if (pair) return source.url?.trim() === pair.sd ? 'sd' : 'hd';
+  return streamQuality(source.url);
+}
+
+/** The url of a feed for `quality`; its own url when there is nothing to switch. */
+export function sourceUrlFor(source: StreamUrls, quality: StreamQuality): string | undefined {
+  const pair = manualPair(source);
+  if (pair) return quality === 'hd' ? pair.hd : pair.sd;
+  return source.url ? withStreamQuality(source.url, quality) : source.url;
+}
+
 /** The quality the url asks for, or null when the url does not name its stream. */
 export function streamQuality(url: string | undefined): StreamQuality | null {
   if (!url) return null;

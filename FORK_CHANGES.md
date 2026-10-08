@@ -165,6 +165,11 @@ The whole UI can be switched between **English** (unchanged, still the default) 
     now checks the port first and warns - in the console and on the operator screen.
   Code: `packages/comms/src/transports/udp-transport.ts`, `startUdpClientHeartbeat` in
   `src/main/ipc-handlers.ts`.
+- **HD and SD stream addresses typed by hand (0.1.2-0.19).** The HD/SD switch used to work only on addresses
+  whose naming the program knows (`frontmain`/`frontsub`, Hikvision, Dahua, Uniview, Ajax). A camera's settings
+  now have two optional fields, HD and SD; with both filled in the switch swaps between them, whatever the
+  paths are called (`cam1hd`/`cam1sd`). Code: `sourceQuality`/`sourceUrlFor` in
+  `src/renderer/components/camera/stream-quality.ts`, fields `hdUrl`/`sdUrl` of `CameraSourceConfig`.
 - **Cameras are set up without a link to the vehicle (0.1.2-0.19).** "Operator workspace → Video" has the
   camera editor (feeds, camera control, gimbal) that used to open only from the video panel of a connected
   vehicle. With no vehicle connected the feeds are filed under the vehicle set up last, or under a stand-in
@@ -457,6 +462,10 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - UDP-порт відкривається спільним, тож друга наземна станція на тому самому порту (QGroundControl
     слухає 14550) мовчки забирала частину пакетів, і обидві бачили зв'язок, що пропадає. Тепер програма
     перевіряє порт і попереджає — у консолі й на екрані оператора.
+- **Адреси потоків HD і SD вручну (0.1.2-0.19).** Перемикач HD/SD працював лише з адресами, назви яких
+  програма знає (`frontmain`/`frontsub`, Hikvision, Dahua, Uniview, Ajax). У налаштуваннях камери тепер є два
+  необов'язкові поля, HD і SD; якщо заповнено обидва, перемикач міняє їх між собою, хоч би як називались
+  шляхи (`cam1hd`/`cam1sd`).
 - **Камери налаштовуються без зв'язку з бортом (0.1.2-0.19).** У «Простір пілота → Відео» є редактор
   камер (потоки, керування камерою, підвіс), який раніше відкривався лише з панелі відео підключеного
   борту. Без борту потоки записуються за бортом, налаштованим останнім, або за тимчасовим, який забирає

@@ -118,7 +118,9 @@
       "commandAdd": "+ Add a command",
       "commandRemove": "Remove the command",
       "save": "Save",
-      "offlineNote": "No vehicle is connected: the cameras are saved and become this vehicle's as soon as it connects. A camera reachable on the network can be checked right now."
+      "offlineNote": "No vehicle is connected: the cameras are saved and become this vehicle's as soon as it connects. A camera reachable on the network can be checked right now.",
+      "manualStreamsTip": "HD and SD stream addresses typed by hand, for paths that do not follow the usual naming (cam1hd / cam1sd). Fill in both and the HD/SD switch swaps between them. Leave empty to let the program work the second stream out from the address above.",
+      "manualStreamPlaceholder": "rtsp://… (optional)"
     },
     "CameraSourceSwitch": {
       "show": "Show {{label}}"

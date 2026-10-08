@@ -10,6 +10,7 @@ import { useCameraStore, sourcesForVehicle, offlineVehicleKey } from '../../stor
 import { CAMERA_PRESETS, presetById } from './camera-presets';
 import { WfbngSetupGuide } from './WfbngSetupGuide';
 import { CameraControlBar } from './CameraControlBar';
+import { sourceQuality, sourceUrlFor } from './stream-quality';
 import { useCameraControlStore } from '../../stores/camera-control-store';
 import type { CameraSourceConfig, GimbalControlMode, CameraControlVendor, CameraHttpCommand } from '../../../shared/camera-types';
 import { DEFAULT_GIMBAL_CONFIG } from '../../../shared/camera-types';
@@ -198,6 +199,31 @@ function SourceRow({ source, selected, onSelect, onChange, onRemove }: {
           placeholder="rtsp://…"
           className="mt-1 w-full rounded bg-surface-input px-1.5 py-0.5 font-mono text-[11px] text-content"
         />
+      )}
+      {source.kind === 'rtsp' && (
+        <div className="mt-1 grid grid-cols-[auto_1fr] items-center gap-x-1.5 gap-y-1 text-[10px] text-content-secondary" title={t('camera.CameraSourceMenu.manualStreamsTip')}>
+          {(['hd', 'sd'] as const).map((q) => {
+            const field = q === 'hd' ? 'hdUrl' : 'sdUrl';
+            return (
+              <label key={q} className="contents">
+                <span>{q.toUpperCase()}</span>
+                <input
+                  value={source[field] ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const next = { ...source, [field]: value || undefined };
+                    // With both typed in, the stream on screen is one of the two from now on.
+                    const quality = sourceQuality(next);
+                    const url = next.hdUrl?.trim() && next.sdUrl?.trim() && quality ? sourceUrlFor(next, quality) : undefined;
+                    onChange({ [field]: value || undefined, ...(url && url !== source.url ? { url } : {}) });
+                  }}
+                  placeholder={t('camera.CameraSourceMenu.manualStreamPlaceholder')}
+                  className="w-full rounded bg-surface-input px-1.5 py-0.5 font-mono text-[11px] text-content"
+                />
+              </label>
+            );
+          })}
+        </div>
       )}
       <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-content-secondary">
         <span className="uppercase">{source.kind}</span>

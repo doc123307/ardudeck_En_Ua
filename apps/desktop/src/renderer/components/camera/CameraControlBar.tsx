@@ -14,7 +14,7 @@ import type {
   CameraControlAction, CameraControlState, CameraSourceConfig, DayNightMode, SupplementLightMode,
 } from '../../../shared/camera-types';
 import { useCameraStore } from '../../stores/camera-store';
-import { streamQuality, withStreamQuality, type StreamQuality } from './stream-quality';
+import { sourceQuality, sourceUrlFor, type StreamQuality } from './stream-quality';
 import { t } from '../../i18n';
 
 const DAY_NIGHT_ICON: Record<DayNightMode, typeof Sun> = { auto: SunMoon, day: Sun, night: Moon };
@@ -42,9 +42,9 @@ export function lightLabel(mode: SupplementLightMode): string {
   return known[mode] ?? mode;
 }
 
-/** True when the feed has anything to control: a camera API, or an url that names its HD/SD stream. */
+/** True when the feed has anything to control: a camera API, or HD/SD streams to switch between. */
 export function hasCameraControls(source: CameraSourceConfig): boolean {
-  return !!source.control || (source.kind === 'rtsp' && streamQuality(source.url) !== null);
+  return !!source.control || (source.kind === 'rtsp' && sourceQuality(source) !== null);
 }
 
 /** Speed of a button-driven move, as a share of the camera's maximum. */
@@ -66,7 +66,7 @@ interface CameraControlBarProps {
 export function CameraControlBar({ source, compact = false, editable = false }: CameraControlBarProps) {
   const updateSource = useCameraStore((s) => s.updateSource);
   const hasControl = !!source.control;
-  const quality = source.kind === 'rtsp' ? streamQuality(source.url) : null;
+  const quality = source.kind === 'rtsp' ? sourceQuality(source) : null;
   // Shared with every other view of this camera, so it is asked once, not once per widget.
   const key = controlKey(source);
   const entry = useCameraControlStore((s) => s.entries[source.id]);
@@ -128,7 +128,8 @@ export function CameraControlBar({ source, compact = false, editable = false }: 
   });
 
   const setQuality = (q: StreamQuality) => {
-    if (source.url && q !== quality) updateSource(source.id, { url: withStreamQuality(source.url, q) });
+    const url = sourceUrlFor(source, q);
+    if (url && q !== quality) updateSource(source.id, { url });
   };
 
   if (!hasControl && !quality) return null;

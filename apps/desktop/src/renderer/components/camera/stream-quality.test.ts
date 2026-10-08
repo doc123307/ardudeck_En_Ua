@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { streamQuality, withStreamQuality } from './stream-quality';
+import { sourceQuality, sourceUrlFor, streamQuality, withStreamQuality } from './stream-quality';
 
 describe('stream quality (main vs sub stream)', () => {
   it('reads and switches Hikvision channel ids', () => {
@@ -56,5 +56,29 @@ describe('stream quality (main vs sub stream)', () => {
     expect(streamQuality('rtsp://h:8554/live')).toBeNull();
     expect(withStreamQuality('rtsp://h:8554/live', 'sd')).toBe('rtsp://h:8554/live');
     expect(streamQuality(undefined)).toBeNull();
+  });
+});
+
+describe('streams typed by hand', () => {
+  const pair = { hdUrl: 'rtsp://h:8554/cam1hd', sdUrl: 'rtsp://h:8554/cam1sd' };
+
+  it('switches between the two addresses whatever they are called', () => {
+    expect(streamQuality(pair.hdUrl)).toBeNull();
+    expect(sourceQuality({ url: pair.hdUrl, ...pair })).toBe('hd');
+    expect(sourceQuality({ url: pair.sdUrl, ...pair })).toBe('sd');
+    expect(sourceUrlFor({ url: pair.hdUrl, ...pair }, 'sd')).toBe(pair.sdUrl);
+    expect(sourceUrlFor({ url: pair.sdUrl, ...pair }, 'hd')).toBe(pair.hdUrl);
+  });
+
+  it('wins over the naming of the address in use', () => {
+    const source = { url: 'rtsp://h:8554/frontmain', hdUrl: 'rtsp://h:8554/frontmain', sdUrl: 'rtsp://h:8554/low' };
+    expect(sourceUrlFor(source, 'sd')).toBe('rtsp://h:8554/low');
+  });
+
+  it('needs both addresses: one alone leaves the automatic naming in charge', () => {
+    expect(sourceQuality({ url: 'rtsp://h:8554/cam1hd', hdUrl: 'rtsp://h:8554/cam1hd' })).toBeNull();
+    expect(sourceQuality({ url: 'rtsp://h:8554/frontsub', sdUrl: ' ' })).toBe('sd');
+    expect(sourceUrlFor({ url: 'rtsp://h:8554/frontsub', sdUrl: 'rtsp://h:8554/x' }, 'hd')).toBe('rtsp://h:8554/frontmain');
+    expect(sourceUrlFor({ url: 'rtsp://h:8554/live' }, 'sd')).toBe('rtsp://h:8554/live');
   });
 });
