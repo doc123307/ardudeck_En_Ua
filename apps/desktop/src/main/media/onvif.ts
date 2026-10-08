@@ -278,6 +278,9 @@ export async function applyOnvif(source: CameraSourceConfig, action: CameraContr
         return { ok: false, error: mt('main.media_control.notSupported') };
     }
   } catch (err) {
+    // Some cameras (Ajax) answer reads without an account, so a bad account or a view-only
+    // one first shows here, on a change, with the controls already on screen.
+    if (err instanceof OnvifError && err.authFailed) return { ok: false, authFailed: true, error: mt('main.media_control.onvifChangeRefused') };
     return failure(target, err);
   }
 }

@@ -18,6 +18,8 @@ class FakeOnvifCamera {
   /** The camera's clock runs this far from ours (an unsynced camera sits in 1970). */
   clockOffsetMs = 0;
   disabled = false;
+  /** Reads are answered without an account; only changes ask for one (Ajax). */
+  openReads = false;
   hasPtz = true;
   ircut = 'AUTO';
   presets = new Map<string, string>([['1', 'Gate'], ['2', 'Yard']]);
@@ -58,7 +60,7 @@ class FakeOnvifCamera {
         const d = new Date(Date.now() + this.clockOffsetMs);
         return soap(`<tds:GetSystemDateAndTimeResponse><tds:SystemDateAndTime><tt:UTCDateTime><tt:Time><tt:Hour>${d.getUTCHours()}</tt:Hour><tt:Minute>${d.getUTCMinutes()}</tt:Minute><tt:Second>${d.getUTCSeconds()}</tt:Second></tt:Time><tt:Date><tt:Year>${d.getUTCFullYear()}</tt:Year><tt:Month>${d.getUTCMonth() + 1}</tt:Month><tt:Day>${d.getUTCDate()}</tt:Day></tt:Date></tt:UTCDateTime></tds:SystemDateAndTime></tds:GetSystemDateAndTimeResponse>`);
       }
-      if (!this.authorized(body)) {
+      if (!(this.openReads && action.startsWith('Get')) && !this.authorized(body)) {
         return soap('<env:Fault><env:Code><env:Value>env:Sender</env:Value><env:Subcode><env:Value>ter:NotAuthorized</env:Value></env:Subcode></env:Code><env:Reason><env:Text xml:lang="en">Sender not authorized</env:Text></env:Reason></env:Fault>', 400);
       }
       switch (action) {
@@ -108,6 +110,7 @@ beforeEach(() => {
   forgetOnvifDevices();
   camera.clockOffsetMs = 0;
   camera.disabled = false;
+  camera.openReads = false;
   camera.hasPtz = true;
   camera.ircut = 'AUTO';
   camera.presets = new Map([['1', 'Gate'], ['2', 'Yard']]);
@@ -200,6 +203,15 @@ describe('ONVIF actions', () => {
     const state = await applyOnvif(source(), { kind: 'dayNight', mode: 'night' });
     expect(camera.ircut).toBe('OFF');
     expect(state.dayNight).toBe('night');
+  });
+
+  it('names the account when a camera that shows its settings refuses to change them', async () => {
+    camera.openReads = true;
+    expect((await getOnvifState(source('not-it'))).ok).toBe(true);
+    const state = await applyOnvif(source('not-it'), { kind: 'dayNight', mode: 'night' });
+    expect(state).toMatchObject({ ok: false, authFailed: true });
+    expect(state.error).toMatch(/ONVIF/);
+    expect(camera.ircut).toBe('AUTO');
   });
 
   it('moves, zooms and stops', async () => {

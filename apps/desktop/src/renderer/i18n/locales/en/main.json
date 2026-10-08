@@ -607,7 +607,8 @@
       "nothingToControl": "The camera answers, but offers nothing this app can control.",
       "notSupported": "The camera does not support this action.",
       "onvifDisabled": "ONVIF is switched off on the camera: enable it in the camera settings (and add an ONVIF user).",
-      "noCommands": "No commands yet: add them in the feed settings."
+      "noCommands": "No commands yet: add them in the feed settings.",
+      "onvifChangeRefused": "The camera shows its settings but refused to change them: check the ONVIF user name and password on this camera, and that the user is allowed to change settings (administrator or operator)."
     }
   }
 }
