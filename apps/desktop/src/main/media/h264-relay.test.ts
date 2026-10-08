@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { needsH264Relay, buildH264RelayArgs, encoderChain } from './h264-relay.js';
+import { needsH264Relay, buildH264RelayArgs, encoderChain, hasAudioTrack, relayAttempts } from './h264-relay.js';
 
 describe('h264 relay helpers', () => {
   it('relays only when no WebRTC-playable video track exists', () => {
@@ -27,6 +27,34 @@ describe('h264 relay helpers', () => {
     expect(args).not.toContain('copy');
     // Both legs ride loopback TCP; UDP RTP listeners are disabled on the hub.
     expect(args.filter((a) => a === '-rtsp_transport')).toHaveLength(2);
+  });
+});
+
+describe('camera sound through the relay', () => {
+  it('knows an audio track by the name the hub gives it', () => {
+    expect(hasAudioTrack(['H265', 'G722'])).toBe(true);
+    expect(hasAudioTrack(['H265', 'MPEG-4 Audio'])).toBe(true);
+    expect(hasAudioTrack(['H265', 'G711'])).toBe(true);
+    expect(hasAudioTrack(['H265'])).toBe(false);
+    expect(hasAudioTrack(['Generic'])).toBe(false);
+    expect(hasAudioTrack([])).toBe(false);
+  });
+
+  it('carries sound as Opus when asked, and drops it otherwise', () => {
+    const withSound = buildH264RelayArgs('rtsp://in/a', 'rtsp://out/b', 'libx264', true);
+    expect(withSound).toContain('libopus');
+    expect(withSound).not.toContain('-an');
+    const silent = buildH264RelayArgs('rtsp://in/a', 'rtsp://out/b', 'libx264');
+    expect(silent).toContain('-an');
+    expect(silent).not.toContain('libopus');
+  });
+
+  it('tries sound once, then every encoder without it: the picture must not depend on audio', () => {
+    const attempts = relayAttempts('win32', true);
+    expect(attempts[0]).toEqual({ encoder: 'libx264', audio: true });
+    expect(attempts.slice(1).every((a) => !a.audio)).toBe(true);
+    expect(attempts.slice(1).map((a) => a.encoder)).toEqual(encoderChain('win32'));
+    expect(relayAttempts('win32', false).some((a) => a.audio)).toBe(false);
   });
 });
 

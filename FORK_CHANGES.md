@@ -165,7 +165,16 @@ The whole UI can be switched between **English** (unchanged, still the default) 
     now checks the port first and warns - in the console and on the operator screen.
   Code: `packages/comms/src/transports/udp-transport.ts`, `startUdpClientHeartbeat` in
   `src/main/ipc-handlers.ts`.
-- **HD and SD stream addresses typed by hand (0.1.2-0.19).** The HD/SD switch used to work only on addresses
+- **Sound from the cameras (0.1.2-0.20).** A camera whose picture goes through the H.264 relay (H.265
+  cameras, which is most of them) lost its sound there: the relay dropped audio. The relay now carries it as
+  Opus, whatever the camera sends (G.722, G.711, AAC); if that attempt fails the picture still starts
+  without sound. A speaker button on the video (next to the zoom) turns the sound of that camera on; sound
+  is off by default and only one camera is heard at a time. Code: `hasAudioTrack`/`relayAttempts` in
+  `src/main/media/h264-relay.ts`, `audibleSourceId` in the camera store, `CameraView.tsx`.
+- **A camera that refuses a change says why (0.1.2-0.20).** An ONVIF camera that reads its settings out but
+  refuses to change them used to show "wrong login or password". The message now names the ONVIF user of
+  that camera and its rights, and ends with the camera's own fault code.
+- **HD and SD stream addresses typed by hand (0.1.2-0.20).** The HD/SD switch used to work only on addresses
   whose naming the program knows (`frontmain`/`frontsub`, Hikvision, Dahua, Uniview, Ajax). A camera's settings
   now have two optional fields, HD and SD; with both filled in the switch swaps between them, whatever the
   paths are called (`cam1hd`/`cam1sd`). Code: `sourceQuality`/`sourceUrlFor` in
@@ -462,7 +471,15 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   - UDP-порт відкривається спільним, тож друга наземна станція на тому самому порту (QGroundControl
     слухає 14550) мовчки забирала частину пакетів, і обидві бачили зв'язок, що пропадає. Тепер програма
     перевіряє порт і попереджає — у консолі й на екрані оператора.
-- **Адреси потоків HD і SD вручну (0.1.2-0.19).** Перемикач HD/SD працював лише з адресами, назви яких
+- **Звук із камер (0.1.2-0.20).** Камера, зображення якої йде через перекодувальник H.264 (камери H.265,
+  тобто більшість), втрачала там звук. Тепер перекодувальник передає його як Opus, хоч би що слала камера
+  (G.722, G.711, AAC); якщо ця спроба не вдається, зображення однаково запускається без звуку. Кнопка
+  динаміка на відео (біля масштабу) вмикає звук цієї камери; типово звук вимкнено, і чути лише одну
+  камеру одночасно.
+- **Камера, що відмовила у зміні, пояснює чому (0.1.2-0.20).** Камера ONVIF, яка показує налаштування, але
+  відмовляється їх змінити, давала «неправильний логін або пароль». Тепер повідомлення називає
+  користувача ONVIF цієї камери та його права й закінчується кодом відмови самої камери.
+- **Адреси потоків HD і SD вручну (0.1.2-0.20).** Перемикач HD/SD працював лише з адресами, назви яких
   програма знає (`frontmain`/`frontsub`, Hikvision, Dahua, Uniview, Ajax). У налаштуваннях камери тепер є два
   необов'язкові поля, HD і SD; якщо заповнено обидва, перемикач міняє їх між собою, хоч би як називались
   шляхи (`cam1hd`/`cam1sd`).

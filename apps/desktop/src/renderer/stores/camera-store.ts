@@ -67,6 +67,8 @@ interface CameraState {
   reconnectRequests: Record<string, number>;
   /** Digital zoom per source: factor and the frame point (0..1) shown at the centre. */
   zoom: Record<string, CameraZoom>;
+  /** The one feed whose sound is on; every other stays muted so two cameras never talk over each other. */
+  audibleSourceId: string | null;
 
   // Config actions
   /** Rebind persisted per-vehicle config from stale vehicle keys (transport id rotates on reconnect) to live ones by sysid suffix. */
@@ -95,6 +97,7 @@ interface CameraState {
   setEngineStatus: (status: MediaEngineStatus) => void;
   requestReconnect: (sourceId: string) => void;
   setZoom: (sourceId: string, zoom: CameraZoom | null) => void;
+  setAudibleSource: (sourceId: string | null) => void;
 }
 
 export interface CameraZoom { z: number; cx: number; cy: number }
@@ -144,6 +147,7 @@ export const useCameraStore = create<CameraState>()(
       videoStreams: {},
       reconnectRequests: {},
       zoom: {},
+      audibleSourceId: null,
       gimbalAttitude: {},
       gimbalInfo: {},
       engineStatus: null,
@@ -253,6 +257,7 @@ export const useCameraStore = create<CameraState>()(
         set((s) => ({ videoStreams: { ...s.videoStreams, [info.vehicleKey]: info } })),
       requestReconnect: (sourceId) =>
         set((s) => ({ reconnectRequests: { ...s.reconnectRequests, [sourceId]: (s.reconnectRequests[sourceId] ?? 0) + 1 } })),
+      setAudibleSource: (audibleSourceId) => set({ audibleSourceId }),
       setZoom: (sourceId, zoom) =>
         set((s) => {
           const next = { ...s.zoom };

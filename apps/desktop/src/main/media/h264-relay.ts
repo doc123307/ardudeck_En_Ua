@@ -28,6 +28,27 @@ export function needsH264Relay(tracks: string[]): boolean {
   return tracks.length > 0 && !tracks.some((t) => WEBRTC_VIDEO.test(t));
 }
 
+/** Audio tracks as the hub names them (G711, G722, Opus, "MPEG-4 Audio", LPCM, AC-3...). */
+const AUDIO_TRACK = /^(g711|g722|g726|opus|lpcm|ac-?3|vorbis|speex|mpeg-4 audio|mpeg-1\/2 audio)/i;
+
+/** True when the pulled stream carries sound the relay can pass on. */
+export function hasAudioTrack(tracks: string[]): boolean {
+  return tracks.some((t) => AUDIO_TRACK.test(t.trim()));
+}
+
+/**
+ * What to start, in order: the first encoder with the camera's sound, then every
+ * encoder without it. Sound is worth one try; a camera whose audio ffmpeg cannot
+ * turn into Opus must still show its picture.
+ */
+export function relayAttempts(platform: NodeJS.Platform, withAudio: boolean): { encoder: string; audio: boolean }[] {
+  const chain = encoderChain(platform);
+  return [
+    ...(withAudio && chain[0] ? [{ encoder: chain[0], audio: true }] : []),
+    ...chain.map((encoder) => ({ encoder, audio: false })),
+  ];
+}
+
 /**
  * H.264 encoders to try, best first, per platform.
  *
@@ -54,21 +75,24 @@ function encoderArgs(encoder: string): string[] {
 /**
  * ffmpeg arguments for the relay: pull the hub's own RTSP output (single
  * connection to the camera - many, e.g. SIYI, cap concurrent RTSP clients),
- * transcode to low-latency H.264, publish back into the hub. Audio is
- * dropped, same as the wfbng bridge - camera audio is rarely WebRTC-playable
- * and never flight-relevant.
+ * transcode to low-latency H.264, publish back into the hub. With `audio` the
+ * camera's sound goes along as Opus, the one audio codec every WebRTC player
+ * takes whatever the camera sent (G.722, G.711, AAC); without it sound is dropped.
  */
 export function buildH264RelayArgs(
   inputUrl: string,
   publishUrl: string,
   encoder = 'libx264',
+  audio = false,
 ): string[] {
   return [
     '-rtsp_transport', 'tcp',
     '-fflags', 'nobuffer',
     '-flags', 'low_delay',
     '-i', inputUrl,
-    '-an',
+    ...(audio
+      ? ['-c:a', 'libopus', '-ar', '48000', '-b:a', '32k', '-application', 'lowdelay']
+      : ['-an']),
     '-c:v', encoder,
     ...encoderArgs(encoder),
     '-pix_fmt', 'yuv420p', '-g', '60',

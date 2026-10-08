@@ -137,7 +137,9 @@
       "zoomIn": "Zoom in (or mouse wheel)",
       "zoomOut": "Zoom out",
       "zoomReset": "Back to the whole picture",
-      "retryingByItself": "Retrying by itself…"
+      "retryingByItself": "Retrying by itself…",
+      "soundOn": "Turn this camera's sound on (the other cameras go quiet)",
+      "soundOff": "Turn the sound off"
     },
     "GimbalPad": {
       "rcDrivenMountControlItFrom": "RC-driven mount, control it from your transmitter",

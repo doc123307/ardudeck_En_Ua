@@ -26,7 +26,7 @@ import { networkInterfaces } from 'node:os';
 import { app } from 'electron';
 import { mediaBinariesDownloader } from './media-binaries-downloader.js';
 import { buildWfbngSdp, buildWfbngFfmpegArgs, wfbngPort, wfbngShouldTranscode } from './wfbng.js';
-import { needsH264Relay, buildH264RelayArgs, encoderChain } from './h264-relay.js';
+import { needsH264Relay, buildH264RelayArgs, encoderChain, hasAudioTrack, relayAttempts } from './h264-relay.js';
 import { wfbngReceiver } from './wfbng-receiver.js';
 import { recordArgs, recordingFileName, stopRecording } from './recording.js';
 import { ArmedRecorder } from './recorder.js';
@@ -577,14 +577,14 @@ export class MediaEngine {
         const relayName = `${name}h264`;
         const attempts: string[] = [];
         let started = false;
-        for (const encoder of encoderChain(process.platform)) {
+        for (const { encoder, audio } of relayAttempts(process.platform, hasAudioTrack(tracks))) {
           this.ffmpegLog = '';
           // No shell. On Windows a shell spawn hands cmd.exe one unquoted
           // command string, so a space or a non-ASCII character anywhere in
           // the path is enough to stop the process ever starting.
           const proc = spawn(
             this.ffmpegPath,
-            buildH264RelayArgs(this.rtspUrl(name), this.rtspUrl(relayName), encoder),
+            buildH264RelayArgs(this.rtspUrl(name), this.rtspUrl(relayName), encoder, audio),
             { stdio: ['ignore', 'ignore', 'pipe'] },
           );
           let exited = false;
@@ -595,12 +595,12 @@ export class MediaEngine {
             ingest = proc;
             started = true;
             this.relayEncoder = encoder;
-            this.logSink?.('info', `H.264 relay started with ${encoder}`);
+            this.logSink?.('info', `H.264 relay started with ${encoder}${audio ? ' + sound' : ''}`);
             break;
           }
           killProc(proc);
           const why = this.ffmpegFailureReason();
-          attempts.push(`${encoder}: ${why ?? 'no output'}`);
+          attempts.push(`${encoder}${audio ? ' + sound' : ''}: ${why ?? 'no output'}`);
         }
         if (!started) {
           await this.removeHubPath(name);

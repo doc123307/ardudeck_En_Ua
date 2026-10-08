@@ -10,7 +10,8 @@
  *  ever speaks getUserMedia or WHEP.
  */
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
+import { Volume2, VolumeX } from 'lucide-react';
 import { flipTransform, panBy, viewToFrame, zoomAround, zoomTransform } from './view-transform';
 import type { CameraSourceConfig, OsdLayers } from '../../../shared/camera-types';
 import type { FleetVehicle } from '../../hooks/useFleet';
@@ -44,8 +45,30 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
   const { status, error, health } = useCameraStream(source, videoRef, onError, onLive, onSignalLost);
   const zoom = useCameraStore((s) => s.zoom[source.id] ?? null);
   const setZoom = useCameraStore((s) => s.setZoom);
+  const audible = useCameraStore((s) => s.audibleSourceId === source.id);
+  const setAudibleSource = useCameraStore((s) => s.setAudibleSource);
+  const [hasSound, setHasSound] = useState(false);
   const drag = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const suppressClick = useRef(false);
+
+  // Sound: off until asked for. React only writes `muted` once, so it is set on the element.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !audible;
+    if (audible) void video.play().catch(() => {/* autoplay policy */});
+  }, [audible, status]);
+
+  // The button is offered only for a feed that brought an audio track; tracks arrive after the picture.
+  useEffect(() => {
+    const check = () => {
+      const stream = videoRef.current?.srcObject;
+      setHasSound(stream instanceof MediaStream && stream.getAudioTracks().some((tr) => tr.readyState === 'live'));
+    };
+    check();
+    const timer = setInterval(check, 2000);
+    return () => clearInterval(timer);
+  }, [source.id]);
 
   // Wheel zooms toward the cursor. Native listener: React's wheel handler is passive and
   // cannot stop the page behind from scrolling.
@@ -168,7 +191,7 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
       {/* Digital zoom: wheel or these buttons; only blows pixels up, so HD gives the most to zoom into.
           Bottom centre: the four corners belong to the OSD readouts. */}
       <div
-        className={`absolute bottom-1 left-1/2 -translate-x-1/2 z-10 flex items-center whitespace-nowrap gap-0.5 rounded bg-black/60 px-1 py-0.5 text-[10px] text-white transition-opacity ${zoom ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+        className={`absolute bottom-1 left-1/2 -translate-x-1/2 z-10 flex items-center whitespace-nowrap gap-0.5 rounded bg-black/60 px-1 py-0.5 text-[10px] text-white transition-opacity ${zoom || audible ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
         onClick={(e) => e.stopPropagation()}
         onPointerDown={(e) => e.stopPropagation()}
       >
@@ -180,6 +203,13 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
         {zoom && (
           <button className="ml-0.5 px-1 hover:text-blue-300" data-tip={t('camera.CameraView.zoomReset')}
             onClick={() => setZoom(source.id, null)}>1:1</button>
+        )}
+        {hasSound && (
+          <button
+            className={`ml-1 px-1 ${audible ? 'text-emerald-300' : 'hover:text-blue-300'}`}
+            data-tip={audible ? t('camera.CameraView.soundOff') : t('camera.CameraView.soundOn')}
+            onClick={() => setAudibleSource(audible ? null : source.id)}
+          >{audible ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}</button>
         )}
       </div>
 
