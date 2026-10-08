@@ -211,6 +211,8 @@ describe('ONVIF actions', () => {
     const state = await applyOnvif(source('not-it'), { kind: 'dayNight', mode: 'night' });
     expect(state).toMatchObject({ ok: false, authFailed: true });
     expect(state.error).toMatch(/ONVIF/);
+    // The camera's own fault code and words are shown, to tell a wrong account from a view-only one.
+    expect(state.error).toContain('[NotAuthorized: Sender not authorized]');
     expect(camera.ircut).toBe('AUTO');
   });
 

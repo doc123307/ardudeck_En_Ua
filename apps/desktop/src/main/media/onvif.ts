@@ -96,7 +96,8 @@ export function forgetOnvifDevices(): void {
 
 /** 'auth': the account was rejected. 'disabled': the camera has ONVIF switched off. */
 class OnvifError extends Error {
-  constructor(message: string, readonly kind: 'auth' | 'disabled' | 'refused' = 'refused') {
+  /** `detail`: the camera's own words for the refusal, when it gave any. */
+  constructor(message: string, readonly kind: 'auth' | 'disabled' | 'refused' = 'refused', readonly detail = '') {
     super(message);
   }
 
@@ -123,7 +124,10 @@ async function call(target: ControlTarget, url: string, body: string, clockOffse
   const res = await cameraRequest(target, 'POST', url, { body: envelope(body, header), contentType: 'application/soap+xml; charset=utf-8' });
   const fault = /<(?:[\w-]+:)?Fault[\s>]/.test(res.text);
   if (res.status === 401 || (fault && /NotAuthorized|Unauthorized|FailedAuthentication|Sender not authorized/i.test(res.text))) {
-    throw new OnvifError(mt('main.media_hikvision.wrongLogin'), 'auth');
+    // The fault code tells a wrong account (FailedAuthentication) from one without the right (NotAuthorized).
+    const code = /(?:ter|wsse):(\w+)/.exec(res.text)?.[1] ?? '';
+    const said = fault ? [code, tagText(res.text, 'Text') ?? tagText(res.text, 'faultstring') ?? ''].filter(Boolean).join(': ') : `HTTP ${res.status}`;
+    throw new OnvifError(mt('main.media_hikvision.wrongLogin'), 'auth', said);
   }
   if (res.status >= 400 || fault) {
     const reason = tagText(res.text, 'Text') ?? tagText(res.text, 'faultstring') ?? '';
@@ -280,7 +284,10 @@ export async function applyOnvif(source: CameraSourceConfig, action: CameraContr
   } catch (err) {
     // Some cameras (Ajax) answer reads without an account, so a bad account or a view-only
     // one first shows here, on a change, with the controls already on screen.
-    if (err instanceof OnvifError && err.authFailed) return { ok: false, authFailed: true, error: mt('main.media_control.onvifChangeRefused') };
+    if (err instanceof OnvifError && err.authFailed) {
+      const said = err.detail ? ` [${err.detail}]` : '';
+      return { ok: false, authFailed: true, error: mt('main.media_control.onvifChangeRefused') + said };
+    }
     return failure(target, err);
   }
 }
