@@ -48,6 +48,7 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
   const audible = useCameraStore((s) => s.audibleSourceId === source.id);
   const setAudibleSource = useCameraStore((s) => s.setAudibleSource);
   const [hasSound, setHasSound] = useState(false);
+  const setSourceHasSound = useCameraStore((s) => s.setSourceHasSound);
   const drag = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const suppressClick = useRef(false);
 
@@ -63,7 +64,9 @@ export function CameraView({ source, vehicle, isPrimary, osd, onActivate, onErro
   useEffect(() => {
     const check = () => {
       const stream = videoRef.current?.srcObject;
-      setHasSound(stream instanceof MediaStream && stream.getAudioTracks().some((tr) => tr.readyState === 'live'));
+      const sound = stream instanceof MediaStream && stream.getAudioTracks().some((tr) => tr.readyState === 'live');
+      setHasSound(sound);
+      setSourceHasSound(source.id, sound);
     };
     check();
     const timer = setInterval(check, 2000);

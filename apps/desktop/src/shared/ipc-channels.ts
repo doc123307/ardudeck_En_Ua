@@ -1010,6 +1010,8 @@ export const IPC_CHANNELS = {
   CAMERA_CONTROL_STATE: 'camera:control-state',
   /** Renderer → main: change one image control (day/night, supplement light); returns the new state. */
   CAMERA_CONTROL_SET: 'camera:control-set',
+  /** Renderer → main: what the camera says it can do, as text for a support request; also copied to the clipboard. */
+  CAMERA_CONTROL_REPORT: 'camera:control-report',
   /** Main → renderer: VIDEO_STREAM_INFORMATION discovered for a vehicle. */
   CAMERA_VIDEO_STREAM_INFO: 'camera:video-stream-info',
   /** Main → renderer: GIMBAL_DEVICE_ATTITUDE_STATUS for a vehicle. */

@@ -3,7 +3,7 @@ import http from 'node:http';
 import { createHash } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
 import type { CameraSourceConfig } from '../../shared/camera-types';
-import { applyOnvif, attr, forgetOnvifDevices, getOnvifState, reachable, securityHeader, tagBlocks, tagText } from './onvif';
+import { applyOnvif, attr, forgetOnvifDevices, getOnvifState, onvifReport, reachable, securityHeader, tagBlocks, tagText } from './onvif';
 
 // Test-only account of the fake camera below.
 const USER = 'onvif';
@@ -195,6 +195,22 @@ describe('ONVIF state', () => {
     const state = await getOnvifState(gone);
     expect(state.ok).toBe(false);
     expect(state.error).toContain('127.0.0.1:9');
+  });
+});
+
+describe('ONVIF report', () => {
+  it('lists what the camera answers, without the account', async () => {
+    const report = await onvifReport(source());
+    expect(report).toContain('## GetImagingSettings');
+    expect(report).toContain('IrCutFilter');
+    expect(report).toContain('## Imaging GetOptions');
+    expect(report).toContain('video source VideoSource_1');
+    expect(report).not.toContain(PASS);
+  });
+
+  it('says so instead of failing when the camera is not there', async () => {
+    const gone: CameraSourceConfig = { ...source(), control: { vendor: 'onvif', host: '127.0.0.1', port: 9, username: USER, password: PASS } };
+    expect(await onvifReport(gone)).toMatch(/discover: ERROR/);
   });
 });
 

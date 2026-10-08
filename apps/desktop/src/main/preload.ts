@@ -262,6 +262,8 @@ const api = {
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CONTROL_STATE, source),
   cameraControlSet: (source: CameraSourceConfig, action: CameraControlAction): Promise<CameraControlState> =>
     ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CONTROL_SET, source, action),
+  cameraControlReport: (source: CameraSourceConfig): Promise<string> =>
+    ipcRenderer.invoke(IPC_CHANNELS.CAMERA_CONTROL_REPORT, source),
   onCameraVideoStreamInfo: (callback: (info: VideoStreamInfoIpc) => void) => {
     const handler = (_: unknown, info: VideoStreamInfoIpc) => callback(info);
     ipcRenderer.on(IPC_CHANNELS.CAMERA_VIDEO_STREAM_INFO, handler);

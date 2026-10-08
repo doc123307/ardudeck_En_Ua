@@ -120,7 +120,10 @@
       "save": "Save",
       "offlineNote": "No vehicle is connected: the cameras are saved and become this vehicle's as soon as it connects. A camera reachable on the network can be checked right now.",
       "manualStreamsTip": "HD and SD stream addresses typed by hand, for paths that do not follow the usual naming (cam1hd / cam1sd). Fill in both and the HD/SD switch swaps between them. Leave empty to let the program work the second stream out from the address above.",
-      "manualStreamPlaceholder": "rtsp://… (optional)"
+      "manualStreamPlaceholder": "rtsp://… (optional)",
+      "report": "Camera report",
+      "reportCopied": "Copied",
+      "reportTip": "Asks the camera what it can do over ONVIF and copies the answer as text. Send it to support when a control (light, zoom) is missing. Holds no login or password."
     },
     "CameraSourceSwitch": {
       "show": "Show {{label}}"
@@ -377,7 +380,10 @@
       "presetName": "Preset name",
       "presetSave": "Store",
       "presetSaveTip": "Store the camera's current position as a preset",
-      "commandFailed": "Command failed"
+      "commandFailed": "Command failed",
+      "sound": "Sound",
+      "soundIsOn": "On",
+      "soundIsOff": "Off"
     }
   }
 }

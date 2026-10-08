@@ -69,6 +69,8 @@ interface CameraState {
   zoom: Record<string, CameraZoom>;
   /** The one feed whose sound is on; every other stays muted so two cameras never talk over each other. */
   audibleSourceId: string | null;
+  /** Feeds whose stream brought an audio track: only those get a sound button. */
+  soundSources: Record<string, boolean>;
 
   // Config actions
   /** Rebind persisted per-vehicle config from stale vehicle keys (transport id rotates on reconnect) to live ones by sysid suffix. */
@@ -98,6 +100,7 @@ interface CameraState {
   requestReconnect: (sourceId: string) => void;
   setZoom: (sourceId: string, zoom: CameraZoom | null) => void;
   setAudibleSource: (sourceId: string | null) => void;
+  setSourceHasSound: (sourceId: string, hasSound: boolean) => void;
 }
 
 export interface CameraZoom { z: number; cx: number; cy: number }
@@ -148,6 +151,7 @@ export const useCameraStore = create<CameraState>()(
       reconnectRequests: {},
       zoom: {},
       audibleSourceId: null,
+      soundSources: {},
       gimbalAttitude: {},
       gimbalInfo: {},
       engineStatus: null,
@@ -258,6 +262,8 @@ export const useCameraStore = create<CameraState>()(
       requestReconnect: (sourceId) =>
         set((s) => ({ reconnectRequests: { ...s.reconnectRequests, [sourceId]: (s.reconnectRequests[sourceId] ?? 0) + 1 } })),
       setAudibleSource: (audibleSourceId) => set({ audibleSourceId }),
+      setSourceHasSound: (sourceId, hasSound) =>
+        set((s) => (!!s.soundSources[sourceId] === hasSound ? s : { soundSources: { ...s.soundSources, [sourceId]: hasSound } })),
       setZoom: (sourceId, zoom) =>
         set((s) => {
           const next = { ...s.zoom };

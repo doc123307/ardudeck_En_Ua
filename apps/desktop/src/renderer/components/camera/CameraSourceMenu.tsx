@@ -474,6 +474,7 @@ function ControlSettings({ source, onChange }: {
               className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-blue-500 disabled:opacity-40"
             >{isHttp ? t('camera.CameraSourceMenu.save') : t('camera.CameraSourceMenu.saveAndCheck')}</button>
             {dirty && <span className="text-amber-400">{t('camera.CameraSourceMenu.notSavedYet')}</span>}
+            {saved && !dirty && saved.vendor === 'onvif' && <ReportButton source={source} />}
           </div>
           {saved && !dirty && (
             <div className="mt-1.5">
@@ -503,5 +504,25 @@ function Shell({ children, onClose }: { children: React.ReactNode; onClose: () =
       </div>
     </>,
     document.body,
+  );
+}
+
+/** Copies what the camera says it can do, for a support request: how a missing control gets added. */
+function ReportButton({ source }: { source: CameraSourceConfig }) {
+  const [state, setState] = useState<'idle' | 'busy' | 'done'>('idle');
+  const run = async () => {
+    setState('busy');
+    // The main process puts the text on the clipboard.
+    const copied = await window.electronAPI.cameraControlReport(source).then(() => true, () => false);
+    setState(copied ? 'done' : 'idle');
+    setTimeout(() => setState('idle'), 2500);
+  };
+  return (
+    <button
+      onClick={() => void run()}
+      disabled={state === 'busy'}
+      className="ml-auto rounded border border-subtle px-2 py-1 text-[11px] text-content-secondary hover:text-content disabled:opacity-40"
+      title={t('camera.CameraSourceMenu.reportTip')}
+    >{state === 'done' ? t('camera.CameraSourceMenu.reportCopied') : t('camera.CameraSourceMenu.report')}</button>
   );
 }

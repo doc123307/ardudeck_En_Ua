@@ -291,3 +291,46 @@ export async function applyOnvif(source: CameraSourceConfig, action: CameraContr
     return failure(target, err);
   }
 }
+
+/** The body of a SOAP answer on one line, namespaces dropped, cut to a readable length. */
+function compactXml(xml: string, limit = 2500): string {
+  const body = /<(?:[\w-]+:)?Body[^>]*>([\s\S]*)<\/(?:[\w-]+:)?Body>/.exec(xml)?.[1] ?? xml;
+  const flat = body.replace(/\s+xmlns(?::[\w-]+)?="[^"]*"/g, '').replace(/>\s+</g, '><').trim();
+  return flat.length > limit ? `${flat.slice(0, limit)}… (+${flat.length - limit})` : flat;
+}
+
+/**
+ * What the camera says it can do, as text for a support request: its services, image
+ * settings and their options, relay outputs, PTZ nodes. Read-only; holds no account data.
+ */
+export async function onvifReport(source: CameraSourceConfig): Promise<string> {
+  const target = resolveControlTarget(source);
+  if (!target) return mt('main.media_hikvision.noAddress');
+  const lines: string[] = [`ONVIF report · ${target.base} · channel ${target.channel}`];
+  const ask = async (title: string, url: string | undefined, body: string) => {
+    if (!url) { lines.push(`\n## ${title}\n(no such service)`); return; }
+    try {
+      lines.push(`\n## ${title}\n${compactXml(await call(target, url, body, device?.clockOffsetMs ?? 0))}`);
+    } catch (err) {
+      const detail = err instanceof OnvifError && err.detail ? ` [${err.detail}]` : '';
+      lines.push(`\n## ${title}\nERROR: ${err instanceof Error ? err.message : String(err)}${detail}`);
+    }
+  };
+  let device: Device | undefined;
+  try {
+    device = await discover(target);
+  } catch (err) {
+    lines.push(`discover: ERROR ${err instanceof Error ? err.message : String(err)}`);
+    return lines.join('\n');
+  }
+  const deviceUrl = target.base + DEVICE_PATH;
+  const source0 = `<VideoSourceToken>${esc(device.videoSourceToken ?? '')}</VideoSourceToken>`;
+  lines.push(`profile ${device.profileToken ?? '-'} · video source ${device.videoSourceToken ?? '-'} · ptz ${device.ptz ? 'yes' : 'no'} · imaging ${device.imaging ? 'yes' : 'no'}`);
+  await ask('GetDeviceInformation', deviceUrl, `<GetDeviceInformation xmlns="${NS.device}"/>`);
+  await ask('GetServices', deviceUrl, `<GetServices xmlns="${NS.device}"><IncludeCapability>true</IncludeCapability></GetServices>`);
+  await ask('GetImagingSettings', device.imaging, `<GetImagingSettings xmlns="${NS.imaging}">${source0}</GetImagingSettings>`);
+  await ask('Imaging GetOptions', device.imaging, `<GetOptions xmlns="${NS.imaging}">${source0}</GetOptions>`);
+  await ask('GetRelayOutputs', deviceUrl, `<GetRelayOutputs xmlns="${NS.device}"/>`);
+  await ask('PTZ GetNodes', device.ptz, `<GetNodes xmlns="${NS.ptz}"/>`);
+  return lines.join('\n');
+}

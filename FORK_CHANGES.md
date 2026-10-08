@@ -171,6 +171,10 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   without sound. A speaker button on the video (next to the zoom) turns the sound of that camera on; sound
   is off by default and only one camera is heard at a time. Code: `hasAudioTrack`/`relayAttempts` in
   `src/main/media/h264-relay.ts`, `audibleSourceId` in the camera store, `CameraView.tsx`.
+- **Camera report (0.1.2-0.20).** The settings of an ONVIF camera have a "Camera report" button: it asks the
+  camera for its services, image settings and their options, relay outputs and PTZ nodes and copies the answer
+  as text (no account data in it). This is how a control the camera has but the program does not offer yet
+  (a supplement light, for one) gets added. Code: `onvifReport` in `src/main/media/onvif.ts`.
 - **A camera that refuses a change says why (0.1.2-0.20).** An ONVIF camera that reads its settings out but
   refuses to change them used to show "wrong login or password". The message now names the ONVIF user of
   that camera and its rights, and ends with the camera's own fault code.
@@ -476,6 +480,10 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   (G.722, G.711, AAC); якщо ця спроба не вдається, зображення однаково запускається без звуку. Кнопка
   динаміка на відео (біля масштабу) вмикає звук цієї камери; типово звук вимкнено, і чути лише одну
   камеру одночасно.
+- **Звіт про камеру (0.1.2-0.20).** У налаштуваннях камери ONVIF є кнопка «Звіт про камеру»: вона питає в
+  камери її служби, налаштування зображення та їхні варіанти, релейні виходи й вузли PTZ і копіює відповідь
+  як текст (логіну й пароля в ньому немає). Так додається керування, яке камера має, а програма ще не
+  пропонує (наприклад, підсвітка).
 - **Камера, що відмовила у зміні, пояснює чому (0.1.2-0.20).** Камера ONVIF, яка показує налаштування, але
   відмовляється їх змінити, давала «неправильний логін або пароль». Тепер повідомлення називає
   користувача ONVIF цієї камери та його права й закінчується кодом відмови самої камери.

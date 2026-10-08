@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { controlKey, useCameraControlStore } from '../../stores/camera-control-store';
 import {
   ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Eye, Layers, Lightbulb, Loader2, Moon, Power, PowerOff, Save, Sparkles, Sun,
-  SunMoon, Trash2, Wand2, ZoomIn, ZoomOut, type LucideIcon,
+  SunMoon, Trash2, Volume2, VolumeX, Wand2, ZoomIn, ZoomOut, type LucideIcon,
 } from 'lucide-react';
 import type {
   CameraControlAction, CameraControlState, CameraSourceConfig, DayNightMode, SupplementLightMode,
@@ -66,6 +66,9 @@ interface CameraControlBarProps {
 export function CameraControlBar({ source, compact = false, editable = false }: CameraControlBarProps) {
   const updateSource = useCameraStore((s) => s.updateSource);
   const hasControl = !!source.control;
+  const hasSound = useCameraStore((s) => !!s.soundSources[source.id]);
+  const audible = useCameraStore((s) => s.audibleSourceId === source.id);
+  const setAudibleSource = useCameraStore((s) => s.setAudibleSource);
   const quality = source.kind === 'rtsp' ? sourceQuality(source) : null;
   // Shared with every other view of this camera, so it is asked once, not once per widget.
   const key = controlKey(source);
@@ -132,7 +135,7 @@ export function CameraControlBar({ source, compact = false, editable = false }: 
     if (url && q !== quality) updateSource(source.id, { url });
   };
 
-  if (!hasControl && !quality) return null;
+  if (!hasControl && !quality && !hasSound) return null;
 
   const ok = hasControl && state?.ok === true;
   const presets = ok ? state.presets ?? [] : [];
@@ -152,6 +155,19 @@ export function CameraControlBar({ source, compact = false, editable = false }: 
               data-tip={q === 'hd' ? t('camera.CameraControlBar.hdTip') : t('camera.CameraControlBar.sdTip')}
             >{q.toUpperCase()}</button>
           ))}
+        </Segment>
+      )}
+
+      {hasSound && (
+        <Segment compact={compact} label={t('camera.CameraControlBar.sound')}>
+          <button
+            onClick={() => setAudibleSource(audible ? null : source.id)}
+            className={`${compact ? BTN_COMPACT : BTN} flex items-center gap-1 ${audible ? 'bg-emerald-600 text-white' : OFF}`}
+            data-tip={audible ? t('camera.CameraView.soundOff') : t('camera.CameraView.soundOn')}
+          >
+            {audible ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
+            {!compact && (audible ? t('camera.CameraControlBar.soundIsOn') : t('camera.CameraControlBar.soundIsOff'))}
+          </button>
         </Segment>
       )}
 

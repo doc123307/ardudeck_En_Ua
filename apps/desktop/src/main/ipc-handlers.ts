@@ -3,7 +3,7 @@
  * Handles communication between renderer and main process
  */
 
-import { ipcMain, BrowserWindow, dialog, app, shell, safeStorage, session, ShareMenu, webContents as allWebContents, type WebContents } from 'electron';
+import { ipcMain, BrowserWindow, clipboard, dialog, app, shell, safeStorage, session, ShareMenu, webContents as allWebContents, type WebContents } from 'electron';
 import { join, dirname, basename } from 'path';
 import { existsSync, readFileSync, statSync } from 'fs';
 import { execFile as execFileCb } from 'node:child_process';
@@ -208,7 +208,7 @@ import { sitlProcess } from './sitl/sitl-process.js';
 import { simEngineProcess } from './sim/sim-engine-process.js';
 import { mediaEngine } from './media/media-engine.js';
 import { CANVAS_STREAM_PATHS, type CameraControlAction, type CanvasStreamSnapshot, type VisionStreamOpenOptions } from '../shared/camera-types.js';
-import { applyCameraControl, getCameraControlState } from './media/camera-control.js';
+import { applyCameraControl, cameraControlReport, getCameraControlState } from './media/camera-control.js';
 import { registerOperatorHandlers } from './operator/operator-ipc.js';
 import { isLicensed, registerLicenseHandlers } from './license/license-ipc.js';
 import { armStandInChannels, simulatorIdleThrottle } from './arm-rc-stand-in.js';
@@ -4985,6 +4985,12 @@ export function setupIpcHandlers(mainWindow: BrowserWindow): void {
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_CONTROL_SET, async (_, source: CameraSourceConfig, action: CameraControlAction) => {
     return applyCameraControl(source, action);
+  });
+  ipcMain.handle(IPC_CHANNELS.CAMERA_CONTROL_REPORT, async (_, source: CameraSourceConfig) => {
+    // Copied here: the page may not write the clipboard unless its window has the focus.
+    const report = await cameraControlReport(source);
+    clipboard.writeText(report);
+    return report;
   });
   ipcMain.handle(IPC_CHANNELS.CAMERA_ENGINE_STATUS, async () => {
     return mediaEngine.getStatus();

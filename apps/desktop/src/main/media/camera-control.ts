@@ -6,7 +6,7 @@
 import type { CameraControlAction, CameraControlState, CameraSourceConfig } from '../../shared/camera-types.js';
 import { applyControl as applyHikvision, getControlState as getHikvisionState } from './hikvision-isapi.js';
 import { applyDahua, getDahuaState } from './dahua-cgi.js';
-import { applyOnvif, getOnvifState } from './onvif.js';
+import { applyOnvif, getOnvifState, onvifReport } from './onvif.js';
 import { cameraRequest, resolveControlTarget, unreachableMessage } from './camera-http.js';
 import { mt } from '../i18n';
 
@@ -49,6 +49,11 @@ export function getCameraControlState(source: CameraSourceConfig): Promise<Camer
     case 'http': return Promise.resolve(httpState(source));
     default: return Promise.resolve({ ok: false, error: mt('main.media_control.notSupported') });
   }
+}
+
+/** A text report of what the camera offers, for a support request (ONVIF only so far). */
+export function cameraControlReport(source: CameraSourceConfig): Promise<string> {
+  return source.control?.vendor === 'onvif' ? onvifReport(source) : Promise.resolve(mt('main.media_control.notSupported'));
 }
 
 export function applyCameraControl(source: CameraSourceConfig, action: CameraControlAction): Promise<CameraControlState> {
