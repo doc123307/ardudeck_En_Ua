@@ -513,7 +513,7 @@ export function calibrateAxis(raw: number, c: RcAxisCalibration | null | undefin
 
 /** The reading with the station's calibration applied, when it was made on this very device. */
 export function calibratePad(pad: RcPad, calibration: RcPadCalibration | null): RcPad {
-  if (!calibration || calibration.pad !== pad.id) return pad;
+  if (!calibration || !samePad(calibration.pad, pad.id)) return pad;
   return { ...pad, axes: pad.axes.map((a, i) => calibrateAxis(a, calibration.axes[i])) };
 }
 
@@ -537,6 +537,176 @@ export function calibrationGrow(c: RcPadCalibration, pad: RcPad): RcPadCalibrati
 /** Done: axes that were not moved stay uncalibrated. */
 export function calibrationFinish(c: RcPadCalibration): RcPadCalibration | null {
   return normalizePadCalibration({ pad: c.pad, sticks: c.sticks, axes: c.axes.map((a) => (a && a.max - a.min >= CALIBRATION_MIN_SPAN ? a : null)) });
+}
+
+// ---- The stick set-up, one axis at a time -------------------------------------------
+
+/**
+ * Each of the four stick directions goes through a whole cycle: pushed to one end (that is
+ * how the axis is found), then to the other end, then brought to the centre and held. Only
+ * the axis being asked about is watched, so a throttle without a spring, left anywhere, never
+ * holds the set-up up, and its centre is where the user puts it, not where it happened to rest.
+ */
+export type StickPhase = 'first' | 'second' | 'center';
+export type StickSetupStep = 'rest' | 'check' | `${RcStickKey}:${StickPhase}`;
+
+export interface StickSetup {
+  pad: string;
+  step: StickSetupStep;
+  /** Where every axis sat when the set-up began: the first push is measured from here. */
+  rest: number[];
+  /** The travel seen on every axis so far; `center` is the rest until a stick's own centre is taken. */
+  axes: RcAxisCalibration[];
+  sticks: RcStickLayout;
+  /** Axes whose centre the user showed. */
+  centered: number[];
+  /** The reading being held at the centre, and since when (ms). */
+  hold: { value: number; since: number } | null;
+}
+
+/** Of the nominal -1..1 travel (2.0), how long the stroke end to end must be: three quarters. */
+export const STICK_FULL_SPAN = 1.5;
+/** How near the far end the second push has to come, as a share of the travel seen. */
+const END_SHARE = 0.25;
+/** How near the middle of its travel the centre must be, as a share of the travel. */
+const CENTER_SHARE = 0.3;
+/** How still the stick has to be held at the centre, and for how long. */
+const HOLD_STILL = 0.03;
+export const CENTER_HOLD_MS = 800;
+
+const STICK_STEPS: StickSetupStep[] = [
+  'rest', ...RC_STICK_KEYS.flatMap((k) => (['first', 'second', 'center'] as const).map((p) => `${k}:${p}` as StickSetupStep)), 'check',
+];
+/** 1-based number of the step and how many there are, for "step n of N". */
+export function stickSetupProgress(step: StickSetupStep): { n: number; total: number } {
+  return { n: STICK_STEPS.indexOf(step) + 1, total: STICK_STEPS.length };
+}
+
+export function stickSetupParts(step: StickSetupStep): { key: RcStickKey; phase: StickPhase } | null {
+  const [key, phase] = step.split(':') as [RcStickKey, StickPhase | undefined];
+  return phase ? { key, phase } : null;
+}
+
+const nextDirection = (key: RcStickKey): StickSetupStep => {
+  const i = RC_STICK_KEYS.indexOf(key);
+  return i < RC_STICK_KEYS.length - 1 ? `${RC_STICK_KEYS[i + 1]!}:first` : 'check';
+};
+
+export function stickSetupBegin(pad: RcPad): StickSetup {
+  const axes = pad.axes.slice(0, RC_MAX_AXES);
+  return {
+    pad: pad.id, step: 'rest', rest: [...axes], axes: axes.map((a) => ({ min: a, center: a, max: a })),
+    sticks: { ...NO_STICKS }, centered: [], hold: null,
+  };
+}
+
+/** The sticks are let go (a throttle without a spring put in the middle): start asking. */
+export function stickSetupAfterRest(pad: RcPad): StickSetup {
+  return { ...stickSetupBegin(pad), step: 'lx:first' };
+}
+
+/** "There is no such stick": on to the next direction. */
+export function stickSetupSkip(s: StickSetup): StickSetup {
+  const parts = stickSetupParts(s.step);
+  if (!parts) return s;
+  return { ...s, step: nextDirection(parts.key), hold: null };
+}
+
+/** "This is the centre": takes where the stick is now, without waiting for it to be held still. */
+export function stickSetupTakeCenter(s: StickSetup, pad: RcPad): StickSetup {
+  const parts = stickSetupParts(s.step);
+  const stick = parts ? s.sticks[parts.key] : null;
+  if (!parts || parts.phase !== 'center' || !stick) return s;
+  return centerAt(s, parts.key, stick.axis, pad.axes[stick.axis] ?? s.axes[stick.axis]!.center);
+}
+
+function centerAt(s: StickSetup, key: RcStickKey, axis: number, value: number): StickSetup {
+  const a = s.axes[axis]!;
+  const axes = s.axes.map((c, i) => (i === axis ? { ...a, center: Math.min(a.max, Math.max(a.min, value)) } : c));
+  return { ...s, axes, centered: [...new Set([...s.centered, axis])], step: nextDirection(key), hold: null };
+}
+
+/** Is the stick at the centre of what it has travelled, so "hold it there" can be counted. */
+export function nearCenter(c: RcAxisCalibration, value: number): boolean {
+  const span = c.max - c.min;
+  return span > 0 && Math.abs(value - (c.min + c.max) / 2) <= span * CENTER_SHARE;
+}
+
+/** One reading while the set-up runs. `now` in ms. */
+export function stickSetupFeed(s: StickSetup, pad: RcPad, now: number): StickSetup {
+  if (pad.id !== s.pad) return s;
+  const axes = s.axes.map((a, i) => {
+    const v = pad.axes[i];
+    return typeof v === 'number' ? { min: Math.min(a.min, v), center: a.center, max: Math.max(a.max, v) } : a;
+  });
+  const next = { ...s, axes };
+  const parts = stickSetupParts(s.step);
+  if (!parts) return next;
+  const { key, phase } = parts;
+
+  if (phase === 'first') {
+    const taken = RC_STICK_KEYS.map((k) => next.sticks[k]?.axis).filter((a): a is number => a !== undefined);
+    const found = detectStickAxis(s.rest, pad.axes, taken);
+    if (!found) return next;
+    return { ...next, sticks: { ...next.sticks, [key]: found }, step: `${key}:second`, hold: null };
+  }
+
+  const stick = next.sticks[key];
+  if (!stick) return { ...next, step: nextDirection(key) };
+  const c = axes[stick.axis]!;
+  const v = pad.axes[stick.axis] ?? c.center;
+
+  if (phase === 'second') {
+    const span = c.max - c.min;
+    // The far end is the one the first push did not go to; the device's own sign decides which.
+    // The stroke is measured from the first end to where the stick is now, so half a stroke
+    // back is not taken for the other end.
+    const pushedTo = stick.invert ? -1 : 1;
+    const farEnd = pushedTo > 0 ? c.min : c.max;
+    const stroke = pushedTo > 0 ? c.max - v : v - c.min;
+    const atFarEnd = Math.abs(v - farEnd) <= span * END_SHARE;
+    return stroke >= STICK_FULL_SPAN && atFarEnd ? { ...next, step: `${key}:center`, hold: null } : next;
+  }
+
+  // Centre: held still near the middle of the travel for a moment.
+  if (!nearCenter(c, v)) return { ...next, hold: null };
+  if (!s.hold || Math.abs(v - s.hold.value) > HOLD_STILL) return { ...next, hold: { value: v, since: now } };
+  if (now - s.hold.since < CENTER_HOLD_MS) return next;
+  return centerAt(next, key, stick.axis, v);
+}
+
+/**
+ * What the set-up learned, as the calibration to keep. Stick axes get their own ends and
+ * centre; any other control that was moved far enough (a slider, a knob) keeps its travel
+ * with its resting place as the centre.
+ */
+export function stickSetupResult(s: StickSetup): RcPadCalibration | null {
+  const stickAxes = new Set(RC_STICK_KEYS.map((k) => s.sticks[k]?.axis).filter((a): a is number => a !== undefined));
+  return normalizePadCalibration({
+    pad: s.pad,
+    sticks: s.sticks,
+    axes: s.axes.map((a, i) => {
+      if (a.max - a.min < CALIBRATION_MIN_SPAN) return null;
+      if (stickAxes.has(i) && !s.centered.includes(i)) return null;
+      return { ...a, center: Math.min(a.max, Math.max(a.min, a.center)) };
+    }),
+  });
+}
+
+/** Directions asked about and not skipped, whose axis made the whole cycle. */
+export function stickSetupComplete(s: StickSetup): RcStickKey[] {
+  return RC_STICK_KEYS.filter((k) => { const st = s.sticks[k]; return !!st && s.centered.includes(st.axis); });
+}
+
+/**
+ * The same transmitter, also when the system names it a little differently (Chromium puts
+ * the USB ids in the name; a rename by the driver or a firmware update keeps them).
+ */
+export function samePad(saved: string, id: string): boolean {
+  if (saved === id) return true;
+  const ids = (s: string) => /vendor:\s*([0-9a-f]{4}).*product:\s*([0-9a-f]{4})/i.exec(s)?.slice(1).join(':').toLowerCase() ?? null;
+  const a = ids(saved);
+  return a !== null && a === ids(id);
 }
 
 // ---- What is assigned to what -----------------------------------------------------

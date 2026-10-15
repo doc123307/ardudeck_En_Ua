@@ -6,13 +6,15 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ArrowUp, Check, RotateCcw, SlidersHorizontal } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Check, Crosshair, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import {
-  RC_STICK_KEYS, calibrationFinish, calibrationGrow, calibrationStart, detectStickAxis, driveSticks, rcAssignmentClashes,
-  rcAssignments, stickPositions, sticksAtRest,
-  type OperatorRcConfig, type RcAssignment, type RcPad, type RcPadCalibration, type RcStickKey, type RcStickLayout,
+  RC_STICK_KEYS, calibratePad, driveSticks, rcAssignmentClashes, rcAssignments, samePad, stickPositions,
+  stickSetupAfterRest, stickSetupBegin, stickSetupComplete, stickSetupFeed, stickSetupParts, stickSetupProgress,
+  stickSetupResult, stickSetupSkip, stickSetupTakeCenter,
+  type OperatorRcConfig, type RcAssignment, type RcPad, type RcStickKey, type RcStickLayout, type StickPhase, type StickSetup,
 } from '../../../shared/operator-rc';
 import type { OperatorConfig } from '../../../shared/operator-types';
+import { useOperatorStore } from '../../stores/operator-store';
 import { BTN, Card, FIELD, Toggle } from './OperatorSettingsParts';
 import { InputEditor, Learn, Meter, useJoystick } from './OperatorRcSettings';
 import { t } from '../../i18n';
@@ -62,8 +64,10 @@ function AxisRow({ index, raw, value, roles, range }: {
  * A stick seen from above: the dot is the stick. `ask` lights the direction the set-up is
  * asking for; a stick the program does not know yet is drawn empty.
  */
+type StickAsk = 'x' | 'y' | '-x' | '-y' | 'center';
+
 function StickCircle({ title, position, ask, caption }: {
-  title: string; position: { x: number; y: number } | null; ask?: 'x' | 'y' | null; caption?: string;
+  title: string; position: { x: number; y: number } | null; ask?: StickAsk | null; caption?: string;
 }) {
   const x = Math.min(1, Math.max(-1, position?.x ?? 0));
   const y = Math.min(1, Math.max(-1, position?.y ?? 0));
@@ -75,6 +79,9 @@ function StickCircle({ title, position, ask, caption }: {
         <span className="absolute inset-y-3 left-1/2 w-px bg-content-tertiary/40" />
         {ask === 'x' && <ArrowRight className="absolute right-1.5 top-1/2 h-6 w-6 -translate-y-1/2 animate-pulse text-blue-400" />}
         {ask === 'y' && <ArrowUp className="absolute left-1/2 top-1.5 h-6 w-6 -translate-x-1/2 animate-pulse text-blue-400" />}
+        {ask === '-x' && <ArrowLeft className="absolute left-1.5 top-1/2 h-6 w-6 -translate-y-1/2 animate-pulse text-blue-400" />}
+        {ask === '-y' && <ArrowDown className="absolute bottom-1.5 left-1/2 h-6 w-6 -translate-x-1/2 animate-pulse text-blue-400" />}
+        {ask === 'center' && <Crosshair className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 animate-pulse text-blue-400" />}
         {position && (
           <span
             className="absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/80 bg-emerald-500 shadow"
@@ -89,27 +96,18 @@ function StickCircle({ title, position, ask, caption }: {
   );
 }
 
-/** The set-up, one question at a time: rest, the four stick directions, then the ends. */
-type SetupStep = 'center' | RcStickKey | 'ends';
-interface Setup {
-  step: SetupStep;
-  draft: RcPadCalibration | null;
-  /** Where the sticks rested; directions are judged from here. */
-  rest: number[];
-  /** The stick just shown has to come back before the next question is asked. */
-  waitRest: boolean;
+/** Stick positions while setting up: straight from the raw readings, measured from rest. */
+function draftPositions(raw: RcPad, setup: StickSetup) {
+  const moved = raw.axes.map((a, i) => Math.min(1, Math.max(-1, (a - (setup.rest[i] ?? 0)) * 1.1)));
+  return stickPositions(moved, setup.sticks);
 }
 
-const nextStep = (step: SetupStep): SetupStep => {
-  if (step === 'center') return 'lx';
-  const i = RC_STICK_KEYS.indexOf(step as RcStickKey);
-  return i >= 0 && i < RC_STICK_KEYS.length - 1 ? RC_STICK_KEYS[i + 1]! : 'ends';
-};
-
-/** Stick positions while setting up: straight from the raw readings, measured from rest. */
-function draftPositions(raw: RcPad, setup: Setup) {
-  const moved = raw.axes.map((a, i) => Math.min(1, Math.max(-1, (a - (setup.rest[i] ?? 0)) * 1.1)));
-  return stickPositions(moved, setup.draft?.sticks ?? { lx: null, ly: null, rx: null, ry: null });
+/** Which way the circle points for a question: the first end, the other end, or the centre. */
+function askFor(key: RcStickKey, phase: StickPhase): StickAsk {
+  if (phase === 'center') return 'center';
+  const horizontal = key === 'lx' || key === 'rx';
+  if (phase === 'first') return horizontal ? 'x' : 'y';
+  return horizontal ? '-x' : '-y';
 }
 
 const STICK_OPTIONS: { key: RcStickKey; label: string }[] = [
@@ -143,56 +141,65 @@ export function OperatorPadSettings({ config, save }: { config: OperatorConfig; 
   const clashes = rcAssignmentClashes(rc);
   const sticks = driveSticks(rc.drive, pad);
 
+  // The set-up waits for the answer: the user is told whether the calibration was kept.
+  const saveConfig = useOperatorStore((s) => s.saveConfig);
   const setRc = (next: OperatorRcConfig) => save({ rc: next });
   const drive = (patch: Partial<OperatorRcConfig['drive']>) => setRc({ ...rc, drive: { ...rc.drive, ...patch } });
   const cruise = (patch: Partial<OperatorRcConfig['cruise']>) => setRc({ ...rc, cruise: { ...rc.cruise, ...patch } });
   const reverse = (patch: Partial<OperatorRcConfig['reverse']>) => setRc({ ...rc, reverse: { ...rc.reverse, ...patch } });
 
-  const [setup, setSetup] = useState<Setup | null>(null);
+  const [setup, setSetup] = useState<StickSetup | null>(null);
+  const [savedNote, setSavedNote] = useState<'saved' | 'failed' | null>(null);
   const latestRaw = useRef<RcPad | null>(raw);
   latestRaw.current = raw;
 
-  // Every reading while the set-up runs: the ends grow, and the stick asked for is looked for.
+  // Every reading while the set-up runs: the travel grows, and the question being asked is answered.
   useEffect(() => {
     if (!raw) { setSetup(null); return; }
-    setSetup((now) => {
-      if (!now || !now.draft || now.step === 'center') return now;
-      const draft = calibrationGrow(now.draft, raw);
-      if (now.step === 'ends') return { ...now, draft };
-      if (now.waitRest) return { ...now, draft, waitRest: !sticksAtRest(now.rest, raw.axes) };
-      const taken = RC_STICK_KEYS.map((k) => draft.sticks[k]?.axis).filter((a): a is number => a !== undefined);
-      const found = detectStickAxis(now.rest, raw.axes, taken);
-      if (!found) return { ...now, draft };
-      return { ...now, draft: { ...draft, sticks: { ...draft.sticks, [now.step]: found } }, step: nextStep(now.step), waitRest: true };
-    });
+    setSetup((now) => (now && now.step !== 'rest' && now.step !== 'check' ? stickSetupFeed(now, raw, Date.now()) : now));
   }, [raw]);
 
-  const begin = () => setSetup({ step: 'center', draft: null, rest: [], waitRest: false });
-  const afterCenter = () => {
+  const begin = () => {
     const now = latestRaw.current;
-    if (now) setSetup({ step: 'lx', draft: calibrationStart(now), rest: [...now.axes], waitRest: false });
+    setSavedNote(null);
+    if (now) setSetup(stickSetupBegin(now));
   };
-  const skip = () => setSetup((now) => (now ? { ...now, step: nextStep(now.step), waitRest: false } : now));
-  const finish = () => {
-    if (setup?.draft) {
-      const done = calibrationFinish(setup.draft);
-      const patch: Partial<OperatorConfig> = { padCalibration: done };
-      // The usual way to drive: throttle on the left stick, steering on the right one.
-      const steer = done?.sticks.rx;
-      const throttle = done?.sticks.ly;
-      if (steer && throttle) {
-        patch.rc = { ...rc, drive: { ...rc.drive, steerAxis: steer.axis, steerReverse: steer.invert, throttleAxis: throttle.axis, throttleReverse: throttle.invert } };
-      }
-      save(patch);
+  const afterRest = () => {
+    const now = latestRaw.current;
+    if (now) setSetup(stickSetupAfterRest(now));
+  };
+  const skip = () => setSetup((now) => (now ? stickSetupSkip(now) : now));
+  const takeCenter = () => {
+    const now = latestRaw.current;
+    if (now) setSetup((s) => (s ? stickSetupTakeCenter(s, now) : s));
+  };
+  const result = setup?.step === 'check' ? stickSetupResult(setup) : null;
+  const finish = async () => {
+    if (!setup) return;
+    const done = stickSetupResult(setup);
+    const patch: Partial<OperatorConfig> = { padCalibration: done };
+    // The usual way to drive: throttle on the left stick, steering on the right one.
+    const steer = done?.sticks.rx;
+    const throttle = done?.sticks.ly;
+    if (steer && throttle) {
+      patch.rc = { ...rc, drive: { ...rc.drive, steerAxis: steer.axis, steerReverse: steer.invert, throttleAxis: throttle.axis, throttleReverse: throttle.invert } };
     }
-    setSetup(null);
+    const ok = await saveConfig(patch);
+    setSavedNote(ok && done ? 'saved' : 'failed');
+    if (ok) setSetup(null);
   };
 
-  const calibrated = config.padCalibration && raw && config.padCalibration.pad === raw.id ? config.padCalibration : null;
+  const calibrated = config.padCalibration && raw && samePad(config.padCalibration.pad, raw.id) ? config.padCalibration : null;
   const layout = calibrated?.sticks ?? { lx: null, ly: null, rx: null, ry: null };
-  const positions = raw && setup && setup.step !== 'center' ? draftPositions(raw, setup) : stickPositions(pad?.axes ?? [], layout);
-  const ask = setup && setup.step !== 'center' && setup.step !== 'ends' ? setup.step : null;
-  const stickKnown = (key: RcStickKey) => (setup?.draft ? setup.draft.sticks[key] : layout[key]);
+  const parts = setup ? stickSetupParts(setup.step) : null;
+  // The check step shows the sticks the way the calibration about to be kept will read them.
+  const positions = raw && result
+    ? stickPositions(calibratePad(raw, result).axes, result.sticks)
+    : raw && setup && setup.step !== 'rest' ? draftPositions(raw, setup) : stickPositions(pad?.axes ?? [], layout);
+  const askOn = (side: 'l' | 'r'): StickAsk | null => (parts && parts.key[0] === side ? askFor(parts.key, parts.phase) : null);
+  const stickKnown = (key: RcStickKey) => (setup ? setup.sticks[key] : layout[key]);
+  const complete = setup ? stickSetupComplete(setup) : [];
+  const progress = setup ? stickSetupProgress(setup.step) : null;
   const axisName = (key: RcStickKey) => {
     const s = stickKnown(key);
     return s ? t('operator.OperatorRcSettings.axisN', { n: s.axis + 1 }) : '—';
@@ -233,10 +240,10 @@ export function OperatorPadSettings({ config, save }: { config: OperatorConfig; 
           <div className="flex flex-wrap items-start gap-x-10 gap-y-4">
             <div className="flex gap-8">
               <StickCircle title={t('operator.OperatorPadSettings.leftStick')} position={positions.left}
-                ask={ask === 'lx' ? 'x' : ask === 'ly' ? 'y' : null}
+                ask={askOn('l')}
                 caption={setup ? `↔ ${axisName('lx')} · ↕ ${axisName('ly')}` : undefined} />
               <StickCircle title={t('operator.OperatorPadSettings.rightStick')} position={positions.right}
-                ask={ask === 'rx' ? 'x' : ask === 'ry' ? 'y' : null}
+                ask={askOn('r')}
                 caption={setup ? `↔ ${axisName('rx')} · ↕ ${axisName('ry')}` : undefined} />
             </div>
 
@@ -258,39 +265,57 @@ export function OperatorPadSettings({ config, save }: { config: OperatorConfig; 
                       ? t('operator.OperatorPadSettings.calibrated', { n: calibrated.axes.filter(Boolean).length })
                       : t('operator.OperatorPadSettings.notCalibrated')}
                   </span>
+                  {savedNote === 'saved' && <span className="text-sm font-medium text-emerald-400">{t('operator.OperatorPadSettings.savedNote')}</span>}
+                  {savedNote === 'failed' && <span className="text-sm font-medium text-amber-400">{t('operator.OperatorPadSettings.saveFailed')}</span>}
                 </>
               )}
-              {setup?.step === 'center' && (
+              {progress && <p className="text-xs text-content-tertiary">{t('operator.OperatorPadSettings.stepOf', progress)}</p>}
+              {setup?.step === 'rest' && (
                 <>
-                  <p className="text-sm text-content">{t('operator.OperatorPadSettings.stepCenter')}</p>
+                  <p className="text-sm text-content">{t('operator.OperatorPadSettings.stepRest')}</p>
                   <div className="flex gap-2">
-                    <button type="button" className={`${BTN} border-blue-500 bg-blue-600 text-white`} onClick={afterCenter}>{t('operator.OperatorPadSettings.next')}</button>
+                    <button type="button" className={`${BTN} border-blue-500 bg-blue-600 text-white`} onClick={afterRest}>{t('operator.OperatorPadSettings.next')}</button>
                     <button type="button" className={BTN} onClick={() => setSetup(null)}>{t('operator.OperatorPadSettings.cancel')}</button>
                   </div>
                 </>
               )}
-              {ask && (
+              {parts && (
                 <>
-                  <p className="text-xs text-content-tertiary">{t('operator.OperatorPadSettings.stepOf', { n: RC_STICK_KEYS.indexOf(ask) + 2, total: 6 })}</p>
-                  <p className="text-base font-semibold text-content">
-                    {setup?.waitRest ? t('operator.OperatorPadSettings.letGo') : t(`operator.OperatorPadSettings.ask_${ask}`)}
-                  </p>
-                  <div className="flex gap-2">
-                    <button type="button" className={BTN} onClick={skip}>{t('operator.OperatorPadSettings.skip')}</button>
+                  <p className="text-base font-semibold text-content">{t(`operator.OperatorPadSettings.${parts.phase === 'first' ? 'ask' : parts.phase === 'second' ? 'opp' : 'center'}_${parts.key}`)}</p>
+                  {parts.phase === 'center' && (
+                    <p className="text-xs text-content-secondary">{setup?.hold ? t('operator.OperatorPadSettings.holding') : t('operator.OperatorPadSettings.centerHint')}</p>
+                  )}
+                  {parts.phase === 'second' && <p className="text-xs text-content-secondary">{t('operator.OperatorPadSettings.oppHint')}</p>}
+                  <div className="flex flex-wrap gap-2">
+                    {parts.phase === 'center' && (
+                      <button type="button" className={`${BTN} border-blue-500 bg-blue-600 text-white`} onClick={takeCenter}>{t('operator.OperatorPadSettings.thisIsCenter')}</button>
+                    )}
+                    {parts.phase === 'first' && <button type="button" className={BTN} onClick={skip}>{t('operator.OperatorPadSettings.skip')}</button>}
                     <button type="button" className={BTN} onClick={() => setSetup(null)}>{t('operator.OperatorPadSettings.cancel')}</button>
                   </div>
                 </>
               )}
-              {setup?.step === 'ends' && (
+              {setup?.step === 'check' && (
                 <>
-                  <p className="text-xs text-content-tertiary">{t('operator.OperatorPadSettings.stepOf', { n: 6, total: 6 })}</p>
-                  <p className="text-sm text-content">{t('operator.OperatorPadSettings.stepEnds')}</p>
-                  <div className="flex gap-2">
-                    <button type="button" className={`${BTN} flex items-center gap-2 border-emerald-500 bg-emerald-600 text-white`} onClick={finish}>
-                      <Check className="h-4 w-4" />{t('operator.OperatorPadSettings.done')}
+                  <p className="text-sm text-content">{t('operator.OperatorPadSettings.stepCheck')}</p>
+                  <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
+                    {RC_STICK_KEYS.map((k) => (
+                      <li key={k} className={complete.includes(k) ? 'text-emerald-400' : 'text-amber-400'}>
+                        {complete.includes(k) ? '✓' : '—'} {t(`operator.OperatorPadSettings.stick_${k}`)}
+                      </li>
+                    ))}
+                  </ul>
+                  {complete.length < RC_STICK_KEYS.length && <p className="text-xs text-amber-400">{t('operator.OperatorPadSettings.checkMissing')}</p>}
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" disabled={!result} className={`${BTN} flex items-center gap-2 border-emerald-500 bg-emerald-600 text-white disabled:opacity-40`} onClick={() => void finish()}>
+                      <Check className="h-4 w-4" />{t('operator.OperatorPadSettings.saveCalibration')}
+                    </button>
+                    <button type="button" className={`${BTN} flex items-center gap-2`} onClick={begin}>
+                      <RotateCcw className="h-4 w-4" />{t('operator.OperatorPadSettings.setupAgain')}
                     </button>
                     <button type="button" className={BTN} onClick={() => setSetup(null)}>{t('operator.OperatorPadSettings.cancel')}</button>
                   </div>
+                  {savedNote === 'failed' && <span className="text-sm font-medium text-amber-400">{t('operator.OperatorPadSettings.saveFailed')}</span>}
                 </>
               )}
             </div>
@@ -308,7 +333,7 @@ export function OperatorPadSettings({ config, save }: { config: OperatorConfig; 
                 raw={value}
                 value={pad.axes[i] ?? 0}
                 roles={rolesOf(rc, assignments, 'axis', i)}
-                range={setup?.draft ? setup.draft.axes[i] : undefined}
+                range={setup && setup.step !== 'rest' && setup.step !== 'check' ? setup.axes[i] : undefined}
               />
             ))}
           </div>

@@ -171,6 +171,15 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   without sound. A speaker button on the video (next to the zoom) turns the sound of that camera on; sound
   is off by default and only one camera is heard at a time. Code: `hasAudioTrack`/`relayAttempts` in
   `src/main/media/h264-relay.ts`, `audibleSourceId` in the camera store, `CameraView.tsx`.
+- **Stick calibration that goes the whole way (0.1.2-0.20).** The set-up used to wait, after each stick, for
+  every axis to come back to where it rested. A throttle stick without a spring (Radiomaster TX12) never does,
+  so the set-up hung and nothing was saved; and the ends were whatever had been reached by "Done". Now each of
+  the four stick directions goes through a whole cycle - one end, the other end (three quarters of the travel
+  at least), then the centre, held still for a moment or taken with "This is the centre" - and only that axis
+  is watched. A check step shows the sticks as the new calibration reads them before it is saved, and the
+  screen says whether it was saved. A transmitter is recognised by its USB ids too, so a slightly different
+  device name does not lose the calibration. Code: `stickSetup*` and `samePad` in `src/shared/operator-rc.ts`,
+  `OperatorPadSettings.tsx`.
 - **Camera report (0.1.2-0.20).** The settings of an ONVIF camera have a "Camera report" button: it asks the
   camera for its services, image settings and their options, relay outputs and PTZ nodes and copies the answer
   as text (no account data in it). This is how a control the camera has but the program does not offer yet
@@ -480,6 +489,13 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   (G.722, G.711, AAC); якщо ця спроба не вдається, зображення однаково запускається без звуку. Кнопка
   динаміка на відео (біля масштабу) вмикає звук цієї камери; типово звук вимкнено, і чути лише одну
   камеру одночасно.
+- **Калібрування стіків на весь хід (0.1.2-0.20).** Налаштування після кожного стіка чекало, доки всі осі
+  повернуться в положення спокою. Стік газу без пружини (Radiomaster TX12) туди не повертається, тож
+  налаштування зависало й нічого не зберігало, а краї були такими, яких устигли дійти до «Готово». Тепер
+  кожен із чотирьох напрямків проходить повний цикл: один край, протилежний край (щонайменше три чверті
+  ходу), потім центр — утриманий нерухомо або вказаний кнопкою «Це центр»; стежимо лише за цією віссю. Крок
+  перевірки показує стіки так, як їх читатиме нове калібрування, ще до збереження, і екран каже, чи
+  збережено. Пульт упізнається й за USB-ідентифікаторами, тож трохи інша назва пристрою не губить калібрування.
 - **Звіт про камеру (0.1.2-0.20).** У налаштуваннях камери ONVIF є кнопка «Звіт про камеру»: вона питає в
   камери її служби, налаштування зображення та їхні варіанти, релейні виходи й вузли PTZ і копіює відповідь
   як текст (логіну й пароля в ньому немає). Так додається керування, яке камера має, а програма ще не
