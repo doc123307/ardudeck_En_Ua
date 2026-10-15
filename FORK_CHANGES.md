@@ -171,6 +171,9 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   without sound. A speaker button on the video (next to the zoom) turns the sound of that camera on; sound
   is off by default and only one camera is heard at a time. Code: `hasAudioTrack`/`relayAttempts` in
   `src/main/media/h264-relay.ts`, `audibleSourceId` in the camera store, `CameraView.tsx`.
+- **Transmitter not seen: the hint says what to do (0.1.2-0.21).** Chromium hands a USB joystick to the page only
+  after its first movement while the window is focused, after every start. The "transmitter not seen" hint on
+  the Transmitter tab now says to click into the window and move a stick or flip a switch.
 - **Stick calibration that goes the whole way (0.1.2-0.20).** The set-up used to wait, after each stick, for
   every axis to come back to where it rested. A throttle stick without a spring (Radiomaster TX12) never does,
   so the set-up hung and nothing was saved; and the ends were whatever had been reached by "Done". Now each of
@@ -489,6 +492,9 @@ The whole UI can be switched between **English** (unchanged, still the default) 
   (G.722, G.711, AAC); якщо ця спроба не вдається, зображення однаково запускається без звуку. Кнопка
   динаміка на відео (біля масштабу) вмикає звук цієї камери; типово звук вимкнено, і чути лише одну
   камеру одночасно.
+- **Пульта не видно: підказка каже, що робити (0.1.2-0.21).** Chromium віддає USB-джойстик сторінці лише після
+  першого руху, коли вікно активне, і так після кожного запуску. Підказка «Пульта не видно» на вкладці «Пульт»
+  тепер каже клацнути у вікно й поворушити стіком або перемикачем.
 - **Калібрування стіків на весь хід (0.1.2-0.20).** Налаштування після кожного стіка чекало, доки всі осі
   повернуться в положення спокою. Стік газу без пружини (Radiomaster TX12) туди не повертається, тож
   налаштування зависало й нічого не зберігало, а краї були такими, яких устигли дійти до «Готово». Тепер

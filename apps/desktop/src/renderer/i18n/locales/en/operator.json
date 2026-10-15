@@ -449,7 +449,7 @@
       "deviceAuto": "Automatically (a transmitter first)",
       "found": "{{name}} · axes: {{axes}}, buttons: {{buttons}}",
       "notFound": "No transmitter is seen",
-      "notFoundHint": "Plug the transmitter in over USB, choose «USB Joystick (HID)» on its screen, then move a stick or press a button: the system shows a device only after its first movement.",
+      "notFoundHint": "Plug the transmitter in over USB and choose «USB Joystick (HID)» on its screen. Then click into this window and move a stick to its end or flip a switch: the system shows the transmitter to the program only after its first movement while the program's window is active, and again after every start of the program.",
       "check": "Check",
       "checkHint": "Every axis and button of the device. The thin mark is the raw reading, the bar is the value after calibration. Green names show what the control is assigned to.",
       "buttonFree": "Not assigned",
